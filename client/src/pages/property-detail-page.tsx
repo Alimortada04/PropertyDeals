@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
 import PropertyGrid from "@/components/properties/property-grid";
+import PropertyCard from "@/components/properties/property-card";
 import { similarProperties } from "@/lib/data";
 import { useState } from "react";
 
