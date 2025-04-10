@@ -3,6 +3,10 @@ import { useAuth } from "@/hooks/use-auth";
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { 
+  Home, Building, Users, LayoutDashboard, Book, 
+  Calculator, MessageCircle, UserCircle, Settings, ChevronRight 
+} from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -18,13 +22,15 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   
   // Close sidebar on route change on mobile
   useEffect(() => {
-    if (window.innerWidth < 1024 && isOpen) {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024 && isOpen) {
       closeSidebar();
     }
   }, [location, isOpen, closeSidebar]);
 
   // Handle window resize
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleResize = () => {
       if (window.innerWidth >= 1024 && !isOpen) {
         // Ensure sidebar is open on desktop
@@ -56,11 +62,11 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isExpanded]);
+  }, [isExpanded, setIsExpanded]);
 
   // Dynamic classes for the hover-expandable sidebar (desktop only)
   const sidebarClasses = `
-    bg-white shadow-md fixed lg:sticky top-[61px] h-[calc(100vh-61px)] overflow-y-auto z-40 transition-all duration-300
+    bg-white shadow-md fixed lg:sticky top-0 h-screen overflow-y-auto z-40 transition-all duration-300
     ${isOpen ? 'w-64 translate-x-0' : 'w-0 -translate-x-full lg:translate-x-0'}
     ${isExpanded ? 'lg:w-64' : 'lg:w-16 hover:lg:w-64'}
   `;
@@ -69,7 +75,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      flex items-center p-2 rounded-md whitespace-nowrap transition-colors duration-200
+      group flex items-center p-2 rounded-md whitespace-nowrap transition-colors duration-200
       ${isActive 
         ? 'bg-[#09261E] text-white' 
         : 'text-[#135341] hover:bg-[#09261E] hover:text-white'}
@@ -84,97 +90,126 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       onMouseEnter={() => window.innerWidth >= 1024 && setIsExpanded(true)}
       onMouseLeave={() => window.innerWidth >= 1024 && setIsExpanded(false)}
     >
-      <nav className="p-4">
+      <nav className="flex flex-col h-full p-4">
+        {/* Logo */}
+        <div className="mb-8 mt-2">
+          <Link href="/" className="flex items-center">
+            <img 
+              src="/images/pdLogoalt.png" 
+              alt="PropertyDeals Logo" 
+              className="h-8 w-auto"
+            />
+            <span className={`ml-2 font-heading font-bold text-[#09261E] text-lg transition-opacity duration-300 ${!isExpanded ? 'lg:opacity-0 lg:w-0 lg:hidden' : ''}`}>
+              PropertyDeals
+            </span>
+          </Link>
+          
+          {/* Expansion hint for accessibility */}
+          <div className={`absolute right-2 top-4 ${isExpanded ? 'opacity-0' : 'opacity-50 lg:opacity-100'} transition-opacity`}>
+            <ChevronRight size={16} className="text-[#135341] animate-pulse" />
+          </div>
+        </div>
+
+        {/* Main Navigation */}
         <div className="mb-6">
-          <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider mb-3 ${!isExpanded && 'lg:opacity-0'}`}>
+          <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider mb-3 transition-opacity duration-300 ${!isExpanded && 'lg:opacity-0'}`}>
             Navigation
           </h3>
           <ul className="space-y-2">
             <li>
               <Link href="/" className={getNavItemClasses("/")}>
-                <i className="fas fa-home w-5 text-center"></i>
-                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
+                <Home className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
                   Home
                 </span>
               </Link>
             </li>
             <li>
               <Link href="/properties" className={getNavItemClasses("/properties")}>
-                <i className="fas fa-building w-5 text-center"></i>
-                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
+                <Building className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
                   Properties
                 </span>
               </Link>
             </li>
             <li>
               <Link href="/reps" className={getNavItemClasses("/reps")}>
-                <i className="fas fa-user-tie w-5 text-center"></i>
-                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
-                  Professionals
+                <Users className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
+                  REPs
                 </span>
               </Link>
             </li>
             <li>
-              <Link href="/seller-dashboard" className={getNavItemClasses("/seller-dashboard")}>
-                <i className="fas fa-chart-line w-5 text-center"></i>
-                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
-                  Seller Dashboard
+              <Link href="/connect" className={getNavItemClasses("/connect")}>
+                <MessageCircle className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
+                  Connect
                 </span>
               </Link>
             </li>
             <li>
-              <Link href="/about" className={getNavItemClasses("/about")}>
-                <i className="fas fa-info-circle w-5 text-center"></i>
-                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
-                  About
-                </span>
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className={getNavItemClasses("/contact")}>
-                <i className="fas fa-envelope w-5 text-center"></i>
-                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
-                  Contact
+              <Link href="/dashboard" className={getNavItemClasses("/dashboard")}>
+                <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
+                  Dashboard
                 </span>
               </Link>
             </li>
           </ul>
         </div>
 
+        {/* Resources Section */}
         <div className="mb-6">
-          <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider mb-3 ${!isExpanded && 'lg:opacity-0'}`}>
+          <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider mb-3 transition-opacity duration-300 ${!isExpanded && 'lg:opacity-0'}`}>
             Resources
           </h3>
           <ul className="space-y-2">
             <li>
-              <Link href="#" className={getNavItemClasses("")}>
-                <i className="fas fa-book w-5 text-center"></i>
-                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
+              <Link href="/guides" className={getNavItemClasses("/guides")}>
+                <Book className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
                   Guides
                 </span>
               </Link>
             </li>
             <li>
-              <Link href="#" className={getNavItemClasses("")}>
-                <i className="fas fa-question-circle w-5 text-center"></i>
-                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
-                  Help Center
+              <Link href="/tools" className={getNavItemClasses("/tools")}>
+                <Calculator className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
+                  Tools
                 </span>
               </Link>
             </li>
           </ul>
         </div>
 
-        <div className={`mt-auto pt-6 ${!isExpanded && 'lg:hidden'}`}>
-          <div className="bg-[#135341]/10 p-4 rounded-lg">
-            <h4 className="font-heading text-[#09261E] text-sm mb-2">Ready to sell?</h4>
-            <p className="text-xs text-gray-600 mb-3">List your property and reach motivated buyers today.</p>
-            <Link href={user ? "/seller-dashboard" : "/register"}>
-              <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white text-sm">
-                Get Started
-              </Button>
-            </Link>
-          </div>
+        {/* Spacer to push profile section to bottom */}
+        <div className="flex-grow"></div>
+        
+        {/* Profile & Settings */}
+        <div className="mb-2 pt-6 border-t border-gray-200">
+          <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider mb-3 transition-opacity duration-300 ${!isExpanded && 'lg:opacity-0'}`}>
+            Account
+          </h3>
+          <ul className="space-y-2">
+            <li>
+              <Link href="/profile" className={getNavItemClasses("/profile")}>
+                <UserCircle className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
+                  Profile
+                </span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/settings" className={getNavItemClasses("/settings")}>
+                <Settings className="w-5 h-5 flex-shrink-0" />
+                <span className={`ml-3 transition-all duration-300 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden group-hover:lg:opacity-100 group-hover:lg:inline-block'}`}>
+                  Settings
+                </span>
+              </Link>
+            </li>
+          </ul>
         </div>
       </nav>
     </aside>

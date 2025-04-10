@@ -31,10 +31,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#F5F5F5]">
       <Navbar toggleSidebar={toggleSidebar} />
       
-      <div className="flex flex-1">
+      <div className="flex flex-1 relative">
         <Sidebar 
           isOpen={sidebarOpen} 
           closeSidebar={closeSidebar} 
@@ -42,7 +42,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           setIsExpanded={setIsExpanded}
         />
         
-        <main className={`flex-1 transition-all duration-300 ${typeof window !== 'undefined' && window.innerWidth >= 1024 ? (isExpanded ? 'lg:ml-64' : 'lg:ml-16') : ''}`}>
+        <main 
+          className={`
+            flex-1 transition-all duration-300 
+            ${typeof window !== 'undefined' ? (isExpanded ? 'lg:ml-64' : 'lg:ml-16') : ''}
+          `}
+        >
           {children}
         </main>
       </div>
