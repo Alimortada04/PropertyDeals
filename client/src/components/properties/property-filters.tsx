@@ -15,10 +15,10 @@ export interface FilterOptions {
 
 export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
   const [filters, setFilters] = useState<FilterOptions>({
-    priceRange: "",
-    beds: "",
-    baths: "",
-    status: ""
+    priceRange: "any",
+    beds: "any",
+    baths: "any",
+    status: "any"
   });
 
   const handleFilterChange = (key: keyof FilterOptions, value: string) => {
@@ -38,7 +38,7 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
             <SelectValue placeholder="Price Range" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Any Price</SelectItem>
+            <SelectItem value="any">Any Price</SelectItem>
             <SelectItem value="0-200000">Under $200k</SelectItem>
             <SelectItem value="200000-400000">$200k - $400k</SelectItem>
             <SelectItem value="400000-600000">$400k - $600k</SelectItem>
@@ -57,7 +57,7 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
             <SelectValue placeholder="Beds" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Any</SelectItem>
+            <SelectItem value="any">Any</SelectItem>
             <SelectItem value="1+">1+ bed</SelectItem>
             <SelectItem value="2+">2+ beds</SelectItem>
             <SelectItem value="3+">3+ beds</SelectItem>
@@ -75,7 +75,7 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
             <SelectValue placeholder="Baths" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Any</SelectItem>
+            <SelectItem value="any">Any</SelectItem>
             <SelectItem value="1+">1+ bath</SelectItem>
             <SelectItem value="2+">2+ baths</SelectItem>
             <SelectItem value="3+">3+ baths</SelectItem>
@@ -92,7 +92,7 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Any Status</SelectItem>
+            <SelectItem value="any">Any Status</SelectItem>
             <SelectItem value="off-market">Off-Market</SelectItem>
             <SelectItem value="exclusive">Exclusive</SelectItem>
           </SelectContent>
@@ -103,7 +103,7 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
         variant="outline"
         className="bg-gray-100 hover:bg-gray-200 text-gray-700 h-10"
         onClick={() => {
-          const resetFilters = { priceRange: "", beds: "", baths: "", status: "" };
+          const resetFilters = { priceRange: "any", beds: "any", baths: "any", status: "any" };
           setFilters(resetFilters);
           onFilter(resetFilters);
         }}

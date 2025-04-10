@@ -26,9 +26,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     <Card className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 property-card">
       <div className="relative">
         <img 
-          src={imageUrl} 
-          alt={title} 
+          src={imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"} 
+          alt={title || "Property"} 
           className="w-full h-48 object-cover"
+          onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+          }}
         />
         <div className={`absolute top-0 right-0 ${status === 'exclusive' ? 'bg-[#803344]' : 'bg-[#09261E]'} text-white px-3 py-1 m-3 text-sm font-medium rounded`}>
           {status === 'exclusive' ? 'Exclusive' : 'Off-Market'}
