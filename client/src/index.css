@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans bg-white text-foreground font-body;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold;
+  }
+}
+
+@layer components {
+  .property-card {
+    @apply transition-all duration-300;
+  }
+  
+  .property-card:hover {
+    @apply transform -translate-y-1 shadow-lg;
+  }
+  
+  .sidebar-transition {
+    @apply transition-all duration-300;
+  }
+}
+
+:root {
+  --background: 0 0% 96%;
+  --foreground: 222 47% 11%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  
+  --primary: 162 75% 10%; /* #09261E */
+  --primary-foreground: 210 40% 98%;
+  
+  --secondary: 347 44% 35%; /* #803344 */
+  --secondary-foreground: 210 40% 98%;
+  
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  
+  --accent: 2 58% 76%; /* #E59F9F */
+  --accent-foreground: 222.2 47.4% 11.2%;
+  
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  
+  --radius: 0.5rem;
+}
+
+/* Font family definitions */
+.font-heading {
+  font-family: 'League Spartan', sans-serif;
+}
+
+.font-body {
+  font-family: 'Lato', sans-serif;
+}
