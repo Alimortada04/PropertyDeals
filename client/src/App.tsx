@@ -10,6 +10,8 @@ import SellerDashboard from "@/pages/seller-dashboard";
 import AuthPage from "@/pages/auth-page";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
+import RepsPage from "@/pages/reps-page";
+import RepDetailPage from "@/pages/rep-detail-page";
 import MainLayout from "@/components/layout/main-layout";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -31,6 +33,18 @@ function Router() {
         {params => (
           <MainLayout>
             <PropertyDetailPage id={params.id} />
+          </MainLayout>
+        )}
+      </Route>
+      <Route path="/reps">
+        <MainLayout>
+          <RepsPage />
+        </MainLayout>
+      </Route>
+      <Route path="/rep/:slug">
+        {params => (
+          <MainLayout>
+            <RepDetailPage slug={params.slug} />
           </MainLayout>
         )}
       </Route>

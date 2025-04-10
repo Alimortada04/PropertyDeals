@@ -1,0 +1,126 @@
+✅ 1. REPs Directory Page
+Route: /reps
+
+This page will serve as a hub to browse and discover real estate professionals. The layout should be clean, modern, and responsive, using TailwindCSS and maintaining the same visual identity as our current pages.
+
+🔹 Design Details:
+A full-width sticky navbar remains at the top (already implemented in the project).
+
+Beneath the navbar, create a tabbed interface with four tabs, each showing a filtered list of REPs based on their type.
+
+📌 Tabs (These should act as filters for different REP types):
+Sellers
+
+Contractors
+
+Agents
+
+Lenders
+
+Clicking on each tab should dynamically update the visible cards below to show only REPs of that type.
+
+🧩 REP Cards (Shown inside each tab):
+Each REP is displayed as a card component in a responsive grid (2 columns on mobile, 3 on tablet, 4 on desktop).
+
+Each card should include:
+
+Circular Avatar (use a placeholder image for now)
+
+Full Name (bold text)
+
+REP Type (small tag or label)
+
+Location (City, State)
+
+1-line bio or tagline (keep short)
+
+A "View Profile" button that links to /rep/[slug] (profile page)
+
+✅ 2. Individual REP Profile Page
+Route: /rep/[name]
+
+This is the full profile for a single REP, similar to a “team member” or “user profile” page. Use a clean, centered layout with proper padding, consistent with the rest of the site.
+
+📌 Profile Layout:
+Hero section with:
+
+Large avatar (centered)
+
+Full Name (large bold text, League Spartan)
+
+REP Type (label)
+
+Contact Info:
+
+Phone (with icon)
+
+Email (with icon)
+
+Location: City, State
+
+About Section:
+
+“About Me” heading
+
+Paragraph with placeholder bio
+
+Dynamic Section Depending on REP Type:
+
+If REP is a Seller:
+
+Section for Current Properties (pull from mock property data)
+
+Section for Past Deals (simple cards)
+
+If REP is a Contractor:
+
+Section for Active Jobs
+
+Section for Past Projects
+
+If REP is a Lender or Agent, just include an About section and Past Deals/Clients.
+
+Use Tailwind spacing, soft background containers, and divide sections with subtle borders or spacing.
+
+🎨 Branding / UI Consistency:
+Please match our existing UI style:
+
+Fonts:
+
+Headings: League Spartan (600 weight, Semi-Bold)
+
+Body: Lato
+
+Color Palette:
+
+Primary Dark Green: #09261E (called brand)
+
+Brand Light: #135341
+
+Accent (Salmon): #E59F9F
+
+Secondary (Wine): #803344
+
+Background White: #F5F5F5
+
+Black: #1C1C1C
+
+Silver: #D8D8D8
+
+Use font-heading for League Spartan and font-sans for Lato (already configured in Tailwind).
+
+The experience should feel professional, modern, and easy to navigate, with thoughtful use of whitespace and intuitive layouts.
+
+🧠 Summary of Files to Add:
+/app/reps/page.tsx: The main REPs tabbed directory
+
+/app/rep/[name]/page.tsx: Individual profile for a REP
+
+Reusable component: <RepCard /> for the card layout in the grid
+
+Reusable tabs component (if needed)
+
+Temporary placeholder data for reps to showcase layout
+
+This is a key part of the platform, so make it clean and extensible for future filtering, dynamic data, or CMS integration.
+
