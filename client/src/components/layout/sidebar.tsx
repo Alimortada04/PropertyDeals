@@ -7,12 +7,13 @@ import { useLocation } from "wouter";
 interface SidebarProps {
   isOpen: boolean;
   closeSidebar: () => void;
+  isExpanded: boolean;
+  setIsExpanded: (expanded: boolean) => void;
 }
 
-export default function Sidebar({ isOpen, closeSidebar }: SidebarProps) {
+export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpanded }: SidebarProps) {
   const { user } = useAuth();
   const [location] = useLocation();
-  const [isExpanded, setIsExpanded] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   
   // Close sidebar on route change on mobile
