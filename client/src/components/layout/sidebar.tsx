@@ -107,6 +107,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               </Link>
             </li>
             <li>
+              <Link href="/reps" className={getNavItemClasses("/reps")}>
+                <i className="fas fa-user-tie w-5 text-center"></i>
+                <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>
+                  Professionals
+                </span>
+              </Link>
+            </li>
+            <li>
               <Link href="/seller-dashboard" className={getNavItemClasses("/seller-dashboard")}>
                 <i className="fas fa-chart-line w-5 text-center"></i>
                 <span className={`ml-3 ${!isExpanded && 'lg:opacity-0 lg:w-0 lg:hidden lg:group-hover:inline-block'}`}>

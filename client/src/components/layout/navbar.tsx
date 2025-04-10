@@ -37,6 +37,7 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
           <nav className="hidden lg:flex items-center space-x-6">
             <Link href="/" className="text-[#135341] hover:text-[#09261E] font-medium">Home</Link>
             <Link href="/properties" className="text-[#135341] hover:text-[#09261E] font-medium">Properties</Link>
+            <Link href="/reps" className="text-[#135341] hover:text-[#09261E] font-medium">Professionals</Link>
             <Link href="/about" className="text-[#135341] hover:text-[#09261E] font-medium">About</Link>
             <Link href="/contact" className="text-[#135341] hover:text-[#09261E] font-medium">Contact</Link>
           </nav>
