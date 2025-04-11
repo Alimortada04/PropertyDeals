@@ -60,14 +60,11 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-40 py-4",
+        "bg-white transition-all duration-200 z-40 pt-5 pb-0",
         isSticky ? "sticky top-0 left-0 right-0 shadow-md" : ""
       )}
     >
-      <div className={cn(
-        "px-4 py-4 transition-all duration-300",
-        isSticky ? "w-full" : "container mx-auto"
-      )}>
+      <div className="w-full px-6 pt-2 pb-0 transition-all duration-300">
         {/* Search and Filter Row - always visible */}
         <div className="flex flex-col md:flex-row gap-4 items-center mb-4 transition-all duration-300 max-h-20 opacity-100">
           {/* Search Bar */}
@@ -104,13 +101,13 @@ export default function StickySearchFilter({
         
         {/* Category Tabs - styled as rounded rectangles */}
         {tabs.length > 0 && (
-          <div className="overflow-x-auto no-scrollbar -mx-4 px-4">
+          <div className="overflow-x-auto pb-3 no-scrollbar px-4">
             <Tabs 
               defaultValue={defaultTab} 
               onValueChange={onTabChange}
               className="w-full"
             >
-              <TabsList className="h-10 bg-transparent w-full flex items-center justify-start overflow-x-auto no-scrollbar border-b border-gray-200">
+              <TabsList className="h-10 bg-transparent w-full flex items-center justify-start overflow-x-auto no-scrollbar">
                 {tabs.map((tab) => (
                   <TabsTrigger
                     key={tab.value}
@@ -132,6 +129,7 @@ export default function StickySearchFilter({
             </Tabs>
           </div>
         )}
+        <div className="border-b border-gray-200 mt-0 mb-6"></div>
       </div>
     </div>
   );

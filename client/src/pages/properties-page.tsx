@@ -11,7 +11,8 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import StickySearchFilter from "@/components/common/sticky-search-filter";
 import { allProperties } from "@/lib/data";
-import { MapPin, List, LayoutGrid } from "lucide-react";
+import { MapPin, List, LayoutGrid, ChevronDown } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface FilterOptions {
   priceRange: string;
