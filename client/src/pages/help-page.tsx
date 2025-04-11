@@ -4,6 +4,7 @@ import {
   MessageSquare,
   AlertTriangle,
 } from "lucide-react";
+import Breadcrumbs from "@/components/common/breadcrumbs";
 
 interface HelpCardProps {
   icon: React.ReactNode;

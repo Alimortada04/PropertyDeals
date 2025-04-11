@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calculator, DollarSign, Percent, GitCompare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Breadcrumbs from "@/components/common/breadcrumbs";
 
 interface ToolCardProps {
   icon: React.ReactNode;
@@ -67,6 +68,12 @@ export default function ToolsPage() {
 
   return (
     <div className="container mx-auto px-4 py-12">
+      {/* Breadcrumbs */}
+      <div className="mb-4">
+        <Breadcrumbs />
+      </div>
+      
+      {/* Page Title */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-heading font-bold text-[#09261E] mb-4">
           Real Estate Investment Tools
