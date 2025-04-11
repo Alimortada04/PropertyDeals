@@ -47,9 +47,6 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
     logoutMutation.mutate();
   };
 
-  // Determine if the current page should show the search bar
-  const showSearch = ['/properties', '/reps'].includes(location);
-
   // Determine if we're on a page that should have a static (scrollable) navbar
   const isStaticNavbarPage = location === '/properties' || location === '/reps';
   
@@ -86,18 +83,16 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
           
           <div className="flex items-center gap-3">
             {/* Search bar - right aligned beside auth buttons */}
-            {showSearch && (
-              <div className="hidden md:block">
-                <div className="relative w-64">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Search..."
-                    className="pl-9 border-gray-300 focus:border-gray-400 rounded-full bg-gray-50 hover:bg-white focus:bg-white"
-                  />
-                </div>
+            <div className="hidden md:block">
+              <div className="relative w-64">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Search..."
+                  className="pl-9 border-gray-300 focus:border-gray-400 rounded-full bg-gray-50 hover:bg-white focus:bg-white"
+                />
               </div>
-            )}
+            </div>
             
             {/* Auth Buttons */}
             <div className="flex items-center gap-3">

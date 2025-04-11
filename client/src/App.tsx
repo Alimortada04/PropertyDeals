@@ -16,6 +16,7 @@ import ToolsPage from "@/pages/tools-page";
 import FlipCalculatorPage from "@/pages/tools/flip-calculator-page";
 import GuidesPage from "@/pages/guides-page";
 import PropertyDictionaryPage from "@/pages/guides/property-dictionary-page";
+import HelpPage from "@/pages/help-page";
 import FAQPage from "@/pages/help/faq-page";
 import SuggestionsPage from "@/pages/help/suggestions-page";
 import ReportPage from "@/pages/help/report-page";
@@ -133,6 +134,11 @@ function Router() {
       <Route path="/contact">
         <MainLayout>
           <ContactPage />
+        </MainLayout>
+      </Route>
+      <Route path="/help">
+        <MainLayout>
+          <HelpPage />
         </MainLayout>
       </Route>
       <Route path="/help/faq">
