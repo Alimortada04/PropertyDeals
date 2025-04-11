@@ -77,11 +77,6 @@ function Router() {
           <FlipCalculatorPage />
         </MainLayout>
       </Route>
-      <Route path="/help">
-        <MainLayout>
-          <HelpPage />
-        </MainLayout>
-      </Route>
       <Route path="/guides">
         <MainLayout>
           <GuidesPage />

@@ -180,12 +180,6 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     {isExpanded && <span className="ml-3">Tools</span>}
                   </Link>
                 </li>
-                <li>
-                  <Link href="/help" className={getNavItemClasses("/help")}>
-                    <HelpCircle className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
-                    {isExpanded && <span className="ml-3">Help</span>}
-                  </Link>
-                </li>
               </ul>
             </div>
 
