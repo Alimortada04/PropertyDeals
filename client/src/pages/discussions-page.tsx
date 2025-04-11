@@ -119,20 +119,20 @@ function StickyPostComposer({
 }) {
   return (
     <div className={`sticky bottom-0 z-30 mb-0 ${className || ''}`}>
-      <div className="bg-white shadow-lg border border-[#09261E]/10 rounded-b-none">
+      <div className="bg-transparent shadow-lg border border-[#09261E]/10 rounded-b-none">
         <div className="p-4">
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 flex-shrink-0">
               <AvatarFallback className="bg-[#124035] text-white">CU</AvatarFallback>
             </Avatar>
-            
+
             <div 
               onClick={onClick}
               className="flex-1 rounded-t-md rounded-bl-md rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 text-white/90 cursor-text hover:bg-[#124035] transition-colors"
             >
               Start a discussion...
             </div>
-            
+
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -173,9 +173,9 @@ export default function DiscussionsPage() {
   const [showMediaUploader, setShowMediaUploader] = useState(false);
   const [mediaFiles, setMediaFiles] = useState<{type: 'image' | 'video', preview: string}[]>([]);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  
+
   const { toast } = useToast();
-  
+
   // Sample data
   const [posts, setPosts] = useState<Post[]>([
     {
@@ -309,7 +309,7 @@ export default function DiscussionsPage() {
       }
     }
   ]);
-  
+
   // Sample replies
   const sampleReplies: Record<number, Reply[]> = {
     1: [
@@ -359,19 +359,19 @@ export default function DiscussionsPage() {
       }
     ]
   };
-  
+
   // Load replies when a post is selected
   useEffect(() => {
     if (selectedPostId) {
       // In a real app, this would be an API call
       setPostReplies(sampleReplies[selectedPostId] || []);
-      
+
       // Find the selected post
       const post = posts.find(p => p.id === selectedPostId);
       setSelectedPost(post || null);
     }
   }, [selectedPostId, posts]);
-  
+
   // Filter posts based on category, search, and sort
   const filteredPosts = posts.filter(post => {
     const matchesCategory = activeCategory === 'all' || post.category === activeCategory;
@@ -379,7 +379,7 @@ export default function DiscussionsPage() {
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
       post.content.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesLocation = !locationFilter || locationFilter === "all" || post.location === locationFilter;
-    
+
     return matchesCategory && matchesSearch && matchesLocation;
   }).sort((a, b) => {
     if (sortOption === 'recent') {
@@ -393,7 +393,7 @@ export default function DiscussionsPage() {
       return b.replies - a.replies; // controversial = most discussed
     }
   });
-  
+
   const handleLikePost = (postId: number) => {
     setPosts(posts.map(post => {
       if (post.id === postId) {
@@ -407,7 +407,7 @@ export default function DiscussionsPage() {
       return post;
     }));
   };
-  
+
   const handleBookmarkPost = (postId: number) => {
     setPosts(posts.map(post => {
       if (post.id === postId) {
@@ -418,13 +418,13 @@ export default function DiscussionsPage() {
       }
       return post;
     }));
-    
+
     toast({
       title: "Post Bookmarked",
       description: "You can find this post in your bookmarks",
     });
   };
-  
+
   const handleLikeReply = (replyId: number) => {
     setPostReplies(postReplies.map(reply => {
       if (reply.id === replyId) {
@@ -438,10 +438,10 @@ export default function DiscussionsPage() {
       return reply;
     }));
   };
-  
+
   const handleReplySubmit = () => {
     if (!newReplyContent.trim() || !selectedPostId) return;
-    
+
     const newReply: Reply = {
       id: Date.now(),
       postId: selectedPostId,
@@ -456,10 +456,10 @@ export default function DiscussionsPage() {
       likes: 0,
       isLiked: false
     };
-    
+
     setPostReplies([...postReplies, newReply]);
     setNewReplyContent('');
-    
+
     // Update the post's reply count
     setPosts(posts.map(post => {
       if (post.id === selectedPostId) {
@@ -471,12 +471,12 @@ export default function DiscussionsPage() {
       return post;
     }));
   };
-  
+
   const handleCreatePost = () => {
     if ((!newPostTitle.trim() && isComposerExpanded) || !newPostContent.trim()) return;
-    
+
     setIsSubmittingPost(true);
-    
+
     // Create attachments from media files if any
     const attachments = mediaFiles.length > 0 
       ? mediaFiles.map(file => ({
@@ -485,7 +485,7 @@ export default function DiscussionsPage() {
           preview: file.type === 'image' ? { image: file.preview } : undefined
         }))
       : undefined;
-    
+
     // Simulate network delay
     setTimeout(() => {
       const newPost: Post = {
@@ -511,7 +511,7 @@ export default function DiscussionsPage() {
           '❤️': 0
         }
       };
-      
+
       setPosts([newPost, ...posts]);
       setShowNewPostDialog(false);
       setNewPostTitle('');
@@ -519,18 +519,18 @@ export default function DiscussionsPage() {
       setIsComposerExpanded(false);
       setMediaFiles([]);
       setIsSubmittingPost(false);
-      
+
       toast({
         title: "Post Created",
         description: "Your post has been published successfully",
       });
     }, 1000);
   };
-  
+
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
-    
+
     // Check if we already have 4 images or 1 video
     if (mediaFiles.length >= 4) {
       toast({
@@ -540,11 +540,11 @@ export default function DiscussionsPage() {
       });
       return;
     }
-    
+
     // Process each file
     Array.from(files).slice(0, 4 - mediaFiles.length).forEach(file => {
       const fileType = file.type.startsWith('image/') ? 'image' : 'video';
-      
+
       // Create a preview URL
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -557,20 +557,20 @@ export default function DiscussionsPage() {
       };
       reader.readAsDataURL(file);
     });
-    
+
     // Reset the input
     e.target.value = '';
   };
-  
+
   const removeMedia = (index: number) => {
     setMediaFiles(prev => prev.filter((_, i) => i !== index));
   };
-  
+
   const handleInlinePost = () => {
     if (!newPostContent.trim()) return;
     handleCreatePost();
   };
-  
+
   const getPostIcon = (type: Post['type']) => {
     switch (type) {
       case 'discussion':
@@ -585,7 +585,7 @@ export default function DiscussionsPage() {
         return <MessageCircle className="h-4 w-4" />;
     }
   };
-  
+
   const getPostTypeLabel = (type: Post['type']) => {
     switch (type) {
       case 'discussion':
@@ -600,7 +600,7 @@ export default function DiscussionsPage() {
         return 'Post';
     }
   };
-  
+
   const getCategoryBadgeColor = (category: string) => {
     switch (category) {
       case 'market-talk':
@@ -619,19 +619,19 @@ export default function DiscussionsPage() {
         return 'bg-gray-100 text-gray-800';
     }
   };
-  
+
   const getCategoryIcon = (categoryId: string) => {
     const category = CATEGORIES.find(c => c.id === categoryId);
     return category ? category.icon : <MenuSquare className="h-5 w-5" />;
   };
-  
+
   return (
     <div className="container mx-auto px-4 py-8 pb-20">
       {/* Breadcrumbs */}
       <div className="mb-3">
         <Breadcrumbs />
       </div>
-      
+
       {/* Header */}
       <div className="mb-6">
         <div className="flex flex-wrap justify-between items-start gap-4">
@@ -642,7 +642,7 @@ export default function DiscussionsPage() {
               and discover valuable resources from the community.
             </p>
           </div>
-          
+
           <Button 
             onClick={() => setShowNewPostDialog(true)}
             className="bg-[#09261E] hover:bg-[#124035] text-white"
@@ -652,7 +652,7 @@ export default function DiscussionsPage() {
           </Button>
         </div>
       </div>
-      
+
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Category Sidebar - Hidden on mobile */}
@@ -718,7 +718,7 @@ export default function DiscussionsPage() {
             </Card>
           </div>
         )}
-        
+
         {/* Mobile Categories/Filters (Visible only on mobile) */}
         <div className="lg:hidden col-span-1 mb-4">
           <div className="grid grid-cols-2 gap-4">
@@ -740,7 +740,7 @@ export default function DiscussionsPage() {
                 ))}
               </SelectContent>
             </Select>
-            
+
             <Select
               value={locationFilter || ""}
               onValueChange={(value) => setLocationFilter(value || null)}
@@ -758,7 +758,7 @@ export default function DiscussionsPage() {
             </Select>
           </div>
         </div>
-        
+
         {/* Main Feed */}
         <div className={`col-span-1 ${showSidebar ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
           {/* Feed filters and content */}
@@ -772,7 +772,7 @@ export default function DiscussionsPage() {
               </div>
             </CardContent>
           </Card>
-          
+
           {isComposerExpanded && (
             <Card className="mb-6 border-2 border-[#09261E]/20">
               <CardContent className="p-6">
@@ -786,14 +786,14 @@ export default function DiscussionsPage() {
                       <p className="text-xs text-gray-500">Share your thoughts with the community</p>
                     </div>
                   </div>
-                
+
                   <Input
                     placeholder="Title (optional)"
                     value={newPostTitle}
                     onChange={(e) => setNewPostTitle(e.target.value)}
                     className="w-full text-lg font-medium mb-2"
                   />
-                  
+
                   <Textarea
                     placeholder="What's on your mind about real estate?"
                     value={newPostContent}
@@ -801,7 +801,7 @@ export default function DiscussionsPage() {
                     className="min-h-[120px] resize-none w-full"
                     autoFocus
                   />
-                  
+
                   {/* Media Previews */}
                   {mediaFiles.length > 0 && (
                     <div className={`grid ${mediaFiles.length === 1 
@@ -835,7 +835,7 @@ export default function DiscussionsPage() {
                       ))}
                     </div>
                   )}
-                  
+
                   <div className="flex flex-wrap items-center justify-between gap-3 mt-2">
                     <div className="flex items-center gap-2">
                       {/* Post Type Selector */}
@@ -882,7 +882,7 @@ export default function DiscussionsPage() {
                           </SelectItem>
                         </SelectContent>
                       </Select>
-                      
+
                       {/* Category Selector */}
                       <Select
                         value={newPostCategory}
@@ -903,7 +903,7 @@ export default function DiscussionsPage() {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     {/* Upload Media Button & Input */}
                     <div className="flex items-center gap-1">
                       <TooltipProvider>
@@ -926,7 +926,7 @@ export default function DiscussionsPage() {
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
-                      
+
                       <Button 
                         variant="ghost" 
                         size="sm"
@@ -939,7 +939,7 @@ export default function DiscussionsPage() {
                       >
                         Cancel
                       </Button>
-                      
+
                       <Button
                         onClick={handleCreatePost}
                         disabled={isSubmittingPost || !newPostContent.trim()}
@@ -958,8 +958,8 @@ export default function DiscussionsPage() {
               </CardContent>
             </Card>
           )}
-          
-          
+
+
           {/* Feed filters and content */}
           <Card className="mb-6">
             <CardHeader className="pb-3">
@@ -975,7 +975,7 @@ export default function DiscussionsPage() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                
+
                 {/* Sort Option */}
                 <div>
                   <Select
@@ -998,7 +998,7 @@ export default function DiscussionsPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 {/* Toggle Sidebar (Desktop Only) */}
                 <Button
                   variant="outline"
@@ -1036,7 +1036,7 @@ export default function DiscussionsPage() {
                         <Avatar className="h-10 w-10 mt-1 mr-4">
                           <AvatarFallback>{post.author.avatar}</AvatarFallback>
                         </Avatar>
-                        
+
                         <div className="flex-1 min-w-0">
                           {/* Post Header */}
                           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
@@ -1045,7 +1045,7 @@ export default function DiscussionsPage() {
                               <span className="text-gray-500 text-sm">• {post.author.role}</span>
                             )}
                             <span className="text-gray-500 text-sm">• {post.timestamp}</span>
-                            
+
                             {/* Post Type Badge */}
                             <Badge variant="outline" className="ml-auto">
                               <span className="flex items-center">
@@ -1054,7 +1054,7 @@ export default function DiscussionsPage() {
                               </span>
                             </Badge>
                           </div>
-                          
+
                           {/* Post Title */}
                           <h3 
                             className="text-lg font-medium text-[#09261E] mb-2 cursor-pointer hover:underline"
@@ -1062,10 +1062,10 @@ export default function DiscussionsPage() {
                           >
                             {post.title}
                           </h3>
-                          
+
                           {/* Post Content */}
                           <p className="text-gray-700 mb-4 line-clamp-3">{post.content}</p>
-                          
+
                           {/* Post Attachments */}
                           {post.attachments && post.attachments.length > 0 && (
                             <div className="mb-4">
@@ -1099,7 +1099,7 @@ export default function DiscussionsPage() {
                                   }
                                 </div>
                               )}
-                              
+
                               {/* Property and link attachments */}
                               {post.attachments.filter(a => a.type === 'property' || a.type === 'link').map((attachment, index) => (
                                 <div 
@@ -1132,7 +1132,7 @@ export default function DiscussionsPage() {
                                       </div>
                                     </div>
                                   )}
-                                  
+
                                   {attachment.type === 'link' && attachment.preview && (
                                     <div className="p-3 cursor-pointer hover:bg-gray-50">
                                       <div className="font-medium mb-1">{attachment.preview.title}</div>
@@ -1148,7 +1148,7 @@ export default function DiscussionsPage() {
                               ))}
                             </div>
                           )}
-                          
+
                           {/* Tags and Categories */}
                           <div className="flex flex-wrap gap-2 mb-3">
                             <Badge className={getCategoryBadgeColor(post.category)}>
@@ -1157,21 +1157,21 @@ export default function DiscussionsPage() {
                                 <span className="ml-1">{CATEGORIES.find(c => c.id === post.category)?.name || post.category}</span>
                               </span>
                             </Badge>
-                            
+
                             {post.location && (
                               <Badge variant="outline" className="text-gray-700">
                                 <MapPin className="h-3 w-3 mr-1" />
                                 {post.location}
                               </Badge>
                             )}
-                            
+
                             {post.tags && post.tags.map(tag => (
                               <Badge key={tag} variant="secondary" className="bg-gray-100 hover:bg-gray-200 text-gray-700">
                                 #{tag}
                               </Badge>
                             ))}
                           </div>
-                          
+
                           {/* Post Actions */}
                           <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
                             {/* Reactions */}
@@ -1186,12 +1186,12 @@ export default function DiscussionsPage() {
                                   <ThumbsUp className="h-4 w-4 mr-1" />
                                   <span>{post.reactions['👍']}</span>
                                 </Button>
-                                
+
                                 <Button variant="ghost" size="sm" className="px-2 h-8">
                                   <Flame className="h-4 w-4 mr-1" />
                                   <span>{post.reactions['🔥']}</span>
                                 </Button>
-                                
+
                                 <Button variant="ghost" size="sm" className="px-2 h-8">
                                   <Lightbulb className="h-4 w-4 mr-1" />
                                   <span>{post.reactions['💡']}</span>
@@ -1208,7 +1208,7 @@ export default function DiscussionsPage() {
                                 <span>{post.likes}</span>
                               </Button>
                             )}
-                            
+
                             {/* Comments Button */}
                             <Button 
                               variant="ghost" 
@@ -1219,7 +1219,7 @@ export default function DiscussionsPage() {
                               <MessageCircle className="h-4 w-4 mr-1" />
                               <span>{post.replies} {post.replies === 1 ? 'reply' : 'replies'}</span>
                             </Button>
-                            
+
                             {/* Bookmark */}
                             <Button 
                               variant="ghost" 
@@ -1229,12 +1229,12 @@ export default function DiscussionsPage() {
                             >
                               <Bookmark className="h-4 w-4" />
                             </Button>
-                            
+
                             {/* Share */}
                             <Button variant="ghost" size="sm" className="px-2 h-8">
                               <Share2 className="h-4 w-4" />
                             </Button>
-                            
+
                             {/* Post Metrics (optional) */}
                             {post.metrics && (
                               <div className="ml-auto text-xs text-gray-400">
@@ -1246,7 +1246,7 @@ export default function DiscussionsPage() {
                       </div>
                     </div>
                   ))}
-                  
+
                   {/* Sticky Post Composer directly inside the feed */}
                   {!isComposerExpanded && !selectedPostId && (
                     <StickyPostComposer 
@@ -1262,7 +1262,7 @@ export default function DiscussionsPage() {
       </div>
 
 
-      
+
       {/* Post Detail Dialog */}
       {selectedPost && (
         <Dialog 
@@ -1275,7 +1275,7 @@ export default function DiscussionsPage() {
                 <Avatar className="h-10 w-10 mt-1">
                   <AvatarFallback>{selectedPost.author.avatar}</AvatarFallback>
                 </Avatar>
-                
+
                 <div className="flex-1">
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
                     <span className="font-medium">{selectedPost.author.name}</span>
@@ -1284,10 +1284,10 @@ export default function DiscussionsPage() {
                     )}
                     <span className="text-gray-500 text-sm">• {selectedPost.timestamp}</span>
                   </div>
-                  
+
                   <DialogTitle className="text-left mt-1 mb-3">{selectedPost.title}</DialogTitle>
                   <p className="text-gray-700 mb-4 whitespace-pre-wrap">{selectedPost.content}</p>
-                  
+
                   {/* Post Attachments */}
                   {selectedPost.attachments && selectedPost.attachments.length > 0 && (
                     <div className="mb-4">
@@ -1321,7 +1321,7 @@ export default function DiscussionsPage() {
                               </div>
                             </div>
                           )}
-                          
+
                           {attachment.type === 'link' && attachment.preview && (
                             <a 
                               href={attachment.url} 
@@ -1342,7 +1342,7 @@ export default function DiscussionsPage() {
                       ))}
                     </div>
                   )}
-                  
+
                   {/* Tags and Categories */}
                   <div className="flex flex-wrap gap-2 mb-4">
                     <Badge className={getCategoryBadgeColor(selectedPost.category)}>
@@ -1353,21 +1353,21 @@ export default function DiscussionsPage() {
                         </span>
                       </span>
                     </Badge>
-                    
+
                     {selectedPost.location && (
                       <Badge variant="outline" className="text-gray-700">
                         <MapPin className="h-3 w-3 mr-1" />
                         {selectedPost.location}
                       </Badge>
                     )}
-                    
+
                     {selectedPost.tags && selectedPost.tags.map(tag => (
                       <Badge key={tag} variant="secondary" className="bg-gray-100 text-gray-700">
                         #{tag}
                       </Badge>
                     ))}
                   </div>
-                  
+
                   {/* Post Actions */}
                   <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
                     {/* Reactions */}
@@ -1382,12 +1382,12 @@ export default function DiscussionsPage() {
                           <ThumbsUp className="h-4 w-4 mr-1" />
                           <span>{selectedPost.reactions['👍']}</span>
                         </Button>
-                        
+
                         <Button variant="ghost" size="sm" className="px-3 h-8">
                           <Flame className="h-4 w-4 mr-1" />
                           <span>{selectedPost.reactions['🔥']}</span>
                         </Button>
-                        
+
                         <Button variant="ghost" size="sm" className="px-3 h-8">
                           <Lightbulb className="h-4 w-4 mr-1" />
                           <span>{selectedPost.reactions['💡']}</span>
@@ -1404,7 +1404,7 @@ export default function DiscussionsPage() {
                         <span>{selectedPost.likes}</span>
                       </Button>
                     )}
-                    
+
                     {/* Bookmark */}
                     <Button 
                       variant="ghost" 
@@ -1415,13 +1415,13 @@ export default function DiscussionsPage() {
                       <Bookmark className="h-4 w-4 mr-1" />
                       <span>Save</span>
                     </Button>
-                    
+
                     {/* Share */}
                     <Button variant="ghost" size="sm" className="px-3 h-8">
                       <Share2 className="h-4 w-4 mr-1" />
                       <span>Share</span>
                     </Button>
-                    
+
                     {/* Flag */}
                     <Button variant="ghost" size="sm" className="px-3 h-8 ml-auto">
                       <Flag className="h-4 w-4" />
@@ -1430,7 +1430,7 @@ export default function DiscussionsPage() {
                 </div>
               </div>
             </DialogHeader>
-            
+
             {/* Reply Count */}
             <div className="mb-4">
               <h4 className="font-medium text-gray-900">
@@ -1438,7 +1438,7 @@ export default function DiscussionsPage() {
               </h4>
               <Separator className="mt-2" />
             </div>
-            
+
             {/* Replies */}
             <div className="space-y-6 mb-6">
               {postReplies.length === 0 ? (
@@ -1451,7 +1451,7 @@ export default function DiscussionsPage() {
                     <Avatar className="h-8 w-8 mt-1">
                       <AvatarFallback>{reply.author.avatar}</AvatarFallback>
                     </Avatar>
-                    
+
                     <div className="flex-1">
                       <div className="flex items-center mb-1">
                         <span className="font-medium text-sm">{reply.author.name}</span>
@@ -1464,11 +1464,11 @@ export default function DiscussionsPage() {
                           • {reply.timestamp}
                         </span>
                       </div>
-                      
+
                       <div className="bg-gray-50 p-3 rounded-lg mb-2">
                         <p className="text-gray-700 text-sm whitespace-pre-wrap">{reply.content}</p>
                       </div>
-                      
+
                       <div className="flex items-center text-xs text-gray-500">
                         <Button 
                           variant="ghost" 
@@ -1485,14 +1485,14 @@ export default function DiscussionsPage() {
                 ))
               )}
             </div>
-            
+
             {/* Reply Input */}
             <div className="mt-auto pt-2 border-t">
               <div className="flex items-start gap-3">
                 <Avatar className="h-8 w-8 mt-1">
                   <AvatarFallback>CU</AvatarFallback>
                 </Avatar>
-                
+
                 <div className="flex-1">
                   <Textarea
                     placeholder="Write a reply..."
@@ -1500,7 +1500,7 @@ export default function DiscussionsPage() {
                     value={newReplyContent}
                     onChange={(e) => setNewReplyContent(e.target.value)}
                   />
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex gap-1">
                       <Button variant="outline" size="sm" className="h-8 px-2">
@@ -1510,7 +1510,7 @@ export default function DiscussionsPage() {
                         <Link className="h-4 w-4" />
                       </Button>
                     </div>
-                    
+
                     <Button 
                       className="bg-[#09261E] hover:bg-[#124035] text-white"
                       onClick={handleReplySubmit}
@@ -1525,7 +1525,7 @@ export default function DiscussionsPage() {
           </DialogContent>
         </Dialog>
       )}
-      
+
       {/* Expanded Post Composer Dialog */}
       <Dialog open={isComposerExpanded} onOpenChange={setIsComposerExpanded}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -1535,7 +1535,7 @@ export default function DiscussionsPage() {
               Share your thoughts, questions, or resources with the community
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4 py-4">
             {/* Post Title */}
             <div>
@@ -1546,7 +1546,7 @@ export default function DiscussionsPage() {
                 className="w-full text-lg font-medium"
               />
             </div>
-            
+
             {/* Post Content */}
             <div>
               <Textarea
@@ -1557,7 +1557,7 @@ export default function DiscussionsPage() {
                 autoFocus
               />
             </div>
-            
+
             {/* Media Previews */}
             {mediaFiles.length > 0 && (
               <div className={`grid ${mediaFiles.length === 1 
@@ -1591,7 +1591,7 @@ export default function DiscussionsPage() {
                 ))}
               </div>
             )}
-            
+
             <div className="flex flex-wrap gap-4">
               {/* Post Type Selector */}
               <div>
@@ -1640,7 +1640,7 @@ export default function DiscussionsPage() {
                   </SelectContent>
                 </Select>
               </div>
-              
+
               {/* Category Selector */}
               <div>
                 <label className="block text-sm font-medium mb-2">Category</label>
@@ -1665,7 +1665,7 @@ export default function DiscussionsPage() {
               </div>
             </div>
           </div>
-          
+
           <DialogFooter className="gap-2 sm:gap-0">
             <div className="flex items-center gap-2 mr-auto">
               <TooltipProvider>
@@ -1684,12 +1684,12 @@ export default function DiscussionsPage() {
                     </label>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Add images (up to 4)</p>
+                    <p>Add images(up to 4)</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
-            
+
             <Button 
               variant="outline" 
               onClick={() => {
@@ -1701,7 +1701,7 @@ export default function DiscussionsPage() {
             >
               Cancel
             </Button>
-            
+
             <Button
               onClick={handleCreatePost}
               disabled={isSubmittingPost || !newPostContent.trim()}
@@ -1717,7 +1717,7 @@ export default function DiscussionsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Create New Post Dialog */}
       <Dialog open={showNewPostDialog} onOpenChange={setShowNewPostDialog}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -1727,7 +1727,7 @@ export default function DiscussionsPage() {
               Share your thoughts, questions, or resources with the community
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid gap-4 py-4">
             {/* Post Type */}
             <div>
@@ -1771,7 +1771,7 @@ export default function DiscussionsPage() {
                 </Button>
               </div>
             </div>
-            
+
             {/* Category */}
             <div className="grid gap-2">
               <label className="text-sm font-medium">Category</label>
@@ -1794,7 +1794,7 @@ export default function DiscussionsPage() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             {/* Title */}
             <div className="grid gap-2">
               <label className="text-sm font-medium">Title</label>
@@ -1804,7 +1804,7 @@ export default function DiscussionsPage() {
                 placeholder="Add a descriptive title"
               />
             </div>
-            
+
             {/* Content */}
             <div className="grid gap-2">
               <label className="text-sm font-medium">Content</label>
@@ -1816,7 +1816,7 @@ export default function DiscussionsPage() {
               />
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowNewPostDialog(false)}>
               Cancel
@@ -1847,7 +1847,7 @@ export default function DiscussionsPage() {
               >
                 <X className="h-6 w-6" />
               </button>
-              
+
               {/* Media Navigation */}
               {selectedPost.attachments.filter(a => a.type === 'image').length > 1 && selectedImage > 0 && (
                 <button 
@@ -1857,7 +1857,7 @@ export default function DiscussionsPage() {
                   <ChevronLeft className="h-6 w-6" />
                 </button>
               )}
-              
+
               {selectedPost.attachments.filter(a => a.type === 'image').length > 1 && 
                selectedImage < selectedPost.attachments.filter(a => a.type === 'image').length - 1 && (
                 <button 
@@ -1867,14 +1867,14 @@ export default function DiscussionsPage() {
                   <ChevronRight className="h-6 w-6" />
                 </button>
               )}
-              
+
               {/* Current Image */}
               <img 
                 src={selectedPost.attachments.filter(a => a.type === 'image')[selectedImage]?.preview?.image || ''}
                 alt="Media attachment"
                 className="max-h-full max-w-full object-contain"
               />
-              
+
               {/* Image Info Bar */}
               <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 p-4 text-white">
                 <div className="flex items-center justify-between">
@@ -1887,7 +1887,7 @@ export default function DiscussionsPage() {
                       <div className="text-sm text-gray-300">{selectedPost.timestamp}</div>
                     </div>
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <button className="p-2 rounded-full hover:bg-gray-800">
                       <ThumbsUp className="h-5 w-5" />
