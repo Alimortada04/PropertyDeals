@@ -23,17 +23,17 @@ export const dictionaryTerms: DictionaryTerm[] = [
   {
     term: "Appraisal",
     definition: "A professional analysis used to estimate the value of the property. This includes examples of sales of similar properties.",
-    category: "Valuation"
+    category: "Property Valuation"
   },
   {
     term: "Appraiser",
-    definition: "A professional who conducts an analysis of the property, including examples of sales of similar properties in order to develop an estimate of the value of the property. The analysis is called an 'appraisal'.",
-    category: "Valuation"
+    definition: "A professional who conducts an analysis of the property, including examples of sales of similar properties in order to develop an estimate of the value of the property. The analysis is called an 'appraisal.'",
+    category: "Professional Services"
   },
   {
     term: "Appreciation",
     definition: "An increase in the market value of a home due to changing market conditions and/or home improvements.",
-    category: "Valuation"
+    category: "Property Valuation"
   },
   {
     term: "Arbitration",
@@ -43,22 +43,22 @@ export const dictionaryTerms: DictionaryTerm[] = [
   {
     term: "Asbestos",
     definition: "A toxic material that was once used in housing insulation and fireproofing. Because some forms of asbestos have been linked to certain lung diseases, it is no longer used in new homes. However, some older homes may still have asbestos in these materials.",
-    category: "Construction"
+    category: "Property Condition"
   },
   {
     term: "Assessed Value",
     definition: "Typically the value placed on property for the purpose of taxation.",
-    category: "Valuation"
+    category: "Property Valuation"
   },
   {
     term: "Assessor",
     definition: "A public official who establishes the value of a property for taxation purposes.",
-    category: "Government"
+    category: "Professional Services"
   },
   {
     term: "Asset",
     definition: "Anything of monetary value that is owned by a person or company. Assets include real property, personal property, stocks, mutual funds, etc.",
-    category: "Financial"
+    category: "Finance"
   },
   {
     term: "Assignment of Mortgage",
@@ -88,7 +88,7 @@ export const dictionaryTerms: DictionaryTerm[] = [
   {
     term: "Balance Sheet",
     definition: "A financial statement that shows assets, liabilities, and net worth as of a specific date.",
-    category: "Financial"
+    category: "Finance"
   },
   {
     term: "Balloon Mortgage",
@@ -103,12 +103,12 @@ export const dictionaryTerms: DictionaryTerm[] = [
   {
     term: "Bankruptcy",
     definition: "Legally declared unable to pay your debts. Bankruptcy can severely impact your credit and your ability to borrow money.",
-    category: "Legal"
+    category: "Finance"
   },
   {
     term: "Before-tax Income",
-    definition: "Income before taxes are deducted. Also known as 'gross income'.",
-    category: "Financial"
+    definition: "Income before taxes are deducted. Also known as 'gross income.'",
+    category: "Finance"
   },
   {
     term: "Biweekly Payment Mortgage",
@@ -122,18 +122,18 @@ export const dictionaryTerms: DictionaryTerm[] = [
   },
   {
     term: "Bridge Loan",
-    definition: "A short-term loan secured by the borrower's current home (which is usually for sale) that allows the proceeds to be used for building or closing on a new house before the current home is sold. Also known as a 'swing loan'.",
+    definition: "A short-term loan secured by the borrower's current home (which is usually for sale) that allows the proceeds to be used for building or closing on a new house before the current home is sold. Also known as a 'swing loan.'",
     category: "Financing"
   },
   {
     term: "Broker",
-    definition: "An individual or firm that acts as an agent between providers and users of products or services, such as a mortgage broker or real estate broker.",
-    category: "Professional"
+    definition: "An individual or firm that acts as an agent between providers and users of products or services, such as a mortgage broker or real estate broker. See also 'Mortgage Broker.'",
+    category: "Professional Services"
   },
   {
     term: "Building Code",
     definition: "Local regulations that set forth the standards and requirements for the construction, maintenance and occupancy of buildings. The codes are designed to provide for the safety, health and welfare of the public.",
-    category: "Government"
+    category: "Legal"
   },
   {
     term: "Buydown",
@@ -147,13 +147,13 @@ export const dictionaryTerms: DictionaryTerm[] = [
   },
   {
     term: "Cap",
-    definition: "For an adjustable-rate mortgage (ARM), a limitation on the amount the interest rate or mortgage payments may increase or decrease.",
+    definition: "For an adjustable-rate mortgage (ARM), a limitation on the amount the interest rate or mortgage payments may increase or decrease. See also 'Lifetime Payment Cap,' 'Lifetime Rate Cap,' 'Periodic Payment Cap,' and 'Periodic Rate Cap.'",
     category: "Financing"
   },
   {
     term: "Capacity",
     definition: "Your ability to make your mortgage payments on time. This depends on your income and income stability (job history and security), your assets and savings, and the amount of your income each month that is left over after you've paid for your housing costs, debts and other obligations.",
-    category: "Financial"
+    category: "Finance"
   },
   {
     term: "Cash-out Refinance",
@@ -163,12 +163,12 @@ export const dictionaryTerms: DictionaryTerm[] = [
   {
     term: "Certificate of Deposit",
     definition: "A document issued by a bank or other financial institution that is evidence of a deposit, with the issuer's promise to return the deposit plus earnings at a specified interest rate within a specified time period.",
-    category: "Financial"
+    category: "Finance"
   },
   {
     term: "Certificate of Eligibility",
     definition: "A document issued by the U.S. Department of Veterans Affairs (VA) certifying a veteran's eligibility for a VA-guaranteed mortgage loan.",
-    category: "Government"
+    category: "Financing"
   },
   {
     term: "Chain of Title",
@@ -187,13 +187,13 @@ export const dictionaryTerms: DictionaryTerm[] = [
   },
   {
     term: "Closing",
-    definition: "The process of completing a financial transaction. For mortgage loans, the process of signing mortgage documents, disbursing funds, and, if applicable, transferring ownership of the property. In some jurisdictions, closing is referred to as 'escrow', a process by which a buyer and seller deliver legal documents to a third party who completes the transaction in accordance with their instructions.",
+    definition: "The process of completing a financial transaction. For mortgage loans, the process of signing mortgage documents, disbursing funds, and, if applicable, transferring ownership of the property. In some jurisdictions, closing is referred to as 'escrow,' a process by which a buyer and seller deliver legal documents to a third party who completes the transaction in accordance with their instructions. See also 'Settlement.'",
     category: "Transaction"
   },
   {
     term: "Closing Agent",
     definition: "The person or entity that coordinates the various closing activities, including the preparation and recordation of closing documents and the disbursement of funds. (May be referred to as an escrow agent or settlement agent in some jurisdictions.) Typically, the closing is conducted by title companies, escrow companies or attorneys.",
-    category: "Professional"
+    category: "Professional Services"
   },
   {
     term: "Closing Costs",
@@ -207,7 +207,7 @@ export const dictionaryTerms: DictionaryTerm[] = [
   },
   {
     term: "Closing Statement",
-    definition: "See 'HUD-1 Settlement Statement'",
+    definition: "See 'HUD-1 Settlement Statement.'",
     category: "Transaction"
   },
   {
@@ -217,7 +217,12 @@ export const dictionaryTerms: DictionaryTerm[] = [
   },
   {
     term: "Collateral",
-    definition: "An asset that is pledged as security for a loan. The borrower risks losing the asset if the loan is not repaid according to the terms of the loan agreement.",
+    definition: "An asset that is pledged as security for a loan. The borrower risks losing the asset if the loan is not repaid according to the terms of the loan agreement. In the case of a mortgage, the collateral would be the house and real property.",
     category: "Financing"
+  },
+  {
+    term: "Condominium",
+    definition: "A unit in a multiunit building. The owner of a condominium unit owns the unit itself and has the right, along with other owners, to use the common areas but does not own the common elements such as the exterior walls, floors and ceilings or the structural systems outside of the unit; these are owned by the condominium association.",
+    category: "Property Types"
   }
 ];

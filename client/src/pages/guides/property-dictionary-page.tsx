@@ -1,147 +1,251 @@
-import { useState, useMemo } from "react";
-import { Link } from "wouter";
-import { dictionaryTerms } from "@/lib/dictionary-data";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select";
-import { ArrowLeft, Search, BookOpen } from "lucide-react";
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
+} from "@/components/ui/pagination";
+import { Search, BookOpen } from "lucide-react";
+import { dictionaryTerms, DictionaryTerm } from "@/lib/dictionary-data";
 
 export default function PropertyDictionaryPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-
-  // Extract unique categories
-  const categories = useMemo(() => {
-    const cats = new Set(dictionaryTerms.map(term => term.category || "Uncategorized"));
-    return ["all", ...Array.from(cats)].sort();
-  }, []);
-
-  // Filter terms based on search and category
-  const filteredTerms = useMemo(() => {
-    return dictionaryTerms.filter(term => {
-      // Search filter
-      const searchMatch = 
-        term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        term.definition.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      // Category filter
-      const categoryMatch = selectedCategory === "all" || term.category === selectedCategory;
-      
-      return searchMatch && categoryMatch;
-    });
-  }, [searchTerm, selectedCategory]);
-
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [letterFilter, setLetterFilter] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filteredTerms, setFilteredTerms] = useState<DictionaryTerm[]>([]);
+  
+  const itemsPerPage = 25;
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  
+  // Get unique categories from the dictionary terms
+  const categories = ["all", ...new Set(dictionaryTerms.map(term => term.category || "Uncategorized"))].sort();
+  
+  // Filter terms based on search, category, and letter filters
+  useEffect(() => {
+    let results = [...dictionaryTerms];
+    
+    // Apply search filter
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      results = results.filter(
+        item => 
+          item.term.toLowerCase().includes(term) ||
+          item.definition.toLowerCase().includes(term)
+      );
+    }
+    
+    // Apply category filter
+    if (categoryFilter !== "all") {
+      results = results.filter(item => item.category === categoryFilter);
+    }
+    
+    // Apply letter filter
+    if (letterFilter !== "all") {
+      results = results.filter(item => item.term.charAt(0).toUpperCase() === letterFilter);
+    }
+    
+    // Sort alphabetically
+    results = results.sort((a, b) => a.term.localeCompare(b.term));
+    
+    setFilteredTerms(results);
+    setCurrentPage(1); // Reset to first page when filters change
+  }, [searchTerm, categoryFilter, letterFilter]);
+  
+  // Calculate pagination values
+  const totalPages = Math.ceil(filteredTerms.length / itemsPerPage);
+  const currentTerms = filteredTerms.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+  
+  // Build pagination display
+  const getPaginationItems = () => {
+    const items = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      items.push(
+        <PaginationItem key={i}>
+          <PaginationLink 
+            isActive={currentPage === i}
+            onClick={() => setCurrentPage(i)}
+          >
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    
+    return items;
+  };
+  
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="mb-8">
-        <Link href="/guides" className="inline-flex items-center text-[#135341] hover:text-[#09261E]">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Guides
-        </Link>
-      </div>
-      
-      <div className="flex items-center justify-center mb-8">
-        <div className="p-3 rounded-full bg-[#09261E]/10 text-[#09261E] mr-4">
-          <BookOpen size={32} strokeWidth={1.5} />
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center mb-2">
+          <BookOpen className="mr-2 h-6 w-6 text-[#09261E]" />
+          <h1 className="text-3xl font-bold text-[#09261E]">
+            Real Estate Terminology Dictionary
+          </h1>
         </div>
-        <h1 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E]">
-          Property Dictionary
-        </h1>
-      </div>
-      
-      <div className="max-w-4xl mx-auto mb-10">
-        <p className="text-lg text-gray-600 text-center">
-          A comprehensive glossary of real estate terms and definitions to help you navigate the complex terminology of property transactions and investments.
+        <p className="text-gray-600 mb-8">
+          Browse our comprehensive collection of real estate terms and definitions to help you navigate the property market with confidence.
         </p>
-      </div>
-      
-      <Card className="mb-10">
-        <CardHeader>
-          <CardTitle>Search Real Estate Terms</CardTitle>
-          <CardDescription>
-            Enter any keyword to find related terms or filter by category
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-grow">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                type="text"
-                placeholder="Search terms or definitions..."
-                className="pl-9"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <Select
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-            >
-              <SelectTrigger className="w-full md:w-[200px]">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category === "all" ? "All Categories" : category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
+        {/* Search and Filter Controls */}
+        <div className="mb-8 space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Search terms and definitions..."
+              className="pl-10 py-2"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-        </CardContent>
-      </Card>
-      
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/4">Term</TableHead>
-              <TableHead className="w-1/6">Category</TableHead>
-              <TableHead>Definition</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredTerms.length > 0 ? (
-              filteredTerms.map((term, index) => (
-                <TableRow key={index}>
-                  <TableCell className="font-medium">{term.term}</TableCell>
-                  <TableCell>
-                    <span className="px-2 py-1 rounded-full text-xs bg-[#09261E]/10 text-[#09261E]">
-                      {term.category || "Uncategorized"}
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            {/* Category Filter */}
+            <div className="sm:w-1/2">
+              <label htmlFor="category-filter" className="block text-sm font-medium text-gray-700 mb-1">
+                Filter by Category
+              </label>
+              <select
+                id="category-filter"
+                className="w-full px-3 py-2 border rounded-md"
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+              >
+                <option value="all">All Categories</option>
+                {categories.filter(c => c !== "all").map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Letter Filter Dropdown (Mobile) */}
+            <div className="sm:hidden w-full">
+              <label htmlFor="letter-filter-mobile" className="block text-sm font-medium text-gray-700 mb-1">
+                Filter by Letter
+              </label>
+              <select
+                id="letter-filter-mobile"
+                className="w-full px-3 py-2 border rounded-md"
+                value={letterFilter}
+                onChange={(e) => setLetterFilter(e.target.value)}
+              >
+                <option value="all">All Letters</option>
+                {alphabet.map((letter) => (
+                  <option key={letter} value={letter}>
+                    {letter}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          
+          {/* Letter Filter Pills (Desktop) */}
+          <div className="hidden sm:flex flex-wrap gap-1 mt-2">
+            <Button
+              variant={letterFilter === "all" ? "default" : "outline"}
+              size="sm"
+              className={letterFilter === "all" ? "bg-[#09261E]" : ""}
+              onClick={() => setLetterFilter("all")}
+            >
+              All
+            </Button>
+            {alphabet.map((letter) => (
+              <Button
+                key={letter}
+                variant={letterFilter === letter ? "default" : "outline"}
+                size="sm"
+                className={letterFilter === letter ? "bg-[#09261E]" : ""}
+                onClick={() => setLetterFilter(letter)}
+              >
+                {letter}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Results Stats */}
+        <div className="text-sm text-gray-500 mb-4">
+          Showing {currentTerms.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}-
+          {Math.min(currentPage * itemsPerPage, filteredTerms.length)} of {filteredTerms.length} terms
+        </div>
+
+        {/* Dictionary Terms */}
+        {currentTerms.length > 0 ? (
+          <div className="space-y-8 mb-8">
+            {currentTerms.map((term, index) => (
+              <div key={index} className="pb-6 border-b border-gray-200 last:border-0">
+                <h2 className="text-xl font-bold text-[#09261E] mb-1">{term.term}</h2>
+                {term.category && (
+                  <div className="mb-2">
+                    <span className="inline-block bg-[#EAF2EF] text-[#09261E] px-2 py-0.5 rounded text-xs font-medium">
+                      {term.category}
                     </span>
-                  </TableCell>
-                  <TableCell>{term.definition}</TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={3} className="h-24 text-center">
-                  No terms found matching your search.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      
-      <div className="mt-6 text-center text-sm text-gray-500">
-        <p>Source: The Real Estate Marketplace Glossary, Federal Trade Commission</p>
+                  </div>
+                )}
+                <p className="text-gray-700">{term.definition}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-medium mb-2">No terms found</h3>
+            <p className="text-gray-600 mb-4">
+              Try adjusting your search criteria or filters.
+            </p>
+            <Button 
+              onClick={() => {
+                setSearchTerm("");
+                setCategoryFilter("all");
+                setLetterFilter("all");
+              }}
+            >
+              Reset Filters
+            </Button>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <Pagination className="mt-8">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+              
+              {getPaginationItems()}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
       </div>
     </div>
   );

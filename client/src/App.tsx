@@ -16,6 +16,9 @@ import ToolsPage from "@/pages/tools-page";
 import FlipCalculatorPage from "@/pages/tools/flip-calculator-page";
 import GuidesPage from "@/pages/guides-page";
 import PropertyDictionaryPage from "@/pages/guides/property-dictionary-page";
+import FAQPage from "@/pages/help/faq-page";
+import SuggestionsPage from "@/pages/help/suggestions-page";
+import ReportPage from "@/pages/help/report-page";
 import MainLayout from "@/components/layout/main-layout";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -130,6 +133,21 @@ function Router() {
       <Route path="/contact">
         <MainLayout>
           <ContactPage />
+        </MainLayout>
+      </Route>
+      <Route path="/help/faq">
+        <MainLayout>
+          <FAQPage />
+        </MainLayout>
+      </Route>
+      <Route path="/help/suggestions">
+        <MainLayout>
+          <SuggestionsPage />
+        </MainLayout>
+      </Route>
+      <Route path="/help/report">
+        <MainLayout>
+          <ReportPage />
         </MainLayout>
       </Route>
       {/* Fallback to 404 */}
