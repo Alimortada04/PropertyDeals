@@ -255,7 +255,75 @@ export default function PropertiesPage() {
       <StickySearchFilter
         onSearch={setSearchTerm}
         searchPlaceholder="Search by address, city, or zip code..."
-        filterContent={filterContent}
+        filterContent={
+          <div className="space-y-6">
+            <div>
+              <h4 className="font-medium mb-2 text-sm text-gray-700">LOCATION</h4>
+              <Input placeholder="City, State, or Zip" />
+            </div>
+            
+            <div>
+              <h4 className="font-medium mb-2 text-sm text-gray-700">PRICE RANGE</h4>
+              <div className="space-y-4">
+                <Slider defaultValue={[0, 1000000]} max={10000000} step={50000} />
+                <div className="flex gap-4">
+                  <Input placeholder="Min" type="number" />
+                  <Input placeholder="Max" type="number" />
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-medium mb-2 text-sm text-gray-700">FILTERS</h4>
+              <div className="grid grid-cols-2 gap-4">
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Investment Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="flip">Flip</SelectItem>
+                    <SelectItem value="rental">Rental</SelectItem>
+                    <SelectItem value="development">Development</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Property Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="single">Single Family</SelectItem>
+                    <SelectItem value="multi">Multi Family</SelectItem>
+                    <SelectItem value="condo">Condo</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Beds" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1+</SelectItem>
+                    <SelectItem value="2">2+</SelectItem>
+                    <SelectItem value="3">3+</SelectItem>
+                    <SelectItem value="4">4+</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Baths" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1+</SelectItem>
+                    <SelectItem value="2">2+</SelectItem>
+                    <SelectItem value="3">3+</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+        }
         filterButtonText="Filters"
       />
       

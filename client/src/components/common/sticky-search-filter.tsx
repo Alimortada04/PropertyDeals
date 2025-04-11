@@ -60,7 +60,7 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-40 pt-5 pb-0",
+        "bg-white transition-all duration-200 z-40 pt-5 pb-0 w-screen -ml-[calc((100vw-100%)/2)] px-[calc((100vw-100%)/2)]",
         isSticky ? "sticky top-0 left-0 right-0 shadow-md" : ""
       )}
     >
