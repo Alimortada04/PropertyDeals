@@ -1,0 +1,181 @@
+✅ 1. Seamless Post Creation Experience
+Redesign the post flow to replace the current "Create Post" button with a persistent, always-visible post composer at the top of the feed:
+
+Place the post input box directly at the top, styled like:
+
+Twitter’s “What’s happening?”
+
+LinkedIn’s “Start a post…”
+
+Input box should include:
+
+User avatar
+
+Placeholder: “Start a discussion…”
+
+Expands to full composer on click
+
+Expanded Composer Should Include:
+Title field (optional)
+
+Main content (rich text or markdown)
+
+Media upload:
+
+Support up to 4 images or 1 video
+
+Preview thumbnails before posting
+
+Drag & drop or click-to-upload
+
+Tag type selector (Discussion, Question, Resource, Deal Alert)
+
+Dropdown to choose category (from sidebar)
+
+Optional location tag
+
+Action buttons:
+
+“Post” (Primary CTA)
+
+“Cancel”
+
+Character counter (optional)
+
+Loading spinner on submit
+
+UX Behavior:
+After submitting:
+
+Post is inserted live at the top of feed
+
+Input is cleared
+
+If user is not logged in:
+
+Clicking input opens login modal
+
+🧵 2. Feed Design & Structure (Reddit/X-Inspired)
+Clean card layout with clear titles, body preview, tags, and media.
+
+Metadata below each post:
+
+Author avatar + name
+
+Post type tag (Discussion, Deal Alert, etc.)
+
+Time posted
+
+Reactions: 👍 ❤️ 🔥
+
+Replies count
+
+Share & Bookmark buttons
+
+Comments & Replies:
+Replies appear in expandable thread format (nested if needed)
+
+Allow:
+
+Rich text
+
+Inline image/video replies
+
+Sorting by: Newest, Most Liked, Most Helpful
+
+📸 3. Image/Video Handling
+In Feed:
+Media should render inline (like X or LinkedIn)
+
+Videos autoplay (muted) and pause on click
+
+Captions should be styled clearly under media
+
+Image Modal:
+When an image is clicked:
+
+Open full-screen modal with carousel support:
+
+Swipe between media posts in the feed (not just single post gallery)
+
+Show:
+
+Poster’s name/avatar
+
+Timestamp
+
+Caption
+
+Tags
+
+Navigation:
+
+Arrows for desktop
+
+Swipe for mobile
+
+“X” to close modal
+
+Retain scroll position on close
+
+Optional: pinch-to-zoom (mobile)
+
+📱 4. Mobile Optimizations
+Add a floating “Start a Discussion” button on mobile (bottom right)
+
+Composer should adapt cleanly to mobile dimensions
+
+🔎 5. Search & Filters
+Maintain current left sidebar category filters
+
+Add search bar at the top of /discussions feed
+
+Add filter dropdown on right side of search:
+
+Sort by:
+
+Most Recent
+
+Most Active
+
+Most Liked
+
+Filter by:
+
+Tags
+
+Categories
+
+Location
+
+🧠 6. Community Layer
+Allow following posts or following authors
+
+Add a sidebar widget for:
+
+Suggested Topics
+
+Trending Tags
+
+Recommended Contributors
+
+✅ Summary
+The new /discussions experience should feel like a hybrid of:
+
+Twitter (inline media, seamless posting)
+
+Reddit (discussion threads, categories)
+
+Discord (group feel and fast interactions)
+
+LinkedIn (professional formatting)
+
+The goal is to foster real estate collaboration and visibility in an approachable, dynamic way — enabling users to:
+
+Share deals
+
+Ask strategic questions
+
+Offer resources
+
+Connect with other REPs
