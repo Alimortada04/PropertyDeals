@@ -554,19 +554,74 @@ export default function ConnectPage() {
               </div>
               <div className="border-t p-3">
                 <div className="flex items-center gap-2">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-9 w-9 flex-shrink-0 rounded-full p-0 border-gray-300 hover:bg-[#EAF2EF]"
+                      >
+                        <Paperclip className="h-4 w-4 text-gray-500" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent side="top" className="w-48 p-2">
+                      <div className="flex flex-col gap-1">
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                        >
+                          <Image className="h-4 w-4 mr-2" /> Upload Image
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                          onClick={() => {
+                            setNewMessage(prev => prev + " https://");
+                          }}
+                        >
+                          <Link className="h-4 w-4 mr-2" /> Add Link
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                          onClick={() => {
+                            setNewMessage(prev => prev + " https://propertydeals.com/properties/123");
+                          }}
+                        >
+                          <Share2 className="h-4 w-4 mr-2" /> Share Listing
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                   <Input
                     placeholder="Type a message..."
                     className="flex-1"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
+                    }}
                   />
-                  <Button
-                    className="bg-[#09261E] hover:bg-[#135341]"
-                    size="sm"
-                    onClick={handleSendMessage}
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          className="h-9 w-9 rounded-full p-0 bg-[#09261E] hover:bg-[#135341] flex-shrink-0"
+                          onClick={handleSendMessage}
+                          disabled={!newMessage.trim()}
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Send message (Enter)</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
             </>
@@ -766,19 +821,77 @@ export default function ConnectPage() {
                 <Avatar className="h-8 w-8">
                   <AvatarFallback>ME</AvatarFallback>
                 </Avatar>
+                
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-9 w-9 flex-shrink-0 rounded-full p-0 border-gray-300 hover:bg-[#EAF2EF]"
+                    >
+                      <Paperclip className="h-4 w-4 text-gray-500" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent side="top" className="w-48 p-2">
+                    <div className="flex flex-col gap-1">
+                      <Button 
+                        variant="ghost" 
+                        className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                      >
+                        <Image className="h-4 w-4 mr-2" /> Upload Image
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                        onClick={() => {
+                          setNewMessage(prev => prev + " https://");
+                        }}
+                      >
+                        <Link className="h-4 w-4 mr-2" /> Add Link
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                        onClick={() => {
+                          setNewMessage(prev => prev + " https://propertydeals.com/properties/123");
+                        }}
+                      >
+                        <Share2 className="h-4 w-4 mr-2" /> Share Listing
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                
                 <Input
                   placeholder="Write a post..."
                   className="flex-1"
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
                 />
-                <Button
-                  size="sm"
-                  className="bg-[#09261E] hover:bg-[#135341]"
-                  onClick={handleSendMessage}
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        size="icon"
+                        className="h-9 w-9 rounded-full p-0 bg-[#09261E] hover:bg-[#135341] flex-shrink-0"
+                        onClick={handleSendMessage}
+                        disabled={!newMessage.trim()}
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Send message (Enter)</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </CardFooter>
           </Card>
