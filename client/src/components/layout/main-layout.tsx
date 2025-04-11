@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 import Footer from "./footer";
+import Breadcrumbs from "../common/breadcrumbs";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -49,6 +50,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {/* Main content - NO left padding for sidebar to ensure overlay */}
         <main className="flex-1 w-full transition-all duration-200">
           <div className="min-h-screen pt-4 pb-16">
+            {/* Skip breadcrumbs on homepage */}
+            {location !== "/" && (
+              <div className="container mx-auto px-[10%] mb-2">
+                <Breadcrumbs />
+              </div>
+            )}
             {children}
           </div>
         </main>

@@ -64,7 +64,7 @@ export default function StickySearchFilter({
         isSticky ? "sticky top-0 left-0 right-0 shadow-md" : ""
       )}
     >
-      <div className="w-full max-w-none px-6 pt-2 pb-0 transition-all duration-300">
+      <div className="w-full max-w-none px-[10%] pt-2 pb-0 transition-all duration-300">
         {/* Search and Filter Row - always visible */}
         <div className="flex flex-col gap-4 transition-all duration-300 opacity-100">
           <div className="flex flex-col md:flex-row gap-4 items-center">

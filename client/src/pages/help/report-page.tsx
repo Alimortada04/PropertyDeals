@@ -120,12 +120,12 @@ export default function ReportPage() {
           Let us know about any technical issues or bugs you've encountered while using PropertyDeals.
         </p>
 
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
+        <div className="bg-[#FEF3F3] border border-[#E59F9F] rounded-lg p-4 mb-8">
           <div className="flex items-start gap-3">
-            <Info className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+            <Info className="h-5 w-5 text-[#E59F9F] mt-0.5 flex-shrink-0" />
             <div>
-              <h3 className="font-medium text-amber-800 mb-1">Before submitting a report</h3>
-              <p className="text-amber-700 text-sm">
+              <h3 className="font-medium text-[#9E3434] mb-1">Before submitting a report</h3>
+              <p className="text-[#9E3434] text-sm">
                 Please check our <a href="/help/faq" className="underline">FAQ page</a> to see if your issue has already been addressed. 
                 This helps us respond to new issues more quickly.
               </p>

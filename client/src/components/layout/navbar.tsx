@@ -56,12 +56,12 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
         !isMobile && !visible && !isStaticNavbarPage ? '-translate-y-full' : 'translate-y-0'
       }`}
     >
-      <div className="flex justify-between items-center px-4 py-3">
+      <div className="flex justify-between items-center pr-4">
         {/* Left section - Menu button */}
         <div>
           <button 
             onClick={toggleSidebar}
-            className="text-gray-700 p-2 hover:bg-gray-100 rounded-full"
+            className="text-gray-700 p-2 hover:bg-gray-100 rounded-full ml-4"
             aria-label="Toggle menu"
           >
             <Menu className="h-5 w-5" />
@@ -79,8 +79,8 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
           )}
         </div>
           
-        {/* Right section - Search & Auth Buttons */}
-        <div className="flex items-center gap-3">
+        {/* Right section - Banner style container */}
+        <div className="bg-white shadow-sm py-3 px-5 rounded-bl-lg flex items-center gap-4 self-start">
           {/* Search bar - right aligned beside auth buttons */}
           <div className="hidden md:block">
             <div className="relative w-64">
