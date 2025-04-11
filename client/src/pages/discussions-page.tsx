@@ -119,7 +119,7 @@ function StickyPostComposer({
 }) {
   return (
     <div className={`sticky bottom-0 z-30 mb-0 ${className || ''}`}>
-      <div className="bg-white shadow-lg border border-[#09261E]/10 rounded-t-md rounded-b-none">
+      <div className="bg-white shadow-lg border border-[#09261E]/10 rounded-b-none">
         <div className="p-4">
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 flex-shrink-0">
