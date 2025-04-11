@@ -723,8 +723,8 @@ export default function DiscussionsPage() {
         
         {/* Main Feed */}
         <div className={`col-span-1 ${showSidebar ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
-          {/* Sticky Post Composer - Twitter/LinkedIn Style */}
-          <Card className="mb-4 overflow-hidden sticky top-[76px] z-10 shadow-md">
+          {/* Feed filters and content */}
+          <Card className="mb-6">
             <CardContent className="p-4">
               <div className="flex items-start gap-4">
                 <Avatar className="h-10 w-10 mt-1">
