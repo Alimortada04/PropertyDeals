@@ -1,0 +1,115 @@
+🧭 Sidebar Navigation (Left Menu)
+Keep the selected menu item’s background as the primary dark green (#09261E).
+
+On hover, use the light timberwolf color (#D8D8D8) instead of green.
+
+The side menu should not push the page content when it opens. It must overlay on top of content like Kaggle’s sidebar (page layout should stay static).
+
+In mobile view, the hamburger menu is not currently opening the sidebar. It should:
+
+Trigger the same sidebar as desktop
+
+Overlay it on top of the page
+
+Fully collapse (disappear) when clicking outside the sidebar
+
+When the sidebar is expanded, it should:
+
+Show the full "PropertyDeals" text next to the logo
+
+Use the same logo image as when collapsed (we're no longer switching images)
+
+🧱 Top Navbar
+Keep top navbar very minimal and clean
+
+Right-align the contents (search bar, Log In, Sign Up)
+
+The search bar should be positioned flush-right, next to the auth buttons
+
+🗂 Properties & REPS Pages — Sticky Search + Filters
+✅ General Sticky Behavior
+The entire search + filter section should be sticky at the top of the page.
+
+Eliminate any vertical gap between this sticky section and the top of the viewport.
+
+🔄 Scroll Behavior
+When scrolling down the page:
+
+The search bar should hide
+
+The quick filters should remain sticky
+
+The filters container should expand to full width (stretching edge-to-edge across the page)
+
+When scrolling back up:
+
+The search bar reappears
+
+The container returns to its original centered width
+
+📱 On Mobile
+Use a design like Kaggle’s mobile layout:
+
+Sticky filter bar should be small, clean, and easy to tap
+
+Filter dropdown should be mobile-friendly and open in a full-width modal
+
+🎛 Filters (for Properties & REPS Pages)
+Filter Container
+Use dropdown-style filters similar to Movoto
+
+Dropdowns:
+
+Tier (General, Exclusive)
+
+Investment Type (Flip, Buy & Hold)
+
+Property Type (Single Family, Multi Family, Condo, Townhouse, Land)
+
+Price Range (Slider from $0 to $10M+, with manual input boxes)
+
+Quick Filters (Under Search Bar)
+Quick filters should be shaped like rounded rectangles, not ovals
+
+Selected filters:
+
+Highlighted or outlined in primary green
+
+Hover state:
+
+Background or outline changes to light gray
+
+Hovering over selected filter:
+
+Shows an × (close icon) on the right
+
+Clicking removes the filter
+
+Filters Button
+When hovering over the Filters button:
+
+It should automatically open the filters modal/dropdown
+
+Background on hover should be light green (#135341), not salmon
+
+🗺️ Properties Page: Grid vs Map View
+Remove the current list view
+
+Support only:
+
+Grid view
+
+Map view (like Redfin Milwaukee Map View)
+
+Map View
+Split-screen layout:
+
+Left half: Property cards
+
+Right half: Map with property pins
+
+When hovering over a map pin:
+
+It should highlight the corresponding card
+
+Display a floating preview card with basic info and a button to open that property’s page

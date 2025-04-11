@@ -305,31 +305,23 @@ export default function PropertiesPage() {
         </div>
         
         <div className="flex items-center gap-4">
-          {/* View Toggle */}
-          <div className="bg-white border border-gray-200 rounded-md flex">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`rounded-l-md rounded-r-none px-3 ${viewMode === 'grid' ? 'bg-gray-100' : ''}`}
+          {/* View Toggle - Redfin Style */}
+          <div className="border rounded-md overflow-hidden">
+            <Button 
+              variant="ghost" 
+              className={`px-4 py-2 ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
               onClick={() => setViewMode('grid')}
             >
-              <LayoutGrid className="h-4 w-4" />
+              <LayoutGrid className="h-4 w-4 mr-2" />
+              Grid
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`rounded-none px-3 ${viewMode === 'list' ? 'bg-gray-100' : ''}`}
-              onClick={() => setViewMode('list')}
-            >
-              <List className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`rounded-r-md rounded-l-none px-3 ${viewMode === 'map' ? 'bg-gray-100' : ''}`}
+            <Button 
+              variant="ghost" 
+              className={`px-4 py-2 ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
               onClick={() => setViewMode('map')}
             >
-              <MapPin className="h-4 w-4" />
+              <MapPin className="h-4 w-4 mr-2" />
+              Map
             </Button>
           </div>
           
@@ -349,7 +341,7 @@ export default function PropertiesPage() {
         </div>
       </div>
 
-      {/* Property Grid */}
+      {/* Property Display - Grid or Map View */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -377,11 +369,35 @@ export default function PropertiesPage() {
         <div className="text-center py-10">
           <p className="text-gray-600">No properties match your search criteria</p>
         </div>
-      ) : (
+      ) : viewMode === 'grid' ? (
+        // Grid View
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {currentProperties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
+        </div>
+      ) : (
+        // Map View - Redfin Style Split Screen
+        <div className="flex flex-col md:flex-row h-[calc(100vh-250px)] min-h-[600px] border rounded-md overflow-hidden">
+          {/* Left side - scrollable property listings */}
+          <div className="w-full md:w-1/2 overflow-y-auto border-r">
+            <div className="divide-y">
+              {currentProperties.map((property) => (
+                <div key={property.id} className="p-4 hover:bg-gray-50">
+                  <PropertyCard property={property} />
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Right side - map */}
+          <div className="w-full md:w-1/2 bg-gray-100 flex items-center justify-center">
+            <div className="text-center p-8">
+              <MapPin className="h-12 w-12 mx-auto mb-4 text-[#09261E]" />
+              <h3 className="text-lg font-medium mb-2">Interactive Map View</h3>
+              <p className="text-gray-600">Map integration will display property locations here</p>
+            </div>
+          </div>
         </div>
       )}
 

@@ -67,7 +67,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       group flex items-center px-3 py-2 mx-0 whitespace-nowrap transition-colors duration-0
       ${isActive 
         ? 'bg-[#09261E] text-white' 
-        : 'text-gray-700 hover:bg-gray-100'}
+        : 'text-gray-700 hover:bg-[#D8D8D8]'}
     `;
   };
 
@@ -105,20 +105,15 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           {/* Logo */}
           <div className="h-14 flex items-center justify-center border-b">
             <Link href="/" className={`flex items-center ${isExpanded ? 'ml-4 justify-start w-full' : 'mx-auto'}`}>
-              {isExpanded ? (
-                <>
-                  <img 
-                    src="/images/pdLogoalt.png" 
-                    alt="PropertyDeals Logo" 
-                    className="h-8 w-auto"
-                  />
-                </>
-              ) : (
-                <img 
-                  src="/images/pdLogo.png" 
-                  alt="PropertyDeals Icon" 
-                  className="h-8 w-auto"
-                />
+              <img 
+                src="/images/pdLogo.png" 
+                alt="PropertyDeals Logo" 
+                className="h-8 w-auto"
+              />
+              {isExpanded && (
+                <span className="ml-2 font-heading font-bold text-[#09261E] text-lg">
+                  PropertyDeals
+                </span>
               )}
             </Link>
           </div>
