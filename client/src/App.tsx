@@ -12,6 +12,7 @@ import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
 import RepsPage from "@/pages/reps-page";
 import RepDetailPage from "@/pages/rep-detail-page";
+import ConnectPage from "@/pages/connect-page";
 import ToolsPage from "@/pages/tools-page";
 import FlipCalculatorPage from "@/pages/tools/flip-calculator-page";
 import GuidesPage from "@/pages/guides-page";
@@ -20,6 +21,9 @@ import HelpPage from "@/pages/help-page";
 import FAQPage from "@/pages/help/faq-page";
 import SuggestionsPage from "@/pages/help/suggestions-page";
 import ReportPage from "@/pages/help/report-page";
+import TermsPage from "@/pages/legal/terms-page";
+import CookiesPage from "@/pages/legal/cookies-page";
+import FHACompliancePage from "@/pages/legal/fha-compliance-page";
 import MainLayout from "@/components/layout/main-layout";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -58,12 +62,7 @@ function Router() {
       </Route>
       <Route path="/connect">
         <MainLayout>
-          <div className="container mx-auto px-4 py-12">
-            <h1 className="text-4xl font-heading font-bold text-[#09261E] mb-6">Connect</h1>
-            <p className="text-lg text-gray-600">
-              This page will contain messaging and communication features in the future.
-            </p>
-          </div>
+          <ConnectPage />
         </MainLayout>
       </Route>
       <Route path="/dashboard">
@@ -154,6 +153,21 @@ function Router() {
       <Route path="/help/report">
         <MainLayout>
           <ReportPage />
+        </MainLayout>
+      </Route>
+      <Route path="/legal/terms">
+        <MainLayout>
+          <TermsPage />
+        </MainLayout>
+      </Route>
+      <Route path="/legal/cookies">
+        <MainLayout>
+          <CookiesPage />
+        </MainLayout>
+      </Route>
+      <Route path="/legal/fha-compliance">
+        <MainLayout>
+          <FHACompliancePage />
         </MainLayout>
       </Route>
       {/* Fallback to 404 */}

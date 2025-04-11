@@ -19,6 +19,10 @@ export interface FilterOptions {
   status: string;
   propertyType?: string;
   investmentType?: string;
+  tier?: string;
+  squareFootage?: string;
+  seller?: string;
+  location?: string;
 }
 
 export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
@@ -28,10 +32,14 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
     baths: "any",
     status: "any",
     propertyType: "",
-    investmentType: ""
+    investmentType: "",
+    tier: "",
+    squareFootage: "",
+    seller: "",
+    location: ""
   });
 
-  const [priceRange, setPriceRange] = useState([0, 1000000]);
+  const [priceRange, setPriceRange] = useState([0, 10000000]);
 
   const handleFilterChange = (key: keyof FilterOptions, value: string) => {
     const newFilters = { ...filters, [key]: value };
@@ -64,8 +72,8 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
               <Slider
                 value={priceRange}
                 min={0}
-                max={3000000}
-                step={50000}
+                max={10000000}
+                step={100000}
                 onValueChange={(values) => {
                   setPriceRange(values);
                   handleFilterChange('priceRange', `${values[0]}-${values[1]}`);
@@ -206,6 +214,51 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
                   </label>
                 </div>
               ))}
+            </div>
+          </div>
+          
+          <Separator />
+          
+          {/* Tier */}
+          <div>
+            <h3 className="text-sm font-semibold mb-3">TIER</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { id: 'general', label: 'General' },
+                { id: 'exclusive', label: 'Exclusive' }
+              ].map((type) => (
+                <div key={type.id} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`tier-${type.id}`} 
+                    checked={filters.tier === type.id}
+                    onCheckedChange={() => 
+                      handleFilterChange('tier', filters.tier === type.id ? '' : type.id)
+                    }
+                  />
+                  <label
+                    htmlFor={`tier-${type.id}`}
+                    className="text-sm leading-none cursor-pointer"
+                  >
+                    {type.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <Separator />
+          
+          {/* Location */}
+          <div>
+            <h3 className="text-sm font-semibold mb-3">LOCATION</h3>
+            <div className="space-y-2">
+              <Input
+                type="text"
+                placeholder="City, State, or ZIP"
+                className="h-9"
+                value={filters.location || ''}
+                onChange={(e) => handleFilterChange('location', e.target.value)}
+              />
             </div>
           </div>
           

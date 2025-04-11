@@ -69,11 +69,12 @@ export default function Footer() {
           <div>
             <h3 className="font-heading font-bold text-lg mb-4">Help & Support</h3>
             <ul className="space-y-2">
-              <li><Link href="#" className="text-white/80 hover:text-white transition duration-300">FAQ</Link></li>
-              <li><Link href="#" className="text-white/80 hover:text-white transition duration-300">Terms of Service</Link></li>
-              <li><Link href="#" className="text-white/80 hover:text-white transition duration-300">Privacy Policy</Link></li>
-              <li><Link href="#" className="text-white/80 hover:text-white transition duration-300">Seller Guidelines</Link></li>
-              <li><Link href="#" className="text-white/80 hover:text-white transition duration-300">Buyer Resources</Link></li>
+              <li><Link href="/help/faq" className="text-white/80 hover:text-white transition duration-300">FAQ</Link></li>
+              <li><Link href="/legal/terms" className="text-white/80 hover:text-white transition duration-300">Terms of Service</Link></li>
+              <li><Link href="/legal/cookies" className="text-white/80 hover:text-white transition duration-300">Cookies Policy</Link></li>
+              <li><Link href="/legal/fha-compliance" className="text-white/80 hover:text-white transition duration-300">FHA Compliance</Link></li>
+              <li><Link href="/help/suggestions" className="text-white/80 hover:text-white transition duration-300">Suggestions</Link></li>
+              <li><Link href="/help/report" className="text-white/80 hover:text-white transition duration-300">Report an Issue</Link></li>
             </ul>
           </div>
 
