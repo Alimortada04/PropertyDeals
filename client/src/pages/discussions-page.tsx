@@ -1026,7 +1026,8 @@ export default function DiscussionsPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="divide-y">
+                <div className="divide-y relative pb-20">
+                  {/* Posts List */}
                   {filteredPosts.map((post) => (
                     <div key={post.id} className="p-5 hover:bg-gray-50 transition-colors">
                       <div className="flex">
@@ -1243,6 +1244,14 @@ export default function DiscussionsPage() {
                       </div>
                     </div>
                   ))}
+                  
+                  {/* Sticky Post Composer directly inside the feed */}
+                  {!isComposerExpanded && !selectedPostId && (
+                    <StickyPostComposer 
+                      onClick={() => setIsComposerExpanded(true)} 
+                      className="mt-4"
+                    />
+                  )}
                 </div>
               )}
             </CardContent>
