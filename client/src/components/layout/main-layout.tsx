@@ -46,8 +46,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           setIsExpanded={setIsExpanded}
         />
         
-        {/* Main content - proper spacing for both collapsed/expanded sidebar */}
-        <main className={`flex-1 w-full transition-all duration-200 ${isExpanded ? 'lg:pl-64' : 'lg:pl-16'}`}>
+        {/* Main content - NO left padding for sidebar to ensure overlay */}
+        <main className="flex-1 w-full transition-all duration-200">
           <div className="min-h-screen pt-4 pb-16">
             {children}
           </div>

@@ -43,22 +43,14 @@ export default function StickySearchFilter({
     onSearch(value);
   };
   
-  // Make the search/filter bar sticky on scroll and hide search on scroll down
+  // Make the search/filter bar sticky on scroll but always visible
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    
     const handleScroll = () => {
       const offset = isMobile ? 60 : 80; // Allow for the top navbar
       setIsSticky(window.scrollY > offset);
       
-      // Only hide search when scrolling down beyond the threshold
-      if (window.scrollY > offset + 50) {
-        setHideSearch(window.scrollY > lastScrollY);
-      } else {
-        setHideSearch(false);
-      }
-      
-      lastScrollY = window.scrollY;
+      // Never hide search when scrolling
+      setHideSearch(false);
     };
     
     window.addEventListener("scroll", handleScroll);
@@ -68,16 +60,16 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-30 py-4",
+        "bg-white transition-all duration-200 z-40 py-4",
         isSticky ? "sticky top-0 left-0 right-0 shadow-md" : ""
       )}
     >
-      <div className="container mx-auto px-4 py-4">
-        {/* Search and Filter Row - hides on scroll down */}
-        <div className={cn(
-          "flex flex-col md:flex-row gap-4 items-center mb-4 transition-all duration-300",
-          hideSearch && isSticky ? "max-h-0 opacity-0 overflow-hidden mb-0" : "max-h-20 opacity-100"
-        )}>
+      <div className={cn(
+        "px-4 py-4 transition-all duration-300",
+        isSticky ? "w-full" : "container mx-auto"
+      )}>
+        {/* Search and Filter Row - always visible */}
+        <div className="flex flex-col md:flex-row gap-4 items-center mb-4 transition-all duration-300 max-h-20 opacity-100">
           {/* Search Bar */}
           <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
