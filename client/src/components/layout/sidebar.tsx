@@ -64,10 +64,10 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      group flex items-center p-2 whitespace-nowrap transition-colors duration-0
+      group flex items-center px-3 py-2 mx-0 whitespace-nowrap transition-colors duration-0
       ${isActive 
         ? 'bg-[#09261E] text-white' 
-        : 'text-gray-700 hover:bg-[#09261E] hover:text-white'}
+        : 'text-gray-700 hover:bg-gray-100'}
     `;
   };
 
@@ -76,11 +76,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       {/* Expansion indicator that peeks from the edge */}
       {!isExpanded && showExpandIndicator && (
         <div 
-          className="fixed top-1/3 left-0 z-30 cursor-pointer"
+          className="fixed top-1/3 left-0 z-30 cursor-pointer h-10"
           onClick={() => setIsExpanded(true)}
         >
-          <div className="bg-white/95 hover:bg-gray-100 shadow-md rounded-r-sm h-12 w-5 flex items-center justify-center border-r border-t border-b border-gray-200">
-            <ChevronRight size={14} className="text-[#09261E]" />
+          <div className="flex items-center bg-white shadow-md h-full">
+            <div className="w-2 h-full border-r border-gray-200"></div>
+            <div className="w-4 h-full flex items-center justify-center">
+              <ChevronRight size={14} className="text-gray-400" />
+            </div>
           </div>
         </div>
       )}
@@ -101,23 +104,20 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         <nav className="flex flex-col h-full">
           {/* Logo */}
           <div className="h-14 flex items-center justify-center border-b">
-            <Link href="/" className={`flex items-center ${isExpanded ? 'ml-4' : 'mx-auto'}`}>
+            <Link href="/" className={`flex items-center ${isExpanded ? 'ml-4 justify-start w-full' : 'mx-auto'}`}>
               {isExpanded ? (
                 <>
                   <img 
-                    src="/images/pdLogo.png" 
+                    src="/images/pdLogoalt.png" 
                     alt="PropertyDeals Logo" 
-                    className="h-10 w-auto"
+                    className="h-8 w-auto"
                   />
-                  <span className="ml-2 font-heading font-bold text-[#09261E] text-lg hidden">
-                    PropertyDeals
-                  </span>
                 </>
               ) : (
                 <img 
                   src="/images/pdLogo.png" 
-                  alt="PropertyDeals Logo" 
-                  className="h-10 w-auto"
+                  alt="PropertyDeals Icon" 
+                  className="h-8 w-auto"
                 />
               )}
             </Link>
