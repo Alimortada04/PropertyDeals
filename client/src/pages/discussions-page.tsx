@@ -128,7 +128,7 @@ function StickyPostComposer({
             
             <div 
               onClick={onClick}
-              className="flex-1 rounded-t-md rounded-bl-md rounded-br-none border border-transparent bg-white py-3 px-4 text-gray-500 cursor-text hover:bg-gray-50 transition-colors ring-1 ring-[#09261E]/10"
+              className="flex-1 rounded-t-md rounded-bl-md rounded-br-none border border-transparent bg-white py-3 px-4 text-[#722F37] cursor-text hover:bg-gray-50 transition-colors ring-1 ring-[#09261E]/10"
             >
               Start a discussion...
             </div>
@@ -680,11 +680,6 @@ export default function DiscussionsPage() {
                     >
                       <div className="mr-2">{category.icon}</div>
                       <span>{category.name}</span>
-                      {activeCategory !== category.id && (
-                        <span className="ml-auto text-xs text-gray-500">
-                          {Math.floor(Math.random() * 20) + 1}
-                        </span>
-                      )}
                     </Button>
                   ))}
                 </div>
@@ -774,14 +769,6 @@ export default function DiscussionsPage() {
                   <h2 className="text-xl font-semibold mb-2 text-[#09261E]">Community Discussions</h2>
                   <p className="text-gray-500">Join conversations with fellow real estate professionals</p>
                 </div>
-                
-                <Button 
-                  onClick={() => setIsComposerExpanded(true)}
-                  className="bg-[#09261E] hover:bg-[#124035] text-white"
-                >
-                  <PlusCircle className="h-4 w-4 mr-2" />
-                  New Post
-                </Button>
               </div>
             </CardContent>
           </Card>
