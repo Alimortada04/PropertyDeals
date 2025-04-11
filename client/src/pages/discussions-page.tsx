@@ -128,7 +128,7 @@ function StickyPostComposer({
             
             <div 
               onClick={onClick}
-              className="flex-1 rounded-t-md rounded-bl-md rounded-br-none border border-transparent bg-white py-3 px-4 text-[#722F37] cursor-text hover:bg-gray-50 transition-colors ring-1 ring-[#09261E]/10"
+              className="flex-1 rounded-t-md rounded-bl-md rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 text-white/90 cursor-text hover:bg-[#124035] transition-colors"
             >
               Start a discussion...
             </div>
