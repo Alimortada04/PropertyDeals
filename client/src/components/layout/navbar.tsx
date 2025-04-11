@@ -56,9 +56,9 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
         !isMobile && !visible && !isStaticNavbarPage ? '-translate-y-full' : 'translate-y-0'
       }`}
     >
-      <div className="max-w-screen-2xl mx-auto px-4 py-3">
-        <div className="flex items-center">
-          {/* Menu toggle button - left aligned */}
+      <div className="flex justify-between items-center px-4 py-3">
+        {/* Left section - Menu button */}
+        <div>
           <button 
             onClick={toggleSidebar}
             className="text-gray-700 p-2 hover:bg-gray-100 rounded-full"
@@ -69,7 +69,7 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
 
           {/* Logo (only visible on mobile) */}
           {isMobile && (
-            <Link href="/" className="ml-2">
+            <Link href="/" className="ml-2 inline-block">
               <img 
                 src="/images/pdLogo.png" 
                 alt="PropertyDeals Logo" 
@@ -77,52 +77,50 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
               />
             </Link>
           )}
+        </div>
           
-          {/* Spacer to push right-aligned elements */}
-          <div className="flex-grow"></div>
+        {/* Right section - Search & Auth Buttons */}
+        <div className="flex items-center gap-3">
+          {/* Search bar - right aligned beside auth buttons */}
+          <div className="hidden md:block">
+            <div className="relative w-64">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search..."
+                className="pl-9 border-gray-300 focus:border-gray-400 rounded-full bg-gray-50 hover:bg-white focus:bg-white"
+              />
+            </div>
+          </div>
           
+          {/* Auth Buttons */}
           <div className="flex items-center gap-3">
-            {/* Search bar - right aligned beside auth buttons */}
-            <div className="hidden md:block">
-              <div className="relative w-64">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="text"
-                  placeholder="Search..."
-                  className="pl-9 border-gray-300 focus:border-gray-400 rounded-full bg-gray-50 hover:bg-white focus:bg-white"
-                />
-              </div>
-            </div>
-            
-            {/* Auth Buttons */}
-            <div className="flex items-center gap-3">
-              {user ? (
-                <>
-                  <span className="hidden sm:inline-block text-gray-700">
-                    {user.fullName || user.username}
+            {user ? (
+              <>
+                <span className="hidden sm:inline-block text-gray-700">
+                  {user.fullName || user.username}
+                </span>
+                <Button 
+                  onClick={handleLogout} 
+                  className="bg-[#09261E] hover:bg-[#135341] text-white"
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/signin">
+                  <span className="text-gray-700 font-medium hover:text-[#09261E] px-3 py-1">
+                    Sign In
                   </span>
-                  <Button 
-                    onClick={handleLogout} 
-                    className="bg-[#09261E] hover:bg-[#135341] text-white"
-                  >
-                    Sign Out
+                </Link>
+                <Link href="/register">
+                  <Button className="bg-[#09261E] hover:bg-[#135341] text-white rounded-md">
+                    Register
                   </Button>
-                </>
-              ) : (
-                <>
-                  <Link href="/signin">
-                    <span className="text-gray-700 font-medium hover:text-[#09261E] px-3 py-1">
-                      Sign In
-                    </span>
-                  </Link>
-                  <Link href="/register">
-                    <Button className="bg-[#09261E] hover:bg-[#135341] text-white rounded-md">
-                      Register
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
