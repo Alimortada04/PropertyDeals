@@ -1,0 +1,131 @@
+🧭 1. Breadcrumb Navigation
+Add breadcrumbs to every page and child page. Position them fully left-aligned above the main content.
+
+Each breadcrumb item must be clickable and linked to the correct page.
+
+Example for /guides/propertydictionary page:
+Home → Guides → PropertyDictionary
+(Both “Home” and “Guides” are links.)
+
+🔍 2. Replace Property & REPs Search Bars
+Create a new full-width search section (same width as navbar), with 10% padding on each side.
+This should include:
+
+A search input bar
+
+A main “Filters” button that opens the appropriate filter panel
+
+Below this, render quick filters (varies by page):
+
+📍 On /reps:
+Quick filters: Rounded square buttons for REP Types:
+
+Seller, Agent, Contractor, Lender, Appraiser, Inspector, Mover, Landscaper
+
+REP Filters modal (on clicking “Filters” button):
+
+Location
+
+REP Type
+
+Sorting: Popularity, Distance, Rating
+
+🏠 On /properties:
+Quick filters: Multi-select dropdowns, styled with correct hover and selected states.
+
+Tier: General, Exclusive
+
+Investment Type: Flip, Buy & Hold
+
+Property Type: Single Family, Multi Family, Condo, Townhouse, Land
+
+Price Range: Slider ($0 to $10M+) + manual input fields
+
+Filters modal:
+
+Location
+
+Investment Type
+
+Property Type
+
+Price Range
+
+Tier
+
+Seller
+
+Square Footage
+
+Beds
+
+Baths
+
+🚫 3. Remove Old Top Navbar
+Delete existing top navbar from all pages.
+
+Instead, add a top-right sticky banner that behaves like the old navbar:
+
+Hides on scroll down, reappears when scrolling up
+
+Contents (from left to right):
+
+Search bar
+
+Sign In (secondary button: light green on hover)
+
+Register (primary button: brand green, wine red on hover)
+
+Only spans the width of its content (not full page)
+
+💬 4. New “Connect” Section → Inspired by Facebook Groups
+Create a new Connect feature that includes:
+
+🏘️ PropertyDiscussions (similar to Facebook Groups):
+Create, join, and browse discussion groups
+
+Each group card displays:
+
+Location
+
+Chat type
+
+Members count
+
+Activity level
+
+Signed-in users can:
+
+Join/Leave groups
+
+View posts and comments
+
+Post updates and questions
+
+Reply and react
+
+📩 Direct Messaging (DM):
+Replicate Facebook-style DMs
+
+Users can:
+
+Search for other members
+
+Start conversations
+
+View inbox
+
+Receive/send invites to users not on PD yet
+
+Inbox layout similar to Messenger (list of conversations, current chat, and contact info)
+
+📄 5. Legal Pages
+In the footer, link to the following pages (create them if not already present):
+
+Terms & Conditions
+
+Cookies Policy
+
+FHA Compliance
+
+Ensure these pages use the same layout and branding as the rest of the site.

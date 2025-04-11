@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 import Footer from "./footer";
+import TopNavbar from "./top-navbar";
 import Breadcrumbs from "../common/breadcrumbs";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -35,11 +35,25 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F8FA]">
-      {/* Top navbar */}
-      <Navbar toggleSidebar={toggleSidebar} />
+      {/* Top-right sticky navbar */}
+      <TopNavbar />
       
-      <div className="flex flex-1">
-        {/* Sidebar */}
+      <div className="flex flex-1 pt-14">
+        {/* Sidebar with hamburger toggle */}
+        <div className="absolute left-4 top-4 z-40">
+          <button 
+            onClick={toggleSidebar}
+            className="text-gray-700 p-2 hover:bg-gray-100 rounded-full"
+            aria-label="Toggle menu"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
         <Sidebar 
           isOpen={sidebarOpen} 
           closeSidebar={closeSidebar} 
@@ -47,12 +61,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           setIsExpanded={setIsExpanded}
         />
         
-        {/* Main content - NO left padding for sidebar to ensure overlay */}
+        {/* Main content */}
         <main className="flex-1 w-full transition-all duration-200">
           <div className="min-h-screen pt-4 pb-16">
-            {/* Skip breadcrumbs on homepage */}
+            {/* Skip breadcrumbs on homepage, otherwise full left-aligned */}
             {location !== "/" && (
-              <div className="container mx-auto px-[10%] mb-2">
+              <div className="pl-16 pr-4 mb-4">
                 <Breadcrumbs />
               </div>
             )}
