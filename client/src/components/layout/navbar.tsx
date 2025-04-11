@@ -50,13 +50,13 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
   // Determine if the current page should show the search bar
   const showSearch = ['/properties', '/reps'].includes(location);
 
-  // Determine if we're on a page that needs a fixed (non-scrolling) navbar
-  const isFixedNavbarPage = location === '/properties' || location === '/reps';
+  // Determine if we're on a page that should have a static (scrollable) navbar
+  const isStaticNavbarPage = location === '/properties' || location === '/reps';
   
   return (
     <header 
-      className={`bg-white shadow-sm ${isFixedNavbarPage ? 'fixed' : 'sticky'} top-0 left-0 right-0 z-40 transition-transform duration-300 ${
-        !isMobile && !visible && !isFixedNavbarPage ? '-translate-y-full' : 'translate-y-0'
+      className={`bg-white shadow-sm ${isStaticNavbarPage ? 'relative' : 'sticky'} top-0 left-0 right-0 z-40 transition-transform duration-300 ${
+        !isMobile && !visible && !isStaticNavbarPage ? '-translate-y-full' : 'translate-y-0'
       }`}
     >
       <div className="max-w-screen-2xl mx-auto px-4 py-3">

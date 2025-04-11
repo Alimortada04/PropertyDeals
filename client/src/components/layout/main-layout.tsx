@@ -32,15 +32,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
-  // Determine if we're on a page that needs extra padding at the top (fixed navbar pages)
-  const isFixedNavbarPage = location === '/properties' || location === '/reps';
-  
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F8FA]">
       {/* Top navbar */}
       <Navbar toggleSidebar={toggleSidebar} />
       
-      <div className={`flex flex-1 ${isFixedNavbarPage ? 'pt-14' : ''}`}> {/* Only add padding for fixed navbar pages */}
+      <div className="flex flex-1">
         {/* Sidebar */}
         <Sidebar 
           isOpen={sidebarOpen} 
