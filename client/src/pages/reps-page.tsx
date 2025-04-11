@@ -149,17 +149,8 @@ export default function RepsPage() {
   );
   
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-[#09261E] mb-2">
-          Real Estate Professionals
-        </h1>
-        <p className="text-gray-600">
-          Connect with trusted professionals who can help you navigate the real estate market
-        </p>
-      </div>
-      
-      {/* Sticky Search and Filter Section */}
+    <div className="container mx-auto px-4 pb-8">
+      {/* Sticky Search and Filter Section - Moved to top */}
       <StickySearchFilter
         onSearch={setSearchTerm}
         searchPlaceholder="Search professionals by name, specialty, or keyword..."
@@ -170,8 +161,18 @@ export default function RepsPage() {
         filterButtonText="Filters"
       />
       
+      {/* Page Title - After sticky search */}
+      <div className="mt-6 mb-4">
+        <h1 className="text-3xl font-bold text-[#09261E] mb-2">
+          Real Estate Professionals
+        </h1>
+        <p className="text-gray-600">
+          Connect with trusted professionals who can help you navigate the real estate market
+        </p>
+      </div>
+      
       {/* Results Count */}
-      <div className="text-sm text-gray-600 mb-6 mt-4">
+      <div className="text-sm text-gray-600 mb-6">
         Found {filteredReps.length} professionals
       </div>
       

@@ -68,11 +68,11 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-30 py-4",
+        "bg-white transition-all duration-200 z-30 py-0 mt-0",
         isSticky ? "sticky top-0 lg:top-14 left-0 right-0 shadow-md" : ""
       )}
     >
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-4">
         {/* Search and Filter Row - hides on scroll down */}
         <div className={cn(
           "flex flex-col md:flex-row gap-4 items-center mb-4 transition-all duration-300",
