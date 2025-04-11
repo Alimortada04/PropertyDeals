@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -13,6 +13,7 @@ import ContactPage from "@/pages/contact-page";
 import RepsPage from "@/pages/reps-page";
 import RepDetailPage from "@/pages/rep-detail-page";
 import ConnectPage from "@/pages/connect-page";
+import DiscussionsPage from "@/pages/discussions-page";
 import ToolsPage from "@/pages/tools-page";
 import FlipCalculatorPage from "@/pages/tools/flip-calculator-page";
 import GuidesPage from "@/pages/guides-page";
@@ -60,10 +61,15 @@ function Router() {
           </MainLayout>
         )}
       </Route>
-      <Route path="/connect">
+      <Route path="/discussions">
         <MainLayout>
           <ConnectPage />
         </MainLayout>
+      </Route>
+      
+      {/* Redirect from old path to new path */}
+      <Route path="/connect">
+        <Redirect to="/discussions" />
       </Route>
       <Route path="/dashboard">
         <MainLayout>
