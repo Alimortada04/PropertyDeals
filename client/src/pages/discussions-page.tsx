@@ -109,6 +109,49 @@ const SORT_OPTIONS = [
   { value: 'controversial', label: 'Most Discussed' }
 ];
 
+// Sticky Post Composer Component
+function StickyPostComposer({ 
+  onClick,
+  className
+}: { 
+  onClick: () => void,
+  className?: string
+}) {
+  return (
+    <div className={`sticky bottom-0 z-30 mb-0 mt-6 ${className || ''}`}>
+      <div className="bg-[#09261E] shadow-lg rounded-md">
+        <div className="p-3">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-8 w-8 flex-shrink-0 border border-white/20">
+              <AvatarFallback className="bg-[#124035] text-white">CU</AvatarFallback>
+            </Avatar>
+            
+            <div 
+              onClick={onClick}
+              className="flex-1 rounded-full border border-white/20 bg-[#124035] py-2 px-4 text-white/80 cursor-text hover:bg-[#195047] transition-colors"
+            >
+              Start a discussion...
+            </div>
+            
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full text-white hover:bg-[#124035]" onClick={onClick}>
+                    <ImageIcon className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Add images</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function DiscussionsPage() {
   const [activeTab, setActiveTab] = useState("feed");
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -1207,48 +1250,7 @@ export default function DiscussionsPage() {
         </div>
       </div>
 
-      {/* Sticky Bottom Post Composer - Follows the thread width */}
-      {!isComposerExpanded && !selectedPostId && (
-        <div className="fixed bottom-0 z-30 w-full">
-          <div className="container mx-auto px-4 pb-4">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Match column width as the main content */}
-              {showSidebar && <div className="hidden lg:block lg:col-span-1"></div>}
-              <div className={`col-span-1 ${showSidebar ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
-                <Card className="shadow-lg">
-                  <CardContent className="p-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8 flex-shrink-0">
-                        <AvatarFallback>CU</AvatarFallback>
-                      </Avatar>
-                      
-                      <div 
-                        onClick={() => setIsComposerExpanded(true)}
-                        className="flex-1 rounded-full border py-2 px-4 text-gray-500 cursor-text hover:bg-gray-50 transition-colors"
-                      >
-                        Start a discussion...
-                      </div>
-                      
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setIsComposerExpanded(true)}>
-                              <ImageIcon className="h-5 w-5 text-gray-500" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Add images</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
       
       {/* Post Detail Dialog */}
       {selectedPost && (
