@@ -62,6 +62,12 @@ export default function HelpPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-5xl mx-auto">
+        {/* Breadcrumbs */}
+        <div className="mb-3">
+          <Breadcrumbs />
+        </div>
+        
+        {/* Page Title */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#09261E] mb-2">Help Center</h1>
           <p className="text-gray-600">

@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Loader2, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import Breadcrumbs from "@/components/common/breadcrumbs";
 
 // Contact form schema
 const contactFormSchema = z.object({
@@ -57,6 +58,11 @@ export default function ContactPage() {
 
   return (
     <div>
+      {/* Breadcrumbs */}
+      <div className="container mx-auto px-4 pt-4">
+        <Breadcrumbs />
+      </div>
+      
       {/* Header */}
       <section className="bg-gray-50 py-16 md:py-24">
         <div className="container mx-auto px-4">
