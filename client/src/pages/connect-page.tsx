@@ -10,11 +10,49 @@ import Breadcrumbs from "@/components/common/breadcrumbs";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ConnectPage() {
-  const [activeTab, setActiveTab] = useState("discover");
+  const [activeTab, setActiveTab] = useState("general");
   const [searchValue, setSearchValue] = useState("");
   const [selectedMessageId, setSelectedMessageId] = useState<number | null>(null);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [newMessage, setNewMessage] = useState("");
+  const [generalMessages, setGeneralMessages] = useState([
+    {
+      id: 1,
+      author: "PropertyDeals Team",
+      avatar: "PD",
+      time: "1 hour ago",
+      content: "Welcome to the General Discussion! This is a space for everyone in the PropertyDeals community to connect, share insights, and discuss real estate topics.",
+      likes: 15,
+      replies: 2
+    },
+    {
+      id: 2,
+      author: "Maria Garcia",
+      avatar: "MG",
+      time: "45 minutes ago",
+      content: "Has anyone worked with properties in the Seattle area recently? I'm looking for insights on the current market conditions there.",
+      likes: 3,
+      replies: 5
+    },
+    {
+      id: 3,
+      author: "David Johnson",
+      avatar: "DJ",
+      time: "30 minutes ago",
+      content: "Just wanted to share a resource I found helpful for understanding property tax implications when flipping properties: www.realestateexample.com/tax-guide",
+      likes: 8,
+      replies: 1
+    },
+    {
+      id: 4,
+      author: "Sarah Williams",
+      avatar: "SW",
+      time: "15 minutes ago",
+      content: "Looking for recommendations on property management software that integrates well with accounting systems. Any suggestions?",
+      likes: 2,
+      replies: 7
+    }
+  ]);
   const { toast } = useToast();
   
   // Mock data for property discussions
@@ -626,7 +664,7 @@ export default function ConnectPage() {
         </div>
         
         <Tabs 
-          defaultValue="discover" 
+          defaultValue="general" 
           value={activeTab}
           onValueChange={(value) => {
             setActiveTab(value);
@@ -635,7 +673,14 @@ export default function ConnectPage() {
           }} 
           className="w-full"
         >
-          <TabsList className="grid w-full max-w-md grid-cols-3 bg-[#EAF2EF]">
+          <TabsList className="grid w-full max-w-md grid-cols-4 bg-[#EAF2EF]">
+            <TabsTrigger 
+              value="general" 
+              className="flex items-center gap-2 data-[state=active]:bg-[#09261E] data-[state=active]:text-white hover:bg-[#D0E3DB] transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              <span>General</span>
+            </TabsTrigger>
             <TabsTrigger 
               value="discover" 
               className="flex items-center gap-2 data-[state=active]:bg-[#09261E] data-[state=active]:text-white hover:bg-[#D0E3DB] transition-colors"
@@ -658,6 +703,81 @@ export default function ConnectPage() {
               <span>Direct Messages</span>
             </TabsTrigger>
           </TabsList>
+          
+          {/* General Tab */}
+          <TabsContent value="general" className="pt-6 px-0">
+            <Card className="overflow-hidden border border-gray-200">
+              <CardHeader className="p-4 flex flex-row items-center justify-between bg-[#F7F8FA] border-b">
+                <div className="flex items-center">
+                  <div>
+                    <CardTitle className="text-lg">PropertyDeals General Discussion</CardTitle>
+                    <CardDescription>All community members (25,600+)</CardDescription>
+                  </div>
+                </div>
+                <Badge variant="outline" className="border-[#09261E] text-[#09261E] bg-[#EAF2EF] hover:bg-[#D0E3DB]">
+                  Member
+                </Badge>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="divide-y max-h-[500px] overflow-y-auto">
+                  {generalMessages.map(post => (
+                    <div key={post.id} className="p-4">
+                      <div className="flex items-start">
+                        <Avatar className="h-10 w-10 mr-3">
+                          <AvatarFallback>{post.avatar}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-center mb-1">
+                            <div className="font-medium">{post.author}</div>
+                            <div className="text-xs text-gray-500">{post.time}</div>
+                          </div>
+                          <p className="text-gray-700 mb-3">{post.content}</p>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Button variant="ghost" size="sm" className="h-8 flex items-center gap-1 text-gray-500">
+                              <ThumbsUp className="h-4 w-4" />
+                              <span>{post.likes}</span>
+                            </Button>
+                            <div className="mx-2">•</div>
+                            <Button variant="ghost" size="sm" className="h-8 flex items-center gap-1 text-gray-500">
+                              <MessageCircle className="h-4 w-4" />
+                              <span>{post.replies} replies</span>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+              <CardFooter className="border-t p-3">
+                <div className="flex w-full items-center gap-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>ME</AvatarFallback>
+                  </Avatar>
+                  <Input
+                    placeholder="Post to the general discussion..."
+                    className="flex-1"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                  />
+                  <Button
+                    size="sm"
+                    className="bg-[#09261E] hover:bg-[#135341]"
+                    onClick={() => {
+                      if (!newMessage.trim()) return;
+                      toast({
+                        title: "Post published",
+                        description: "Your post has been published to the general discussion.",
+                      });
+                      setNewMessage("");
+                    }}
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardFooter>
+            </Card>
+          </TabsContent>
           
           {/* Discover Tab */}
           <TabsContent value="discover" className="pt-6 px-0">
