@@ -14,7 +14,7 @@ import {
   ThumbsUp, Send, Globe, Users, User, Paperclip, Image as ImageIcon, Link, 
   Share2, MenuSquare, ThumbsDown, Bookmark, Flag, BarChart3, 
   FileText, HelpCircle, PanelLeft, Home, Flame, LightbulbIcon, PlusCircleIcon,
-  ExternalLink
+  ExternalLink, Loader2
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Breadcrumbs from "@/components/common/breadcrumbs";
@@ -125,6 +125,11 @@ export default function DiscussionsPage() {
   const [postReplies, setPostReplies] = useState<Reply[]>([]);
   const [showNewPostDialog, setShowNewPostDialog] = useState(false);
   const [locationFilter, setLocationFilter] = useState<string | null>("all");
+  const [isComposerExpanded, setIsComposerExpanded] = useState(false);
+  const [isSubmittingPost, setIsSubmittingPost] = useState(false);
+  const [showMediaUploader, setShowMediaUploader] = useState(false);
+  const [mediaFiles, setMediaFiles] = useState<{type: 'image' | 'video', preview: string}[]>([]);
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
   
   const { toast } = useToast();
   
@@ -425,40 +430,102 @@ export default function DiscussionsPage() {
   };
   
   const handleCreatePost = () => {
-    if (!newPostTitle.trim() || !newPostContent.trim()) return;
+    if ((!newPostTitle.trim() && isComposerExpanded) || !newPostContent.trim()) return;
     
-    const newPost: Post = {
-      id: Date.now(),
-      type: newPostType,
-      author: {
-        id: 999, // Current user
-        name: 'Current User', // Would come from auth context
-        avatar: 'CU',
-        role: 'Investor'
-      },
-      title: newPostTitle,
-      content: newPostContent,
-      timestamp: 'Just now',
-      likes: 0,
-      replies: 0,
-      category: newPostCategory,
-      reactions: {
-        '👍': 0,
-        '🔥': 0,
-        '💡': 0,
-        '❤️': 0
-      }
-    };
+    setIsSubmittingPost(true);
     
-    setPosts([newPost, ...posts]);
-    setShowNewPostDialog(false);
-    setNewPostTitle('');
-    setNewPostContent('');
+    // Create attachments from media files if any
+    const attachments = mediaFiles.length > 0 
+      ? mediaFiles.map(file => ({
+          type: file.type === 'image' ? 'image' as const : 'link' as const,
+          url: file.preview,
+          preview: file.type === 'image' ? { image: file.preview } : undefined
+        }))
+      : undefined;
     
-    toast({
-      title: "Post Created",
-      description: "Your post has been published successfully",
+    // Simulate network delay
+    setTimeout(() => {
+      const newPost: Post = {
+        id: Date.now(),
+        type: newPostType,
+        author: {
+          id: 999, // Current user
+          name: 'Current User', // Would come from auth context
+          avatar: 'CU',
+          role: 'Investor'
+        },
+        title: isComposerExpanded ? newPostTitle : newPostContent.split('\n')[0], // Use first line as title if not expanded
+        content: newPostContent,
+        timestamp: 'Just now',
+        likes: 0,
+        replies: 0,
+        category: newPostCategory,
+        attachments,
+        reactions: {
+          '👍': 0,
+          '🔥': 0,
+          '💡': 0,
+          '❤️': 0
+        }
+      };
+      
+      setPosts([newPost, ...posts]);
+      setShowNewPostDialog(false);
+      setNewPostTitle('');
+      setNewPostContent('');
+      setIsComposerExpanded(false);
+      setMediaFiles([]);
+      setIsSubmittingPost(false);
+      
+      toast({
+        title: "Post Created",
+        description: "Your post has been published successfully",
+      });
+    }, 1000);
+  };
+  
+  const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    
+    // Check if we already have 4 images or 1 video
+    if (mediaFiles.length >= 4) {
+      toast({
+        title: "Upload limit reached",
+        description: "You can upload a maximum of 4 images",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Process each file
+    Array.from(files).slice(0, 4 - mediaFiles.length).forEach(file => {
+      const fileType = file.type.startsWith('image/') ? 'image' : 'video';
+      
+      // Create a preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setMediaFiles(prev => [
+            ...prev, 
+            { type: fileType as 'image' | 'video', preview: e.target!.result as string }
+          ]);
+        }
+      };
+      reader.readAsDataURL(file);
     });
+    
+    // Reset the input
+    e.target.value = '';
+  };
+  
+  const removeMedia = (index: number) => {
+    setMediaFiles(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const handleInlinePost = () => {
+    if (!newPostContent.trim()) return;
+    handleCreatePost();
   };
   
   const getPostIcon = (type: Post['type']) => {
@@ -656,6 +723,188 @@ export default function DiscussionsPage() {
         
         {/* Main Feed */}
         <div className={`col-span-1 ${showSidebar ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
+          {/* Post Composer - Twitter/LinkedIn Style */}
+          <Card className="mb-4 overflow-hidden">
+            <CardContent className="p-4">
+              <div className="flex items-start gap-4">
+                <Avatar className="h-10 w-10 mt-1">
+                  <AvatarFallback>CU</AvatarFallback>
+                </Avatar>
+                
+                <div className="flex-1">
+                  {isComposerExpanded ? (
+                    <div className="space-y-4">
+                      <Input
+                        placeholder="Title (optional)"
+                        value={newPostTitle}
+                        onChange={(e) => setNewPostTitle(e.target.value)}
+                        className="w-full text-lg font-medium mb-2"
+                      />
+                      
+                      <Textarea
+                        placeholder="What's on your mind about real estate?"
+                        value={newPostContent}
+                        onChange={(e) => setNewPostContent(e.target.value)}
+                        className="min-h-[120px] resize-none w-full"
+                        autoFocus
+                      />
+                      
+                      {/* Media Previews */}
+                      {mediaFiles.length > 0 && (
+                        <div className="grid grid-cols-2 gap-2 mt-2">
+                          {mediaFiles.map((file, index) => (
+                            <div key={index} className="relative group rounded-md overflow-hidden">
+                              <img 
+                                src={file.preview} 
+                                alt={`Uploaded media ${index + 1}`}
+                                className="w-full h-32 object-cover"
+                              />
+                              <button
+                                onClick={() => removeMedia(index)}
+                                className="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      <div className="flex flex-wrap items-center justify-between gap-3 mt-2">
+                        <div className="flex items-center gap-2">
+                          {/* Post Type Selector */}
+                          <Select
+                            value={newPostType}
+                            onValueChange={(value: any) => {
+                              if (
+                                value === "discussion" ||
+                                value === "property" ||
+                                value === "resource" ||
+                                value === "question"
+                              ) {
+                                setNewPostType(value);
+                              }
+                            }}
+                          >
+                            <SelectTrigger className="w-[140px]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="discussion">
+                                <div className="flex items-center">
+                                  <MessageCircle className="h-4 w-4 mr-2" />
+                                  Discussion
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="question">
+                                <div className="flex items-center">
+                                  <HelpCircle className="h-4 w-4 mr-2" />
+                                  Question
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="property">
+                                <div className="flex items-center">
+                                  <Home className="h-4 w-4 mr-2" />
+                                  Property
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="resource">
+                                <div className="flex items-center">
+                                  <FileText className="h-4 w-4 mr-2" />
+                                  Resource
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                          
+                          {/* Category Selector */}
+                          <Select
+                            value={newPostCategory}
+                            onValueChange={setNewPostCategory}
+                          >
+                            <SelectTrigger className="w-[160px]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {CATEGORIES.slice(1).map(category => (
+                                <SelectItem key={category.id} value={category.id}>
+                                  <div className="flex items-center">
+                                    <span className="mr-2">{category.icon}</span>
+                                    <span>{category.name}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        {/* Upload Media Button & Input */}
+                        <div className="flex items-center gap-1">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <label className="cursor-pointer p-2 rounded-full hover:bg-gray-100">
+                                  <ImageIcon className="h-5 w-5 text-gray-500" />
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={handleMediaUpload}
+                                    multiple
+                                    max={4}
+                                  />
+                                </label>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Add images (up to 4)</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                          
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => {
+                              setIsComposerExpanded(false);
+                              setNewPostTitle('');
+                              setNewPostContent('');
+                              setMediaFiles([]);
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          
+                          <Button
+                            onClick={handleCreatePost}
+                            disabled={isSubmittingPost || !newPostContent.trim()}
+                            className="bg-[#09261E] hover:bg-[#124035] text-white"
+                          >
+                            {isSubmittingPost ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Posting...
+                              </>
+                            ) : "Post"}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      onClick={() => setIsComposerExpanded(true)}
+                      className="border rounded-lg py-3 px-4 text-gray-500 cursor-text hover:bg-gray-50 transition-colors"
+                    >
+                      Start a discussion...
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Feed filters and content */}
           <Card className="mb-6">
             <CardHeader className="pb-3">
               <div className="flex flex-wrap gap-4 justify-between">
@@ -716,16 +965,16 @@ export default function DiscussionsPage() {
                       : "Be the first to start a discussion in this category!"}
                   </p>
                   <Button 
-                    onClick={() => setShowNewPostDialog(true)}
+                    onClick={() => setIsComposerExpanded(true)}
                     className="bg-[#09261E] hover:bg-[#124035] text-white"
                   >
-                    Create New Post
+                    Start a Discussion
                   </Button>
                 </div>
               ) : (
                 <div className="divide-y">
                   {filteredPosts.map((post) => (
-                    <div key={post.id} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div key={post.id} className="p-5 hover:bg-gray-50 transition-colors">
                       <div className="flex">
                         <Avatar className="h-10 w-10 mt-1 mr-4">
                           <AvatarFallback>{post.author.avatar}</AvatarFallback>
@@ -734,7 +983,7 @@ export default function DiscussionsPage() {
                         <div className="flex-1 min-w-0">
                           {/* Post Header */}
                           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
-                            <span className="font-medium">{post.author.name}</span>
+                            <span className="font-medium hover:underline cursor-pointer">{post.author.name}</span>
                             {post.author.role && (
                               <span className="text-gray-500 text-sm">• {post.author.role}</span>
                             )}
@@ -758,7 +1007,7 @@ export default function DiscussionsPage() {
                           </h3>
                           
                           {/* Post Content */}
-                          <p className="text-gray-700 mb-3 line-clamp-2">{post.content}</p>
+                          <p className="text-gray-700 mb-4 line-clamp-3">{post.content}</p>
                           
                           {/* Post Attachments */}
                           {post.attachments && post.attachments.length > 0 && (
