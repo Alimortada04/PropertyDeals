@@ -1028,10 +1028,10 @@ export default function DiscussionsPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="divide-y relative pb-20">
+                <div className="divide-y relative">
                   {/* Posts List */}
-                  {filteredPosts.map((post) => (
-                    <div key={post.id} className="p-5 hover:bg-gray-50 transition-colors">
+                  {filteredPosts.map((post, index) => (
+                    <div key={post.id} className={`p-5 hover:bg-gray-50 transition-colors ${index === filteredPosts.length - 1 ? 'border-b-0' : ''}`}>
                       <div className="flex">
                         <Avatar className="h-10 w-10 mt-1 mr-4">
                           <AvatarFallback>{post.author.avatar}</AvatarFallback>
