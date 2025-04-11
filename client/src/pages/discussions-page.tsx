@@ -777,14 +777,14 @@ export default function DiscussionsPage() {
                           {/* Post Type Selector */}
                           <Select
                             value={newPostType}
-                            onValueChange={(value: any) => {
+                            onValueChange={(value: string) => {
                               if (
                                 value === "discussion" ||
                                 value === "property" ||
                                 value === "resource" ||
                                 value === "question"
                               ) {
-                                setNewPostType(value);
+                                setNewPostType(value as Post['type']);
                               }
                             }}
                           >
