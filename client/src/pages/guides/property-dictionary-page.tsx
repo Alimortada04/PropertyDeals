@@ -23,7 +23,12 @@ export default function PropertyDictionaryPage() {
   const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   
   // Get unique categories from the dictionary terms
-  const categories = ["all", ...new Set(dictionaryTerms.map(term => term.category || "Uncategorized"))].sort();
+  const categoryMap: Record<string, boolean> = { "all": true };
+  dictionaryTerms.forEach(term => {
+    const category = term.category || "Uncategorized";
+    categoryMap[category] = true;
+  });
+  const categories = Object.keys(categoryMap).sort();
   
   // Filter terms based on search, category, and letter filters
   useEffect(() => {
