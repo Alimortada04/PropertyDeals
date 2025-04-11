@@ -14,7 +14,7 @@ import {
   ThumbsUp, Send, Globe, Users, User, Paperclip, Image as ImageIcon, Link, 
   Share2, MenuSquare, ThumbsDown, Bookmark, Flag, BarChart3, 
   FileText, HelpCircle, PanelLeft, Home, Flame, PlusCircle, 
-  ExternalLink, Loader2, X, ChevronLeft, ChevronRight
+  ExternalLink, Loader2, X, ChevronLeft, ChevronRight, Lightbulb
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Breadcrumbs from "@/components/common/breadcrumbs";
@@ -647,7 +647,7 @@ export default function DiscussionsPage() {
             onClick={() => setShowNewPostDialog(true)}
             className="bg-[#09261E] hover:bg-[#124035] text-white"
           >
-            <PlusCircleIcon className="h-5 w-5 mr-2" />
+            <PlusCircle className="h-5 w-5 mr-2" />
             Create Post
           </Button>
         </div>
@@ -1206,7 +1206,7 @@ export default function DiscussionsPage() {
                                 </Button>
                                 
                                 <Button variant="ghost" size="sm" className="px-2 h-8">
-                                  <LightbulbIcon className="h-4 w-4 mr-1" />
+                                  <Lightbulb className="h-4 w-4 mr-1" />
                                   <span>{post.reactions['💡']}</span>
                                 </Button>
                               </div>
@@ -1402,7 +1402,7 @@ export default function DiscussionsPage() {
                         </Button>
                         
                         <Button variant="ghost" size="sm" className="px-3 h-8">
-                          <LightbulbIcon className="h-4 w-4 mr-1" />
+                          <Lightbulb className="h-4 w-4 mr-1" />
                           <span>{selectedPost.reactions['💡']}</span>
                         </Button>
                       </div>
