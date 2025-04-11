@@ -1,0 +1,75 @@
+🧭 Layout & Functionality Enhancements
+🔍 Search & Filters Layout
+Full Width Search & Filters
+
+On both the /properties and /reps pages, make the search and filter section span the full width of the screen.
+
+It should no longer be limited to the width of the catalog section below it.
+
+/reps Page Padding & Consistency
+
+Match the margin and padding of the REPS search section to be identical to the properties page.
+
+This ensures consistency in spacing, layout, and responsiveness.
+
+Filters Button on Properties
+
+Add a "Filters" button to the end of the search bar on the /properties page, matching the one from the /reps page.
+
+Clicking it should open a modal or dropdown with the following filters:
+
+Location
+
+Investment Type
+
+Property Type
+
+Price Range (Slider with $0–$10M+ and manual input boxes)
+
+Tier
+
+Seller
+
+Size
+
+Beds
+
+Baths
+
+❓ New Help Section
+Under the sidebar’s Resources, add a new section labeled “Help” (icon: ?).
+
+This will include cards linking to the following pages:
+
+FAQ – A page with expandable accordion-style frequently asked questions.
+
+Suggestions
+
+Users can submit suggestions.
+
+Users can upvote/downvote other suggestions (use a placeholder voting system for now).
+
+Report a Problem
+
+A page to report bugs or technical issues.
+
+Include fields for title, description, and optional screenshot upload (placeholder).
+
+📚 PropertyDictionary Expansion
+Please update the /guides/propertydictionary page with a complete, searchable, and paginated list of real estate terms and definitions based on the uploaded PDF:
+“Real Estate Terminology.pdf”.
+
+🛠️ Requirements:
+Import all terms and definitions from the provided PDF (no exclusions).
+
+Display them in a clean list format, alphabetized A–Z.
+
+Include a search bar at the top of the page to search by keyword or partial term.
+
+Each term should be bolded, and the definition should follow in a clean paragraph block.
+
+Add pagination (e.g., 25 terms per page) if needed for performance and clarity.
+
+💡 If you want to add filters by first letter (A–Z), that would also be helpful for navigation, but optional for now.
+
+This will be one of the core educational tools on the site, so it must be easy to navigate, scalable, and searchable.

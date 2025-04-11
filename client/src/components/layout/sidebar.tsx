@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { 
   Home, Building, Users, LayoutDashboard, Book, 
-  Calculator, MessageCircle, UserCircle, Settings, ChevronRight 
+  Calculator, MessageCircle, UserCircle, Settings, ChevronRight, HelpCircle
 } from "lucide-react";
 
 interface SidebarProps {
@@ -178,6 +178,35 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                   <Link href="/tools" className={getNavItemClasses("/tools")}>
                     <Calculator className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
                     {isExpanded && <span className="ml-3">Tools</span>}
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Help Section */}
+            <div className="mb-6">
+              {isExpanded && (
+                <h3 className="text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2">
+                  Help
+                </h3>
+              )}
+              <ul>
+                <li>
+                  <Link href="/help/faq" className={getNavItemClasses("/help/faq")}>
+                    <HelpCircle className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    {isExpanded && <span className="ml-3">FAQ</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/help/suggestions" className={getNavItemClasses("/help/suggestions")}>
+                    <HelpCircle className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    {isExpanded && <span className="ml-3">Suggestions</span>}
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/help/report" className={getNavItemClasses("/help/report")}>
+                    <HelpCircle className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    {isExpanded && <span className="ml-3">Report a Problem</span>}
                   </Link>
                 </li>
               </ul>
