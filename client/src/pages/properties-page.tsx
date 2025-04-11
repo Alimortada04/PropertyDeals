@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import StickySearchFilter from "@/components/common/sticky-search-filter";
+import Breadcrumbs from "@/components/common/breadcrumbs";
 import { allProperties } from "@/lib/data";
 import { MapPin, List, LayoutGrid, ChevronDown } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -241,8 +242,13 @@ export default function PropertiesPage() {
   
   return (
     <div className="container mx-auto px-4 pb-8">
-      {/* Page Title - Before sticky search */}
-      <div className="pt-4 mb-6">
+      {/* Breadcrumbs */}
+      <div className="mb-3 pt-4">
+        <Breadcrumbs />
+      </div>
+      
+      {/* Page Title */}
+      <div className="mb-6">
         <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">
           Browse Properties
         </h1>

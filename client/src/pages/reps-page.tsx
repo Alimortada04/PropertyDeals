@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import RepCard from "@/components/reps/rep-card";
 import StickySearchFilter from "@/components/common/sticky-search-filter";
+import Breadcrumbs from "@/components/common/breadcrumbs";
 
 type RepType = 'seller' | 'contractor' | 'agent' | 'lender' | 'appraiser' | 'inspector' | 'mover' | 'landscaper';
 
