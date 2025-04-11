@@ -140,7 +140,7 @@ export default function DiscussionsPage() {
         location: 'San Francisco, CA'
       },
       title: 'Current interest rate trends affecting investment property ROI',
-      content: 'I've been tracking interest rates closely over the last quarter, and I'm seeing significant impacts on potential ROI for multi-family investments. Anyone else finding creative ways to offset these higher costs?',
+      content: "I've been tracking interest rates closely over the last quarter, and I'm seeing significant impacts on potential ROI for multi-family investments. Anyone else finding creative ways to offset these higher costs?",
       timestamp: '2 hours ago',
       likes: 24,
       replies: 8,
@@ -166,8 +166,8 @@ export default function DiscussionsPage() {
         avatar: 'SJ',
         role: 'Property Manager'
       },
-      title: 'Off-market duplex opportunity in Austin's East Side',
-      content: 'I have a client looking to sell their fully renovated duplex off-market. Both units are 2bed/1bath with separate utilities and long-term tenants in place. Cash flow positive from day one.',
+      title: "Off-market duplex opportunity in Austin's East Side",
+      content: "I have a client looking to sell their fully renovated duplex off-market. Both units are 2bed/1bath with separate utilities and long-term tenants in place. Cash flow positive from day one.",
       timestamp: '4 hours ago',
       likes: 37,
       replies: 12,
@@ -197,7 +197,7 @@ export default function DiscussionsPage() {
         role: 'Real Estate Attorney'
       },
       title: 'Free template: BRRRR strategy deal analyzer spreadsheet',
-      content: 'After helping dozens of investors analyze BRRRR deals, I've created this comprehensive spreadsheet to help evaluate potential opportunities. Feel free to make a copy and use it for your next deal!',
+      content: "After helping dozens of investors analyze BRRRR deals, I've created this comprehensive spreadsheet to help evaluate potential opportunities. Feel free to make a copy and use it for your next deal!",
       timestamp: '1 day ago',
       likes: 98,
       replies: 21,
@@ -223,7 +223,7 @@ export default function DiscussionsPage() {
         role: 'First-time Investor'
       },
       title: 'Best practices for screening contractors for a major renovation?',
-      content: 'I'm about to purchase my first flip property and need to find reliable contractors. What questions should I ask? Red flags to watch for? And how do you structure payment to protect yourself?',
+      content: "I'm about to purchase my first flip property and need to find reliable contractors. What questions should I ask? Red flags to watch for? And how do you structure payment to protect yourself?",
       timestamp: '2 days ago',
       likes: 45,
       replies: 17,
@@ -245,8 +245,8 @@ export default function DiscussionsPage() {
         avatar: 'DK',
         role: 'Commercial Investor'
       },
-      title: 'Creative financing strategies for commercial properties in today's market',
-      content: 'With traditional lenders tightening requirements, I've been exploring seller financing and private money options for commercial acquisitions. Here are 3 structures that have worked well recently...',
+      title: "Creative financing strategies for commercial properties in today's market",
+      content: "With traditional lenders tightening requirements, I've been exploring seller financing and private money options for commercial acquisitions. Here are 3 structures that have worked well recently...",
       timestamp: '3 days ago',
       likes: 63,
       replies: 14,
@@ -273,7 +273,7 @@ export default function DiscussionsPage() {
           avatar: 'AR',
           role: 'Commercial Lender'
         },
-        content: 'Great observation. We're seeing clients restructure with interest-only periods for the first 2-3 years to maintain cash flow while waiting for rates to potentially come down.',
+        content: "Great observation. We're seeing clients restructure with interest-only periods for the first 2-3 years to maintain cash flow while waiting for rates to potentially come down.",
         timestamp: '1 hour ago',
         likes: 8,
         isLiked: false
@@ -287,7 +287,7 @@ export default function DiscussionsPage() {
           avatar: 'LP',
           role: 'Property Manager'
         },
-        content: 'In our market, we're focusing more on value-add opportunities where the improved NOI can offset the higher interest costs. Specifically targeting properties with below-market rents or operational inefficiencies.',
+        content: "In our market, we're focusing more on value-add opportunities where the improved NOI can offset the higher interest costs. Specifically targeting properties with below-market rents or operational inefficiencies.",
         timestamp: '45 minutes ago',
         likes: 12,
         isLiked: true
@@ -303,7 +303,7 @@ export default function DiscussionsPage() {
           avatar: 'JW',
           role: 'Real Estate Investor'
         },
-        content: 'Very interested in this. Is owner willing to provide any financing? Can you share current rent roll and expenses?',
+        content: "Very interested in this. Is owner willing to provide any financing? Can you share current rent roll and expenses?",
         timestamp: '3 hours ago',
         likes: 3,
         isLiked: false
@@ -321,7 +321,7 @@ export default function DiscussionsPage() {
       const post = posts.find(p => p.id === selectedPostId);
       setSelectedPost(post || null);
     }
-  }, [selectedPostId]);
+  }, [selectedPostId, posts]);
   
   // Filter posts based on category, search, and sort
   const filteredPosts = posts.filter(post => {

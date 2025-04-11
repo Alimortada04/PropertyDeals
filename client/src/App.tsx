@@ -63,7 +63,7 @@ function Router() {
       </Route>
       <Route path="/discussions">
         <MainLayout>
-          <ConnectPage />
+          <DiscussionsPage />
         </MainLayout>
       </Route>
       
