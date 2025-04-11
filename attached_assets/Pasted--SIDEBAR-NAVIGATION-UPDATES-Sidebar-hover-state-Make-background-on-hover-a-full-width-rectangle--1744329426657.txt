@@ -1,0 +1,108 @@
+🧭 SIDEBAR NAVIGATION UPDATES
+Sidebar hover state:
+
+Make background on hover a full-width rectangle with no rounded corners.
+
+Highlight background with brand’s dark green (#09261E) and instant color transition.
+
+Sidebar logo:
+
+Replace with the new pdLogoalt.png provided (use current logo file in project).
+
+Increase its size and reduce padding/margin to center it vertically.
+
+Chevron:
+
+When sidebar is collapsed, show a small chevron inside a rectangle that peeks out of the left edge (to guide users it’s expandable).
+
+This chevron should disappear when sidebar is expanded.
+
+🧱 TOP NAVBAR BEHAVIOR
+Align content (search bar, Sign In, Register) fully to the right.
+
+Navbar scroll behavior:
+
+On desktop: scrolls out of view when scrolling down, reappears when scrolling up.
+
+On mobile, the top nav should be sticky at all times, never scroll out of view.
+
+On mobile view:
+
+The hamburger should open the same sidebar, overlay style (like desktop).
+
+Tapping outside the sidebar closes it entirely.
+
+PD logo should appear to the right of the hamburger in the top bar.
+
+🔍 SEARCH + FILTER BAR STICKINESS
+For both /reps and /properties pages:
+
+The search bar and filter buttons should be sticky (stay fixed at the top when scrolling).
+
+On mobile, replicate Kaggle-style UX for filters:
+
+Horizontally scrollable filters under the search bar.
+
+Filters button opens a dropdown/modal with tags and sorting.
+
+🎛️ FILTER BUTTON STYLING
+On both /reps and /properties (desktop):
+
+Display quick filters as styled buttons beneath the search bar.
+
+Match Kaggle's rounded filter buttons, but make ours slightly less rounded.
+
+On hover, highlight buttons using brand salmon accent color (#E59F9F).
+
+Maintain a clean modern design, minimal borders, with slight shadow or lift on hover.
+
+🔄 UNIFY SEARCH/FILTER UX ACROSS PAGES
+Ensure /properties page search bar + filter layout exactly matches /reps, both on mobile and desktop.
+
+Properties Filters:
+Below the search bar, show the following custom quick filters:
+
+Tier:
+
+General, Exclusive
+
+Investment Type:
+
+Flip, Buy and Hold
+
+Property Type:
+
+Single Family, Multi Family, Condo, Townhouse, Land
+
+Price Range:
+
+Horizontal meter or blank fields: $0 — $10M+
+
+Allow user-defined input boxes or sliders.
+
+Filters button should still open a modal with tag-based multi-select filters (styled like Kaggle’s).
+
+🗺️ MAP VIEW FEATURE — /properties
+Implement split view mode toggle inspired by Redfin’s Milwaukee listings page:
+🔗 https://www.redfin.com/city/35759/WI/Milwaukee
+
+Add functionality to:
+Toggle between:
+
+🗂️ List View
+
+🗺️ Map View (Split)
+
+Map View Features:
+
+Pins displayed for each property on the map.
+
+Hovering over a pin:
+
+Highlights the corresponding listing in the grid.
+
+Shows a small floating card preview of the property.
+
+Includes a button to open the full property page (/p/[id]).
+
+Ensure responsiveness and smooth user experience across desktop and mobile views.

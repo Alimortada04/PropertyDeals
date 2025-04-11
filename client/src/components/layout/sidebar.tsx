@@ -60,11 +60,11 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
     return () => document.removeEventListener('mousemove', handleMouseMove);
   }, [isExpanded]);
 
-  // Nav item classes with immediate color change on hover
+  // Nav item classes with immediate color change on hover - full width with no rounded corners
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      group flex items-center p-2 rounded-md whitespace-nowrap transition-all duration-100
+      group flex items-center p-2 whitespace-nowrap transition-colors duration-0
       ${isActive 
         ? 'bg-[#09261E] text-white' 
         : 'text-gray-700 hover:bg-[#09261E] hover:text-white'}
@@ -79,8 +79,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           className="fixed top-1/3 left-0 z-30 cursor-pointer"
           onClick={() => setIsExpanded(true)}
         >
-          <div className="bg-gray-200/80 hover:bg-gray-300/80 rounded-r-md h-10 w-5 flex items-center justify-center">
-            <ChevronRight size={14} className="text-gray-600" />
+          <div className="bg-white/95 hover:bg-gray-100 shadow-md rounded-r-sm h-12 w-5 flex items-center justify-center border-r border-t border-b border-gray-200">
+            <ChevronRight size={14} className="text-[#09261E]" />
           </div>
         </div>
       )}
@@ -100,24 +100,24 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       >
         <nav className="flex flex-col h-full">
           {/* Logo */}
-          <div className="h-14 flex items-center px-4 border-b">
-            <Link href="/" className="flex items-center">
+          <div className="h-14 flex items-center justify-center border-b">
+            <Link href="/" className={`flex items-center ${isExpanded ? 'ml-4' : 'mx-auto'}`}>
               {isExpanded ? (
                 <>
                   <img 
-                    src="/images/pdLogoalt.png" 
+                    src="/images/pdLogo.png" 
                     alt="PropertyDeals Logo" 
-                    className="h-8 w-auto"
+                    className="h-10 w-auto"
                   />
-                  <span className="ml-2 font-heading font-bold text-[#09261E] text-lg">
+                  <span className="ml-2 font-heading font-bold text-[#09261E] text-lg hidden">
                     PropertyDeals
                   </span>
                 </>
               ) : (
                 <img 
-                  src="/images/pdLogoalt.png" 
+                  src="/images/pdLogo.png" 
                   alt="PropertyDeals Logo" 
-                  className="h-8 w-auto mx-auto"
+                  className="h-10 w-auto"
                 />
               )}
             </Link>
