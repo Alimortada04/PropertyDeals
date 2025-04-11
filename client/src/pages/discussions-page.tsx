@@ -14,7 +14,7 @@ import {
   ThumbsUp, Send, Globe, Users, User, Paperclip, Image as ImageIcon, Link, 
   Share2, MenuSquare, ThumbsDown, Bookmark, Flag, BarChart3, 
   FileText, HelpCircle, PanelLeft, Home, Flame, LightbulbIcon, PlusCircleIcon,
-  ExternalLink, Loader2
+  ExternalLink, Loader2, X, ChevronLeft, ChevronRight
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Breadcrumbs from "@/components/common/breadcrumbs";
