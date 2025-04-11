@@ -723,8 +723,8 @@ export default function DiscussionsPage() {
         
         {/* Main Feed */}
         <div className={`col-span-1 ${showSidebar ? 'lg:col-span-3' : 'lg:col-span-4'}`}>
-          {/* Post Composer - Twitter/LinkedIn Style */}
-          <Card className="mb-4 overflow-hidden">
+          {/* Sticky Post Composer - Twitter/LinkedIn Style */}
+          <Card className="mb-4 overflow-hidden sticky top-[76px] z-10 shadow-md">
             <CardContent className="p-4">
               <div className="flex items-start gap-4">
                 <Avatar className="h-10 w-10 mt-1">
@@ -751,13 +751,24 @@ export default function DiscussionsPage() {
                       
                       {/* Media Previews */}
                       {mediaFiles.length > 0 && (
-                        <div className="grid grid-cols-2 gap-2 mt-2">
+                        <div className={`grid ${mediaFiles.length === 1 
+                          ? 'grid-cols-1' 
+                          : mediaFiles.length === 2 
+                            ? 'grid-cols-2' 
+                            : mediaFiles.length === 3 
+                              ? 'grid-cols-2' 
+                              : 'grid-cols-2'} gap-2 mt-2`}>
                           {mediaFiles.map((file, index) => (
-                            <div key={index} className="relative group rounded-md overflow-hidden">
+                            <div 
+                              key={index} 
+                              className={`relative group rounded-md overflow-hidden ${
+                                mediaFiles.length === 3 && index === 0 ? 'col-span-2 row-span-1' : ''
+                              } ${mediaFiles.length === 1 ? 'max-h-96' : ''}`}
+                            >
                               <img 
                                 src={file.preview} 
                                 alt={`Uploaded media ${index + 1}`}
-                                className="w-full h-32 object-cover"
+                                className={`w-full ${mediaFiles.length === 1 ? 'max-h-96 object-contain' : 'h-40 object-cover'}`}
                               />
                               <button
                                 onClick={() => removeMedia(index)}
@@ -1011,11 +1022,43 @@ export default function DiscussionsPage() {
                           
                           {/* Post Attachments */}
                           {post.attachments && post.attachments.length > 0 && (
-                            <div className="mb-3">
-                              {post.attachments.map((attachment, index) => (
+                            <div className="mb-4">
+                              {/* Image attachments */}
+                              {post.attachments && post.attachments.filter(a => a.type === 'image' && a.preview?.image).length > 0 && (
+                                <div className={`grid ${post.attachments.length === 1 ? 'grid-cols-1' : post.attachments.length === 2 ? 'grid-cols-2' : 'grid-cols-2'} gap-2 mb-3 rounded-lg overflow-hidden`}>
+                                  {post.attachments
+                                    .filter(a => a.type === 'image' && a.preview?.image)
+                                    .slice(0, 4)
+                                    .map((attachment, index) => (
+                                      <div 
+                                        key={index} 
+                                        className={`relative cursor-pointer ${post.attachments && post.attachments.length === 3 && index === 0 ? 'col-span-2 row-span-2' : ''}`}
+                                        onClick={() => {
+                                          setSelectedImage(index);
+                                          setSelectedPostId(post.id);
+                                        }}
+                                      >
+                                        <img 
+                                          src={attachment.preview!.image}
+                                          alt="Attachment" 
+                                          className={`w-full ${post.attachments && post.attachments.length === 1 ? 'max-h-96 object-contain' : 'h-56 object-cover'}`}
+                                        />
+                                        {post.attachments && post.attachments.filter(a => a.type === 'image').length > 4 && index === 3 && (
+                                          <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-white font-bold text-xl">
+                                            +{post.attachments.filter(a => a.type === 'image').length - 4}
+                                          </div>
+                                        )}
+                                      </div>
+                                    ))
+                                  }
+                                </div>
+                              )}
+                              
+                              {/* Property and link attachments */}
+                              {post.attachments.filter(a => a.type === 'property' || a.type === 'link').map((attachment, index) => (
                                 <div 
                                   key={index} 
-                                  className="border rounded-md overflow-hidden"
+                                  className="border rounded-md overflow-hidden mb-3"
                                   onClick={() => setSelectedPostId(post.id)}
                                 >
                                   {attachment.type === 'property' && attachment.preview && (
@@ -1540,6 +1583,80 @@ export default function DiscussionsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Media Viewer Modal */}
+      {selectedPostId !== null && selectedImage !== null && selectedPost && selectedPost.attachments && (
+        <Dialog 
+          open={selectedImage !== null} 
+          onOpenChange={(open) => !open && setSelectedImage(null)}
+        >
+          <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden">
+            <div className="relative w-full h-full flex items-center justify-center bg-black">
+              {/* Close Button */}
+              <button 
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-2 right-2 z-10 text-white bg-black bg-opacity-50 rounded-full p-1"
+              >
+                <X className="h-6 w-6" />
+              </button>
+              
+              {/* Media Navigation */}
+              {selectedPost.attachments.filter(a => a.type === 'image').length > 1 && selectedImage > 0 && (
+                <button 
+                  onClick={() => setSelectedImage(selectedImage - 1)}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 z-10 text-white bg-black bg-opacity-50 rounded-full p-2"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+              )}
+              
+              {selectedPost.attachments.filter(a => a.type === 'image').length > 1 && 
+               selectedImage < selectedPost.attachments.filter(a => a.type === 'image').length - 1 && (
+                <button 
+                  onClick={() => setSelectedImage(selectedImage + 1)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-10 text-white bg-black bg-opacity-50 rounded-full p-2"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              )}
+              
+              {/* Current Image */}
+              <img 
+                src={selectedPost.attachments.filter(a => a.type === 'image')[selectedImage]?.preview?.image || ''}
+                alt="Media attachment"
+                className="max-h-full max-w-full object-contain"
+              />
+              
+              {/* Image Info Bar */}
+              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 p-4 text-white">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <Avatar className="h-8 w-8 mr-2">
+                      <AvatarFallback>{selectedPost.author.avatar}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium">{selectedPost.author.name}</div>
+                      <div className="text-sm text-gray-300">{selectedPost.timestamp}</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <button className="p-2 rounded-full hover:bg-gray-800">
+                      <ThumbsUp className="h-5 w-5" />
+                    </button>
+                    <button className="p-2 rounded-full hover:bg-gray-800">
+                      <MessageCircle className="h-5 w-5" />
+                    </button>
+                    <button className="p-2 rounded-full hover:bg-gray-800">
+                      <Share2 className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }

@@ -1,0 +1,112 @@
+💬 1. Sticky Post Composer
+Make the post creation box sticky so it stays visible as you scroll the feed.
+
+Users should never have to scroll back to the top to post.
+
+Mimic Twitter/X behavior: the post box floats above the feed and is always accessible.
+
+If media is attached (image or video), treat it as the main content:
+
+It should take center stage visually (like X posts).
+
+Media fills the post card width with caption underneath.
+
+🔔 2. Community Interaction Layer
+A. Notifications System
+Add a bell icon in the top-right of the banner/nav.
+
+Clicking the icon should show:
+
+New replies to your posts
+
+Mentions
+
+Follows
+
+Likes/Reactions
+
+B. Inbox & Messaging
+Add a Direct Message inbox with support for:
+
+Threads with individual users
+
+Option to search users and start new threads
+
+Real-time chat experience, like Facebook/Discord
+
+Inbox should be accessible from:
+
+The left sidebar (Connect or dedicated Messages tab)
+
+Banner profile dropdown or top-right icon
+
+C. Pinned Threads
+Add the ability for admins/mods to pin posts to the top of a discussion category
+
+Pin indicator + “Pinned” label on feed card
+
+Support multiple pins per category
+
+🖼️ 3. Media Handling Improvements (continued)
+When a user clicks on an image or video:
+
+Open a media viewer modal
+
+Support scrolling/swiping through other media in the feed (Reddit-style gallery)
+
+Modal includes:
+
+User info
+
+Caption
+
+Reactions
+
+Timestamp
+
+📐 4. Layout Responsiveness & Content Flow
+A. Content Positioning
+Ensure no content is ever covered by the collapsed sidebar:
+
+Content should start to the right of the collapsed sidebar at all times.
+
+Maintain the current behavior where expanding the sidebar does not push content — it simply opens over the page.
+
+B. Desktop Sidebar Behavior
+When sidebar is collapsed:
+
+Show icons only (as it is now)
+
+When expanded:
+
+Sidebar overlays content (not pushing it)
+
+Smooth animation preferred
+
+C. Mobile Navigation Overhaul
+Remove current floating hamburger icon.
+
+Instead, make the banner a full-width horizontal navbar on mobile.
+
+Place a new hamburger icon on the far left of this banner.
+
+When tapped:
+
+Opens the same sidebar menu as desktop (expanded view)
+
+Menu should cover the screen, slide from the left.
+
+Tapping outside the menu collapses it automatically
+
+Ensure full responsiveness for all mobile screen sizes.
+
+✅ Summary
+These improvements will:
+
+Deliver a seamless posting experience like modern social apps.
+
+Support engagement via reactions, messages, and notifications.
+
+Fix layout and spacing issues across all devices.
+
+Unify navigation UX for desktop and mobile.
