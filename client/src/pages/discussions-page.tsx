@@ -583,7 +583,7 @@ export default function DiscussionsPage() {
   };
   
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 pb-20">
       {/* Breadcrumbs */}
       <div className="mb-3">
         <Breadcrumbs />
@@ -1206,6 +1206,43 @@ export default function DiscussionsPage() {
           </Card>
         </div>
       </div>
+
+      {/* Sticky Bottom Post Composer */}
+      {!isComposerExpanded && !selectedPostId && (
+        <div className="fixed bottom-0 left-0 right-0 z-30">
+          <div className="container mx-auto px-4 pb-4">
+            <Card className="shadow-lg">
+              <CardContent className="p-3">
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8 flex-shrink-0">
+                    <AvatarFallback>CU</AvatarFallback>
+                  </Avatar>
+                  
+                  <div 
+                    onClick={() => setIsComposerExpanded(true)}
+                    className="flex-1 rounded-full border py-2 px-4 text-gray-500 cursor-text hover:bg-gray-50 transition-colors"
+                  >
+                    Start a discussion...
+                  </div>
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setIsComposerExpanded(true)}>
+                          <ImageIcon className="h-5 w-5 text-gray-500" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Add images</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
       
       {/* Post Detail Dialog */}
       {selectedPost && (
@@ -1469,6 +1506,198 @@ export default function DiscussionsPage() {
           </DialogContent>
         </Dialog>
       )}
+      
+      {/* Expanded Post Composer Dialog */}
+      <Dialog open={isComposerExpanded} onOpenChange={setIsComposerExpanded}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Create New Post</DialogTitle>
+            <DialogDescription>
+              Share your thoughts, questions, or resources with the community
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            {/* Post Title */}
+            <div>
+              <Input
+                placeholder="Title (optional)"
+                value={newPostTitle}
+                onChange={(e) => setNewPostTitle(e.target.value)}
+                className="w-full text-lg font-medium"
+              />
+            </div>
+            
+            {/* Post Content */}
+            <div>
+              <Textarea
+                placeholder="What's on your mind about real estate?"
+                value={newPostContent}
+                onChange={(e) => setNewPostContent(e.target.value)}
+                className="min-h-[150px] resize-none w-full"
+                autoFocus
+              />
+            </div>
+            
+            {/* Media Previews */}
+            {mediaFiles.length > 0 && (
+              <div className={`grid ${mediaFiles.length === 1 
+                ? 'grid-cols-1' 
+                : mediaFiles.length === 2 
+                  ? 'grid-cols-2' 
+                  : mediaFiles.length === 3 
+                    ? 'grid-cols-2' 
+                    : 'grid-cols-2'} gap-2 mt-2`}>
+                {mediaFiles.map((file, index) => (
+                  <div 
+                    key={index} 
+                    className={`relative group rounded-md overflow-hidden ${
+                      mediaFiles.length === 3 && index === 0 ? 'col-span-2 row-span-1' : ''
+                    } ${mediaFiles.length === 1 ? 'max-h-96' : ''}`}
+                  >
+                    <img 
+                      src={file.preview} 
+                      alt={`Uploaded media ${index + 1}`}
+                      className={`w-full ${mediaFiles.length === 1 ? 'max-h-96 object-contain' : 'h-40 object-cover'}`}
+                    />
+                    <button
+                      onClick={() => removeMedia(index)}
+                      className="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <div className="flex flex-wrap gap-4">
+              {/* Post Type Selector */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Post Type</label>
+                <Select
+                  value={newPostType}
+                  onValueChange={(value: string) => {
+                    if (
+                      value === "discussion" ||
+                      value === "property" ||
+                      value === "resource" ||
+                      value === "question"
+                    ) {
+                      setNewPostType(value as Post['type']);
+                    }
+                  }}
+                >
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="discussion">
+                      <div className="flex items-center">
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        Discussion
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="question">
+                      <div className="flex items-center">
+                        <HelpCircle className="h-4 w-4 mr-2" />
+                        Question
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="property">
+                      <div className="flex items-center">
+                        <Home className="h-4 w-4 mr-2" />
+                        Property
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="resource">
+                      <div className="flex items-center">
+                        <FileText className="h-4 w-4 mr-2" />
+                        Resource
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Category Selector */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Category</label>
+                <Select
+                  value={newPostCategory}
+                  onValueChange={setNewPostCategory}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.slice(1).map(category => (
+                      <SelectItem key={category.id} value={category.id}>
+                        <div className="flex items-center">
+                          <span className="mr-2">{category.icon}</span>
+                          <span>{category.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter className="gap-2 sm:gap-0">
+            <div className="flex items-center gap-2 mr-auto">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <label className="cursor-pointer p-2 rounded-md hover:bg-gray-100">
+                      <ImageIcon className="h-5 w-5 text-gray-500" />
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleMediaUpload}
+                        multiple
+                        max={4}
+                      />
+                    </label>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Add images (up to 4)</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setIsComposerExpanded(false);
+                setNewPostTitle('');
+                setNewPostContent('');
+                setMediaFiles([]);
+              }}
+            >
+              Cancel
+            </Button>
+            
+            <Button
+              onClick={handleCreatePost}
+              disabled={isSubmittingPost || !newPostContent.trim()}
+              className="bg-[#09261E] hover:bg-[#124035] text-white"
+            >
+              {isSubmittingPost ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Posting...
+                </>
+              ) : "Post"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       
       {/* Create New Post Dialog */}
       <Dialog open={showNewPostDialog} onOpenChange={setShowNewPostDialog}>
