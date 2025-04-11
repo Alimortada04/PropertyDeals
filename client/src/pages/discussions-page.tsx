@@ -963,6 +963,14 @@ export default function DiscussionsPage() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
+                
+                <Button 
+                  onClick={() => setIsComposerExpanded(true)}
+                  className="bg-[#09261E] hover:bg-[#124035] text-white"
+                >
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  New Post
+                </Button>
 
                 {/* Sort Option */}
                 <div>
@@ -1016,10 +1024,10 @@ export default function DiscussionsPage() {
                   </Button>
                 </div>
               ) : (
-                <div className="divide-y relative">
+                <div className="divide-y divide-transparent relative">
                   {/* Posts List */}
                   {filteredPosts.map((post, index) => (
-                    <div key={post.id} className={`p-5 hover:bg-gray-50 transition-colors ${index === filteredPosts.length - 1 ? 'border-b-0' : ''}`}>
+                    <div key={post.id} className={`p-5 hover:bg-gray-50 transition-colors border-transparent ${index === filteredPosts.length - 1 ? 'border-b-0' : ''}`}>
                       <div className="flex">
                         <Avatar className="h-10 w-10 mt-1 mr-4">
                           <AvatarFallback>{post.author.avatar}</AvatarFallback>
