@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Book, FileText, BookOpen, Video } from "lucide-react";
+import Breadcrumbs from "@/components/common/breadcrumbs";
 
 interface GuideCardProps {
   icon: React.ReactNode;

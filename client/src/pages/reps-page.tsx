@@ -151,8 +151,13 @@ export default function RepsPage() {
   
   return (
     <div className="container mx-auto px-4 pb-8">
-      {/* Page Title - Before sticky search */}
-      <div className="pt-4 mb-6">
+      {/* Breadcrumbs */}
+      <div className="mb-3 pt-4">
+        <Breadcrumbs />
+      </div>
+      
+      {/* Page Title */}
+      <div className="mb-6">
         <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">
           Real Estate Professionals
         </h1>
