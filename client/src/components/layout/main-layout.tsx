@@ -61,12 +61,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         {/* Main content */}
         <main className="flex-1 w-full transition-all duration-200">
           <div className="min-h-screen pt-4 pb-16">
-            {/* Skip breadcrumbs on homepage, otherwise full left-aligned */}
-            {location !== "/" && (
-              <div className="pl-16 pr-4 mb-4">
-                <Breadcrumbs />
-              </div>
-            )}
             {children}
           </div>
         </main>

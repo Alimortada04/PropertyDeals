@@ -517,9 +517,13 @@ export default function DiscussionsPage() {
   
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Breadcrumbs */}
+      <div className="mb-3">
+        <Breadcrumbs />
+      </div>
+      
       {/* Header */}
       <div className="mb-6">
-        <Breadcrumbs />
         <div className="flex flex-wrap justify-between items-start gap-4">
           <div>
             <h1 className="text-3xl font-bold text-[#09261E] mb-2">Discussions</h1>
