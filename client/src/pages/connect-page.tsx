@@ -1,13 +1,40 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Search, Users, MessageCircle, ChevronRight, X, Plus, ThumbsUp, Send, Globe, User } from "lucide-react";
+import { 
+  Search, Users, MessageCircle, ChevronRight, X, Plus, ThumbsUp, Send, Globe, 
+  User, Paperclip, Image, Link, Share2, ExternalLink 
+} from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Breadcrumbs from "@/components/common/breadcrumbs";
 import { useToast } from "@/hooks/use-toast";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+interface ChatMessage {
+  id: number;
+  author: string;
+  avatar: string;
+  time: string;
+  content: string;
+  isMine?: boolean;
+  likes?: number;
+  replies?: number;
+  attachments?: {
+    type: 'image' | 'link' | 'propertyLink';
+    url: string;
+    preview?: {
+      title?: string;
+      image?: string;
+      domain?: string;
+      price?: string;
+      address?: string;
+    }
+  }[];
+}
 
 export default function ConnectPage() {
   const [activeTab, setActiveTab] = useState("general");
@@ -15,15 +42,19 @@ export default function ConnectPage() {
   const [selectedMessageId, setSelectedMessageId] = useState<number | null>(null);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [newMessage, setNewMessage] = useState("");
-  const [generalMessages, setGeneralMessages] = useState([
+  const [showAttachmentOptions, setShowAttachmentOptions] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  
+  const [generalMessages, setGeneralMessages] = useState<ChatMessage[]>([
     {
       id: 1,
       author: "PropertyDeals Team",
       avatar: "PD",
       time: "1 hour ago",
       content: "Welcome to the General Discussion! This is a space for everyone in the PropertyDeals community to connect, share insights, and discuss real estate topics.",
-      likes: 15,
-      replies: 2
+      isMine: false
     },
     {
       id: 2,
@@ -31,8 +62,7 @@ export default function ConnectPage() {
       avatar: "MG",
       time: "45 minutes ago",
       content: "Has anyone worked with properties in the Seattle area recently? I'm looking for insights on the current market conditions there.",
-      likes: 3,
-      replies: 5
+      isMine: false
     },
     {
       id: 3,
@@ -40,20 +70,67 @@ export default function ConnectPage() {
       avatar: "DJ",
       time: "30 minutes ago",
       content: "Just wanted to share a resource I found helpful for understanding property tax implications when flipping properties: www.realestateexample.com/tax-guide",
-      likes: 8,
-      replies: 1
+      isMine: false,
+      attachments: [
+        {
+          type: 'link',
+          url: 'https://www.realestateexample.com/tax-guide',
+          preview: {
+            title: 'Tax Guide for Real Estate Investors',
+            domain: 'realestateexample.com',
+            image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop'
+          }
+        }
+      ]
     },
     {
       id: 4,
+      author: "You",
+      avatar: "ME",
+      time: "25 minutes ago",
+      content: "Check out this property I just listed. Great investment opportunity!",
+      isMine: true,
+      attachments: [
+        {
+          type: 'propertyLink',
+          url: '/properties/123',
+          preview: {
+            title: 'Modern Farmhouse',
+            address: '123 Main St, Milwaukee, WI',
+            price: '$450,000',
+            image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG91c2V8ZW58MHx8MHx8fDA%3D'
+          }
+        }
+      ]
+    },
+    {
+      id: 5,
       author: "Sarah Williams",
       avatar: "SW",
       time: "15 minutes ago",
       content: "Looking for recommendations on property management software that integrates well with accounting systems. Any suggestions?",
-      likes: 2,
-      replies: 7
+      isMine: false
     }
   ]);
   const { toast } = useToast();
+  
+  // Auto-scroll to bottom when new messages are added
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [generalMessages]);
+  
+  // Function to handle file selection
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0]);
+      toast({
+        title: "File selected",
+        description: `${e.target.files[0].name} ready to upload.`,
+      });
+    }
+  };
   
   // Mock data for property discussions
   const allDiscussionGroups = [
@@ -291,20 +368,87 @@ export default function ConnectPage() {
   const selectedGroup = allDiscussionGroups.find(group => group.id === selectedGroupId);
   
   const handleSendMessage = () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() && !selectedFile) return;
     
-    if (activeTab === "messages" && selectedMessageId) {
+    if (activeTab === "general") {
+      // Process message content - detect URLs
+      let content = newMessage.trim();
+      let newAttachments: ChatMessage['attachments'] = [];
+      
+      // Check if message contains a URL
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const urls = content.match(urlRegex);
+      
+      if (urls) {
+        // For demo purposes, if URL contains 'properties', treat as internal property link
+        urls.forEach(url => {
+          if (url.includes('properties')) {
+            newAttachments?.push({
+              type: 'propertyLink',
+              url: url,
+              preview: {
+                title: 'Property Listing',
+                address: '123 Example Street, Milwaukee, WI',
+                price: '$399,000',
+                image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG91c2V8ZW58MHx8MHx8fDA%3D'
+              }
+            });
+          } else {
+            newAttachments?.push({
+              type: 'link',
+              url: url,
+              preview: {
+                title: 'External Website',
+                domain: new URL(url).hostname,
+              }
+            });
+          }
+        });
+      }
+      
+      // Add file attachment if any
+      if (selectedFile) {
+        if (selectedFile.type.startsWith('image/')) {
+          newAttachments?.push({
+            type: 'image',
+            url: URL.createObjectURL(selectedFile),
+          });
+        }
+      }
+      
+      // Add new message to general chat
+      const newGeneralMessage: ChatMessage = {
+        id: generalMessages.length + 1,
+        author: "You",
+        avatar: "ME",
+        time: "Just now",
+        content: content,
+        isMine: true,
+        attachments: newAttachments.length > 0 ? newAttachments : undefined
+      };
+      
+      setGeneralMessages([...generalMessages, newGeneralMessage]);
+      setNewMessage("");
+      setSelectedFile(null);
+      
+      toast({
+        title: "Message sent",
+        description: "Your message has been posted to the general discussion.",
+      });
+    } else if (activeTab === "messages" && selectedMessageId) {
       toast({
         title: "Message sent",
         description: "Your message has been sent.",
       });
       setNewMessage("");
+      setSelectedFile(null);
     } else if ((activeTab === "discover" || activeTab === "my-content") && selectedGroupId) {
       toast({
         title: "Post published",
         description: "Your post has been published to the group.",
       });
       setNewMessage("");
+      setSelectedFile(null);
     }
   };
 
@@ -393,10 +537,12 @@ export default function ConnectPage() {
                       <div>
                         <div 
                           className={`px-3 py-2 rounded-lg ${
-                            msg.isMine ? 'bg-[#09261E] text-white' : 'bg-gray-100'
+                            msg.isMine 
+                              ? 'bg-[#09261E] text-white rounded-tr-none' 
+                              : 'bg-gray-100 rounded-tl-none'
                           }`}
                         >
-                          <p className="text-sm">{msg.content}</p>
+                          <p className="text-sm whitespace-pre-wrap break-words">{msg.content}</p>
                         </div>
                         <p className={`text-xs text-gray-500 mt-1 ${msg.isMine ? 'text-right' : ''}`}>
                           {msg.time}
@@ -719,61 +865,238 @@ export default function ConnectPage() {
                 </Badge>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y max-h-[500px] overflow-y-auto">
-                  {generalMessages.map(post => (
-                    <div key={post.id} className="p-4">
-                      <div className="flex items-start">
-                        <Avatar className="h-10 w-10 mr-3">
-                          <AvatarFallback>{post.avatar}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="flex justify-between items-center mb-1">
-                            <div className="font-medium">{post.author}</div>
-                            <div className="text-xs text-gray-500">{post.time}</div>
-                          </div>
-                          <p className="text-gray-700 mb-3">{post.content}</p>
-                          <div className="flex items-center text-sm text-gray-500">
-                            <Button variant="ghost" size="sm" className="h-8 flex items-center gap-1 text-gray-500">
-                              <ThumbsUp className="h-4 w-4" />
-                              <span>{post.likes}</span>
-                            </Button>
-                            <div className="mx-2">•</div>
-                            <Button variant="ghost" size="sm" className="h-8 flex items-center gap-1 text-gray-500">
-                              <MessageCircle className="h-4 w-4" />
-                              <span>{post.replies} replies</span>
-                            </Button>
+                <div 
+                  ref={chatContainerRef}
+                  className="max-h-[500px] overflow-y-auto p-4 space-y-4"
+                >
+                  {generalMessages.map((message, index) => {
+                    // Check if we should show the sender info (don't repeat for consecutive messages)
+                    const prevMessage = index > 0 ? generalMessages[index - 1] : null;
+                    const showSender = !prevMessage || prevMessage.author !== message.author;
+                    
+                    return (
+                      <div 
+                        key={message.id} 
+                        className={`flex ${message.isMine ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div className={`group flex max-w-[80%] ${message.isMine ? 'flex-row-reverse' : 'flex-row'}`}>
+                          {showSender && (
+                            <Avatar className={`h-8 w-8 mt-1 ${message.isMine ? 'ml-2' : 'mr-2'}`}>
+                              <AvatarFallback>{message.avatar}</AvatarFallback>
+                            </Avatar>
+                          )}
+                          {!showSender && (
+                            <div className={`w-8 ${message.isMine ? 'ml-2' : 'mr-2'}`}></div>
+                          )}
+                          
+                          <div className="max-w-full">
+                            {showSender && (
+                              <div className={`flex items-center mb-1 ${message.isMine ? 'justify-end' : 'justify-start'}`}>
+                                <div className="font-medium text-sm">{message.author}</div>
+                              </div>
+                            )}
+                            
+                            <div>
+                              <div 
+                                className={`px-3 py-2 rounded-lg ${
+                                  message.isMine 
+                                    ? 'bg-[#09261E] text-white rounded-tr-none' 
+                                    : 'bg-gray-100 rounded-tl-none'
+                                }`}
+                              >
+                                <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                              </div>
+                              
+                              {/* Attachment previews */}
+                              {message.attachments && message.attachments.map((attachment, i) => (
+                                <div 
+                                  key={i} 
+                                  className={`mt-1 rounded-lg overflow-hidden ${
+                                    message.isMine 
+                                      ? 'bg-[#0D382D] text-white' 
+                                      : 'bg-gray-50 border border-gray-200'
+                                  }`}
+                                >
+                                  {attachment.type === 'image' && (
+                                    <img 
+                                      src={attachment.url} 
+                                      alt="Attachment" 
+                                      className="max-w-full rounded-lg max-h-60 object-contain"
+                                    />
+                                  )}
+                                  
+                                  {attachment.type === 'link' && attachment.preview && (
+                                    <a 
+                                      href={attachment.url} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="block hover:opacity-90 transition-opacity"
+                                    >
+                                      <div className="p-3">
+                                        {attachment.preview.image && (
+                                          <div className="mb-2 rounded overflow-hidden">
+                                            <img 
+                                              src={attachment.preview.image}
+                                              alt={attachment.preview.title || "Link preview"} 
+                                              className="w-full h-32 object-cover"
+                                            />
+                                          </div>
+                                        )}
+                                        <div className="font-medium mb-1">{attachment.preview.title}</div>
+                                        {attachment.preview.domain && (
+                                          <div className="text-xs opacity-80 flex items-center">
+                                            <ExternalLink className="h-3 w-3 mr-1" />
+                                            {attachment.preview.domain}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </a>
+                                  )}
+                                  
+                                  {attachment.type === 'propertyLink' && attachment.preview && (
+                                    <a 
+                                      href={attachment.url} 
+                                      className="block hover:opacity-90 transition-opacity"
+                                    >
+                                      <div className="flex">
+                                        {attachment.preview.image && (
+                                          <div className="w-24 h-24 flex-shrink-0">
+                                            <img 
+                                              src={attachment.preview.image}
+                                              alt={attachment.preview.title || "Property"} 
+                                              className="w-full h-full object-cover"
+                                            />
+                                          </div>
+                                        )}
+                                        <div className="p-3">
+                                          <div className="font-medium mb-1">{attachment.preview.title}</div>
+                                          {attachment.preview.address && (
+                                            <div className="text-xs opacity-80 mb-1">{attachment.preview.address}</div>
+                                          )}
+                                          {attachment.preview.price && (
+                                            <div className="text-sm font-bold">{attachment.preview.price}</div>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </a>
+                                  )}
+                                </div>
+                              ))}
+                              
+                              <div className={`flex items-center mt-1 text-xs text-gray-500 ${message.isMine ? 'justify-end' : 'justify-start'}`}>
+                                <span>{message.time}</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
               <CardFooter className="border-t p-3">
                 <div className="flex w-full items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>ME</AvatarFallback>
-                  </Avatar>
+                  <input 
+                    type="file" 
+                    className="hidden"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                  />
+                  
+                  <Popover open={showAttachmentOptions} onOpenChange={setShowAttachmentOptions}>
+                    <PopoverTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-9 w-9 flex-shrink-0 rounded-full p-0 border-gray-300 hover:bg-[#EAF2EF]"
+                      >
+                        <Paperclip className="h-4 w-4 text-gray-500" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent side="top" className="w-48 p-2">
+                      <div className="flex flex-col gap-1">
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                          onClick={() => {
+                            fileInputRef.current?.click();
+                            setShowAttachmentOptions(false);
+                          }}
+                        >
+                          <Image className="h-4 w-4 mr-2" /> Upload Image
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                          onClick={() => {
+                            setNewMessage(prev => prev + " https://");
+                            setShowAttachmentOptions(false);
+                          }}
+                        >
+                          <Link className="h-4 w-4 mr-2" /> Add Link
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          className="justify-start font-normal px-2 h-8 hover:bg-[#EAF2EF]"
+                          onClick={() => {
+                            setNewMessage(prev => prev + " https://propertydeals.com/properties/123");
+                            setShowAttachmentOptions(false);
+                          }}
+                        >
+                          <Share2 className="h-4 w-4 mr-2" /> Share Listing
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  
                   <Input
-                    placeholder="Post to the general discussion..."
+                    placeholder="Type a message..."
                     className="flex-1"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                  />
-                  <Button
-                    size="sm"
-                    className="bg-[#09261E] hover:bg-[#135341]"
-                    onClick={() => {
-                      if (!newMessage.trim()) return;
-                      toast({
-                        title: "Post published",
-                        description: "Your post has been published to the general discussion.",
-                      });
-                      setNewMessage("");
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSendMessage();
+                      }
                     }}
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
+                  />
+                  
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="icon"
+                          className="h-9 w-9 rounded-full p-0 bg-[#09261E] hover:bg-[#135341] flex-shrink-0"
+                          onClick={handleSendMessage}
+                          disabled={!newMessage.trim() && !selectedFile}
+                        >
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Send message (Enter)</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  
+                  {selectedFile && (
+                    <div className="absolute bottom-14 left-0 right-0 bg-white p-2 border-t border-gray-200 flex items-center justify-between">
+                      <div className="flex items-center">
+                        <Image className="h-4 w-4 mr-2 text-gray-500" />
+                        <span className="text-sm truncate">{selectedFile.name}</span>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 w-6 p-0"
+                        onClick={() => setSelectedFile(null)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardFooter>
             </Card>
