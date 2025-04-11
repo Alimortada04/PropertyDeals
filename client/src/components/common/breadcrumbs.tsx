@@ -27,9 +27,9 @@ export default function Breadcrumbs({
   if (breadcrumbs.length === 0) return null;
 
   return (
-    <nav className={`py-3 max-w-full overflow-x-auto ${className}`} aria-label="Breadcrumbs">
+    <nav className={`pt-1 pb-3 max-w-full overflow-x-auto ${className}`} aria-label="Breadcrumbs">
       <ol className="flex text-sm">
-        <li className="flex items-center">
+        <li className="flex items-center pl-0">
           <Link href="/" className="text-gray-500 hover:text-[#09261E]">
             Home
           </Link>
@@ -88,7 +88,7 @@ function generateBreadcrumbs(path: string): BreadcrumbItem[] {
     'report': 'Report an Issue',
     'profile': 'Profile',
     'settings': 'Settings',
-    'connect': 'Connect',
+    'connect': 'Discussions',
     'dashboard': 'Dashboard',
     'about': 'About',
     'contact': 'Contact',

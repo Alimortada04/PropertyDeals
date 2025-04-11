@@ -148,7 +148,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <li>
                   <Link href="/connect" className={getNavItemClasses("/connect")}>
                     <MessageCircle className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
-                    {isExpanded && <span className="ml-3">Connect</span>}
+                    {isExpanded && <span className="ml-3">Discussions</span>}
                   </Link>
                 </li>
                 <li>
