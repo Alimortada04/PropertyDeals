@@ -119,16 +119,16 @@ function StickyPostComposer({
 }) {
   return (
     <div className={`sticky bottom-0 z-30 mb-0 mt-6 ${className || ''}`}>
-      <div className="bg-[#09261E] shadow-lg rounded-md">
+      <div className="bg-white shadow-lg rounded-t-md rounded-b-none">
         <div className="p-3">
           <div className="flex items-center gap-3">
-            <Avatar className="h-8 w-8 flex-shrink-0 border border-white/20">
+            <Avatar className="h-8 w-8 flex-shrink-0">
               <AvatarFallback className="bg-[#124035] text-white">CU</AvatarFallback>
             </Avatar>
             
             <div 
               onClick={onClick}
-              className="flex-1 rounded-full border border-white/20 bg-[#124035] py-2 px-4 text-white/80 cursor-text hover:bg-[#195047] transition-colors"
+              className="flex-1 rounded-full border border-[#09261E]/20 bg-[#124035] py-2 px-4 text-white/80 cursor-text hover:bg-[#195047] transition-colors"
             >
               Start a discussion...
             </div>
@@ -136,7 +136,7 @@ function StickyPostComposer({
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full text-white hover:bg-[#124035]" onClick={onClick}>
+                  <Button variant="ghost" size="icon" className="rounded-full text-[#09261E] hover:bg-gray-100" onClick={onClick}>
                     <ImageIcon className="h-5 w-5" />
                   </Button>
                 </TooltipTrigger>
