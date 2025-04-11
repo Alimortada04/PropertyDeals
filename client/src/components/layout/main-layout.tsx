@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
 import Navbar from "./navbar";
 import Sidebar from "./sidebar";
 import Footer from "./footer";
@@ -6,6 +7,7 @@ import Footer from "./footer";
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [location] = useLocation();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -30,12 +32,15 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
     }
   }, []);
 
+  // Determine if we're on a page that needs extra padding at the top (fixed navbar pages)
+  const isFixedNavbarPage = location === '/properties' || location === '/reps';
+  
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F8FA]">
       {/* Top navbar */}
       <Navbar toggleSidebar={toggleSidebar} />
       
-      <div className="flex flex-1 pt-14"> {/* pt-14 to account for fixed navbar */}
+      <div className={`flex flex-1 ${isFixedNavbarPage ? 'pt-14' : ''}`}> {/* Only add padding for fixed navbar pages */}
         {/* Sidebar */}
         <Sidebar 
           isOpen={sidebarOpen} 
