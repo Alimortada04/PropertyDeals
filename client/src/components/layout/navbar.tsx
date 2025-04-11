@@ -13,9 +13,16 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
   const [visible, setVisible] = useState(true);
   const isMobile = useIsMobile();
 
-  // Handle scroll to hide/show navbar - only on desktop
+  // Handle scroll to hide/show navbar - only on desktop and not on Properties or REPs pages
   useEffect(() => {
     if (typeof window === 'undefined' || isMobile) return;
+    
+    // Always keep navbar visible on Properties and REPs pages
+    const isStaticNavbarPage = location === '/properties' || location === '/reps';
+    if (isStaticNavbarPage) {
+      setVisible(true);
+      return () => {}; // No cleanup needed for static pages
+    }
     
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
@@ -34,7 +41,7 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [prevScrollPos, isMobile]);
+  }, [prevScrollPos, isMobile, location]);
 
   const handleLogout = () => {
     logoutMutation.mutate();

@@ -68,8 +68,8 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-30 py-0 mt-0",
-        isSticky ? "sticky top-0 lg:top-14 left-0 right-0 shadow-md" : ""
+        "bg-white transition-all duration-200 z-30 py-4",
+        isSticky ? "sticky top-0 left-0 right-0 shadow-md" : ""
       )}
     >
       <div className="container mx-auto px-4 py-4">

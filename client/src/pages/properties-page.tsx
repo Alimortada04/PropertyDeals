@@ -278,7 +278,17 @@ export default function PropertiesPage() {
   
   return (
     <div className="container mx-auto px-4 pb-8">
-      {/* Sticky Search and Filter Section - Moved to top */}
+      {/* Page Title - Before sticky search */}
+      <div className="pt-4 mb-6">
+        <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">
+          Browse Properties
+        </h1>
+        <p className="text-gray-600">
+          Discover your perfect investment opportunity
+        </p>
+      </div>
+      
+      {/* Sticky Search and Filter Section */}
       <StickySearchFilter
         onSearch={setSearchTerm}
         searchPlaceholder="Search by address, city, or zip code..."
@@ -288,16 +298,6 @@ export default function PropertiesPage() {
         filterContent={filterContent}
         filterButtonText="Filters"
       />
-      
-      {/* Page Title - After sticky search */}
-      <div className="mt-6 mb-4">
-        <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">
-          Browse Properties
-        </h1>
-        <p className="text-gray-600">
-          Discover your perfect investment opportunity
-        </p>
-      </div>
       
       {/* View Toggle and Sort Options */}
       <div className="flex flex-wrap justify-between items-center mb-6">
