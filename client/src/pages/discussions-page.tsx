@@ -119,7 +119,7 @@ function StickyPostComposer({
 }) {
   return (
     <div className={`sticky bottom-0 z-30 mb-0 ${className || ''}`}>
-      <div className="bg-transparent shadow-lg border border-[#09261E]/10 rounded-b-none">
+      <div className="bg-transparent shadow-lg">
         <div className="p-4">
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 flex-shrink-0">
@@ -128,23 +128,11 @@ function StickyPostComposer({
 
             <div 
               onClick={onClick}
-              className="flex-1 rounded-t-md rounded-bl-md rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 text-white/90 cursor-text hover:bg-[#124035] transition-colors"
+              className="flex-1 flex items-center rounded-2xl rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 pr-12 text-white/90 cursor-text hover:bg-[#124035] transition-colors relative"
             >
-              Start a discussion...
+              <span>Start a discussion...</span>
+              <ImageIcon className="h-5 w-5 text-white/90 absolute right-4" />
             </div>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="rounded-full text-[#09261E] hover:bg-gray-100" onClick={onClick}>
-                    <ImageIcon className="h-5 w-5" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Add images</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </div>
         </div>
       </div>
