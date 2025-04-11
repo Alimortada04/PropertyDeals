@@ -13,7 +13,8 @@ import {
   Search, MessageCircle, Clock, TrendingUp, MapPin, Filter, 
   ThumbsUp, Send, Globe, Users, User, Paperclip, Image as ImageIcon, Link, 
   Share2, MenuSquare, ThumbsDown, Bookmark, Flag, BarChart3, 
-  FileText, HelpCircle, PanelLeft, Home, Flame, LightbulbIcon, PlusCircleIcon
+  FileText, HelpCircle, PanelLeft, Home, Flame, LightbulbIcon, PlusCircleIcon,
+  ExternalLink
 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import Breadcrumbs from "@/components/common/breadcrumbs";
@@ -123,7 +124,7 @@ export default function DiscussionsPage() {
   const [newReplyContent, setNewReplyContent] = useState("");
   const [postReplies, setPostReplies] = useState<Reply[]>([]);
   const [showNewPostDialog, setShowNewPostDialog] = useState(false);
-  const [locationFilter, setLocationFilter] = useState<string | null>(null);
+  const [locationFilter, setLocationFilter] = useState<string | null>("all");
   
   const { toast } = useToast();
   
@@ -329,7 +330,7 @@ export default function DiscussionsPage() {
     const matchesSearch = !searchQuery || 
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
       post.content.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesLocation = !locationFilter || post.location === locationFilter;
+    const matchesLocation = !locationFilter || locationFilter === "all" || post.location === locationFilter;
     
     return matchesCategory && matchesSearch && matchesLocation;
   }).sort((a, b) => {
@@ -595,7 +596,7 @@ export default function DiscussionsPage() {
                         <SelectValue placeholder="All Locations" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Locations</SelectItem>
+                        <SelectItem value="all">All Locations</SelectItem>
                         <SelectItem value="San Francisco, CA">San Francisco, CA</SelectItem>
                         <SelectItem value="Austin, TX">Austin, TX</SelectItem>
                         <SelectItem value="New York, NY">New York, NY</SelectItem>
@@ -639,7 +640,7 @@ export default function DiscussionsPage() {
                 <SelectValue placeholder="All Locations" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Locations</SelectItem>
+                <SelectItem value="all">All Locations</SelectItem>
                 <SelectItem value="San Francisco, CA">San Francisco, CA</SelectItem>
                 <SelectItem value="Austin, TX">Austin, TX</SelectItem>
                 <SelectItem value="New York, NY">New York, NY</SelectItem>
