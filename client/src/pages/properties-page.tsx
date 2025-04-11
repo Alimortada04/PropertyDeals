@@ -118,8 +118,8 @@ export default function PropertiesPage() {
       {/* Tier Dropdown */}
       <div className="w-44">
         <Select 
-          value={filters.tier || ""}
-          onValueChange={(value) => setFilters({...filters, tier: value})}
+          value={filters.tier || "any"}
+          onValueChange={(value) => setFilters({...filters, tier: value === "any" ? "" : value})}
         >
           <SelectTrigger className="border h-9 bg-white">
             <SelectValue placeholder="Tier" />
@@ -135,8 +135,8 @@ export default function PropertiesPage() {
       {/* Investment Type Dropdown */}
       <div className="w-44">
         <Select 
-          value={filters.investmentType || ""}
-          onValueChange={(value) => setFilters({...filters, investmentType: value})}
+          value={filters.investmentType || "any"}
+          onValueChange={(value) => setFilters({...filters, investmentType: value === "any" ? "" : value})}
         >
           <SelectTrigger className="border h-9 bg-white">
             <SelectValue placeholder="Investment Type" />
@@ -152,8 +152,8 @@ export default function PropertiesPage() {
       {/* Property Type Dropdown */}
       <div className="w-44">
         <Select 
-          value={filters.propertyType || ""}
-          onValueChange={(value) => setFilters({...filters, propertyType: value})}
+          value={filters.propertyType || "any"}
+          onValueChange={(value) => setFilters({...filters, propertyType: value === "any" ? "" : value})}
         >
           <SelectTrigger className="border h-9 bg-white">
             <SelectValue placeholder="Property Type" />
