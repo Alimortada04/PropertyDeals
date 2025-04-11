@@ -903,8 +903,13 @@ export default function ConnectPage() {
   return (
     <div className="container mx-auto px-4 lg:px-6 py-8">
       <div className="flex flex-col space-y-8">
-        <div>
+        {/* Breadcrumbs */}
+        <div className="mb-3">
           <Breadcrumbs />
+        </div>
+        
+        {/* Header */}
+        <div>
           <h1 className="text-3xl font-bold text-[#09261E] mb-2">Discussions</h1>
           <p className="text-gray-600">
             Join property discussions and connect with other real estate professionals
