@@ -66,36 +66,45 @@ export default function StickySearchFilter({
     >
       <div className="w-full px-6 pt-2 pb-0 transition-all duration-300">
         {/* Search and Filter Row - always visible */}
-        <div className="flex flex-col md:flex-row gap-4 items-center mb-4 transition-all duration-300 max-h-20 opacity-100">
-          {/* Search Bar */}
-          <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              type="text"
-              placeholder={searchPlaceholder}
-              className="pl-10 pr-4 py-2 w-full bg-white hover:border-gray-400"
-              value={searchTerm}
-              onChange={handleSearch}
-            />
+        <div className="flex flex-col gap-4 transition-all duration-300 opacity-100">
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            {/* Search Bar */}
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                type="text"
+                placeholder={searchPlaceholder}
+                className="pl-10 pr-4 py-2 w-full bg-white hover:border-gray-400"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
+            
+            {/* Filter Button (only show if tabs exist) */}
+            {filterContent && tabs.length > 0 && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="flex-shrink-0 flex items-center gap-2 hover:bg-[#EAF2EF] hover:border-[#09261E]"
+                  >
+                    <Filter className="h-4 w-4" />
+                    {filterButtonText}
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[350px] p-5 shadow-lg" align="end">
+                  {filterContent}
+                </PopoverContent>
+              </Popover>
+            )}
           </div>
           
-          {/* Filter Button */}
-          {filterContent && (
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="flex-shrink-0 flex items-center gap-2 hover:bg-[#EAF2EF] hover:border-[#09261E]"
-                >
-                  <Filter className="h-4 w-4" />
-                  {filterButtonText}
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[350px] p-5 shadow-lg" align="end">
-                {filterContent}
-              </PopoverContent>
-            </Popover>
+          {/* Display filter content inline if no tabs */}
+          {filterContent && tabs.length === 0 && (
+            <div className="mt-2 mb-3">
+              {filterContent}
+            </div>
           )}
         </div>
         

@@ -109,170 +109,132 @@ export default function PropertiesPage() {
     setCurrentPage(1);
   }, [searchTerm, filters, sortBy]);
 
-  // Define property category tabs
-  const propertyTabs = [
-    { value: "all", label: "All" },
-    { value: "single-family", label: "Single Family" },
-    { value: "multi-family", label: "Multi Family" },
-    { value: "condo", label: "Condo" },
-    { value: "townhouse", label: "Townhouse" },
-    { value: "land", label: "Land" }
-  ];
+  // We no longer need property tabs since we're using dropdowns
+  const propertyTabs: { value: string; label: string; }[] = [];
   
-  // Define Filter Modal Content
+  // Define quick filter dropdowns
   const filterContent = (
-    <div className="space-y-4">
-      <div>
-        <h4 className="font-medium mb-2 text-sm text-gray-700">TIER</h4>
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { id: 'general', label: 'General' },
-            { id: 'exclusive', label: 'Exclusive' }
-          ].map((type) => (
-            <div key={type.id} className="flex items-center space-x-2">
-              <Checkbox 
-                id={`tier-${type.id}`} 
-                checked={filters.tier === type.id}
-                onCheckedChange={() => setFilters({
-                  ...filters,
-                  tier: filters.tier === type.id ? '' : type.id
-                })}
-              />
-              <label
-                htmlFor={`tier-${type.id}`}
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {type.label}
-              </label>
-            </div>
-          ))}
-        </div>
+    <div className="flex flex-wrap gap-4 justify-start w-full">
+      {/* Tier Dropdown */}
+      <div className="w-44">
+        <Select 
+          value={filters.tier || ""}
+          onValueChange={(value) => setFilters({...filters, tier: value})}
+        >
+          <SelectTrigger className="border h-9 bg-white">
+            <SelectValue placeholder="Tier" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="any">Any Tier</SelectItem>
+            <SelectItem value="general">General</SelectItem>
+            <SelectItem value="exclusive">Exclusive</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      
-      <div>
-        <h4 className="font-medium mb-2 text-sm text-gray-700">INVESTMENT TYPE</h4>
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { id: 'flip', label: 'Flip' },
-            { id: 'buy-hold', label: 'Buy and Hold' }
-          ].map((type) => (
-            <div key={type.id} className="flex items-center space-x-2">
-              <Checkbox 
-                id={`investment-${type.id}`} 
-                checked={filters.investmentType === type.id}
-                onCheckedChange={() => setFilters({
-                  ...filters,
-                  investmentType: filters.investmentType === type.id ? '' : type.id
-                })}
-              />
-              <label
-                htmlFor={`investment-${type.id}`}
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {type.label}
-              </label>
-            </div>
-          ))}
-        </div>
+
+      {/* Investment Type Dropdown */}
+      <div className="w-44">
+        <Select 
+          value={filters.investmentType || ""}
+          onValueChange={(value) => setFilters({...filters, investmentType: value})}
+        >
+          <SelectTrigger className="border h-9 bg-white">
+            <SelectValue placeholder="Investment Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="any">Any Investment</SelectItem>
+            <SelectItem value="flip">Flip</SelectItem>
+            <SelectItem value="buy-hold">Buy & Hold</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      
-      <div>
-        <h4 className="font-medium mb-2 text-sm text-gray-700">PROPERTY TYPE</h4>
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { id: 'single-family', label: 'Single Family' },
-            { id: 'multi-family', label: 'Multi Family' },
-            { id: 'condo', label: 'Condo' },
-            { id: 'townhouse', label: 'Townhouse' },
-            { id: 'land', label: 'Land' }
-          ].map((type) => (
-            <div key={type.id} className="flex items-center space-x-2">
-              <Checkbox 
-                id={`prop-${type.id}`} 
-                checked={filters.propertyType === type.id}
-                onCheckedChange={() => setFilters({
-                  ...filters,
-                  propertyType: filters.propertyType === type.id ? '' : type.id
-                })}
-              />
-              <label
-                htmlFor={`prop-${type.id}`}
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                {type.label}
-              </label>
-            </div>
-          ))}
-        </div>
+
+      {/* Property Type Dropdown */}
+      <div className="w-44">
+        <Select 
+          value={filters.propertyType || ""}
+          onValueChange={(value) => setFilters({...filters, propertyType: value})}
+        >
+          <SelectTrigger className="border h-9 bg-white">
+            <SelectValue placeholder="Property Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="any">Any Property</SelectItem>
+            <SelectItem value="single-family">Single Family</SelectItem>
+            <SelectItem value="multi-family">Multi Family</SelectItem>
+            <SelectItem value="condo">Condo</SelectItem>
+            <SelectItem value="townhouse">Townhouse</SelectItem>
+            <SelectItem value="land">Land</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-      
-      <div>
-        <h4 className="font-medium mb-2 text-sm text-gray-700">PRICE RANGE</h4>
-        <div className="space-y-4">
-          <div className="pt-4">
-            <Slider 
-              defaultValue={[0, 1000000]} 
-              max={10000000} 
-              step={50000} 
-              onValueChange={(values) => {
-                setFilters({
-                  ...filters,
-                  priceRange: `${values[0]}-${values[1]}`
-                });
-              }}
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex-1">
-              <Input
-                type="number"
-                placeholder="Min"
-                className="w-full"
-                onChange={(e) => {
-                  const min = e.target.value ? parseInt(e.target.value) : 0;
-                  const [, max] = filters.priceRange.split('-').map(Number);
+
+      {/* Price Range Dropdown/Slider */}
+      <div className="w-44">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="border h-9 bg-white w-full flex justify-between">
+              <span className="text-sm text-gray-500">Price Range</span>
+              <ChevronDown className="h-4 w-4 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[320px] p-5">
+            <div className="space-y-5">
+              <h3 className="font-medium text-sm">Price Range</h3>
+              <Slider
+                defaultValue={[0, 1000000]}
+                min={0}
+                max={10000000}
+                step={100000}
+                onValueChange={(values) => {
                   setFilters({
-                    ...filters,
-                    priceRange: `${min}-${max || 10000000}`
+                    ...filters, 
+                    priceRange: `${values[0]}-${values[1]}`
                   });
                 }}
               />
+              <div className="flex items-center gap-4">
+                <div>
+                  <p className="text-xs mb-1 text-gray-500">Min</p>
+                  <Input
+                    type="text"
+                    value={`$${new Intl.NumberFormat().format(parseInt(filters.priceRange?.split('-')?.[0] || "0"))}`}
+                    className="h-8"
+                    onChange={(e) => {
+                      // Parse input if needed
+                      const value = e.target.value.replace(/[\$,]/g, '');
+                      const min = parseInt(value) || 0;
+                      const max = parseInt(filters.priceRange?.split('-')?.[1] || "10000000");
+                      setFilters({
+                        ...filters,
+                        priceRange: `${min}-${max}`
+                      });
+                    }}
+                  />
+                </div>
+                <div className="pt-5">—</div>
+                <div>
+                  <p className="text-xs mb-1 text-gray-500">Max</p>
+                  <Input
+                    type="text"
+                    value={`$${new Intl.NumberFormat().format(parseInt(filters.priceRange?.split('-')?.[1] || "10000000"))}`}
+                    className="h-8"
+                    onChange={(e) => {
+                      // Parse input if needed
+                      const value = e.target.value.replace(/[\$,]/g, '');
+                      const max = parseInt(value) || 10000000;
+                      const min = parseInt(filters.priceRange?.split('-')?.[0] || "0");
+                      setFilters({
+                        ...filters,
+                        priceRange: `${min}-${max}`
+                      });
+                    }}
+                  />
+                </div>
+              </div>
             </div>
-            <span className="text-gray-500">—</span>
-            <div className="flex-1">
-              <Input
-                type="number"
-                placeholder="Max"
-                className="w-full"
-                onChange={(e) => {
-                  const max = e.target.value ? parseInt(e.target.value) : 10000000;
-                  const [min] = filters.priceRange.split('-').map(Number);
-                  setFilters({
-                    ...filters,
-                    priceRange: `${min || 0}-${max}`
-                  });
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="flex justify-between pt-4">
-        <Button variant="outline" onClick={() => {
-          setFilters({
-            priceRange: "",
-            beds: "",
-            baths: "",
-            status: "",
-            tier: "",
-            investmentType: "",
-            propertyType: ""
-          });
-        }}>
-          Clear All
-        </Button>
-        <Button className="bg-[#09261E] hover:bg-[#135341]">Apply Filters</Button>
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   );
@@ -293,9 +255,6 @@ export default function PropertiesPage() {
       <StickySearchFilter
         onSearch={setSearchTerm}
         searchPlaceholder="Search by address, city, or zip code..."
-        tabs={propertyTabs}
-        onTabChange={(value) => setFilters({...filters, propertyType: value === 'all' ? '' : value})}
-        defaultTab="all"
         filterContent={filterContent}
         filterButtonText="Filters"
       />
