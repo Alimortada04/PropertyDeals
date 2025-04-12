@@ -21,6 +21,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const { user } = useAuth();
   const [location] = useLocation();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
   const [showExpandIndicator, setShowExpandIndicator] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
@@ -106,8 +107,13 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       {/* Mobile top navbar with hamburger menu */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm h-14 lg:hidden flex items-center px-4">
         <button 
-          onClick={toggleSidebar}
-          className="mr-4 p-2 hover:bg-gray-100 rounded-md"
+          ref={hamburgerRef}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleSidebar();
+          }}
+          className="mr-4 p-2 hover:bg-gray-100 rounded-md touch-manipulation"
           aria-label="Toggle menu"
           type="button"
         >
@@ -154,9 +160,9 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         id="sidebar" 
         ref={sidebarRef}
         className={`
-          fixed top-0 left-0 h-screen overflow-y-auto z-50 shadow-lg
-          transition-all duration-200 bg-white
-          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          fixed top-0 left-0 h-screen overflow-y-auto shadow-lg
+          transition-all duration-200 ease-in-out bg-white
+          ${isOpen ? 'translate-x-0 z-60' : '-translate-x-full lg:translate-x-0 z-50'}
           ${isExpanded ? 'w-64' : 'w-16'}
           ${isMobile ? 'w-[260px]' : ''}
         `}
