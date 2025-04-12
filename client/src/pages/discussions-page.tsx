@@ -117,9 +117,43 @@ function StickyPostComposer({
   onClick: () => void,
   className?: string
 }) {
+  const [isSticky, setIsSticky] = useState(true);
+  const composerRef = useRef<HTMLDivElement>(null);
+  
+  // Adjust sticky behavior based on scroll position
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const handleScroll = () => {
+      const footerElement = document.querySelector('footer');
+      if (!footerElement || !composerRef.current) return;
+      
+      const footerTop = footerElement.getBoundingClientRect().top;
+      const composerHeight = composerRef.current.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      
+      // If footer is becoming visible in viewport, stop being sticky
+      if (footerTop - viewportHeight + composerHeight < 0) {
+        setIsSticky(false);
+      } else {
+        setIsSticky(true);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
   return (
-    <div className={`sticky bottom-0 z-30 mb-0 ${className || ''}`}>
-      <div className="bg-transparent shadow-lg">
+    <div 
+      ref={composerRef}
+      className={`${isSticky ? 'sticky bottom-0' : 'relative'} z-30 mb-0 bg-white ${className || ''}`}
+      style={{ 
+        borderTopLeftRadius: '0',
+        borderTopRightRadius: '0',
+      }}
+    >
+      <div className="bg-white shadow-lg">
         <div className="p-4">
           <div className="flex items-center gap-3">
             <Avatar className="h-9 w-9 flex-shrink-0">
@@ -128,9 +162,9 @@ function StickyPostComposer({
 
             <div 
               onClick={onClick}
-              className="flex-1 flex items-center rounded-2xl rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 pr-12 text-white/90 cursor-text hover:bg-[#124035] transition-colors relative"
+              className="flex-1 flex items-center rounded-2xl rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 pr-12 text-[#7a1a45] cursor-text hover:bg-[#124035] transition-colors relative"
             >
-              <span>Start a discussion...</span>
+              <span className="text-white/90">Start a discussion...</span>
               <ImageIcon className="h-5 w-5 text-white/90 absolute right-4" />
             </div>
           </div>
