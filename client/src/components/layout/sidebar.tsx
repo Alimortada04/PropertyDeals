@@ -276,8 +276,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             <ul className="space-y-4">
               <li>
                 <Link 
-                  href="/guides" 
-                  className={getMobileNavItemClasses("/guides")}
+                  href="/playbook" 
+                  className={getMobileNavItemClasses("/playbook")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -285,7 +285,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <Book className={getMobileIconClasses("/guides")} />
+                  <Book className={getMobileIconClasses("/playbook")} />
                   <span>PropertyPlaybook</span>
                 </Link>
               </li>
@@ -495,7 +495,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               )}
               <ul>
                 <li>
-                  <Link href="/guides" className={getNavItemClasses("/guides")}>
+                  <Link href="/playbook" className={getNavItemClasses("/playbook")}>
                     <Book className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
                     {isExpanded && <span className="ml-3">PropertyPlaybook</span>}
                   </Link>

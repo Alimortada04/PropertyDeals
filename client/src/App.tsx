@@ -16,8 +16,8 @@ import ConnectPage from "@/pages/connect-page";
 import DiscussionsPage from "@/pages/discussions-page";
 import ToolsPage from "@/pages/tools-page";
 import FlipCalculatorPage from "@/pages/tools/flip-calculator-page";
-import GuidesPage from "@/pages/guides-page";
-import PropertyDictionaryPage from "@/pages/guides/property-dictionary-page";
+import PlaybookPage from "@/pages/playbook-page";
+import PropertyDictionaryPage from "@/pages/playbook/property-dictionary-page";
 import HelpPage from "@/pages/help-page";
 import FAQPage from "@/pages/help/faq-page";
 import SuggestionsPage from "@/pages/help/suggestions-page";
@@ -86,12 +86,12 @@ function Router() {
           <FlipCalculatorPage />
         </MainLayout>
       </Route>
-      <Route path="/guides">
+      <Route path="/playbook">
         <MainLayout>
-          <GuidesPage />
+          <PlaybookPage />
         </MainLayout>
       </Route>
-      <Route path="/guides/property-dictionary">
+      <Route path="/playbook/property-dictionary">
         <MainLayout>
           <PropertyDictionaryPage />
         </MainLayout>

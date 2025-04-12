@@ -56,16 +56,34 @@ export default function StickySearchFilter({
     onSearch(value);
   };
   
-  // Make the search/filter bar sticky on scroll
+  // State for the collapsible bottom section
+  const [showBottomSection, setShowBottomSection] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Make the search/filter bar sticky on scroll and handle bottom section visibility
   useEffect(() => {
     const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
       // Always sticky after scrolling a bit
-      setIsSticky(window.scrollY > 10); 
+      setIsSticky(currentScrollY > 10);
+      
+      // Hide bottom section when scrolling down, show when scrolling up
+      if (currentScrollY > lastScrollY + 5) {
+        // Scrolling down
+        setShowBottomSection(false);
+      } else if (currentScrollY < lastScrollY - 5) {
+        // Scrolling up
+        setShowBottomSection(true);
+      }
+      
+      // Save current scroll position
+      setLastScrollY(currentScrollY);
     };
     
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
   
   return (
     <div 
@@ -75,8 +93,8 @@ export default function StickySearchFilter({
       )}
     >
       {/* Main search bar - full-width, Redfin-inspired layout */}
-      <div className="w-full px-0 py-3">
-        <div className="flex flex-col md:flex-row gap-3 max-w-full mx-auto">
+      <div className="w-full px-4 py-3">
+        <div className="flex flex-col md:flex-row gap-3 max-w-7xl mx-auto">
           {/* Location Search */}
           <div className="relative flex-grow max-w-xl">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />

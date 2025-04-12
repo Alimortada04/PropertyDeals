@@ -434,7 +434,7 @@ export default function PropertiesPage() {
       <div className="flex-grow mt-4">
         {isLoading ? (
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="bg-white rounded-lg overflow-hidden shadow-md">
                   <Skeleton className="w-full h-48" />
@@ -464,7 +464,7 @@ export default function PropertiesPage() {
         ) : viewMode === 'grid' ? (
           // Grid View - Traditional Card Grid
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {currentProperties.map((property) => (
                 <div 
                   key={property.id}
