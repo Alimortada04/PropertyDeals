@@ -460,7 +460,7 @@ export default function PropertiesPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-grow mt-2">
+      <div className="flex-grow mt-6">
         {isLoading ? (
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

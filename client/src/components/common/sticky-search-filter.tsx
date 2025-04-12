@@ -93,8 +93,8 @@ export default function StickySearchFilter({
       )}
     >
       {/* Main search bar - full-width, Redfin-inspired layout */}
-      <div className="w-full px-4 py-3">
-        <div className="flex flex-col md:flex-row gap-3 max-w-7xl mx-auto">
+      <div className="w-full px-4 py-4 shadow-sm">
+        <div className="flex flex-col md:flex-row gap-4 max-w-7xl mx-auto">
           {/* Location Search */}
           <div className="relative flex-grow max-w-xl">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
@@ -108,7 +108,7 @@ export default function StickySearchFilter({
           </div>
 
           {/* Quick Filters Row - Redfin style dropdowns */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-3 flex-wrap">
             {/* Price Range */}
             <Select defaultValue="any">
               <SelectTrigger className="w-32 h-10 bg-white border border-gray-200 rounded-md hover:border-gray-300">
