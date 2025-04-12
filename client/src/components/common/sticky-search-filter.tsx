@@ -101,7 +101,7 @@ export default function StickySearchFilter({
             <Input
               type="text"
               placeholder={searchPlaceholder}
-              className="pl-10 pr-4 py-2 w-full bg-white border border-gray-300 hover:border-gray-400"
+              className="pl-10 pr-4 py-2 w-full bg-white border border-gray-200 hover:border-gray-300 rounded-md"
               value={searchTerm}
               onChange={handleSearch}
             />
@@ -111,7 +111,7 @@ export default function StickySearchFilter({
           <div className="flex gap-2 flex-wrap">
             {/* Price Range */}
             <Select defaultValue="any">
-              <SelectTrigger className="w-32 h-10 bg-white border border-gray-300">
+              <SelectTrigger className="w-32 h-10 bg-white border border-gray-200 rounded-md hover:border-gray-300">
                 <SelectValue placeholder="Price" />
               </SelectTrigger>
               <SelectContent>
@@ -126,7 +126,7 @@ export default function StickySearchFilter({
 
             {/* Beds/Baths */}
             <Select defaultValue="any">
-              <SelectTrigger className="w-32 h-10 bg-white border border-gray-300">
+              <SelectTrigger className="w-32 h-10 bg-white border border-gray-200 rounded-md hover:border-gray-300">
                 <SelectValue placeholder="Beds/Baths" />
               </SelectTrigger>
               <SelectContent>
@@ -141,7 +141,7 @@ export default function StickySearchFilter({
 
             {/* Property Type */}
             <Select defaultValue="any">
-              <SelectTrigger className="w-32 h-10 bg-white border border-gray-300">
+              <SelectTrigger className="w-32 h-10 bg-white border border-gray-200 rounded-md hover:border-gray-300">
                 <SelectValue placeholder="Home Type" />
               </SelectTrigger>
               <SelectContent>
@@ -159,7 +159,7 @@ export default function StickySearchFilter({
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="h-10 flex items-center gap-2 border border-gray-300"
+                  className="h-10 flex items-center gap-2 border border-gray-200 rounded-md hover:border-gray-300"
                 >
                   <Sliders className="h-4 w-4" />
                   {filterButtonText}

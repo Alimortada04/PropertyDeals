@@ -402,8 +402,8 @@ export default function PropertiesPage() {
       
         {/* View controls below search bar but still in sticky section - collapses on scroll down */}
         <div className={cn(
-          "w-full border-t border-gray-100 px-4 overflow-hidden transition-all duration-300",
-          showViewControls ? "max-h-20 opacity-100 py-2" : "max-h-0 opacity-0 py-0 border-t-0"
+          "w-full px-4 overflow-hidden transition-all duration-300",
+          showViewControls ? "max-h-20 opacity-100 py-2" : "max-h-0 opacity-0 py-0"
         )}>
           <div className="container mx-auto flex flex-wrap justify-between items-center">
             {/* Property Count */}
@@ -414,7 +414,7 @@ export default function PropertiesPage() {
             {/* View Mode and Sort Controls */}
             <div className="flex items-center gap-3">
               {/* View Toggles */}
-              <div className="border rounded-md overflow-hidden flex">
+              <div className="border border-gray-200 rounded-md overflow-hidden flex">
                 <Button 
                   variant="ghost" 
                   size="sm"
@@ -443,7 +443,7 @@ export default function PropertiesPage() {
               
               {/* Sort Control */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-white border h-9 w-44">
+                <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 h-9 w-44">
                   <span className="text-sm">Sort: </span>
                   <SelectValue placeholder="Recommended" />
                 </SelectTrigger>
