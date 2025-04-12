@@ -53,8 +53,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         />
         
         {/* Main content - ensure it starts after the collapsed sidebar width */}
-        <main className={`flex-1 w-full transition-all duration-200 ${!isExpanded ? 'ml-16' : ''} lg:ml-16`}>
-          <div className="min-h-screen pt-4 pb-16">
+        <main className={`flex-1 w-full transition-all duration-200 ${!isExpanded ? 'ml-16' : 'ml-64'} lg:ml-16`}>
+          <div className="min-h-screen pt-4 pb-16 px-4">
             {children}
           </div>
         </main>

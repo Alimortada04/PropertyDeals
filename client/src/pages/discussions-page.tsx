@@ -118,7 +118,19 @@ function StickyPostComposer({
   className?: string
 }) {
   const [isSticky, setIsSticky] = useState(true);
+  const [isAtBottom, setIsAtBottom] = useState(false);
   const composerRef = useRef<HTMLDivElement>(null);
+  const lastPostRef = useRef<Element | null>(null);
+  
+  // Get a reference to the last post in the thread
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const posts = document.querySelectorAll('[data-post-container]');
+      if (posts.length > 0) {
+        lastPostRef.current = posts[posts.length - 1];
+      }
+    }
+  }, []);
   
   // Adjust sticky behavior based on scroll position
   useEffect(() => {
@@ -132,6 +144,13 @@ function StickyPostComposer({
       const composerHeight = composerRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
       
+      // Check if we're at the bottom of the thread
+      if (lastPostRef.current) {
+        const lastPostBottom = lastPostRef.current.getBoundingClientRect().bottom;
+        const isLastPostVisible = lastPostBottom < viewportHeight - composerHeight;
+        setIsAtBottom(isLastPostVisible);
+      }
+      
       // If footer is becoming visible in viewport, stop being sticky
       if (footerTop - viewportHeight + composerHeight < 0) {
         setIsSticky(false);
@@ -141,16 +160,20 @@ function StickyPostComposer({
     };
     
     window.addEventListener('scroll', handleScroll);
+    // Initial check
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
   return (
     <div 
       ref={composerRef}
-      className={`${isSticky ? 'sticky bottom-0' : 'relative'} z-30 mb-0 bg-white ${className || ''}`}
+      className={`${isSticky ? 'sticky bottom-0' : 'relative'} z-30 mb-0 bg-white ${className || ''} ${isAtBottom ? 'border-t-0' : 'border-t border-gray-200'}`}
       style={{ 
         borderTopLeftRadius: '0',
         borderTopRightRadius: '0',
+        borderLeft: '1px solid transparent',
+        borderRight: '1px solid transparent',
       }}
     >
       <div className="bg-white shadow-lg">
@@ -162,7 +185,7 @@ function StickyPostComposer({
 
             <div 
               onClick={onClick}
-              className="flex-1 flex items-center rounded-2xl rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 pr-12 text-[#7a1a45] cursor-text hover:bg-[#124035] transition-colors relative"
+              className="flex-1 flex items-center rounded-2xl rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 pr-12 cursor-text hover:bg-[#124035] transition-colors relative"
             >
               <span className="text-white/90">Start a discussion...</span>
               <ImageIcon className="h-5 w-5 text-white/90 absolute right-4" />
@@ -1053,7 +1076,11 @@ export default function DiscussionsPage() {
                 <div className="divide-y divide-transparent relative">
                   {/* Posts List */}
                   {filteredPosts.map((post, index) => (
-                    <div key={post.id} className={`p-5 hover:bg-gray-50 transition-colors border-transparent ${index === filteredPosts.length - 1 ? 'border-b-0' : ''}`}>
+                    <div 
+                      key={post.id} 
+                      data-post-container 
+                      className={`p-5 hover:bg-gray-50 transition-colors border-transparent ${index === filteredPosts.length - 1 ? 'border-b-0' : ''}`}
+                    >
                       <div className="flex">
                         <Avatar className="h-10 w-10 mt-1 mr-4">
                           <AvatarFallback>{post.author.avatar}</AvatarFallback>
