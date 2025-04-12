@@ -386,7 +386,7 @@ export default function PropertiesPage() {
       </div>
       
       {/* Sticky full-width search bar at the top of the page */}
-      <div className="sticky top-0 z-40 bg-white shadow-md pb-0 px-0">
+      <div className="sticky top-0 z-40 bg-white pb-0 px-0">
         <div className="w-full">
           <StickySearchFilter
             onSearch={setSearchTerm}
@@ -402,7 +402,7 @@ export default function PropertiesPage() {
       
         {/* View controls below search bar but still in sticky section - collapses on scroll down */}
         <div className={cn(
-          "w-full border-t border-gray-200 px-4 overflow-hidden transition-all duration-300",
+          "w-full border-t border-gray-100 px-4 overflow-hidden transition-all duration-300",
           showViewControls ? "max-h-20 opacity-100 py-2" : "max-h-0 opacity-0 py-0 border-t-0"
         )}>
           <div className="container mx-auto flex flex-wrap justify-between items-center">
