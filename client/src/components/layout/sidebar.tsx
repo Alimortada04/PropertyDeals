@@ -105,31 +105,63 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   return (
     <>
       {/* Mobile top navbar with hamburger menu */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm h-14 lg:hidden flex items-center px-4">
-        <button 
-          ref={hamburgerRef}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleSidebar();
-          }}
-          className="mr-4 p-2 hover:bg-gray-100 rounded-md touch-manipulation"
-          aria-label="Toggle menu"
-          type="button"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm h-14 lg:hidden flex items-center justify-between px-4">
+        <div className="flex items-center">
+          <button 
+            ref={hamburgerRef}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log("Hamburger clicked");
+              
+              // Try direct DOM manipulation as a fallback approach
+              const sidebarElement = document.getElementById('sidebar');
+              if (sidebarElement) {
+                if (sidebarElement.classList.contains('-translate-x-full')) {
+                  sidebarElement.classList.remove('-translate-x-full');
+                  sidebarElement.classList.add('translate-x-0');
+                } else {
+                  sidebarElement.classList.remove('translate-x-0');
+                  sidebarElement.classList.add('-translate-x-full');
+                }
+              }
+              
+              // Also update React state
+              toggleSidebar();
+            }}
+            className="mr-4 p-2 hover:bg-gray-100 rounded-md touch-manipulation cursor-pointer"
+            aria-label="Toggle menu"
+            type="button"
+            style={{ touchAction: 'manipulation' }}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          
+          <Link href="/" className="flex items-center">
+            <img 
+              src="/images/pdLogo.png" 
+              alt="PropertyDeals Logo" 
+              className="h-8 w-auto"
+            />
+            <span className="ml-2 font-heading font-bold text-[#09261E] text-lg">
+              PropertyDeals
+            </span>
+          </Link>
+        </div>
         
-        <Link href="/" className="flex items-center">
-          <img 
-            src="/images/pdLogo.png" 
-            alt="PropertyDeals Logo" 
-            className="h-8 w-auto"
-          />
-          <span className="ml-2 font-heading font-bold text-[#09261E] text-lg">
-            PropertyDeals
-          </span>
-        </Link>
+        {/* Auth buttons */}
+        <div className="flex items-center gap-2">
+          <Link href="/auth">
+            <button className="px-3 py-1 text-sm rounded border border-gray-300 hover:bg-gray-100">
+              Sign In
+            </button>
+          </Link>
+          <Link href="/auth">
+            <button className="px-3 py-1 text-sm rounded bg-[#09261E] text-white hover:bg-[#124035]">
+              Register
+            </button>
+          </Link>
+        </div>
       </div>
       
       {/* Expansion indicator that peeks from the edge (only on desktop) */}
@@ -150,8 +182,28 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       {/* Overlay for mobile */}
       {isMobile && isOpen && (
         <div 
+          id="sidebar-overlay"
           className="fixed inset-0 bg-black/50 z-40"
-          onClick={closeSidebar}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Update DOM directly as a fallback approach
+            const sidebarElement = document.getElementById('sidebar');
+            if (sidebarElement) {
+              sidebarElement.classList.remove('translate-x-0');
+              sidebarElement.classList.add('-translate-x-full');
+            }
+            
+            // Also update React state
+            closeSidebar();
+            
+            // Hide overlay
+            const overlay = document.getElementById('sidebar-overlay');
+            if (overlay) {
+              overlay.style.display = 'none';
+            }
+          }}
         ></div>
       )}
       

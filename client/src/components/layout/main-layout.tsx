@@ -12,7 +12,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const [location] = useLocation();
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+    console.log('Toggle sidebar called, current state:', sidebarOpen);
+    setSidebarOpen(prevState => !prevState);
   };
 
   const closeSidebar = () => {
