@@ -7,7 +7,7 @@ import { Link } from 'wouter';
 
 interface PropertyMapProps {
   properties: Partial<Property>[];
-  onPropertyHover?: (propertyId: number | null) => void;
+  onPropertyHover?: (propertyId: number | undefined | null) => void;
   hoveredPropertyId?: number | null;
 }
 

@@ -196,9 +196,11 @@ export default function PropertiesPage() {
   };
   
   // Safe property hover handler
-  const handlePropertyHover = (id: number | undefined) => {
-    if (id !== undefined) {
+  const handlePropertyHover = (id: number | undefined | null) => {
+    if (id !== undefined && id !== null) {
       setHoveredPropertyId(id);
+    } else {
+      setHoveredPropertyId(null);
     }
   };
   
@@ -443,7 +445,7 @@ export default function PropertiesPage() {
               {currentProperties.map((property) => (
                 <div 
                   key={property.id}
-                  onMouseEnter={() => setHoveredPropertyId(property.id)}
+                  onMouseEnter={() => handlePropertyHover(property.id)}
                   onMouseLeave={() => setHoveredPropertyId(null)}
                 >
                   <PropertyCard property={property} />
@@ -510,7 +512,7 @@ export default function PropertiesPage() {
                 <div 
                   key={property.id} 
                   className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-                  onMouseEnter={() => setHoveredPropertyId(property.id)}
+                  onMouseEnter={() => handlePropertyHover(property.id)}
                   onMouseLeave={() => setHoveredPropertyId(null)}
                 >
                   <div className="flex flex-col md:flex-row">
@@ -643,7 +645,7 @@ export default function PropertiesPage() {
                         "p-4 hover:bg-gray-50 transition-colors",
                         hoveredPropertyId === property.id ? "bg-[#EAF2EF]" : ""
                       )}
-                      onMouseEnter={() => setHoveredPropertyId(property.id)}
+                      onMouseEnter={() => handlePropertyHover(property.id)}
                       onMouseLeave={() => setHoveredPropertyId(null)}
                     >
                       <div className="flex gap-4">
@@ -681,7 +683,7 @@ export default function PropertiesPage() {
             <div className="w-full md:w-1/2 h-1/2 md:h-full">
               <PropertyMap 
                 properties={filteredProperties} 
-                onPropertyHover={setHoveredPropertyId}
+                onPropertyHover={handlePropertyHover}
                 hoveredPropertyId={hoveredPropertyId}
               />
             </div>
