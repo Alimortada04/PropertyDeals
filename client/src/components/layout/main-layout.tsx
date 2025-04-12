@@ -52,7 +52,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* Top-right sticky navbar */}
       <TopNavbar specialBehavior={isSpecialPage} />
       
-      <div className="flex flex-1 pt-14">
+      <div className="flex flex-1 pt-16 lg:pt-14">
         {/* Sidebar component - no floating hamburger */}
         <Sidebar 
           isOpen={sidebarOpen} 

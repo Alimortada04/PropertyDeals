@@ -6,7 +6,7 @@ import { useLocation } from "wouter";
 import { 
   Home, Building, Users, LayoutDashboard, Book, 
   Calculator, MessageCircle, UserCircle, Settings, ChevronRight, HelpCircle,
-  Menu
+  Menu, X
 } from "lucide-react";
 
 interface SidebarProps {
@@ -105,7 +105,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   return (
     <>
       {/* Mobile top navbar with hamburger menu */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm h-14 lg:hidden flex items-center justify-between px-4">
+      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm h-16 lg:hidden flex items-center justify-between px-4">
         <div className="flex items-center">
           <button 
             ref={hamburgerRef}
@@ -114,36 +114,24 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               e.stopPropagation();
               console.log("Hamburger clicked");
               
-              // Try direct DOM manipulation as a fallback approach
-              const sidebarElement = document.getElementById('sidebar');
-              if (sidebarElement) {
-                if (sidebarElement.classList.contains('-translate-x-full')) {
-                  sidebarElement.classList.remove('-translate-x-full');
-                  sidebarElement.classList.add('translate-x-0');
-                } else {
-                  sidebarElement.classList.remove('translate-x-0');
-                  sidebarElement.classList.add('-translate-x-full');
-                }
-              }
-              
-              // Also update React state
-              toggleSidebar();
+              // Show mobile menu directly
+              document.getElementById('mobile-menu')?.classList.toggle('hidden');
             }}
             className="mr-4 p-2 hover:bg-gray-100 rounded-md touch-manipulation cursor-pointer"
             aria-label="Toggle menu"
             type="button"
             style={{ touchAction: 'manipulation' }}
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-6 w-6" />
           </button>
           
           <Link href="/" className="flex items-center">
             <img 
               src="/images/pdLogo.png" 
               alt="PropertyDeals Logo" 
-              className="h-8 w-auto"
+              className="h-9 w-auto"
             />
-            <span className="ml-2 font-heading font-bold text-[#09261E] text-lg">
+            <span className="ml-2 font-heading font-bold text-[#09261E] text-xl">
               PropertyDeals
             </span>
           </Link>
@@ -152,15 +140,144 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         {/* Auth buttons */}
         <div className="flex items-center gap-2">
           <Link href="/auth">
-            <button className="px-3 py-1 text-sm rounded border border-gray-300 hover:bg-gray-100">
+            <button className="px-4 py-1.5 text-base rounded border border-gray-300 hover:bg-gray-100">
               Sign In
             </button>
           </Link>
           <Link href="/auth">
-            <button className="px-3 py-1 text-sm rounded bg-[#09261E] text-white hover:bg-[#124035]">
+            <button className="px-4 py-1.5 text-base rounded bg-[#09261E] text-white hover:bg-[#124035]">
               Register
             </button>
           </Link>
+        </div>
+      </div>
+      
+      {/* New Fullscreen Mobile Menu */}
+      <div id="mobile-menu" className="fixed inset-0 bg-white z-50 lg:hidden hidden pt-16">
+        <div className="h-full overflow-y-auto">
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-xl font-bold text-[#09261E]">Menu</h2>
+            <button 
+              onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+              className="p-2 hover:bg-gray-100 rounded-full"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+          
+          <nav className="px-4 py-4">
+            <h3 className="text-sm uppercase text-gray-500 font-medium tracking-wider mb-3">Navigation</h3>
+            <ul className="space-y-4">
+              <li>
+                <Link 
+                  href="/" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <Home className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Home</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/properties" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <Building className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Properties</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/reps" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <Users className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>The REP Room</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/discussions" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <MessageCircle className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Discussions</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/dashboard" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <LayoutDashboard className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Dashboard</span>
+                </Link>
+              </li>
+            </ul>
+            
+            <h3 className="text-sm uppercase text-gray-500 font-medium tracking-wider mb-3 mt-8">Resources</h3>
+            <ul className="space-y-4">
+              <li>
+                <Link 
+                  href="/guides" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <Book className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Guides</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/tools" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <Calculator className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Tools</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/help" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <HelpCircle className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Help</span>
+                </Link>
+              </li>
+            </ul>
+            
+            <h3 className="text-sm uppercase text-gray-500 font-medium tracking-wider mb-3 mt-8">Account</h3>
+            <ul className="space-y-4">
+              <li>
+                <Link 
+                  href="/profile" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <UserCircle className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Profile</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  href="/settings" 
+                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                >
+                  <Settings className="w-5 h-5 mr-3 text-gray-700" />
+                  <span>Settings</span>
+                </Link>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
       
