@@ -402,7 +402,7 @@ export default function PropertiesPage() {
       
         {/* View controls below search bar but still in sticky section - collapses on scroll down */}
         <div className={cn(
-          "w-full px-4 overflow-hidden transition-all duration-300",
+          "w-full px-4 overflow-hidden transition-all duration-300 -mt-1",
           showViewControls ? "max-h-20 opacity-100 py-2" : "max-h-0 opacity-0 py-0"
         )}>
           <div className="container mx-auto flex flex-wrap justify-between items-center">
