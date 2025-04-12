@@ -46,6 +46,10 @@ export default function PropertiesPage() {
   const [location, setLocation] = useLocation();
   const [hoveredPropertyId, setHoveredPropertyId] = useState<number | null>(null);
   const propertiesPerPage = viewMode === 'map' ? 12 : 6;
+  
+  // State for controlling collapsible view controls section
+  const [showViewControls, setShowViewControls] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   // Update URL when view mode changes
   useEffect(() => {
@@ -62,6 +66,28 @@ export default function PropertiesPage() {
       setViewMode(viewParam as "grid" | "map" | "list");
     }
   }, []);
+  
+  // Handle scroll events to collapse/expand view controls
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Hide view controls when scrolling down, show when scrolling up
+      if (currentScrollY > lastScrollY + 5) {
+        // Scrolling down
+        setShowViewControls(false);
+      } else if (currentScrollY < lastScrollY - 5) {
+        // Scrolling up
+        setShowViewControls(true);
+      }
+      
+      // Save current scroll position
+      setLastScrollY(currentScrollY);
+    };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   const { data: properties, isLoading, error } = useQuery<Property[]>({
     queryKey: ["/api/properties"],
@@ -374,8 +400,11 @@ export default function PropertiesPage() {
           />
         </div>
       
-        {/* View controls below search bar but still in sticky section */}
-        <div className="w-full border-t border-gray-200 px-4 py-2">
+        {/* View controls below search bar but still in sticky section - collapses on scroll down */}
+        <div className={cn(
+          "w-full border-t border-gray-200 px-4 overflow-hidden transition-all duration-300",
+          showViewControls ? "max-h-20 opacity-100 py-2" : "max-h-0 opacity-0 py-0 border-t-0"
+        )}>
           <div className="container mx-auto flex flex-wrap justify-between items-center">
             {/* Property Count */}
             <div className="text-sm text-gray-700 mb-2 sm:mb-0">
