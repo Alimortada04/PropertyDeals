@@ -101,6 +101,18 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         : 'text-gray-700 hover:bg-[#D8D8D8]'}
     `;
   };
+  
+  // Helper for mobile menu items
+  const getMobileNavItemClasses = (path: string) => {
+    const isActive = location === path;
+    return `flex items-center py-2 rounded-md px-3 ${isActive ? 'bg-[#09261E] text-white hover:bg-[#09261E]' : 'hover:bg-gray-50'}`;
+  };
+  
+  // Helper for icons in mobile menu
+  const getMobileIconClasses = (path: string) => {
+    const isActive = location === path;
+    return `w-5 h-5 mr-3 ${isActive ? 'text-white' : 'text-gray-700'}`;
+  };
 
   return (
     <>
@@ -186,7 +198,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <li>
                 <Link 
                   href="/" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -194,14 +206,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <Home className="w-5 h-5 mr-3 text-gray-700" />
+                  <Home className={getMobileIconClasses("/")} />
                   <span>Home</span>
                 </Link>
               </li>
               <li>
                 <Link 
                   href="/properties" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/properties")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -209,14 +221,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <Building className="w-5 h-5 mr-3 text-gray-700" />
+                  <Building className={getMobileIconClasses("/properties")} />
                   <span>Properties</span>
                 </Link>
               </li>
               <li>
                 <Link 
                   href="/reps" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/reps")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -224,7 +236,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <Users className="w-5 h-5 mr-3 text-gray-700" />
+                  <Users className={getMobileIconClasses("/reps")} />
                   <span>The REP Room</span>
                 </Link>
               </li>
