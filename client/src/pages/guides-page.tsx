@@ -76,7 +76,7 @@ export default function GuidesPage() {
       {/* Page Title */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-heading font-bold text-[#09261E] mb-4">
-          Real Estate Guides & Resources
+          PropertyPlaybook: Real Estate Resources
         </h1>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
           Educational resources to help you navigate the real estate market with confidence.

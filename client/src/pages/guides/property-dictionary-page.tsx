@@ -104,7 +104,7 @@ export default function PropertyDictionaryPage() {
         <div className="mb-4">
           <Link href="/guides" className="inline-flex items-center text-[#09261E] hover:underline">
             <ChevronLeft className="h-4 w-4 mr-1" />
-            Back to Guides
+            Back to PropertyPlaybook
           </Link>
         </div>
         

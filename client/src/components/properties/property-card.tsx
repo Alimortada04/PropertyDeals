@@ -226,15 +226,15 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       </CardContent>
 
       <CardFooter className="px-4 pb-4 pt-0 flex items-center relative">
-        {/* REP Avatars peeking over the button by half */}
-        <div className="flex -space-x-3 absolute right-8 -top-3">
+        {/* REP Avatars peeking over the button by 60% */}
+        <div className="flex -space-x-3 absolute right-8 -top-5">
           {demoReps.map((rep, index) => (
             <div 
               key={rep.id}
               className={`transition-all duration-300 ${
-                activeAvatarIndex === index ? 'transform -translate-y-2 z-30' : 'z-10'
+                activeAvatarIndex === index ? 'transform -translate-y-2 z-30' : 'z-1'
               }`}
-              style={{ zIndex: demoReps.length - index }}
+              style={{ zIndex: activeAvatarIndex === index ? 30 : 1 }}
               onMouseEnter={() => setActiveAvatarIndex(index)}
               onMouseLeave={() => setActiveAvatarIndex(-1)}
               onClick={(e) => handleAvatarClick(e, rep.id)}
@@ -244,7 +244,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                 <AvatarFallback>{rep.name.substring(0, 2)}</AvatarFallback>
               </Avatar>
               {activeAvatarIndex === index && (
-                <div className="absolute bg-white text-xs text-gray-800 rounded shadow-md py-1 px-2 -mt-1 ml-1">
+                <div className="absolute bg-white text-xs text-gray-800 rounded shadow-md py-1 px-2 -mt-1 ml-1 z-50">
                   {rep.role}
                 </div>
               )}

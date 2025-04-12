@@ -286,7 +286,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                   }}
                 >
                   <Book className={getMobileIconClasses("/guides")} />
-                  <span>Guides</span>
+                  <span>PropertyPlaybook</span>
                 </Link>
               </li>
               <li>
@@ -497,7 +497,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <li>
                   <Link href="/guides" className={getNavItemClasses("/guides")}>
                     <Book className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
-                    {isExpanded && <span className="ml-3">Guides</span>}
+                    {isExpanded && <span className="ml-3">PropertyPlaybook</span>}
                   </Link>
                 </li>
                 <li>
