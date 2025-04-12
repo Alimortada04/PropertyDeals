@@ -162,11 +162,10 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       {/* Mobile Menu that slides in from left */}
       <div 
         id="mobile-menu" 
-        className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-50 lg:hidden hidden pt-16 shadow-lg transition-transform duration-300 ease-in-out -translate-x-full"
+        className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-50 lg:hidden hidden shadow-lg transition-transform duration-300 ease-in-out -translate-x-full"
       >
-        <div className="h-full overflow-y-auto">
-          <div className="flex justify-between items-center py-3 px-4 border-b">
-            <h2 className="text-xl font-bold text-[#09261E]">Menu</h2>
+        <div className="h-full overflow-y-auto pt-16">
+          <div className="absolute top-0 right-0 mt-4 mr-4">
             <button 
               onClick={() => {
                 const mobileMenu = document.getElementById('mobile-menu');
@@ -178,6 +177,9 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             >
               <X className="h-6 w-6" />
             </button>
+          </div>
+          <div className="px-4 py-3 border-b">
+            <h2 className="text-xl font-bold text-[#09261E]">Menu</h2>
           </div>
           
           <nav className="px-4 py-4">
