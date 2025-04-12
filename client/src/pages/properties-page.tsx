@@ -400,7 +400,7 @@ export default function PropertiesPage() {
           "w-full px-0 overflow-hidden transition-all duration-300 -mt-1",
           showViewControls ? "max-h-20 opacity-100 py-3" : "max-h-0 opacity-0 py-0"
         )}>
-          <div className="w-full pl-4 pr-4 md:pl-16 flex flex-wrap justify-between items-center gap-y-2">
+          <div className="w-full px-4 md:px-16 flex flex-wrap justify-between items-center gap-y-2">
             {/* Left side controls */}
             <div className="flex items-center gap-3 flex-wrap">
               {/* Sort Control */}
