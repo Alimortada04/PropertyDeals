@@ -88,7 +88,7 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-40 w-full border-b border-gray-100",
+        "bg-white transition-all duration-200 z-40 w-screen border-b border-gray-100",
         isSticky ? "sticky top-0 left-0 right-0" : ""
       )}
     >
