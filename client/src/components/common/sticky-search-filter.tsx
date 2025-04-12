@@ -224,7 +224,7 @@ export default function StickySearchFilter({
               onValueChange={onTabChange}
               className="w-full"
             >
-              <TabsList className="h-10 bg-transparent w-full flex items-center justify-start overflow-x-auto">
+              <TabsList className="h-10 bg-transparent w-full flex items-center justify-center overflow-x-auto">
                 {tabs.map((tab) => (
                   <TabsTrigger
                     key={tab.value}

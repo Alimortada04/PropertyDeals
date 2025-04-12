@@ -403,22 +403,22 @@ export default function PropertiesPage() {
         {/* View controls below search bar but still in sticky section - collapses on scroll down */}
         <div className={cn(
           "w-full px-4 overflow-hidden transition-all duration-300 -mt-1",
-          showViewControls ? "max-h-20 opacity-100 py-2" : "max-h-0 opacity-0 py-0"
+          showViewControls ? "max-h-20 opacity-100 py-3" : "max-h-0 opacity-0 py-0"
         )}>
-          <div className="container mx-auto flex flex-wrap justify-between items-center">
+          <div className="container mx-auto flex flex-wrap justify-center items-center gap-6">
             {/* Property Count */}
             <div className="text-sm text-gray-700 mb-2 sm:mb-0">
               <span className="font-medium">{filteredProperties.length}</span> homes for sale
             </div>
             
             {/* View Mode and Sort Controls */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               {/* View Toggles */}
               <div className="border border-gray-200 rounded-md overflow-hidden flex">
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className={`h-10 w-20 rounded-none ${viewMode === 'list' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                  className={`h-9 rounded-none ${viewMode === 'list' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
                   onClick={() => setViewMode('list')}
                 >
                   List
@@ -426,7 +426,7 @@ export default function PropertiesPage() {
                 <Button 
                   variant="ghost"
                   size="sm" 
-                  className={`h-10 w-20 rounded-none ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                  className={`h-9 rounded-none ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
                   onClick={() => setViewMode('map')}
                 >
                   Map
@@ -434,7 +434,7 @@ export default function PropertiesPage() {
                 <Button 
                   variant="ghost"
                   size="sm" 
-                  className={`h-10 w-20 rounded-none ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                  className={`h-9 rounded-none ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
                   onClick={() => setViewMode('grid')}
                 >
                   Grid
@@ -443,8 +443,8 @@ export default function PropertiesPage() {
               
               {/* Sort Control */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 h-10 w-48 px-4">
-                  <span className="text-sm font-medium mr-1">Sort:</span>
+                <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 h-9 w-44">
+                  <span className="text-sm">Sort: </span>
                   <SelectValue placeholder="Recommended" />
                 </SelectTrigger>
                 <SelectContent>
