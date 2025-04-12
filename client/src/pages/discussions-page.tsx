@@ -120,12 +120,15 @@ function StickyPostComposer({
   const [isSticky, setIsSticky] = useState(true);
   const [isAtBottom, setIsAtBottom] = useState(false);
   const composerRef = useRef<HTMLDivElement>(null);
-  const contentAreaRef = useRef<Element | null>(null);
+  const lastPostRef = useRef<Element | null>(null);
   
-  // Get a reference to the content area
+  // Get a reference to the last post in the thread
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      contentAreaRef.current = document.querySelector('[data-content-area]');
+      const posts = document.querySelectorAll('[data-post-container]');
+      if (posts.length > 0) {
+        lastPostRef.current = posts[posts.length - 1];
+      }
     }
   }, []);
   
@@ -135,27 +138,25 @@ function StickyPostComposer({
     
     const handleScroll = () => {
       const footerElement = document.querySelector('footer');
-      const contentArea = contentAreaRef.current;
-      
-      if (!footerElement || !composerRef.current || !contentArea) return;
+      if (!footerElement || !composerRef.current) return;
       
       const footerTop = footerElement.getBoundingClientRect().top;
       const composerHeight = composerRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
-      const contentBottom = contentArea.getBoundingClientRect().bottom;
       
-      // Calculate where the composer should stop being sticky
-      // If we're near the footer or at the end of content, make it relative
-      if (footerTop - viewportHeight + composerHeight < 0 || 
-          contentBottom < viewportHeight) {
+      // Check if we're at the bottom of the thread
+      if (lastPostRef.current) {
+        const lastPostBottom = lastPostRef.current.getBoundingClientRect().bottom;
+        const isLastPostVisible = lastPostBottom < viewportHeight - composerHeight;
+        setIsAtBottom(isLastPostVisible);
+      }
+      
+      // If footer is becoming visible in viewport, stop being sticky
+      if (footerTop - viewportHeight + composerHeight < 0) {
         setIsSticky(false);
       } else {
         setIsSticky(true);
       }
-      
-      // Determine if we're at the bottom of the content area
-      // This affects the styling (border, etc.)
-      setIsAtBottom(contentBottom < viewportHeight + 100);
     };
     
     window.addEventListener('scroll', handleScroll);
@@ -167,29 +168,27 @@ function StickyPostComposer({
   return (
     <div 
       ref={composerRef}
-      className={`fixed bottom-0 left-0 right-0 z-50 transform transition-transform duration-200 ${
-        isSticky ? 'translate-y-0' : `translate-y-${isAtBottom ? '0' : 'full'}`
-      } shadow-lg ${className || ''}`}
+      className={`${isSticky ? 'sticky bottom-0' : 'relative'} z-30 mb-0 bg-transparent ${className || ''} ${isAtBottom ? 'border-t-0' : ''}`}
       style={{ 
-        maxWidth: '100%',
-        margin: '0 auto',
+        borderTopLeftRadius: '0',
+        borderTopRightRadius: '0',
+        borderLeft: '1px solid transparent',
+        borderRight: '1px solid transparent',
       }}
     >
-      <div className="bg-white shadow-lg border-t border-gray-200">
-        <div className="container mx-auto max-w-4xl">
-          <div className="p-4">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-9 w-9 flex-shrink-0">
-                <AvatarFallback className="bg-[#124035] text-white">CU</AvatarFallback>
-              </Avatar>
+      <div className="bg-transparent">
+        <div className="p-4">
+          <div className="flex items-center gap-3">
+            <Avatar className="h-9 w-9 flex-shrink-0">
+              <AvatarFallback className="bg-[#124035] text-white">CU</AvatarFallback>
+            </Avatar>
 
-              <div 
-                onClick={onClick}
-                className="flex-1 flex items-center rounded-2xl rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 pr-12 cursor-text hover:bg-[#124035] transition-colors relative"
-              >
-                <span className="text-white/90">Start a discussion...</span>
-                <ImageIcon className="h-5 w-5 text-white/90 absolute right-4" />
-              </div>
+            <div 
+              onClick={onClick}
+              className="flex-1 flex items-center rounded-2xl rounded-br-none border border-transparent bg-[#09261E] py-3 px-4 pr-12 cursor-text hover:bg-[#124035] transition-colors relative"
+            >
+              <span className="text-white/90">Start a discussion...</span>
+              <ImageIcon className="h-5 w-5 text-white/90 absolute right-4" />
             </div>
           </div>
         </div>
