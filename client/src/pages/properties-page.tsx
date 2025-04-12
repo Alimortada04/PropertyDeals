@@ -360,7 +360,7 @@ export default function PropertiesPage() {
       </div>
       
       {/* Sticky full-width search bar at the top of the page */}
-      <div className="sticky top-0 z-40 bg-white shadow-md pb-0">
+      <div className="sticky top-0 z-40 bg-white shadow-md pb-0 px-0">
         <div className="w-full">
           <StickySearchFilter
             onSearch={setSearchTerm}

@@ -204,20 +204,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
       </CardContent>
 
-      <CardFooter className="px-4 pb-4 pt-0 flex justify-between items-center">
-        <Button 
-          className="bg-[#135341] hover:bg-[#09261E] text-white flex-grow" 
-          variant="default"
-          onClick={(e) => {
-            e.stopPropagation();
-            setLocation(`/p/${id}`);
-          }}
-        >
-          View Details
-        </Button>
-        
-        {/* REP Avatars */}
-        <div className="flex -space-x-3 ml-3">
+      <CardFooter className="px-4 pb-4 pt-0 flex items-center relative">
+        {/* REP Avatars positioned behind button */}
+        <div className="flex -space-x-3 absolute right-12">
           {demoReps.map((rep, index) => (
             <div 
               key={rep.id}
@@ -235,12 +224,23 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               </Avatar>
               {activeAvatarIndex === index && (
                 <div className="absolute bg-white text-xs text-gray-800 rounded shadow-md py-1 px-2 -mt-1 ml-1">
-                  {rep.name} - {rep.role}
+                  {rep.role}
                 </div>
               )}
             </div>
           ))}
         </div>
+        
+        <Button 
+          className="bg-[#135341] hover:bg-[#09261E] text-white w-full" 
+          variant="default"
+          onClick={(e) => {
+            e.stopPropagation();
+            setLocation(`/p/${id}`);
+          }}
+        >
+          View Details
+        </Button>
       </CardFooter>
     </Card>
   );

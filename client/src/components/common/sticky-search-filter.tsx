@@ -75,8 +75,8 @@ export default function StickySearchFilter({
       )}
     >
       {/* Main search bar - full-width, Redfin-inspired layout */}
-      <div className="w-full px-4 py-3">
-        <div className="flex flex-col md:flex-row gap-3 max-w-7xl mx-auto">
+      <div className="w-full px-0 py-3">
+        <div className="flex flex-col md:flex-row gap-3 max-w-full mx-auto">
           {/* Location Search */}
           <div className="relative flex-grow max-w-xl">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
