@@ -114,8 +114,18 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               e.stopPropagation();
               console.log("Hamburger clicked");
               
-              // Show mobile menu directly
-              document.getElementById('mobile-menu')?.classList.toggle('hidden');
+              // Show mobile menu and overlay
+              const mobileMenu = document.getElementById('mobile-menu');
+              const overlay = document.getElementById('mobile-menu-overlay');
+              
+              if (mobileMenu) {
+                mobileMenu.classList.remove('-translate-x-full');
+                mobileMenu.classList.remove('hidden');
+              }
+              
+              if (overlay) {
+                overlay.classList.remove('hidden');
+              }
             }}
             className="mr-4 p-2 hover:bg-gray-100 rounded-md touch-manipulation cursor-pointer"
             aria-label="Toggle menu"
@@ -131,9 +141,6 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               alt="PropertyDeals Logo" 
               className="h-9 w-auto"
             />
-            <span className="ml-2 font-heading font-bold text-[#09261E] text-xl">
-              PropertyDeals
-            </span>
           </Link>
         </div>
         
@@ -152,13 +159,21 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         </div>
       </div>
       
-      {/* New Fullscreen Mobile Menu */}
-      <div id="mobile-menu" className="fixed inset-0 bg-white z-50 lg:hidden hidden pt-16">
+      {/* Mobile Menu that slides in from left */}
+      <div 
+        id="mobile-menu" 
+        className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-50 lg:hidden hidden pt-16 shadow-lg transition-transform duration-300 ease-in-out -translate-x-full"
+      >
         <div className="h-full overflow-y-auto">
           <div className="flex justify-between items-center p-4 border-b">
             <h2 className="text-xl font-bold text-[#09261E]">Menu</h2>
             <button 
-              onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+              onClick={() => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const overlay = document.getElementById('mobile-menu-overlay');
+                if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                if (overlay) overlay.classList.add('hidden');
+              }}
               className="p-2 hover:bg-gray-100 rounded-full"
             >
               <X className="h-6 w-6" />
@@ -172,7 +187,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <Home className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Home</span>
@@ -182,7 +202,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/properties" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <Building className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Properties</span>
@@ -192,7 +217,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/reps" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <Users className="w-5 h-5 mr-3 text-gray-700" />
                   <span>The REP Room</span>
@@ -202,7 +232,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/discussions" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <MessageCircle className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Discussions</span>
@@ -212,7 +247,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/dashboard" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <LayoutDashboard className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Dashboard</span>
@@ -226,7 +266,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/guides" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <Book className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Guides</span>
@@ -236,7 +281,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/tools" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <Calculator className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Tools</span>
@@ -246,7 +296,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/help" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <HelpCircle className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Help</span>
@@ -255,12 +310,17 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             </ul>
             
             <h3 className="text-sm uppercase text-gray-500 font-medium tracking-wider mb-3 mt-8">Account</h3>
-            <ul className="space-y-4">
+            <ul className="space-y-4 mb-20">
               <li>
                 <Link 
                   href="/profile" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <UserCircle className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Profile</span>
@@ -270,7 +330,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <Link 
                   href="/settings" 
                   className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
-                  onClick={() => document.getElementById('mobile-menu')?.classList.add('hidden')}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
                 >
                   <Settings className="w-5 h-5 mr-3 text-gray-700" />
                   <span>Settings</span>
@@ -280,6 +345,18 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           </nav>
         </div>
       </div>
+      
+      {/* Overlay for mobile menu */}
+      <div 
+        id="mobile-menu-overlay" 
+        className="fixed inset-0 bg-black/50 z-40 lg:hidden hidden"
+        onClick={() => {
+          const mobileMenu = document.getElementById('mobile-menu');
+          const overlay = document.getElementById('mobile-menu-overlay');
+          if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+          if (overlay) overlay.classList.add('hidden');
+        }}
+      ></div>
       
       {/* Expansion indicator that peeks from the edge (only on desktop) */}
       {!isMobile && !isExpanded && showExpandIndicator && (
