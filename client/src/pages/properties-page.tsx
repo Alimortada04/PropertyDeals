@@ -400,9 +400,9 @@ export default function PropertiesPage() {
           "w-full px-4 overflow-hidden transition-all duration-300 -mt-1",
           showViewControls ? "max-h-20 opacity-100 py-3" : "max-h-0 opacity-0 py-0"
         )}>
-          <div className="container mx-auto flex flex-wrap justify-between items-center">
+          <div className="container mx-auto flex flex-wrap justify-between items-center gap-y-2">
             {/* Left side controls */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               {/* Sort Control */}
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 h-9 w-36">
