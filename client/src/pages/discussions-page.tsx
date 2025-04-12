@@ -121,7 +121,7 @@ function StickyPostComposer({
   const [isAtBottom, setIsAtBottom] = useState(false);
   const composerRef = useRef<HTMLDivElement>(null);
   const lastPostRef = useRef<Element | null>(null);
-  
+
   // Get a reference to the last post in the thread
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -131,26 +131,26 @@ function StickyPostComposer({
       }
     }
   }, []);
-  
+
   // Adjust sticky behavior based on scroll position
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
     const handleScroll = () => {
       const footerElement = document.querySelector('footer');
       if (!footerElement || !composerRef.current) return;
-      
+
       const footerTop = footerElement.getBoundingClientRect().top;
       const composerHeight = composerRef.current.offsetHeight;
       const viewportHeight = window.innerHeight;
-      
+
       // Check if we're at the bottom of the thread
       if (lastPostRef.current) {
         const lastPostBottom = lastPostRef.current.getBoundingClientRect().bottom;
         const isLastPostVisible = lastPostBottom < viewportHeight - composerHeight;
         setIsAtBottom(isLastPostVisible);
       }
-      
+
       // If footer is becoming visible in viewport, stop being sticky
       if (footerTop - viewportHeight + composerHeight < 0) {
         setIsSticky(false);
@@ -158,13 +158,13 @@ function StickyPostComposer({
         setIsSticky(true);
       }
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     // Initial check
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   return (
     <div 
       ref={composerRef}
@@ -1012,7 +1012,7 @@ export default function DiscussionsPage() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                
+
                 <Button 
                   onClick={() => setIsComposerExpanded(true)}
                   className="bg-[#09261E] hover:bg-[#124035] text-white"
