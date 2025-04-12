@@ -162,7 +162,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       {/* Mobile Menu that slides in from left */}
       <div 
         id="mobile-menu" 
-        className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-50 lg:hidden hidden shadow-lg transition-transform duration-300 ease-in-out -translate-x-full"
+        className="fixed top-0 left-0 bottom-0 w-[250px] bg-white z-50 lg:hidden hidden shadow-lg transition-transform duration-300 ease-in-out -translate-x-full"
       >
         <div className="h-full overflow-y-auto">
           <div className="flex items-center px-4 py-3 border-b">
@@ -177,7 +177,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             >
               <X className="h-6 w-6" />
             </button>
-            <h2 className="text-xl font-bold text-[#09261E] flex items-center">Menu</h2>
+            <h2 className="text-xl font-bold text-[#09261E] flex items-center leading-none">Menu</h2>
           </div>
           
           <nav className="px-4 py-4">
@@ -410,7 +410,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           transition-all duration-200 ease-in-out bg-white
           ${isOpen ? 'translate-x-0 z-60' : '-translate-x-full lg:translate-x-0 z-50'}
           ${isExpanded ? 'w-64' : 'w-16'}
-          ${isMobile ? 'w-[260px]' : ''}
+          ${isMobile ? 'w-[250px]' : ''}
         `}
         onMouseEnter={() => !isMobile && setIsExpanded(true)}
         onMouseLeave={() => !isMobile && setIsExpanded(false)}
