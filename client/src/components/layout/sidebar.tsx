@@ -165,7 +165,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-50 lg:hidden hidden pt-16 shadow-lg transition-transform duration-300 ease-in-out -translate-x-full"
       >
         <div className="h-full overflow-y-auto">
-          <div className="flex justify-between items-center p-4 border-b">
+          <div className="flex justify-between items-center py-3 px-4 border-b">
             <h2 className="text-xl font-bold text-[#09261E]">Menu</h2>
             <button 
               onClick={() => {
@@ -174,7 +174,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
                 if (overlay) overlay.classList.add('hidden');
               }}
-              className="p-2 hover:bg-gray-100 rounded-full"
+              className="hover:bg-gray-100 rounded-full"
             >
               <X className="h-6 w-6" />
             </button>
