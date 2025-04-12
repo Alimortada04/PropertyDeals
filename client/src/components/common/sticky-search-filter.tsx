@@ -88,13 +88,13 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-40 w-screen border-b border-gray-100",
+        "bg-white transition-all duration-200 z-40 w-full border-b border-gray-100",
         isSticky ? "sticky top-0 left-0 right-0" : ""
       )}
     >
       {/* Main search bar - full-width, Redfin-inspired layout */}
-      <div className="w-full px-0 py-4 shadow-sm">
-        <div className="flex flex-row items-center gap-3 max-w-full px-4 md:px-16 mx-auto">
+      <div className="w-full px-0 py-6 shadow-sm">
+        <div className="flex flex-row items-center gap-3 max-w-full px-[10%] mx-auto">
           {/* Location Search */}
           <div className="relative flex-grow">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
@@ -132,7 +132,7 @@ export default function StickySearchFilter({
       {selectedFilters.length > 0 && (
         <div className="bg-white border-b border-gray-100">
           <div className="w-full px-0 py-2">
-            <div className="flex flex-wrap gap-2 items-center max-w-full px-4 md:px-16 mx-auto">
+            <div className="flex flex-wrap gap-2 items-center max-w-full px-[10%] mx-auto">
               <span className="text-sm text-gray-500 pr-2">Active filters:</span>
               {selectedFilters.map((filter) => (
                 <div 
@@ -159,7 +159,7 @@ export default function StickySearchFilter({
           "w-full px-0 bg-white border-b border-gray-100 overflow-hidden transition-all duration-300",
           showBottomSection ? "max-h-20 opacity-100" : "max-h-0 opacity-0 border-b-0"
         )}>
-          <div className="overflow-x-auto py-2 max-w-full px-4 md:px-16 mx-auto">
+          <div className="overflow-x-auto py-2 max-w-full px-[10%] mx-auto">
             <Tabs 
               defaultValue={defaultTab} 
               onValueChange={onTabChange}
