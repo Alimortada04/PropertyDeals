@@ -243,7 +243,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <li>
                 <Link 
                   href="/discussions" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/discussions")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -251,14 +251,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <MessageCircle className="w-5 h-5 mr-3 text-gray-700" />
+                  <MessageCircle className={getMobileIconClasses("/discussions")} />
                   <span>Discussions</span>
                 </Link>
               </li>
               <li>
                 <Link 
                   href="/dashboard" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/dashboard")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -266,7 +266,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <LayoutDashboard className="w-5 h-5 mr-3 text-gray-700" />
+                  <LayoutDashboard className={getMobileIconClasses("/dashboard")} />
                   <span>Dashboard</span>
                 </Link>
               </li>
@@ -277,7 +277,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <li>
                 <Link 
                   href="/guides" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/guides")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -285,14 +285,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <Book className="w-5 h-5 mr-3 text-gray-700" />
+                  <Book className={getMobileIconClasses("/guides")} />
                   <span>Guides</span>
                 </Link>
               </li>
               <li>
                 <Link 
                   href="/tools" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/tools")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -300,14 +300,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <Calculator className="w-5 h-5 mr-3 text-gray-700" />
+                  <Calculator className={getMobileIconClasses("/tools")} />
                   <span>Tools</span>
                 </Link>
               </li>
               <li>
                 <Link 
                   href="/help" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/help")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -315,7 +315,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <HelpCircle className="w-5 h-5 mr-3 text-gray-700" />
+                  <HelpCircle className={getMobileIconClasses("/help")} />
                   <span>Help</span>
                 </Link>
               </li>
@@ -326,7 +326,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <li>
                 <Link 
                   href="/profile" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/profile")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -334,14 +334,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <UserCircle className="w-5 h-5 mr-3 text-gray-700" />
+                  <UserCircle className={getMobileIconClasses("/profile")} />
                   <span>Profile</span>
                 </Link>
               </li>
               <li>
                 <Link 
                   href="/settings" 
-                  className="flex items-center py-2 hover:bg-gray-50 rounded-md px-3"
+                  className={getMobileNavItemClasses("/settings")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
                     const overlay = document.getElementById('mobile-menu-overlay');
@@ -349,7 +349,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     if (overlay) overlay.classList.add('hidden');
                   }}
                 >
-                  <Settings className="w-5 h-5 mr-3 text-gray-700" />
+                  <Settings className={getMobileIconClasses("/settings")} />
                   <span>Settings</span>
                 </Link>
               </li>
