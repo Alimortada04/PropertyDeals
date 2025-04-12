@@ -340,69 +340,73 @@ export default function PropertiesPage() {
   
   return (
     <div className="flex flex-col min-h-screen pb-12">
-      {/* Top Sticky Search Filter Bar - Full Width */}
-      <StickySearchFilter
-        onSearch={setSearchTerm}
-        searchPlaceholder="City, Address, ZIP, or MLS #"
-        filterContent={advancedFilterContent}
-        filterButtonText="All Filters"
-        showSaveSearch={true}
-        onSaveSearch={handleSaveSearch}
-        selectedFilters={activeFilters}
-        onClearFilter={clearFilter}
-      />
+      {/* Sticky full-width search bar at the top of the page */}
+      <div className="sticky top-0 z-50 bg-white shadow-md pb-0">
+        <div className="w-full">
+          <StickySearchFilter
+            onSearch={setSearchTerm}
+            searchPlaceholder="City, Address, ZIP, or MLS #"
+            filterContent={advancedFilterContent}
+            filterButtonText="All Filters"
+            showSaveSearch={true}
+            onSaveSearch={handleSaveSearch}
+            selectedFilters={activeFilters}
+            onClearFilter={clearFilter}
+          />
+        </div>
       
-      {/* Sub Header with Property Count and View Controls */}
-      <div className="container mx-auto px-4 mt-5 mb-4">
-        <div className="flex flex-wrap justify-between items-center">
-          {/* Property Count */}
-          <div className="text-sm text-gray-700 mb-2 sm:mb-0">
-            <span className="font-medium">{filteredProperties.length}</span> homes for sale
-          </div>
-          
-          {/* View Mode and Sort Controls */}
-          <div className="flex items-center gap-3">
-            {/* View Toggles */}
-            <div className="border rounded-md overflow-hidden flex">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className={`h-10 rounded-none ${viewMode === 'list' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                onClick={() => setViewMode('list')}
-              >
-                List
-              </Button>
-              <Button 
-                variant="ghost"
-                size="sm" 
-                className={`h-10 rounded-none ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                onClick={() => setViewMode('map')}
-              >
-                Map
-              </Button>
-              <Button 
-                variant="ghost"
-                size="sm" 
-                className={`h-10 rounded-none ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                onClick={() => setViewMode('grid')}
-              >
-                Grid
-              </Button>
+        {/* View controls below search bar but still in sticky section */}
+        <div className="w-full border-t border-gray-200 px-4 py-2">
+          <div className="container mx-auto flex flex-wrap justify-between items-center">
+            {/* Property Count */}
+            <div className="text-sm text-gray-700 mb-2 sm:mb-0">
+              <span className="font-medium">{filteredProperties.length}</span> homes for sale
             </div>
             
-            {/* Sort Control */}
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="bg-white border h-10 w-44">
-                <span className="text-sm">Sort: </span>
-                <SelectValue placeholder="Recommended" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="recommended">Recommended</SelectItem>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="price-low">Price (Low to High)</SelectItem>
-                <SelectItem value="price-high">Price (High to Low)</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* View Mode and Sort Controls */}
+            <div className="flex items-center gap-3">
+              {/* View Toggles */}
+              <div className="border rounded-md overflow-hidden flex">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className={`h-9 rounded-none ${viewMode === 'list' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                  onClick={() => setViewMode('list')}
+                >
+                  List
+                </Button>
+                <Button 
+                  variant="ghost"
+                  size="sm" 
+                  className={`h-9 rounded-none ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                  onClick={() => setViewMode('map')}
+                >
+                  Map
+                </Button>
+                <Button 
+                  variant="ghost"
+                  size="sm" 
+                  className={`h-9 rounded-none ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                  onClick={() => setViewMode('grid')}
+                >
+                  Grid
+                </Button>
+              </div>
+              
+              {/* Sort Control */}
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="bg-white border h-9 w-44">
+                  <span className="text-sm">Sort: </span>
+                  <SelectValue placeholder="Recommended" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recommended">Recommended</SelectItem>
+                  <SelectItem value="newest">Newest</SelectItem>
+                  <SelectItem value="price-low">Price (Low to High)</SelectItem>
+                  <SelectItem value="price-high">Price (High to Low)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </div>

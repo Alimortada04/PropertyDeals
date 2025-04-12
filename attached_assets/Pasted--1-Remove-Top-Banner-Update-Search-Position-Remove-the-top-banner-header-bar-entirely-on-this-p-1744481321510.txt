@@ -1,0 +1,74 @@
+📍 1. Remove Top Banner & Update Search Position
+Remove the top banner/header bar entirely on this page.
+
+Instead, place the search bar and filter controls directly at the top of the page, before any listings load.
+
+Make the search section behave like a navbar:
+
+Sticky at the top when scrolling
+
+Full-width matching the edge of the viewport — it should not be constrained by page padding.
+
+🧱 2. Property Card Redesign
+Update the design of each property card in the listings grid to reflect the following:
+
+✅ Entire Card Clickable
+
+Clicking anywhere on the card should navigate to that individual property page.
+
+🖼️ Images
+
+Display a primary image.
+
+On hover, show a secondary image as a smooth fade or side-swipe transition.
+
+On hover (desktop):
+
+Show left/right chevron arrows to scroll through additional images (if available).
+
+Clicking arrows navigates the image slider.
+
+🏷️ Property Tags
+
+Top-right corner: colored tag for property type, such as:
+
+Single Family, Duplex, Triplex, Multi Family, Condo, Townhouse, Land
+
+Tag color should align with branding or vary based on property type.
+
+🛏️ Property Info
+
+Display:
+
+🛏️ Beds
+
+🛁 Baths
+
+📏 Square Footage
+
+💼 Investment Type(s): Flip, Buy & Hold, Seller Finance, etc.
+
+Show these in a visually clean icon-row or quick stat bar.
+
+👥 REP Avatars (Connected Professionals)
+
+Bottom-right of each card (near the “View Details” area):
+
+Show stacked small avatar circles of people connected to this property (e.g., wholesalers, contractors).
+
+Only ~90% of each avatar should be visible unless hovered, at which point it rises slightly and becomes clickable.
+
+Clicking an avatar opens the respective /rep/[name] profile page.
+
+🔥 Engagement Metrics
+
+Show view & favorite counts clearly on the card (bottom or side area):
+
+👁️ Total Views
+
+❤️ Favorited By X Users
+
+📱 3. Mobile & UX Responsiveness
+Ensure all new behaviors (image hover, sticky navbar, avatar hover) gracefully degrade on mobile or become tap-friendly.
+
+Avatars can be tapped to raise them and expose profile link.
