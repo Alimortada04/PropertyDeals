@@ -1297,13 +1297,7 @@ export default function DiscussionsPage() {
                     </div>
                   ))}
 
-                  {/* Sticky Post Composer directly inside the feed */}
-                  {!isComposerExpanded && !selectedPostId && (
-                    <StickyPostComposer 
-                      onClick={() => setIsComposerExpanded(true)} 
-                      className="mt-4"
-                    />
-                  )}
+                  {/* Removed inline composer */}
                 </div>
               )}
             </CardContent>
@@ -1954,6 +1948,13 @@ export default function DiscussionsPage() {
             </div>
           </DialogContent>
         </Dialog>
+      )}
+
+      {/* Global sticky post composer */}
+      {!isComposerExpanded && !selectedPostId && (
+        <StickyPostComposer 
+          onClick={() => setIsComposerExpanded(true)} 
+        />
       )}
     </div>
   );
