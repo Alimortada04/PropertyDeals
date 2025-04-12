@@ -630,14 +630,6 @@ export default function DiscussionsPage() {
               and discover valuable resources from the community.
             </p>
           </div>
-
-          <Button 
-            onClick={() => setShowNewPostDialog(true)}
-            className="bg-[#09261E] hover:bg-[#124035] text-white"
-          >
-            <PlusCircle className="h-5 w-5 mr-2" />
-            Create Post
-          </Button>
         </div>
       </div>
 
