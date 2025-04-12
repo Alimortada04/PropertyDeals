@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Property } from "@shared/schema";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
@@ -104,6 +104,17 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     e.stopPropagation();
     setLocation(`/rep/${repId}`);
   };
+  
+  // Add auto-fade effect on hover to show second image
+  useEffect(() => {
+    if (isHovered && propertyImages.length > 1) {
+      // Show the second image when hovered
+      setCurrentImageIndex(1);
+    } else {
+      // Reset to first image when not hovered
+      setCurrentImageIndex(0);
+    }
+  }, [isHovered, propertyImages.length]);
 
   return (
     <Card 
@@ -158,8 +169,18 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           )}
         </div>
 
+        {/* Property status badge - color-coded by status */}
+        <Badge className={`absolute top-2 right-2 ${
+          status === 'sold' ? 'bg-[#E59F9F] text-white' : 
+          status === 'pending' ? 'bg-[#f5a742] text-white' : 
+          status === 'exclusive' ? 'bg-[#803344] text-white' :
+          'bg-[#135341] text-white'
+        } shadow-sm`}>
+          {status || "For Sale"}
+        </Badge>
+        
         {/* Property type tag */}
-        <Badge className={`absolute top-2 right-2 ${getPropertyTypeColor(propertyType, status || undefined)}`}>
+        <Badge className={`absolute top-2 left-2 ${getPropertyTypeColor(propertyType, status || undefined)}`}>
           {getPropertyTypeTag(propertyType, status || undefined)}
         </Badge>
       </div>
@@ -170,8 +191,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </h3>
         <p className="text-gray-700 mb-2 text-sm">{address}, {city}, {state}</p>
         
-        {/* Property stats with icons */}
-        <div className="grid grid-cols-4 text-sm text-gray-600 mb-3 gap-2">
+        {/* Property stats with icons - left-aligned */}
+        <div className="flex justify-start text-sm text-gray-600 mb-3 gap-3">
           <div className="flex items-center gap-1.5">
             <Bed size={16} />
             <span>{bedrooms}</span>
@@ -184,15 +205,15 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <Move size={16} />
             <span>{squareFeet?.toLocaleString()}</span>
           </div>
-          <div>
+          <div className="ml-auto">
             <Badge variant="outline" className="font-normal border-[#135341] text-[#135341]">
               {investmentType}
             </Badge>
           </div>
         </div>
         
-        {/* Engagement metrics */}
-        <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+        {/* Engagement metrics - all left-aligned to make room for avatars */}
+        <div className="flex items-center justify-start text-xs text-gray-500 mb-3 gap-3">
           <div className="flex items-center gap-1">
             <Eye size={14} />
             <span>{viewCount} views</span>
@@ -205,13 +226,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       </CardContent>
 
       <CardFooter className="px-4 pb-4 pt-0 flex items-center relative">
-        {/* REP Avatars positioned behind button */}
-        <div className="flex -space-x-3 absolute right-12">
+        {/* REP Avatars peeking over the button by half */}
+        <div className="flex -space-x-3 absolute right-8 -top-3">
           {demoReps.map((rep, index) => (
             <div 
               key={rep.id}
               className={`transition-all duration-300 ${
-                activeAvatarIndex === index ? 'transform -translate-y-1 z-30' : 'z-10'
+                activeAvatarIndex === index ? 'transform -translate-y-2 z-30' : 'z-10'
               }`}
               style={{ zIndex: demoReps.length - index }}
               onMouseEnter={() => setActiveAvatarIndex(index)}
