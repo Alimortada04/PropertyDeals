@@ -139,7 +139,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             <img 
               src="/images/pdLogo.png" 
               alt="PropertyDeals Logo" 
-              className="h-9 w-auto"
+              className="h-11 w-auto"
             />
           </Link>
         </div>
@@ -173,11 +173,11 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
                 if (overlay) overlay.classList.add('hidden');
               }}
-              className="hover:bg-gray-100 rounded-full mr-3"
+              className="hover:bg-gray-100 rounded-full mr-3 flex items-center justify-center"
             >
               <X className="h-6 w-6" />
             </button>
-            <h2 className="text-xl font-bold text-[#09261E]">Menu</h2>
+            <h2 className="text-xl font-bold text-[#09261E] flex items-center">Menu</h2>
           </div>
           
           <nav className="px-4 py-4">
