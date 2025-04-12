@@ -195,6 +195,13 @@ export default function PropertiesPage() {
     alert('Search saved! You will receive notifications for new matching properties.');
   };
   
+  // Safe property hover handler
+  const handlePropertyHover = (id: number | undefined) => {
+    if (id !== undefined) {
+      setHoveredPropertyId(id);
+    }
+  };
+  
   // Define filter content for the advanced filters popover
   const advancedFilterContent = (
     <div className="space-y-5">

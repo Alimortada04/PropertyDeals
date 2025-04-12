@@ -108,12 +108,12 @@ export default function StickySearchFilter({
               </Select>
 
               {/* Beds/Baths */}
-              <Select defaultValue="">
+              <Select defaultValue="any">
                 <SelectTrigger className="w-32 h-10 bg-white border border-gray-300">
                   <SelectValue placeholder="Beds/Baths" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Any</SelectItem>
+                  <SelectItem value="any">Any</SelectItem>
                   <SelectItem value="1+">1+ Beds</SelectItem>
                   <SelectItem value="2+">2+ Beds</SelectItem>
                   <SelectItem value="3+">3+ Beds</SelectItem>
@@ -123,12 +123,12 @@ export default function StickySearchFilter({
               </Select>
 
               {/* Property Type */}
-              <Select defaultValue="">
+              <Select defaultValue="any">
                 <SelectTrigger className="w-32 h-10 bg-white border border-gray-300">
                   <SelectValue placeholder="Home Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Any</SelectItem>
+                  <SelectItem value="any">Any</SelectItem>
                   <SelectItem value="house">House</SelectItem>
                   <SelectItem value="condo">Condo</SelectItem>
                   <SelectItem value="townhouse">Townhouse</SelectItem>
