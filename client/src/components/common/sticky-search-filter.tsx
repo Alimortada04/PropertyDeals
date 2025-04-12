@@ -212,9 +212,12 @@ export default function StickySearchFilter({
         </div>
       )}
       
-      {/* Category Tabs - styled similarly to Redfin */}
+      {/* Category Tabs - styled similarly to Redfin - collapses on scroll down */}
       {tabs.length > 0 && (
-        <div className="w-full px-4 bg-white border-b border-gray-200">
+        <div className={cn(
+          "w-full px-4 bg-white border-b border-gray-200 overflow-hidden transition-all duration-300",
+          showBottomSection ? "max-h-20 opacity-100" : "max-h-0 opacity-0 border-b-0"
+        )}>
           <div className="overflow-x-auto py-2 max-w-7xl mx-auto">
             <Tabs 
               defaultValue={defaultTab} 
