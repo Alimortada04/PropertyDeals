@@ -109,6 +109,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           onClick={toggleSidebar}
           className="mr-4 p-2 hover:bg-gray-100 rounded-md"
           aria-label="Toggle menu"
+          type="button"
         >
           <Menu className="h-5 w-5" />
         </button>

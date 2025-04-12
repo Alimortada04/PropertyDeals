@@ -8,6 +8,7 @@ import Breadcrumbs from "../common/breadcrumbs";
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [location] = useLocation();
 
   const toggleSidebar = () => {
@@ -26,12 +27,19 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const handleResize = () => {
+        // Check if we're on mobile
+        const mobile = window.innerWidth < 1024;
+        setIsMobile(mobile);
+        
         // Reset sidebar state on mobile/desktop transitions
-        if (window.innerWidth < 1024) {
+        if (mobile) {
           setIsExpanded(false);
         }
       };
 
+      // Initial check
+      handleResize();
+      
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
     }
@@ -52,8 +60,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           toggleSidebar={toggleSidebar}
         />
         
-        {/* Main content - ensure it starts after the collapsed sidebar width */}
-        <main className={`flex-1 w-full transition-all duration-200 ${!isExpanded ? 'ml-16' : 'ml-64'} lg:ml-16`}>
+        {/* Main content - ensure it starts after the collapsed sidebar width on desktop only */}
+        <main className={`flex-1 w-full transition-all duration-200 ${!isMobile && (!isExpanded ? 'ml-16' : 'ml-64')} lg:ml-16`}>
           <div className="min-h-screen pt-4 pb-16 px-4">
             {children}
           </div>

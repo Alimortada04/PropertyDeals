@@ -13,7 +13,21 @@ export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
   const { user, logoutMutation } = useAuth();
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const [location] = useLocation();
+
+  // Detect mobile devices
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Handle scroll to hide/show navbar
   useEffect(() => {
@@ -46,6 +60,11 @@ export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
   const handleLogout = () => {
     logoutMutation.mutate();
   };
+  
+  // Don't render on mobile
+  if (isMobile) {
+    return null;
+  }
   
   return (
     <div 
