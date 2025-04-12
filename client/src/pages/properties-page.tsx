@@ -13,10 +13,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import StickySearchFilter from "@/components/common/sticky-search-filter";
 import Breadcrumbs from "@/components/common/breadcrumbs";
 import { allProperties } from "@/lib/data";
-import { MapPin, List, LayoutGrid, ChevronDown, Grid, Save } from "lucide-react";
+import { MapPin, List, LayoutGrid, ChevronDown, Grid, Save, ChevronRight } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 
 interface FilterOptions {
   priceRange: string;
@@ -341,7 +341,7 @@ export default function PropertiesPage() {
   return (
     <div className="flex flex-col min-h-screen pb-12">
       {/* Sticky full-width search bar at the top of the page */}
-      <div className="sticky top-0 z-50 bg-white shadow-md pb-0">
+      <div className="sticky top-0 z-40 bg-white shadow-md pb-0">
         <div className="w-full">
           <StickySearchFilter
             onSearch={setSearchTerm}
@@ -411,8 +411,27 @@ export default function PropertiesPage() {
         </div>
       </div>
 
+      {/* Breadcrumb and Header Section */}
+      <div className="container mx-auto px-4 mt-6">
+        <div className="flex items-center text-sm text-gray-500 mb-2">
+          <Link href="/" className="hover:text-[#135341]">Home</Link>
+          <ChevronRight className="h-4 w-4 mx-1" />
+          <span className="text-gray-700 font-medium">Properties</span>
+        </div>
+        
+        <div className="mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#09261E] mb-2">
+            Property Listings
+          </h1>
+          <p className="text-gray-600 max-w-3xl">
+            Browse our curated collection of investment properties. Filter by price range, property type, 
+            and investment strategy to find your next real estate opportunity.
+          </p>
+        </div>
+      </div>
+
       {/* Main Content Area */}
-      <div className="flex-grow">
+      <div className="flex-grow mt-4">
         {isLoading ? (
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
