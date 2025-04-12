@@ -216,10 +216,7 @@ export default function PropertiesPage() {
     }
   };
 
-  // Save search handler
-  const handleSaveSearch = () => {
-    alert('Search saved! You will receive notifications for new matching properties.');
-  };
+
   
   // Safe property hover handler
   const handlePropertyHover = (id: number | undefined | null) => {
@@ -393,8 +390,6 @@ export default function PropertiesPage() {
             searchPlaceholder="City, Address, ZIP, or MLS #"
             filterContent={advancedFilterContent}
             filterButtonText="All Filters"
-            showSaveSearch={true}
-            onSaveSearch={handleSaveSearch}
             selectedFilters={activeFilters}
             onClearFilter={clearFilter}
           />
@@ -405,45 +400,12 @@ export default function PropertiesPage() {
           "w-full px-4 overflow-hidden transition-all duration-300 -mt-1",
           showViewControls ? "max-h-20 opacity-100 py-3" : "max-h-0 opacity-0 py-0"
         )}>
-          <div className="container mx-auto flex flex-wrap justify-center items-center gap-6">
-            {/* Property Count */}
-            <div className="text-sm text-gray-700 mb-2 sm:mb-0">
-              <span className="font-medium">{filteredProperties.length}</span> homes for sale
-            </div>
-            
-            {/* View Mode and Sort Controls */}
+          <div className="container mx-auto flex flex-wrap justify-between items-center">
+            {/* Left side controls */}
             <div className="flex items-center gap-3">
-              {/* View Toggles */}
-              <div className="border border-gray-200 rounded-md overflow-hidden flex">
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  className={`h-9 rounded-none ${viewMode === 'list' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                  onClick={() => setViewMode('list')}
-                >
-                  List
-                </Button>
-                <Button 
-                  variant="ghost"
-                  size="sm" 
-                  className={`h-9 rounded-none ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                  onClick={() => setViewMode('map')}
-                >
-                  Map
-                </Button>
-                <Button 
-                  variant="ghost"
-                  size="sm" 
-                  className={`h-9 rounded-none ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                  onClick={() => setViewMode('grid')}
-                >
-                  Grid
-                </Button>
-              </div>
-              
               {/* Sort Control */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 h-9 w-44">
+                <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 h-9 w-36">
                   <span className="text-sm">Sort: </span>
                   <SelectValue placeholder="Recommended" />
                 </SelectTrigger>
@@ -454,6 +416,81 @@ export default function PropertiesPage() {
                   <SelectItem value="price-high">Price (High to Low)</SelectItem>
                 </SelectContent>
               </Select>
+
+              {/* Location Dropdown */}
+              <Select defaultValue="any">
+                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300">
+                  <span className="text-sm">Location: </span>
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any Location</SelectItem>
+                  <SelectItem value="downtown">Downtown</SelectItem>
+                  <SelectItem value="suburbs">Suburbs</SelectItem>
+                  <SelectItem value="beachfront">Beachfront</SelectItem>
+                  <SelectItem value="mountain">Mountain View</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Property Type Dropdown */}
+              <Select defaultValue="any">
+                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300">
+                  <span className="text-sm">Type: </span>
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any Type</SelectItem>
+                  <SelectItem value="house">House</SelectItem>
+                  <SelectItem value="condo">Condo</SelectItem>
+                  <SelectItem value="townhouse">Townhouse</SelectItem>
+                  <SelectItem value="multi-family">Multi-Family</SelectItem>
+                  <SelectItem value="land">Land</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Price Range Dropdown */}
+              <Select defaultValue="any">
+                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300">
+                  <span className="text-sm">Price: </span>
+                  <SelectValue placeholder="Any" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any">Any Price</SelectItem>
+                  <SelectItem value="0-300000">Under $300k</SelectItem>
+                  <SelectItem value="300000-500000">$300k-$500k</SelectItem>
+                  <SelectItem value="500000-750000">$500k-$750k</SelectItem>
+                  <SelectItem value="750000-1000000">$750k-$1M</SelectItem>
+                  <SelectItem value="1000000+">$1M+</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {/* Right side - View Toggles */}
+            <div className="border border-gray-200 rounded-md overflow-hidden flex">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className={`h-9 rounded-none ${viewMode === 'list' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                onClick={() => setViewMode('list')}
+              >
+                List
+              </Button>
+              <Button 
+                variant="ghost"
+                size="sm" 
+                className={`h-9 rounded-none ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                onClick={() => setViewMode('map')}
+              >
+                Map
+              </Button>
+              <Button 
+                variant="ghost"
+                size="sm" 
+                className={`h-9 rounded-none ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                onClick={() => setViewMode('grid')}
+              >
+                Grid
+              </Button>
             </div>
           </div>
         </div>

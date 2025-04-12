@@ -94,9 +94,9 @@ export default function StickySearchFilter({
     >
       {/* Main search bar - full-width, Redfin-inspired layout */}
       <div className="w-full px-4 py-4 shadow-sm">
-        <div className="flex flex-col md:flex-row gap-4 max-w-7xl mx-auto">
+        <div className="flex flex-row items-center gap-3 max-w-7xl mx-auto">
           {/* Location Search */}
-          <div className="relative flex-grow max-w-xl">
+          <div className="relative flex-grow">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
             <Input
               type="text"
@@ -107,83 +107,24 @@ export default function StickySearchFilter({
             />
           </div>
 
-          {/* Quick Filters Row - Redfin style dropdowns */}
-          <div className="flex gap-3 flex-wrap">
-            {/* Price Range */}
-            <Select defaultValue="any">
-              <SelectTrigger className="w-32 h-10 bg-white border border-gray-200 rounded-md hover:border-gray-300">
-                <SelectValue placeholder="Price" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="any">Any Price</SelectItem>
-                <SelectItem value="0-300000">Under $300k</SelectItem>
-                <SelectItem value="300000-500000">$300k-$500k</SelectItem>
-                <SelectItem value="500000-750000">$500k-$750k</SelectItem>
-                <SelectItem value="750000-1000000">$750k-$1M</SelectItem>
-                <SelectItem value="1000000+">$1M+</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* Beds/Baths */}
-            <Select defaultValue="any">
-              <SelectTrigger className="w-32 h-10 bg-white border border-gray-200 rounded-md hover:border-gray-300">
-                <SelectValue placeholder="Beds/Baths" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="any">Any</SelectItem>
-                <SelectItem value="1+">1+ Beds</SelectItem>
-                <SelectItem value="2+">2+ Beds</SelectItem>
-                <SelectItem value="3+">3+ Beds</SelectItem>
-                <SelectItem value="4+">4+ Beds</SelectItem>
-                <SelectItem value="5+">5+ Beds</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* Property Type */}
-            <Select defaultValue="any">
-              <SelectTrigger className="w-32 h-10 bg-white border border-gray-200 rounded-md hover:border-gray-300">
-                <SelectValue placeholder="Home Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="any">Any</SelectItem>
-                <SelectItem value="house">House</SelectItem>
-                <SelectItem value="condo">Condo</SelectItem>
-                <SelectItem value="townhouse">Townhouse</SelectItem>
-                <SelectItem value="multi-family">Multi-Family</SelectItem>
-                <SelectItem value="land">Land</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* More Filters Button */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="h-10 flex items-center gap-2 border border-gray-200 rounded-md hover:border-gray-300"
-                >
-                  <Sliders className="h-4 w-4" />
-                  {filterButtonText}
-                  <span className="text-xs bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center">
-                    +1
-                  </span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[350px] p-5 shadow-lg" align="end">
-                {filterContent}
-              </PopoverContent>
-            </Popover>
-
-            {/* Save Search Button */}
-            {showSaveSearch && (
+          {/* More Filters Button */}
+          <Popover>
+            <PopoverTrigger asChild>
               <Button 
-                variant="default" 
-                className="h-10 bg-[#09261E] text-white hover:bg-[#124035]"
-                onClick={onSaveSearch}
+                variant="outline" 
+                className="h-10 flex items-center gap-2 border border-gray-200 rounded-md hover:border-gray-300"
               >
-                Save Search
+                <Sliders className="h-4 w-4" />
+                {filterButtonText}
+                <span className="text-xs bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center">
+                  +1
+                </span>
               </Button>
-            )}
-          </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-[350px] p-5 shadow-lg" align="end">
+              {filterContent}
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
