@@ -4,7 +4,6 @@ import Sidebar from "./sidebar";
 import Footer from "./footer";
 import TopNavbar from "./top-navbar";
 import Breadcrumbs from "../common/breadcrumbs";
-import { Menu } from "lucide-react";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,6 +17,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
+
+  // Check if we're on pages where the top banner should be hidden when scrolling up
+  const isSpecialPage = location === '/reps' || location === '/properties' || 
+                        location.startsWith('/rep/') || location.startsWith('/p/');
 
   // This effect is used to detect if window exists (for SSR compatibility)
   useEffect(() => {
@@ -37,29 +40,20 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F8FA]">
       {/* Top-right sticky navbar */}
-      <TopNavbar />
+      <TopNavbar specialBehavior={isSpecialPage} />
       
       <div className="flex flex-1 pt-14">
-        {/* Sidebar with hamburger toggle */}
-        <div className="absolute left-4 top-4 z-40">
-          <button 
-            onClick={toggleSidebar}
-            className="text-gray-700 p-2 hover:bg-gray-100 rounded-full"
-            aria-label="Toggle menu"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        </div>
-        
+        {/* Sidebar component - no floating hamburger */}
         <Sidebar 
           isOpen={sidebarOpen} 
           closeSidebar={closeSidebar} 
           isExpanded={isExpanded}
           setIsExpanded={setIsExpanded}
+          toggleSidebar={toggleSidebar}
         />
         
-        {/* Main content */}
-        <main className="flex-1 w-full transition-all duration-200">
+        {/* Main content - ensure it starts after the collapsed sidebar width */}
+        <main className={`flex-1 w-full transition-all duration-200 ${!isExpanded ? 'ml-16' : ''} lg:ml-16`}>
           <div className="min-h-screen pt-4 pb-16">
             {children}
           </div>

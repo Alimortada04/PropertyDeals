@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import { 
   Pagination, 
   PaginationContent, 
@@ -9,7 +10,7 @@ import {
   PaginationNext, 
   PaginationPrevious 
 } from "@/components/ui/pagination";
-import { Search, BookOpen } from "lucide-react";
+import { Search, BookOpen, ChevronLeft } from "lucide-react";
 import { dictionaryTerms, DictionaryTerm } from "@/lib/dictionary-data";
 
 export default function PropertyDictionaryPage() {
@@ -99,6 +100,14 @@ export default function PropertyDictionaryPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-5xl mx-auto">
+        {/* Back to Guides link */}
+        <div className="mb-4">
+          <Link href="/guides" className="inline-flex items-center text-[#09261E] hover:underline">
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Back to Guides
+          </Link>
+        </div>
+        
         <div className="flex items-center mb-2">
           <BookOpen className="mr-2 h-6 w-6 text-[#09261E]" />
           <h1 className="text-3xl font-bold text-[#09261E]">

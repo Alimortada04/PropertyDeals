@@ -159,10 +159,10 @@ export default function RepsPage() {
       {/* Page Title */}
       <div className="mb-6">
         <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">
-          Real Estate Professionals
+          The REP Room
         </h1>
         <p className="text-gray-600">
-          Connect with trusted professionals who can help you navigate the real estate market
+          Connect with trusted Real Estate Professionals (REPs)
         </p>
       </div>
       

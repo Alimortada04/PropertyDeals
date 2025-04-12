@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { 
   Home, Building, Users, LayoutDashboard, Book, 
-  Calculator, MessageCircle, UserCircle, Settings, ChevronRight, HelpCircle
+  Calculator, MessageCircle, UserCircle, Settings, ChevronRight, HelpCircle,
+  Menu
 } from "lucide-react";
 
 interface SidebarProps {
@@ -13,20 +14,35 @@ interface SidebarProps {
   closeSidebar: () => void;
   isExpanded: boolean;
   setIsExpanded: (expanded: boolean) => void;
+  toggleSidebar: () => void;
 }
 
-export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpanded }: SidebarProps) {
+export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpanded, toggleSidebar }: SidebarProps) {
   const { user } = useAuth();
   const [location] = useLocation();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [showExpandIndicator, setShowExpandIndicator] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check if we're on mobile
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   // Close sidebar on route change on mobile
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 1024 && isOpen) {
+    if (typeof window !== 'undefined' && isMobile && isOpen) {
       closeSidebar();
     }
-  }, [location, isOpen, closeSidebar]);
+  }, [location, isOpen, closeSidebar, isMobile]);
 
   // Handle window resize
   useEffect(() => {
@@ -60,6 +76,20 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
     return () => document.removeEventListener('mousemove', handleMouseMove);
   }, [isExpanded]);
 
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (isMobile && isOpen && sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        closeSidebar();
+      }
+    };
+    
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [closeSidebar, isOpen, isMobile]);
+
   // Nav item classes with immediate color change on hover - full width with no rounded corners
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
@@ -73,8 +103,30 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
 
   return (
     <>
-      {/* Expansion indicator that peeks from the edge */}
-      {!isExpanded && showExpandIndicator && (
+      {/* Mobile top navbar with hamburger menu */}
+      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm h-14 lg:hidden flex items-center px-4">
+        <button 
+          onClick={toggleSidebar}
+          className="mr-4 p-2 hover:bg-gray-100 rounded-md"
+          aria-label="Toggle menu"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+        
+        <Link href="/" className="flex items-center">
+          <img 
+            src="/images/pdLogo.png" 
+            alt="PropertyDeals Logo" 
+            className="h-8 w-auto"
+          />
+          <span className="ml-2 font-heading font-bold text-[#09261E] text-lg">
+            PropertyDeals
+          </span>
+        </Link>
+      </div>
+      
+      {/* Expansion indicator that peeks from the edge (only on desktop) */}
+      {!isMobile && !isExpanded && showExpandIndicator && (
         <div 
           className="fixed top-1/3 left-0 z-30 cursor-pointer h-10"
           onClick={() => setIsExpanded(true)}
@@ -88,6 +140,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         </div>
       )}
       
+      {/* Overlay for mobile */}
+      {isMobile && isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={closeSidebar}
+        ></div>
+      )}
+      
       {/* Sidebar */}
       <aside 
         id="sidebar" 
@@ -97,9 +157,10 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           transition-all duration-200 bg-white
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           ${isExpanded ? 'w-64' : 'w-16'}
+          ${isMobile ? 'w-[260px]' : ''}
         `}
-        onMouseEnter={() => window.innerWidth >= 1024 && setIsExpanded(true)}
-        onMouseLeave={() => window.innerWidth >= 1024 && setIsExpanded(false)}
+        onMouseEnter={() => !isMobile && setIsExpanded(true)}
+        onMouseLeave={() => !isMobile && setIsExpanded(false)}
       >
         <nav className="flex flex-col h-full">
           {/* Logo */}
@@ -142,7 +203,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <li>
                   <Link href="/reps" className={getNavItemClasses("/reps")}>
                     <Users className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
-                    {isExpanded && <span className="ml-3">REPs</span>}
+                    {isExpanded && <span className="ml-3">The REP Room</span>}
                   </Link>
                 </li>
                 <li>

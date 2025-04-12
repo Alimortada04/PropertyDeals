@@ -5,7 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-export default function TopNavbar() {
+interface TopNavbarProps {
+  specialBehavior?: boolean;
+}
+
+export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
   const { user, logoutMutation } = useAuth();
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -20,10 +24,15 @@ export default function TopNavbar() {
       const isScrolledDown = prevScrollPos < currentScrollPos;
       const isScrolledBeyondThreshold = currentScrollPos > 20;
       
-      // Hide when scrolling down, show when scrolling up
-      if (isScrolledDown && isScrolledBeyondThreshold) {
+      // For REPs and Properties pages, hide on scroll (both up and down)
+      // to prevent it from covering the search filters
+      if (specialBehavior && isScrolledBeyondThreshold) {
         setVisible(false);
-      } else {
+      } 
+      // Standard behavior - hide when scrolling down, show when scrolling up
+      else if (isScrolledDown && isScrolledBeyondThreshold) {
+        setVisible(false);
+      } else if (!isScrolledDown) {
         setVisible(true);
       }
       
@@ -32,7 +41,7 @@ export default function TopNavbar() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [prevScrollPos]);
+  }, [prevScrollPos, specialBehavior]);
 
   const handleLogout = () => {
     logoutMutation.mutate();
