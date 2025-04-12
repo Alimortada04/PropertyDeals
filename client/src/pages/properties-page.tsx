@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@shared/schema";
 import PropertyCard from "@/components/properties/property-card";
+import PropertyMap from "@/components/properties/property-map";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
@@ -12,8 +13,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import StickySearchFilter from "@/components/common/sticky-search-filter";
 import Breadcrumbs from "@/components/common/breadcrumbs";
 import { allProperties } from "@/lib/data";
-import { MapPin, List, LayoutGrid, ChevronDown } from "lucide-react";
+import { MapPin, List, LayoutGrid, ChevronDown, Grid, Save } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { useLocation } from 'wouter';
 
 interface FilterOptions {
   priceRange: string;
@@ -36,10 +39,29 @@ export default function PropertiesPage() {
     investmentType: "",
     propertyType: ""
   });
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<"grid" | "map" | "list">("grid");
-  const propertiesPerPage = 6;
+  const [location, setLocation] = useLocation();
+  const [hoveredPropertyId, setHoveredPropertyId] = useState<number | null>(null);
+  const propertiesPerPage = viewMode === 'map' ? 12 : 6;
+
+  // Update URL when view mode changes
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('view', viewMode);
+    window.history.replaceState({}, '', url.toString());
+  }, [viewMode]);
+
+  // Check URL for view mode on initial load
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const viewParam = url.searchParams.get('view');
+    if (viewParam && (viewParam === 'grid' || viewParam === 'map' || viewParam === 'list')) {
+      setViewMode(viewParam as "grid" | "map" | "list");
+    }
+  }, []);
 
   const { data: properties, isLoading, error } = useQuery<Property[]>({
     queryKey: ["/api/properties"],
@@ -105,200 +127,268 @@ export default function PropertiesPage() {
   const currentProperties = sortedProperties.slice(indexOfFirstProperty, indexOfLastProperty);
   const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
   
-  // Reset to first page when filters change
+  // Update the activeFilters state when filters change
   useEffect(() => {
+    const newActiveFilters: string[] = [];
+    
+    if (filters.priceRange) {
+      const [min, max] = filters.priceRange.split('-').map(Number);
+      if (max) {
+        newActiveFilters.push(`$${min.toLocaleString()} - $${max.toLocaleString()}`);
+      } else {
+        newActiveFilters.push(`$${min.toLocaleString()}+`);
+      }
+    }
+    
+    if (filters.beds) {
+      newActiveFilters.push(`${filters.beds} beds`);
+    }
+    
+    if (filters.baths) {
+      newActiveFilters.push(`${filters.baths} baths`);
+    }
+    
+    if (filters.status) {
+      newActiveFilters.push(filters.status.charAt(0).toUpperCase() + filters.status.slice(1));
+    }
+    
+    if (filters.tier) {
+      newActiveFilters.push(filters.tier.charAt(0).toUpperCase() + filters.tier.slice(1));
+    }
+    
+    if (filters.investmentType) {
+      newActiveFilters.push(filters.investmentType.charAt(0).toUpperCase() + filters.investmentType.slice(1));
+    }
+    
+    if (filters.propertyType) {
+      newActiveFilters.push(filters.propertyType.charAt(0).toUpperCase() + filters.propertyType.slice(1));
+    }
+    
+    setActiveFilters(newActiveFilters);
+    
+    // Reset to first page when filters change
     setCurrentPage(1);
   }, [searchTerm, filters, sortBy]);
 
-  // We no longer need property tabs since we're using dropdowns
-  const propertyTabs: { value: string; label: string; }[] = [];
+  // Handle filter clearing
+  const clearFilter = (filter: string) => {
+    // Find which filter to clear based on the displayed text
+    if (filter.includes('$')) {
+      setFilters({ ...filters, priceRange: '' });
+    } else if (filter.includes('beds')) {
+      setFilters({ ...filters, beds: '' });
+    } else if (filter.includes('baths')) {
+      setFilters({ ...filters, baths: '' });
+    } else if (filter === 'General' || filter === 'Exclusive') {
+      setFilters({ ...filters, tier: '' });
+    } else if (filter === 'Flip' || filter === 'Buy & Hold') {
+      setFilters({ ...filters, investmentType: '' });
+    } else if (['Single Family', 'Multi Family', 'Condo', 'Townhouse', 'Land'].includes(filter)) {
+      setFilters({ ...filters, propertyType: '' });
+    } else {
+      setFilters({ ...filters, status: '' });
+    }
+  };
+
+  // Save search handler
+  const handleSaveSearch = () => {
+    alert('Search saved! You will receive notifications for new matching properties.');
+  };
   
-  // Define quick filter dropdowns
-  const filterContent = (
-    <div className="flex flex-wrap gap-4 justify-start w-full">
-      {/* Tier Dropdown */}
-      <div className="w-44">
-        <Select 
-          value={filters.tier || "any"}
-          onValueChange={(value) => setFilters({...filters, tier: value === "any" ? "" : value})}
-        >
-          <SelectTrigger className="border h-9 bg-white">
-            <SelectValue placeholder="Tier" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="any">Any Tier</SelectItem>
-            <SelectItem value="general">General</SelectItem>
-            <SelectItem value="exclusive">Exclusive</SelectItem>
-          </SelectContent>
-        </Select>
+  // Define filter content for the advanced filters popover
+  const advancedFilterContent = (
+    <div className="space-y-5">
+      <div>
+        <h3 className="font-medium text-sm mb-3">Price Range</h3>
+        <Slider
+          defaultValue={[0, 1000000]}
+          min={0}
+          max={10000000}
+          step={100000}
+          onValueChange={(values) => {
+            setFilters({
+              ...filters, 
+              priceRange: `${values[0]}-${values[1]}`
+            });
+          }}
+        />
+        <div className="flex items-center gap-4 mt-4">
+          <div>
+            <p className="text-xs mb-1 text-gray-500">Min</p>
+            <Input
+              type="text"
+              value={`$${new Intl.NumberFormat().format(parseInt(filters.priceRange?.split('-')?.[0] || "0"))}`}
+              className="h-8"
+              onChange={(e) => {
+                // Parse input if needed
+                const value = e.target.value.replace(/[\$,]/g, '');
+                const min = parseInt(value) || 0;
+                const max = parseInt(filters.priceRange?.split('-')?.[1] || "10000000");
+                setFilters({
+                  ...filters,
+                  priceRange: `${min}-${max}`
+                });
+              }}
+            />
+          </div>
+          <div className="pt-5">—</div>
+          <div>
+            <p className="text-xs mb-1 text-gray-500">Max</p>
+            <Input
+              type="text"
+              value={`$${new Intl.NumberFormat().format(parseInt(filters.priceRange?.split('-')?.[1] || "10000000"))}`}
+              className="h-8"
+              onChange={(e) => {
+                // Parse input if needed
+                const value = e.target.value.replace(/[\$,]/g, '');
+                const max = parseInt(value) || 10000000;
+                const min = parseInt(filters.priceRange?.split('-')?.[0] || "0");
+                setFilters({
+                  ...filters,
+                  priceRange: `${min}-${max}`
+                });
+              }}
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Investment Type Dropdown */}
-      <div className="w-44">
-        <Select 
-          value={filters.investmentType || "any"}
-          onValueChange={(value) => setFilters({...filters, investmentType: value === "any" ? "" : value})}
-        >
-          <SelectTrigger className="border h-9 bg-white">
-            <SelectValue placeholder="Investment Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="any">Any Investment</SelectItem>
-            <SelectItem value="flip">Flip</SelectItem>
-            <SelectItem value="buy-hold">Buy & Hold</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="space-y-3">
+        <h3 className="font-medium text-sm">Investment Type</h3>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="flip" 
+              checked={filters.investmentType === 'flip'} 
+              onCheckedChange={(checked) => {
+                setFilters({
+                  ...filters, 
+                  investmentType: checked ? 'flip' : ''
+                });
+              }}
+            />
+            <label htmlFor="flip" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Flip
+            </label>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="buy-hold" 
+              checked={filters.investmentType === 'buy-hold'} 
+              onCheckedChange={(checked) => {
+                setFilters({
+                  ...filters, 
+                  investmentType: checked ? 'buy-hold' : ''
+                });
+              }}
+            />
+            <label htmlFor="buy-hold" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Buy & Hold
+            </label>
+          </div>
+        </div>
       </div>
 
-      {/* Property Type Dropdown */}
-      <div className="w-44">
-        <Select 
-          value={filters.propertyType || "any"}
-          onValueChange={(value) => setFilters({...filters, propertyType: value === "any" ? "" : value})}
-        >
-          <SelectTrigger className="border h-9 bg-white">
-            <SelectValue placeholder="Property Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="any">Any Property</SelectItem>
-            <SelectItem value="single-family">Single Family</SelectItem>
-            <SelectItem value="multi-family">Multi Family</SelectItem>
-            <SelectItem value="condo">Condo</SelectItem>
-            <SelectItem value="townhouse">Townhouse</SelectItem>
-            <SelectItem value="land">Land</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Price Range Dropdown/Slider */}
-      <div className="w-44">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="border h-9 bg-white w-full flex justify-between">
-              <span className="text-sm text-gray-500">Price Range</span>
-              <ChevronDown className="h-4 w-4 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[320px] p-5">
-            <div className="space-y-5">
-              <h3 className="font-medium text-sm">Price Range</h3>
-              <Slider
-                defaultValue={[0, 1000000]}
-                min={0}
-                max={10000000}
-                step={100000}
-                onValueChange={(values) => {
-                  setFilters({
-                    ...filters, 
-                    priceRange: `${values[0]}-${values[1]}`
-                  });
-                }}
-              />
-              <div className="flex items-center gap-4">
-                <div>
-                  <p className="text-xs mb-1 text-gray-500">Min</p>
-                  <Input
-                    type="text"
-                    value={`$${new Intl.NumberFormat().format(parseInt(filters.priceRange?.split('-')?.[0] || "0"))}`}
-                    className="h-8"
-                    onChange={(e) => {
-                      // Parse input if needed
-                      const value = e.target.value.replace(/[\$,]/g, '');
-                      const min = parseInt(value) || 0;
-                      const max = parseInt(filters.priceRange?.split('-')?.[1] || "10000000");
-                      setFilters({
-                        ...filters,
-                        priceRange: `${min}-${max}`
-                      });
-                    }}
-                  />
-                </div>
-                <div className="pt-5">—</div>
-                <div>
-                  <p className="text-xs mb-1 text-gray-500">Max</p>
-                  <Input
-                    type="text"
-                    value={`$${new Intl.NumberFormat().format(parseInt(filters.priceRange?.split('-')?.[1] || "10000000"))}`}
-                    className="h-8"
-                    onChange={(e) => {
-                      // Parse input if needed
-                      const value = e.target.value.replace(/[\$,]/g, '');
-                      const max = parseInt(value) || 10000000;
-                      const min = parseInt(filters.priceRange?.split('-')?.[0] || "0");
-                      setFilters({
-                        ...filters,
-                        priceRange: `${min}-${max}`
-                      });
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+      <div className="space-y-3">
+        <h3 className="font-medium text-sm">Property Tier</h3>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="general" 
+              checked={filters.tier === 'general'} 
+              onCheckedChange={(checked) => {
+                setFilters({
+                  ...filters, 
+                  tier: checked ? 'general' : ''
+                });
+              }}
+            />
+            <label htmlFor="general" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              General
+            </label>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="exclusive" 
+              checked={filters.tier === 'exclusive'} 
+              onCheckedChange={(checked) => {
+                setFilters({
+                  ...filters, 
+                  tier: checked ? 'exclusive' : ''
+                });
+              }}
+            />
+            <label htmlFor="exclusive" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Exclusive
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   );
   
   return (
-    <div className="container mx-auto px-4 pb-8">
-      {/* Breadcrumbs */}
-      <div className="mb-3 pt-4">
-        <Breadcrumbs />
-      </div>
-      
-      {/* Page Title */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">
-          Browse Properties
-        </h1>
-        <p className="text-gray-600">
-          Discover your perfect investment opportunity
-        </p>
-      </div>
-      
-      {/* Sticky Search and Filter Section */}
+    <div className="flex flex-col min-h-screen pb-12">
+      {/* Top Sticky Search Filter Bar - Full Width */}
       <StickySearchFilter
         onSearch={setSearchTerm}
-        searchPlaceholder="Search by address, city, or zip code..."
-        filterContent={filterContent}
-        filterButtonText="Filters"
+        searchPlaceholder="City, Address, ZIP, or MLS #"
+        filterContent={advancedFilterContent}
+        filterButtonText="All Filters"
+        showSaveSearch={true}
+        onSaveSearch={handleSaveSearch}
+        selectedFilters={activeFilters}
+        onClearFilter={clearFilter}
       />
       
-      {/* View Toggle and Sort Options */}
-      <div className="flex flex-wrap justify-between items-center mb-6">
-        <div className="text-sm text-gray-600 mb-2 sm:mb-0">
-          <span className="font-medium">{filteredProperties.length}</span> properties found
-        </div>
-        
-        <div className="flex items-center gap-4">
-          {/* View Toggle - Redfin Style */}
-          <div className="border rounded-md overflow-hidden">
-            <Button 
-              variant="ghost" 
-              className={`px-4 py-2 ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-              onClick={() => setViewMode('grid')}
-            >
-              <LayoutGrid className="h-4 w-4 mr-2" />
-              Grid
-            </Button>
-            <Button 
-              variant="ghost" 
-              className={`px-4 py-2 ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-              onClick={() => setViewMode('map')}
-            >
-              <MapPin className="h-4 w-4 mr-2" />
-              Map
-            </Button>
+      {/* Sub Header with Property Count and View Controls */}
+      <div className="container mx-auto px-4 mt-5 mb-4">
+        <div className="flex flex-wrap justify-between items-center">
+          {/* Property Count */}
+          <div className="text-sm text-gray-700 mb-2 sm:mb-0">
+            <span className="font-medium">{filteredProperties.length}</span> homes for sale
           </div>
           
-          {/* Sort Dropdown */}
-          <div className="flex items-center">
+          {/* View Mode and Sort Controls */}
+          <div className="flex items-center gap-3">
+            {/* View Toggles */}
+            <div className="border rounded-md overflow-hidden flex">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className={`h-10 rounded-none ${viewMode === 'list' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                onClick={() => setViewMode('list')}
+              >
+                List
+              </Button>
+              <Button 
+                variant="ghost"
+                size="sm" 
+                className={`h-10 rounded-none ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                onClick={() => setViewMode('map')}
+              >
+                Map
+              </Button>
+              <Button 
+                variant="ghost"
+                size="sm" 
+                className={`h-10 rounded-none ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
+                onClick={() => setViewMode('grid')}
+              >
+                Grid
+              </Button>
+            </div>
+            
+            {/* Sort Control */}
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="bg-white border w-40 h-9">
-                <SelectValue placeholder="Sort by" />
+              <SelectTrigger className="bg-white border h-10 w-44">
+                <span className="text-sm">Sort: </span>
+                <SelectValue placeholder="Recommended" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="recommended">Recommended</SelectItem>
                 <SelectItem value="newest">Newest</SelectItem>
                 <SelectItem value="price-low">Price (Low to High)</SelectItem>
                 <SelectItem value="price-high">Price (High to Low)</SelectItem>
@@ -308,111 +398,289 @@ export default function PropertiesPage() {
         </div>
       </div>
 
-      {/* Property Display - Grid or Map View */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white rounded-lg overflow-hidden shadow-md">
-              <Skeleton className="w-full h-48" />
-              <div className="p-5">
-                <Skeleton className="h-7 w-1/2 mb-2" />
-                <Skeleton className="h-5 w-3/4 mb-3" />
-                <div className="flex justify-between mb-4">
-                  <Skeleton className="h-4 w-16" />
-                  <Skeleton className="h-4 w-16" />
-                  <Skeleton className="h-4 w-16" />
+      {/* Main Content Area */}
+      <div className="flex-grow">
+        {isLoading ? (
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="bg-white rounded-lg overflow-hidden shadow-md">
+                  <Skeleton className="w-full h-48" />
+                  <div className="p-5">
+                    <Skeleton className="h-7 w-1/2 mb-2" />
+                    <Skeleton className="h-5 w-3/4 mb-3" />
+                    <div className="flex justify-between mb-4">
+                      <Skeleton className="h-4 w-16" />
+                      <Skeleton className="h-4 w-16" />
+                      <Skeleton className="h-4 w-16" />
+                    </div>
+                    <Skeleton className="h-10 w-full" />
+                  </div>
                 </div>
-                <Skeleton className="h-10 w-full" />
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : error ? (
-        <div className="text-center py-10">
-          <p className="text-red-500 mb-2">Error loading properties</p>
-          <p className="text-gray-600">Please try again later</p>
-        </div>
-      ) : filteredProperties.length === 0 ? (
-        <div className="text-center py-10">
-          <p className="text-gray-600">No properties match your search criteria</p>
-        </div>
-      ) : viewMode === 'grid' ? (
-        // Grid View
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {currentProperties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
-          ))}
-        </div>
-      ) : (
-        // Map View - Redfin Style Split Screen
-        <div className="flex flex-col md:flex-row h-[calc(100vh-250px)] min-h-[600px] border rounded-md overflow-hidden">
-          {/* Left side - scrollable property listings */}
-          <div className="w-full md:w-1/2 overflow-y-auto border-r">
-            <div className="divide-y">
+          </div>
+        ) : error ? (
+          <div className="container mx-auto px-4 text-center py-10">
+            <p className="text-red-500 mb-2">Error loading properties</p>
+            <p className="text-gray-600">Please try again later</p>
+          </div>
+        ) : filteredProperties.length === 0 ? (
+          <div className="container mx-auto px-4 text-center py-10">
+            <p className="text-gray-600">No properties match your search criteria</p>
+          </div>
+        ) : viewMode === 'grid' ? (
+          // Grid View - Traditional Card Grid
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {currentProperties.map((property) => (
-                <div key={property.id} className="p-4 hover:bg-gray-50">
+                <div 
+                  key={property.id}
+                  onMouseEnter={() => setHoveredPropertyId(property.id)}
+                  onMouseLeave={() => setHoveredPropertyId(null)}
+                >
                   <PropertyCard property={property} />
                 </div>
               ))}
             </div>
+            
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        href="#" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1) setCurrentPage(currentPage - 1);
+                        }}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                    
+                    {Array.from({ length: Math.min(totalPages, 5) }).map((_, index) => {
+                      let pageNumber = currentPage - 2 + index;
+                      if (pageNumber <= 0) pageNumber = index + 1;
+                      if (pageNumber > totalPages) pageNumber = totalPages - (4 - index);
+                      return (
+                        <PaginationItem key={index}>
+                          <PaginationLink 
+                            href="#" 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(pageNumber);
+                            }}
+                            isActive={currentPage === pageNumber}
+                          >
+                            {pageNumber}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    })}
+                    
+                    <PaginationItem>
+                      <PaginationNext 
+                        href="#" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                        }}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
           </div>
-          
-          {/* Right side - map */}
-          <div className="w-full md:w-1/2 bg-gray-100 flex items-center justify-center">
-            <div className="text-center p-8">
-              <MapPin className="h-12 w-12 mx-auto mb-4 text-[#09261E]" />
-              <h3 className="text-lg font-medium mb-2">Interactive Map View</h3>
-              <p className="text-gray-600">Map integration will display property locations here</p>
+        ) : viewMode === 'list' ? (
+          // List View - Horizontal Cards
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col gap-4">
+              {currentProperties.map((property) => (
+                <div 
+                  key={property.id} 
+                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                  onMouseEnter={() => setHoveredPropertyId(property.id)}
+                  onMouseLeave={() => setHoveredPropertyId(null)}
+                >
+                  <div className="flex flex-col md:flex-row">
+                    <div className="md:w-1/3 lg:w-1/4">
+                      <img 
+                        src={property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"} 
+                        alt={property.title || "Property"} 
+                        className="w-full h-48 md:h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-5 md:w-2/3 lg:w-3/4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-xl font-heading font-bold text-[#135341] mb-2">
+                            ${property.price?.toLocaleString()}
+                          </h3>
+                          <p className="text-gray-700 mb-3">{property.address}, {property.city}, {property.state}</p>
+                          <div className="flex text-sm text-gray-600 mb-4 gap-4">
+                            <span>{property.bedrooms} beds</span>
+                            <span>{property.bathrooms} baths</span>
+                            <span>{property.squareFeet?.toLocaleString()} sqft</span>
+                          </div>
+                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                            {property.description || "Beautiful property in a prime location, perfect for your next investment."}
+                          </p>
+                        </div>
+                        <Button 
+                          className="bg-[#135341] hover:bg-[#09261E] text-white"
+                          onClick={() => setLocation(`/p/${property.id}`)}
+                        >
+                          View Details
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center">
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        href="#" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage > 1) setCurrentPage(currentPage - 1);
+                        }}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                    
+                    {Array.from({ length: Math.min(totalPages, 5) }).map((_, index) => {
+                      let pageNumber = currentPage - 2 + index;
+                      if (pageNumber <= 0) pageNumber = index + 1;
+                      if (pageNumber > totalPages) pageNumber = totalPages - (4 - index);
+                      return (
+                        <PaginationItem key={index}>
+                          <PaginationLink 
+                            href="#" 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setCurrentPage(pageNumber);
+                            }}
+                            isActive={currentPage === pageNumber}
+                          >
+                            {pageNumber}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    })}
+                    
+                    <PaginationItem>
+                      <PaginationNext 
+                        href="#" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                        }}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            )}
+          </div>
+        ) : (
+          // Map View - Split Screen Layout
+          <div className="flex flex-col md:flex-row h-[calc(100vh-200px)] md:min-h-[600px]">
+            {/* Left Column - Scrollable Property List */}
+            <div className="w-full md:w-1/2 h-1/2 md:h-full overflow-y-auto border-r border-gray-200">
+              <div className="h-full">
+                {/* Property Count and Page Navigation */}
+                <div className="sticky top-0 z-10 bg-white px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                  <div className="text-sm font-medium">
+                    {filteredProperties.length} homes · Page {currentPage} of {totalPages}
+                  </div>
+                  {totalPages > 1 && (
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        disabled={currentPage === 1}
+                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      >
+                        Previous
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        disabled={currentPage === totalPages}
+                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Property List */}
+                <div className="divide-y divide-gray-200">
+                  {currentProperties.map((property) => (
+                    <div 
+                      key={property.id} 
+                      className={cn(
+                        "p-4 hover:bg-gray-50 transition-colors",
+                        hoveredPropertyId === property.id ? "bg-[#EAF2EF]" : ""
+                      )}
+                      onMouseEnter={() => setHoveredPropertyId(property.id)}
+                      onMouseLeave={() => setHoveredPropertyId(null)}
+                    >
+                      <div className="flex gap-4">
+                        <div className="w-1/3">
+                          <img 
+                            src={property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"} 
+                            alt={property.title || "Property"} 
+                            className="w-full h-24 object-cover rounded"
+                          />
+                        </div>
+                        <div className="w-2/3">
+                          <h3 className="font-bold text-[#135341]">${property.price?.toLocaleString()}</h3>
+                          <p className="text-sm text-gray-700 mb-1 truncate">{property.address}</p>
+                          <div className="flex text-xs text-gray-600 mb-2">
+                            <span className="mr-2">{property.bedrooms} beds</span>
+                            <span className="mr-2">{property.bathrooms} baths</span>
+                            <span>{property.squareFeet?.toLocaleString()} sqft</span>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            className="w-full bg-[#135341] hover:bg-[#09261E] text-white text-xs"
+                            onClick={() => setLocation(`/p/${property.id}`)}
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Right Column - Map */}
+            <div className="w-full md:w-1/2 h-1/2 md:h-full">
+              <PropertyMap 
+                properties={filteredProperties} 
+                onPropertyHover={setHoveredPropertyId}
+                hoveredPropertyId={hoveredPropertyId}
+              />
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-12 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  href="#" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (currentPage > 1) setCurrentPage(currentPage - 1);
-                  }}
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-              
-              {Array.from({ length: totalPages }).map((_, index) => (
-                <PaginationItem key={index}>
-                  <PaginationLink 
-                    href="#" 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setCurrentPage(index + 1);
-                    }}
-                    isActive={currentPage === index + 1}
-                  >
-                    {index + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              
-              <PaginationItem>
-                <PaginationNext 
-                  href="#" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                  }}
-                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <!-- Background -->
+  <rect width="800" height="600" fill="#E8EEEB" />
+  
+  <!-- Roads -->
+  <g stroke="#FFFFFF" stroke-width="3">
+    <!-- Horizontal roads -->
+    <line x1="0" y1="100" x2="800" y2="100" />
+    <line x1="0" y1="200" x2="800" y2="200" />
+    <line x1="0" y1="300" x2="800" y2="300" />
+    <line x1="0" y1="400" x2="800" y2="400" />
+    <line x1="0" y1="500" x2="800" y2="500" />
+    
+    <!-- Vertical roads -->
+    <line x1="100" y1="0" x2="100" y2="600" />
+    <line x1="200" y1="0" x2="200" y2="600" />
+    <line x1="300" y1="0" x2="300" y2="600" />
+    <line x1="400" y1="0" x2="400" y2="600" />
+    <line x1="500" y1="0" x2="500" y2="600" />
+    <line x1="600" y1="0" x2="600" y2="600" />
+    <line x1="700" y1="0" x2="700" y2="600" />
+  </g>
+  
+  <!-- Main roads -->
+  <g stroke="#D6D6D6" stroke-width="6">
+    <line x1="0" y1="300" x2="800" y2="300" />
+    <line x1="400" y1="0" x2="400" y2="600" />
+  </g>
+  
+  <!-- Water bodies -->
+  <rect x="550" y="350" width="250" height="150" fill="#BFD7E3" />
+  <path d="M0 550 C100 500, 200 600, 300 550 L300 600 L0 600 Z" fill="#BFD7E3" />
+  
+  <!-- Parks -->
+  <rect x="150" y="150" width="100" height="100" fill="#C3D9C3" rx="5" ry="5" />
+  <rect x="450" y="200" width="150" height="80" fill="#C3D9C3" rx="5" ry="5" />
+  <circle cx="650" cy="150" r="50" fill="#C3D9C3" />
+  
+  <!-- Buildings -->
+  <g fill="#D1D1D1">
+    <rect x="120" y="320" width="40" height="30" />
+    <rect x="120" y="360" width="60" height="30" />
+    <rect x="220" y="320" width="50" height="60" />
+    <rect x="320" y="340" width="30" height="30" />
+    <rect x="320" y="380" width="55" height="15" />
+    <rect x="420" y="320" width="40" height="40" />
+    <rect x="420" y="370" width="30" height="25" />
+    <rect x="480" y="320" width="15" height="70" />
+    
+    <rect x="120" y="120" width="20" height="20" />
+    <rect x="150" y="120" width="30" height="15" />
+    <rect x="120" y="420" width="40" height="40" />
+    <rect x="220" y="220" width="35" height="35" />
+    <rect x="220" y="420" width="40" height="35" />
+    <rect x="320" y="120" width="40" height="20" />
+    <rect x="320" y="440" width="30" height="30" />
+  </g>
+</svg>
