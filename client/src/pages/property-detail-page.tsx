@@ -472,10 +472,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             {/* Sidebar - Contact Card Column */}
-            <div className="lg:col-span-1">
-              <div className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg lg:sticky lg:top-8 mb-8 max-w-[380px] lg:mx-auto xl:ml-0">
+            <div className="lg:col-span-1 h-full">
+              <div className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg sticky top-8 mb-8 max-w-[380px] lg:mx-auto xl:ml-0">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
-                <div className="flex items-center mb-6 border-b pb-4">
+                <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
                   <img 
                     src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
                     alt="Property Seller" 
@@ -495,7 +495,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       </span>
                     </p>
                   </div>
-                </div>
+                </Link>
                 
                 {/* Action Buttons */}
                 <div className="space-y-3 mb-6">
@@ -687,7 +687,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             <div className="p-6">
-              <div className="flex items-center mb-6 border-b pb-4">
+              <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
                 <img 
                   src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
                   alt="Property Seller" 
@@ -707,7 +707,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </span>
                   </p>
                 </div>
-              </div>
+              </Link>
 
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
