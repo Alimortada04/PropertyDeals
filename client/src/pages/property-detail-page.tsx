@@ -286,7 +286,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       <section className="py-10 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Main Content Column */}
+            {/* Main Content Column with no overflow-hidden to allow proper sticky behavior */}
             <div className="w-full lg:w-2/3">
               {/* Key Features */}
               <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
@@ -472,10 +472,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             {/* Sidebar */}
-            <div className="w-full lg:w-1/3">
+            <div className="w-full lg:w-1/3 lg:relative">
               {/* Contact REP Card */}
-              <div className="bg-white p-6 rounded-lg border-2 border-[#09261E]/20 shadow-md mb-8 sticky top-[80px]">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested in this Property?</h2>
+              <div className="bg-white p-6 rounded-lg border-2 border-[#09261E]/20 shadow-md mb-8 sticky top-[100px]">
+                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
                 <div className="flex items-center mb-6 border-b pb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
