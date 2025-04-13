@@ -1,0 +1,97 @@
+🌐 Design & Motion Inspiration:
+Use these sites as references to guide layout, animation, scroll behavior, and visual energy:
+
+https://www.jeton.com/
+
+https://www.superlist.com/
+
+https://slite.com/
+
+https://moon-project.webflow.io/
+
+https://ready.so/
+
+https://empathy-path-eleven.webflow.io/
+
+https://www.evekayser.com.br/
+
+https://createwithplay.com/
+
+https://business.adobe.com/blog/basics/best-website-design-examples
+
+💡 Vision & Brand Vibe:
+PropertyDeals is building a modern platform for discovering exclusive off-market properties and connecting with trusted professionals (REPs). The site should feel:
+
+Bold, high-conversion, and startup-grade
+
+Community-focused
+
+Polished and investor-savvy
+
+Creative and movement-oriented (scrolling = an experience)
+
+🎯 Key Home Page Features to Include:
+Hero Section
+Animated or parallax background
+
+Bold headline + subheadline (e.g. “Off-Market Deals. Real Connections.”)
+
+CTA buttons: “Browse Properties” and “Explore REPs”
+
+Smooth entry animations
+
+Feature Highlights (2-3 Horizontal Sections)
+Horizontal sections for each of the core use cases:
+
+“Find off-market deals others can’t see”
+
+“Connect with real estate pros in your area”
+
+“Track, favorite, and analyze your deals”
+
+Use subtle scroll animations or fade-in effects.
+
+Embedded Property Cards (Dynamic)
+Showcase top-performing property cards (from our listings)
+
+Interactive hover effects: show image slides or microanimations
+
+Click = navigate to property detail
+
+Community & REP Section
+Highlight “The REP Room” and allow users to browse or join.
+
+Include verified avatars, mini bios, or location highlights
+
+Optionally include a floating interactive map background that shifts as user scrolls
+
+Testimonials / Trust Section
+Use creative grid layout (inspired by Jeton, Adobe, or Slite)
+
+Include 3 short testimonials or community quotes
+
+Minimal design with parallax or slide-in transitions
+
+Sticky or Floating Elements
+Floating sticky button (e.g. “Join Now” or “Chat With Us”)
+
+Scroll indicator on the left or right (dot-based like https://plunderandpoach.webflow.io/)
+
+Footer Section
+Minimal but branded
+
+Include links to: About, Help, Terms, Cookies, Socials, etc.
+
+📱 Responsiveness & Interaction
+Make the experience seamless on desktop, tablet, and mobile
+
+Enable scroll-triggered interactions (scrolling over sections activates transitions)
+
+Use Framer Motion, GSAP, or CSS animations for parallax, fade, zoom, and slide-in effects
+
+🛠️ Technical Notes
+Framework: Next.js 14 (App Router)
+
+Styling: TailwindCSS + custom components
+
+You may use any lightweight animation libraries as needed
