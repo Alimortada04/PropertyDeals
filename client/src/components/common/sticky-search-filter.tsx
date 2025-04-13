@@ -143,7 +143,7 @@ export default function StickySearchFilter({
                 >
                   <span>{filter}</span>
                   <button 
-                    className="ml-2 text-gray-500 hover:text-gray-700"
+                    className="ml-2 text-[#09261E] hover:text-[#135341]"
                     onClick={() => onClearFilter && onClearFilter(filter)}
                   >
                     <X size={14} />

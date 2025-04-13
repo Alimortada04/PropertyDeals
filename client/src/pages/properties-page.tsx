@@ -407,7 +407,7 @@ export default function PropertiesPage() {
             <div className="flex items-center gap-3 flex-wrap">
               {/* Sort Control */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 h-9 w-36">
+                <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E] h-9 w-36">
                   <span className="text-sm">Sort: </span>
                   <SelectValue placeholder="Recommended" />
                 </SelectTrigger>
@@ -421,7 +421,7 @@ export default function PropertiesPage() {
 
               {/* Location Dropdown */}
               <Select defaultValue="any">
-                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300">
+                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E]">
                   <span className="text-sm">Location: </span>
                   <SelectValue placeholder="Any" />
                 </SelectTrigger>
@@ -436,7 +436,7 @@ export default function PropertiesPage() {
 
               {/* Property Type Dropdown */}
               <Select defaultValue="any">
-                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300">
+                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E]">
                   <span className="text-sm">Type: </span>
                   <SelectValue placeholder="Any" />
                 </SelectTrigger>
@@ -452,7 +452,7 @@ export default function PropertiesPage() {
 
               {/* Price Range Dropdown */}
               <Select defaultValue="any">
-                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300">
+                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E]">
                   <span className="text-sm">Price: </span>
                   <SelectValue placeholder="Any" />
                 </SelectTrigger>
