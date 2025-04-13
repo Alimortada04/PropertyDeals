@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { useScrollAnimation, useParallaxEffect } from "@/hooks/use-scroll-animation";
 import { 
   Search, 
   Users, 
@@ -11,7 +11,12 @@ import {
   BarChart3,
   MapPin,
   ScrollText,
-  Handshake
+  Handshake,
+  Eye,
+  UserCheck,
+  CheckCircle,
+  Repeat,
+  DollarSign
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -19,6 +24,7 @@ export default function ImmersiveFeatures() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeSection, setActiveSection] = useState(0);
+  const { relativePosition } = useParallaxEffect();
 
   // References to each section
   const section1Ref = useRef<HTMLDivElement>(null);
@@ -57,67 +63,112 @@ export default function ImmersiveFeatures() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Feature sections data
+  // Feature sections data for the "What's PropertyDeals?" section
   const sections = [
     {
       ref: section1Ref,
       animation: section1Animation,
-      title: "Discover Off-Market Properties",
-      subtitle: "Need a deal? We got you.",
-      description: "Access exclusive property listings you won't find on MLS. Our platform connects you with off-market opportunities that match your investment criteria.",
-      image: "/src/assets/property-map.svg",
+      title: "See the Deal.",
+      subtitle: "Step 1",
+      description: "Find off-market properties and exclusive opportunities that match your investment criteria. Our platform gives you access to deals you won't find anywhere else.",
       color: "#09261E",
-      icon: <Home className="h-16 w-16 text-[#09261E]/20" />,
+      icon: <Eye className="h-16 w-16 text-white/90" />,
       stats: [
         { label: "Off-market deals", value: "3,500+" },
-        { label: "Avg. time to close", value: "47 days" },
-        { label: "Investor ROI", value: "12-18%" }
+        { label: "New listings daily", value: "40+" },
+        { label: "Cities covered", value: "250+" }
       ],
       cta: {
         label: "Browse Properties",
         link: "/properties",
         icon: <Search className="h-4 w-4" />
-      }
+      },
+      illustration: (
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Home className="h-32 w-32 text-white/20" />
+          </div>
+          <div className="absolute top-1/4 left-1/4 animate-float delay-300">
+            <MapPin className="h-8 w-8 text-white/60" />
+          </div>
+          <div className="absolute bottom-1/4 right-1/3 animate-float delay-500">
+            <BarChart3 className="h-10 w-10 text-white/70" />
+          </div>
+          <div className="absolute top-1/3 right-1/4 animate-float">
+            <Home className="h-10 w-10 text-white/60" />
+          </div>
+        </div>
+      )
     },
     {
       ref: section2Ref,
       animation: section2Animation,
-      title: "Connect with Verified REPs",
-      subtitle: "Need help? You're covered.",
-      description: "Work with pre-vetted real estate professionals who have been verified and reviewed by our community. From agents to contractors, find the right experts for your project.",
-      image: "/src/assets/real-estate-pro.svg",
+      title: "Meet the REP.",
+      subtitle: "Step 2",
+      description: "Connect directly with verified real estate professionals. Every REP on our platform has been vetted and reviewed by our community for quality and reliability.",
       color: "#135341",
-      icon: <Users className="h-16 w-16 text-[#135341]/20" />,
+      icon: <UserCheck className="h-16 w-16 text-white/90" />,
       stats: [
         { label: "Verified REPs", value: "900+" },
-        { label: "Avg. response time", value: "24 hrs" },
-        { label: "Customer rating", value: "4.8/5" }
+        { label: "Average rating", value: "4.8/5" },
+        { label: "Response time", value: "< 24h" }
       ],
       cta: {
-        label: "Explore REPs",
+        label: "Meet REPs",
         link: "/reps",
-        icon: <Briefcase className="h-4 w-4" />
-      }
+        icon: <Users className="h-4 w-4" />
+      },
+      illustration: (
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Users className="h-32 w-32 text-white/20" />
+          </div>
+          <div className="absolute top-1/3 left-1/4 animate-float delay-200">
+            <Briefcase className="h-8 w-8 text-white/60" />
+          </div>
+          <div className="absolute bottom-1/3 right-1/4 animate-float delay-400">
+            <MessageCircle className="h-10 w-10 text-white/70" />
+          </div>
+          <div className="absolute top-1/4 right-1/3 animate-float delay-300">
+            <Handshake className="h-10 w-10 text-white/60" />
+          </div>
+        </div>
+      )
     },
     {
       ref: section3Ref,
       animation: section3Animation,
-      title: "Join the Investor Community",
-      subtitle: "Want to network? Join the conversation.",
-      description: "Connect with like-minded investors, share insights, and leverage powerful tools designed specifically for real estate professionals and investors.",
-      image: "/src/assets/community-connect.svg",
-      color: "#803344",
-      icon: <MessageCircle className="h-16 w-16 text-[#803344]/20" />,
+      title: "Close and Repeat.",
+      subtitle: "Step 3",
+      description: "Execute deals seamlessly through our platform and build your network. Property by property, connection by connection, watch your real estate portfolio grow.",
+      color: "#E59F9F",
+      icon: <Repeat className="h-16 w-16 text-white/90" />,
       stats: [
-        { label: "Active members", value: "14,000+" },
-        { label: "Daily discussions", value: "150+" },
-        { label: "Deal shares", value: "500+/mo" }
+        { label: "Deals closed", value: "15,000+" },
+        { label: "Community members", value: "12,500+" },
+        { label: "Average ROI", value: "18-22%" }
       ],
       cta: {
-        label: "Join Discussion",
-        link: "/discussions",
-        icon: <MessageCircle className="h-4 w-4" />
-      }
+        label: "Start Investing",
+        link: "/auth",
+        icon: <CheckCircle className="h-4 w-4" />
+      },
+      illustration: (
+        <div className="relative w-full h-full">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <CheckCircle className="h-32 w-32 text-white/20" />
+          </div>
+          <div className="absolute top-1/4 right-1/4 animate-float delay-300">
+            <ScrollText className="h-8 w-8 text-white/60" />
+          </div>
+          <div className="absolute bottom-1/3 left-1/3 animate-float delay-100">
+            <DollarSign className="h-10 w-10 text-white/70" />
+          </div>
+          <div className="absolute top-1/3 left-1/4 animate-float delay-500">
+            <Repeat className="h-10 w-10 text-white/60" />
+          </div>
+        </div>
+      )
     }
   ];
 
@@ -129,10 +180,13 @@ export default function ImmersiveFeatures() {
       {/* Section title */}
       <div className="container mx-auto px-4 mb-8 text-center">
         <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-3">
-          A Comprehensive Platform
+          <span className="relative">
+            What's PropertyDeals?
+            <span className="absolute bottom-1 left-0 right-0 h-3 bg-[#E59F9F]/30 -z-10 mx-auto" style={{ width: "60%" }}></span>
+          </span>
         </h2>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          PropertyDeals isn't just a listing site. It's a complete ecosystem for real estate investors and professionals.
+          A complete ecosystem that takes you from finding deals to closing them, with everything you need in between.
         </p>
       </div>
       

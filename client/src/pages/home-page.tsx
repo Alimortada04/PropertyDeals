@@ -10,6 +10,7 @@ import StickySearchBar from "@/components/home/sticky-search-bar";
 import BackToTop from "@/components/layout/back-to-top";
 import ImmersiveFeatures from "@/components/home/immersive-features";
 import HorizontalPropertyShowcase from "@/components/home/horizontal-property-showcase";
+import ValueGrid from "@/components/home/value-grid";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@shared/schema";
@@ -132,19 +133,24 @@ export default function HomePage() {
         <HorizontalPropertyShowcase properties={displayProperties} />
       </div>
       
+      {/* Why This is Different - Value Grid */}
+      <ScrollAnimationSection className="w-full" threshold={0.2}>
+        <ValueGrid />
+      </ScrollAnimationSection>
+      
       {/* REP Room Preview - Interactive carousel */}
       <ScrollAnimationSection className="w-full">
         <RepRoomPreview />
       </ScrollAnimationSection>
       
-      {/* Tools Teaser - Interactive calculator previews */}
-      <ScrollAnimationSection className="w-full" threshold={0.1}>
-        <ToolsTeaser />
-      </ScrollAnimationSection>
-      
       {/* Community Preview - Discussion highlights */}
       <ScrollAnimationSection className="w-full" threshold={0.1}>
         <CommunityPreview />
+      </ScrollAnimationSection>
+      
+      {/* Tools Teaser - Interactive calculator previews */}
+      <ScrollAnimationSection className="w-full" threshold={0.1}>
+        <ToolsTeaser />
       </ScrollAnimationSection>
       
       {/* Final Call to Action - Bold statement and signup */}
