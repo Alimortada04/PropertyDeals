@@ -158,7 +158,7 @@ export default function HeroSection() {
       </div>
       
       {/* Main hero content - Split layout */}
-      <div className="relative z-10 container mx-auto px-4 min-h-[100vh] flex items-center py-12 md:py-0">
+      <div className="relative z-10 container mx-auto px-4 min-h-[100vh] flex items-center py-6 md:py-10 lg:py-0">
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left content column */}
           <div className="lg:col-span-7 flex flex-col justify-center">
@@ -273,8 +273,8 @@ export default function HeroSection() {
                   }}
                 >
                   <div className="relative">
-                    {/* Avatar stack positioned behind the pill */}
-                    <div className="flex -space-x-2 absolute -left-3 top-1/2 transform -translate-y-1/2 -translate-x-[15%]">
+                    {/* Avatar stack positioned above the pill and aligned to the right */}
+                    <div className="flex -space-x-2 absolute -right-1 -top-4 transform translate-x-[5%]">
                       {target.avatars.map((avatar, avatarIdx) => (
                         <div 
                           key={avatarIdx}
@@ -293,7 +293,7 @@ export default function HeroSection() {
                     
                     {/* Pill */}
                     <div 
-                      className="bg-white/90 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2.5 pl-6 flex items-center gap-3 shadow-sm group cursor-pointer relative transition-all duration-300 z-10 overflow-hidden"
+                      className="bg-white/90 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2.5 flex items-center gap-3 shadow-sm group cursor-pointer relative transition-all duration-300 z-10 overflow-hidden mt-2"
                       style={{ color: target.color }}
                     >
                       <div className="flex items-center gap-2 relative z-10">
