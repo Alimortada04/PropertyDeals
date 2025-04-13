@@ -84,7 +84,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Main gradient orb */}
         <div 
-          className="absolute -right-[10%] -top-[5%] w-[65vw] h-[65vw] max-w-[1000px] max-h-[1000px] rounded-full bg-gradient-to-bl from-[#09261E]/15 to-[#135341]/25 blur-3xl will-change-transform"
+          className="absolute -right-[10%] -top-[5%] w-[70vw] h-[70vw] max-w-[1100px] max-h-[1100px] rounded-full bg-gradient-to-bl from-[#09261E]/20 to-[#135341]/30 blur-3xl will-change-transform"
           style={{
             transform: `translate3d(${scrollY * 0.05 + relativePosition.x * 20}px, ${scrollY * -0.05 + relativePosition.y * 20}px, 0)`,
           }}
@@ -92,9 +92,24 @@ export default function HeroSection() {
         
         {/* Secondary orb */}
         <div 
-          className="absolute -left-[10%] bottom-[5%] w-[45vw] h-[45vw] max-w-[800px] max-h-[800px] rounded-full bg-gradient-to-tr from-[#E59F9F]/10 to-[#803344]/10 blur-3xl will-change-transform"
+          className="absolute -left-[10%] bottom-[5%] w-[55vw] h-[55vw] max-w-[900px] max-h-[900px] rounded-full bg-gradient-to-tr from-[#E59F9F]/15 to-[#803344]/15 blur-3xl will-change-transform"
           style={{
             transform: `translate3d(${scrollY * -0.03 + relativePosition.x * -20}px, ${scrollY * -0.03 + relativePosition.y * -15}px, 0)`,
+          }}
+        />
+        
+        {/* Additional colorful background elements */}
+        <div 
+          className="absolute left-[25%] top-[15%] w-[40vw] h-[40vw] max-w-[700px] max-h-[700px] rounded-full bg-gradient-to-r from-[#135341]/10 to-[#298668]/10 blur-3xl will-change-transform animate-pulse-slow"
+          style={{
+            transform: `translate3d(${scrollY * 0.02 + relativePosition.x * 5}px, ${scrollY * 0.02 + relativePosition.y * 5}px, 0)`,
+          }}
+        />
+        
+        <div 
+          className="absolute right-[20%] bottom-[20%] w-[25vw] h-[25vw] max-w-[400px] max-h-[400px] rounded-full bg-gradient-to-b from-[#E5D89F]/10 to-[#F8F8F8]/5 blur-3xl will-change-transform animate-float-slow"
+          style={{
+            transform: `translate3d(${scrollY * -0.01 + relativePosition.x * -8}px, ${scrollY * 0.04 + relativePosition.y * -8}px, 0)`,
           }}
         />
         
@@ -201,18 +216,84 @@ export default function HeroSection() {
               }`}
             >
               {[
-                { icon: <Search className="h-4 w-4" />, text: "For Investors & Buyers", color: "#09261E" },
-                { icon: <Handshake className="h-4 w-4" />, text: "For REPs", color: "#135341" },
-                { icon: <Key className="h-4 w-4" />, text: "For Sellers", color: "#803344" }
+                { 
+                  icon: <Search className="h-4 w-4" />, 
+                  text: "For Investors & Buyers", 
+                  color: "#09261E",
+                  href: "/buyers-dash",
+                  avatars: [
+                    { initials: "JL", bg: "#09261E30" },
+                    { initials: "MR", bg: "#09261E20" },
+                    { initials: "AT", bg: "#09261E25" }
+                  ]
+                },
+                { 
+                  icon: <Handshake className="h-4 w-4" />, 
+                  text: "For REPs", 
+                  color: "#135341",
+                  href: "/rep-dash",
+                  avatars: [
+                    { initials: "RH", bg: "#13534130" },
+                    { initials: "LS", bg: "#13534120" },
+                    { initials: "BK", bg: "#13534125" }
+                  ]
+                },
+                { 
+                  icon: <Key className="h-4 w-4" />, 
+                  text: "For Sellers", 
+                  color: "#803344",
+                  href: "/seller-dash",
+                  avatars: [
+                    { initials: "PL", bg: "#80334430" },
+                    { initials: "DJ", bg: "#80334420" },
+                    { initials: "EM", bg: "#80334425" }
+                  ]
+                }
               ].map((target, idx) => (
-                <div 
+                <Link 
                   key={idx} 
-                  className="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2 flex items-center gap-2 shadow-sm"
-                  style={{ color: target.color }}
+                  href={target.href}
+                  onClick={(e) => {
+                    // If user is not authenticated, show login modal
+                    const isAuthenticated = false; // Replace with actual auth check
+                    if (!isAuthenticated) {
+                      e.preventDefault();
+                      // Redirect to auth page with returnUrl
+                      window.location.href = `/auth?returnUrl=${target.href}`;
+                    }
+                  }}
                 >
-                  {target.icon}
-                  <span className="text-sm font-medium">{target.text}</span>
-                </div>
+                  <div 
+                    className="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2.5 flex items-center gap-3 shadow-sm hover:shadow-md transition-all group cursor-pointer pr-10 relative"
+                    style={{ color: target.color }}
+                  >
+                    <div className="flex items-center gap-2">
+                      {target.icon}
+                      <span className="text-sm font-medium">{target.text}</span>
+                    </div>
+                    
+                    {/* Avatar stack */}
+                    <div className="flex -space-x-3 absolute right-3">
+                      {target.avatars.map((avatar, avatarIdx) => (
+                        <div 
+                          key={avatarIdx}
+                          className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border border-white will-change-transform transition-all"
+                          style={{ 
+                            background: avatar.bg,
+                            color: target.color,
+                            transform: `translateY(${relativePosition.y * 5}px)`,
+                            zIndex: 10 - avatarIdx
+                          }}
+                        >
+                          {avatar.initials}
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Hover indicator */}
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 w-0 bg-current transition-all duration-300 opacity-0 group-hover:w-full group-hover:opacity-100"/>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -242,9 +323,10 @@ export default function HeroSection() {
               
               {/* Featured property card */}
               <div 
-                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white"
+                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform"
                 style={{
-                  transform: `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15}px, 0) rotate(-2deg)`,
+                  transform: `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15 - scrollY * 0.05}px, 0) rotate(-2deg)`,
+                  transition: 'transform 0.1s ease-out'
                 }}
               >
                 {/* Property image */}
@@ -277,9 +359,10 @@ export default function HeroSection() {
               
               {/* REP card */}
               <div 
-                className="absolute bottom-[10%] right-[5%] w-[60%] rounded-xl shadow-xl bg-white p-4 z-30"
+                className="absolute bottom-[10%] right-[5%] w-[60%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
                 style={{
-                  transform: `translate3d(${relativePosition.x * 20}px, ${relativePosition.y * 20}px, 0) rotate(3deg)`,
+                  transform: `translate3d(${relativePosition.x * 20}px, ${relativePosition.y * 20 + scrollY * 0.03}px, 0) rotate(3deg)`,
+                  transition: 'transform 0.1s ease-out'
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -316,9 +399,10 @@ export default function HeroSection() {
               
               {/* Floating UI elements */}
               <div 
-                className="absolute top-[25%] right-[0%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 animate-float"
+                className="absolute top-[25%] right-[0%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
                 style={{
-                  transform: `translate3d(${relativePosition.x * -10}px, ${relativePosition.y * -10}px, 0)`,
+                  transform: `translate3d(${relativePosition.x * -10 - scrollY * 0.02}px, ${relativePosition.y * -10 - scrollY * 0.01}px, 0)`,
+                  transition: 'transform 0.1s ease-out'
                 }}
               >
                 <div className="flex items-center gap-2">
@@ -330,9 +414,10 @@ export default function HeroSection() {
               </div>
               
               <div 
-                className="absolute bottom-[40%] left-[5%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 animate-float-slow"
+                className="absolute bottom-[40%] left-[5%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
                 style={{
-                  transform: `translate3d(${relativePosition.x * 10}px, ${relativePosition.y * 10}px, 0)`,
+                  transform: `translate3d(${relativePosition.x * 10 - scrollY * 0.01}px, ${relativePosition.y * 10 + scrollY * 0.025}px, 0)`,
+                  transition: 'transform 0.1s ease-out'
                 }}
               >
                 <div className="flex items-center gap-2">
@@ -340,6 +425,22 @@ export default function HeroSection() {
                     <Shield className="h-4 w-4" />
                   </div>
                   <span className="text-xs font-medium text-[#09261E]">Trusted network</span>
+                </div>
+              </div>
+              
+              {/* New floating element */}
+              <div 
+                className="absolute top-[55%] right-[15%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
+                style={{
+                  transform: `translate3d(${relativePosition.x * 15 + scrollY * 0.015}px, ${relativePosition.y * 15 - scrollY * 0.02}px, 0)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="text-[#09261E]">
+                    <NetworkIcon className="h-4 w-4" />
+                  </div>
+                  <span className="text-xs font-medium text-[#09261E]">Connect with experts</span>
                 </div>
               </div>
             </div>
