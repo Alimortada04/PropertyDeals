@@ -174,7 +174,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       {/* Mobile Menu that slides in from left */}
       <div 
         id="mobile-menu" 
-        className="fixed top-0 left-0 bottom-0 w-[250px] bg-white z-50 lg:hidden hidden shadow-lg transition-transform duration-300 ease-in-out -translate-x-full"
+        className="fixed top-0 left-0 bottom-0 w-[250px] bg-white z-50 lg:hidden hidden shadow-lg transition-transform duration-300 ease-in-out -translate-x-full overscroll-contain"
       >
         <div className="h-full overflow-y-auto">
           <div className="flex items-center px-4 py-3 border-b">
@@ -361,12 +361,18 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       {/* Overlay for mobile menu */}
       <div 
         id="mobile-menu-overlay" 
-        className="fixed inset-0 bg-black/50 z-40 lg:hidden hidden"
+        className="fixed inset-0 bg-black/50 z-40 lg:hidden hidden touch-none"
         onClick={() => {
           const mobileMenu = document.getElementById('mobile-menu');
           const overlay = document.getElementById('mobile-menu-overlay');
           if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
           if (overlay) overlay.classList.add('hidden');
+          
+          // Ensure body scrolling is enabled when menu is closed
+          document.body.style.removeProperty('overflow');
+          document.body.style.removeProperty('position');
+          document.body.style.removeProperty('inset');
+          document.body.style.removeProperty('touch-action');
         }}
       ></div>
       
