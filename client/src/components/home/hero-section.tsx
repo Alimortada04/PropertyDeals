@@ -18,6 +18,7 @@ import {
   LightbulbIcon
 } from "lucide-react";
 import { useCursorGlow, useParallaxEffect } from "@/hooks/use-scroll-animation";
+import { featuredProperties } from "@/lib/data";
 
 // Custom Network icon
 function NetworkIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -71,7 +72,8 @@ export default function HeroSection() {
   return (
     <div 
       ref={heroRef} 
-      className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh]"
+      className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh] top-0 mt-0"
+      style={{ marginTop: 0 }}
     >
       {/* Cursor glow effect container */}
       <div 
@@ -263,26 +265,18 @@ export default function HeroSection() {
                     }
                   }}
                 >
-                  <div 
-                    className="bg-white/80 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2.5 flex items-center gap-3 shadow-sm hover:shadow-md transition-all group cursor-pointer pr-10 relative"
-                    style={{ color: target.color }}
-                  >
-                    <div className="flex items-center gap-2">
-                      {target.icon}
-                      <span className="text-sm font-medium">{target.text}</span>
-                    </div>
-                    
-                    {/* Avatar stack */}
-                    <div className="flex -space-x-3 absolute right-3">
+                  <div className="relative">
+                    {/* Avatar stack positioned behind the pill */}
+                    <div className="flex -space-x-2 absolute -left-3 top-1/2 transform -translate-y-1/2 -translate-x-[15%]">
                       {target.avatars.map((avatar, avatarIdx) => (
                         <div 
                           key={avatarIdx}
-                          className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border border-white will-change-transform transition-all"
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white will-change-transform transition-all"
                           style={{ 
                             background: avatar.bg,
                             color: target.color,
-                            transform: `translateY(${relativePosition.y * 5}px)`,
-                            zIndex: 10 - avatarIdx
+                            transform: `translateY(${relativePosition.y * 2}px)`,
+                            zIndex: 1 - avatarIdx
                           }}
                         >
                           {avatar.initials}
@@ -290,8 +284,28 @@ export default function HeroSection() {
                       ))}
                     </div>
                     
-                    {/* Hover indicator */}
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 w-0 bg-current transition-all duration-300 opacity-0 group-hover:w-full group-hover:opacity-100"/>
+                    {/* Pill */}
+                    <div 
+                      className="bg-white/90 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2.5 pl-6 flex items-center gap-3 shadow-sm group cursor-pointer relative transition-all duration-300 z-10 overflow-hidden"
+                      style={{ color: target.color }}
+                    >
+                      <div className="flex items-center gap-2 relative z-10">
+                        {target.icon}
+                        <span className="text-sm font-medium">{target.text}</span>
+                      </div>
+                      
+                      {/* Modern hover animation - subtle gradient overlay */}
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r"
+                           style={{ 
+                             backgroundImage: `linear-gradient(to right, ${target.color}15, ${target.color}05)`,
+                           }} 
+                      />
+                      
+                      {/* Enhanced hover animation - border highlight */}
+                      <div className="absolute inset-0 opacity-0 rounded-full group-hover:opacity-100 transition-all duration-300 border-2"
+                           style={{ borderColor: `${target.color}` }} 
+                      />
+                    </div>
                   </div>
                 </Link>
               ))}

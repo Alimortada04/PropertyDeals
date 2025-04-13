@@ -74,16 +74,6 @@ export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
     >
       {/* Right-aligned banner */}
       <div className="bg-white shadow-md py-3 px-5 rounded-bl-lg flex items-center gap-4 self-start">
-        {/* Search bar */}
-        <div className="relative w-64">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input
-            type="text"
-            placeholder="Search..."
-            className="pl-9 border-gray-300 focus:border-gray-400 rounded-full bg-white hover:bg-white focus:bg-white"
-          />
-        </div>
-        
         {/* Auth Buttons */}
         <div className="flex items-center gap-3">
           {user ? (
