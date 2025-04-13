@@ -205,22 +205,31 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           <div className="mb-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[500px]">
               {/* Main large image (2/3 width) */}
-              <div className="md:col-span-2 overflow-hidden rounded-lg relative group">
+              <div 
+                className="md:col-span-2 overflow-hidden rounded-lg relative group cursor-pointer"
+                onClick={() => setViewingAllPhotos(true)}
+              >
                 <img 
-                  src={property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"} 
-                  alt={property.address} 
+                  src={propertyImages[currentPhotoIndex]} 
+                  alt={`${property.address} - Photo ${currentPhotoIndex + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300"
                 />
                 {/* Navigation arrows */}
                 <button 
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10"
-                  onClick={prevImage}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent opening the gallery
+                    prevImage();
+                  }}
                 >
                   <ChevronLeft className="h-6 w-6" />
                 </button>
                 <button 
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10"
-                  onClick={nextImage}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent opening the gallery
+                    nextImage();
+                  }}
                 >
                   <ChevronRight className="h-6 w-6" />
                 </button>
@@ -228,7 +237,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button 
                     className="bg-white text-[#09261E] px-4 py-2 rounded-md font-medium"
-                    onClick={() => setViewingAllPhotos(true)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Redundant but clearer
+                      setViewingAllPhotos(true);
+                    }}
                   >
                     View All Photos
                   </button>
@@ -238,12 +250,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               {/* Right column images (1/3 width) */}
               <div className="md:col-span-1 grid grid-rows-2 gap-4 h-full">
                 {/* Top image */}
-                <div className="overflow-hidden rounded-lg">
+                <div className="overflow-hidden rounded-lg cursor-pointer">
                   <img 
-                    src="https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
-                    alt="Living Room" 
+                    src={propertyImages.length > 1 ? propertyImages[1] : propertyImages[0]} 
+                    alt={`${property.address} - Interior`}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
-                    onClick={() => setViewingAllPhotos(true)}
+                    onClick={() => {
+                      if (propertyImages.length > 1) setCurrentPhotoIndex(1);
+                      setViewingAllPhotos(true);
+                    }}
                   />
                 </div>
                 
@@ -585,57 +600,71 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       {/* Photo Gallery Modal */}
       {viewingAllPhotos && (
         <div className="fixed inset-0 bg-black z-50 overflow-y-auto">
-          {/* Close button */}
-          <button 
-            className="fixed top-4 right-4 text-white bg-black/30 hover:bg-black/50 p-2 rounded-full z-10"
-            onClick={() => setViewingAllPhotos(false)}
-          >
-            <X className="h-6 w-6" />
-          </button>
-          
-          {/* Photo navigation */}
-          <div className="flex items-center justify-between px-4 fixed inset-x-0 top-1/2 -translate-y-1/2 pointer-events-none">
+          {/* Header - Fixed position */}
+          <div className="sticky top-0 left-0 right-0 z-10 p-4 flex justify-between items-center bg-gradient-to-b from-black/70 to-transparent">
+            <h3 className="text-white text-xl font-heading font-medium">
+              {property.address} - Photo Gallery
+            </h3>
             <button 
-              className="bg-black/30 hover:bg-black/50 text-white p-3 rounded-full pointer-events-auto"
-              onClick={prevImage}
+              className="text-white bg-black/30 hover:bg-black/50 p-2 rounded-full"
+              onClick={() => setViewingAllPhotos(false)}
             >
-              <ChevronLeft className="h-8 w-8" />
-            </button>
-            <button 
-              className="bg-black/30 hover:bg-black/50 text-white p-3 rounded-full pointer-events-auto"
-              onClick={nextImage}
-            >
-              <ChevronRight className="h-8 w-8" />
+              <X className="h-6 w-6" />
             </button>
           </div>
           
+          {/* Gallery introduction */}
+          <div className="container mx-auto px-4 pt-12 pb-6 text-center">
+            <p className="text-white/80 mb-4">Scroll down to view all images of this property</p>
+            <div className="w-12 h-12 mx-auto animate-bounce text-white/60">
+              <i className="fas fa-chevron-down text-2xl"></i>
+            </div>
+          </div>
+          
           {/* Current main photo */}
-          <div className="flex items-center justify-center min-h-screen py-20">
+          <div className="flex items-center justify-center min-h-[70vh] px-4">
             <img 
               src={propertyImages[currentPhotoIndex]} 
               alt={`${property.address} - Photo ${currentPhotoIndex + 1}`} 
-              className="max-w-full max-h-[80vh] object-contain"
+              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+              id="main-gallery-photo"
             />
           </div>
           
           {/* Photo counter */}
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full">
-            {currentPhotoIndex + 1} / {propertyImages.length}
+          <div className="container mx-auto px-4 text-center mb-10">
+            <div className="bg-black/50 text-white px-4 py-2 rounded-full inline-block">
+              {currentPhotoIndex + 1} / {propertyImages.length}
+            </div>
           </div>
           
           {/* All photos - vertical scrolling */}
-          <div className="container mx-auto px-4 py-10 space-y-4">
+          <div className="container mx-auto px-4 space-y-20 pb-20">
             {propertyImages.map((img, index) => (
               <div 
                 key={index} 
-                className={`w-full flex justify-center ${currentPhotoIndex === index ? 'border-4 border-[#135341] rounded-lg' : ''}`}
+                className="w-full flex flex-col items-center"
               >
-                <img 
-                  src={img} 
-                  alt={`${property.address} - Photo ${index + 1}`} 
-                  className="max-w-full max-h-[80vh] object-contain rounded-lg cursor-pointer"
-                  onClick={() => setCurrentPhotoIndex(index)}
-                />
+                <div className={`w-full max-w-4xl flex justify-center mb-2 ${currentPhotoIndex === index ? 'ring-4 ring-[#135341] rounded-lg' : ''}`}>
+                  <img 
+                    src={img} 
+                    alt={`${property.address} - Photo ${index + 1}`} 
+                    className="max-w-full max-h-[80vh] object-contain rounded-lg cursor-pointer"
+                    onClick={() => {
+                      setCurrentPhotoIndex(index);
+                      // Scroll back to main photo
+                      document.getElementById('main-gallery-photo')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  />
+                </div>
+                <p className="text-white/60 text-sm">
+                  {index === 0 && 'Exterior'} 
+                  {index === 1 && 'Living Room'}
+                  {index === 2 && 'Kitchen'}
+                  {index === 3 && 'Primary Bedroom'}
+                  {index === 4 && 'Bathroom'}
+                  {index > 4 && `Photo ${index + 1}`}
+                </p>
               </div>
             ))}
           </div>
