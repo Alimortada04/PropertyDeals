@@ -599,82 +599,82 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       
       {/* Photo Gallery Modal */}
       {viewingAllPhotos && (
-        <div className="fixed inset-0 bg-black z-50 overflow-y-auto">
-          {/* Header - Fixed position */}
-          <div className="sticky top-0 left-0 right-0 z-10 p-4 flex justify-between items-center bg-gradient-to-b from-black/70 to-transparent">
-            <h3 className="text-white text-xl font-heading font-medium">
-              {property.address} - Photo Gallery
-            </h3>
-            <button 
-              className="text-white bg-black/30 hover:bg-black/50 p-2 rounded-full"
-              onClick={() => setViewingAllPhotos(false)}
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
-          
-          {/* Gallery introduction */}
-          <div className="container mx-auto px-4 pt-12 pb-6 text-center">
-            <p className="text-white/80 mb-4">Scroll down to view all images of this property</p>
-            <div className="w-12 h-12 mx-auto animate-bounce text-white/60">
-              <i className="fas fa-chevron-down text-2xl"></i>
-            </div>
-          </div>
-          
-          {/* Current main photo */}
-          <div className="flex items-center justify-center min-h-[70vh] px-4">
-            <img 
-              src={propertyImages[currentPhotoIndex]} 
-              alt={`${property.address} - Photo ${currentPhotoIndex + 1}`} 
-              className="max-w-full max-h-[80vh] object-contain rounded-lg"
-              id="main-gallery-photo"
-            />
-          </div>
-          
-          {/* Photo counter */}
-          <div className="container mx-auto px-4 text-center mb-10">
-            <div className="bg-black/50 text-white px-4 py-2 rounded-full inline-block">
-              {currentPhotoIndex + 1} / {propertyImages.length}
-            </div>
-          </div>
-          
-          {/* All photos - vertical scrolling */}
-          <div className="container mx-auto px-4 space-y-20 pb-20">
-            {propertyImages.map((img, index) => (
-              <div 
-                key={index} 
-                className="w-full flex flex-col items-center"
+        <div 
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setViewingAllPhotos(false)} // Close when clicking outside
+        >
+          <div 
+            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+          >
+            <div className="p-4 flex justify-between items-center border-b sticky top-0 bg-white z-10">
+              <h3 className="text-xl font-heading font-bold text-[#09261E]">{property.address} - All Photos</h3>
+              <button 
+                onClick={() => setViewingAllPhotos(false)}
+                className="text-gray-500 hover:text-gray-800"
               >
-                <div className={`w-full max-w-4xl flex justify-center mb-2 ${currentPhotoIndex === index ? 'ring-4 ring-[#135341] rounded-lg' : ''}`}>
-                  <img 
-                    src={img} 
-                    alt={`${property.address} - Photo ${index + 1}`} 
-                    className="max-w-full max-h-[80vh] object-contain rounded-lg cursor-pointer"
-                    onClick={() => {
-                      setCurrentPhotoIndex(index);
-                      // Scroll back to main photo
-                      document.getElementById('main-gallery-photo')?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  />
-                </div>
-                <p className="text-white/60 text-sm">
-                  {index === 0 && 'Exterior'} 
-                  {index === 1 && 'Living Room'}
-                  {index === 2 && 'Kitchen'}
-                  {index === 3 && 'Primary Bedroom'}
-                  {index === 4 && 'Bathroom'}
-                  {index > 4 && `Photo ${index + 1}`}
-                </p>
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            {/* Gallery introduction */}
+            <div className="p-4 text-center border-b">
+              <p className="text-gray-600 mb-2">Scroll to view all images of this property</p>
+              <div className="w-8 h-8 mx-auto animate-bounce text-gray-400">
+                <i className="fas fa-chevron-down"></i>
               </div>
-            ))}
+            </div>
+            
+            {/* All photos - vertical scrolling */}
+            <div className="p-4 space-y-8">
+              {propertyImages.map((img, index) => (
+                <div key={index} className="border-b pb-8 last:border-b-0">
+                  <div className="mb-2">
+                    <img 
+                      src={img} 
+                      alt={`${property.address} - Photo ${index + 1}`} 
+                      className="w-full rounded-lg"
+                    />
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <p className="text-gray-700 font-medium">
+                      {index === 0 && 'Exterior'} 
+                      {index === 1 && 'Living Room'}
+                      {index === 2 && 'Kitchen'}
+                      {index === 3 && 'Primary Bedroom'}
+                      {index === 4 && 'Bathroom'}
+                      {index > 4 && `Photo ${index + 1}`}
+                    </p>
+                    <span className="text-sm text-gray-500">
+                      {index + 1} / {propertyImages.length}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="p-4 border-t sticky bottom-0 bg-white">
+              <Button 
+                onClick={() => setViewingAllPhotos(false)}
+                className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
+              >
+                Close Gallery
+              </Button>
+            </div>
           </div>
         </div>
       )}
       
       {/* Map Modal */}
       {viewingMap && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+        <div 
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setViewingMap(false)} // Close when clicking outside
+        >
+          <div 
+            className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+          >
             <div className="flex items-center justify-between border-b p-4">
               <h3 className="text-xl font-heading font-bold text-[#09261E]">{property.address}</h3>
               <button 
