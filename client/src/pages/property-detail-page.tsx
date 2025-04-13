@@ -282,12 +282,12 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         </div>
       </section>
 
-      {/* Property Details Section */}
+      {/* Property Details Section - Using grid for better sticky behavior */}
       <section className="py-10 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Main Content Column with no overflow-hidden to allow proper sticky behavior */}
-            <div className="w-full lg:w-2/3">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content Column - Takes 2/3 of the space */}
+            <div className="lg:col-span-2">
               {/* Key Features */}
               <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property Details</h2>
@@ -471,10 +471,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </div>
             </div>
 
-            {/* Sidebar - Using CSS approach for sticky positioning */}
-            <div className="w-full lg:w-1/3 self-start" style={{ position: "sticky", top: "100px" }}>
-              {/* Contact REP Card */}
-              <div className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg mb-8">
+            {/* Sidebar - Using CSS grid approach for Redfin-style stickiness */}
+            <div className="lg:col-span-1">
+              {/* Contact REP Card - Direct sticky positioning */}
+              <div className="sticky top-[100px] bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg mb-8">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
                 <div className="flex items-center mb-6 border-b pb-4">
                   <img 
