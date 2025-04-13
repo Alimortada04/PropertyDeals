@@ -5,7 +5,7 @@ export default function AboutPage() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="bg-gray-50 py-16 md:py-24">
+      <section className="bg-white py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-heading font-bold text-[#09261E] mb-6">About PropertyDeals</h1>
@@ -55,7 +55,7 @@ export default function AboutPage() {
       </section>
 
       {/* Mission & Values */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-6">Our Mission & Values</h2>
