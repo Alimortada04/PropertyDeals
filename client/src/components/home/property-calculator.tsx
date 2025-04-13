@@ -14,6 +14,7 @@ interface PropertyCalculatorProps {
 export default function PropertyCalculator({ property, scrollY, isVisible }: PropertyCalculatorProps) {
   const [calculatorMode, setCalculatorMode] = useState<'flip' | 'rental'>('flip');
   const [isCalculatorVisible, setIsCalculatorVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   
   // Simulate loading time when property changes
   useEffect(() => {
@@ -43,14 +44,21 @@ export default function PropertyCalculator({ property, scrollY, isVisible }: Pro
         "absolute top-[10%] right-[-5%] w-[70%] bg-white/95 backdrop-blur-md rounded-xl shadow-xl p-5 overflow-hidden transform will-change-transform transition-all duration-500",
         {
           'opacity-0 translate-x-10': !isVisible || !isCalculatorVisible,
-          'opacity-100 translate-x-0': isVisible && isCalculatorVisible
+          'opacity-100 translate-x-0': isVisible && isCalculatorVisible,
+          'z-25': !isHovered,
+          'z-30': isHovered // Move in front when hovered
         }
       )}
       style={{
         transform: `translate3d(${isVisible && isCalculatorVisible ? 0 : 10}px, ${scrollY * 0.01}px, 0) rotate(3deg)`,
         transformStyle: 'preserve-3d',
-        boxShadow: '0 15px 30px -10px rgba(9, 38, 30, 0.15)'
+        boxShadow: isHovered 
+          ? '0 25px 50px -5px rgba(9, 38, 30, 0.25)' 
+          : '0 15px 30px -10px rgba(9, 38, 30, 0.15)',
+        transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, z-index 0s'
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Calculator Header */}
       <div className="flex justify-between items-center mb-4">
