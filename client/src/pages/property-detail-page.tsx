@@ -474,8 +474,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             {/* Sidebar */}
             <div className="w-full lg:w-1/3">
               {/* Contact REP Card */}
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-8 sticky top-[80px]">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Property Contact</h2>
+              <div className="bg-white p-6 rounded-lg border-2 border-[#09261E]/20 shadow-md mb-8 sticky top-[80px]">
+                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested in this Property?</h2>
                 <div className="flex items-center mb-6 border-b pb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
@@ -484,19 +484,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   />
                   <div>
                     <h3 className="font-heading font-bold text-[#135341] text-xl">Michael Johnson</h3>
-                    <p className="text-gray-600 font-medium">
+                    <p className="text-gray-600 font-medium mb-1">
                       <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md">
                         Seller
                       </span>
                     </p>
-                    <div className="flex items-center mt-2">
-                      <i className="fas fa-star text-yellow-500"></i>
-                      <i className="fas fa-star text-yellow-500"></i>
-                      <i className="fas fa-star text-yellow-500"></i>
-                      <i className="fas fa-star text-yellow-500"></i>
-                      <i className="fas fa-star-half-alt text-yellow-500"></i>
-                      <span className="ml-1 text-sm text-gray-600">(48 reviews)</span>
-                    </div>
+                    <p className="text-gray-700">
+                      <i className="fas fa-phone-alt text-[#135341] mr-2"></i>
+                      (555) 123-4567
+                    </p>
                   </div>
                 </div>
                 
@@ -514,29 +510,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   >
                     <i className="fas fa-file-invoice-dollar mr-2"></i> Make an Offer
                   </Button>
-                </div>
-                
-                {/* Property Quick Info */}
-                <div className="bg-[#09261E]/5 p-4 rounded-lg mb-4">
-                  <h4 className="font-heading font-bold text-[#09261E] mb-2">Property Snapshot</h4>
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="flex items-center">
-                      <i className="fas fa-bed text-[#135341] mr-2"></i>
-                      <span>{property.bedrooms} Beds</span>
-                    </div>
-                    <div className="flex items-center">
-                      <i className="fas fa-bath text-[#135341] mr-2"></i>
-                      <span>{property.bathrooms} Baths</span>
-                    </div>
-                    <div className="flex items-center">
-                      <i className="fas fa-ruler-combined text-[#135341] mr-2"></i>
-                      <span>{property.squareFeet?.toLocaleString()} sqft</span>
-                    </div>
-                    <div className="flex items-center">
-                      <i className="fas fa-calendar-alt text-[#135341] mr-2"></i>
-                      <span>Built {property.yearBuilt}</span>
-                    </div>
-                  </div>
                 </div>
                 
                 {/* Contact Preferences */}
