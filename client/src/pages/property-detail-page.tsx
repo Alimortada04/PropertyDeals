@@ -30,6 +30,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const { data: property, isLoading, error } = useQuery<Property>({
     queryKey: [`/api/properties/${id}`],
   });
+  
+  // Set document title when property data is available
+  useEffect(() => {
+    if (property) {
+      document.title = `${property.address} | PropertyDeals`;
+    }
+  }, [property]);
 
   // Form schema for property inquiry
   const inquirySchema = z.object({
@@ -131,11 +138,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
   // Format address
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
-  
-  // Set document title to property address
-  useEffect(() => {
-    document.title = `${property.address} | PropertyDeals`;
-  }, [property.address]);
 
   return (
     <>
