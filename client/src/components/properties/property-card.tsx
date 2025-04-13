@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { Property } from "@shared/schema";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bed, Bath, Move, Heart, Eye, ChevronLeft, ChevronRight, Share2 } from "lucide-react";
+import { Bed, Bath, Move, Heart, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -105,12 +105,6 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     setLocation(`/rep/${repId}`);
   };
   
-  const handleShareClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // In a real implementation, this would open a share modal or copy a link
-    alert(`Property link copied: ${window.location.origin}/p/${id}`);
-  };
-  
   // Add auto-fade effect on hover to show second image
   useEffect(() => {
     if (isHovered && propertyImages.length > 1) {
@@ -173,14 +167,6 @@ export default function PropertyCard({ property }: PropertyCardProps) {
               {currentImageIndex + 1}/{propertyImages.length}
             </div>
           )}
-          
-          {/* Share button */}
-          <button 
-            onClick={handleShareClick}
-            className="absolute bottom-2 right-2 bg-white rounded-full p-1.5 shadow-md z-10 hover:bg-gray-100 transition-all"
-          >
-            <Share2 size={14} className="text-gray-700" />
-          </button>
         </div>
 
         {/* Property status badge - color-coded by status */}

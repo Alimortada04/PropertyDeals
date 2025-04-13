@@ -362,7 +362,7 @@ export default function PropertiesPage() {
   );
   
   return (
-    <div className="flex flex-col min-h-screen pb-12 bg-white">
+    <div className="flex flex-col min-h-screen pb-12 bg-gray-50">
       {/* Breadcrumb and Header Section - White background */}
       <div className="w-full bg-white">
         <div className="container mx-auto px-4 pt-6 pb-6">
@@ -499,7 +499,7 @@ export default function PropertiesPage() {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-grow mt-6 bg-gray-50">
+      <div className="flex-grow mt-6">
         {isLoading ? (
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
