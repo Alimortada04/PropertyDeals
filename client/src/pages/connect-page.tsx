@@ -1032,7 +1032,7 @@ export default function ConnectPage() {
                                   className={`mt-1 rounded-lg overflow-hidden ${
                                     message.isMine 
                                       ? 'bg-[#0D382D] text-white' 
-                                      : 'bg-gray-50 border border-gray-200'
+                                      : 'bg-white border border-gray-200'
                                   }`}
                                 >
                                   {attachment.type === 'image' && (

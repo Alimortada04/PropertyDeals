@@ -221,7 +221,7 @@ export default function PropertyDictionaryPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-gray-50 rounded-lg">
+          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
             <h3 className="text-lg font-medium mb-2">No terms found</h3>
             <p className="text-gray-600 mb-4">
               Try adjusting your search criteria or filters.

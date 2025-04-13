@@ -105,7 +105,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   // Helper for mobile menu items
   const getMobileNavItemClasses = (path: string) => {
     const isActive = location === path;
-    return `flex items-center py-2 rounded-md px-3 ${isActive ? 'bg-[#09261E] text-white hover:bg-[#09261E]' : 'hover:bg-gray-50'}`;
+    return `flex items-center py-2 rounded-md px-3 ${isActive ? 'bg-[#09261E] text-white hover:bg-[#09261E]' : 'hover:bg-gray-100'}`;
   };
   
   // Helper for icons in mobile menu
