@@ -25,6 +25,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const [showExpandIndicator, setShowExpandIndicator] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
+  // Helper function to clean up overflow and re-enable scrolling
+  const cleanupScrollLock = () => {
+    document.body.style.removeProperty('overflow');
+    document.body.style.removeProperty('position');
+    document.body.style.removeProperty('inset');
+    document.body.style.removeProperty('touch-action');
+  };
+  
   // Check if we're on mobile
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -138,6 +146,9 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               if (overlay) {
                 overlay.classList.remove('hidden');
               }
+              
+              // Don't disable scrolling entirely - let the overlay handle touch events
+              // This approach allows scrolling the menu content while preventing background scrolling
             }}
             className="mr-4 p-2 hover:bg-gray-100 rounded-md touch-manipulation cursor-pointer"
             aria-label="Toggle menu"
@@ -184,6 +195,9 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 const overlay = document.getElementById('mobile-menu-overlay');
                 if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
                 if (overlay) overlay.classList.add('hidden');
+                
+                // Ensure body scrolling is re-enabled
+                cleanupScrollLock();
               }}
               className="hover:bg-gray-100 rounded-full mr-3 flex items-center justify-center"
             >
@@ -204,6 +218,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                     const overlay = document.getElementById('mobile-menu-overlay');
                     if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
                     if (overlay) overlay.classList.add('hidden');
+                    cleanupScrollLock();
                   }}
                 >
                   <Home className={getMobileIconClasses("/")} />
@@ -368,11 +383,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
           if (overlay) overlay.classList.add('hidden');
           
-          // Ensure body scrolling is enabled when menu is closed
-          document.body.style.removeProperty('overflow');
-          document.body.style.removeProperty('position');
-          document.body.style.removeProperty('inset');
-          document.body.style.removeProperty('touch-action');
+          // Ensure body scrolling is re-enabled
+          cleanupScrollLock();
         }}
       ></div>
       
@@ -415,6 +427,9 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             if (overlay) {
               overlay.style.display = 'none';
             }
+            
+            // Ensure body scrolling is re-enabled
+            cleanupScrollLock();
           }}
         ></div>
       )}
