@@ -230,12 +230,12 @@ export default function ImmersiveFeatures() {
       </div>
       
       {/* Feature sections */}
-      <div className="space-y-32 md:space-y-64 py-10">
+      <div className="space-y-16 md:space-y-32 py-10">
         {sections.map((section, index) => (
           <div 
             key={index}
             ref={section.ref}
-            className={`container mx-auto px-4 min-h-screen flex flex-col justify-center items-center py-20 `}
+            className={`container mx-auto px-4 flex flex-col justify-center items-center py-10 md:py-16`}
           >
             <div 
               ref={section.animation.ref as React.RefObject<HTMLDivElement>}

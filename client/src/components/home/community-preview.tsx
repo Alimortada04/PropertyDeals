@@ -117,7 +117,7 @@ export default function CommunityPreview() {
         {/* Scrollable Discussion Cards */}
         <div 
           ref={discussionsRef}
-          className="flex overflow-x-auto space-x-6 pb-6 -mx-4 px-4 no-scrollbar snap-x"
+          className="flex overflow-x-auto space-x-6 pb-6 px-4 no-scrollbar snap-x max-w-full"
         >
           {filteredPosts.map((post, index) => (
             <Card 

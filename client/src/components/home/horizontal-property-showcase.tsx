@@ -148,7 +148,7 @@ export default function HorizontalPropertyShowcase({ properties }: HorizontalPro
         {/* Properties horizontal scroll */}
         <div 
           ref={scrollRef}
-          className="flex overflow-x-auto no-scrollbar pb-8 snap-x snap-mandatory"
+          className="flex overflow-x-auto no-scrollbar pb-8 snap-x snap-mandatory max-w-full"
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}

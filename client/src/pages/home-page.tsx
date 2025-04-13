@@ -116,7 +116,7 @@ export default function HomePage() {
   };
 
   return (
-    <div ref={homePageRef} className="relative overflow-hidden">
+    <div ref={homePageRef} className="relative overflow-x-hidden max-w-full">
       {/* Hero Section - Full height splash with animated components */}
       <HeroSection />
       
@@ -177,9 +177,6 @@ export default function HomePage() {
           </Link>
         </div>
       </ScrollAnimationSection>
-      
-      {/* Footer */}
-      <Footer />
       
       {/* Back to Top Button */}
       <BackToTop />

@@ -106,7 +106,7 @@ export default function RepRoomPreview() {
           {/* REP Cards Carousel */}
           <div 
             ref={scrollContainerRef}
-            className="flex overflow-x-auto gap-6 pb-4 no-scrollbar snap-x snap-mandatory"
+            className="flex overflow-x-auto gap-6 pb-4 no-scrollbar snap-x snap-mandatory max-w-full"
           >
             {featuredReps.map((rep, index) => (
               <div 
