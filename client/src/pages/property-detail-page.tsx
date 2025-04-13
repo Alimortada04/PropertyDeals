@@ -821,7 +821,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
           >
             <div className="p-4 flex justify-between items-center border-b sticky top-0 bg-white z-10">
-              <h3 className="text-xl font-heading font-bold text-[#09261E]">Contact REP</h3>
+              <h3 className="text-xl font-heading font-bold text-[#09261E]">Contact Seller</h3>
               <button 
                 onClick={() => setContactModalOpen(false)}
                 className="text-gray-500 hover:text-gray-800"
@@ -831,122 +831,87 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             <div className="p-6">
-              <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
-                <img 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
-                  alt="Property Seller" 
-                  className="w-20 h-20 rounded-full object-cover mr-4 border-2 border-[#09261E]" 
-                />
-                <div>
-                  <h3 className="font-heading font-bold text-[#135341] text-xl">Michael Johnson</h3>
-                  <p className="text-gray-600 font-medium mb-1 flex items-center">
-                    <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md mr-2">
-                      Seller
-                    </span>
-                    <span className="inline-flex items-center text-sm mr-3">
-                      <span className="mr-1">👀</span> 142
-                    </span>
-                    <span className="inline-flex items-center text-sm">
-                      <span className="mr-1">❤️</span> 23
-                    </span>
-                  </p>
-                </div>
-              </Link>
-
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Your Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email Address</FormLabel>
-                        <FormControl>
-                          <Input type="email" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone Number</FormLabel>
-                        <FormControl>
-                          <Input type="tel" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="message"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Message</FormLabel>
-                        <FormControl>
-                          <Textarea 
-                            {...field} 
-                            rows={4} 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="pt-4 border-t">
-                    <h4 className="font-medium text-gray-700 mb-3">Contact Methods</h4>
-                    <div className="grid grid-cols-3 gap-3">
-                      <Button 
-                        type="button"
-                        variant="outline"
-                        className="bg-[#09261E]/10 border-0 hover:bg-[#09261E] hover:text-white"
-                      >
-                        <i className="fas fa-phone-alt mr-2"></i> Call
-                      </Button>
-                      <Button 
-                        type="button"
-                        variant="outline"
-                        className="bg-[#09261E]/10 border-0 hover:bg-[#09261E] hover:text-white"
-                      >
-                        <i className="fas fa-comment mr-2"></i> Text
-                      </Button>
-                      <Button 
-                        type="button"
-                        variant="outline"
-                        className="bg-[#09261E] text-white border-0 hover:bg-[#135341]"
-                      >
-                        <i className="fas fa-envelope mr-2"></i> Email
-                      </Button>
-                    </div>
+              {/* Seller Profile Preview */}
+              <div className="mb-6 bg-gray-50 p-4 rounded-lg">
+                <div className="flex items-center mb-3">
+                  <Avatar className="h-16 w-16 border-2 border-[#09261E]">
+                    <AvatarImage src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" />
+                    <AvatarFallback>MJ</AvatarFallback>
+                  </Avatar>
+                  <div className="ml-3">
+                    <h3 className="font-medium text-[#09261E] text-lg">Michael Johnson</h3>
+                    <p className="text-sm text-gray-500">Property Owner • Joined 2023</p>
                   </div>
-
-                  <Button 
-                    type="submit" 
-                    className="w-full mt-6 bg-[#09261E] hover:bg-[#135341] text-white py-3 font-medium"
-                    disabled={inquiryMutation.isPending}
-                  >
-                    {inquiryMutation.isPending ? "Sending..." : "Send Message"}
-                  </Button>
-                </form>
-              </Form>
+                  <div className="ml-auto">
+                    <Badge variant="outline" className="bg-[#09261E]/10 text-[#09261E] border-0">
+                      Verified Owner
+                    </Badge>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mb-2">
+                  I'm a real estate investor with over 10 years of experience in the Milwaukee area. I specialize in residential properties and off-market deals.
+                </p>
+              </div>
+              
+              {/* Contact Options Description */}
+              <p className="text-gray-600 mb-5 text-center">
+                Choose how you'd like to connect with the seller about this property:
+              </p>
+              
+              {/* Contact Options */}
+              <div className="grid grid-cols-3 gap-4">
+                <Button 
+                  variant="outline"
+                  className="flex-col h-auto py-6 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+                  onClick={() => {
+                    toast({
+                      title: "Email Sent",
+                      description: "Your email client has been opened with the seller's address.",
+                    });
+                    window.location.href = `mailto:seller@propertydeals.com?subject=Inquiry about ${property.address}&body=I'm interested in your property at ${property.address}.`;
+                  }}
+                >
+                  <Mail className="h-6 w-6 mb-2" />
+                  <span>Email</span>
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  className="flex-col h-auto py-6 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+                  onClick={() => {
+                    toast({
+                      title: "Message Started",
+                      description: "Your message has been started. The seller will be notified.",
+                    });
+                    setContactModalOpen(false);
+                  }}
+                >
+                  <MessageSquare className="h-6 w-6 mb-2" />
+                  <span>Message</span>
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  className="flex-col h-auto py-6 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+                  onClick={() => {
+                    toast({
+                      title: "Phone Call",
+                      description: "Connecting you with the seller's phone number.",
+                    });
+                    window.location.href = "tel:555-123-4567";
+                  }}
+                >
+                  <Phone className="h-6 w-6 mb-2" />
+                  <span>Call</span>
+                </Button>
+              </div>
+              
+              {/* Additional Action */}
+              <div className="mt-6 pt-6 border-t text-center">
+                <Button variant="ghost" className="text-[#09261E] hover:bg-[#09261E]/10" onClick={() => setContactModalOpen(false)}>
+                  Back to Property Details
+                </Button>
+              </div>
             </div>
           </div>
         </div>
