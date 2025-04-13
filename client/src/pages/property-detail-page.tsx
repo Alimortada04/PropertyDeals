@@ -471,9 +471,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </div>
             </div>
 
-            {/* Sidebar - Contact Card Column - Using flex approach instead of grid */}
-            <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
-              <div className="lg:sticky lg:top-4 bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg max-w-sm mx-auto lg:max-w-full">
+            {/* Direct implementation of the interested card */}
+            <div className="hidden lg:block lg:w-1/3 xl:w-1/4 lg:mt-0">
+              <div className="sticky top-20 bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg w-[320px]">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
                 <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
                   <img 
@@ -533,6 +533,71 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </button>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mobile Contact Card */}
+      <section className="py-6 bg-white block lg:hidden border-t border-gray-200">
+        <div className="container mx-auto px-4">
+          <div className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg">
+            <h2 className="text-xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
+            <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
+              <img 
+                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
+                alt="Property Seller" 
+                className="w-16 h-16 rounded-full object-cover mr-4 border-2 border-[#09261E]" 
+              />
+              <div>
+                <h3 className="font-heading font-bold text-[#135341] text-lg">Michael Johnson</h3>
+                <p className="text-gray-600 font-medium mb-1 flex items-center flex-wrap">
+                  <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md mr-2 mb-1">
+                    Seller
+                  </span>
+                  <span className="inline-flex items-center text-sm mr-3">
+                    <span className="mr-1">👀</span> 142
+                  </span>
+                  <span className="inline-flex items-center text-sm">
+                    <span className="mr-1">❤️</span> 23
+                  </span>
+                </p>
+              </div>
+            </Link>
+            
+            <div className="space-y-3 mb-5">
+              <Button 
+                className="w-full bg-[#09261E] hover:bg-[#135341] text-white py-4 font-medium text-base"
+                onClick={() => setContactModalOpen(true)}
+              >
+                <i className="fas fa-user-plus mr-2"></i> Contact REP
+              </Button>
+              <Button 
+                className="w-full border-2 border-[#803344] text-[#803344] hover:bg-[#803344] hover:text-white py-4 font-medium text-base bg-white"
+                onClick={() => setOfferModalOpen(true)}
+              >
+                <i className="fas fa-file-invoice-dollar mr-2"></i> Make an Offer
+              </Button>
+            </div>
+            
+            <div className="flex justify-between items-center">
+              <div className="grid grid-cols-5 w-full gap-2">
+                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Share">
+                  <i className="fas fa-share-alt"></i>
+                </button>
+                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Like">
+                  <i className="fas fa-heart"></i>
+                </button>
+                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Email">
+                  <i className="fas fa-envelope"></i>
+                </button>
+                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Message">
+                  <i className="fas fa-comment"></i>
+                </button>
+                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Call">
+                  <i className="fas fa-phone-alt"></i>
+                </button>
               </div>
             </div>
           </div>
