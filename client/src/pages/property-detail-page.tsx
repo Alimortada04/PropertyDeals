@@ -515,23 +515,21 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 
                 {/* Contact Preferences */}
                 <div className="flex justify-between items-center">
-                  <div className="flex space-x-3">
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
-                      <i className="fas fa-phone-alt"></i>
+                  <div className="grid grid-cols-5 w-full gap-2">
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Share">
+                      <i className="fas fa-share-alt"></i>
                     </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
-                      <i className="fas fa-comment"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
-                      <i className="fas fa-envelope"></i>
-                    </button>
-                  </div>
-                  <div className="flex space-x-3">
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Like">
                       <i className="fas fa-heart"></i>
                     </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
-                      <i className="fas fa-share-alt"></i>
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Email">
+                      <i className="fas fa-envelope"></i>
+                    </button>
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Message">
+                      <i className="fas fa-comment"></i>
+                    </button>
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Call">
+                      <i className="fas fa-phone-alt"></i>
                     </button>
                   </div>
                 </div>
