@@ -1,10 +1,14 @@
 import HeroSection from "@/components/home/hero-section";
 import PropertyGrid from "@/components/properties/property-grid";
 import HowItWorks from "@/components/home/how-it-works";
+import RepRoomPreview from "@/components/home/rep-room-preview";
+import ToolsTeaser from "@/components/home/tools-teaser";
+import CommunityPreview from "@/components/home/community-preview";
 import CTASection from "@/components/home/cta-section";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "wouter";
 import { featuredProperties } from "@/lib/data";
 
 export default function HomePage() {
@@ -13,13 +17,13 @@ export default function HomePage() {
   });
 
   // Fallback to featured properties if API fails or is loading
-  const displayProperties = properties?.slice(0, 3) || featuredProperties;
+  const displayProperties = properties?.slice(0, 6) || featuredProperties;
 
   const renderPropertyGrid = () => {
     if (isLoading) {
       return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={i} className="bg-white rounded-lg overflow-hidden shadow-md">
               <Skeleton className="w-full h-48" />
               <div className="p-5">
@@ -52,23 +56,39 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Hero Section */}
       <HeroSection />
       
-      <div className="py-16 bg-white">
+      {/* Featured Properties Preview */}
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-3xl font-heading font-bold text-[#09261E]">Featured Properties</h2>
-            <a href="/properties" className="text-[#135341] hover:text-[#09261E] flex items-center">
-              View All
-              <i className="fas fa-arrow-right ml-2"></i>
-            </a>
+            <Link href="/properties" className="text-[#135341] hover:text-[#09261E] flex items-center">
+              View All Listings
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </Link>
           </div>
           
           {renderPropertyGrid()}
         </div>
-      </div>
+      </section>
       
+      {/* REP Room Preview */}
+      <RepRoomPreview />
+      
+      {/* Tools Teaser */}
+      <ToolsTeaser />
+      
+      {/* Community Preview */}
+      <CommunityPreview />
+      
+      {/* How PropertyDeals Works */}
       <HowItWorks />
+      
+      {/* Final Call to Action */}
       <CTASection />
     </>
   );

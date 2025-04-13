@@ -501,8 +501,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           {/* Location-based recommendations using recommendation engine */}
           {property && (
             <PropertyRecommendations 
-              location={property.city}
-              propertyType={property.propertyType}
+              location={property.city || ''}
+              propertyType={property.propertyType || ''}
               priceRange={property.price ? { 
                 min: property.price * 0.8, 
                 max: property.price * 1.2 
