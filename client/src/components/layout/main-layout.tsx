@@ -48,7 +48,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F7F8FA]">
+    <div className="flex flex-col min-h-screen bg-white">
       {/* Top-right sticky navbar */}
       <TopNavbar specialBehavior={isSpecialPage} />
       
