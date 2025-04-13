@@ -1,45 +1,38 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
+import { useParallaxEffect, useCursorGlow } from "@/hooks/use-scroll-animation";
 import { Button } from "@/components/ui/button";
-import { 
-  ArrowRight, 
-  Search, 
-  Users, 
-  MapPin, 
-  Home, 
-  Building, 
-  DollarSign, 
-  MessageCircle, 
-  Shield,
-  Lock,
-  ChevronDown,
-  Handshake,
-  Key,
-  LightbulbIcon
-} from "lucide-react";
-import { useCursorGlow, useParallaxEffect } from "@/hooks/use-scroll-animation";
 import { featuredProperties } from "@/lib/data";
+import { 
+  Search, 
+  ArrowRight, 
+  HandshakeIcon as Handshake,
+  KeyRound as Key,
+  Shield,
+  Users,
+  MapPin,
+  LightbulbIcon,
+  ChevronDown,
+} from "lucide-react";
 
-// Custom Network icon
-function NetworkIcon(props: React.SVGProps<SVGSVGElement>) {
+// Custom network icon since it's not available directly in lucide
+function CustomNetworkIcon({ className }: { className?: string }) {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
+    <svg 
+      className={className}
+      xmlns="http://www.w3.org/2000/svg" 
+      width="24" 
+      height="24" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
       strokeLinejoin="round"
     >
-      <circle cx="12" cy="5" r="3" />
-      <circle cx="5" cy="19" r="3" />
-      <circle cx="19" cy="19" r="3" />
-      <line x1="12" y1="8" x2="5" y2="16" />
-      <line x1="12" y1="8" x2="19" y2="16" />
+      <path d="M9 2v6c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2V2"/>
+      <path d="M12 8v8"/>
+      <path d="M3 12h2a2 2 0 0 1 2 2v4a4 4 0 0 0 4 4h2a4 4 0 0 0 4-4v-4a2 2 0 0 1 2-2h2"/>
     </svg>
   );
 }
@@ -87,7 +80,7 @@ export default function HeroSection() {
     <div 
       ref={heroRef} 
       className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh] top-0 mt-0"
-      style={{ marginTop: 0 }}
+      style={{ marginTop: "-1px" }}
     >
       {/* Cursor glow effect container */}
       <div 
@@ -487,7 +480,7 @@ export default function HeroSection() {
               >
                 <div className="flex items-center gap-2">
                   <div className="text-[#09261E]">
-                    <NetworkIcon className="h-4 w-4" />
+                    <CustomNetworkIcon className="h-4 w-4" />
                   </div>
                   <span className="text-xs font-medium text-[#09261E]">Connect with experts</span>
                 </div>
