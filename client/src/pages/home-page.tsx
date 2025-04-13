@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import HeroSection from "@/components/home/hero-section";
 import PropertyGrid from "@/components/properties/property-grid";
 import HowItWorks from "@/components/home/how-it-works";
@@ -5,13 +6,29 @@ import RepRoomPreview from "@/components/home/rep-room-preview";
 import ToolsTeaser from "@/components/home/tools-teaser";
 import CommunityPreview from "@/components/home/community-preview";
 import CTASection from "@/components/home/cta-section";
+import Footer from "@/components/layout/footer";
+import StickySearchBar from "@/components/home/sticky-search-bar";
+import BackToTop from "@/components/layout/back-to-top";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
+import { ArrowRight } from "lucide-react";
 import { featuredProperties } from "@/lib/data";
 
 export default function HomePage() {
+  const [hasScrolled, setHasScrolled] = useState(false);
+  
+  // Handle scroll event to add animations
+  useEffect(() => {
+    const handleScroll = () => {
+      setHasScrolled(window.scrollY > 100);
+    };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  
   const { data: properties, isLoading, error } = useQuery<Property[]>({
     queryKey: ["/api/properties"],
   });
@@ -59,20 +76,34 @@ export default function HomePage() {
       {/* Hero Section */}
       <HeroSection />
       
+      {/* Sticky Search Bar */}
+      <StickySearchBar />
+      
       {/* Featured Properties Preview */}
-      <section className="py-16 bg-white">
+      <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-10">
-            <h2 className="text-3xl font-heading font-bold text-[#09261E]">Featured Properties</h2>
-            <Link href="/properties" className="text-[#135341] hover:text-[#09261E] flex items-center">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <div className="max-w-xl mb-6 md:mb-0">
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-4 relative">
+                <span className="relative z-10">Featured Properties</span>
+                <span className="absolute bottom-1 left-0 h-3 w-24 bg-[#E59F9F]/30 -z-0"></span>
+              </h2>
+              <p className="text-gray-600 text-lg">
+                Discover our handpicked selection of exclusive off-market real estate opportunities.
+              </p>
+            </div>
+            <Link href="/properties" 
+              className="text-[#135341] hover:text-[#09261E] flex items-center font-medium transition-colors group"
+            >
               View All Listings
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
+              <ArrowRight className="h-5 w-5 ml-1 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
           
-          {renderPropertyGrid()}
+          {/* Property Cards with animation */}
+          <div className={`transition-all duration-700 ${hasScrolled ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-90'}`}>
+            {renderPropertyGrid()}
+          </div>
         </div>
       </section>
       
@@ -90,6 +121,12 @@ export default function HomePage() {
       
       {/* Final Call to Action */}
       <CTASection />
+      
+      {/* Footer */}
+      <Footer />
+      
+      {/* Back to Top Button */}
+      <BackToTop />
     </>
   );
 }

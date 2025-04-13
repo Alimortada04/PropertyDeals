@@ -1,0 +1,127 @@
+🎯 Core Goals
+Showcase our brand promise and identity clearly
+
+Drive users toward browsing properties and connecting with REPs
+
+Create a visually engaging, modern scrolling experience with movement and flair
+
+Reflect community-driven energy through content and interactivity
+
+📐 1. Layout & Structure
+Above the Fold (Hero Section):
+
+Bold headline + subheadline clearly articulating our purpose
+
+Ex: “Find hidden deals. Connect directly. No middleman.”
+
+Add 3 fast-hitting value prop icons:
+✅ Off-Market Only | 🤝 Verified REPs | 📊 Deal-Ready Tools
+
+Primary CTAs:
+
+🟢 Browse Properties
+🟣 Connect with REPs
+
+Sticky Search/Nav Behavior:
+
+Remove the current top-right banner on this page.
+
+Let search filters live within a full-width navbar beneath the hero.
+
+That navbar should be sticky like Redfin/Kaggle (acts as the main scroll anchor).
+
+Ensure it spans full page width, not just content width (100vw with padding on both sides).
+
+🧭 2. Modern UI/UX Enhancements
+Sticky Sidebar Behavior:
+
+Ensure no content is ever covered by the collapsed sidebar.
+
+All content should start to the right of the collapsed bar — at all breakpoints.
+
+Expanded sidebar should open over content, not push it.
+
+Mobile Navigation Updates:
+
+Remove the current floating hamburger.
+
+Add new full-width top navbar with hamburger on left, logo next to it.
+
+When opened, menu should slide in full-screen (like Kaggle mobile).
+
+Clicking outside the menu should auto-close it.
+
+Ensure full responsiveness and seamless transitions.
+
+🧠 3. Visual & Interaction Polish
+Homepage Flow Improvements:
+
+Improve section hierarchy: increase spacing, font scaling, and reduce visual clutter.
+
+Add dynamic transitions between homepage sections (not abrupt scroll jumps).
+
+Keep layout clean but with depth, spacing, and a subtle card/grid structure.
+
+Property Card Enhancements:
+
+Card is fully clickable (not just "View Details" button).
+
+Show main image + secondary image on hover or chevron carousel (hover or tap).
+
+Top-right tag: Property Type (e.g. Single Family, Duplex…)
+
+Top-left tag: Investment Type (e.g. Flip, Buy & Hold…)
+
+Include REP avatars partially tucked behind View button — hover floats them up
+
+Add views + favorites counters with clean icon badges
+
+Parallax + Movement Enhancements:
+
+Use parallax or scroll-based animations on hero section, section transitions, and illustrations.
+
+Add micro-interactions (hover, slide-in, fade-in) to keep energy high.
+
+Consider subtle background motion, animated SVGs, or floating elements that reinforce the brand identity.
+
+Typography & Visual Identity:
+
+Maintain brand fonts (League Spartan headers + Lato body)
+
+Use our full color palette, including Salmon as hover or accent highlight
+
+Avoid any off-brand colors like orange
+
+💬 Community & Connection Focus
+REP Room Callouts:
+
+Showcase verified REPs in a carousel or feature block
+
+“Trusted Real Estate Professionals ready to help you close deals faster.”
+
+CTA: “Meet REPs in your area” → /reps
+
+Discussions Sneak Peek:
+
+Highlight recent threads from /discussions in a clean horizontal scroll
+
+“What investors are talking about right now”
+
+Stats / Trust Signals:
+
+Include community stats:
+
+💬 3,200+ active members | 🏘️ 2,100+ off-market properties | 🤝 900+ verified REPs
+
+🔧 Footer Additions & Utility Links
+Add new footer links:
+
+Terms & Conditions
+
+FHA Compliance
+
+Cookies Policy
+
+Include micro-icons + hover underline styling
+
+Add back-to-top arrow when user scrolls past 80vh
