@@ -389,9 +389,9 @@ export default function PropertiesPage() {
         <div className="w-full">
           <StickySearchFilter
             onSearch={setSearchTerm}
-            searchPlaceholder="City, Address, ZIP, or MLS #"
+            searchPlaceholder="Search properties by location, type, or keyword..."
             filterContent={advancedFilterContent}
-            filterButtonText="All Filters"
+            filterButtonText="Filters"
             selectedFilters={activeFilters}
             onClearFilter={clearFilter}
           />

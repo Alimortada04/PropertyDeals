@@ -93,31 +93,33 @@ export default function StickySearchFilter({
       )}
     >
       {/* Main search bar - full-width, Redfin-inspired layout */}
-      <div className="w-full px-0 py-6 shadow-sm">
-        <div className="flex flex-row items-center gap-3 max-w-full px-[5%] mx-auto">
-          {/* Location Search */}
+      <div className="w-full py-3 border-y border-gray-200">
+        <div className="flex flex-row items-center gap-2 max-w-full px-[5%] mx-auto">
+          {/* Search Input */}
           <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
             <Input
               type="text"
               placeholder={searchPlaceholder}
-              className="pl-10 pr-4 py-2 w-full bg-white border border-gray-200 hover:border-gray-300 focus:border-gray-300 focus:ring-0 rounded-md"
+              className="pl-10 pr-4 py-2 w-full bg-white border border-gray-300 focus:border-gray-400 rounded-full"
               value={searchTerm}
               onChange={handleSearch}
             />
           </div>
 
-          {/* More Filters Button */}
+          {/* Filters Button */}
           <Popover>
             <PopoverTrigger asChild>
               <Button 
                 variant="outline" 
-                className="h-10 flex items-center gap-2 border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E]"
+                className="h-10 flex items-center gap-1.5 border border-gray-300 rounded-lg hover:bg-gray-50"
               >
-                <Sliders className="h-4 w-4" />
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 4.5h18M7 12h10M10 19.5h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
                 {filterButtonText}
                 {selectedFilters && selectedFilters.length > 0 && (
-                  <span className="text-xs bg-[#135341] text-white rounded-full h-5 w-5 flex items-center justify-center">
+                  <span className="text-xs bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center font-medium">
                     {selectedFilters.length}
                   </span>
                 )}
@@ -130,63 +132,31 @@ export default function StickySearchFilter({
         </div>
       </div>
 
-      {/* Applied Filters Chips */}
-      {selectedFilters.length > 0 && (
-        <div className="bg-white border-b border-gray-100">
-          <div className="w-full px-0 py-2">
-            <div className="flex flex-wrap gap-2 items-center max-w-full px-[5%] mx-auto">
-              <span className="text-sm text-gray-500 pr-2">Active filters:</span>
-              {selectedFilters.map((filter) => (
-                <div 
-                  key={filter}
-                  className="flex items-center bg-[#EAF2EF] text-[#09261E] rounded-full px-3 py-1 text-sm"
-                >
-                  <span>{filter}</span>
-                  <button 
-                    className="ml-2 text-[#09261E] hover:text-[#135341]"
-                    onClick={() => onClearFilter && onClearFilter(filter)}
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Applied Filters Chips - removed for simplicity as per screenshot */}
       
-      {/* Category Tabs - styled similarly to Redfin - collapses on scroll down */}
+      {/* Category Tabs */}
       {tabs.length > 0 && (
         <div className={cn(
-          "w-full px-0 bg-white border-b border-gray-100 overflow-hidden transition-all duration-300",
+          "w-full px-0 bg-white border-b border-gray-200 overflow-hidden",
           showBottomSection ? "max-h-20 opacity-100" : "max-h-0 opacity-0 border-b-0"
         )}>
-          <div className="overflow-x-auto py-2 max-w-full px-[5%] mx-auto">
-            <Tabs 
-              defaultValue={defaultTab} 
-              onValueChange={onTabChange}
-              className="w-full"
-            >
-              <TabsList className="h-10 bg-transparent w-full flex items-center justify-center overflow-x-auto">
-                {tabs.map((tab) => (
-                  <TabsTrigger
-                    key={tab.value}
-                    value={tab.value}
-                    className="flex-shrink-0 h-9 px-4 rounded-md mr-2 border border-transparent
-                    data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#09261E]
-                    data-[state=active]:shadow-none hover:bg-gray-100 group relative"
-                  >
-                    {tab.label}
-                    {tab.value !== 'all' && (
-                      <div className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 
-                        data-[state=active]:block hidden data-[state=active]:group-hover:opacity-100">
-                        <X size={14} className="text-gray-500" />
-                      </div>
-                    )}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
+          <div className="overflow-x-auto py-3 max-w-full px-[5%] mx-auto">
+            <div className="flex space-x-2 overflow-x-auto">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.value}
+                  onClick={() => onTabChange && onTabChange(tab.value)}
+                  className={cn(
+                    "px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium",
+                    tab.value === defaultTab 
+                      ? "bg-[#EAF2EF] text-[#09261E]" 
+                      : "bg-white text-gray-600 hover:bg-gray-100"
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
