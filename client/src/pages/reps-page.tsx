@@ -25,7 +25,7 @@ type EntityType = 'person' | 'business' | 'all';
 export default function RepsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [repType, setRepType] = useState<RepType | 'all'>("all");
-  const [entityType, setEntityType] = useState<EntityType>("all");
+  const [entityType, setEntityType] = useState<EntityType>("person");
   const [location, setLocation] = useState("");
   const [sortBy, setSortBy] = useState("popularity");
   const [filteredReps, setFilteredReps] = useState<Rep[]>(reps);
@@ -151,7 +151,7 @@ export default function RepsPage() {
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={() => {
           setRepType('all');
-          setEntityType('all');
+          setEntityType('person');
           setLocation('');
           setSortBy('popularity');
         }}>
@@ -208,35 +208,35 @@ export default function RepsPage() {
               Found {filteredReps.length} professionals
             </div>
             
-            <div className="border rounded-lg overflow-hidden shadow-sm">
-              <ToggleGroup 
-                type="single" 
-                value={entityType !== 'business' ? 'people' : 'businesses'}
-                onValueChange={(value) => {
-                  if (value === 'people') setEntityType('person');
-                  else if (value === 'businesses') setEntityType('business');
-                  else setEntityType('all');
-                }}
-                className="bg-white"
+            <div className="flex items-center bg-gray-200 p-1 rounded-full shadow-sm relative h-10 w-[240px]">
+              <div 
+                className={`absolute inset-y-1 w-[118px] ${
+                  entityType === 'business' ? 'right-1 translate-x-0' : 'left-1 translate-x-0'
+                } bg-white rounded-full shadow transition-all duration-300 ease-in-out`}
+              ></div>
+              <button
+                className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
+                  entityType !== 'business' 
+                    ? 'text-[#09261E] font-medium' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+                onClick={() => setEntityType('person')}
               >
-                <ToggleGroupItem value="all" aria-label="All" onClick={() => setEntityType('all')}
-                  className={`px-3 py-2 ${entityType === 'all' ? 'bg-[#09261E] text-white' : ''}`}
-                >
-                  All
-                </ToggleGroupItem>
-                <ToggleGroupItem value="people" aria-label="People"
-                  className={`px-3 py-2 ${entityType === 'person' ? 'bg-[#09261E] text-white' : ''}`}
-                >
-                  <UserRound size={18} className="mr-1" />
-                  People
-                </ToggleGroupItem>
-                <ToggleGroupItem value="businesses" aria-label="Businesses"
-                  className={`px-3 py-2 ${entityType === 'business' ? 'bg-[#09261E] text-white' : ''}`}
-                >
-                  <Building2 size={18} className="mr-1" />
-                  Businesses
-                </ToggleGroupItem>
-              </ToggleGroup>
+                <UserRound size={14} className="mr-1.5" />
+                <span className="text-sm">People</span>
+              </button>
+              
+              <button
+                className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
+                  entityType === 'business' 
+                    ? 'text-[#09261E] font-medium' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+                onClick={() => setEntityType('business')}
+              >
+                <Building2 size={14} className="mr-1.5" />
+                <span className="text-sm">Businesses</span>
+              </button>
             </div>
           </div>
           
