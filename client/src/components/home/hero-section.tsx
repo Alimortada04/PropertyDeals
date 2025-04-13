@@ -11,16 +11,44 @@ import {
   DollarSign, 
   MessageCircle, 
   Landmark, 
-  ArrowDownCircle 
+  ArrowDownCircle,
+  ChevronDown,
+  Clock,
+  Shield,
+  Network,
+  Lock
 } from "lucide-react";
 import { useCursorGlow, useParallaxEffect } from "@/hooks/use-scroll-animation";
+
+// Custom Network icon since it's not available in lucide-react
+function NetworkIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="5" r="3" />
+      <circle cx="5" cy="19" r="3" />
+      <circle cx="19" cy="19" r="3" />
+      <line x1="12" y1="8" x2="5" y2="16" />
+      <line x1="12" y1="8" x2="19" y2="16" />
+    </svg>
+  );
+}
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [activePanel, setActivePanel] = useState(0);
   const { relativePosition } = useParallaxEffect();
   
   // Use cursor glow effect
@@ -30,12 +58,6 @@ export default function HeroSection() {
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
-      
-      // Update active panel based on scroll position
-      const scrollPercent = window.scrollY / window.innerHeight;
-      if (scrollPercent < 0.3) setActivePanel(0);
-      else if (scrollPercent < 0.6) setActivePanel(1);
-      else setActivePanel(2);
     };
     
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -45,46 +67,12 @@ export default function HeroSection() {
   // Trigger entrance animations
   useEffect(() => {
     setIsVisible(true);
-    
-    // Auto rotate panels
-    const interval = setInterval(() => {
-      if (scrollY < 100) { // Only auto-rotate when near top of page
-        setActivePanel(prev => (prev + 1) % 3);
-      }
-    }, 4000);
-    
-    return () => clearInterval(interval);
-  }, [scrollY]);
-
-  // Panel content
-  const panels = [
-    {
-      badge: "OFF-MARKET PROPERTIES",
-      heading: "Deals. Connections.",
-      headingHighlight: "Revolution.",
-      description: "Discover exclusive real estate opportunities and connect with verified professionals you won't find on any other platform.",
-      icon: <Building className="h-24 w-24 opacity-10" />
-    },
-    {
-      badge: "VERIFIED PROFESSIONALS",
-      heading: "Expert REPs.",
-      headingHighlight: "Real Results.",
-      description: "Work with 900+ verified real estate professionals who have been vetted and reviewed by our community.",
-      icon: <Users className="h-24 w-24 opacity-10" />
-    },
-    {
-      badge: "INVESTOR COMMUNITY",
-      heading: "Community. Tools.",
-      headingHighlight: "Success.",
-      description: "Access powerful investor tools and join a thriving community sharing insights, strategies, and opportunities.",
-      icon: <Landmark className="h-24 w-24 opacity-10" />
-    }
-  ];
+  }, []);
 
   return (
     <div 
       ref={heroRef} 
-      className="relative bg-white overflow-hidden"
+      className="relative bg-white overflow-hidden min-h-screen"
     >
       {/* Cursor glow effect container */}
       <div 
@@ -97,7 +85,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Right orb */}
         <div 
-          className="absolute -right-20 bottom-10 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-[#09261E]/5 to-[#09261E]/20 blur-2xl will-change-transform"
+          className="absolute -right-[10%] top-[30%] w-[45vw] h-[45vw] max-w-[800px] max-h-[800px] rounded-full bg-gradient-to-br from-[#09261E]/10 to-[#09261E]/20 blur-3xl will-change-transform"
           style={{
             transform: `translate3d(${scrollY * 0.05 + relativePosition.x * 20}px, ${scrollY * -0.05 + relativePosition.y * 20}px, 0)`,
           }}
@@ -105,7 +93,7 @@ export default function HeroSection() {
         
         {/* Left orb */}
         <div 
-          className="absolute -left-20 -bottom-40 w-[400px] h-[400px] rounded-full bg-gradient-to-br from-[#E59F9F]/10 to-[#E59F9F]/20 blur-2xl will-change-transform"
+          className="absolute -left-[5%] bottom-[10%] w-[35vw] h-[35vw] max-w-[600px] max-h-[600px] rounded-full bg-gradient-to-br from-[#E59F9F]/10 to-[#E59F9F]/20 blur-3xl will-change-transform"
           style={{
             transform: `translate3d(${scrollY * -0.03 + relativePosition.x * -20}px, ${scrollY * -0.03 + relativePosition.y * -15}px, 0)`,
           }}
@@ -113,7 +101,7 @@ export default function HeroSection() {
         
         {/* Top orb */}
         <div 
-          className="absolute right-[10%] top-[10%] w-[200px] h-[200px] rounded-full bg-gradient-to-br from-[#135341]/10 to-[#135341]/20 blur-xl will-change-transform"
+          className="absolute right-[20%] top-[10%] w-[20vw] h-[20vw] max-w-[300px] max-h-[300px] rounded-full bg-gradient-to-br from-[#135341]/10 to-[#135341]/20 blur-xl will-change-transform"
           style={{
             transform: `translate3d(${scrollY * 0.02 + relativePosition.x * 10}px, ${scrollY * 0.06 + relativePosition.y * 10}px, 0)`,
           }}
@@ -155,180 +143,165 @@ export default function HeroSection() {
       </div>
       
       {/* Main hero content */}
-      <div className="relative z-10 container mx-auto px-4 min-h-[100vh] flex flex-col justify-center items-center text-center py-20 md:py-24 lg:py-32">
-        {/* Content container with slide transition between panels */}
-        <div className="relative w-full max-w-5xl mx-auto overflow-hidden" style={{ height: "320px" }}>
-          {panels.map((panel, index) => (
-            <div 
-              key={index}
-              className="absolute inset-0 transition-all duration-1000 flex flex-col items-center justify-center"
-              style={{
-                opacity: activePanel === index ? 1 : 0,
-                transform: `translateY(${activePanel === index ? 0 : (activePanel > index ? -40 : 40)}px)`,
-                zIndex: activePanel === index ? 10 : 0,
-              }}
-            >
-              {/* Top floating badge */}
-              <div 
-                className={`mb-6 px-4 py-1.5 rounded-full text-sm inline-flex items-center bg-gradient-to-r from-[#09261E]/10 via-[#135341]/20 to-[#09261E]/10 backdrop-blur-sm`}
-              >
-                <span className="bg-green-500 w-2 h-2 rounded-full mr-2"></span>
-                <span className="text-[#09261E] font-medium tracking-wider">{panel.badge}</span>
-              </div>
-              
-              {/* Main headline */}
-              <h1 className="text-5xl md:text-7xl font-heading font-bold text-[#09261E] mb-6 leading-none tracking-tight max-w-2xl mx-auto">
-                <span className="block mb-2">{panel.heading}</span>
-                <span className="block relative">
-                  <span className="relative inline-block">
-                    {panel.headingHighlight}
-                    <span className="absolute -bottom-2 left-0 right-0 h-3 bg-[#E59F9F]/40"></span>
-                  </span>
-                </span>
-              </h1>
-              
-              {/* Subheadline */}
-              <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto mb-10">
-                {panel.description}
-              </p>
-              
-              {/* Background icon */}
-              <div 
-                className="absolute right-0 bottom-0 opacity-20 transform translate-y-1/4 translate-x-1/4"
-                style={{
-                  transform: `translate(25%, 25%) rotate(${scrollY * 0.01}deg)`,
-                }}
-              >
-                {panel.icon}
-              </div>
-            </div>
-          ))}
+      <div className="relative z-10 container mx-auto px-4 min-h-[100vh] flex flex-col justify-center items-center py-20 md:py-0">
+        {/* Content container with slide transition */}
+        <div className="relative w-full max-w-6xl mx-auto flex flex-col items-center justify-center">
+          {/* Trust Badge */}
+          <div className={`mb-8 px-4 py-1.5 rounded-full text-sm inline-flex items-center bg-white/80 backdrop-blur-sm shadow-sm transition-all duration-700 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-8'
+          }`}>
+            <span className="bg-green-500 w-2 h-2 rounded-full mr-2"></span>
+            <span className="text-[#09261E] font-medium tracking-wide">REAL ESTATE REIMAGINED</span>
+          </div>
           
-          {/* Panel indicators */}
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-2">
-            {panels.map((_, index) => (
-              <button 
-                key={index}
-                className={`w-${activePanel === index ? '12' : '2'} h-2 rounded-full transition-all duration-300 ${
-                  activePanel === index ? 'bg-[#09261E]' : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-                onClick={() => setActivePanel(index)}
-                aria-label={`View panel ${index + 1}`}
-              />
+          {/* Main headline */}
+          <h1 
+            className={`text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-heading font-bold text-[#09261E] mb-6 md:mb-8 tracking-tight text-center transition-all duration-1000 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
+            <span className="block mb-2">Built on Trust.</span>
+            <span className="block relative">
+              <span className="relative inline-block">
+                Powered by Real Estate.
+                <span className="absolute -bottom-2 left-0 right-0 h-3 bg-[#E59F9F]/40 -z-10"></span>
+              </span>
+            </span>
+          </h1>
+          
+          {/* Subheadline */}
+          <p 
+            className={`text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto mb-10 text-center transition-all duration-1000 delay-300 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
+            Discover deals, meet your crew, and make moves — all in one platform.
+          </p>
+          
+          {/* Value Pills */}
+          <div 
+            className={`flex flex-wrap justify-center gap-3 mb-12 max-w-2xl mx-auto transition-all duration-1000 delay-500 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            {[
+              { icon: <Shield className="h-4 w-4" />, text: "Verified Professionals" },
+              { icon: <Home className="h-4 w-4" />, text: "Off-Market Deals" },
+              { icon: <NetworkIcon className="h-4 w-4" />, text: "Real Connections" },
+              { icon: <Lock className="h-4 w-4" />, text: "Secure Transactions" }
+            ].map((pill, idx) => (
+              <div 
+                key={idx} 
+                className="bg-white/70 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2 flex items-center gap-2 shadow-sm"
+              >
+                <div className="text-[#135341]">{pill.icon}</div>
+                <span className="text-sm font-medium text-gray-800">{pill.text}</span>
+              </div>
             ))}
           </div>
-        </div>
-        
-        {/* CTA buttons */}
-        <div 
-          className={`mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 transition-all duration-1000 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'
-          }`}
-        >
-          <Link href="/properties">
-            <Button className="relative overflow-hidden group bg-[#09261E] hover:bg-[#135341] text-white rounded-full flex items-center gap-2 px-8 py-7 text-lg font-medium shadow-xl hover:shadow-2xl transition-all">
-              {/* Button background animation */}
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#09261E] via-[#135341] to-[#09261E] opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-size-200 animate-gradient-x"></span>
-              
-              <Search className="h-5 w-5 relative z-10" />
-              <span className="relative z-10">Start Exploring</span>
-              <ArrowRight className="h-5 w-5 relative z-10 opacity-70 group-hover:translate-x-1 transition-transform ml-1" />
-            </Button>
-          </Link>
-          <Link href="/about">
-            <Button variant="outline" className="bg-white/70 backdrop-blur-sm border-[#135341] text-[#135341] hover:bg-[#135341] hover:text-white rounded-full flex items-center gap-2 px-8 py-7 text-lg font-medium shadow-lg hover:shadow-xl transition-all">
-              <MessageCircle className="h-5 w-5" />
-              <span>See How It Works</span>
-            </Button>
-          </Link>
-        </div>
-        
-        {/* Trusted by logos */}
-        <div 
-          className={`mt-auto transition-all duration-1000 delay-300 ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-          }`}
-        >
-          <p className="text-gray-500 text-sm font-medium tracking-wider mb-6">TRUSTED BY INVESTORS NATIONWIDE</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-            <div className="h-8 text-gray-400 font-heading font-bold border-b-2 border-transparent hover:border-[#E59F9F]/40 hover:text-gray-600 transition-all duration-300">REALTY GROUP</div>
-            <div className="h-8 text-gray-400 font-heading font-bold border-b-2 border-transparent hover:border-[#E59F9F]/40 hover:text-gray-600 transition-all duration-300">INVESTMENT PROS</div>
-            <div className="h-8 text-gray-400 font-heading font-bold border-b-2 border-transparent hover:border-[#E59F9F]/40 hover:text-gray-600 transition-all duration-300">CAPITAL VENTURES</div>
-            <div className="h-8 text-gray-400 font-heading font-bold border-b-2 border-transparent hover:border-[#E59F9F]/40 hover:text-gray-600 transition-all duration-300">HOME PARTNERS</div>
+          
+          {/* CTA buttons */}
+          <div 
+            className={`flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 transition-all duration-1000 delay-700 ${
+              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+            }`}
+          >
+            <Link href="/properties">
+              <Button className="relative overflow-hidden group bg-[#09261E] hover:bg-[#135341] text-white rounded-full flex items-center gap-2 px-8 py-6 text-lg font-medium shadow-xl hover:shadow-2xl transition-all">
+                {/* Button background animation */}
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#09261E] via-[#135341] to-[#09261E] opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-size-200 animate-gradient-x"></span>
+                
+                <Search className="h-5 w-5 relative z-10" />
+                <span className="relative z-10">Start Exploring</span>
+                <ArrowRight className="h-5 w-5 relative z-10 opacity-70 group-hover:translate-x-1 transition-transform ml-1" />
+              </Button>
+            </Link>
+            <Link href="/about">
+              <Button variant="outline" className="bg-white/80 backdrop-blur-sm border-[#135341] text-[#135341] hover:bg-[#135341] hover:text-white rounded-full flex items-center gap-2 px-8 py-6 text-lg font-medium shadow-lg hover:shadow-xl transition-all">
+                <MessageCircle className="h-5 w-5" />
+                <span>See How It Works</span>
+              </Button>
+            </Link>
           </div>
-        </div>
-        
-        {/* Stats row */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {[
-            { icon: <Home className="h-6 w-6 text-[#135341]" />, value: "3,500+", label: "Off-Market Properties" },
-            { icon: <Users className="h-6 w-6 text-[#135341]" />, value: "900+", label: "Verified REPs" },
-            { icon: <DollarSign className="h-6 w-6 text-[#135341]" />, value: "$1.2B+", label: "Transaction Volume" },
-          ].map((stat, index) => (
-            <div 
-              key={index}
-              className={`bg-white/50 backdrop-blur-sm rounded-xl p-4 shadow-sm flex flex-col items-center justify-center transition-all duration-1000 delay-${index * 200} transform ${
-                isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
-              }`}
-            >
-              <div className="bg-[#135341]/10 rounded-full p-3 mb-3">
-                {stat.icon}
+          
+          {/* Stats row */}
+          <div 
+            className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12 transition-all duration-1000 delay-1000 ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+          >
+            {[
+              { icon: <Home className="h-6 w-6 text-[#135341]" />, value: "3,500+", label: "Off-Market Properties" },
+              { icon: <Users className="h-6 w-6 text-[#135341]" />, value: "900+", label: "Verified REPs" },
+              { icon: <DollarSign className="h-6 w-6 text-[#135341]" />, value: "$1.2B+", label: "Transaction Volume" },
+            ].map((stat, index) => (
+              <div 
+                key={index}
+                className="bg-white/50 backdrop-blur-sm rounded-xl p-4 shadow-sm flex flex-col items-center justify-center border border-gray-100/50"
+              >
+                <div className="bg-[#135341]/10 rounded-full p-3 mb-3">
+                  {stat.icon}
+                </div>
+                <p className="text-2xl font-heading font-bold text-[#09261E]">{stat.value}</p>
+                <p className="text-sm text-gray-600">{stat.label}</p>
               </div>
-              <p className="text-2xl font-heading font-bold text-[#09261E]">{stat.value}</p>
-              <p className="text-sm text-gray-600">{stat.label}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Scroll indicator */}
         <div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+          className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-all duration-1000 delay-1200 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
           style={{
-            opacity: 1 - scrollY * 0.005,
+            opacity: Math.max(0, 1 - scrollY * 0.005),
           }}
         >
           <div className="flex flex-col items-center gap-2 animate-bounce">
-            <p className="text-sm text-gray-600 font-medium">Scroll to explore</p>
-            <ArrowDownCircle className="h-6 w-6 text-[#09261E]" />
+            <p className="text-sm text-gray-600 font-medium">Scroll to unlock value</p>
+            <ChevronDown className="h-6 w-6 text-[#09261E]" />
           </div>
         </div>
-      </div>
-      
-      {/* Floating pins/map element */}
-      <div className="absolute bottom-0 inset-x-0 h-[300px] pointer-events-none overflow-hidden">
-        {[
-          { x: '15%', y: '30%', label: 'New York', count: '429 deals' },
-          { x: '25%', y: '60%', label: 'Miami', count: '215 deals' },
-          { x: '50%', y: '20%', label: 'Chicago', count: '176 deals' },
-          { x: '75%', y: '40%', label: 'Los Angeles', count: '312 deals' },
-          { x: '85%', y: '70%', label: 'Dallas', count: '184 deals' },
-        ].map((pin, i) => (
+        
+        {/* 3D Layered elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-[40vh] pointer-events-none overflow-hidden">
+          {/* Building silhouettes layer */}
           <div 
-            key={i}
-            className="absolute"
-            style={{ 
-              left: pin.x, 
-              top: pin.y,
-              transform: `translate3d(${scrollY * (i % 2 === 0 ? 0.02 : -0.02) + relativePosition.x * (i % 2 === 0 ? 5 : -5)}px, ${scrollY * (i % 3 === 0 ? -0.03 : 0.02) + relativePosition.y * (i % 3 === 0 ? -5 : 5)}px, 0)`,
+            className="absolute bottom-0 left-0 right-0 h-[15vh] bg-[#09261E]/5 backdrop-blur-[2px]"
+            style={{
+              transform: `translate3d(0, ${scrollY * 0.1}px, 0)`,
+              clipPath: 'polygon(0% 100%, 5% 90%, 10% 95%, 20% 80%, 25% 85%, 30% 75%, 40% 60%, 50% 70%, 60% 55%, 70% 65%, 75% 60%, 80% 40%, 90% 50%, 95% 45%, 100% 55%, 100% 100%)'
             }}
-          >
-            <div className="relative group cursor-pointer">
-              <MapPin className="text-[#E59F9F] h-6 w-6 z-10 relative" />
-              <span className="absolute top-0 left-0 h-6 w-6 bg-[#E59F9F]/20 rounded-full animate-ping"></span>
-              
-              {/* Info tooltip on hover */}
-              <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm shadow-lg rounded-lg p-2 w-32 text-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                <p className="font-medium text-[#09261E] text-sm">{pin.label}</p>
-                <p className="text-xs text-gray-600">{pin.count}</p>
+          ></div>
+          
+          {/* Map pin markers layer */}
+          <div className="absolute inset-0">
+            {[
+              { x: '10%', y: '70%', size: 6 },
+              { x: '20%', y: '50%', size: 8 },
+              { x: '35%', y: '65%', size: 5 },
+              { x: '55%', y: '40%', size: 7 },
+              { x: '70%', y: '60%', size: 9 },
+              { x: '85%', y: '35%', size: 6 },
+            ].map((pin, i) => (
+              <div 
+                key={i}
+                className="absolute"
+                style={{ 
+                  left: pin.x, 
+                  top: pin.y,
+                  transform: `translate3d(${scrollY * ((i % 3) * 0.01)}px, ${scrollY * ((i % 2) * -0.01)}px, 0)`,
+                }}
+              >
+                <div className="relative">
+                  <MapPin className="text-[#E59F9F] h-5 w-5" />
+                  <span className={`absolute top-0 left-0 h-5 w-5 bg-[#E59F9F]/20 rounded-full animate-ping-slow opacity-${pin.size * 10}`}></span>
+                </div>
               </div>
-              
-              {/* Always visible label */}
-              <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap text-xs font-medium text-gray-600">
-                {pin.label}
-              </span>
-            </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
     </div>
   );
