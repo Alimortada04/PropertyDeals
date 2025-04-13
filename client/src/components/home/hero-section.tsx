@@ -362,9 +362,9 @@ export default function HeroSection() {
                 </div>
               </Link>
               
-              {/* REP card */}
+              {/* REP card - moved down */}
               <div 
-                className="absolute bottom-[15%] right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
+                className="absolute bottom-[2%] right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
                 style={{
                   transform: `translate3d(0, ${scrollY * 0.03}px, 0) rotate(3deg)`,
                   transition: 'transform 0.1s ease-out'
@@ -402,51 +402,7 @@ export default function HeroSection() {
                 </line>
               </svg>
               
-              {/* Floating UI elements */}
-              <div 
-                className="absolute top-[18%] right-[-2%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
-                style={{
-                  transform: `translate3d(${-scrollY * 0.02}px, ${-scrollY * 0.01}px, 0)`,
-                  transition: 'transform 0.1s ease-out'
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="text-[#E59F9F]">
-                    <LightbulbIcon className="h-4 w-4" />
-                  </div>
-                  <span className="text-xs font-medium text-[#09261E]">Off-market opportunities</span>
-                </div>
-              </div>
-              
-              <div 
-                className="absolute bottom-[45%] left-[10%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
-                style={{
-                  transform: `translate3d(${-scrollY * 0.01}px, ${scrollY * 0.025}px, 0)`,
-                  transition: 'transform 0.1s ease-out'
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="text-[#135341]">
-                    <Shield className="h-4 w-4" />
-                  </div>
-                  <span className="text-xs font-medium text-[#09261E]">Trusted network</span>
-                </div>
-              </div>
-              
-              <div 
-                className="absolute top-[65%] right-[18%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
-                style={{
-                  transform: `translate3d(${scrollY * 0.015}px, ${-scrollY * 0.02}px, 0)`,
-                  transition: 'transform 0.1s ease-out'
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="text-[#09261E]">
-                    <CustomNetworkIcon className="h-4 w-4" />
-                  </div>
-                  <span className="text-xs font-medium text-[#09261E]">Connect with experts</span>
-                </div>
-              </div>
+              {/* Removed floating UI bubbles as requested */}
             </div>
           </div>
         </div>
