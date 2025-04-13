@@ -95,8 +95,8 @@ export default function HeroSection() {
   return (
     <div 
       ref={heroRef} 
-      className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh] top-0 mt-0 pt-0"
-      style={{ marginTop: "0", padding: "0" }}
+      className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh] top-0 mt-0 pt-16 md:pt-6 lg:pt-0"
+      style={{ marginTop: "0" }}
     >
       {/* New background elements */}
       <BackgroundElements scrollY={scrollY} />
@@ -379,9 +379,9 @@ export default function HeroSection() {
                 </div>
               </Link>
               
-              {/* REP card - positioned differently based on screen size */}
+              {/* REP card - only visible on desktop */}
               <div 
-                className="absolute md:top-[-10%] md:right-[15%] top-[-20%] right-[0%] md:w-[50%] w-[70%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
+                className="absolute md:top-[-10%] md:right-[15%] top-[-20%] right-[0%] md:w-[50%] w-[70%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform hidden lg:block"
                 style={{
                   transform: `translate3d(0, ${Math.min(40, scrollY * 0.02)}px, 0) rotate(2deg)`,
                   transition: 'transform 0.2s ease-out'
