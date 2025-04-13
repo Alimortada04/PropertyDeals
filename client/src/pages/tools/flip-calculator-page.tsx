@@ -196,7 +196,7 @@ export default function FlipCalculatorPage() {
                 <div className="space-y-4">
                   <div>
                     <h4 className="font-medium mb-2">Deal Summary</h4>
-                    <div className="bg-gray-50 p-4 rounded-md">
+                    <div className="bg-white p-4 rounded-md border border-gray-200">
                       <div className="flex justify-between mb-2">
                         <span>Purchase Price:</span>
                         <span className="font-medium">${form.getValues().purchasePrice.toLocaleString()}</span>
@@ -222,7 +222,7 @@ export default function FlipCalculatorPage() {
                   
                   <div>
                     <h4 className="font-medium mb-2">Sale Analysis</h4>
-                    <div className="bg-gray-50 p-4 rounded-md">
+                    <div className="bg-white p-4 rounded-md border border-gray-200">
                       <div className="flex justify-between mb-2">
                         <span>After Repair Value:</span>
                         <span className="font-medium">${form.getValues().afterRepairValue.toLocaleString()}</span>

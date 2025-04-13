@@ -197,7 +197,7 @@ export default function ContactPage() {
             
             <div>
               <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Contact Information</h2>
-              <div className="bg-gray-50 p-8 rounded-lg">
+              <div className="bg-white p-8 rounded-lg border border-gray-200">
                 <div className="mb-8">
                   <h3 className="font-heading font-bold text-[#135341] mb-2">Office Location</h3>
                   <p className="text-gray-700">123 Property Lane</p>
@@ -260,7 +260,7 @@ export default function ContactPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-10 text-center">Frequently Asked Questions</h2>
