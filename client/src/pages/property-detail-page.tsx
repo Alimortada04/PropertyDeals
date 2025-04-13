@@ -160,11 +160,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             <div>
               <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">{property.address}</h1>
               <p className="text-gray-600 text-lg mb-2">{`${property.city}, ${property.state} ${property.zipCode}`}</p>
-              <div className="flex items-center">
-                <span className={`inline-block ${property.status === 'exclusive' ? 'bg-[#803344]' : 'bg-[#09261E]'} text-white text-sm px-3 py-1 rounded-md mr-3`}>
-                  {property.status === 'exclusive' ? 'Exclusive' : 'Off-Market'}
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="inline-block bg-[#09261E] text-white text-sm px-3 py-1 rounded-md">
+                  {property.propertyType || 'Single Family'}
                 </span>
-                <span className="text-gray-500">Listed {new Date(property.createdAt).toLocaleDateString()}</span>
+                <span className="inline-block bg-[#803344] text-white text-sm px-3 py-1 rounded-md">
+                  {property.condition || 'Light Rehab'}
+                </span>
               </div>
             </div>
             <div className="text-right mt-4 lg:mt-0">
@@ -175,32 +177,55 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
           {/* Property Gallery */}
           <div className="mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-[500px]">
-              <div className="md:col-span-2 md:row-span-2 overflow-hidden rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[500px]">
+              {/* Main large image (2/3 width) */}
+              <div className="md:col-span-2 overflow-hidden rounded-lg relative group">
                 <img 
                   src={property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"} 
                   alt={property.address} 
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover transition-transform duration-300"
                 />
-              </div>
-              <div className="overflow-hidden rounded-lg">
-                <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Living Room" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-              </div>
-              <div className="overflow-hidden rounded-lg">
-                <img src="https://images.unsplash.com/photo-1556912173-3bb406ef7e77?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Kitchen" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-              </div>
-              <div className="overflow-hidden rounded-lg">
-                <img src="https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Bedroom" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-              </div>
-              <div className="overflow-hidden rounded-lg relative group">
-                <img src="https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Bathroom" className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {/* Navigation arrows */}
+                <button className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10">
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10">
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+                {/* Overlay to view all photos */}
+                <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button 
                     className="bg-white text-[#09261E] px-4 py-2 rounded-md font-medium"
                     onClick={() => setViewingAllPhotos(true)}
                   >
                     View All Photos
                   </button>
+                </div>
+              </div>
+              
+              {/* Right column images (1/3 width) */}
+              <div className="md:col-span-1 grid grid-rows-2 gap-4 h-full">
+                {/* Top image */}
+                <div className="overflow-hidden rounded-lg">
+                  <img 
+                    src="https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                    alt="Living Room" 
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
+                    onClick={() => setViewingAllPhotos(true)}
+                  />
+                </div>
+                
+                {/* Bottom map */}
+                <div className="overflow-hidden rounded-lg relative">
+                  {/* Map placeholder - in a real app, this would be a Google Map */}
+                  <div className="w-full h-full bg-[#09261E]/10 flex items-center justify-center cursor-pointer"
+                       onClick={() => setViewingMap(true)}>
+                    <div className="text-center">
+                      <MapPin className="h-8 w-8 text-[#09261E] mx-auto mb-2" />
+                      <p className="text-gray-600 text-sm">Map View</p>
+                      <p className="text-xs text-gray-500">{formattedAddress}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

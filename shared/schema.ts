@@ -27,6 +27,7 @@ export const properties = pgTable("properties", {
   yearBuilt: integer("yearBuilt"),
   propertyType: text("propertyType"),
   status: text("status").default("off-market"), // off-market, exclusive, etc.
+  condition: text("condition"), // turnkey, light rehab, full gut, BRRRR, etc.
   features: text("features").array(),
   imageUrl: text("imageUrl"),
   sellerId: integer("sellerId").notNull(),
