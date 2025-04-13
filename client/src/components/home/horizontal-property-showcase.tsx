@@ -104,7 +104,7 @@ export default function HorizontalPropertyShowcase({ properties }: HorizontalPro
   return (
     <div 
       ref={containerRef}
-      className="relative py-10"
+      className="relative py-10 w-full overflow-hidden"
     >
       <div ref={animationRef as React.RefObject<HTMLDivElement>} className={`transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'}`}>
         {/* Heading */}

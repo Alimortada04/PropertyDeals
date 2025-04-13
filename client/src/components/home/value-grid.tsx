@@ -61,8 +61,8 @@ export default function ValueGrid() {
   ];
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
+    <section className="py-20 bg-white overflow-hidden">
+      <div className="container mx-auto px-4 max-w-full">
         <div 
           ref={ref as React.RefObject<HTMLDivElement>} 
           className={`mb-16 text-center transition-all duration-1000 ${
