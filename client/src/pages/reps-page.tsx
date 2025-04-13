@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { reps, getRepsByType, Rep } from "@/lib/rep-data";
+import { reps, getRepsByType, getRepsByEntityType, Rep } from "@/lib/rep-data";
 import {
   Select,
   SelectContent,
@@ -13,12 +13,19 @@ import { Checkbox } from "@/components/ui/checkbox";
 import RepCard from "@/components/reps/rep-card";
 import StickySearchFilter from "@/components/common/sticky-search-filter";
 import Breadcrumbs from "@/components/common/breadcrumbs";
+import { 
+  ToggleGroup, 
+  ToggleGroupItem 
+} from "@/components/ui/toggle-group";
+import { UserRound, Building2 } from "lucide-react";
 
 type RepType = 'seller' | 'contractor' | 'agent' | 'lender' | 'appraiser' | 'inspector' | 'mover' | 'landscaper';
+type EntityType = 'person' | 'business' | 'all';
 
 export default function RepsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [repType, setRepType] = useState<RepType | 'all'>("all");
+  const [entityType, setEntityType] = useState<EntityType>("all");
   const [location, setLocation] = useState("");
   const [sortBy, setSortBy] = useState("popularity");
   const [filteredReps, setFilteredReps] = useState<Rep[]>(reps);
@@ -36,13 +43,18 @@ export default function RepsPage() {
     { value: "landscaper", label: "Landscaper" }
   ];
   
-  // Filter reps based on search term, type, and location
+  // Filter reps based on search term, type, entity type, and location
   useEffect(() => {
     let results = [...reps];
     
-    // Filter by type
+    // Filter by professional type
     if (repType !== 'all') {
       results = results.filter(rep => rep.type === repType);
+    }
+    
+    // Filter by entity type (person or business)
+    if (entityType !== 'all') {
+      results = results.filter(rep => rep.entityType === entityType);
     }
     
     // Filter by search term
@@ -80,7 +92,7 @@ export default function RepsPage() {
     }
     
     setFilteredReps(results);
-  }, [searchTerm, repType, location, sortBy]);
+  }, [searchTerm, repType, entityType, location, sortBy]);
   
   // Filter modal content
   const filterContent = (
@@ -139,6 +151,7 @@ export default function RepsPage() {
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={() => {
           setRepType('all');
+          setEntityType('all');
           setLocation('');
           setSortBy('popularity');
         }}>
@@ -189,9 +202,42 @@ export default function RepsPage() {
       {/* Main Content Area */}
       <div className="flex-grow mt-6">
         <div className="container mx-auto px-4">
-          {/* Results Count */}
-          <div className="text-sm text-gray-600 mb-6">
-            Found {filteredReps.length} professionals
+          {/* People/Businesses View Toggle and Result Count */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <div className="text-sm text-gray-600">
+              Found {filteredReps.length} professionals
+            </div>
+            
+            <div className="border rounded-lg overflow-hidden shadow-sm">
+              <ToggleGroup 
+                type="single" 
+                value={entityType !== 'business' ? 'people' : 'businesses'}
+                onValueChange={(value) => {
+                  if (value === 'people') setEntityType('person');
+                  else if (value === 'businesses') setEntityType('business');
+                  else setEntityType('all');
+                }}
+                className="bg-white"
+              >
+                <ToggleGroupItem value="all" aria-label="All" onClick={() => setEntityType('all')}
+                  className={`px-3 py-2 ${entityType === 'all' ? 'bg-[#09261E] text-white' : ''}`}
+                >
+                  All
+                </ToggleGroupItem>
+                <ToggleGroupItem value="people" aria-label="People"
+                  className={`px-3 py-2 ${entityType === 'person' ? 'bg-[#09261E] text-white' : ''}`}
+                >
+                  <UserRound size={18} className="mr-1" />
+                  People
+                </ToggleGroupItem>
+                <ToggleGroupItem value="businesses" aria-label="Businesses"
+                  className={`px-3 py-2 ${entityType === 'business' ? 'bg-[#09261E] text-white' : ''}`}
+                >
+                  <Building2 size={18} className="mr-1" />
+                  Businesses
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
           </div>
           
           {/* Results Grid */}

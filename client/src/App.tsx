@@ -12,6 +12,7 @@ import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
 import RepsPage from "@/pages/reps-page";
 import RepDetailPage from "@/pages/rep-detail-page";
+import BusinessDetailPage from "@/pages/business-detail-page";
 import ConnectPage from "@/pages/connect-page";
 import DiscussionsPage from "@/pages/discussions-page";
 import ToolsPage from "@/pages/tools-page";
@@ -58,6 +59,13 @@ function Router() {
         {params => (
           <MainLayout>
             <RepDetailPage slug={params.slug} />
+          </MainLayout>
+        )}
+      </Route>
+      <Route path="/business/:slug">
+        {params => (
+          <MainLayout>
+            <BusinessDetailPage slug={params.slug} />
           </MainLayout>
         )}
       </Route>
