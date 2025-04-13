@@ -285,9 +285,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       {/* Property Details Section - Using grid for better sticky behavior */}
       <section className="py-10 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content Column - Takes 2/3 of the space */}
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {/* Main Content Column - Takes 2/3 of the space on lg screens, 3/4 on xl screens */}
+            <div className="lg:col-span-2 xl:col-span-3">
               {/* Key Features */}
               <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property Details</h2>
@@ -473,7 +473,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
             {/* Sidebar - Contact Card Column */}
             <div className="lg:col-span-1">
-              <div className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg lg:sticky lg:top-8 mb-8">
+              <div className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg lg:sticky lg:top-8 mb-8 max-w-[380px] lg:mx-auto xl:ml-0">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
                 <div className="flex items-center mb-6 border-b pb-4">
                   <img 
