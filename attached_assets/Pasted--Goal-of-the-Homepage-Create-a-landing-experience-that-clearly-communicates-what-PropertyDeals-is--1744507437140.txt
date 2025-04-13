@@ -1,0 +1,103 @@
+🧭 Goal of the Homepage
+Create a landing experience that clearly communicates what PropertyDeals is and drives users to take action through:
+
+Discovering Deals
+
+Connecting with Professionals
+
+Do not include “List Your Property” anywhere — seller acquisition is handled elsewhere.
+
+🎯 Homepage Goals
+Introduce the platform with confidence and clarity
+
+Encourage users to browse properties and explore professionals
+
+Keep it clean, modern, and emotionally compelling
+
+🧱 Sections to Build
+1. Hero Section
+Large, full-width, visually appealing banner
+
+Headline:
+
+“Be in the Room Where It Happens.”
+
+Subheadline:
+
+“Find exclusive off-market real estate deals and connect with trusted professionals.”
+
+CTA Button: Browse Properties → /properties
+
+Secondary CTA: Explore The REP Room → /reps
+
+Background: Use imagery that conveys trust, homes, and connection (subtle gradient or photo)
+
+2. Featured Properties Preview
+Title: Featured Properties
+
+Use existing property cards and structure (from /properties)
+
+Display 3–6 property cards in a grid
+
+CTA: View All Listings → /properties
+
+3. REP Room Preview
+Title: Trusted REPs. Real Connections.
+
+Subheading:
+
+“Explore The REP Room to connect with real estate professionals who move deals forward.”
+
+Show 3–4 REP cards (avatars, name, type, location)
+
+CTA: Browse REPs → /reps
+
+4. Tools Teaser
+Title: Investor Tools Built In
+
+Subtext: “PropertyDeals helps you run the numbers before you run the deal.”
+
+Show a clean row of 3 cards linking to:
+
+Flip Calculator
+
+Seller Finance Calculator
+
+Sub-to Estimator
+
+CTA: Explore All Tools → /tools
+
+5. Community Preview
+Title: Discussions That Matter
+
+Subtext: “Get advice, share deals, and discuss strategies with investors like you.”
+
+Show 2–3 sample posts from /discussions
+
+CTA: Join the Conversation → /discussions
+
+6. How PropertyDeals Works
+Keep your existing “How PropertyDeals Works” section
+
+Streamline the copy:
+
+“Connecting buyers with exclusive off-market properties and trusted professionals to close deals faster.”
+
+7. Call to Action
+Title: Start Browsing Deals Now
+
+Two CTA buttons:
+
+Browse Properties (primary)
+
+Explore The REP Room (secondary)
+
+✅ Styling & UX Guidelines
+Use existing fonts: League Spartan for headers, Lato for body
+
+Colors: Stay within defined brand palette (Primary Green, Wine, Salmon, Silver)
+
+Use hover states and smooth transitions
+
+Must be fully responsive
+
