@@ -282,12 +282,12 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         </div>
       </section>
 
-      {/* Property Details Section - Using grid for better sticky behavior */}
+      {/* Property Details Section - Completely restructured for proper sticky behavior */}
       <section className="py-10 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {/* Main Content Column - Takes 2/3 of the space on lg screens, 3/4 on xl screens */}
-            <div className="lg:col-span-2 xl:col-span-3">
+          <div className="flex flex-col lg:flex-row">
+            {/* Main Content Column - 2/3 of the width */}
+            <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8">
               {/* Key Features */}
               <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property Details</h2>
@@ -471,9 +471,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </div>
             </div>
 
-            {/* Sidebar - Contact Card Column - Redfin-style sticky implementation */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-4 bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg max-w-[380px] mx-auto">
+            {/* Sidebar - Contact Card Column - Using flex approach instead of grid */}
+            <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
+              <div className="lg:sticky lg:top-4 bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg max-w-sm mx-auto lg:max-w-full">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
                 <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
                   <img 
