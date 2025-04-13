@@ -1,0 +1,54 @@
+We're focusing solely on the Hero Section of the homepage for PropertyDeals.
+
+🎯 Objective:
+Create a modern, emotionally resonant, and visually striking hero section that instantly communicates the value of PropertyDeals as a real estate platform built for:
+
+Investors & Buyers (looking for off-market deals)
+
+REPs (Real Estate Professionals like contractors, agents, lenders)
+
+Sellers & Wholesalers (looking to move properties quickly)
+
+This hero needs to feel trustworthy, cutting-edge, and community-driven. Think bold typography, modern visuals, and subtle animations or scroll interactions to elevate the experience.
+
+🧩 Requirements:
+1. Design
+Full-width hero section with modern layout (split layout or layered layout encouraged)
+
+Background: subtle gradient, pattern, or parallax movement is encouraged
+
+Fonts: Use League Spartan for headings (semi-bold), and Lato for body text
+
+Colors: Use brand palette (Primary Green #09261E, Accent Salmon #E59F9F, Wine #803344, Light Green #135341, etc.)
+
+Keep everything clean, readable, and visually structured
+
+2. Content
+Headline (H1): Emphasize action + opportunity
+Example:
+
+“Built on Trust, Powered by Real Estate”
+
+Subtext: A short one-liner to support the vision:
+
+“Discover off-market opportunities, connect with trusted professionals, and grow your real estate network.”
+
+CTAs (Call to Actions):
+
+“Explore Deals” (Primary — link to /properties)
+
+“Join our Community” (Secondary — link to /reps or /register)
+
+3. Visuals
+Include a graphic, hero image, or modern real estate-themed illustration on the right side (or background layer)
+
+Responsive design (mobile-first behavior)
+
+Optional but encouraged:  scroll animation or hover effect to bring it to life (I want the hero to pop out at you)
+
+🔧 Notes:
+Remove the current property search bar from the homepage entirely — it should not be shown in this hero section.
+
+This section should set the emotional tone for the rest of the homepage. Think of it as the first impression for visitors — it needs to communicate value, vision, and community in one glance.
+
+Keep the layout modular so we can build sections below it without design clash.

@@ -79,10 +79,71 @@ export default {
             height: "0",
           },
         },
+        "float": {
+          "0%, 100%": {
+            transform: "translateY(0)",
+          },
+          "50%": {
+            transform: "translateY(-10px)",
+          },
+        },
+        "float-slow": {
+          "0%, 100%": {
+            transform: "translateY(0)",
+          },
+          "50%": {
+            transform: "translateY(-5px)",
+          },
+        },
+        "breathe": {
+          "0%, 100%": {
+            transform: "scale(1)",
+            opacity: "0.5",
+          },
+          "50%": {
+            transform: "scale(1.05)",
+            opacity: "0.7",
+          },
+        },
+        "pulse-slow": {
+          "0%, 100%": {
+            opacity: "0.5",
+          },
+          "50%": {
+            opacity: "0.8",
+          },
+        },
+        "ping-slow": {
+          "0%": {
+            transform: "scale(1)",
+            opacity: "1",
+          },
+          "75%, 100%": {
+            transform: "scale(2)",
+            opacity: "0",
+          },
+        },
+        "gradient-x": {
+          "0%, 100%": {
+            "background-position": "0% 50%",
+          },
+          "50%": {
+            "background-position": "100% 50%",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "float": "float 5s ease-in-out infinite",
+        "float-slow": "float-slow 7s ease-in-out infinite",
+        "breathe": "breathe 8s ease-in-out infinite",
+        "pulse-slow": "pulse-slow 4s ease-in-out infinite",
+        "ping-slow": "ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite",
+        "gradient-x": "gradient-x 15s ease infinite",
+      },
+      backgroundSize: {
+        "size-200": "200% 200%",
       },
     },
   },
