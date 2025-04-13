@@ -34,6 +34,7 @@ export const featuredProperties: ExtendedProperty[] = [
     squareFeet: 3200,
     status: "exclusive",
     imageUrl: "https://images.unsplash.com/photo-1592595896616-c37162298647?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    newListing: true,
   },
   {
     id: 3,
@@ -47,10 +48,11 @@ export const featuredProperties: ExtendedProperty[] = [
     squareFeet: 1850,
     status: "off-market",
     imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    priceDrop: true,
   },
 ];
 
-export const similarProperties: Partial<Property>[] = [
+export const similarProperties: ExtendedProperty[] = [
   {
     id: 10,
     title: "Similar Property 1",
@@ -92,7 +94,7 @@ export const similarProperties: Partial<Property>[] = [
   },
 ];
 
-export const allProperties: Partial<Property>[] = [
+export const allProperties: ExtendedProperty[] = [
   ...featuredProperties,
   {
     id: 4,

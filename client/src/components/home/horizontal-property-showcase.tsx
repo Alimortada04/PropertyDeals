@@ -22,7 +22,7 @@ interface ExtendedProperty extends Partial<Property> {
 }
 
 interface HorizontalPropertyShowcaseProps {
-  properties: Partial<Property>[];
+  properties: ExtendedProperty[];
 }
 
 export default function HorizontalPropertyShowcase({ properties }: HorizontalPropertyShowcaseProps) {
@@ -97,14 +97,11 @@ export default function HorizontalPropertyShowcase({ properties }: HorizontalPro
     }
   };
   
-  const getStatusTag = (property: Partial<Property>) => {
-    // Cast to our extended property type that includes UI-specific fields
-    const extendedProperty = property as ExtendedProperty;
-    
+  const getStatusTag = (property: ExtendedProperty) => {
     // Determine status based on property data
-    if (extendedProperty.offMarketDeal) return { text: "Off-Market", color: "#E59F9F" };
-    if (extendedProperty.newListing) return { text: "New Listing", color: "#09261E" };
-    if (extendedProperty.priceDrop) return { text: "Price Drop", color: "#803344" };
+    if (property.offMarketDeal) return { text: "Off-Market", color: "#E59F9F" };
+    if (property.newListing) return { text: "New Listing", color: "#09261E" };
+    if (property.priceDrop) return { text: "Price Drop", color: "#803344" };
     return { text: "Featured", color: "#135341" };
   };
 
