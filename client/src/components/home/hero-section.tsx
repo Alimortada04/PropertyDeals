@@ -1,41 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
-import { useParallaxEffect, useCursorGlow } from "@/hooks/use-scroll-animation";
 import { Button } from "@/components/ui/button";
-import { featuredProperties } from "@/lib/data";
+import { featuredProperties, similarProperties, allProperties } from "@/lib/data";
 import { 
   Search, 
   ArrowRight, 
   HandshakeIcon as Handshake,
   KeyRound as Key,
-  Shield,
   Users,
-  MapPin,
-  LightbulbIcon,
   ChevronDown,
+  MapPin,
+  Shield,
+  LightbulbIcon,
 } from "lucide-react";
-
-// Custom network icon since it's not available directly in lucide
-function CustomNetworkIcon({ className }: { className?: string }) {
-  return (
-    <svg 
-      className={className}
-      xmlns="http://www.w3.org/2000/svg" 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    >
-      <path d="M9 2v6c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2V2"/>
-      <path d="M12 8v8"/>
-      <path d="M3 12h2a2 2 0 0 1 2 2v4a4 4 0 0 0 4 4h2a4 4 0 0 0 4-4v-4a2 2 0 0 1 2-2h2"/>
-    </svg>
-  );
-}
+import PropertyCarousel from "./property-carousel";
+import BackgroundElements from "./background-elements";
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
@@ -48,8 +27,8 @@ export default function HeroSection() {
   const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
   const featuredProperty = featuredProperties[currentFeaturedIndex];
   
-  // Use cursor glow effect
-  useCursorGlow(cursorRef);
+  // Combine all properties for the carousel
+  const carouselProperties = [...featuredProperties, ...similarProperties.slice(0, 2)];
   
   // Track scroll position for parallax effect
   useEffect(() => {
@@ -83,80 +62,8 @@ export default function HeroSection() {
       className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh] top-0 mt-0"
       style={{ marginTop: "-1px" }}
     >
-      {/* Cursor glow effect container */}
-      <div 
-        ref={cursorRef}
-        className="absolute inset-0 cursor-glow transition-opacity duration-1000"
-        style={{ opacity: isVisible ? 1 : 0 }}
-      ></div>
-      
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Main gradient orb */}
-        <div 
-          className="absolute -right-[10%] -top-[5%] w-[70vw] h-[70vw] max-w-[1100px] max-h-[1100px] rounded-full bg-gradient-to-bl from-[#09261E]/20 to-[#135341]/30 blur-3xl will-change-transform"
-          style={{
-            transform: `translate3d(${scrollY * 0.05 + relativePosition.x * 20}px, ${scrollY * -0.05 + relativePosition.y * 20}px, 0)`,
-          }}
-        />
-        
-        {/* Secondary orb */}
-        <div 
-          className="absolute -left-[10%] bottom-[5%] w-[55vw] h-[55vw] max-w-[900px] max-h-[900px] rounded-full bg-gradient-to-tr from-[#E59F9F]/15 to-[#803344]/15 blur-3xl will-change-transform"
-          style={{
-            transform: `translate3d(${scrollY * -0.03 + relativePosition.x * -20}px, ${scrollY * -0.03 + relativePosition.y * -15}px, 0)`,
-          }}
-        />
-        
-        {/* Additional colorful background elements */}
-        <div 
-          className="absolute left-[25%] top-[15%] w-[40vw] h-[40vw] max-w-[700px] max-h-[700px] rounded-full bg-gradient-to-r from-[#135341]/10 to-[#298668]/10 blur-3xl will-change-transform animate-pulse-slow"
-          style={{
-            transform: `translate3d(${scrollY * 0.02 + relativePosition.x * 5}px, ${scrollY * 0.02 + relativePosition.y * 5}px, 0)`,
-          }}
-        />
-        
-        <div 
-          className="absolute right-[20%] bottom-[20%] w-[25vw] h-[25vw] max-w-[400px] max-h-[400px] rounded-full bg-gradient-to-b from-[#E5D89F]/10 to-[#F8F8F8]/5 blur-3xl will-change-transform animate-float-slow"
-          style={{
-            transform: `translate3d(${scrollY * -0.01 + relativePosition.x * -8}px, ${scrollY * 0.04 + relativePosition.y * -8}px, 0)`,
-          }}
-        />
-        
-        {/* Accent elements */}
-        <div className="absolute inset-0">
-          {/* Dotted grid pattern */}
-          <div 
-            className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMyMjIiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDF2NGgtMXYtNHptMiAwaDF2NGgtMXYtNHptLTcgM2g0djFoLTR2LTF6bTAtMmgxdjRoLTF2LTR6bTIgMGgxdjRoLTF2LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')]"
-            style={{
-              opacity: 0.8 - scrollY * 0.001,
-              transform: `translate3d(0, ${scrollY * 0.1}px, 0)`,
-            }}
-          />
-          
-          {/* Abstract shapes */}
-          <div 
-            className="absolute left-[10%] top-[20%] w-20 h-20 rounded-md bg-[#E59F9F]/10 rotate-12 will-change-transform animate-float"
-            style={{
-              transform: `rotate(12deg) translate3d(${relativePosition.x * -15}px, ${relativePosition.y * -15 + scrollY * 0.03}px, 0)`,
-            }}
-          />
-          
-          <div 
-            className="absolute right-[12%] top-[60%] w-24 h-24 rounded-full border-4 border-[#09261E]/5 will-change-transform animate-pulse-slow"
-            style={{
-              transform: `translate3d(${relativePosition.x * 25}px, ${relativePosition.y * 25 + scrollY * -0.05}px, 0)`,
-            }}
-          />
-          
-          <div 
-            className="absolute left-[15%] bottom-[30%] w-32 h-4 bg-[#135341]/10 rounded-full will-change-transform animate-breathe"
-            style={{
-              transform: `translate3d(${relativePosition.x * -20}px, ${relativePosition.y * -10 + scrollY * 0.02}px, 0) rotate(-5deg)`,
-            }}
-          />
-        </div>
-      </div>
+      {/* New background elements */}
+      <BackgroundElements scrollY={scrollY} />
       
       {/* Main hero content - Split layout */}
       <div className="relative z-10 container mx-auto px-4 min-h-[100vh] flex items-center py-6 md:py-10 lg:py-0">
@@ -320,117 +227,19 @@ export default function HeroSection() {
             </div>
           </div>
           
-          {/* Right illustration column */}
+          {/* Right property carousel column */}
           <div 
             className={`lg:col-span-5 relative transition-all duration-1000 delay-500 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
             }`}
           >
-            {/* 3D layered property illustration */}
-            <div className="relative h-[500px] w-full max-w-[500px] mx-auto">
-              {/* Background city silhouette */}
-              <div 
-                className="absolute inset-0 z-10"
-                style={{
-                  transform: `translate3d(${relativePosition.x * -10}px, ${relativePosition.y * -10}px, 0)`,
-                }}
-              >
-                <div className="absolute bottom-0 left-0 right-0 h-[35%] opacity-20"
-                  style={{
-                    clipPath: 'polygon(0% 100%, 5% 90%, 10% 95%, 20% 80%, 25% 85%, 30% 75%, 40% 60%, 50% 70%, 60% 55%, 70% 65%, 75% 60%, 80% 40%, 90% 50%, 95% 45%, 100% 55%, 100% 100%)',
-                    background: 'linear-gradient(to top, #09261E, transparent)'
-                  }}
-                ></div>
-              </div>
-              
-              {/* Featured property card with 3D hover effect */}
-              <Link 
-                href={`/p/${featuredProperty.id}`}
-                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer transform-gpu"
-                style={{
-                  transform: `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`,
-                  transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-out',
-                  transformStyle: 'preserve-3d',
-                  boxShadow: '0 10px 30px -5px rgba(9, 38, 30, 0.15)'
-                }}
-                onMouseMove={(e) => {
-                  const card = e.currentTarget;
-                  const rect = card.getBoundingClientRect();
-                  const x = e.clientX - rect.left; // x position within the element
-                  const y = e.clientY - rect.top; // y position within the element
-                  
-                  // Calculate rotation angles based on mouse position
-                  // Use smaller values for subtler effect (0.08)
-                  const rotateY = ((x / rect.width) - 0.5) * 8; // -4 to 4 degrees
-                  const rotateX = ((y / rect.height) - 0.5) * -8; // 4 to -4 degrees
-                  
-                  // Apply transformation - subtle 3D effect
-                  card.style.transform = `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale3d(1.02, 1.02, 1.02)`;
-                  card.style.boxShadow = '0 20px 40px -10px rgba(9, 38, 30, 0.25)';
-                }}
-                onMouseLeave={(e) => {
-                  const card = e.currentTarget;
-                  // Reset to original transform
-                  card.style.transform = `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`;
-                  card.style.boxShadow = '0 10px 30px -5px rgba(9, 38, 30, 0.15)';
-                }}
-              >
-                {/* Property image with zoom effect */}
-                <div className="h-[60%] bg-[#09261E]/5 overflow-hidden relative">
-                  <div 
-                    className="absolute inset-0 bg-center bg-cover transition-all duration-700 group-hover:scale-110 will-change-transform"
-                    style={{ 
-                      backgroundImage: `url(${featuredProperty.imageUrl})` 
-                    }}
-                  />
-                  
-                  {/* Property tags */}
-                  {featuredProperty.offMarketDeal && (
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm z-10">
-                      Off-Market Deal
-                    </div>
-                  )}
-                  {featuredProperty.newListing && (
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm z-10">
-                      New Listing
-                    </div>
-                  )}
-                  {featuredProperty.priceDrop && (
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm z-10">
-                      Price Drop
-                    </div>
-                  )}
-                  
-                  {/* Price tag */}
-                  <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm z-10">
-                    <p className="font-heading font-bold text-lg text-[#09261E]">
-                      ${featuredProperty.price?.toLocaleString()}
-                    </p>
-                  </div>
-                </div>
-                
-                {/* Property details */}
-                <div className="p-4">
-                  <h3 className="font-heading font-bold text-lg text-[#09261E] truncate">
-                    {featuredProperty.title}
-                  </h3>
-                  <div className="flex items-center text-gray-500 text-sm mt-1">
-                    <MapPin className="h-3 w-3 mr-1" />
-                    <span className="truncate">{featuredProperty.city}, {featuredProperty.state}</span>
-                  </div>
-                  
-                  {/* Property specs */}
-                  <div className="flex justify-between items-center mt-3">
-                    <div className="text-xs text-gray-600">{featuredProperty.bedrooms} bed</div>
-                    <div className="text-xs text-gray-600">{featuredProperty.bathrooms} bath</div>
-                    <div className="text-xs text-gray-600">{featuredProperty.squareFeet?.toLocaleString()} sqft</div>
-                  </div>
-                </div>
-              </Link>
+            <div className="relative min-h-[500px] w-full">
+              {/* Property Cards Carousel */}
+              <PropertyCarousel properties={carouselProperties} scrollY={scrollY} />
               
               {/* REP card */}
               <div 
-                className="absolute bottom-[15%] right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
+                className="absolute -bottom-4 right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform md:block hidden"
                 style={{
                   transform: `translate3d(0, ${scrollY * 0.03}px, 0) rotate(3deg)`,
                   transition: 'transform 0.1s ease-out'
@@ -447,73 +256,7 @@ export default function HeroSection() {
                 </div>
               </div>
               
-              {/* Connection lines - animated */}
-              <svg 
-                className="absolute inset-0 w-full h-full z-15 pointer-events-none opacity-30"
-                style={{
-                  transform: `translate3d(0, ${scrollY * 0.01}px, 0)`,
-                }}
-              >
-                <defs>
-                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#09261E" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#E59F9F" stopOpacity="0.2" />
-                  </linearGradient>
-                </defs>
-                <line x1="30%" y1="40%" x2="70%" y2="80%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" from="0" to="20" dur="3s" repeatCount="indefinite" />
-                </line>
-                <line x1="20%" y1="60%" x2="80%" y2="30%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="4s" repeatCount="indefinite" />
-                </line>
-              </svg>
-              
-              {/* Floating UI elements */}
-              <div 
-                className="absolute top-[18%] right-[-2%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
-                style={{
-                  transform: `translate3d(${-scrollY * 0.02}px, ${-scrollY * 0.01}px, 0)`,
-                  transition: 'transform 0.1s ease-out'
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="text-[#E59F9F]">
-                    <LightbulbIcon className="h-4 w-4" />
-                  </div>
-                  <span className="text-xs font-medium text-[#09261E]">Off-market opportunities</span>
-                </div>
-              </div>
-              
-              <div 
-                className="absolute bottom-[45%] left-[10%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
-                style={{
-                  transform: `translate3d(${-scrollY * 0.01}px, ${scrollY * 0.025}px, 0)`,
-                  transition: 'transform 0.1s ease-out'
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="text-[#135341]">
-                    <Shield className="h-4 w-4" />
-                  </div>
-                  <span className="text-xs font-medium text-[#09261E]">Trusted network</span>
-                </div>
-              </div>
-              
-              {/* New floating element */}
-              <div 
-                className="absolute top-[65%] right-[18%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
-                style={{
-                  transform: `translate3d(${scrollY * 0.015}px, ${-scrollY * 0.02}px, 0)`,
-                  transition: 'transform 0.1s ease-out'
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="text-[#09261E]">
-                    <CustomNetworkIcon className="h-4 w-4" />
-                  </div>
-                  <span className="text-xs font-medium text-[#09261E]">Connect with experts</span>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>

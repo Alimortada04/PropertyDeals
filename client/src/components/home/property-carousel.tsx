@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useEmblaCarousel } from 'embla-carousel-react';
+import useEmblaCarousel from 'embla-carousel-react';
 import { Link } from 'wouter';
 import { ExtendedProperty } from '@/lib/data';
 import { 
@@ -113,7 +113,6 @@ export default function PropertyCarousel({ properties, scrollY }: PropertyCarous
     loop: true,
     align: 'center',
     skipSnaps: false,
-    draggable: true,
   });
   
   const [activeIndex, setActiveIndex] = useState(0);
