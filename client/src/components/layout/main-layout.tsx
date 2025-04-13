@@ -23,6 +23,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   // Check if we're on pages where the top banner should be hidden when scrolling up
   const isSpecialPage = location === '/reps' || location === '/properties' || 
                         location.startsWith('/rep/') || location.startsWith('/p/');
+                        
+  // Check if we're on the homepage to remove top padding
+  const isHomePage = location === '/';
 
   // This effect is used to detect if window exists (for SSR compatibility)
   useEffect(() => {
@@ -64,7 +67,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         
         {/* Main content - ensure it starts after the collapsed sidebar width on desktop only */}
         <main className={`flex-1 w-full transition-all duration-200 overflow-x-hidden ${!isMobile ? (!isExpanded ? 'ml-16' : 'ml-64') : 'ml-0'} lg:ml-16`}>
-          <div className="min-h-screen pt-4 pb-16 px-0 max-w-full">
+          <div className={`min-h-screen ${isHomePage ? 'pt-0' : 'pt-4'} pb-16 px-0 max-w-full`}>
             {children}
           </div>
         </main>

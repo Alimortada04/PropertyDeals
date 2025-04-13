@@ -350,8 +350,9 @@ export default function HeroSection() {
               </div>
               
               {/* Featured property card */}
-              <div 
-                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform"
+              <Link 
+                href={`/p/${featuredProperty.id}`}
+                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer"
                 style={{
                   transform: `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15 - scrollY * 0.05}px, 0) rotate(-2deg)`,
                   transition: 'transform 0.1s ease-out'
@@ -403,7 +404,7 @@ export default function HeroSection() {
                     <div className="text-xs text-gray-600">{featuredProperty.squareFeet?.toLocaleString()} sqft</div>
                   </div>
                 </div>
-              </div>
+              </Link>
               
               {/* REP card */}
               <div 
