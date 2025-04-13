@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import HeroSection from "@/components/home/hero-section";
 import PropertyGrid from "@/components/properties/property-grid";
-import HowItWorks from "@/components/home/how-it-works";
 import RepRoomPreview from "@/components/home/rep-room-preview";
 import ToolsTeaser from "@/components/home/tools-teaser";
 import CommunityPreview from "@/components/home/community-preview";
@@ -9,6 +8,8 @@ import CTASection from "@/components/home/cta-section";
 import Footer from "@/components/layout/footer";
 import StickySearchBar from "@/components/home/sticky-search-bar";
 import BackToTop from "@/components/layout/back-to-top";
+import ImmersiveFeatures from "@/components/home/immersive-features";
+import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -16,17 +17,57 @@ import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { featuredProperties } from "@/lib/data";
 
+// Helper function for scroll animations
+function ScrollAnimationSection({ 
+  children, 
+  className = "", 
+  threshold = 0.2 
+}: { 
+  children: React.ReactNode, 
+  className?: string, 
+  threshold?: number 
+}) {
+  const { ref, isVisible } = useScrollAnimation({ threshold });
+  
+  return (
+    <div 
+      ref={ref as React.RefObject<HTMLDivElement>} 
+      className={`${className} transition-all duration-1000 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const homePageRef = useRef<HTMLDivElement>(null);
   
-  // Handle scroll event to add animations
+  // Handle scroll and mouse events for animations
   useEffect(() => {
     const handleScroll = () => {
       setHasScrolled(window.scrollY > 100);
     };
     
+    const handleMouseMove = (e: MouseEvent) => {
+      if (homePageRef.current) {
+        setMousePosition({
+          x: e.clientX / window.innerWidth,
+          y: e.clientY / window.innerHeight
+        });
+      }
+    };
+    
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("mousemove", handleMouseMove);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
   
   const { data: properties, isLoading, error } = useQuery<Property[]>({
@@ -72,16 +113,31 @@ export default function HomePage() {
   };
 
   return (
-    <>
-      {/* Hero Section */}
+    <div ref={homePageRef} className="relative overflow-hidden">
+      {/* Hero Section - Full height splash with animated components */}
       <HeroSection />
       
-      {/* Sticky Search Bar */}
+      {/* Sticky Search Bar - Appears on scroll */}
       <StickySearchBar />
       
-      {/* Featured Properties Preview */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      {/* Immersive Features Section - Story-based scrolling experience */}
+      <ScrollAnimationSection>
+        <ImmersiveFeatures />
+      </ScrollAnimationSection>
+      
+      {/* Featured Properties Preview - Horizontal scrolling cards */}
+      <ScrollAnimationSection className="py-20 bg-white relative">
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{
+            backgroundSize: '40px 40px',
+            backgroundImage: 'radial-gradient(#09261E 1px, transparent 0)',
+            backgroundPosition: `${mousePosition.x * 20}px ${mousePosition.y * 20}px`,
+            transition: 'background-position 0.2s ease-out'
+          }}
+        ></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div className="max-w-xl mb-6 md:mb-0">
               <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-4 relative">
@@ -101,32 +157,57 @@ export default function HomePage() {
           </div>
           
           {/* Property Cards with animation */}
-          <div className={`transition-all duration-700 ${hasScrolled ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-90'}`}>
+          <div className="transition-all duration-700">
             {renderPropertyGrid()}
           </div>
         </div>
-      </section>
+      </ScrollAnimationSection>
       
-      {/* REP Room Preview */}
-      <RepRoomPreview />
+      {/* REP Room Preview - Interactive carousel */}
+      <ScrollAnimationSection className="w-full">
+        <RepRoomPreview />
+      </ScrollAnimationSection>
       
-      {/* Tools Teaser */}
-      <ToolsTeaser />
+      {/* Tools Teaser - Interactive calculator previews */}
+      <ScrollAnimationSection className="w-full" threshold={0.1}>
+        <ToolsTeaser />
+      </ScrollAnimationSection>
       
-      {/* Community Preview */}
-      <CommunityPreview />
+      {/* Community Preview - Discussion highlights */}
+      <ScrollAnimationSection className="w-full" threshold={0.1}>
+        <CommunityPreview />
+      </ScrollAnimationSection>
       
-      {/* How PropertyDeals Works */}
-      <HowItWorks />
-      
-      {/* Final Call to Action */}
-      <CTASection />
+      {/* Final Call to Action - Bold statement and signup */}
+      <ScrollAnimationSection className="w-full bg-gradient-to-b from-white to-[#F9F9F9] py-24" threshold={0.3}>
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-5xl font-heading font-bold text-[#09261E] mb-6 max-w-4xl mx-auto leading-tight">
+            PropertyDeals isn't a platform.
+            <span className="block relative mt-2">
+              <span className="relative inline-block z-10">
+                It's your competitive edge.
+                <span className="absolute -bottom-2 left-0 right-0 h-3 bg-[#E59F9F]/40 -z-10"></span>
+              </span>
+            </span>
+          </h2>
+          
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-10">
+            Join thousands of investors who are finding better deals, connecting with trusted professionals, and closing faster.
+          </p>
+          
+          <Link href="/auth">
+            <button className="bg-[#09261E] hover:bg-[#135341] text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all">
+              Sign Up Free
+            </button>
+          </Link>
+        </div>
+      </ScrollAnimationSection>
       
       {/* Footer */}
       <Footer />
       
       {/* Back to Top Button */}
       <BackToTop />
-    </>
+    </div>
   );
 }

@@ -42,7 +42,7 @@
     scrollbar-width: none;  /* Firefox */
   }
   
-  /* Animations for homepage */
+  /* Basic Animations */
   .animate-fadeIn {
     animation: fadeIn 1s ease-out;
   }
@@ -60,6 +60,93 @@
     animation-delay: 0.4s;
   }
   
+  /* Entrance Animations */
+  .animate-fadeInUp {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+  
+  .animate-fadeInLeft {
+    animation: fadeInLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  
+  .animate-fadeInRight {
+    animation: fadeInRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  
+  .animate-scaleIn {
+    animation: scaleIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  
+  /* Scroll Animations */
+  .animate-on-scroll {
+    opacity: 0;
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .animate-on-scroll.fade-in-up {
+    transform: translateY(40px);
+  }
+  
+  .animate-on-scroll.fade-in-left {
+    transform: translateX(-40px);
+  }
+  
+  .animate-on-scroll.fade-in-right {
+    transform: translateX(40px);
+  }
+  
+  .animate-on-scroll.scale-in {
+    transform: scale(0.92);
+  }
+  
+  .animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translate(0) scale(1);
+  }
+  
+  /* Continuous Animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulseSlow 3s ease-in-out infinite;
+  }
+  
+  .animate-breathe {
+    animation: breathe 8s ease-in-out infinite;
+  }
+  
+  /* Animation Delays */
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+  
+  .delay-700 {
+    animation-delay: 700ms;
+  }
+  
+  .delay-1000 {
+    animation-delay: 1000ms;
+  }
+  
+  /* Keyframes */
   @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -76,11 +163,6 @@
     }
   }
   
-  /* Back to top button animation */
-  .animate-fadeInUp {
-    animation: fadeInUp 0.5s ease-out forwards;
-  }
-  
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -90,6 +172,110 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+  
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  @keyframes pulseSlow {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes breathe {
+    0% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(1.03);
+    }
+    50% {
+      transform: scale(1);
+    }
+    75% {
+      transform: scale(1.03);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  /* Extra Utilities */
+  .parallax-slow {
+    transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  
+  .parallax-medium {
+    transition: transform 0.5s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  
+  .parallax-fast {
+    transition: transform 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
+  }
+  
+  /* Mouse-follow cursor effect */
+  .cursor-glow {
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(9, 38, 30, 0.12), transparent 45%);
   }
 }
 

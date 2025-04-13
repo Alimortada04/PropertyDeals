@@ -1,0 +1,127 @@
+🧠 Purpose & Strategy
+The homepage should:
+
+Visually wow the user — but never overwhelm.
+
+Guide them intuitively to find deals, meet REPs, or join discussions.
+
+Convey the power of the PropertyDeals platform through storytelling, immersive scroll behavior, and clean, modern UI.
+
+Think bold storytelling meets minimalist UX — inspired by Jeton, Slite, Superlist, Moon Project, and Adobe’s best design examples.
+
+🧱 Tech Stack
+Next.js 14
+
+App Router
+
+TailwindCSS
+
+TypeScript
+
+Framer Motion (or other animation frameworks)
+
+Parallax and Scroll-Triggered Effects
+
+🧭 Homepage Structure & Vision
+1. Hero Section
+Full screen impact.
+
+Use subtle animation or video (optional parallax).
+
+Big, bold value statement:
+
+“Deals. Connections. A Real Estate Revolution.”
+Subtext:
+“Discover off-market properties. Meet verified REPs. Close faster.”
+
+Primary CTA: “Start Exploring”
+
+Secondary CTA: “See How It Works”
+
+2. Live Deal Teasers
+Horizontal scroll or carousel of 3 property cards (auto-rotate on desktop, swipeable on mobile).
+
+Each card animates in, subtly.
+
+Hover: switch images or show contact avatars (like Redfin).
+
+3. REP Room Showcase
+Horizontal scroll of REP avatars (tagged Agent, Contractor, etc.)
+
+Caption: “Over 1,200 Real Estate Professionals ready to help.”
+
+CTA: “Browse The REP Room”
+
+4. Platform Benefits (3 Columns w/ Animation)
+“Verified Professionals Only”
+
+“Real-Time Deal Matching”
+
+“Built-In Tools for Sellers, Investors & REPs”
+
+Use icons or custom illustrations — animate them into view with scroll.
+
+5. Immersive Scroll Block
+Full-width background sections.
+
+Each scroll step tells a short story:
+
+“Need a deal? We got you.”
+
+“Need a contractor? You’re covered.”
+
+“Want to network? Join the conversation.”
+
+Subtle scroll transitions, layered elements, and movement.
+
+6. Community Highlight Feed (Optional)
+Pull in 2–3 top posts from /discussions
+
+Create a “Join the Conversation” CTA
+
+7. CTA Footer Section
+Emotionally-driven final CTA:
+
+“PropertyDeals isn’t a platform. It’s your competitive edge.”
+
+Primary Button: “Sign Up Free”
+
+✨ Design Inspiration to Reference
+Take specific visual and UX inspiration from:
+
+https://www.jeton.com/ → typography & hierarchy
+
+https://slite.com/ → scroll storytelling
+
+https://moon-project.webflow.io/ → hero animations + parallax
+
+https://ready.so/ → modern section transitions
+
+https://plunderandpoach.webflow.io/ → playful yet clean visuals
+
+https://www.alisaeeed.com/ → motion, polish, simplicity
+
+🧠 Styling Guidelines
+Fonts: Lato (body), League Spartan (headers)
+
+Color Palette:
+
+Primary Green: #09261E
+
+Light Green: #135341
+
+Wine: #803344
+
+Salmon: #E59F9F
+
+Silver: #D8D8D8
+
+White: #F5F5F5
+
+Black: #1C1C1C
+
+Use modern whitespace and padding (not boxed).
+
+Rounded corners, floating cards, and layered depth.
+
+Use motion, not clutter to impress.
