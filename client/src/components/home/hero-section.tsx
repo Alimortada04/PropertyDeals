@@ -18,6 +18,40 @@ import PropertyCarousel from "./property-carousel";
 import BackgroundElements from "./background-elements";
 import PropertyCalculator from "./property-calculator";
 
+// LiveCounterDisplay component to show animated counter
+function LiveCounterDisplay({ baseNumber }: { baseNumber: number }) {
+  const [count, setCount] = useState(baseNumber);
+  
+  useEffect(() => {
+    // Randomly add users on an interval
+    const interval = setInterval(() => {
+      // 70% chance to add a user every 5 seconds
+      if (Math.random() < 0.7) {
+        setCount(prev => prev + 1);
+      }
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  // When a user is added, animate the digit
+  useEffect(() => {
+    const elem = document.getElementById('user-counter');
+    if (elem) {
+      elem.classList.add('animate-pulse', 'text-[#135341]');
+      setTimeout(() => {
+        elem.classList.remove('animate-pulse', 'text-[#135341]');
+      }, 700);
+    }
+  }, [count]);
+  
+  return (
+    <span id="user-counter" className="text-xs font-bold transition-colors duration-700">
+      {count}+
+    </span>
+  );
+}
+
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -361,11 +395,11 @@ export default function HeroSection() {
                 </div>
               </Link>
               
-              {/* REP card - moved down */}
+              {/* REP card - moved above property and calculator */}
               <div 
-                className="absolute bottom-[2%] right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
+                className="absolute top-[-10%] right-[15%] w-[50%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
                 style={{
-                  transform: `translate3d(0, ${scrollY * 0.03}px, 0) rotate(3deg)`,
+                  transform: `translate3d(0, ${scrollY * 0.03}px, 0) rotate(2deg)`,
                   transition: 'transform 0.1s ease-out'
                 }}
               >
@@ -375,7 +409,10 @@ export default function HeroSection() {
                   </div>
                   <div>
                     <h4 className="font-medium text-[#09261E]">REP Network</h4>
-                    <p className="text-xs text-gray-500">900+ Verified Professionals</p>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <LiveCounterDisplay baseNumber={900} />
+                      <span className="text-xs text-gray-500">Verified Professionals</span>
+                    </div>
                   </div>
                 </div>
               </div>
