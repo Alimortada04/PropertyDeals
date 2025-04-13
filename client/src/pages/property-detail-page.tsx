@@ -1,733 +1,681 @@
+import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Link } from "wouter";
-import { Property, InsertPropertyInquiry } from "@shared/schema";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useParams } from "wouter";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Share2, Heart, MapPin, Home, ChevronRight, X, ChevronsRight } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { useAuth } from "@/hooks/use-auth";
-import PropertyGrid from "@/components/properties/property-grid";
-import PropertyCard from "@/components/properties/property-card";
-import PropertyRecommendations from "@/components/properties/property-recommendations";
-import { similarProperties } from "@/lib/data";
-import { useState, useEffect } from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { MapPin, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { insertPropertyInquirySchema, InsertPropertyInquiry } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
+import PropertyRecommendations from "@/components/property-recommendations";
+import { allProperties, similarProperties } from "@/lib/data";
 
 interface PropertyDetailPageProps {
   id: string;
 }
 
 export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
+  const propertyId = parseInt(id);
   const { toast } = useToast();
-  const { user } = useAuth();
   const [viewingAllPhotos, setViewingAllPhotos] = useState(false);
   const [viewingMap, setViewingMap] = useState(false);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
   
-  const { data: property, isLoading, error } = useQuery<Property>({
-    queryKey: [`/api/properties/${id}`],
-  });
-  
-  // Set document title when property data is available
-  useEffect(() => {
-    if (property) {
-      document.title = `${property.address} | PropertyDeals`;
+  // Get property data
+  const { data: property, isLoading, error } = useQuery({
+    queryKey: [`/api/properties/${propertyId}`],
+    queryFn: async () => {
+      const response = await fetch(`/api/properties/${propertyId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch property');
+      }
+      return response.json();
     }
-  }, [property]);
-
-  // Form schema for property inquiry
-  const inquirySchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Please enter a valid email"),
-    phone: z.string().optional(),
-    message: z.string().min(10, "Message should be at least 10 characters"),
   });
-
-  type InquiryFormValues = z.infer<typeof inquirySchema>;
-
-  const form = useForm<InquiryFormValues>({
+  
+  // Create form schema with validation
+  const inquirySchema = z.object({
+    name: z.string().min(2, {
+      message: "Name must be at least 2 characters.",
+    }),
+    email: z.string().email({
+      message: "Please enter a valid email address.",
+    }),
+    phone: z.string().min(10, {
+      message: "Please enter a valid phone number.",
+    }),
+    message: z.string().min(10, {
+      message: "Message must be at least 10 characters.",
+    })
+  });
+  
+  // Create form
+  const form = useForm<z.infer<typeof inquirySchema>>({
     resolver: zodResolver(inquirySchema),
     defaultValues: {
-      name: user?.fullName || "",
-      email: user?.email || "",
+      name: "",
+      email: "",
       phone: "",
-      message: `I'm interested in this property...`,
+      message: `Hi, I'm interested in ${property?.address}. Please contact me for more information.`
     },
   });
-
+  
+  // Create inquiry mutation
   const inquiryMutation = useMutation({
-    mutationFn: async (data: InquiryFormValues) => {
-      const inquiryData: Partial<InsertPropertyInquiry> = {
+    mutationFn: async (data: z.infer<typeof inquirySchema>) => {
+      const inquiryData: InsertPropertyInquiry = {
         ...data,
-        propertyId: parseInt(id),
-        userId: user?.id,
+        propertyId,
+        sellerId: property?.sellerId || 1,
+        status: 'new',
+        createdAt: new Date().toISOString() 
       };
       
-      const res = await apiRequest(
-        "POST", 
-        `/api/properties/${id}/inquiries`, 
-        inquiryData
-      );
+      const res = await apiRequest("POST", "/api/inquiries", inquiryData);
       return await res.json();
-    },
-    onSuccess: () => {
-      toast({
-        title: "Inquiry Sent!",
-        description: "The seller will contact you soon.",
-      });
-      form.reset();
     },
     onError: (error: Error) => {
       toast({
-        title: "Failed to send inquiry",
-        description: error.message,
         variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to send inquiry",
       });
     },
+    onSuccess: () => {
+      toast({
+        title: "Inquiry Sent",
+        description: "Your inquiry has been sent to the property seller.",
+      });
+      setContactModalOpen(false);
+    }
   });
-
-  const onSubmit = (data: InquiryFormValues) => {
+  
+  const onSubmit = (data: z.infer<typeof inquirySchema>) => {
     inquiryMutation.mutate(data);
   };
-
+  
+  // Handle property not found or still loading
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-10">
-        <div className="mb-6">
-          <Skeleton className="h-6 w-40 mb-2" />
-        </div>
-        <div className="flex flex-col lg:flex-row justify-between items-start mb-6">
-          <div>
-            <Skeleton className="h-10 w-64 mb-2" />
-            <Skeleton className="h-6 w-48 mb-2" />
-            <Skeleton className="h-8 w-32" />
-          </div>
-          <Skeleton className="h-10 w-32 mt-4 lg:mt-0" />
-        </div>
-        <Skeleton className="w-full h-[500px] mb-8" />
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="w-full lg:w-2/3">
-            <Skeleton className="w-full h-[400px] mb-8" />
-            <Skeleton className="w-full h-[300px] mb-8" />
-            <Skeleton className="w-full h-[250px]" />
-          </div>
-          <Skeleton className="w-full lg:w-1/3 h-[600px]" />
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-16 h-16 border-4 border-[#09261E] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
-
+  
   if (error || !property) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center">
-          <h2 className="text-2xl font-heading text-[#09261E] mb-4">Property Not Found</h2>
-          <p className="text-gray-600 mb-8">We couldn't find the property you're looking for.</p>
-          <Link href="/properties">
-            <Button className="bg-[#09261E] hover:bg-[#135341] text-white">
-              Browse Properties
-            </Button>
-          </Link>
-        </div>
+      <div className="min-h-screen flex flex-col items-center justify-center text-center p-4">
+        <Home className="h-16 w-16 text-[#09261E] mb-4" />
+        <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">Property Not Found</h1>
+        <p className="text-gray-600 mb-6 max-w-lg">We couldn't find the property you're looking for. It may have been removed or the ID is incorrect.</p>
+        <Link to="/properties">
+          <Button>Browse Properties</Button>
+        </Link>
       </div>
     );
   }
-
-  // Format address
-  const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
-
-  // Sample property images - in a real app these would come from the API
+  
+  // Sample property photos for demo
   const propertyImages = [
-    property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
-    "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
   ];
   
-  // Navigate to previous image in the gallery
-  const prevImage = () => {
-    setCurrentPhotoIndex((prev) => 
-      prev === 0 ? propertyImages.length - 1 : prev - 1
-    );
-  };
+  const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
   
-  // Navigate to next image in the gallery
-  const nextImage = () => {
-    setCurrentPhotoIndex((prev) => 
-      prev === propertyImages.length - 1 ? 0 : prev + 1
-    );
+  // Calculate days since listed - in a real app this would come from the database
+  const daysOnMarket = 5;
+  
+  const handleWatchlistToggle = () => {
+    setIsInWatchlist(!isInWatchlist);
+    toast({
+      title: isInWatchlist ? "Removed from Watchlist" : "Added to Watchlist",
+      description: isInWatchlist 
+        ? "This property has been removed from your watchlist" 
+        : "This property has been added to your watchlist",
+    });
   };
   
   return (
     <>
-      {/* Property Hero Section */}
-      <section className="bg-white">
-        <div className="container mx-auto px-4 py-6">
-          {/* Breadcrumb */}
-          <div className="mb-6">
-            <nav className="flex text-gray-500 text-sm">
-              <Link href="/" className="hover:text-[#09261E]">Home</Link>
-              <span className="mx-2">/</span>
-              <Link href="/properties" className="hover:text-[#09261E]">Properties</Link>
-              <span className="mx-2">/</span>
-              <span className="text-[#135341]">{property.address}</span>
-            </nav>
-          </div>
-
-          {/* Property Title & Quick Info */}
-          <div className="flex flex-col lg:flex-row justify-between items-start mb-6">
+      {/* Property Hero Section with Photo Gallery */}
+      <section className="relative bg-white">
+        <div className="container mx-auto px-4 pt-6 pb-8">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex text-sm text-gray-500 mb-4 items-center">
+            <Link to="/" className="hover:text-[#09261E]">Home</Link>
+            <ChevronRight className="h-4 w-4 mx-1" />
+            <Link to="/properties" className="hover:text-[#09261E]">Properties</Link>
+            <ChevronRight className="h-4 w-4 mx-1" />
+            <span className="text-[#09261E] font-medium truncate">{property.address}</span>
+          </nav>
+        
+          {/* Property Title and Key Details */}
+          <div className="md:flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">{property.address}</h1>
-              <p className="text-gray-600 text-lg mb-2">{`${property.city}, ${property.state} ${property.zipCode}`}</p>
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="inline-block bg-[#09261E] text-white text-sm px-3 py-1 rounded-md">
-                  {property.propertyType || 'Single Family'}
-                </span>
-                <span className="inline-block bg-[#803344] text-white text-sm px-3 py-1 rounded-md">
-                  {property.condition || 'Light Rehab'}
-                </span>
+              <h1 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-2">{property.title}</h1>
+              <div className="flex items-center text-lg text-gray-700 mb-1">
+                <MapPin className="h-5 w-5 text-[#09261E] mr-1 flex-shrink-0" />
+                <span>{formattedAddress}</span>
+              </div>
+              
+              {/* Property Status Tags */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {property.propertyType && (
+                  <Badge variant="outline" className="bg-[#09261E]/10 text-[#09261E] border-0">
+                    {property.propertyType}
+                  </Badge>
+                )}
+                {daysOnMarket <= 7 && (
+                  <Badge variant="outline" className="bg-[#135341]/10 text-[#135341] border-0">
+                    New Listing
+                  </Badge>
+                )}
+                {property.offMarket && (
+                  <Badge variant="outline" className="bg-[#803344]/10 text-[#803344] border-0">
+                    Off Market
+                  </Badge>
+                )}
+                <Badge variant="outline" className="bg-gray-100 text-gray-700 border-0">
+                  {daysOnMarket} {daysOnMarket === 1 ? 'day' : 'days'} on PropertyDeals
+                </Badge>
               </div>
             </div>
-            <div className="text-right mt-4 lg:mt-0">
-              <h2 className="text-3xl font-heading font-bold text-[#135341]">${property.price?.toLocaleString()}</h2>
-              <p className="text-gray-600">${Math.round((property.price || 0) / (property.squareFeet || 1))} / sq ft</p>
+            
+            <div className="mt-4 md:mt-0 flex flex-col items-end">
+              <div className="text-3xl md:text-4xl font-bold text-[#09261E]">${property.price.toLocaleString()}</div>
+              <div className="text-gray-600">
+                ${property.squareFeet ? Math.round(property.price / property.squareFeet) : '0'}/sqft
+              </div>
             </div>
           </div>
 
-          {/* Property Gallery */}
-          <div className="mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[500px]">
-              {/* Main large image (2/3 width) */}
-              <div 
-                className="md:col-span-2 overflow-hidden rounded-lg relative group cursor-pointer"
+          {/* Photo Gallery Grid */}
+          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] md:h-[500px] mb-4">
+            {/* Main Large Photo */}
+            <div className="col-span-2 row-span-2 relative">
+              <img 
+                src={propertyImages[0]} 
+                alt={property.title} 
+                className="w-full h-full object-cover rounded-tl-lg rounded-bl-lg" 
+              />
+            </div>
+            
+            {/* Smaller Photos */}
+            <div className="col-span-2 row-span-1">
+              <img 
+                src={propertyImages[1]} 
+                alt={property.title} 
+                className="w-full h-full object-cover rounded-tr-lg" 
+              />
+            </div>
+            <div className="col-span-1 row-span-1">
+              <img 
+                src={propertyImages[2]} 
+                alt={property.title} 
+                className="w-full h-full object-cover" 
+              />
+            </div>
+            <div className="col-span-1 row-span-1 relative">
+              <img 
+                src={propertyImages[3]} 
+                alt={property.title} 
+                className="w-full h-full object-cover rounded-br-lg" 
+              />
+              <button 
                 onClick={() => setViewingAllPhotos(true)}
+                className="absolute inset-0 bg-black/50 text-white flex items-center justify-center rounded-br-lg hover:bg-black/60 transition-colors"
               >
-                <img 
-                  src={propertyImages[currentPhotoIndex]} 
-                  alt={`${property.address} - Photo ${currentPhotoIndex + 1}`}
-                  className="w-full h-full object-cover transition-transform duration-300"
-                />
-                {/* Navigation arrows */}
-                <button 
-                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent opening the gallery
-                    prevImage();
-                  }}
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button 
-                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent opening the gallery
-                    nextImage();
-                  }}
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-                {/* Overlay to view all photos */}
-                <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button 
-                    className="bg-white text-[#09261E] px-4 py-2 rounded-md font-medium"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Redundant but clearer
-                      setViewingAllPhotos(true);
-                    }}
-                  >
-                    View All Photos
-                  </button>
+                <span className="font-medium">View All Photos</span>
+              </button>
+            </div>
+          </div>
+          
+          {/* Property Key Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-[#09261E]/5 p-3 rounded-lg text-center">
+              <div className="text-gray-600 text-sm mb-1">Bedrooms</div>
+              <div className="font-bold text-xl text-[#09261E]">{property.bedrooms}</div>
+            </div>
+            <div className="bg-[#09261E]/5 p-3 rounded-lg text-center">
+              <div className="text-gray-600 text-sm mb-1">Bathrooms</div>
+              <div className="font-bold text-xl text-[#09261E]">{property.bathrooms}</div>
+            </div>
+            <div className="bg-[#09261E]/5 p-3 rounded-lg text-center">
+              <div className="text-gray-600 text-sm mb-1">Square Feet</div>
+              <div className="font-bold text-xl text-[#09261E]">{property.squareFeet?.toLocaleString() || 'N/A'}</div>
+            </div>
+            <div className="bg-[#09261E]/5 p-3 rounded-lg text-center">
+              <div className="text-gray-600 text-sm mb-1">Lot Size</div>
+              <div className="font-bold text-xl text-[#09261E]">{property.lotSize || 'N/A'}</div>
+            </div>
+          </div>
+          
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+              onClick={() => setContactModalOpen(true)}
+            >
+              Contact Seller
+            </Button>
+            <Button
+              variant="outline"
+              className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+              onClick={() => setOfferModalOpen(true)}
+            >
+              Make an Offer
+            </Button>
+            <Button
+              variant="outline"
+              className={isInWatchlist ? "border-[#803344] text-[#803344] hover:bg-[#803344] hover:text-white" : "border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"}
+              onClick={handleWatchlistToggle}
+            >
+              <Heart className={`h-4 w-4 mr-2 ${isInWatchlist ? 'fill-[#803344]' : ''}`} />
+              {isInWatchlist ? 'Saved' : 'Save'}
+            </Button>
+            <Button
+              variant="outline"
+              className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+              onClick={() => setViewingMap(true)}
+            >
+              <MapPin className="h-4 w-4 mr-2" />
+              View Map
+            </Button>
+            <Button
+              variant="outline"
+              className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+            >
+              <Share2 className="h-4 w-4 mr-2" />
+              Share
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Property Details Section */}
+      <section className="py-6 bg-white border-t border-gray-200">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row">
+            {/* Left Column with Main Sections */}
+            <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8 space-y-12">
+              
+              {/* The Numbers Section */}
+              <div>
+                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">The Numbers</h2>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="numbers" className="border-b border-gray-200">
+                    <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
+                      <div className="flex items-center">
+                        <span className="mr-3 text-lg">🧮</span>
+                        <span className="font-heading font-semibold text-[#09261E]">View Financial Details</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 pt-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-500">Estimated Rent</h4>
+                            <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.008).toFixed(0)}/month</p>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-500">Estimated Expenses</h4>
+                            <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.003).toFixed(0)}/month</p>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-500">Property Tax</h4>
+                            <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.018).toFixed(0)}/year</p>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-500">Estimated Repair Costs</h4>
+                            <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.05).toFixed(0)}</p>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-500">After Repair Value (ARV)</h4>
+                            <p className="text-lg font-semibold text-[#09261E]">${(property.price * 1.2).toFixed(0)}</p>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-500">Price per Sqft</h4>
+                            <p className="text-lg font-semibold text-[#09261E]">${property.squareFeet ? (property.price / property.squareFeet).toFixed(2) : "N/A"}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="border-t border-gray-200 pt-4 pb-2">
+                        <Button variant="outline" className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white">
+                          <i className="fas fa-tools mr-2"></i> I'm a contractor — Submit a Quote
+                        </Button>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+              
+              {/* Relevant Calculators Section */}
+              <div>
+                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Relevant Calculators</h2>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="calculators" className="border-b border-gray-200">
+                    <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
+                      <div className="flex items-center">
+                        <span className="mr-3 text-lg">📈</span>
+                        <span className="font-heading font-semibold text-[#09261E]">View Property Calculators</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 pt-4">
+                      <div className="space-y-4">
+                        <div className="bg-[#09261E]/5 p-4 rounded-lg">
+                          <h4 className="font-medium text-lg text-[#09261E] mb-2">Flip Calculator</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
+                              <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs</label>
+                              <Input type="text" defaultValue={`$${(property.price * 0.05).toFixed(0)}`} className="bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">ARV</label>
+                              <Input type="text" defaultValue={`$${(property.price * 1.2).toFixed(0)}`} className="bg-white" />
+                            </div>
+                          </div>
+                          <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Potential Profit</Button>
+                        </div>
+                        
+                        <div className="bg-[#09261E]/5 p-4 rounded-lg">
+                          <h4 className="font-medium text-lg text-[#09261E] mb-2">Rental Calculator</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
+                              <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Rent</label>
+                              <Input type="text" defaultValue={`$${(property.price * 0.008).toFixed(0)}`} className="bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Expenses</label>
+                              <Input type="text" defaultValue={`$${(property.price * 0.003).toFixed(0)}`} className="bg-white" />
+                            </div>
+                          </div>
+                          <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Cash Flow & ROI</Button>
+                        </div>
+                      </div>
+                      <div className="text-center py-4">
+                        <Link to="/tools" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                          View All Property Calculators <i className="fas fa-arrow-right ml-2"></i>
+                        </Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+              
+              {/* Find a REP Section */}
+              <div>
+                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Find a REP</h2>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="reps" className="border-b border-gray-200">
+                    <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
+                      <div className="flex items-center">
+                        <span className="mr-3 text-lg">🧑‍🔧</span>
+                        <span className="font-heading font-semibold text-[#09261E]">View Local Professionals</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 pt-4">
+                      <p className="text-gray-600 mb-4">Connect with local professionals who can help with this property:</p>
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                        <Link to="/reps?type=agent&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
+                          <div className="text-center">
+                            <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                              <i className="fas fa-user-tie text-[#09261E]"></i>
+                            </div>
+                            <h3 className="font-medium text-[#09261E]">Agent</h3>
+                          </div>
+                        </Link>
+                        <Link to="/reps?type=contractor&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
+                          <div className="text-center">
+                            <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                              <i className="fas fa-hammer text-[#09261E]"></i>
+                            </div>
+                            <h3 className="font-medium text-[#09261E]">Contractor</h3>
+                          </div>
+                        </Link>
+                        <Link to="/reps?type=lender&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
+                          <div className="text-center">
+                            <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                              <i className="fas fa-hand-holding-usd text-[#09261E]"></i>
+                            </div>
+                            <h3 className="font-medium text-[#09261E]">Lender</h3>
+                          </div>
+                        </Link>
+                      </div>
+                      
+                      <div className="text-center pb-2">
+                        <Link to="/reps" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                          View All REPs <i className="fas fa-arrow-right ml-2"></i>
+                        </Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+              
+              {/* Property History Section */}
+              <div>
+                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property History</h2>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="history" className="border-b border-gray-200">
+                    <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
+                      <div className="flex items-center">
+                        <span className="mr-3 text-lg">🏛</span>
+                        <span className="font-heading font-semibold text-[#09261E]">View Transaction History</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 pt-4">
+                      <div className="overflow-x-auto">
+                        <table className="w-full min-w-full divide-y divide-gray-200">
+                          <thead className="bg-gray-50">
+                            <tr>
+                              <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                              <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                              <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                              <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
+                            </tr>
+                          </thead>
+                          <tbody className="bg-white divide-y divide-gray-200">
+                            <tr>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">12/15/2024</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Listed</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${property.price.toLocaleString()}</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">PropertyDeals</td>
+                            </tr>
+                            <tr>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">06/30/2024</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Assessed</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${(property.price * 0.85).toLocaleString()}</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">County Records</td>
+                            </tr>
+                            <tr>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">01/22/2019</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Sold</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${(property.price * 0.8).toLocaleString()}</td>
+                              <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">MLS</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div className="text-xs text-gray-500 pt-4 pb-2 italic">
+                        Property history data is for demonstration purposes. In a production app, this would be pulled from public records.
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+              
+              {/* Comparable Properties Section */}
+              <div>
+                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Comparable Properties</h2>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="comps" className="border-b border-gray-200">
+                    <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
+                      <div className="flex items-center">
+                        <span className="mr-3 text-lg">🏘️</span>
+                        <span className="font-heading font-semibold text-[#09261E]">View Similar Properties</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 pt-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        {similarProperties.slice(0, 4).map((comp, index) => (
+                          <div key={index} className="flex bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                            <div className="w-1/3">
+                              <img src={comp.imageUrl || 'https://source.unsplash.com/random/300x200/?house'} 
+                                  alt={comp.title} className="h-full w-full object-cover" />
+                            </div>
+                            <div className="w-2/3 p-3">
+                              <h3 className="font-medium text-[#09261E] text-sm line-clamp-1">{comp.address}</h3>
+                              <p className="font-bold text-[#09261E]">${comp.price?.toLocaleString()}</p>
+                              <div className="text-xs text-gray-600 mt-1">
+                                <span>{comp.bedrooms} beds</span> • <span>{comp.bathrooms} baths</span> • <span>{comp.squareFeet?.toLocaleString()} sqft</span>
+                              </div>
+                              <div className="mt-2 text-xs">
+                                <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 rounded-full">0.8 miles</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="text-center pb-2">
+                        <Link to="/properties?location=Milwaukee" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                          View All Comparable Properties <i className="fas fa-arrow-right ml-2"></i>
+                        </Link>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            </div>
+            
+            {/* Right Sidebar - Contact Interested Card */}
+            <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
+              {/* Contact Card - Desktop Version */}
+              <div className="hidden lg:block sticky top-24">
+                <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm bg-white max-w-[380px]">
+                  <div className="p-4 border-b border-gray-200 bg-[#09261E]/5">
+                    <h3 className="font-bold text-xl text-[#09261E]">Interested in this property?</h3>
+                    <p className="text-gray-600 text-sm">Contact the seller or schedule a viewing</p>
+                  </div>
+                  
+                  <div className="p-4">
+                    <div className="flex items-center mb-4 pb-4 border-b border-gray-100">
+                      <img 
+                        src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
+                        alt="Property Seller" 
+                        className="w-12 h-12 rounded-full object-cover mr-3 border-2 border-[#09261E]" 
+                      />
+                      <div>
+                        <h4 className="font-heading font-bold text-[#09261E]">Michael Johnson</h4>
+                        <p className="text-gray-600 text-sm">Seller • Responds in 24hrs</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <Button className="w-full bg-[#09261E] hover:bg-[#135341]" onClick={() => setContactModalOpen(true)}>
+                        Contact Seller
+                      </Button>
+                      <Button variant="outline" className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white" onClick={() => setOfferModalOpen(true)}>
+                        Make an Offer
+                      </Button>
+                      <Button variant="outline" className="w-full" onClick={() => setViewingMap(true)}>
+                        <MapPin className="h-4 w-4 mr-2" />
+                        View Map
+                      </Button>
+                      <div className="text-xs text-center text-gray-500 mt-2">
+                        <span className="inline-flex items-center">
+                          <i className="fas fa-eye mr-1"></i> 142 people viewed this property
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-[#09261E]/5 border-t border-gray-200">
+                    <div className="text-sm text-gray-600">
+                      <p className="mb-2">
+                        <span className="font-medium">Property ID:</span> {propertyId}
+                      </p>
+                      <p>
+                        <span className="font-medium">Listed:</span> {new Date().toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
               
-              {/* Right column images (1/3 width) */}
-              <div className="md:col-span-1 grid grid-rows-2 gap-4 h-full">
-                {/* Top image */}
-                <div className="overflow-hidden rounded-lg cursor-pointer">
-                  <img 
-                    src={propertyImages.length > 1 ? propertyImages[1] : propertyImages[0]} 
-                    alt={`${property.address} - Interior`}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" 
-                    onClick={() => {
-                      if (propertyImages.length > 1) setCurrentPhotoIndex(1);
-                      setViewingAllPhotos(true);
-                    }}
-                  />
-                </div>
-                
-                {/* Bottom map */}
-                <div className="overflow-hidden rounded-lg relative">
-                  {/* Map placeholder - in a real app, this would be a Google Map */}
-                  <div className="w-full h-full bg-[#09261E]/10 flex items-center justify-center cursor-pointer"
-                       onClick={() => setViewingMap(true)}>
-                    <div className="text-center">
-                      <MapPin className="h-8 w-8 text-[#09261E] mx-auto mb-2" />
-                      <p className="text-gray-600 text-sm">Map View</p>
-                      <p className="text-xs text-gray-500">{formattedAddress}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Property Details Section - Completely restructured for proper sticky behavior */}
-      <section className="py-10 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row">
-            {/* Main Content Column - 2/3 of the width */}
-            <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8">
-              {/* Key Features */}
-              <div className="bg-white mb-8">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property Details</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <i className="fas fa-bed text-[#09261E]"></i>
-                    </div>
-                    <h3 className="font-heading font-bold text-[#135341]">{property.bedrooms} Beds</h3>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <i className="fas fa-bath text-[#09261E]"></i>
-                    </div>
-                    <h3 className="font-heading font-bold text-[#135341]">{property.bathrooms} Baths</h3>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <i className="fas fa-ruler-combined text-[#09261E]"></i>
-                    </div>
-                    <h3 className="font-heading font-bold text-[#135341]">{property.squareFeet?.toLocaleString()} sqft</h3>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <i className="fas fa-calendar-alt text-[#09261E]"></i>
-                    </div>
-                    <h3 className="font-heading font-bold text-[#135341]">Built {property.yearBuilt}</h3>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-2 text-gray-700 mb-6">
-                  <div className="flex justify-between border-b border-[#D8D8D8] py-2">
-                    <span>Property Type</span>
-                    <span className="font-medium">{property.propertyType}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#D8D8D8] py-2">
-                    <span>Year Built</span>
-                    <span className="font-medium">{property.yearBuilt}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#D8D8D8] py-2">
-                    <span>Lot Size</span>
-                    <span className="font-medium">{property.lotSize}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#D8D8D8] py-2">
-                    <span>Heating</span>
-                    <span className="font-medium">Forced Air, Gas</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#D8D8D8] py-2">
-                    <span>Cooling</span>
-                    <span className="font-medium">Central Air</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#D8D8D8] py-2">
-                    <span>Parking</span>
-                    <span className="font-medium">2 Car Garage</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#D8D8D8] py-2">
-                    <span>Basement</span>
-                    <span className="font-medium">Finished</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#D8D8D8] py-2">
-                    <span>School District</span>
-                    <span className="font-medium">Milwaukee Public</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Direct implementation of the interested card */}
-            <div className="hidden lg:block lg:w-1/3 xl:w-1/4 lg:mt-0">
-              <div className="sticky top-20 bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg w-[320px]">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
-                <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
-                  <img 
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
-                    alt="Property Seller" 
-                    className="w-20 h-20 rounded-full object-cover mr-4 border-2 border-[#09261E]" 
-                  />
+              {/* Contact Card - Mobile Version */}
+              <div className="lg:hidden sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-10">
+                <div className="flex items-center justify-between mb-2">
                   <div>
-                    <h3 className="font-heading font-bold text-[#135341] text-xl">Michael Johnson</h3>
-                    <p className="text-gray-600 font-medium mb-1 flex items-center">
-                      <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md mr-2">
-                        Seller
-                      </span>
-                      <span className="inline-flex items-center text-sm mr-3">
-                        <span className="mr-1">👀</span> 142
-                      </span>
-                      <span className="inline-flex items-center text-sm">
-                        <span className="mr-1">❤️</span> 23
-                      </span>
-                    </p>
+                    <h3 className="font-bold text-[#09261E]">${property.price.toLocaleString()}</h3>
+                    <p className="text-gray-600 text-xs">Interested in this property?</p>
                   </div>
-                </Link>
-                
-                {/* Action Buttons */}
-                <div className="space-y-3 mb-6">
                   <Button 
-                    className="w-full bg-[#09261E] hover:bg-[#135341] text-white py-6 font-medium text-lg"
+                    className="bg-[#09261E] hover:bg-[#135341]"
+                    size="sm"
                     onClick={() => setContactModalOpen(true)}
                   >
-                    <i className="fas fa-user-plus mr-2"></i> Contact REP
+                    Contact Seller
                   </Button>
-                  <Button 
-                    className="w-full border-2 border-[#803344] text-[#803344] hover:bg-[#803344] hover:text-white py-6 font-medium text-lg bg-white"
-                    onClick={() => setOfferModalOpen(true)}
-                  >
-                    <i className="fas fa-file-invoice-dollar mr-2"></i> Make an Offer
-                  </Button>
-                </div>
-                
-                {/* Contact Preferences */}
-                <div className="flex justify-between items-center">
-                  <div className="grid grid-cols-5 w-full gap-2">
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Share">
-                      <i className="fas fa-share-alt"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Like">
-                      <i className="fas fa-heart"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Email">
-                      <i className="fas fa-envelope"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Message">
-                      <i className="fas fa-comment"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Call">
-                      <i className="fas fa-phone-alt"></i>
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Mobile Contact Card */}
-      <section className="py-6 bg-white block lg:hidden border-t border-gray-200">
-        <div className="container mx-auto px-4">
-          <div className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg">
-            <h2 className="text-xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
-            <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
-              <img 
-                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
-                alt="Property Seller" 
-                className="w-16 h-16 rounded-full object-cover mr-4 border-2 border-[#09261E]" 
-              />
-              <div>
-                <h3 className="font-heading font-bold text-[#135341] text-lg">Michael Johnson</h3>
-                <p className="text-gray-600 font-medium mb-1 flex items-center flex-wrap">
-                  <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md mr-2 mb-1">
-                    Seller
-                  </span>
-                  <span className="inline-flex items-center text-sm mr-3">
-                    <span className="mr-1">👀</span> 142
-                  </span>
-                  <span className="inline-flex items-center text-sm">
-                    <span className="mr-1">❤️</span> 23
-                  </span>
-                </p>
-              </div>
-            </Link>
-            
-            <div className="space-y-3 mb-5">
-              <Button 
-                className="w-full bg-[#09261E] hover:bg-[#135341] text-white py-4 font-medium text-base"
-                onClick={() => setContactModalOpen(true)}
-              >
-                <i className="fas fa-user-plus mr-2"></i> Contact REP
-              </Button>
-              <Button 
-                className="w-full border-2 border-[#803344] text-[#803344] hover:bg-[#803344] hover:text-white py-4 font-medium text-base bg-white"
-                onClick={() => setOfferModalOpen(true)}
-              >
-                <i className="fas fa-file-invoice-dollar mr-2"></i> Make an Offer
-              </Button>
-            </div>
-            
-            <div className="flex justify-between items-center">
-              <div className="grid grid-cols-5 w-full gap-2">
-                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Share">
-                  <i className="fas fa-share-alt"></i>
-                </button>
-                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Like">
-                  <i className="fas fa-heart"></i>
-                </button>
-                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Email">
-                  <i className="fas fa-envelope"></i>
-                </button>
-                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Message">
-                  <i className="fas fa-comment"></i>
-                </button>
-                <button className="flex items-center justify-center w-10 h-10 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Call">
-                  <i className="fas fa-phone-alt"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Property Detail Accordions - Redesigned with clean horizontal dividers */}
-      <section className="py-6 bg-white border-t border-gray-200">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Property Insights</h2>
-          
-          <Accordion type="multiple" className="bg-white">
-            {/* The Numbers Accordion */}
-            <AccordionItem value="numbers" className="border-b border-gray-200">
-              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
-                <div className="flex items-center">
-                  <span className="mr-3 text-lg">🧮</span>
-                  <span className="font-heading font-semibold text-[#09261E]">The Numbers</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pt-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500">Estimated Rent</h4>
-                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.008).toFixed(0)}/month</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500">Estimated Expenses</h4>
-                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.003).toFixed(0)}/month</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500">Property Tax</h4>
-                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.018).toFixed(0)}/year</p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500">Estimated Repair Costs</h4>
-                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.05).toFixed(0)}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500">After Repair Value (ARV)</h4>
-                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 1.2).toFixed(0)}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-medium text-gray-500">Price per Sqft</h4>
-                      <p className="text-lg font-semibold text-[#09261E]">${property.squareFeet ? (property.price / property.squareFeet).toFixed(2) : "N/A"}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="border-t border-gray-200 pt-4 pb-2">
-                  <Button variant="outline" className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white">
-                    <i className="fas fa-tools mr-2"></i> I'm a contractor — Submit a Quote
-                  </Button>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            
-            {/* Relevant Calculators */}
-            <AccordionItem value="calculators" className="border-b border-gray-200">
-              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
-                <div className="flex items-center">
-                  <span className="mr-3 text-lg">📈</span>
-                  <span className="font-heading font-semibold text-[#09261E]">Relevant Calculators</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pt-4">
-                <div className="space-y-4">
-                  <div className="bg-[#09261E]/5 p-4 rounded-lg">
-                    <h4 className="font-medium text-lg text-[#09261E] mb-2">Flip Calculator</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                      <div>
-                        <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
-                        <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs</label>
-                        <Input type="text" defaultValue={`$${(property.price * 0.05).toFixed(0)}`} className="bg-white" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-500 block mb-1">ARV</label>
-                        <Input type="text" defaultValue={`$${(property.price * 1.2).toFixed(0)}`} className="bg-white" />
-                      </div>
-                    </div>
-                    <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Potential Profit</Button>
-                  </div>
-                  
-                  <div className="bg-[#09261E]/5 p-4 rounded-lg">
-                    <h4 className="font-medium text-lg text-[#09261E] mb-2">Rental Calculator</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                      <div>
-                        <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
-                        <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Rent</label>
-                        <Input type="text" defaultValue={`$${(property.price * 0.008).toFixed(0)}`} className="bg-white" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Expenses</label>
-                        <Input type="text" defaultValue={`$${(property.price * 0.003).toFixed(0)}`} className="bg-white" />
-                      </div>
-                    </div>
-                    <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Cash Flow & ROI</Button>
-                  </div>
-                </div>
-                <div className="text-center py-4">
-                  <Link to="/tools" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
-                    View All Property Calculators <i className="fas fa-arrow-right ml-2"></i>
-                  </Link>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            
-            {/* Find a REP */}
-            <AccordionItem value="reps" className="border-b border-gray-200">
-              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
-                <div className="flex items-center">
-                  <span className="mr-3 text-lg">🧑‍🔧</span>
-                  <span className="font-heading font-semibold text-[#09261E]">Find a REP</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pt-4">
-                <p className="text-gray-600 mb-4">Connect with local professionals who can help with this property:</p>
-                
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-                  <Link to="/reps?type=agent&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <i className="fas fa-user-tie text-[#09261E]"></i>
-                      </div>
-                      <h3 className="font-medium text-[#09261E]">Agent</h3>
-                    </div>
-                  </Link>
-                  <Link to="/reps?type=contractor&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <i className="fas fa-hammer text-[#09261E]"></i>
-                      </div>
-                      <h3 className="font-medium text-[#09261E]">Contractor</h3>
-                    </div>
-                  </Link>
-                  <Link to="/reps?type=lender&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
-                    <div className="text-center">
-                      <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <i className="fas fa-hand-holding-usd text-[#09261E]"></i>
-                      </div>
-                      <h3 className="font-medium text-[#09261E]">Lender</h3>
-                    </div>
-                  </Link>
-                </div>
-                
-                <div className="text-center pb-2">
-                  <Link to="/reps" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
-                    View All REPs <i className="fas fa-arrow-right ml-2"></i>
-                  </Link>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            
-            {/* Property History */}
-            <AccordionItem value="history" className="border-b border-gray-200">
-              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
-                <div className="flex items-center">
-                  <span className="mr-3 text-lg">🏛</span>
-                  <span className="font-heading font-semibold text-[#09261E]">Property History</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pt-4">
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                        <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
-                        <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      <tr>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">12/15/2024</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Listed</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${property.price.toLocaleString()}</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">PropertyDeals</td>
-                      </tr>
-                      <tr>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">06/30/2024</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Assessed</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${(property.price * 0.85).toLocaleString()}</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">County Records</td>
-                      </tr>
-                      <tr>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">01/22/2019</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Sold</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${(property.price * 0.8).toLocaleString()}</td>
-                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">MLS</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div className="text-xs text-gray-500 pt-4 pb-2 italic">
-                  Property history data is for demonstration purposes. In a production app, this would be pulled from public records.
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            
-            {/* Comparable Properties */}
-            <AccordionItem value="comps" className="border-b border-gray-200">
-              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
-                <div className="flex items-center">
-                  <span className="mr-3 text-lg">🏘️</span>
-                  <span className="font-heading font-semibold text-[#09261E]">Comparable Properties</span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pt-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  {similarProperties.slice(0, 4).map((comp, index) => (
-                    <div key={index} className="flex bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                      <div className="w-1/3">
-                        <img src={comp.imageUrl || 'https://source.unsplash.com/random/300x200/?house'} 
-                             alt={comp.title} className="h-full w-full object-cover" />
-                      </div>
-                      <div className="w-2/3 p-3">
-                        <h3 className="font-medium text-[#09261E] text-sm line-clamp-1">{comp.address}</h3>
-                        <p className="font-bold text-[#09261E]">${comp.price?.toLocaleString()}</p>
-                        <div className="text-xs text-gray-600 mt-1">
-                          <span>{comp.bedrooms} beds</span> • <span>{comp.bathrooms} baths</span> • <span>{comp.squareFeet?.toLocaleString()} sqft</span>
-                        </div>
-                        <div className="mt-2 text-xs">
-                          <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 rounded-full">0.8 miles</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="text-center pb-2">
-                  <Link to="/properties?location=Milwaukee" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
-                    View All Comparable Properties <i className="fas fa-arrow-right ml-2"></i>
-                  </Link>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
         </div>
       </section>
       
@@ -1040,47 +988,33 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <div className="bg-[#803344]/10 border border-[#803344]/20 rounded-md p-4 mb-4">
                   <h4 className="font-heading text-[#803344] font-bold mb-2">Sign up or login required</h4>
                   <p className="text-gray-700 text-sm mb-3">
-                    To make an offer on this property, you'll need to create an account or login to your existing account.
+                    To make an offer on this property, you need to create an account or login.
                   </p>
-                  
-                  <div className="flex space-x-3">
-                    <Button 
-                      className="bg-[#803344] hover:bg-[#803344]/80 text-white"
-                      onClick={() => {
-                        setOfferModalOpen(false);
-                        // In a real app, redirect to register page or open register modal
-                      }}
-                    >
-                      Register
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      className="border-[#803344] text-[#803344] hover:bg-[#803344]/10"
-                      onClick={() => {
-                        setOfferModalOpen(false);
-                        // In a real app, redirect to login page or open login modal
-                      }}
-                    >
-                      Login
-                    </Button>
+                  <div className="flex gap-3">
+                    <Link to="/auth" className="w-full">
+                      <Button variant="default" className="w-full bg-[#09261E] hover:bg-[#135341]">Login / Sign up</Button>
+                    </Link>
                   </div>
                 </div>
-
-                <div className="bg-gray-100 p-4 rounded-md">
-                  <h4 className="font-medium text-gray-700 mb-3">Offer Steps:</h4>
-                  <ol className="list-decimal list-inside text-sm text-gray-600 space-y-2">
-                    <li>Register or login to your account</li>
-                    <li>Verify your identity and contact information</li>
-                    <li>Submit your offer price and terms</li>
-                    <li>Upload proof of funds or pre-approval letter</li>
-                    <li>Receive confirmation from the seller</li>
-                  </ol>
+                
+                <div className="text-gray-600 text-sm">
+                  <p className="mb-2">Making an offer through PropertyDeals gives you:</p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>Faster response times from sellers</li>
+                    <li>Secure document handling and signatures</li>
+                    <li>Access to recommended inspectors and lenders</li>
+                    <li>Step-by-step guidance through the entire process</li>
+                  </ul>
                 </div>
               </div>
-
-              <div className="text-center text-sm text-gray-500">
-                <p>By making an offer, you agree to PropertyDeals' terms of service.</p>
-              </div>
+              
+              <Button 
+                onClick={() => setOfferModalOpen(false)}
+                className="w-full mt-4"
+                variant="outline"
+              >
+                Close
+              </Button>
             </div>
           </div>
         </div>
