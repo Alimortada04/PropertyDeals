@@ -224,10 +224,14 @@ export default function HeroSection() {
                     >
                       {/* Avatar stack positioned to the left of text, inside pill */}
                       <div className="flex -space-x-1 absolute left-2">
-                        {target.avatars.map((avatar, avatarIdx) => (
+                        {target.avatars.slice(0, 3).map((avatar, avatarIdx) => (
                           <div 
                             key={avatarIdx}
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white will-change-transform overflow-hidden"
+                            className={`
+                              w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white will-change-transform overflow-hidden
+                              ${avatarIdx === 2 ? 'hidden sm:flex' : ''} 
+                              ${avatarIdx === 1 ? 'hidden xs:flex' : ''}
+                            `}
                             style={{ 
                               zIndex: 30 + (3 - avatarIdx)
                             }}
@@ -281,7 +285,7 @@ export default function HeroSection() {
               
               <Link 
                 href={`/p/${featuredProperty.id}`}
-                className="absolute top-[5%] left-[5%] w-[65%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer transform-gpu"
+                className="absolute top-[15%] left-[5%] w-[65%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer transform-gpu"
                 style={{
                   transform: `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`,
                   transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-out, opacity 0.5s ease',

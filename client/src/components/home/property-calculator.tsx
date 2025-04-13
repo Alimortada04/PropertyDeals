@@ -41,7 +41,7 @@ export default function PropertyCalculator({ property, scrollY, isVisible }: Pro
   return (
     <div
       className={cn(
-        "absolute top-[10%] right-[-5%] w-[70%] bg-white/95 backdrop-blur-md rounded-xl shadow-xl p-5 overflow-hidden transform will-change-transform transition-all duration-500",
+        "absolute top-[20%] right-[-5%] w-[70%] bg-white/95 backdrop-blur-md rounded-xl shadow-xl p-5 overflow-hidden transform will-change-transform transition-all duration-500",
         {
           'opacity-0 translate-x-10': !isVisible || !isCalculatorVisible,
           'opacity-100 translate-x-0': isVisible && isCalculatorVisible,
