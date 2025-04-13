@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { ChevronRight, ChevronLeft } from "lucide-react";
@@ -16,6 +16,13 @@ interface PropertyRecommendationsProps {
   title?: string;
   showViewAll?: boolean;
   maxResults?: number;
+}
+
+// Extended property type to handle UI tags like "off market"
+interface ExtendedProperty extends Property {
+  offMarket?: boolean;
+  newListing?: boolean;
+  priceDrop?: boolean;
 }
 
 export default function PropertyRecommendations({
@@ -38,18 +45,34 @@ export default function PropertyRecommendations({
         if (!response.ok) {
           throw new Error('Failed to fetch recommended properties');
         }
-        return await response.json();
+        // Process API data to add UI properties
+        const properties = await response.json();
+        return properties.map((prop: Property) => {
+          const random = Math.random();
+          // Add UI properties
+          return {
+            ...prop,
+            offMarket: random > 0.7,
+            newListing: random < 0.3,
+            priceDrop: random > 0.4 && random < 0.5
+          } as ExtendedProperty;
+        });
       } catch (error) {
         console.error("Error fetching recommendations:", error);
         // Fallback to sample data if API fails
-        return allProperties.slice(0, 8);
+        return allProperties.slice(0, 8).map(prop => ({
+          ...prop,
+          offMarket: Math.random() > 0.7,
+          newListing: Math.random() < 0.3,
+          priceDrop: Math.random() > 0.4 && Math.random() < 0.5
+        }));
       }
     },
     enabled: !!location
   });
 
   // Filter recommendations by property type and price range
-  const filteredRecommendations = recommendations?.filter((property: Property) => {
+  const filteredRecommendations = recommendations?.filter((property: ExtendedProperty) => {
     let matches = true;
     
     if (propertyType && property.propertyType !== propertyType) {
@@ -121,7 +144,7 @@ export default function PropertyRecommendations({
       )}
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {displayedRecommendations.map((property: Property) => (
+        {displayedRecommendations.map((property: ExtendedProperty) => (
           <Link key={property.id} to={`/p/${property.id}`}>
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
               <div className="relative h-48">

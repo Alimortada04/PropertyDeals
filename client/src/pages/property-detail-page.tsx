@@ -4,7 +4,7 @@ import { useParams } from "wouter";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Share2, Heart, MapPin, Home, ChevronRight, X, ChevronsRight } from "lucide-react";
+import { Share2, Heart, MapPin, Home, ChevronRight, ChevronLeft, X, ChevronsRight } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -167,7 +167,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
   
   // Calculate days since listed - in a real app this would come from the database
-  const daysOnMarket = 5;
+  const daysOnMarket: number = 5;
   
   const handleWatchlistToggle = () => {
     setIsInWatchlist(!isInWatchlist);
@@ -196,10 +196,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           {/* Property Title and Key Details */}
           <div className="md:flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-2">{property.title}</h1>
+              <h1 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-2">{property.address}</h1>
               <div className="flex items-center text-lg text-gray-700 mb-1">
-                <MapPin className="h-5 w-5 text-[#09261E] mr-1 flex-shrink-0" />
-                <span>{formattedAddress}</span>
+                <span>{property.city}, {property.state} {property.zipCode}</span>
               </div>
               
               {/* Property Status Tags */}
@@ -209,16 +208,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     {property.propertyType}
                   </Badge>
                 )}
-                {daysOnMarket <= 7 && (
-                  <Badge variant="outline" className="bg-[#135341]/10 text-[#135341] border-0">
-                    New Listing
-                  </Badge>
-                )}
-                {property.offMarket && (
-                  <Badge variant="outline" className="bg-[#803344]/10 text-[#803344] border-0">
-                    Off Market
-                  </Badge>
-                )}
+                {/* Condition Badge - Would come from property data in real implementation */}
+                <Badge variant="outline" className="bg-[#135341]/10 text-[#135341] border-0">
+                  Light Rehab
+                </Badge>
                 <Badge variant="outline" className="bg-gray-100 text-gray-700 border-0">
                   {daysOnMarket} {daysOnMarket === 1 ? 'day' : 'days'} on PropertyDeals
                 </Badge>
@@ -234,43 +227,48 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           </div>
 
           {/* Photo Gallery Grid */}
-          <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] md:h-[500px] mb-4">
-            {/* Main Large Photo */}
-            <div className="col-span-2 row-span-2 relative">
+          <div className="grid grid-cols-3 grid-rows-2 gap-2 h-[400px] md:h-[500px] mb-4">
+            {/* Main Large Photo - 2/3 width and full height */}
+            <div className="col-span-2 row-span-2 relative group cursor-pointer" onClick={() => setViewingAllPhotos(true)}>
               <img 
                 src={propertyImages[0]} 
-                alt={property.title} 
-                className="w-full h-full object-cover rounded-tl-lg rounded-bl-lg" 
+                alt={property.address} 
+                className="w-full h-full object-cover rounded-l-lg" 
               />
+              {/* Photo Navigation Arrows */}
+              <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button className="bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors">
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button className="bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors">
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </div>
+              {/* View All Photos Text (appears on hover) */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="font-medium flex items-center justify-center">
+                  View All Photos <ChevronRight className="h-4 w-4 ml-1" />
+                </span>
+              </div>
             </div>
             
-            {/* Smaller Photos */}
-            <div className="col-span-2 row-span-1">
+            {/* Secondary Photo - Top Right */}
+            <div className="col-span-1 row-span-1 cursor-pointer" onClick={() => setViewingAllPhotos(true)}>
               <img 
                 src={propertyImages[1]} 
-                alt={property.title} 
+                alt={property.address} 
                 className="w-full h-full object-cover rounded-tr-lg" 
               />
             </div>
-            <div className="col-span-1 row-span-1">
-              <img 
-                src={propertyImages[2]} 
-                alt={property.title} 
-                className="w-full h-full object-cover" 
-              />
-            </div>
-            <div className="col-span-1 row-span-1 relative">
-              <img 
-                src={propertyImages[3]} 
-                alt={property.title} 
-                className="w-full h-full object-cover rounded-br-lg" 
-              />
-              <button 
-                onClick={() => setViewingAllPhotos(true)}
-                className="absolute inset-0 bg-black/50 text-white flex items-center justify-center rounded-br-lg hover:bg-black/60 transition-colors"
-              >
-                <span className="font-medium">View All Photos</span>
-              </button>
+            
+            {/* Map Preview - Bottom Right */}
+            <div className="col-span-1 row-span-1 relative cursor-pointer" onClick={() => setViewingMap(true)}>
+              <div className="bg-[#09261E]/10 w-full h-full rounded-br-lg flex items-center justify-center">
+                <MapPin className="h-10 w-10 text-[#09261E]" />
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="bg-black/50 text-white text-sm px-3 py-1 rounded-full">View Map</span>
+              </div>
             </div>
           </div>
           
