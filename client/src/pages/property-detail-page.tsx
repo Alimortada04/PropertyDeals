@@ -212,10 +212,16 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   className="w-full h-full object-cover transition-transform duration-300"
                 />
                 {/* Navigation arrows */}
-                <button className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10">
+                <button 
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10"
+                  onClick={prevImage}
+                >
                   <ChevronLeft className="h-6 w-6" />
                 </button>
-                <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10">
+                <button 
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-[#09261E] p-2 rounded-full z-10"
+                  onClick={nextImage}
+                >
                   <ChevronRight className="h-6 w-6" />
                 </button>
                 {/* Overlay to view all photos */}
@@ -404,7 +410,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     <div className="text-center">
                       <i className="fas fa-map-marker-alt text-[#135341] text-4xl mb-3"></i>
                       <p className="text-gray-600">{formattedAddress}</p>
-                      <Button className="mt-4 bg-[#09261E] hover:bg-[#135341] text-white">
+                      <Button 
+                        className="mt-4 bg-[#09261E] hover:bg-[#135341] text-white"
+                        onClick={() => setViewingMap(true)}
+                      >
                         View on Map
                       </Button>
                     </div>
