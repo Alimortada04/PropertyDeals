@@ -14,6 +14,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
 import PropertyGrid from "@/components/properties/property-grid";
 import PropertyCard from "@/components/properties/property-card";
+import PropertyRecommendations from "@/components/properties/property-recommendations";
 import { similarProperties } from "@/lib/data";
 import { useState } from "react";
 
@@ -492,11 +493,25 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         </div>
       </section>
 
-      {/* Similar Properties */}
+      {/* Smart Property Recommendations */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-8">Similar Properties</h2>
-          <PropertyGrid properties={similarProperties} />
+          
+          {/* Location-based recommendations using recommendation engine */}
+          {property && (
+            <PropertyRecommendations 
+              location={property.city}
+              propertyType={property.propertyType}
+              priceRange={property.price ? { 
+                min: property.price * 0.8, 
+                max: property.price * 1.2 
+              } : undefined}
+              title=""
+              showViewAll={true}
+              maxResults={4}
+            />
+          )}
         </div>
       </section>
       

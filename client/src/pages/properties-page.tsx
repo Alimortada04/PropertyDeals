@@ -501,6 +501,18 @@ export default function PropertiesPage() {
 
       {/* Main Content Area */}
       <div className="flex-grow mt-6">
+        {/* Location-based Property Recommendations */}
+        {searchTerm && searchTerm.length > 2 && (
+          <div className="container mx-auto px-4 mb-10">
+            <PropertyRecommendations 
+              location={searchTerm}
+              title={`Properties in ${searchTerm}`}
+              maxResults={4}
+              showViewAll={false}
+            />
+          </div>
+        )}
+        
         {isLoading ? (
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
