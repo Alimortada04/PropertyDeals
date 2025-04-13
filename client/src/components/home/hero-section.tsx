@@ -42,7 +42,8 @@ export default function HeroSection() {
   const heroRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const { relativePosition } = useParallaxEffect();
+  // Initialize with zero position since we don't want mouse movement parallax
+  const { relativePosition } = { relativePosition: { x: 0, y: 0 } };
   // Track current featured property (rotating among featured properties)
   const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
   const featuredProperty = featuredProperties[currentFeaturedIndex];
@@ -274,7 +275,7 @@ export default function HeroSection() {
                 >
                   <div className="relative">
                     {/* Avatar stack positioned above the pill and aligned to the right */}
-                    <div className="flex -space-x-2 absolute -right-1 -top-4 transform translate-x-[5%]">
+                    <div className="flex -space-x-2 absolute -right-1 -top-4 transform -translate-x-[15%]">
                       {target.avatars.map((avatar, avatarIdx) => (
                         <div 
                           key={avatarIdx}
@@ -347,7 +348,7 @@ export default function HeroSection() {
                 href={`/p/${featuredProperty.id}`}
                 className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer transform-gpu"
                 style={{
-                  transform: `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15 - scrollY * 0.05}px, 0) rotate(-2deg)`,
+                  transform: `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`,
                   transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-out',
                   transformStyle: 'preserve-3d',
                   boxShadow: '0 10px 30px -5px rgba(9, 38, 30, 0.15)'
@@ -364,13 +365,13 @@ export default function HeroSection() {
                   const rotateX = ((y / rect.height) - 0.5) * -8; // 4 to -4 degrees
                   
                   // Apply transformation - subtle 3D effect
-                  card.style.transform = `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15 - scrollY * 0.05}px, 0) rotate(-2deg) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale3d(1.02, 1.02, 1.02)`;
+                  card.style.transform = `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale3d(1.02, 1.02, 1.02)`;
                   card.style.boxShadow = '0 20px 40px -10px rgba(9, 38, 30, 0.25)';
                 }}
                 onMouseLeave={(e) => {
                   const card = e.currentTarget;
                   // Reset to original transform
-                  card.style.transform = `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15 - scrollY * 0.05}px, 0) rotate(-2deg)`;
+                  card.style.transform = `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`;
                   card.style.boxShadow = '0 10px 30px -5px rgba(9, 38, 30, 0.15)';
                 }}
               >
@@ -431,7 +432,7 @@ export default function HeroSection() {
               <div 
                 className="absolute bottom-[15%] right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
                 style={{
-                  transform: `translate3d(${relativePosition.x * 20}px, ${relativePosition.y * 20 + scrollY * 0.03}px, 0) rotate(3deg)`,
+                  transform: `translate3d(0, ${scrollY * 0.03}px, 0) rotate(3deg)`,
                   transition: 'transform 0.1s ease-out'
                 }}
               >
@@ -450,7 +451,7 @@ export default function HeroSection() {
               <svg 
                 className="absolute inset-0 w-full h-full z-15 pointer-events-none opacity-30"
                 style={{
-                  transform: `translate3d(${relativePosition.x * 5}px, ${relativePosition.y * 5}px, 0)`,
+                  transform: `translate3d(0, ${scrollY * 0.01}px, 0)`,
                 }}
               >
                 <defs>
@@ -471,7 +472,7 @@ export default function HeroSection() {
               <div 
                 className="absolute top-[18%] right-[-2%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
                 style={{
-                  transform: `translate3d(${relativePosition.x * -10 - scrollY * 0.02}px, ${relativePosition.y * -10 - scrollY * 0.01}px, 0)`,
+                  transform: `translate3d(${-scrollY * 0.02}px, ${-scrollY * 0.01}px, 0)`,
                   transition: 'transform 0.1s ease-out'
                 }}
               >
@@ -486,7 +487,7 @@ export default function HeroSection() {
               <div 
                 className="absolute bottom-[45%] left-[10%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
                 style={{
-                  transform: `translate3d(${relativePosition.x * 10 - scrollY * 0.01}px, ${relativePosition.y * 10 + scrollY * 0.025}px, 0)`,
+                  transform: `translate3d(${-scrollY * 0.01}px, ${scrollY * 0.025}px, 0)`,
                   transition: 'transform 0.1s ease-out'
                 }}
               >
@@ -502,7 +503,7 @@ export default function HeroSection() {
               <div 
                 className="absolute top-[65%] right-[18%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
                 style={{
-                  transform: `translate3d(${relativePosition.x * 15 + scrollY * 0.015}px, ${relativePosition.y * 15 - scrollY * 0.02}px, 0)`,
+                  transform: `translate3d(${scrollY * 0.015}px, ${-scrollY * 0.02}px, 0)`,
                   transition: 'transform 0.1s ease-out'
                 }}
               >
