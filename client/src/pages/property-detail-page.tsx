@@ -29,6 +29,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const [viewingAllPhotos, setViewingAllPhotos] = useState(false);
   const [viewingMap, setViewingMap] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [offerModalOpen, setOfferModalOpen] = useState(false);
   
   const { data: property, isLoading, error } = useQuery<Property>({
     queryKey: [`/api/properties/${id}`],
@@ -471,15 +473,23 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
             {/* Sidebar */}
             <div className="w-full lg:w-1/3">
-              {/* Contact Agent */}
+              {/* Contact REP Card */}
               <div className="bg-white p-6 rounded-lg shadow-sm mb-8 sticky top-[80px]">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested in this property?</h2>
-                <div className="flex items-center mb-6">
-                  <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="Agent" className="w-16 h-16 rounded-full object-cover mr-4" />
+                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Property Contact</h2>
+                <div className="flex items-center mb-6 border-b pb-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
+                    alt="Property Seller" 
+                    className="w-20 h-20 rounded-full object-cover mr-4 border-2 border-[#09261E]" 
+                  />
                   <div>
-                    <h3 className="font-heading font-bold text-[#135341]">Michael Johnson</h3>
-                    <p className="text-gray-600">Off-Market Specialist</p>
-                    <div className="flex items-center mt-1">
+                    <h3 className="font-heading font-bold text-[#135341] text-xl">Michael Johnson</h3>
+                    <p className="text-gray-600 font-medium">
+                      <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md">
+                        Seller
+                      </span>
+                    </p>
+                    <div className="flex items-center mt-2">
                       <i className="fas fa-star text-yellow-500"></i>
                       <i className="fas fa-star text-yellow-500"></i>
                       <i className="fas fa-star text-yellow-500"></i>
@@ -489,85 +499,67 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </div>
                   </div>
                 </div>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Your Name</FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email Address</FormLabel>
-                          <FormControl>
-                            <Input type="email" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <Input type="tel" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="message"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Message</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              {...field} 
-                              rows={4} 
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-[#09261E] hover:bg-[#135341] text-white py-3 font-medium"
-                      disabled={inquiryMutation.isPending}
-                    >
-                      {inquiryMutation.isPending ? "Sending..." : "Contact Agent"}
-                    </Button>
-                  </form>
-                </Form>
-                <div className="mt-4 flex justify-center space-x-4">
-                  <a href="#" className="text-[#135341] hover:text-[#09261E]">
-                    <i className="fas fa-phone-alt mr-1"></i> Call
-                  </a>
-                  <a href="#" className="text-[#135341] hover:text-[#09261E]">
-                    <i className="fas fa-comment mr-1"></i> Text
-                  </a>
-                  <a href="#" className="text-[#135341] hover:text-[#09261E]">
-                    <i className="fas fa-heart mr-1"></i> Save
-                  </a>
-                  <a href="#" className="text-[#135341] hover:text-[#09261E]">
-                    <i className="fas fa-share-alt mr-1"></i> Share
-                  </a>
+                
+                {/* Action Buttons */}
+                <div className="space-y-3 mb-6">
+                  <Button 
+                    className="w-full bg-[#09261E] hover:bg-[#135341] text-white py-6 font-medium text-lg"
+                    onClick={() => setContactModalOpen(true)}
+                  >
+                    <i className="fas fa-user-plus mr-2"></i> Contact REP
+                  </Button>
+                  <Button 
+                    className="w-full border-2 border-[#803344] text-[#803344] hover:bg-[#803344] hover:text-white py-6 font-medium text-lg bg-white"
+                    onClick={() => setOfferModalOpen(true)}
+                  >
+                    <i className="fas fa-file-invoice-dollar mr-2"></i> Make an Offer
+                  </Button>
+                </div>
+                
+                {/* Property Quick Info */}
+                <div className="bg-[#09261E]/5 p-4 rounded-lg mb-4">
+                  <h4 className="font-heading font-bold text-[#09261E] mb-2">Property Snapshot</h4>
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="flex items-center">
+                      <i className="fas fa-bed text-[#135341] mr-2"></i>
+                      <span>{property.bedrooms} Beds</span>
+                    </div>
+                    <div className="flex items-center">
+                      <i className="fas fa-bath text-[#135341] mr-2"></i>
+                      <span>{property.bathrooms} Baths</span>
+                    </div>
+                    <div className="flex items-center">
+                      <i className="fas fa-ruler-combined text-[#135341] mr-2"></i>
+                      <span>{property.squareFeet?.toLocaleString()} sqft</span>
+                    </div>
+                    <div className="flex items-center">
+                      <i className="fas fa-calendar-alt text-[#135341] mr-2"></i>
+                      <span>Built {property.yearBuilt}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Contact Preferences */}
+                <div className="flex justify-between items-center">
+                  <div className="flex space-x-3">
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                      <i className="fas fa-phone-alt"></i>
+                    </button>
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                      <i className="fas fa-comment"></i>
+                    </button>
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                      <i className="fas fa-envelope"></i>
+                    </button>
+                  </div>
+                  <div className="flex space-x-3">
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                      <i className="fas fa-heart"></i>
+                    </button>
+                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                      <i className="fas fa-share-alt"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -696,6 +688,229 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   with the property location pinned. The user would be able to zoom,
                   pan, and view nearby amenities.
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Contact REP Modal */}
+      {contactModalOpen && (
+        <div 
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setContactModalOpen(false)} // Close when clicking outside
+        >
+          <div 
+            className="bg-white rounded-lg max-w-xl w-full max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+          >
+            <div className="p-4 flex justify-between items-center border-b sticky top-0 bg-white z-10">
+              <h3 className="text-xl font-heading font-bold text-[#09261E]">Contact REP</h3>
+              <button 
+                onClick={() => setContactModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <div className="flex items-center mb-6 border-b pb-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
+                  alt="Property Seller" 
+                  className="w-20 h-20 rounded-full object-cover mr-4 border-2 border-[#09261E]" 
+                />
+                <div>
+                  <h3 className="font-heading font-bold text-[#135341] text-xl">Michael Johnson</h3>
+                  <p className="text-gray-600">
+                    <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md">
+                      Seller
+                    </span>
+                  </p>
+                  <p className="text-gray-500 text-sm mt-1">Preferred contact method: <span className="text-[#09261E] font-medium">Email</span></p>
+                </div>
+              </div>
+
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Your Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email Address</FormLabel>
+                        <FormControl>
+                          <Input type="email" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone Number</FormLabel>
+                        <FormControl>
+                          <Input type="tel" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="message"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Message</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            {...field} 
+                            rows={4} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="pt-4 border-t">
+                    <h4 className="font-medium text-gray-700 mb-3">Contact Methods</h4>
+                    <div className="grid grid-cols-3 gap-3">
+                      <Button 
+                        type="button"
+                        variant="outline"
+                        className="bg-[#09261E]/10 border-0 hover:bg-[#09261E] hover:text-white"
+                      >
+                        <i className="fas fa-phone-alt mr-2"></i> Call
+                      </Button>
+                      <Button 
+                        type="button"
+                        variant="outline"
+                        className="bg-[#09261E]/10 border-0 hover:bg-[#09261E] hover:text-white"
+                      >
+                        <i className="fas fa-comment mr-2"></i> Text
+                      </Button>
+                      <Button 
+                        type="button"
+                        variant="outline"
+                        className="bg-[#09261E] text-white border-0 hover:bg-[#135341]"
+                      >
+                        <i className="fas fa-envelope mr-2"></i> Email
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full mt-6 bg-[#09261E] hover:bg-[#135341] text-white py-3 font-medium"
+                    disabled={inquiryMutation.isPending}
+                  >
+                    {inquiryMutation.isPending ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
+              </Form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Make an Offer Modal */}
+      {offerModalOpen && (
+        <div 
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setOfferModalOpen(false)} // Close when clicking outside
+        >
+          <div 
+            className="bg-white rounded-lg max-w-xl w-full max-h-[90vh] overflow-auto"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+          >
+            <div className="p-4 flex justify-between items-center border-b sticky top-0 bg-white z-10">
+              <h3 className="text-xl font-heading font-bold text-[#09261E]">Make an Offer</h3>
+              <button 
+                onClick={() => setOfferModalOpen(false)}
+                className="text-gray-500 hover:text-gray-800"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <div className="flex items-center space-x-4 mb-6 pb-4 border-b">
+                <div className="flex-shrink-0">
+                  <img 
+                    src={propertyImages[0]} 
+                    alt={property.address} 
+                    className="w-16 h-16 object-cover rounded-md" 
+                  />
+                </div>
+                <div>
+                  <h4 className="font-heading font-medium text-[#09261E]">{property.address}</h4>
+                  <p className="text-sm text-gray-600">{property.city}, {property.state}</p>
+                  <p className="text-[#135341] font-bold">${property.price?.toLocaleString()}</p>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <div className="bg-[#803344]/10 border border-[#803344]/20 rounded-md p-4 mb-4">
+                  <h4 className="font-heading text-[#803344] font-bold mb-2">Sign up or login required</h4>
+                  <p className="text-gray-700 text-sm mb-3">
+                    To make an offer on this property, you'll need to create an account or login to your existing account.
+                  </p>
+                  
+                  <div className="flex space-x-3">
+                    <Button 
+                      className="bg-[#803344] hover:bg-[#803344]/80 text-white"
+                      onClick={() => {
+                        setOfferModalOpen(false);
+                        // In a real app, redirect to register page or open register modal
+                      }}
+                    >
+                      Register
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      className="border-[#803344] text-[#803344] hover:bg-[#803344]/10"
+                      onClick={() => {
+                        setOfferModalOpen(false);
+                        // In a real app, redirect to login page or open login modal
+                      }}
+                    >
+                      Login
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="bg-gray-100 p-4 rounded-md">
+                  <h4 className="font-medium text-gray-700 mb-3">Offer Steps:</h4>
+                  <ol className="list-decimal list-inside text-sm text-gray-600 space-y-2">
+                    <li>Register or login to your account</li>
+                    <li>Verify your identity and contact information</li>
+                    <li>Submit your offer price and terms</li>
+                    <li>Upload proof of funds or pre-approval letter</li>
+                    <li>Receive confirmation from the seller</li>
+                  </ol>
+                </div>
+              </div>
+
+              <div className="text-center text-sm text-gray-500">
+                <p>By making an offer, you agree to PropertyDeals' terms of service.</p>
               </div>
             </div>
           </div>
