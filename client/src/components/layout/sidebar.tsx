@@ -125,7 +125,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   return (
     <>
       {/* Mobile top navbar with hamburger menu */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm h-16 lg:hidden flex items-center justify-between px-4">
+      <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-sm h-14 lg:hidden flex items-center justify-between px-2">
         <div className="flex items-center">
           <button 
             ref={hamburgerRef}
@@ -188,7 +188,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         className="fixed top-0 left-0 bottom-0 w-[250px] bg-white z-50 lg:hidden hidden shadow-lg transition-transform duration-300 ease-in-out -translate-x-full overscroll-contain"
       >
         <div className="h-full overflow-y-auto">
-          <div className="flex items-center px-4 py-3 border-b">
+          <div className="flex items-center px-2 py-1 border-b">
             <button 
               onClick={() => {
                 const mobileMenu = document.getElementById('mobile-menu');
