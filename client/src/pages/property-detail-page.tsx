@@ -483,14 +483,16 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   />
                   <div>
                     <h3 className="font-heading font-bold text-[#135341] text-xl">Michael Johnson</h3>
-                    <p className="text-gray-600 font-medium mb-1">
-                      <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md">
+                    <p className="text-gray-600 font-medium mb-1 flex items-center">
+                      <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md mr-2">
                         Seller
                       </span>
-                    </p>
-                    <p className="text-gray-700">
-                      <i className="fas fa-phone-alt text-[#135341] mr-2"></i>
-                      (555) 123-4567
+                      <span className="inline-flex items-center text-sm mr-3">
+                        <span className="mr-1">👀</span> 142
+                      </span>
+                      <span className="inline-flex items-center text-sm">
+                        <span className="mr-1">❤️</span> 23
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -695,12 +697,17 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 />
                 <div>
                   <h3 className="font-heading font-bold text-[#135341] text-xl">Michael Johnson</h3>
-                  <p className="text-gray-600">
-                    <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md">
+                  <p className="text-gray-600 font-medium mb-1 flex items-center">
+                    <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md mr-2">
                       Seller
                     </span>
+                    <span className="inline-flex items-center text-sm mr-3">
+                      <span className="mr-1">👀</span> 142
+                    </span>
+                    <span className="inline-flex items-center text-sm">
+                      <span className="mr-1">❤️</span> 23
+                    </span>
                   </p>
-                  <p className="text-gray-500 text-sm mt-1">Preferred contact method: <span className="text-[#09261E] font-medium">Email</span></p>
                 </div>
               </div>
 
