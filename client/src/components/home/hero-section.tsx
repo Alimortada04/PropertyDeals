@@ -52,7 +52,7 @@ export default function HeroSection() {
       setCurrentFeaturedIndex((prev) => 
         prev >= featuredProperties.length - 1 ? 0 : prev + 1
       );
-    }, 8000); // Change property every 8 seconds
+    }, 5000); // Change property every 5 seconds
     
     return () => clearInterval(interval);
   }, []);
@@ -230,19 +230,133 @@ export default function HeroSection() {
             </div>
           </div>
           
-          {/* Right property carousel column */}
+          {/* Right property card column */}
           <div 
             className={`lg:col-span-5 relative transition-all duration-1000 delay-500 ${
               isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
             }`}
           >
             <div className="relative min-h-[500px] w-full">
-              {/* Property Cards Carousel */}
-              <PropertyCarousel properties={carouselProperties} scrollY={scrollY} />
+              {/* Featured property card with 3D hover effect */}
+              <Link 
+                href={`/p/${featuredProperty.id}`}
+                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer transform-gpu"
+                style={{
+                  transform: `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`,
+                  transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-out',
+                  transformStyle: 'preserve-3d',
+                  boxShadow: '0 10px 30px -5px rgba(9, 38, 30, 0.15)'
+                }}
+                onMouseMove={(e) => {
+                  const card = e.currentTarget;
+                  const rect = card.getBoundingClientRect();
+                  const x = e.clientX - rect.left; // x position within element
+                  const y = e.clientY - rect.top; // y position within element
+                  
+                  // Calculate rotation angles based on mouse position
+                  // Use smaller values for subtler effect (0.08)
+                  const rotateY = ((x / rect.width) - 0.5) * 8; // -4 to 4 degrees
+                  const rotateX = ((y / rect.height) - 0.5) * -8; // 4 to -4 degrees
+                  
+                  // Apply transformation - subtle 3D effect
+                  card.style.transform = `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale3d(1.02, 1.02, 1.02)`;
+                  card.style.boxShadow = '0 20px 40px -10px rgba(9, 38, 30, 0.25)';
+                }}
+                onMouseLeave={(e) => {
+                  const card = e.currentTarget;
+                  // Reset to original transform
+                  card.style.transform = `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`;
+                  card.style.boxShadow = '0 10px 30px -5px rgba(9, 38, 30, 0.15)';
+                }}
+              >
+                {/* Property image with zoom effect */}
+                <div className="h-[60%] bg-[#09261E]/5 overflow-hidden relative">
+                  <div 
+                    className="absolute inset-0 bg-center bg-cover transition-all duration-700 group-hover:scale-110 will-change-transform"
+                    style={{ 
+                      backgroundImage: `url(${featuredProperty.imageUrl})` 
+                    }}
+                  />
+                  
+                  {/* Property tags */}
+                  <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+                    {featuredProperty.offMarketDeal && (
+                      <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm inline-flex items-center gap-1">
+                        <span>⭐</span> Off-Market Deal
+                      </div>
+                    )}
+                    {featuredProperty.newListing && (
+                      <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm inline-flex items-center gap-1">
+                        <span>🆕</span> New Listing
+                      </div>
+                    )}
+                    {featuredProperty.priceDrop && (
+                      <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm inline-flex items-center gap-1">
+                        <span>📉</span> Price Drop
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Network badge */}
+                  <div className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm z-10 inline-flex items-center gap-1">
+                    <span>🔄</span> Trusted Network
+                  </div>
+                  
+                  {/* Price tag */}
+                  <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm z-10">
+                    <p className="font-heading font-bold text-lg text-[#09261E]">
+                      ${featuredProperty.price?.toLocaleString()}
+                    </p>
+                  </div>
+                  
+                  {/* REP Avatar stack */}
+                  <div className="absolute bottom-3 right-3 z-10">
+                    <div className="flex -space-x-2">
+                      {Array.from({ length: 3 }).map((_, idx) => (
+                        <div 
+                          key={idx}
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white overflow-hidden will-change-transform"
+                          style={{ zIndex: 3 - idx }}
+                        >
+                          <img 
+                            src={`https://images.unsplash.com/photo-${1580489944761 + idx * 1000}-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80`}
+                            alt="REP avatar" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Property details */}
+                <div className="p-4">
+                  <h3 className="font-heading font-bold text-lg text-[#09261E] truncate">
+                    {featuredProperty.title}
+                  </h3>
+                  <div className="flex items-center text-gray-500 text-sm mt-1">
+                    <MapPin className="h-3 w-3 mr-1" />
+                    <span className="truncate">{featuredProperty.city}, {featuredProperty.state}</span>
+                  </div>
+                  
+                  {/* Property specs */}
+                  <div className="flex justify-between items-center mt-3">
+                    <div className="text-xs text-gray-600 flex items-center gap-1">
+                      <span>🛏️</span> {featuredProperty.bedrooms} bed
+                    </div>
+                    <div className="text-xs text-gray-600 flex items-center gap-1">
+                      <span>🚿</span> {featuredProperty.bathrooms} bath
+                    </div>
+                    <div className="text-xs text-gray-600 flex items-center gap-1">
+                      <span>📏</span> {featuredProperty.squareFeet?.toLocaleString()} sqft
+                    </div>
+                  </div>
+                </div>
+              </Link>
               
               {/* REP card */}
               <div 
-                className="absolute -bottom-4 right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform md:block hidden"
+                className="absolute bottom-[15%] right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
                 style={{
                   transform: `translate3d(0, ${scrollY * 0.03}px, 0) rotate(3deg)`,
                   transition: 'transform 0.1s ease-out'
@@ -259,7 +373,72 @@ export default function HeroSection() {
                 </div>
               </div>
               
-
+              {/* Connection lines - animated */}
+              <svg 
+                className="absolute inset-0 w-full h-full z-15 pointer-events-none opacity-30"
+                style={{
+                  transform: `translate3d(0, ${scrollY * 0.01}px, 0)`,
+                }}
+              >
+                <defs>
+                  <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#09261E" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#E59F9F" stopOpacity="0.2" />
+                  </linearGradient>
+                </defs>
+                <line x1="30%" y1="40%" x2="70%" y2="80%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" from="0" to="20" dur="3s" repeatCount="indefinite" />
+                </line>
+                <line x1="20%" y1="60%" x2="80%" y2="30%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5">
+                  <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="4s" repeatCount="indefinite" />
+                </line>
+              </svg>
+              
+              {/* Floating UI elements */}
+              <div 
+                className="absolute top-[18%] right-[-2%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
+                style={{
+                  transform: `translate3d(${-scrollY * 0.02}px, ${-scrollY * 0.01}px, 0)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="text-[#E59F9F]">
+                    <LightbulbIcon className="h-4 w-4" />
+                  </div>
+                  <span className="text-xs font-medium text-[#09261E]">Off-market opportunities</span>
+                </div>
+              </div>
+              
+              <div 
+                className="absolute bottom-[45%] left-[10%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
+                style={{
+                  transform: `translate3d(${-scrollY * 0.01}px, ${scrollY * 0.025}px, 0)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="text-[#135341]">
+                    <Shield className="h-4 w-4" />
+                  </div>
+                  <span className="text-xs font-medium text-[#09261E]">Trusted network</span>
+                </div>
+              </div>
+              
+              <div 
+                className="absolute top-[65%] right-[18%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
+                style={{
+                  transform: `translate3d(${scrollY * 0.015}px, ${-scrollY * 0.02}px, 0)`,
+                  transition: 'transform 0.1s ease-out'
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="text-[#09261E]">
+                    <CustomNetworkIcon className="h-4 w-4" />
+                  </div>
+                  <span className="text-xs font-medium text-[#09261E]">Connect with experts</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
