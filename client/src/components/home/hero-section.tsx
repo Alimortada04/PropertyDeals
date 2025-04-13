@@ -246,7 +246,7 @@ export default function HeroSection() {
                       </div>
                       
                       <div className="flex items-center gap-2 relative z-10">
-                        {target.icon}
+                        <span className="md:inline hidden">{target.icon}</span>
                         <span className="text-sm font-medium">{target.text}</span>
                       </div>
                       
@@ -327,17 +327,17 @@ export default function HeroSection() {
                   <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
                     {featuredProperty.offMarketDeal && (
                       <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm inline-flex items-center gap-1">
-                        <span>⭐</span> Off-Market Deal
+                        <span className="md:inline hidden">⭐</span> Off-Market Deal
                       </div>
                     )}
                     {featuredProperty.newListing && (
                       <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm inline-flex items-center gap-1">
-                        <span>🆕</span> New Listing
+                        <span className="md:inline hidden">🆕</span> New Listing
                       </div>
                     )}
                     {featuredProperty.priceDrop && (
                       <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm inline-flex items-center gap-1">
-                        <span>📉</span> Price Drop
+                        <span className="md:inline hidden">📉</span> Price Drop
                       </div>
                     )}
                   </div>
@@ -367,21 +367,21 @@ export default function HeroSection() {
                   {/* Property specs */}
                   <div className="flex justify-between items-center mt-3">
                     <div className="text-xs text-gray-600 flex items-center gap-1">
-                      <span>🛏️</span> {featuredProperty.bedrooms} bed
+                      <span className="md:inline hidden">🛏️</span> {featuredProperty.bedrooms} bed
                     </div>
                     <div className="text-xs text-gray-600 flex items-center gap-1">
-                      <span>🚿</span> {featuredProperty.bathrooms} bath
+                      <span className="md:inline hidden">🚿</span> {featuredProperty.bathrooms} bath
                     </div>
                     <div className="text-xs text-gray-600 flex items-center gap-1">
-                      <span>📏</span> {featuredProperty.squareFeet?.toLocaleString()} sqft
+                      <span className="md:inline hidden">📏</span> {featuredProperty.squareFeet?.toLocaleString()} sqft
                     </div>
                   </div>
                 </div>
               </Link>
               
-              {/* REP card - moved above property and calculator */}
+              {/* REP card - positioned differently based on screen size */}
               <div 
-                className="absolute top-[-10%] right-[15%] w-[50%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
+                className="absolute md:top-[-10%] md:right-[15%] top-[-20%] right-[0%] md:w-[50%] w-[70%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
                 style={{
                   transform: `translate3d(0, ${Math.min(40, scrollY * 0.02)}px, 0) rotate(2deg)`,
                   transition: 'transform 0.2s ease-out'
