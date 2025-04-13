@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { insertPropertyInquirySchema, insertPropertySchema } from "@shared/schema";
+import { RecommendationEngine } from "./recommendation";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
@@ -127,6 +128,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     const inquiries = await storage.getSellerInquiries(req.user.id);
     res.json(inquiries);
+  });
+
+  // Property recommendations
+  app.get("/api/properties/recommendations/location/:location", async (req, res) => {
+    try {
+      const location = req.params.location;
+      const priceMin = req.query.priceMin ? parseInt(req.query.priceMin as string) : 0;
+      const priceMax = req.query.priceMax ? parseInt(req.query.priceMax as string) : 10000000;
+      const propertyTypes = req.query.propertyTypes ? (req.query.propertyTypes as string).split(',') : undefined;
+      const features = req.query.features ? (req.query.features as string).split(',') : undefined;
+      const maxResults = req.query.maxResults ? parseInt(req.query.maxResults as string) : 5;
+
+      const properties = await storage.getProperties();
+      const recommendationEngine = new RecommendationEngine(properties);
+      
+      const recommendations = recommendationEngine.getRecommendations({
+        location,
+        priceRange: { min: priceMin, max: priceMax },
+        propertyTypes,
+        preferredFeatures: features,
+        maxResults
+      });
+
+      res.json(recommendations);
+    } catch (error) {
+      console.error('Error getting recommendations:', error);
+      res.status(500).json({ message: "Failed to get recommendations" });
+    }
+  });
+
+  // Random property recommendations
+  app.get("/api/properties/recommendations", async (req, res) => {
+    try {
+      const maxResults = req.query.maxResults ? parseInt(req.query.maxResults as string) : 5;
+
+      const properties = await storage.getProperties();
+      const recommendationEngine = new RecommendationEngine(properties);
+      
+      const recommendations = recommendationEngine.getRecommendations({
+        maxResults
+      });
+
+      res.json(recommendations);
+    } catch (error) {
+      console.error('Error getting recommendations:', error);
+      res.status(500).json({ message: "Failed to get recommendations" });
+    }
   });
 
   const httpServer = createServer(app);

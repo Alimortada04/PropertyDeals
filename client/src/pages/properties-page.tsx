@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Property } from "@shared/schema";
 import PropertyCard from "@/components/properties/property-card";
 import PropertyMap from "@/components/properties/property-map";
+import PropertyRecommendations from "@/components/properties/property-recommendations";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
