@@ -101,7 +101,7 @@ export default function StickySearchFilter({
             <Input
               type="text"
               placeholder={searchPlaceholder}
-              className="pl-10 pr-4 py-2 w-full bg-white border border-gray-200 hover:border-gray-300 rounded-md"
+              className="pl-10 pr-4 py-2 w-full bg-white border border-gray-200 hover:border-gray-300 focus:border-gray-300 focus:ring-0 rounded-md"
               value={searchTerm}
               onChange={handleSearch}
             />
@@ -112,13 +112,15 @@ export default function StickySearchFilter({
             <PopoverTrigger asChild>
               <Button 
                 variant="outline" 
-                className="h-10 flex items-center gap-2 border border-gray-200 rounded-md hover:border-gray-300"
+                className="h-10 flex items-center gap-2 border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E]"
               >
                 <Sliders className="h-4 w-4" />
                 {filterButtonText}
-                <span className="text-xs bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center">
-                  +1
-                </span>
+                {selectedFilters && selectedFilters.length > 0 && (
+                  <span className="text-xs bg-[#135341] text-white rounded-full h-5 w-5 flex items-center justify-center">
+                    {selectedFilters.length}
+                  </span>
+                )}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[350px] p-5 shadow-lg" align="end">
@@ -137,7 +139,7 @@ export default function StickySearchFilter({
               {selectedFilters.map((filter) => (
                 <div 
                   key={filter}
-                  className="flex items-center bg-gray-100 rounded-full px-3 py-1 text-sm"
+                  className="flex items-center bg-[#EAF2EF] text-[#09261E] rounded-full px-3 py-1 text-sm"
                 >
                   <span>{filter}</span>
                   <button 
