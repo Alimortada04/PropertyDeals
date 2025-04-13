@@ -73,9 +73,9 @@ export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
       }`}
     >
       {/* Right-aligned banner */}
-      <div className="bg-white shadow-md py-3 px-5 rounded-bl-lg flex items-center gap-4 self-start">
-        {/* Auth Buttons */}
-        <div className="flex items-center gap-3">
+      <div className="bg-white shadow-md py-3 px-5 rounded-bl-lg flex items-center justify-end gap-4 self-start">
+        {/* Auth Buttons - moved to the right */}
+        <div className="flex items-center gap-3 ml-auto">
           {user ? (
             <>
               <span className="text-gray-700">
