@@ -17,6 +17,7 @@ import PropertyCard from "@/components/properties/property-card";
 import PropertyRecommendations from "@/components/properties/property-recommendations";
 import { similarProperties } from "@/lib/data";
 import { useState, useEffect } from "react";
+import { MapPin, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface PropertyDetailPageProps {
   id: string;
@@ -26,6 +27,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const { toast } = useToast();
   const { user } = useAuth();
   const [viewingAllPhotos, setViewingAllPhotos] = useState(false);
+  const [viewingMap, setViewingMap] = useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   
   const { data: property, isLoading, error } = useQuery<Property>({
     queryKey: [`/api/properties/${id}`],
@@ -139,6 +142,29 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   // Format address
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
 
+  // Sample property images - in a real app these would come from the API
+  const propertyImages = [
+    property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1556912173-3bb406ef7e77?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"
+  ];
+  
+  // Navigate to previous image in the gallery
+  const prevImage = () => {
+    setCurrentPhotoIndex((prev) => 
+      prev === 0 ? propertyImages.length - 1 : prev - 1
+    );
+  };
+  
+  // Navigate to next image in the gallery
+  const nextImage = () => {
+    setCurrentPhotoIndex((prev) => 
+      prev === propertyImages.length - 1 ? 0 : prev + 1
+    );
+  };
+  
   return (
     <>
       {/* Property Hero Section */}
@@ -549,38 +575,90 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       
       {/* Photo Gallery Modal */}
       {viewingAllPhotos && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
-            <div className="p-4 flex justify-between items-center border-b">
-              <h3 className="text-xl font-heading font-bold">{property.title} - All Photos</h3>
-              <button 
-                onClick={() => setViewingAllPhotos(false)}
-                className="text-gray-500 hover:text-gray-800"
+        <div className="fixed inset-0 bg-black z-50 overflow-y-auto">
+          {/* Close button */}
+          <button 
+            className="fixed top-4 right-4 text-white bg-black/30 hover:bg-black/50 p-2 rounded-full z-10"
+            onClick={() => setViewingAllPhotos(false)}
+          >
+            <X className="h-6 w-6" />
+          </button>
+          
+          {/* Photo navigation */}
+          <div className="flex items-center justify-between px-4 fixed inset-x-0 top-1/2 -translate-y-1/2 pointer-events-none">
+            <button 
+              className="bg-black/30 hover:bg-black/50 text-white p-3 rounded-full pointer-events-auto"
+              onClick={prevImage}
+            >
+              <ChevronLeft className="h-8 w-8" />
+            </button>
+            <button 
+              className="bg-black/30 hover:bg-black/50 text-white p-3 rounded-full pointer-events-auto"
+              onClick={nextImage}
+            >
+              <ChevronRight className="h-8 w-8" />
+            </button>
+          </div>
+          
+          {/* Current main photo */}
+          <div className="flex items-center justify-center min-h-screen py-20">
+            <img 
+              src={propertyImages[currentPhotoIndex]} 
+              alt={`${property.address} - Photo ${currentPhotoIndex + 1}`} 
+              className="max-w-full max-h-[80vh] object-contain"
+            />
+          </div>
+          
+          {/* Photo counter */}
+          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full">
+            {currentPhotoIndex + 1} / {propertyImages.length}
+          </div>
+          
+          {/* All photos - vertical scrolling */}
+          <div className="container mx-auto px-4 py-10 space-y-4">
+            {propertyImages.map((img, index) => (
+              <div 
+                key={index} 
+                className={`w-full flex justify-center ${currentPhotoIndex === index ? 'border-4 border-[#135341] rounded-lg' : ''}`}
               >
-                <i className="fas fa-times text-xl"></i>
+                <img 
+                  src={img} 
+                  alt={`${property.address} - Photo ${index + 1}`} 
+                  className="max-w-full max-h-[80vh] object-contain rounded-lg cursor-pointer"
+                  onClick={() => setCurrentPhotoIndex(index)}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Map Modal */}
+      {viewingMap && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between border-b p-4">
+              <h3 className="text-xl font-heading font-bold text-[#09261E]">{property.address}</h3>
+              <button 
+                className="text-gray-500 hover:text-gray-700"
+                onClick={() => setViewingMap(false)}
+              >
+                <X className="h-6 w-6" />
               </button>
             </div>
-            <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <img 
-                src={property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914"} 
-                alt={property.title} 
-                className="w-full rounded-lg"
-              />
-              <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f" alt="Living Room" className="w-full rounded-lg" />
-              <img src="https://images.unsplash.com/photo-1556912173-3bb406ef7e77" alt="Kitchen" className="w-full rounded-lg" />
-              <img src="https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db" alt="Bedroom" className="w-full rounded-lg" />
-              <img src="https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83" alt="Bathroom" className="w-full rounded-lg" />
-              <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6" alt="Exterior" className="w-full rounded-lg" />
-              <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858" alt="Kitchen 2" className="w-full rounded-lg" />
-              <img src="https://images.unsplash.com/photo-1585412727339-54e4bae3bbf9" alt="Backyard" className="w-full rounded-lg" />
-            </div>
-            <div className="p-4 border-t">
-              <Button 
-                onClick={() => setViewingAllPhotos(false)}
-                className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
-              >
-                Close Gallery
-              </Button>
+            
+            <div className="flex-grow h-[70vh] bg-[#09261E]/5 flex items-center justify-center p-4">
+              {/* In a real app, this would be a Google Map API integration */}
+              <div className="text-center">
+                <MapPin className="h-12 w-12 text-[#09261E] mx-auto mb-4" />
+                <p className="text-lg font-medium text-[#09261E] mb-2">Map View</p>
+                <p className="text-gray-600 mb-6">{formattedAddress}</p>
+                <p className="text-sm text-gray-500 max-w-md mx-auto">
+                  In a real application, this would display an interactive Google Map
+                  with the property location pinned. The user would be able to zoom,
+                  pan, and view nearby amenities.
+                </p>
+              </div>
             </div>
           </div>
         </div>
