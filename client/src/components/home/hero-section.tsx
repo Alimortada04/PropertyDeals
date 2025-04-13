@@ -183,31 +183,30 @@ export default function HeroSection() {
                   }}
                 >
                   <div className="relative">
-                    {/* Avatar stack positioned above and left of the pill */}
-                    <div className="flex -space-x-2 absolute -left-1 -top-4 transform translate-x-[15%]">
-                      {target.avatars.map((avatar, avatarIdx) => (
-                        <div 
-                          key={avatarIdx}
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white will-change-transform transition-all overflow-hidden"
-                          style={{ 
-                            transform: `translateY(${relativePosition.y * 2}px)`,
-                            zIndex: 3 - avatarIdx
-                          }}
-                        >
-                          <img 
-                            src={avatar.imageUrl} 
-                            alt="User avatar" 
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {/* Pill */}
+                    {/* Pill with avatars in front */}
                     <div 
-                      className="bg-white/90 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2.5 flex items-center gap-3 shadow-sm group cursor-pointer relative transition-all duration-300 z-10 overflow-hidden mt-2"
+                      className="bg-white/90 backdrop-blur-sm border border-gray-100 rounded-full px-4 py-2 flex items-center gap-3 shadow-sm group cursor-pointer relative transition-all duration-300 overflow-hidden pl-12"
                       style={{ color: target.color }}
                     >
+                      {/* Avatar stack positioned to the left of text, inside pill */}
+                      <div className="flex -space-x-1 absolute left-2">
+                        {target.avatars.map((avatar, avatarIdx) => (
+                          <div 
+                            key={avatarIdx}
+                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white will-change-transform overflow-hidden"
+                            style={{ 
+                              zIndex: 30 + (3 - avatarIdx)
+                            }}
+                          >
+                            <img 
+                              src={avatar.imageUrl} 
+                              alt="User avatar" 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      
                       <div className="flex items-center gap-2 relative z-10">
                         {target.icon}
                         <span className="text-sm font-medium">{target.text}</span>
