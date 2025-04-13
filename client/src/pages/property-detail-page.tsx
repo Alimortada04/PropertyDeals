@@ -290,7 +290,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             {/* Main Content Column - 2/3 of the width */}
             <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8">
               {/* Key Features */}
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+              <div className="bg-white mb-8">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property Details</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
                   <div className="text-center">
@@ -319,7 +319,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-2 text-gray-700 mb-6">
                   <div className="flex justify-between border-b border-[#D8D8D8] py-2">
                     <span>Property Type</span>
                     <span className="font-medium">{property.propertyType}</span>
@@ -351,122 +351,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   <div className="flex justify-between border-b border-[#D8D8D8] py-2">
                     <span>School District</span>
                     <span className="font-medium">Milwaukee Public</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Description */}
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Description</h2>
-                <div className="text-gray-700 space-y-4">
-                  {property.description ? (
-                    <p>{property.description}</p>
-                  ) : (
-                    <>
-                      <p>
-                        This beautiful {property.propertyType?.toLowerCase()} is nestled in the heart of {property.city}'s most desirable neighborhood. The {property.bedrooms}-bedroom, {property.bathrooms}-bathroom home spans {property.squareFeet?.toLocaleString()} square feet and sits on a spacious {property.lotSize} lot.
-                      </p>
-                      <p>
-                        The open-concept main floor features a gourmet kitchen with high-end stainless steel appliances, quartz countertops, and a large island perfect for entertaining. The kitchen opens to a bright dining area and comfortable living room with a cozy gas fireplace.
-                      </p>
-                      <p>
-                        This off-market property won't last long - schedule a viewing today!
-                      </p>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Features & Amenities */}
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Features & Amenities</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-gray-700">
-                  {property.features && property.features.length > 0 ? (
-                    property.features.map((feature, index) => (
-                      <div key={index} className="flex items-center py-2">
-                        <i className="fas fa-check text-[#135341] mr-3"></i>
-                        <span>{feature}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <>
-                      <div className="flex items-center py-2">
-                        <i className="fas fa-check text-[#135341] mr-3"></i>
-                        <span>Hardwood Floors</span>
-                      </div>
-                      <div className="flex items-center py-2">
-                        <i className="fas fa-check text-[#135341] mr-3"></i>
-                        <span>Stainless Steel Appliances</span>
-                      </div>
-                      <div className="flex items-center py-2">
-                        <i className="fas fa-check text-[#135341] mr-3"></i>
-                        <span>Quartz Countertops</span>
-                      </div>
-                      <div className="flex items-center py-2">
-                        <i className="fas fa-check text-[#135341] mr-3"></i>
-                        <span>Gas Fireplace</span>
-                      </div>
-                      <div className="flex items-center py-2">
-                        <i className="fas fa-check text-[#135341] mr-3"></i>
-                        <span>High Ceilings</span>
-                      </div>
-                      <div className="flex items-center py-2">
-                        <i className="fas fa-check text-[#135341] mr-3"></i>
-                        <span>Walk-in Closets</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {/* Location & Map */}
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Location</h2>
-                <div className="aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden">
-                  {/* Map placeholder */}
-                  <div className="h-full w-full flex items-center justify-center bg-[#09261E]/5">
-                    <div className="text-center">
-                      <i className="fas fa-map-marker-alt text-[#135341] text-4xl mb-3"></i>
-                      <p className="text-gray-600">{formattedAddress}</p>
-                      <Button 
-                        className="mt-4 bg-[#09261E] hover:bg-[#135341] text-white"
-                        onClick={() => setViewingMap(true)}
-                      >
-                        View on Map
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-700">
-                  <div>
-                    <h3 className="font-medium text-lg mb-2 text-[#135341]">Walkability</h3>
-                    <div className="flex items-center">
-                      <div className="w-1/2 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="bg-[#09261E] h-full w-[85%]"></div>
-                      </div>
-                      <span className="ml-2">85/100</span>
-                    </div>
-                    <p className="text-sm mt-1">Very walkable neighborhood</p>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-lg mb-2 text-[#135341]">Transit</h3>
-                    <div className="flex items-center">
-                      <div className="w-1/2 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="bg-[#09261E] h-full w-[72%]"></div>
-                      </div>
-                      <span className="ml-2">72/100</span>
-                    </div>
-                    <p className="text-sm mt-1">Good transit options</p>
-                  </div>
-                  <div>
-                    <h3 className="font-medium text-lg mb-2 text-[#135341]">Schools</h3>
-                    <div className="flex items-center">
-                      <div className="w-1/2 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div className="bg-[#09261E] h-full w-[90%]"></div>
-                      </div>
-                      <span className="ml-2">90/100</span>
-                    </div>
-                    <p className="text-sm mt-1">Excellent school district</p>
                   </div>
                 </div>
               </div>
@@ -605,18 +489,18 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         </div>
       </section>
 
-      {/* Property Detail Accordions */}
-      <section className="py-10 bg-white border-t border-gray-200">
+      {/* Property Detail Accordions - Redesigned with clean horizontal dividers */}
+      <section className="py-6 bg-white border-t border-gray-200">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property Details</h2>
+          <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Property Insights</h2>
           
-          <Accordion type="multiple" className="bg-white space-y-4">
+          <Accordion type="multiple" className="bg-white">
             {/* The Numbers Accordion */}
-            <AccordionItem value="numbers" className="border border-gray-200 rounded-lg overflow-hidden">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+            <AccordionItem value="numbers" className="border-b border-gray-200">
+              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
                 <div className="flex items-center">
-                  <span className="mr-2 text-[#09261E]">🧮</span>
-                  <span className="font-heading font-semibold text-lg text-[#09261E]">The Numbers</span>
+                  <span className="mr-3 text-lg">🧮</span>
+                  <span className="font-heading font-semibold text-[#09261E]">The Numbers</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pt-4">
@@ -659,11 +543,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </AccordionItem>
             
             {/* Relevant Calculators */}
-            <AccordionItem value="calculators" className="border border-gray-200 rounded-lg overflow-hidden">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+            <AccordionItem value="calculators" className="border-b border-gray-200">
+              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
                 <div className="flex items-center">
-                  <span className="mr-2 text-[#09261E]">📈</span>
-                  <span className="font-heading font-semibold text-lg text-[#09261E]">Relevant Calculators</span>
+                  <span className="mr-3 text-lg">📈</span>
+                  <span className="font-heading font-semibold text-[#09261E]">Relevant Calculators</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pt-4">
@@ -715,11 +599,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </AccordionItem>
             
             {/* Find a REP */}
-            <AccordionItem value="reps" className="border border-gray-200 rounded-lg overflow-hidden">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+            <AccordionItem value="reps" className="border-b border-gray-200">
+              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
                 <div className="flex items-center">
-                  <span className="mr-2 text-[#09261E]">🧑‍🔧</span>
-                  <span className="font-heading font-semibold text-lg text-[#09261E]">Find a REP</span>
+                  <span className="mr-3 text-lg">🧑‍🔧</span>
+                  <span className="font-heading font-semibold text-[#09261E]">Find a REP</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pt-4">
@@ -761,11 +645,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </AccordionItem>
             
             {/* Property History */}
-            <AccordionItem value="history" className="border border-gray-200 rounded-lg overflow-hidden">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+            <AccordionItem value="history" className="border-b border-gray-200">
+              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
                 <div className="flex items-center">
-                  <span className="mr-2 text-[#09261E]">🏛</span>
-                  <span className="font-heading font-semibold text-lg text-[#09261E]">Property History</span>
+                  <span className="mr-3 text-lg">🏛</span>
+                  <span className="font-heading font-semibold text-[#09261E]">Property History</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pt-4">
@@ -808,11 +692,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </AccordionItem>
             
             {/* Comparable Properties */}
-            <AccordionItem value="comps" className="border border-gray-200 rounded-lg overflow-hidden">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+            <AccordionItem value="comps" className="border-b border-gray-200">
+              <AccordionTrigger className="w-full py-4 hover:no-underline hover:bg-[#135341]/5 transition-colors">
                 <div className="flex items-center">
-                  <span className="mr-2 text-[#09261E]">🏘️</span>
-                  <span className="font-heading font-semibold text-lg text-[#09261E]">Comparable Properties</span>
+                  <span className="mr-3 text-lg">🏘️</span>
+                  <span className="font-heading font-semibold text-[#09261E]">Comparable Properties</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pt-4">
