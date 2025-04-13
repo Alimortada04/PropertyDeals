@@ -338,10 +338,7 @@ export default function HeroSection() {
                     )}
                   </div>
                   
-                  {/* Network badge */}
-                  <div className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm z-10 inline-flex items-center gap-1">
-                    <span>🔄</span> Trusted Network
-                  </div>
+                  {/* Network badge removed */}
                   
                   {/* Price tag */}
                   <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm z-10">
@@ -350,24 +347,7 @@ export default function HeroSection() {
                     </p>
                   </div>
                   
-                  {/* REP Avatar stack */}
-                  <div className="absolute bottom-3 right-3 z-10">
-                    <div className="flex -space-x-2">
-                      {Array.from({ length: 3 }).map((_, idx) => (
-                        <div 
-                          key={idx}
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white overflow-hidden will-change-transform"
-                          style={{ zIndex: 3 - idx }}
-                        >
-                          <img 
-                            src={`https://images.unsplash.com/photo-${1580489944761 + idx * 1000}-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80`}
-                            alt="REP avatar" 
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  {/* REP Avatar stack removed */}
                 </div>
                 
                 {/* Property details */}
@@ -399,8 +379,8 @@ export default function HeroSection() {
               <div 
                 className="absolute top-[-10%] right-[15%] w-[50%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
                 style={{
-                  transform: `translate3d(0, ${scrollY * 0.03}px, 0) rotate(2deg)`,
-                  transition: 'transform 0.1s ease-out'
+                  transform: `translate3d(0, ${Math.min(40, scrollY * 0.02)}px, 0) rotate(2deg)`,
+                  transition: 'transform 0.2s ease-out'
                 }}
               >
                 <div className="flex items-center gap-3">
@@ -417,12 +397,9 @@ export default function HeroSection() {
                 </div>
               </div>
               
-              {/* Connection lines - animated */}
+              {/* Connection lines - simplified and reduced */}
               <svg 
                 className="absolute inset-0 w-full h-full z-15 pointer-events-none opacity-30"
-                style={{
-                  transform: `translate3d(0, ${scrollY * 0.01}px, 0)`,
-                }}
               >
                 <defs>
                   <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -430,12 +407,8 @@ export default function HeroSection() {
                     <stop offset="100%" stopColor="#E59F9F" stopOpacity="0.2" />
                   </linearGradient>
                 </defs>
-                <line x1="30%" y1="40%" x2="70%" y2="80%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" from="0" to="20" dur="3s" repeatCount="indefinite" />
-                </line>
-                <line x1="20%" y1="60%" x2="80%" y2="30%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="4s" repeatCount="indefinite" />
-                </line>
+                <line x1="30%" y1="40%" x2="70%" y2="80%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5" />
+                <line x1="20%" y1="60%" x2="80%" y2="30%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5" />
               </svg>
               
               {/* Removed floating UI bubbles as requested */}

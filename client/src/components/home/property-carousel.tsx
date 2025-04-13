@@ -62,10 +62,7 @@ const PropertyCard = ({ property, isActive }: PropertyCardProps) => {
           )}
         </div>
         
-        {/* Network badge */}
-        <div className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm z-10 inline-flex items-center gap-1">
-          <span>🔄</span> Trusted Network
-        </div>
+        {/* Network badge removed */}
         
         {/* Price tag */}
         <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm z-10">
@@ -74,24 +71,7 @@ const PropertyCard = ({ property, isActive }: PropertyCardProps) => {
           </p>
         </div>
         
-        {/* REP Avatar stack */}
-        <div className="absolute bottom-3 right-3 z-20">
-          <div className="flex -space-x-2">
-            {Array.from({ length: 3 }).map((_, idx) => (
-              <div 
-                key={idx}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white overflow-hidden will-change-transform"
-                style={{ zIndex: 3 - idx }}
-              >
-                <img 
-                  src={`https://images.unsplash.com/photo-${1580489944761 + idx * 1000}-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80`}
-                  alt="REP avatar" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* REP Avatar stack removed */}
       </div>
       
       {/* Property details */}
@@ -183,8 +163,8 @@ export default function PropertyCarousel({ properties, scrollY }: PropertyCarous
     <div 
       className="relative w-full h-full max-w-[1200px] mx-auto"
       style={{
-        transform: `translateY(${-scrollY * 0.05}px)`,
-        transition: 'transform 0.1s ease-out',
+        transform: `translateY(${Math.min(30, -scrollY * 0.03)}px)`,
+        transition: 'transform 0.2s ease-out',
       }}
     >
       <div className="overflow-hidden" ref={emblaRef}>
