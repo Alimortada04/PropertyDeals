@@ -50,6 +50,9 @@ export default function HeroSection() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const { relativePosition } = useParallaxEffect();
+  // Track current featured property (rotating among featured properties)
+  const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
+  const featuredProperty = featuredProperties[currentFeaturedIndex];
   
   // Use cursor glow effect
   useCursorGlow(cursorRef);
@@ -67,6 +70,17 @@ export default function HeroSection() {
   // Trigger entrance animations
   useEffect(() => {
     setIsVisible(true);
+  }, []);
+  
+  // Rotate through featured properties
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentFeaturedIndex((prev) => 
+        prev >= featuredProperties.length - 1 ? 0 : prev + 1
+      );
+    }, 8000); // Change property every 8 seconds
+    
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -344,36 +358,56 @@ export default function HeroSection() {
                 }}
               >
                 {/* Property image */}
-                <div className="h-[60%] bg-[#09261E]/5 overflow-hidden relative">
-                  {/* Using a generic placeholder - you should replace with actual image */}
-                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm">
-                    Off-Market Deal
-                  </div>
+                <div 
+                  className="h-[60%] bg-[#09261E]/5 overflow-hidden relative bg-center bg-cover transition-all duration-500"
+                  style={{ 
+                    backgroundImage: `url(${featuredProperty.imageUrl})` 
+                  }}
+                >
+                  {featuredProperty.offMarketDeal && (
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm">
+                      Off-Market Deal
+                    </div>
+                  )}
+                  {featuredProperty.newListing && (
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm">
+                      New Listing
+                    </div>
+                  )}
+                  {featuredProperty.priceDrop && (
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm">
+                      Price Drop
+                    </div>
+                  )}
                   <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
-                    <p className="font-heading font-bold text-lg text-[#09261E]">$825,000</p>
+                    <p className="font-heading font-bold text-lg text-[#09261E]">
+                      ${featuredProperty.price?.toLocaleString()}
+                    </p>
                   </div>
                 </div>
                 
                 {/* Property details */}
                 <div className="p-4">
-                  <h3 className="font-heading font-bold text-lg text-[#09261E] truncate">Modern Farmhouse</h3>
+                  <h3 className="font-heading font-bold text-lg text-[#09261E] truncate">
+                    {featuredProperty.title}
+                  </h3>
                   <div className="flex items-center text-gray-500 text-sm mt-1">
                     <MapPin className="h-3 w-3 mr-1" />
-                    <span className="truncate">Nashville, TN</span>
+                    <span className="truncate">{featuredProperty.city}, {featuredProperty.state}</span>
                   </div>
                   
                   {/* Property specs */}
                   <div className="flex justify-between items-center mt-3">
-                    <div className="text-xs text-gray-600">4 bed</div>
-                    <div className="text-xs text-gray-600">3 bath</div>
-                    <div className="text-xs text-gray-600">2,800 sqft</div>
+                    <div className="text-xs text-gray-600">{featuredProperty.bedrooms} bed</div>
+                    <div className="text-xs text-gray-600">{featuredProperty.bathrooms} bath</div>
+                    <div className="text-xs text-gray-600">{featuredProperty.squareFeet?.toLocaleString()} sqft</div>
                   </div>
                 </div>
               </div>
               
               {/* REP card */}
               <div 
-                className="absolute bottom-[10%] right-[5%] w-[60%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
+                className="absolute bottom-[15%] right-[8%] w-[55%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform"
                 style={{
                   transform: `translate3d(${relativePosition.x * 20}px, ${relativePosition.y * 20 + scrollY * 0.03}px, 0) rotate(3deg)`,
                   transition: 'transform 0.1s ease-out'
@@ -413,7 +447,7 @@ export default function HeroSection() {
               
               {/* Floating UI elements */}
               <div 
-                className="absolute top-[25%] right-[0%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
+                className="absolute top-[18%] right-[-2%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
                 style={{
                   transform: `translate3d(${relativePosition.x * -10 - scrollY * 0.02}px, ${relativePosition.y * -10 - scrollY * 0.01}px, 0)`,
                   transition: 'transform 0.1s ease-out'
@@ -428,7 +462,7 @@ export default function HeroSection() {
               </div>
               
               <div 
-                className="absolute bottom-[40%] left-[5%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
+                className="absolute bottom-[45%] left-[10%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
                 style={{
                   transform: `translate3d(${relativePosition.x * 10 - scrollY * 0.01}px, ${relativePosition.y * 10 + scrollY * 0.025}px, 0)`,
                   transition: 'transform 0.1s ease-out'
@@ -444,7 +478,7 @@ export default function HeroSection() {
               
               {/* New floating element */}
               <div 
-                className="absolute top-[55%] right-[15%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
+                className="absolute top-[65%] right-[18%] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-lg z-40 will-change-transform"
                 style={{
                   transform: `translate3d(${relativePosition.x * 15 + scrollY * 0.015}px, ${relativePosition.y * 15 - scrollY * 0.02}px, 0)`,
                   transition: 'transform 0.1s ease-out'
