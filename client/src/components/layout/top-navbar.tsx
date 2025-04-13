@@ -80,7 +80,7 @@ export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
           <Input
             type="text"
             placeholder="Search..."
-            className="pl-9 border-gray-300 focus:border-gray-400 rounded-full bg-gray-50 hover:bg-white focus:bg-white"
+            className="pl-9 border-gray-300 focus:border-gray-400 rounded-full bg-white hover:bg-white focus:bg-white"
           />
         </div>
         

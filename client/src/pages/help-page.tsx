@@ -105,7 +105,7 @@ export default function HelpPage() {
               </Link>
               <a 
                 href="mailto:support@propertydeals.com"
-                className="w-full sm:w-auto px-4 py-2 border border-[#09261E] text-[#09261E] rounded hover:bg-gray-50 transition-colors text-center"
+                className="w-full sm:w-auto px-4 py-2 border border-[#09261E] text-[#09261E] rounded hover:bg-gray-100 transition-colors text-center"
               >
                 Email Support
               </a>

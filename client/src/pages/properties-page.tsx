@@ -733,7 +733,7 @@ export default function PropertiesPage() {
                     <div 
                       key={property.id} 
                       className={cn(
-                        "p-4 hover:bg-gray-50 transition-colors",
+                        "p-4 hover:bg-gray-100 transition-colors",
                         hoveredPropertyId === property.id ? "bg-[#EAF2EF]" : ""
                       )}
                       onMouseEnter={() => handlePropertyHover(property.id)}

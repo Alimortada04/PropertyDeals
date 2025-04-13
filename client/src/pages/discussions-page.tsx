@@ -1079,7 +1079,7 @@ export default function DiscussionsPage() {
                     <div 
                       key={post.id} 
                       data-post-container 
-                      className={`p-5 hover:bg-gray-50 transition-colors border-transparent ${index === filteredPosts.length - 1 ? 'border-b-0' : ''}`}
+                      className={`p-5 hover:bg-gray-100 transition-colors border-transparent ${index === filteredPosts.length - 1 ? 'border-b-0' : ''}`}
                     >
                       <div className="flex">
                         <Avatar className="h-10 w-10 mt-1 mr-4">
@@ -1183,7 +1183,7 @@ export default function DiscussionsPage() {
                                   )}
 
                                   {attachment.type === 'link' && attachment.preview && (
-                                    <div className="p-3 cursor-pointer hover:bg-gray-50">
+                                    <div className="p-3 cursor-pointer hover:bg-gray-100">
                                       <div className="font-medium mb-1">{attachment.preview.title}</div>
                                       {attachment.preview.domain && (
                                         <div className="text-xs text-gray-500 flex items-center">
@@ -1376,7 +1376,7 @@ export default function DiscussionsPage() {
                               href={attachment.url} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="block p-3 hover:bg-gray-50"
+                              className="block p-3 hover:bg-gray-100"
                             >
                               <div className="font-medium mb-1">{attachment.preview.title}</div>
                               {attachment.preview.domain && (
@@ -1514,7 +1514,7 @@ export default function DiscussionsPage() {
                         </span>
                       </div>
 
-                      <div className="bg-gray-50 p-3 rounded-lg mb-2">
+                      <div className="bg-white border border-gray-200 p-3 rounded-lg mb-2">
                         <p className="text-gray-700 text-sm whitespace-pre-wrap">{reply.content}</p>
                       </div>
 
