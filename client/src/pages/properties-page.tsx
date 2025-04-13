@@ -362,28 +362,30 @@ export default function PropertiesPage() {
   );
   
   return (
-    <div className="flex flex-col min-h-screen pb-12">
-      {/* Breadcrumb and Header Section */}
-      <div className="container mx-auto px-4 mt-6 mb-6">
-        <div className="flex items-center text-sm text-gray-500 mb-2">
-          <Link href="/" className="hover:text-[#135341]">Home</Link>
-          <ChevronRight className="h-4 w-4 mx-1" />
-          <span className="text-gray-700 font-medium">Properties</span>
-        </div>
-        
-        <div className="mb-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#09261E] mb-2">
-            Property Listings
-          </h1>
-          <p className="text-gray-600 max-w-3xl">
-            Browse our curated collection of investment properties. Filter by price range, property type, 
-            and investment strategy to find your next real estate opportunity.
-          </p>
+    <div className="flex flex-col min-h-screen pb-12 bg-gray-50">
+      {/* Breadcrumb and Header Section - White background */}
+      <div className="w-full bg-white">
+        <div className="container mx-auto px-4 pt-6 pb-6">
+          <div className="flex items-center text-sm text-gray-500 mb-2">
+            <Link href="/" className="hover:text-[#135341]">Home</Link>
+            <ChevronRight className="h-4 w-4 mx-1" />
+            <span className="text-gray-700 font-medium">Properties</span>
+          </div>
+          
+          <div className="mb-4">
+            <h1 className="text-2xl md:text-3xl font-bold text-[#09261E] mb-2">
+              Property Listings
+            </h1>
+            <p className="text-gray-600 max-w-3xl">
+              Browse our curated collection of investment properties. Filter by price range, property type, 
+              and investment strategy to find your next real estate opportunity.
+            </p>
+          </div>
         </div>
       </div>
       
       {/* Sticky full-width search bar at the top of the page */}
-      <div className="sticky top-0 z-40 bg-white pb-0 px-0 w-full left-0 right-0">
+      <div className="sticky top-0 lg:top-0 md:top-16 z-30 bg-white pb-0 px-0 w-full left-0 right-0">
         <div className="w-full">
           <StickySearchFilter
             onSearch={setSearchTerm}

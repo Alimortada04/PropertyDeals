@@ -88,8 +88,8 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-40 w-full border-b border-gray-100",
-        isSticky ? "sticky top-14 left-0 right-0 md:top-0" : ""
+        "bg-white transition-all duration-200 z-30 w-full border-b border-gray-100",
+        isSticky ? "sticky top-16 left-0 right-0 lg:top-0" : ""
       )}
     >
       {/* Main search bar - full-width, Redfin-inspired layout */}
