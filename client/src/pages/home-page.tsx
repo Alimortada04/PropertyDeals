@@ -76,7 +76,15 @@ export default function HomePage() {
   });
 
   // Fallback to featured properties if API fails or is loading
-  const displayProperties = properties?.slice(0, 6) || featuredProperties;
+  // Cast properties to include UI-specific fields that are added in data.ts
+  const displayProperties = (properties?.slice(0, 6) || featuredProperties) as ExtendedProperty[];
+  
+  // Import ExtendedProperty type
+  type ExtendedProperty = Property & {
+    offMarketDeal?: boolean;
+    newListing?: boolean;
+    priceDrop?: boolean;
+  };
 
   const renderPropertyGrid = () => {
     if (isLoading) {
