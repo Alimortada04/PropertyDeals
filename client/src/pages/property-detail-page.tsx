@@ -17,6 +17,7 @@ import PropertyCard from "@/components/properties/property-card";
 import PropertyRecommendations from "@/components/properties/property-recommendations";
 import { similarProperties } from "@/lib/data";
 import { useState, useEffect } from "react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { MapPin, ChevronLeft, ChevronRight, X } from "lucide-react";
 
 interface PropertyDetailPageProps {
@@ -604,6 +605,248 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         </div>
       </section>
 
+      {/* Property Detail Accordions */}
+      <section className="py-10 bg-white border-t border-gray-200">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property Details</h2>
+          
+          <Accordion type="multiple" className="bg-white space-y-4">
+            {/* The Numbers Accordion */}
+            <AccordionItem value="numbers" className="border border-gray-200 rounded-lg overflow-hidden">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+                <div className="flex items-center">
+                  <span className="mr-2 text-[#09261E]">🧮</span>
+                  <span className="font-heading font-semibold text-lg text-[#09261E]">The Numbers</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500">Estimated Rent</h4>
+                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.008).toFixed(0)}/month</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500">Estimated Expenses</h4>
+                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.003).toFixed(0)}/month</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500">Property Tax</h4>
+                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.018).toFixed(0)}/year</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500">Estimated Repair Costs</h4>
+                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.05).toFixed(0)}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500">After Repair Value (ARV)</h4>
+                      <p className="text-lg font-semibold text-[#09261E]">${(property.price * 1.2).toFixed(0)}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-500">Price per Sqft</h4>
+                      <p className="text-lg font-semibold text-[#09261E]">${property.squareFeet ? (property.price / property.squareFeet).toFixed(2) : "N/A"}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="border-t border-gray-200 pt-4 pb-2">
+                  <Button variant="outline" className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white">
+                    <i className="fas fa-tools mr-2"></i> I'm a contractor — Submit a Quote
+                  </Button>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            {/* Relevant Calculators */}
+            <AccordionItem value="calculators" className="border border-gray-200 rounded-lg overflow-hidden">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+                <div className="flex items-center">
+                  <span className="mr-2 text-[#09261E]">📈</span>
+                  <span className="font-heading font-semibold text-lg text-[#09261E]">Relevant Calculators</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pt-4">
+                <div className="space-y-4">
+                  <div className="bg-[#09261E]/5 p-4 rounded-lg">
+                    <h4 className="font-medium text-lg text-[#09261E] mb-2">Flip Calculator</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
+                        <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs</label>
+                        <Input type="text" defaultValue={`$${(property.price * 0.05).toFixed(0)}`} className="bg-white" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500 block mb-1">ARV</label>
+                        <Input type="text" defaultValue={`$${(property.price * 1.2).toFixed(0)}`} className="bg-white" />
+                      </div>
+                    </div>
+                    <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Potential Profit</Button>
+                  </div>
+                  
+                  <div className="bg-[#09261E]/5 p-4 rounded-lg">
+                    <h4 className="font-medium text-lg text-[#09261E] mb-2">Rental Calculator</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                      <div>
+                        <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
+                        <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Rent</label>
+                        <Input type="text" defaultValue={`$${(property.price * 0.008).toFixed(0)}`} className="bg-white" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Expenses</label>
+                        <Input type="text" defaultValue={`$${(property.price * 0.003).toFixed(0)}`} className="bg-white" />
+                      </div>
+                    </div>
+                    <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Cash Flow & ROI</Button>
+                  </div>
+                </div>
+                <div className="text-center py-4">
+                  <Link to="/tools" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                    View All Property Calculators <i className="fas fa-arrow-right ml-2"></i>
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            {/* Find a REP */}
+            <AccordionItem value="reps" className="border border-gray-200 rounded-lg overflow-hidden">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+                <div className="flex items-center">
+                  <span className="mr-2 text-[#09261E]">🧑‍🔧</span>
+                  <span className="font-heading font-semibold text-lg text-[#09261E]">Find a REP</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pt-4">
+                <p className="text-gray-600 mb-4">Connect with local professionals who can help with this property:</p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
+                  <Link to="/reps?type=agent&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i className="fas fa-user-tie text-[#09261E]"></i>
+                      </div>
+                      <h3 className="font-medium text-[#09261E]">Agent</h3>
+                    </div>
+                  </Link>
+                  <Link to="/reps?type=contractor&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i className="fas fa-hammer text-[#09261E]"></i>
+                      </div>
+                      <h3 className="font-medium text-[#09261E]">Contractor</h3>
+                    </div>
+                  </Link>
+                  <Link to="/reps?type=lender&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
+                    <div className="text-center">
+                      <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i className="fas fa-hand-holding-usd text-[#09261E]"></i>
+                      </div>
+                      <h3 className="font-medium text-[#09261E]">Lender</h3>
+                    </div>
+                  </Link>
+                </div>
+                
+                <div className="text-center pb-2">
+                  <Link to="/reps" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                    View All REPs <i className="fas fa-arrow-right ml-2"></i>
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            {/* Property History */}
+            <AccordionItem value="history" className="border border-gray-200 rounded-lg overflow-hidden">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+                <div className="flex items-center">
+                  <span className="mr-2 text-[#09261E]">🏛</span>
+                  <span className="font-heading font-semibold text-lg text-[#09261E]">Property History</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pt-4">
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                        <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Source</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      <tr>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">12/15/2024</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Listed</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${property.price.toLocaleString()}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">PropertyDeals</td>
+                      </tr>
+                      <tr>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">06/30/2024</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Assessed</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${(property.price * 0.85).toLocaleString()}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">County Records</td>
+                      </tr>
+                      <tr>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">01/22/2019</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Sold</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">${(property.price * 0.8).toLocaleString()}</td>
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">MLS</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className="text-xs text-gray-500 pt-4 pb-2 italic">
+                  Property history data is for demonstration purposes. In a production app, this would be pulled from public records.
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            {/* Comparable Properties */}
+            <AccordionItem value="comps" className="border border-gray-200 rounded-lg overflow-hidden">
+              <AccordionTrigger className="px-6 py-4 hover:no-underline bg-gray-50 hover:bg-gray-100">
+                <div className="flex items-center">
+                  <span className="mr-2 text-[#09261E]">🏘️</span>
+                  <span className="font-heading font-semibold text-lg text-[#09261E]">Comparable Properties</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  {similarProperties.slice(0, 4).map((comp, index) => (
+                    <div key={index} className="flex bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                      <div className="w-1/3">
+                        <img src={comp.imageUrl || 'https://source.unsplash.com/random/300x200/?house'} 
+                             alt={comp.title} className="h-full w-full object-cover" />
+                      </div>
+                      <div className="w-2/3 p-3">
+                        <h3 className="font-medium text-[#09261E] text-sm line-clamp-1">{comp.address}</h3>
+                        <p className="font-bold text-[#09261E]">${comp.price?.toLocaleString()}</p>
+                        <div className="text-xs text-gray-600 mt-1">
+                          <span>{comp.bedrooms} beds</span> • <span>{comp.bathrooms} baths</span> • <span>{comp.squareFeet?.toLocaleString()} sqft</span>
+                        </div>
+                        <div className="mt-2 text-xs">
+                          <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 rounded-full">0.8 miles</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="text-center pb-2">
+                  <Link to="/properties?location=Milwaukee" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                    View All Comparable Properties <i className="fas fa-arrow-right ml-2"></i>
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </section>
+      
       {/* Smart Property Recommendations */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">

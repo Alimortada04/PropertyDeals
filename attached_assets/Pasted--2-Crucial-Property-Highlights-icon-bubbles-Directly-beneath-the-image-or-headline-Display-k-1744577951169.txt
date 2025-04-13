@@ -1,0 +1,101 @@
+🛏️ 2. Crucial Property Highlights (icon bubbles)
+Directly beneath the image or headline:
+
+Display key metrics using bubbles or square icons:
+
+🛏 Beds
+
+🛁 Baths
+
+📐 Sqft
+
+🏗 Year Built
+
+Use rounded square or circular backgrounds for a clean visual. Center them in a responsive grid.
+
+📊 3. Secondary Property Info
+List below the highlights:
+
+Property Type
+
+Lot Size
+
+Parking
+
+Price per Sqft
+
+Condition (e.g. Full Gut, Turnkey, BRRR)
+
+Make this section responsive and styled like quick tags or a definition list layout.
+
+🪄 4. Expandable Accordion Sections (like Realtor.com)
+Below the main content, add accordion sections with the following structure and content:
+
+🧮 The Numbers
+Includes:
+
+Estimated Rent
+
+Estimated Expenses
+
+Estimated Repair Costs
+
+ARV (After Repair Value)
+
+Property Tax info
+
+Include CTA at the bottom of this section:
+🛠 "I'm a contractor — Submit a Quote" (leads to form or contractor submission area)
+
+📈 Relevant Calculators (context-aware)
+If investmentType = Flip, show Flip Calculator pre-filled with ARV, repair, cost.
+
+If investmentType = Buy & Hold, show Rental Calculator with rent, taxes, expenses filled in.
+
+These calculators already exist on other pages — embed those directly here and ensure the data flows from this property’s info.
+
+🧑‍🔧 Find a REP
+Suggest local professionals relevant to the type of deal:
+
+Flip → Contractor, Hard Money Lender, Agent
+
+Rental → Property Manager, Lender, Insurance
+
+These should be buttons linking to filtered views of REPs in the REP Room.
+
+🏛 History (API Data)
+Display:
+
+Public and MLS data (if integrated)
+
+Purchase history with dates and prices
+
+City/county appraised value by year
+
+Tax amount by year
+
+Use timeline format or table for clarity.
+
+🏘️ Comps
+Pull in and list comparable properties using an API (Zillow, MLS, PropStream-style integration if available).
+
+Each comp should show:
+
+Address, image
+
+Price
+
+Bed/Bath/Sqft
+
+Distance from subject property
+
+Link to view more details or see on a map.
+
+📱 Notes for UX & Responsiveness
+Use collapsible accordion animations
+
+Make sure the layout stacks properly on mobile
+
+Ensure contact card remains sticky on scroll (as discussed in last prompt)
+
+Use brand color palette and font styling
