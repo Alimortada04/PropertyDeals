@@ -3,6 +3,7 @@ export interface Rep {
   name: string;
   slug: string;
   type: 'seller' | 'contractor' | 'agent' | 'lender';
+  entityType?: 'person' | 'business';
   location: {
     city: string;
     state: string;
@@ -38,6 +39,13 @@ export interface Rep {
       comment: string;
     }[];
   };
+  // Business-specific fields
+  foundedYear?: number;
+  employees?: number;
+  services?: string[];
+  businessLicense?: string;
+  website?: string;
+  logoUrl?: string;
 }
 
 export const reps: Rep[] = [
@@ -46,6 +54,7 @@ export const reps: Rep[] = [
     name: "Alex Morgan",
     slug: "alex-morgan",
     type: "seller",
+    entityType: "person",
     location: {
       city: "Milwaukee",
       state: "WI"
@@ -60,6 +69,43 @@ export const reps: Rep[] = [
     properties: {
       current: [1, 3, 5],
       past: [2, 4, 6]
+    }
+  },
+  {
+    id: 9,
+    name: "Summit Realty Group",
+    slug: "summit-realty-group",
+    type: "agent",
+    entityType: "business",
+    location: {
+      city: "Milwaukee",
+      state: "WI"
+    },
+    tagline: "Your trusted partner in Wisconsin real estate since 2010",
+    avatar: "https://randomuser.me/api/portraits/lego/5.jpg",
+    logoUrl: "https://randomuser.me/api/portraits/lego/5.jpg",
+    contact: {
+      phone: "(414) 555-9876",
+      email: "info@summitrealty.com"
+    },
+    bio: "Summit Realty Group is a full-service real estate agency specializing in residential and commercial properties throughout Wisconsin. Our team of experienced agents combines local market knowledge with innovative marketing strategies to deliver exceptional results for our clients.",
+    foundedYear: 2010,
+    employees: 24,
+    website: "https://summitrealty.example.com",
+    businessLicense: "WI-RE-12345",
+    services: ["Residential Sales", "Commercial Properties", "Property Management", "Investment Consulting"],
+    clients: {
+      total: 1250,
+      testimonials: [
+        {
+          name: "Milwaukee Business Journal",
+          comment: "Named one of the top 10 real estate firms in Wisconsin for customer satisfaction."
+        },
+        {
+          name: "John & Mary Thompson",
+          comment: "Summit Realty found us the perfect commercial location for our restaurant."
+        }
+      ]
     }
   },
   {
@@ -264,6 +310,7 @@ export const reps: Rep[] = [
     name: "Olivia Banks",
     slug: "olivia-banks",
     type: "lender",
+    entityType: "person",
     location: {
       city: "Green Bay",
       state: "WI"
@@ -288,11 +335,68 @@ export const reps: Rep[] = [
         }
       ]
     }
+  },
+  {
+    id: 10,
+    name: "Green Home Contractors",
+    slug: "green-home-contractors",
+    type: "contractor",
+    entityType: "business",
+    location: {
+      city: "Madison",
+      state: "WI"
+    },
+    tagline: "Sustainable building solutions for environmentally conscious homeowners",
+    avatar: "https://randomuser.me/api/portraits/lego/2.jpg",
+    logoUrl: "https://randomuser.me/api/portraits/lego/2.jpg",
+    contact: {
+      phone: "(608) 555-7777",
+      email: "info@greenhomecontractors.com"
+    },
+    bio: "Green Home Contractors is a certified eco-friendly construction company specializing in sustainable building practices. From energy-efficient renovations to new green home construction, we help our clients reduce their environmental footprint while creating beautiful, functional living spaces.",
+    foundedYear: 2015,
+    employees: 35,
+    website: "https://greenhomecontractors.example.com",
+    businessLicense: "WI-GC-54321",
+    services: ["Green Home Construction", "Solar Panel Installation", "Energy Audits", "Eco-Friendly Renovations"],
+    projects: {
+      active: [
+        {
+          title: "Net-Zero Community Development",
+          location: "Verona",
+          completion: "December 2025"
+        },
+        {
+          title: "Solar Neighborhood Initiative",
+          location: "Sun Prairie",
+          completion: "August 2025"
+        }
+      ],
+      past: [
+        {
+          title: "LEED Platinum Office Building",
+          location: "Downtown Madison",
+          completed: "March 2024"
+        },
+        {
+          title: "Sustainable Apartment Complex",
+          location: "Middleton",
+          completed: "September 2023"
+        }
+      ]
+    }
   }
 ];
 
 export function getRepsByType(type: Rep['type']) {
   return reps.filter(rep => rep.type === type);
+}
+
+export function getRepsByEntityType(entityType: 'person' | 'business' | 'all' = 'all') {
+  if (entityType === 'all') {
+    return reps;
+  }
+  return reps.filter(rep => rep.entityType === entityType);
 }
 
 export function getRepBySlug(slug: string) {
