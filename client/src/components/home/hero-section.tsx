@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import PropertyCarousel from "./property-carousel";
 import BackgroundElements from "./background-elements";
+import PropertyCalculator from "./property-calculator";
 
 export default function HeroSection() {
   const [scrollY, setScrollY] = useState(0);
@@ -238,12 +239,19 @@ export default function HeroSection() {
           >
             <div className="relative min-h-[500px] w-full">
               {/* Featured property card with 3D hover effect */}
+              {/* Investment Calculator */}
+              <PropertyCalculator 
+                property={featuredProperty} 
+                scrollY={scrollY} 
+                isVisible={isVisible}
+              />
+              
               <Link 
                 href={`/p/${featuredProperty.id}`}
-                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer transform-gpu"
+                className="absolute top-[5%] left-[5%] w-[65%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer transform-gpu"
                 style={{
                   transform: `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`,
-                  transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-out',
+                  transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-out, opacity 0.5s ease',
                   transformStyle: 'preserve-3d',
                   boxShadow: '0 10px 30px -5px rgba(9, 38, 30, 0.15)'
                 }}
