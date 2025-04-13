@@ -4,7 +4,7 @@ import { useParams } from "wouter";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Share2, Heart, MapPin, Home, ChevronRight, ChevronLeft, X, ChevronsRight } from "lucide-react";
+import { Share2, Heart, MapPin, Home, ChevronRight, ChevronLeft, X, ChevronsRight, Mail, MessageSquare, Phone } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -59,6 +59,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   
   // Get property data
   const { data: property, isLoading, error } = useQuery({
@@ -183,7 +184,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     <>
       {/* Property Hero Section with Photo Gallery */}
       <section className="relative bg-white">
-        <div className="container mx-auto px-4 pt-6 pb-8">
+        <div className="container mx-auto px-4 pt-12 pb-8">
           {/* Breadcrumb Navigation */}
           <nav className="flex text-sm text-gray-500 mb-4 items-center">
             <Link to="/" className="hover:text-[#09261E]">Home</Link>
@@ -231,16 +232,28 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             {/* Main Large Photo - 2/3 width and full height */}
             <div className="col-span-2 row-span-2 relative group cursor-pointer" onClick={() => setViewingAllPhotos(true)}>
               <img 
-                src={propertyImages[0]} 
+                src={propertyImages[currentPhotoIndex]} 
                 alt={property.address} 
                 className="w-full h-full object-cover rounded-l-lg" 
               />
               {/* Photo Navigation Arrows */}
               <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors">
+                <button 
+                  className="bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentPhotoIndex(prev => (prev === 0 ? propertyImages.length - 1 : prev - 1));
+                  }}
+                >
                   <ChevronLeft className="h-6 w-6" />
                 </button>
-                <button className="bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors">
+                <button 
+                  className="bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentPhotoIndex(prev => (prev === propertyImages.length - 1 ? 0 : prev + 1));
+                  }}
+                >
                   <ChevronRight className="h-6 w-6" />
                 </button>
               </div>
@@ -255,7 +268,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             {/* Secondary Photo - Top Right */}
             <div className="col-span-1 row-span-1 cursor-pointer" onClick={() => setViewingAllPhotos(true)}>
               <img 
-                src={propertyImages[1]} 
+                src={propertyImages[currentPhotoIndex + 1 >= propertyImages.length ? 0 : currentPhotoIndex + 1]} 
                 alt={property.address} 
                 className="w-full h-full object-cover rounded-tr-lg" 
               />
@@ -316,14 +329,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               <Heart className={`h-4 w-4 mr-2 ${isInWatchlist ? 'fill-[#803344]' : ''}`} />
               {isInWatchlist ? 'Saved' : 'Save'}
             </Button>
-            <Button
-              variant="outline"
-              className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
-              onClick={() => setViewingMap(true)}
-            >
-              <MapPin className="h-4 w-4 mr-2" />
-              View Map
-            </Button>
+
             <Button
               variant="outline"
               className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
