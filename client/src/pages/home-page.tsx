@@ -9,6 +9,7 @@ import Footer from "@/components/layout/footer";
 import StickySearchBar from "@/components/home/sticky-search-bar";
 import BackToTop from "@/components/layout/back-to-top";
 import ImmersiveFeatures from "@/components/home/immersive-features";
+import HorizontalPropertyShowcase from "@/components/home/horizontal-property-showcase";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@shared/schema";
@@ -126,42 +127,9 @@ export default function HomePage() {
       </ScrollAnimationSection>
       
       {/* Featured Properties Preview - Horizontal scrolling cards */}
-      <ScrollAnimationSection className="py-20 bg-white relative">
-        <div 
-          className="absolute inset-0 opacity-20 pointer-events-none"
-          style={{
-            backgroundSize: '40px 40px',
-            backgroundImage: 'radial-gradient(#09261E 1px, transparent 0)',
-            backgroundPosition: `${mousePosition.x * 20}px ${mousePosition.y * 20}px`,
-            transition: 'background-position 0.2s ease-out'
-          }}
-        ></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-            <div className="max-w-xl mb-6 md:mb-0">
-              <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-4 relative">
-                <span className="relative z-10">Featured Properties</span>
-                <span className="absolute bottom-1 left-0 h-3 w-24 bg-[#E59F9F]/30 -z-0"></span>
-              </h2>
-              <p className="text-gray-600 text-lg">
-                Discover our handpicked selection of exclusive off-market real estate opportunities.
-              </p>
-            </div>
-            <Link href="/properties" 
-              className="text-[#135341] hover:text-[#09261E] flex items-center font-medium transition-colors group"
-            >
-              View All Listings
-              <ArrowRight className="h-5 w-5 ml-1 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-          
-          {/* Property Cards with animation */}
-          <div className="transition-all duration-700">
-            {renderPropertyGrid()}
-          </div>
-        </div>
-      </ScrollAnimationSection>
+      <div className="py-12 bg-white relative">
+        <HorizontalPropertyShowcase properties={displayProperties} />
+      </div>
       
       {/* REP Room Preview - Interactive carousel */}
       <ScrollAnimationSection className="w-full">

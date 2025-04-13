@@ -184,7 +184,7 @@ export default function ImmersiveFeatures() {
             className={`container mx-auto px-4 min-h-screen flex flex-col justify-center items-center py-20 `}
           >
             <div 
-              ref={section.animation.ref}
+              ref={section.animation.ref as React.RefObject<HTMLDivElement>}
               className={`relative w-full ${
                 index % 2 === 0
                   ? 'lg:ml-[10%]'

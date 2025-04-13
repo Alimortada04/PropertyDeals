@@ -1,6 +1,13 @@
 import { Property } from "@shared/schema";
 
-export const featuredProperties: Partial<Property>[] = [
+// Extended property interface with UI-specific fields
+interface ExtendedProperty extends Partial<Property> {
+  offMarketDeal?: boolean;
+  newListing?: boolean;
+  priceDrop?: boolean;
+}
+
+export const featuredProperties: ExtendedProperty[] = [
   {
     id: 1,
     title: "Modern Farmhouse",
@@ -13,6 +20,7 @@ export const featuredProperties: Partial<Property>[] = [
     squareFeet: 2450,
     status: "off-market",
     imageUrl: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    offMarketDeal: true,
   },
   {
     id: 2,
