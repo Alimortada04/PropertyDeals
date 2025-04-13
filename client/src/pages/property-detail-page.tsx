@@ -471,67 +471,64 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </div>
             </div>
 
-            {/* Direct implementation of the interested card */}
+            {/* Interested Card - Styled to match the screenshot exactly */}
             <div className="hidden lg:block lg:w-1/3 xl:w-1/4 lg:mt-0">
-              <div className="sticky top-20 bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg w-[320px]">
+              <div className="sticky top-20 bg-white p-6 rounded-lg shadow-lg w-[280px]">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
-                <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
+                <div className="flex flex-col items-center mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" 
                     alt="Property Seller" 
-                    className="w-20 h-20 rounded-full object-cover mr-4 border-2 border-[#09261E]" 
+                    className="w-16 h-16 rounded-full object-cover border-2 border-[#09261E] mb-2" 
                   />
-                  <div>
-                    <h3 className="font-heading font-bold text-[#135341] text-xl">Michael Johnson</h3>
-                    <p className="text-gray-600 font-medium mb-1 flex items-center">
-                      <span className="bg-[#09261E]/10 text-[#09261E] px-2 py-1 text-sm rounded-md mr-2">
-                        Seller
-                      </span>
-                      <span className="inline-flex items-center text-sm mr-3">
-                        <span className="mr-1">👀</span> 142
-                      </span>
-                      <span className="inline-flex items-center text-sm">
-                        <span className="mr-1">❤️</span> 23
-                      </span>
-                    </p>
+                  <h3 className="font-heading font-bold text-[#135341] text-lg">Michael Johnson</h3>
+                  <div className="flex items-center justify-center mt-1 space-x-2">
+                    <span className="bg-gray-100 text-gray-800 px-2 py-0.5 text-sm rounded-md">
+                      Seller
+                    </span>
+                    <span className="flex items-center text-sm text-gray-600">
+                      <span className="mr-1">👁️</span> 142
+                    </span>
+                    <span className="flex items-center text-sm text-gray-600">
+                      <span className="mr-1 text-red-500">❤️</span> 23
+                    </span>
                   </div>
-                </Link>
+                </div>
                 
                 {/* Action Buttons */}
                 <div className="space-y-3 mb-6">
                   <Button 
-                    className="w-full bg-[#09261E] hover:bg-[#135341] text-white py-6 font-medium text-lg"
+                    className="w-full bg-[#09261E] hover:bg-[#135341] text-white py-2.5 font-medium"
                     onClick={() => setContactModalOpen(true)}
                   >
-                    <i className="fas fa-user-plus mr-2"></i> Contact REP
+                    <i className="fas fa-user mr-2"></i> Contact REP
                   </Button>
                   <Button 
-                    className="w-full border-2 border-[#803344] text-[#803344] hover:bg-[#803344] hover:text-white py-6 font-medium text-lg bg-white"
+                    variant="outline"
+                    className="w-full border border-[#803344] text-[#803344] hover:bg-[#803344] hover:text-white py-2.5 font-medium"
                     onClick={() => setOfferModalOpen(true)}
                   >
                     <i className="fas fa-file-invoice-dollar mr-2"></i> Make an Offer
                   </Button>
                 </div>
                 
-                {/* Contact Preferences */}
-                <div className="flex justify-between items-center">
-                  <div className="grid grid-cols-5 w-full gap-2">
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Share">
-                      <i className="fas fa-share-alt"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Like">
-                      <i className="fas fa-heart"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Email">
-                      <i className="fas fa-envelope"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Message">
-                      <i className="fas fa-comment"></i>
-                    </button>
-                    <button className="flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]" title="Call">
-                      <i className="fas fa-phone-alt"></i>
-                    </button>
-                  </div>
+                {/* Contact Preferences - Row of circular buttons */}
+                <div className="flex justify-center space-x-2 mt-4">
+                  <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200" title="Share">
+                    <i className="fas fa-share-alt text-gray-600"></i>
+                  </button>
+                  <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200" title="Like">
+                    <i className="fas fa-heart text-gray-600"></i>
+                  </button>
+                  <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200" title="Email">
+                    <i className="fas fa-envelope text-gray-600"></i>
+                  </button>
+                  <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200" title="Message">
+                    <i className="fas fa-comment text-gray-600"></i>
+                  </button>
+                  <button className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200" title="Call">
+                    <i className="fas fa-phone-alt text-gray-600"></i>
+                  </button>
                 </div>
               </div>
             </div>
