@@ -471,9 +471,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </div>
             </div>
 
-            {/* Sidebar - Contact Card Column */}
-            <div className="lg:col-span-1 relative">
-              <div style={{ position: "sticky", top: "2rem" }} className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg max-w-[380px] lg:mx-auto xl:ml-0">
+            {/* Sidebar - Contact Card Column - Redfin-style sticky implementation */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-4 bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg max-w-[380px] mx-auto">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
                 <Link to="/rep/michael-johnson" className="flex items-center mb-6 border-b pb-4 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
                   <img 
