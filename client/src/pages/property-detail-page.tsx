@@ -679,34 +679,33 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             {/* Right Sidebar - Contact Interested Card */}
             <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
               <div className="bg-gray-50 rounded-lg overflow-hidden lg:sticky lg:top-6">
-                <div className="p-4">
-                  <h3 className="text-xl font-heading font-bold text-[#09261E] mb-1">Interested in this property?</h3>
-                  <p className="text-gray-600 mb-4">Contact the seller or schedule a viewing</p>
+                <div className="p-4 pb-6">
+                  <h3 className="text-2xl font-heading font-bold text-[#09261E] mb-1">Interested in this property?</h3>
+                  <p className="text-gray-600">Contact the seller or schedule a viewing</p>
                 </div>
                 
-                <div className="bg-white p-4 border-y border-gray-200">
-                  <div className="flex items-center mb-4">
-                    <Avatar className="h-14 w-14 border border-gray-200">
-                      <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
-                      <AvatarFallback>MJ</AvatarFallback>
-                    </Avatar>
+                <div className="bg-white p-4 pb-6 border-y border-gray-200">
+                  <div className="flex items-center mb-6">
+                    <div className="h-16 w-16 rounded-full overflow-hidden border border-gray-200">
+                      <img src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" className="w-full h-full object-cover" />
+                    </div>
                     <div className="ml-3">
-                      <div className="font-medium text-lg text-[#09261E]">Michael Johnson</div>
-                      <div className="text-gray-500 flex items-center">
+                      <div className="font-medium text-xl text-[#09261E]">Michael Johnson</div>
+                      <div className="text-gray-500 text-sm flex items-center">
                         Seller <span className="mx-2">•</span> Responds in 24hrs
                       </div>
                     </div>
                   </div>
                   
                   <Button 
-                    className="w-full bg-[#09261E] hover:bg-[#135341] mb-3" 
+                    className="w-full bg-[#09261E] hover:bg-[#135341] mb-3 py-6 rounded-md text-base font-medium" 
                     onClick={() => setContactModalOpen(true)}
                   >
                     Contact Seller
                   </Button>
                   
                   <Button 
-                    className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 mb-3" 
+                    className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 mb-3 py-6 rounded-md text-base font-medium border border-gray-200" 
                     variant="outline"
                     onClick={() => setOfferModalOpen(true)}
                   >
@@ -714,7 +713,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </Button>
                   
                   <Button 
-                    className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 flex items-center justify-center"
+                    className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 py-6 rounded-md text-base font-medium border border-gray-200 flex items-center justify-center"
                     variant="outline"
                   >
                     <MapPin className="h-5 w-5 mr-2" />
@@ -722,7 +721,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </Button>
                 </div>
                 
-                <div className="p-4 flex items-center justify-center text-gray-500 text-sm">
+                <div className="py-5 flex items-center justify-center text-gray-500 text-sm">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -730,8 +729,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   142 people viewed this property
                 </div>
                 
-                <div className="bg-gray-50 p-4 text-gray-600 text-sm">
-                  <div>Property ID: {property.id}</div>
+                <div className="bg-gray-50 p-4 text-gray-600 text-sm space-y-1">
+                  <div>Property ID: 1</div>
                   <div>Listed: 4/13/2025</div>
                 </div>
               </div>
