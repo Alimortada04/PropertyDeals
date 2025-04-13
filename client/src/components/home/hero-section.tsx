@@ -12,6 +12,7 @@ import {
   MapPin,
   Shield,
   LightbulbIcon,
+  Network as CustomNetworkIcon,
 } from "lucide-react";
 import PropertyCarousel from "./property-carousel";
 import BackgroundElements from "./background-elements";
@@ -134,36 +135,36 @@ export default function HeroSection() {
             >
               {[
                 { 
-                  icon: <Search className="h-4 w-4" />, 
-                  text: "For Investors & Buyers", 
+                  icon: "🏠", 
+                  text: "For Buyers", 
                   color: "#09261E",
                   href: "/buyers-dash",
                   avatars: [
-                    { initials: "JL", bg: "#09261E30" },
-                    { initials: "MR", bg: "#09261E20" },
-                    { initials: "AT", bg: "#09261E25" }
+                    { imageUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+                    { imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+                    { imageUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" }
                   ]
                 },
                 { 
-                  icon: <Handshake className="h-4 w-4" />, 
+                  icon: "🤝", 
                   text: "For REPs", 
                   color: "#135341",
                   href: "/rep-dash",
                   avatars: [
-                    { initials: "RH", bg: "#13534130" },
-                    { initials: "LS", bg: "#13534120" },
-                    { initials: "BK", bg: "#13534125" }
+                    { imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+                    { imageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+                    { imageUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" }
                   ]
                 },
                 { 
-                  icon: <Key className="h-4 w-4" />, 
+                  icon: "🔑", 
                   text: "For Sellers", 
                   color: "#803344",
                   href: "/seller-dash",
                   avatars: [
-                    { initials: "PL", bg: "#80334430" },
-                    { initials: "DJ", bg: "#80334420" },
-                    { initials: "EM", bg: "#80334425" }
+                    { imageUrl: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+                    { imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" },
+                    { imageUrl: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" }
                   ]
                 }
               ].map((target, idx) => (
@@ -181,20 +182,22 @@ export default function HeroSection() {
                   }}
                 >
                   <div className="relative">
-                    {/* Avatar stack positioned above the pill and aligned to the right */}
-                    <div className="flex -space-x-2 absolute -right-1 -top-4 transform -translate-x-[15%]">
+                    {/* Avatar stack positioned above and left of the pill */}
+                    <div className="flex -space-x-2 absolute -left-1 -top-4 transform translate-x-[15%]">
                       {target.avatars.map((avatar, avatarIdx) => (
                         <div 
                           key={avatarIdx}
-                          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white will-change-transform transition-all"
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white will-change-transform transition-all overflow-hidden"
                           style={{ 
-                            background: avatar.bg,
-                            color: target.color,
                             transform: `translateY(${relativePosition.y * 2}px)`,
-                            zIndex: 1 - avatarIdx
+                            zIndex: 3 - avatarIdx
                           }}
                         >
-                          {avatar.initials}
+                          <img 
+                            src={avatar.imageUrl} 
+                            alt="User avatar" 
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                       ))}
                     </div>

@@ -16,42 +16,56 @@ interface PropertyCardProps {
 
 const PropertyCard = ({ property, isActive }: PropertyCardProps) => {
   return (
-    <Link 
-      href={`/p/${property.id}`}
-      className={`relative flex-[0_0_85%] sm:flex-[0_0_70%] md:flex-[0_0_45%] lg:flex-[0_0_35%] mx-3 h-[450px] rounded-2xl bg-white overflow-hidden border-4 border-white shadow-xl will-change-transform group cursor-pointer transform-gpu transition-all duration-500 ease-out ${
+    <div
+      className={`relative flex-[0_0_85%] sm:flex-[0_0_70%] md:flex-[0_0_45%] lg:flex-[0_0_35%] mx-3 h-[450px] rounded-2xl bg-white overflow-hidden border-4 border-white shadow-xl will-change-transform group transform-gpu transition-all duration-500 ease-out ${
         isActive 
-          ? 'scale-100 opacity-100 shadow-2xl' 
-          : 'scale-[0.85] opacity-90 shadow-lg'
+          ? 'scale-100 opacity-100 shadow-2xl z-20 cursor-pointer' 
+          : 'scale-[0.65] opacity-75 shadow-lg pointer-events-none z-10'
       }`}
       style={{
         transformStyle: 'preserve-3d',
       }}
     >
+      {isActive && (
+        <Link 
+          href={`/p/${property.id}`}
+          className="absolute inset-0 z-50"
+          aria-label={`View ${property.title}`}
+        />
+      )}
+      
       {/* Property image with zoom effect */}
       <div className="h-[60%] bg-[#09261E]/5 overflow-hidden relative">
         <div 
-          className="absolute inset-0 bg-center bg-cover transition-all duration-700 group-hover:scale-110 will-change-transform"
+          className={`absolute inset-0 bg-center bg-cover transition-all duration-700 ${isActive ? 'group-hover:scale-110' : ''} will-change-transform`}
           style={{ 
             backgroundImage: `url(${property.imageUrl})` 
           }}
         />
         
-        {/* Property tags */}
-        {property.offMarketDeal && (
-          <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm z-10">
-            Off-Market Deal
-          </div>
-        )}
-        {property.newListing && (
-          <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm z-10">
-            New Listing
-          </div>
-        )}
-        {property.priceDrop && (
-          <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm z-10">
-            Price Drop
-          </div>
-        )}
+        {/* Property badges */}
+        <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+          {property.offMarketDeal && (
+            <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm inline-flex items-center gap-1">
+              <span>⭐</span> Off-Market Deal
+            </div>
+          )}
+          {property.newListing && (
+            <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm inline-flex items-center gap-1">
+              <span>🆕</span> New Listing
+            </div>
+          )}
+          {property.priceDrop && (
+            <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm inline-flex items-center gap-1">
+              <span>📉</span> Price Drop
+            </div>
+          )}
+        </div>
+        
+        {/* Network badge */}
+        <div className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm z-10 inline-flex items-center gap-1">
+          <span>🔄</span> Trusted Network
+        </div>
         
         {/* Price tag */}
         <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm z-10">
@@ -60,20 +74,20 @@ const PropertyCard = ({ property, isActive }: PropertyCardProps) => {
           </p>
         </div>
         
-        {/* Avatar stack positioned above and right */}
-        <div className="absolute -right-1 -top-2 transform -translate-x-[15%] z-20">
+        {/* REP Avatar stack */}
+        <div className="absolute bottom-3 right-3 z-20">
           <div className="flex -space-x-2">
-            {[0, 1, 2].map((idx) => (
+            {Array.from({ length: 3 }).map((_, idx) => (
               <div 
                 key={idx}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white will-change-transform transition-all"
-                style={{ 
-                  background: idx === 0 ? '#13534130' : idx === 1 ? '#13534120' : '#13534125',
-                  color: '#135341',
-                  zIndex: 3 - idx
-                }}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium border-2 border-white overflow-hidden will-change-transform"
+                style={{ zIndex: 3 - idx }}
               >
-                {idx === 0 ? 'JD' : idx === 1 ? 'TS' : 'RB'}
+                <img 
+                  src={`https://images.unsplash.com/photo-${1580489944761 + idx * 1000}-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80`}
+                  alt="REP avatar" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             ))}
           </div>
@@ -94,12 +108,26 @@ const PropertyCard = ({ property, isActive }: PropertyCardProps) => {
         
         {/* Property specs */}
         <div className="flex justify-between items-center mt-3">
-          <div className="text-xs text-gray-600">{property.bedrooms} bed</div>
-          <div className="text-xs text-gray-600">{property.bathrooms} bath</div>
-          <div className="text-xs text-gray-600">{property.squareFeet?.toLocaleString()} sqft</div>
+          <div className="text-xs text-gray-600 flex items-center gap-1">
+            <span>🛏️</span> {property.bedrooms} bed
+          </div>
+          <div className="text-xs text-gray-600 flex items-center gap-1">
+            <span>🚿</span> {property.bathrooms} bath
+          </div>
+          <div className="text-xs text-gray-600 flex items-center gap-1">
+            <span>📏</span> {property.squareFeet?.toLocaleString()} sqft
+          </div>
         </div>
       </div>
-    </Link>
+      
+      {/* Card hover effects - glow effect for center card only */}
+      {isActive && (
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#09261E]/10 to-transparent"></div>
+          <div className="absolute -inset-1 bg-gradient-to-r from-[#135341]/0 via-[#135341]/5 to-[#135341]/0 rounded-3xl blur-xl group-hover:animate-pulse-slow"></div>
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -113,6 +141,9 @@ export default function PropertyCarousel({ properties, scrollY }: PropertyCarous
     loop: true,
     align: 'center',
     skipSnaps: false,
+    // Having ~40% of the next/prev cards visible
+    startIndex: 1,
+    slidesToScroll: 1
   });
   
   const [activeIndex, setActiveIndex] = useState(0);
@@ -133,14 +164,14 @@ export default function PropertyCarousel({ properties, scrollY }: PropertyCarous
     setScrollSnaps(emblaApi.scrollSnapList());
     emblaApi.on('select', onSelect);
     
-    // Autoplay functionality
+    // Autoplay functionality - every 3 seconds as requested
     const interval = setInterval(() => {
       if (emblaApi.canScrollNext()) {
         emblaApi.scrollNext();
       } else {
         emblaApi.scrollTo(0); // Restart from beginning
       }
-    }, 5000); // Change slide every 5 seconds
+    }, 3000); // Change slide every 3 seconds
     
     return () => {
       clearInterval(interval);
@@ -173,6 +204,7 @@ export default function PropertyCarousel({ properties, scrollY }: PropertyCarous
         onClick={scrollPrev} 
         className="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-1/2 rounded-full size-12 p-0 bg-white/90 backdrop-blur-sm text-[#09261E] hover:bg-white hover:text-[#135341] border border-gray-200 shadow-lg z-30"
         variant="outline"
+        aria-label="Previous property"
       >
         <ChevronLeft className="h-6 w-6" />
       </Button>
@@ -181,6 +213,7 @@ export default function PropertyCarousel({ properties, scrollY }: PropertyCarous
         onClick={scrollNext} 
         className="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-1/2 rounded-full size-12 p-0 bg-white/90 backdrop-blur-sm text-[#09261E] hover:bg-white hover:text-[#135341] border border-gray-200 shadow-lg z-30"
         variant="outline"
+        aria-label="Next property"
       >
         <ChevronRight className="h-6 w-6" />
       </Button>
