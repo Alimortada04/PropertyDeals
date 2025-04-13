@@ -285,9 +285,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       {/* Property Details Section - Using grid for better sticky behavior */}
       <section className="py-10 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Main Content Column - Takes 3/4 of the space */}
-            <div className="lg:col-span-3">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content Column - Takes 2/3 of the space */}
+            <div className="lg:col-span-2">
               {/* Key Features */}
               <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-6">Property Details</h2>
