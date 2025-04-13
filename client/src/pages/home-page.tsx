@@ -6,7 +6,6 @@ import ToolsTeaser from "@/components/home/tools-teaser";
 import CommunityPreview from "@/components/home/community-preview";
 import CTASection from "@/components/home/cta-section";
 import Footer from "@/components/layout/footer";
-import StickySearchBar from "@/components/home/sticky-search-bar";
 import BackToTop from "@/components/layout/back-to-top";
 import ImmersiveFeatures from "@/components/home/immersive-features";
 import HorizontalPropertyShowcase from "@/components/home/horizontal-property-showcase";
@@ -119,9 +118,6 @@ export default function HomePage() {
     <div ref={homePageRef} className="relative overflow-x-hidden max-w-full">
       {/* Hero Section - Full height splash with animated components */}
       <HeroSection />
-      
-      {/* Sticky Search Bar - Appears on scroll */}
-      <StickySearchBar />
       
       {/* Immersive Features Section - Story-based scrolling experience */}
       <ScrollAnimationSection>

@@ -71,7 +71,7 @@ export default function HeroSection() {
   return (
     <div 
       ref={heroRef} 
-      className="relative bg-white overflow-hidden min-h-[100vh]"
+      className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh]"
     >
       {/* Cursor glow effect container */}
       <div 
