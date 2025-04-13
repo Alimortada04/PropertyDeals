@@ -471,10 +471,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </div>
             </div>
 
-            {/* Sidebar */}
-            <div className="w-full lg:w-1/3 lg:relative">
+            {/* Sidebar - Using CSS approach for sticky positioning */}
+            <div className="w-full lg:w-1/3 self-start" style={{ position: "sticky", top: "100px" }}>
               {/* Contact REP Card */}
-              <div className="bg-white p-6 rounded-lg border-2 border-[#09261E]/20 shadow-md mb-8 sticky top-[100px]">
+              <div className="bg-white p-6 rounded-lg border border-[#09261E]/10 shadow-lg mb-8">
                 <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-4">Interested?</h2>
                 <div className="flex items-center mb-6 border-b pb-4">
                   <img 
