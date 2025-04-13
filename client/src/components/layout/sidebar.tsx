@@ -170,12 +170,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         {/* Auth buttons */}
         <div className="flex items-center gap-2">
           <Link href="/auth">
-            <button className="px-4 py-1.5 text-base rounded border border-gray-300 hover:bg-gray-100">
+            <button className="px-4 py-1.5 text-base rounded border border-gray-300 hover:bg-[#09261E] hover:text-white transition-colors duration-200">
               Sign In
             </button>
           </Link>
           <Link href="/auth">
-            <button className="px-4 py-1.5 text-base rounded bg-[#09261E] text-white hover:bg-[#124035]">
+            <button className="px-4 py-1.5 text-base rounded bg-[#09261E] text-white hover:bg-[#803344] transition-colors duration-200 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]">
               Register
             </button>
           </Link>

@@ -73,9 +73,9 @@ export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
       }`}
     >
       {/* Right-aligned banner */}
-      <div className="bg-white shadow-md py-3 px-5 rounded-bl-lg flex items-center justify-end gap-4 self-start">
+      <div className="bg-white shadow-md py-3 px-5 rounded-bl-lg flex items-center justify-end gap-2 self-start">
         {/* Auth Buttons - moved to the right */}
-        <div className="flex items-center gap-3 ml-auto">
+        <div className="flex items-center gap-2 ml-auto">
           {user ? (
             <>
               <span className="text-gray-700">
@@ -94,13 +94,15 @@ export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
               <Link href="/signin">
                 <Button 
                   variant="outline"
-                  className="hover:bg-[#EAF2EF] hover:text-[#09261E] border-gray-300"
+                  className="hover:bg-[#09261E] hover:text-white border-gray-300 transition-colors duration-200"
                 >
                   Sign In
                 </Button>
               </Link>
               <Link href="/register">
-                <Button className="bg-[#09261E] hover:bg-[#9E3434] text-white">
+                <Button 
+                  className="bg-[#09261E] hover:bg-[#803344] text-white transition-colors duration-200 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
+                >
                   Register
                 </Button>
               </Link>
