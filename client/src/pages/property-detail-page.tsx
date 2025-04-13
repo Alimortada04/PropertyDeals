@@ -60,6 +60,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [showMessageBox, setShowMessageBox] = useState(false);
+  const [messageText, setMessageText] = useState("");
   
   // Get property data
   const { data: property, isLoading, error } = useQuery({
@@ -832,26 +834,28 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
             <div className="p-6">
               {/* Seller Profile Preview */}
-              <div className="mb-6 bg-gray-50 p-4 rounded-lg">
-                <div className="flex items-center mb-3">
-                  <Avatar className="h-16 w-16 border-2 border-[#09261E]">
-                    <AvatarImage src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" />
-                    <AvatarFallback>MJ</AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3">
-                    <h3 className="font-medium text-[#09261E] text-lg">Michael Johnson</h3>
-                    <p className="text-sm text-gray-500">Property Owner • Joined 2023</p>
+              <Link to="/rep/michael-johnson" className="block mb-6 hover:bg-gray-100 transition-colors rounded-lg">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="flex items-center mb-3">
+                    <Avatar className="h-16 w-16 border-2 border-[#09261E]">
+                      <AvatarImage src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" />
+                      <AvatarFallback>MJ</AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3">
+                      <h3 className="font-medium text-[#09261E] text-lg">Michael Johnson</h3>
+                      <p className="text-sm text-gray-500">Property Owner • Joined 2023</p>
+                    </div>
+                    <div className="ml-auto">
+                      <Badge variant="outline" className="bg-[#09261E]/10 text-[#09261E] border-0">
+                        Verified Owner
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="ml-auto">
-                    <Badge variant="outline" className="bg-[#09261E]/10 text-[#09261E] border-0">
-                      Verified Owner
-                    </Badge>
-                  </div>
+                  <p className="text-sm text-gray-600 mb-2">
+                    I'm a real estate investor with over 10 years of experience in the Milwaukee area. I specialize in residential properties and off-market deals.
+                  </p>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">
-                  I'm a real estate investor with over 10 years of experience in the Milwaukee area. I specialize in residential properties and off-market deals.
-                </p>
-              </div>
+              </Link>
               
               {/* Contact Options Description */}
               <p className="text-gray-600 mb-5 text-center">
@@ -862,7 +866,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               <div className="grid grid-cols-3 gap-4">
                 <Button 
                   variant="outline"
-                  className="flex-col h-auto py-6 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+                  className="flex-col h-auto py-4 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
                   onClick={() => {
                     toast({
                       title: "Email Sent",
@@ -871,28 +875,24 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     window.location.href = `mailto:seller@propertydeals.com?subject=Inquiry about ${property.address}&body=I'm interested in your property at ${property.address}.`;
                   }}
                 >
-                  <Mail className="h-6 w-6 mb-2" />
-                  <span>Email</span>
+                  <Mail className="h-5 w-5 mb-1" />
+                  <span className="text-sm">Email</span>
                 </Button>
                 
                 <Button 
                   variant="outline"
-                  className="flex-col h-auto py-6 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+                  className={`flex-col h-auto py-4 border-[#09261E] ${showMessageBox ? "bg-[#09261E] text-white" : "text-[#09261E] hover:bg-[#09261E] hover:text-white"}`}
                   onClick={() => {
-                    toast({
-                      title: "Message Started",
-                      description: "Your message has been started. The seller will be notified.",
-                    });
-                    setContactModalOpen(false);
+                    setShowMessageBox(!showMessageBox);
                   }}
                 >
-                  <MessageSquare className="h-6 w-6 mb-2" />
-                  <span>Message</span>
+                  <MessageSquare className="h-5 w-5 mb-1" />
+                  <span className="text-sm">Message</span>
                 </Button>
                 
                 <Button 
                   variant="outline"
-                  className="flex-col h-auto py-6 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+                  className="flex-col h-auto py-4 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
                   onClick={() => {
                     toast({
                       title: "Phone Call",
@@ -901,10 +901,49 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     window.location.href = "tel:555-123-4567";
                   }}
                 >
-                  <Phone className="h-6 w-6 mb-2" />
-                  <span>Call</span>
+                  <Phone className="h-5 w-5 mb-1" />
+                  <span className="text-sm">Call</span>
                 </Button>
               </div>
+              
+              {/* Message Box */}
+              {showMessageBox && (
+                <div className="mt-4 border border-[#09261E]/20 rounded-lg p-4 bg-white">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Write a message to Michael
+                  </label>
+                  <Textarea 
+                    placeholder="I'm interested in this property and would like to know more about..."
+                    className="mb-3 min-h-[100px]"
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                  />
+                  <div className="flex justify-end">
+                    <Button 
+                      variant="default"
+                      className="bg-[#09261E] hover:bg-[#135341] text-white"
+                      onClick={() => {
+                        if (messageText.trim().length > 0) {
+                          toast({
+                            title: "Message Sent",
+                            description: "Your message has been sent to the seller.",
+                          });
+                          setMessageText("");
+                          setShowMessageBox(false);
+                        } else {
+                          toast({
+                            variant: "destructive",
+                            title: "Error",
+                            description: "Please enter a message before sending.",
+                          });
+                        }
+                      }}
+                    >
+                      Send Message
+                    </Button>
+                  </div>
+                </div>
+              )}
               
               {/* Additional Action */}
               <div className="mt-6 pt-6 border-t text-center">
