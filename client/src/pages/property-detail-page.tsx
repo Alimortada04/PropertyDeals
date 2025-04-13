@@ -16,7 +16,7 @@ import PropertyGrid from "@/components/properties/property-grid";
 import PropertyCard from "@/components/properties/property-card";
 import PropertyRecommendations from "@/components/properties/property-recommendations";
 import { similarProperties } from "@/lib/data";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface PropertyDetailPageProps {
   id: string;
@@ -131,6 +131,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
   // Format address
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
+  
+  // Set document title to property address
+  useEffect(() => {
+    document.title = `${property.address} | PropertyDeals`;
+  }, [property.address]);
 
   return (
     <>
@@ -144,15 +149,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               <span className="mx-2">/</span>
               <Link href="/properties" className="hover:text-[#09261E]">Properties</Link>
               <span className="mx-2">/</span>
-              <span className="text-[#135341]">{property.title}</span>
+              <span className="text-[#135341]">{property.address}</span>
             </nav>
           </div>
 
           {/* Property Title & Quick Info */}
           <div className="flex flex-col lg:flex-row justify-between items-start mb-6">
             <div>
-              <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">{property.title}</h1>
-              <p className="text-gray-600 text-lg mb-2">{formattedAddress}</p>
+              <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">{property.address}</h1>
+              <p className="text-gray-600 text-lg mb-2">{`${property.city}, ${property.state} ${property.zipCode}`}</p>
               <div className="flex items-center">
                 <span className={`inline-block ${property.status === 'exclusive' ? 'bg-[#803344]' : 'bg-[#09261E]'} text-white text-sm px-3 py-1 rounded-md mr-3`}>
                   {property.status === 'exclusive' ? 'Exclusive' : 'Off-Market'}
@@ -172,7 +177,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               <div className="md:col-span-2 md:row-span-2 overflow-hidden rounded-lg">
                 <img 
                   src={property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"} 
-                  alt={property.title} 
+                  alt={property.address} 
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
