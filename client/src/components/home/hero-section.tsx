@@ -95,14 +95,14 @@ export default function HeroSection() {
   return (
     <div 
       ref={heroRef} 
-      className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh] top-0 mt-0"
-      style={{ marginTop: "-1px" }}
+      className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh] top-0 mt-0 pt-0"
+      style={{ marginTop: "0", padding: "0" }}
     >
       {/* New background elements */}
       <BackgroundElements scrollY={scrollY} />
       
       {/* Main hero content - Split layout */}
-      <div className="relative z-10 container mx-auto px-4 min-h-[100vh] flex items-center py-6 md:py-10 lg:py-0">
+      <div className="relative z-10 container mx-auto px-4 min-h-[100vh] flex items-center py-0">
         <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left content column */}
           <div className="lg:col-span-7 flex flex-col justify-center">

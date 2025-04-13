@@ -55,7 +55,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* Top-right sticky navbar */}
       <TopNavbar specialBehavior={isSpecialPage} />
       
-      <div className="flex flex-1 pt-16 lg:pt-14">
+      <div className="flex flex-1 pt-0">
         {/* Sidebar component - no floating hamburger */}
         <Sidebar 
           isOpen={sidebarOpen} 
@@ -67,7 +67,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         
         {/* Main content - ensure it starts after the collapsed sidebar width on desktop only */}
         <main className={`flex-1 w-full transition-all duration-200 overflow-x-hidden ${!isMobile ? (!isExpanded ? 'ml-16' : 'ml-64') : 'ml-0'} lg:ml-16`}>
-          <div className={`min-h-screen ${isHomePage ? 'pt-0' : 'pt-4'} pb-16 px-0 max-w-full`}>
+          <div className={`min-h-screen pt-0 pb-16 px-0 max-w-full`}>
             {children}
           </div>
         </main>
