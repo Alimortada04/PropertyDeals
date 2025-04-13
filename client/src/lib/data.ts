@@ -1,7 +1,7 @@
 import { Property } from "@shared/schema";
 
 // Extended property interface with UI-specific fields
-interface ExtendedProperty extends Partial<Property> {
+export interface ExtendedProperty extends Partial<Property> {
   offMarketDeal?: boolean;
   newListing?: boolean;
   priceDrop?: boolean;

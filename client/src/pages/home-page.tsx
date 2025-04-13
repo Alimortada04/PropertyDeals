@@ -16,7 +16,7 @@ import { Property } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { ArrowRight } from "lucide-react";
-import { featuredProperties } from "@/lib/data";
+import { featuredProperties, ExtendedProperty } from "@/lib/data";
 
 // Helper function for scroll animations
 function ScrollAnimationSection({ 
@@ -78,13 +78,6 @@ export default function HomePage() {
   // Fallback to featured properties if API fails or is loading
   // Cast properties to include UI-specific fields that are added in data.ts
   const displayProperties = (properties?.slice(0, 6) || featuredProperties) as ExtendedProperty[];
-  
-  // Import ExtendedProperty type
-  type ExtendedProperty = Property & {
-    offMarketDeal?: boolean;
-    newListing?: boolean;
-    priceDrop?: boolean;
-  };
 
   const renderPropertyGrid = () => {
     if (isLoading) {

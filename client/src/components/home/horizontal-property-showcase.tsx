@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Property } from "@shared/schema";
+import { ExtendedProperty } from "@/lib/data";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { 
@@ -14,12 +15,7 @@ import {
 } from "lucide-react";
 import { useScrollAnimation, useParallaxEffect } from "@/hooks/use-scroll-animation";
 
-// Extended property type with additional UI-specific fields
-interface ExtendedProperty extends Partial<Property> {
-  offMarketDeal?: boolean;
-  newListing?: boolean;
-  priceDrop?: boolean;
-}
+// Using ExtendedProperty type from data.ts
 
 interface HorizontalPropertyShowcaseProps {
   properties: ExtendedProperty[];
