@@ -150,53 +150,67 @@ export default function RepsPage() {
   );
   
   return (
-    <div className="container mx-auto px-4 pb-8">
-      {/* Breadcrumbs */}
-      <div className="mb-3 pt-4">
-        <Breadcrumbs />
-      </div>
-      
-      {/* Page Title */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">
-          The REP Room
-        </h1>
-        <p className="text-gray-600">
-          Connect with trusted Real Estate Professionals (REPs)
-        </p>
+    <div className="flex flex-col min-h-screen pb-12 bg-gray-50">
+      {/* Breadcrumb and Header Section - White background */}
+      <div className="w-full bg-white">
+        <div className="container mx-auto px-4 pt-6 pb-6">
+          {/* Breadcrumbs */}
+          <div className="mb-3">
+            <Breadcrumbs />
+          </div>
+          
+          {/* Page Title */}
+          <div className="mb-4">
+            <h1 className="text-2xl md:text-3xl font-heading font-bold text-[#09261E] mb-2">
+              The REP Room
+            </h1>
+            <p className="text-gray-600">
+              Connect with trusted Real Estate Professionals (REPs)
+            </p>
+          </div>
+        </div>
       </div>
       
       {/* Sticky Search and Filter Section */}
-      <StickySearchFilter
-        onSearch={setSearchTerm}
-        searchPlaceholder="Search professionals by name, specialty, or keyword..."
-        tabs={repTabs}
-        onTabChange={(value) => setRepType(value as 'all' | RepType)}
-        defaultTab="all"
-        filterContent={filterContent}
-        filterButtonText="Filters"
-      />
-      
-      {/* Results Count */}
-      <div className="text-sm text-gray-600 mb-6">
-        Found {filteredReps.length} professionals
+      <div className="sticky top-0 lg:top-0 md:top-16 z-30 bg-white pb-0 px-0 w-full left-0 right-0">
+        <div className="w-full">
+          <StickySearchFilter
+            onSearch={setSearchTerm}
+            searchPlaceholder="Search professionals by name, specialty, or keyword..."
+            tabs={repTabs}
+            onTabChange={(value) => setRepType(value as 'all' | RepType)}
+            defaultTab="all"
+            filterContent={filterContent}
+            filterButtonText="Filters"
+          />
+        </div>
       </div>
       
-      {/* Results Grid */}
-      {filteredReps.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredReps.map((rep) => (
-            <RepCard key={rep.id} rep={rep} />
-          ))}
+      {/* Main Content Area */}
+      <div className="flex-grow mt-6">
+        <div className="container mx-auto px-4">
+          {/* Results Count */}
+          <div className="text-sm text-gray-600 mb-6">
+            Found {filteredReps.length} professionals
+          </div>
+          
+          {/* Results Grid */}
+          {filteredReps.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredReps.map((rep) => (
+                <RepCard key={rep.id} rep={rep} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No results found</h3>
+              <p className="text-gray-600">
+                Try adjusting your search or filter criteria to find more professionals.
+              </p>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="text-center py-12">
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No results found</h3>
-          <p className="text-gray-600">
-            Try adjusting your search or filter criteria to find more professionals.
-          </p>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
