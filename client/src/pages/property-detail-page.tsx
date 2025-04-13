@@ -106,9 +106,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     mutationFn: async (data: z.infer<typeof inquirySchema>) => {
       const inquiryData: InsertPropertyInquiry = {
         ...data,
-        propertyId,
-        status: 'new',
-        createdAt: new Date().toISOString() 
+        propertyId
       };
       
       const res = await apiRequest("POST", "/api/inquiries", inquiryData);
@@ -680,72 +678,61 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             
             {/* Right Sidebar - Contact Interested Card */}
             <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
-              <div className="bg-white border border-gray-200 rounded-lg p-4 lg:sticky lg:top-6">
-                <div className="flex items-center mb-4">
-                  <Avatar className="h-12 w-12 border border-gray-200">
-                    <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
-                    <AvatarFallback>JD</AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3">
-                    <Link to="/profile/seller123" className="font-medium text-[#09261E] hover:underline block">John Doe</Link>
-                    <div className="text-gray-500 text-sm">Property Owner</div>
-                  </div>
+              <div className="bg-gray-50 rounded-lg overflow-hidden lg:sticky lg:top-6">
+                <div className="p-4">
+                  <h3 className="text-xl font-heading font-bold text-[#09261E] mb-1">Interested in this property?</h3>
+                  <p className="text-gray-600 mb-4">Contact the seller or schedule a viewing</p>
                 </div>
                 
-                <div className="flex space-x-2 mb-4">
-                  <Button className="flex-1 bg-[#09261E] hover:bg-[#135341]" size="sm" onClick={() => setShowMessageBox(!showMessageBox)}>
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    Message
-                  </Button>
-                  <Button className="flex-1" variant="outline" size="sm">
-                    <Phone className="h-4 w-4 mr-2" />
-                    Call
-                  </Button>
-                  <Button className="flex-1" variant="outline" size="sm">
-                    <Mail className="h-4 w-4 mr-2" />
-                    Email
-                  </Button>
-                </div>
-                
-                {showMessageBox && (
-                  <div className="mb-4">
-                    <Textarea 
-                      placeholder="Type your message here..." 
-                      className="mb-2"
-                      value={messageText}
-                      onChange={(e) => setMessageText(e.target.value)}
-                    />
-                    <Button className="w-full bg-[#09261E] hover:bg-[#135341]">
-                      Send Message
-                    </Button>
+                <div className="bg-white p-4 border-y border-gray-200">
+                  <div className="flex items-center mb-4">
+                    <Avatar className="h-14 w-14 border border-gray-200">
+                      <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
+                      <AvatarFallback>MJ</AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3">
+                      <div className="font-medium text-lg text-[#09261E]">Michael Johnson</div>
+                      <div className="text-gray-500 flex items-center">
+                        Seller <span className="mx-2">•</span> Responds in 24hrs
+                      </div>
+                    </div>
                   </div>
-                )}
-                
-                <div className="border-t border-gray-200 pt-4 mb-4">
-                  <div className="text-lg font-bold text-[#09261E] mb-1">${property.price.toLocaleString()}</div>
-                  <div className="flex text-sm text-gray-600 mb-3">
-                    <div className="mr-3">{property.bedrooms} beds</div>
-                    <div className="mr-3">{property.bathrooms} baths</div>
-                    <div>{property.squareFeet?.toLocaleString() || 'N/A'} sqft</div>
-                  </div>
-                  <Button className="w-full bg-[#09261E] hover:bg-[#135341] mb-2" onClick={() => setContactModalOpen(true)}>
+                  
+                  <Button 
+                    className="w-full bg-[#09261E] hover:bg-[#135341] mb-3" 
+                    onClick={() => setContactModalOpen(true)}
+                  >
                     Contact Seller
                   </Button>
-                  <Button className="w-full" variant="outline" onClick={() => setOfferModalOpen(true)}>
+                  
+                  <Button 
+                    className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 mb-3" 
+                    variant="outline"
+                    onClick={() => setOfferModalOpen(true)}
+                  >
                     Make an Offer
+                  </Button>
+                  
+                  <Button 
+                    className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 flex items-center justify-center"
+                    variant="outline"
+                  >
+                    <MapPin className="h-5 w-5 mr-2" />
+                    View Map
                   </Button>
                 </div>
                 
-                <div className="text-sm text-gray-600">
-                  <div className="mb-2">
-                    <span className="font-medium">MLS#:</span> PD{property.id}0{property.id}
-                  </div>
-                  <div className="mb-2">
-                    <span className="font-medium">Status:</span> For Sale
-                  </div>
-                  <p>
-                    <span className="font-medium">Listed:</span> {new Date().toLocaleDateString()}
-                  </p>
+                <div className="p-4 flex items-center justify-center text-gray-500 text-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  142 people viewed this property
+                </div>
+                
+                <div className="bg-gray-50 p-4 text-gray-600 text-sm">
+                  <div>Property ID: {property.id}</div>
+                  <div>Listed: 4/13/2025</div>
                 </div>
               </div>
               
@@ -887,23 +874,29 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           onClick={() => setContactModalOpen(false)}
         >
           <div 
-            className="bg-white rounded-lg p-6 max-w-md w-full overflow-y-auto max-h-[90vh]"
+            className="bg-white rounded-lg max-w-md w-full overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-2xl font-bold text-[#09261E] mb-4">Contact Seller</h2>
-            <div className="mb-6">
-              <div className="flex items-center mb-4">
-                <Avatar className="h-12 w-12 border border-gray-200">
-                  <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div className="ml-3">
-                  <div className="font-medium text-[#09261E]">John Doe</div>
-                  <div className="text-gray-500 text-sm">Property Owner</div>
+            <div className="bg-[#09261E]/5 p-5">
+              <h2 className="text-2xl font-bold text-[#09261E]">Contact About This Property</h2>
+              <p className="text-gray-600 mt-1">{property.address}, {property.city}</p>
+            </div>
+            
+            <div className="p-5">
+              <div className="border-b border-gray-200 pb-4 mb-4">
+                <div className="flex items-center">
+                  <Avatar className="h-14 w-14 border border-gray-200">
+                    <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
+                    <AvatarFallback>MJ</AvatarFallback>
+                  </Avatar>
+                  <div className="ml-3">
+                    <div className="font-medium text-lg text-[#09261E]">Michael Johnson</div>
+                    <div className="text-gray-500 flex items-center text-sm">
+                      Seller <span className="mx-2">•</span> Responds in 24hrs
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <p className="text-gray-600 mb-4">Fill out the form below to contact the seller about this property:</p>
               
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -921,33 +914,35 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     )}
                   />
                   
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="your.email@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone</FormLabel>
-                        <FormControl>
-                          <Input placeholder="(123) 456-7890" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="your.email@example.com" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone</FormLabel>
+                          <FormControl>
+                            <Input placeholder="(123) 456-7890" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   
                   <FormField
                     control={form.control}
@@ -956,15 +951,19 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       <FormItem>
                         <FormLabel>Message</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="I'm interested in..." {...field} rows={4} />
+                          <Textarea 
+                            placeholder="I'm interested in this property and would like to schedule a viewing." 
+                            {...field} 
+                            rows={4} 
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   
-                  <div className="flex flex-col space-y-2">
-                    <Button type="submit" className="w-full bg-[#09261E] hover:bg-[#135341]">
+                  <div className="mt-6">
+                    <Button type="submit" className="w-full bg-[#09261E] hover:bg-[#135341] py-6">
                       {inquiryMutation.isPending ? (
                         <div className="flex items-center">
                           <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
@@ -972,14 +971,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       ) : "Send Message"}
                     </Button>
-                    <Button 
-                      type="button"
-                      variant="outline" 
-                      className="w-full" 
-                      onClick={() => setContactModalOpen(false)}
-                    >
-                      Cancel
-                    </Button>
+                    
+                    <div className="mt-4 text-center text-sm text-gray-500">
+                      By submitting, you agree to our <Link to="/terms" className="text-[#09261E] hover:underline">Terms of Service</Link>
+                    </div>
                   </div>
                 </form>
               </Form>
