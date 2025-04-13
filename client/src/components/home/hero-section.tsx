@@ -342,38 +342,66 @@ export default function HeroSection() {
                 ></div>
               </div>
               
-              {/* Featured property card */}
+              {/* Featured property card with 3D hover effect */}
               <Link 
                 href={`/p/${featuredProperty.id}`}
-                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer"
+                className="absolute top-[5%] left-[10%] w-[80%] h-[60%] rounded-2xl shadow-2xl bg-white overflow-hidden z-20 border-4 border-white will-change-transform group cursor-pointer transform-gpu"
                 style={{
                   transform: `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15 - scrollY * 0.05}px, 0) rotate(-2deg)`,
-                  transition: 'transform 0.1s ease-out'
+                  transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease-out',
+                  transformStyle: 'preserve-3d',
+                  boxShadow: '0 10px 30px -5px rgba(9, 38, 30, 0.15)'
+                }}
+                onMouseMove={(e) => {
+                  const card = e.currentTarget;
+                  const rect = card.getBoundingClientRect();
+                  const x = e.clientX - rect.left; // x position within the element
+                  const y = e.clientY - rect.top; // y position within the element
+                  
+                  // Calculate rotation angles based on mouse position
+                  // Use smaller values for subtler effect (0.08)
+                  const rotateY = ((x / rect.width) - 0.5) * 8; // -4 to 4 degrees
+                  const rotateX = ((y / rect.height) - 0.5) * -8; // 4 to -4 degrees
+                  
+                  // Apply transformation - subtle 3D effect
+                  card.style.transform = `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15 - scrollY * 0.05}px, 0) rotate(-2deg) rotateY(${rotateY}deg) rotateX(${rotateX}deg) scale3d(1.02, 1.02, 1.02)`;
+                  card.style.boxShadow = '0 20px 40px -10px rgba(9, 38, 30, 0.25)';
+                }}
+                onMouseLeave={(e) => {
+                  const card = e.currentTarget;
+                  // Reset to original transform
+                  card.style.transform = `translate3d(${relativePosition.x * 15}px, ${relativePosition.y * 15 - scrollY * 0.05}px, 0) rotate(-2deg)`;
+                  card.style.boxShadow = '0 10px 30px -5px rgba(9, 38, 30, 0.15)';
                 }}
               >
-                {/* Property image */}
-                <div 
-                  className="h-[60%] bg-[#09261E]/5 overflow-hidden relative bg-center bg-cover transition-all duration-500"
-                  style={{ 
-                    backgroundImage: `url(${featuredProperty.imageUrl})` 
-                  }}
-                >
+                {/* Property image with zoom effect */}
+                <div className="h-[60%] bg-[#09261E]/5 overflow-hidden relative">
+                  <div 
+                    className="absolute inset-0 bg-center bg-cover transition-all duration-700 group-hover:scale-110 will-change-transform"
+                    style={{ 
+                      backgroundImage: `url(${featuredProperty.imageUrl})` 
+                    }}
+                  />
+                  
+                  {/* Property tags */}
                   {featuredProperty.offMarketDeal && (
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm">
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm z-10">
                       Off-Market Deal
                     </div>
                   )}
                   {featuredProperty.newListing && (
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm">
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#135341] shadow-sm z-10">
                       New Listing
                     </div>
                   )}
                   {featuredProperty.priceDrop && (
-                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm">
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm z-10">
                       Price Drop
                     </div>
                   )}
-                  <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
+                  
+                  {/* Price tag */}
+                  <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm z-10">
                     <p className="font-heading font-bold text-lg text-[#09261E]">
                       ${featuredProperty.price?.toLocaleString()}
                     </p>
