@@ -285,13 +285,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             
             {/* Map Preview - Bottom Right */}
             <div className="col-span-1 row-span-1 relative cursor-pointer" 
-              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formattedAddress)}`, '_blank')}
+              onClick={() => setViewingMap(true)}
             >
               <div className="bg-[#09261E]/10 w-full h-full rounded-br-lg flex items-center justify-center">
                 <MapPin className="h-10 w-10 text-[#09261E]" />
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="bg-black/50 text-white text-sm px-3 py-1 rounded-full">Open Google Maps</span>
+                <span className="bg-black/50 text-white text-sm px-3 py-1 rounded-full">View Map</span>
               </div>
             </div>
           </div>
@@ -679,53 +679,204 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 </AccordionItem>
               </Accordion>
               
-              {/* Relevant Calculators Section */}
+              {/* Calculators Section */}
               <Accordion type="single" defaultValue="calculators" collapsible className="w-full">
                 <AccordionItem value="calculators" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">📈</span>
-                      <span>Relevant Calculators</span>
+                      <span>Calculators</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Flip Calculator */}
                       <div className="bg-[#09261E]/5 p-4 rounded-lg">
                         <h4 className="font-medium text-lg text-[#09261E] mb-2">Flip Calculator</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div className="space-y-3 mb-4">
                           <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
-                            <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
+                            <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price (Automatic)</label>
+                            <Input 
+                              type="text" 
+                              value={`$${property.price.toLocaleString()}`} 
+                              className="bg-white" 
+                              disabled 
+                            />
                           </div>
                           <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs</label>
-                            <Input type="text" defaultValue={`$${(property.price * 0.05).toFixed(0)}`} className="bg-white" />
+                            <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs (Automatic)</label>
+                            <Input 
+                              type="text" 
+                              value={`$${(property.price * 0.05).toFixed(0)}`} 
+                              className="bg-white" 
+                              disabled 
+                            />
                           </div>
                           <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">ARV</label>
-                            <Input type="text" defaultValue={`$${(property.price * 1.2).toFixed(0)}`} className="bg-white" />
+                            <label className="flex items-center text-sm font-medium text-gray-500 block mb-1">
+                              ARV
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <InfoIcon className="h-3.5 w-3.5 ml-1.5 text-gray-500" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="text-xs">After Repair Value</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </label>
+                            <Input 
+                              type="text" 
+                              defaultValue={`$${(property.price * 1.2).toFixed(0)}`} 
+                              className="bg-white" 
+                              id="arv-input"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-500 block mb-1">Holding Costs</label>
+                            <Input 
+                              type="text" 
+                              defaultValue={`$${(property.price * 0.02).toFixed(0)}`} 
+                              className="bg-white" 
+                              id="holding-costs-input"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-500 block mb-1">Selling Costs</label>
+                            <Input 
+                              type="text" 
+                              defaultValue={`$${(property.price * 0.06).toFixed(0)}`} 
+                              className="bg-white" 
+                              id="selling-costs-input"
+                            />
                           </div>
                         </div>
-                        <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Potential Profit</Button>
+                        <div className="space-y-2">
+                          <Button 
+                            className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
+                            onClick={() => {
+                              // Parse inputs
+                              const arvStr = (document.getElementById('arv-input') as HTMLInputElement).value.replace(/[$,]/g, '');
+                              const holdingCostsStr = (document.getElementById('holding-costs-input') as HTMLInputElement).value.replace(/[$,]/g, '');
+                              const sellingCostsStr = (document.getElementById('selling-costs-input') as HTMLInputElement).value.replace(/[$,]/g, '');
+                              
+                              const arv = parseFloat(arvStr) || property.price * 1.2;
+                              const holdingCosts = parseFloat(holdingCostsStr) || property.price * 0.02;
+                              const sellingCosts = parseFloat(sellingCostsStr) || property.price * 0.06;
+                              const purchasePrice = property.price;
+                              const repairCosts = property.price * 0.05;
+                              
+                              // Calculate profit
+                              const profit = arv - (purchasePrice + repairCosts + holdingCosts + sellingCosts);
+                              
+                              // Update result
+                              const resultElement = document.getElementById('flip-result');
+                              if (resultElement) {
+                                resultElement.textContent = `$${profit.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
+                              }
+                            }}
+                          >
+                            Calculate Profit
+                          </Button>
+                          <div className="flex justify-between pt-2 border-t border-gray-200">
+                            <span className="font-medium">Potential Profit:</span>
+                            <span className="font-bold text-[#09261E]" id="flip-result">--</span>
+                          </div>
+                        </div>
                       </div>
                       
+                      {/* Rental Calculator */}
                       <div className="bg-[#09261E]/5 p-4 rounded-lg">
                         <h4 className="font-medium text-lg text-[#09261E] mb-2">Rental Calculator</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div className="space-y-3 mb-4">
                           <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
-                            <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
+                            <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price (Automatic)</label>
+                            <Input 
+                              type="text" 
+                              value={`$${property.price.toLocaleString()}`} 
+                              className="bg-white" 
+                              disabled 
+                            />
                           </div>
                           <div>
                             <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Rent</label>
-                            <Input type="text" defaultValue={`$${(property.price * 0.008).toFixed(0)}`} className="bg-white" />
+                            <Input 
+                              type="text" 
+                              defaultValue={`$${(property.price * 0.008).toFixed(0)}`} 
+                              className="bg-white"
+                              id="monthly-rent-input"
+                            />
                           </div>
                           <div>
                             <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Expenses</label>
-                            <Input type="text" defaultValue={`$${(property.price * 0.003).toFixed(0)}`} className="bg-white" />
+                            <Input 
+                              type="text" 
+                              defaultValue={`$${(property.price * 0.003).toFixed(0)}`} 
+                              className="bg-white"
+                              id="monthly-expenses-input"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-500 block mb-1">Down Payment Percentage</label>
+                            <Input 
+                              type="text" 
+                              defaultValue="20%" 
+                              className="bg-white"
+                              id="down-payment-input"
+                            />
                           </div>
                         </div>
-                        <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Cash Flow & ROI</Button>
+                        <div className="space-y-2">
+                          <Button 
+                            className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
+                            onClick={() => {
+                              // Parse inputs
+                              const rentStr = (document.getElementById('monthly-rent-input') as HTMLInputElement).value.replace(/[$,]/g, '');
+                              const expensesStr = (document.getElementById('monthly-expenses-input') as HTMLInputElement).value.replace(/[$,]/g, '');
+                              const downPaymentStr = (document.getElementById('down-payment-input') as HTMLInputElement).value.replace(/[%,]/g, '');
+                              
+                              const monthlyRent = parseFloat(rentStr) || property.price * 0.008;
+                              const monthlyExpenses = parseFloat(expensesStr) || property.price * 0.003;
+                              const downPaymentPercent = parseFloat(downPaymentStr) || 20;
+                              const purchasePrice = property.price;
+                              
+                              // Calculate metrics
+                              const annualRent = monthlyRent * 12;
+                              const annualExpenses = monthlyExpenses * 12;
+                              const netOperatingIncome = annualRent - annualExpenses;
+                              const rentPercentage = (monthlyRent / purchasePrice) * 100;
+                              const capRate = (netOperatingIncome / purchasePrice) * 100;
+                              
+                              // Cash on Cash calculation
+                              const downPayment = (purchasePrice * downPaymentPercent) / 100;
+                              const closingCosts = purchasePrice * 0.03;
+                              const totalInvestment = downPayment + closingCosts;
+                              const cashOnCash = (netOperatingIncome - (purchasePrice - downPayment) * 0.05) / totalInvestment * 100;
+                              
+                              // Update results
+                              document.getElementById('rent-percent-result')!.textContent = `${rentPercentage.toFixed(2)}%`;
+                              document.getElementById('cap-rate-result')!.textContent = `${capRate.toFixed(2)}%`;
+                              document.getElementById('cash-on-cash-result')!.textContent = `${cashOnCash.toFixed(2)}%`;
+                            }}
+                          >
+                            Calculate Returns
+                          </Button>
+                          <div className="space-y-1 pt-2 border-t border-gray-200">
+                            <div className="flex justify-between">
+                              <span className="font-medium">Rent %:</span>
+                              <span className="font-bold text-[#09261E]" id="rent-percent-result">--</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-medium">Cap Rate %:</span>
+                              <span className="font-bold text-[#09261E]" id="cap-rate-result">--</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-medium">Cash on Cash Return:</span>
+                              <span className="font-bold text-[#09261E]" id="cash-on-cash-result">--</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="text-center py-4">
@@ -1191,6 +1342,59 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             >
               Close
             </Button>
+          </div>
+        </div>
+      )}
+      
+      {/* Google Maps Modal */}
+      {viewingMap && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          onClick={() => setViewingMap(false)}
+        >
+          <div 
+            className="bg-white rounded-lg p-4 max-w-5xl w-full h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-[#09261E]">{property.address}, {property.city}, {property.state}</h2>
+              <Button 
+                variant="ghost" 
+                className="p-1 h-auto" 
+                onClick={() => setViewingMap(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            
+            <div className="h-[calc(100%-60px)] w-full overflow-hidden rounded-md">
+              <iframe 
+                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyDemn0EXWU_G9tQpYF8t-EPcHOgmijlEbM&q=${encodeURIComponent(formattedAddress)}`}
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+            
+            <div className="mt-4 flex justify-end">
+              <Button 
+                variant="outline"
+                className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white mr-3"
+                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formattedAddress)}`, '_blank')}
+              >
+                Open in Google Maps
+              </Button>
+              <Button 
+                variant="default"
+                className="bg-[#09261E] hover:bg-[#09261E]/90"
+                onClick={() => setViewingMap(false)}
+              >
+                Close
+              </Button>
+            </div>
           </div>
         </div>
       )}
