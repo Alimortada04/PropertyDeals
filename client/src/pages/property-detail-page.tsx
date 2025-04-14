@@ -191,6 +191,25 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     });
   };
   
+  // Check if we're on mobile
+  const isMobile = useIsMobile();
+
+  // Handle contact seller action
+  const handleContactSeller = () => {
+    setContactModalOpen(true);
+  };
+
+  // If on mobile, show mobile optimized view
+  if (isMobile) {
+    return (
+      <MobilePropertyView 
+        property={property}
+        onBack={() => window.history.back()}
+        onContactSeller={handleContactSeller}
+      />
+    );
+  }
+  
   return (
     <TooltipProvider>
       {/* Property Hero Section with Photo Gallery */}
