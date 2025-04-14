@@ -692,14 +692,15 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                                 <div 
                                   className="w-3 h-3 rounded-full mr-1"
                                   style={{
-                                    backgroundColor: [
-                                      'rgba(128, 51, 68, 0.95)', 
-                                      'rgba(128, 51, 68, 0.85)', 
-                                      'rgba(128, 51, 68, 0.75)', 
-                                      'rgba(128, 51, 68, 0.65)', 
-                                      'rgba(128, 51, 68, 0.55)', 
-                                      'rgba(128, 51, 68, 0.45)'
-                                    ][index % 6]
+                                    backgroundColor: index === 0 
+                                    ? 'rgba(19, 83, 65, 0.95)' // Under 18 - Green
+                                    : [
+                                      'rgba(128, 51, 68, 0.90)', 
+                                      'rgba(128, 51, 68, 0.80)', 
+                                      'rgba(128, 51, 68, 0.70)', 
+                                      'rgba(128, 51, 68, 0.60)', 
+                                      'rgba(128, 51, 68, 0.50)'
+                                    ][(index - 1) % 5]
                                   }}
                                 />
                                 <span>{item.group}: {item.percentage}%</span>
