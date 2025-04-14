@@ -988,13 +988,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 </AccordionItem>
               </Accordion>
               
-              {/* Seller's Other Properties Section */}
+              {/* Comparable Properties Section */}
               <Accordion type="single" defaultValue="comparable" collapsible className="w-full">
                 <AccordionItem value="comparable" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">🏘️</span>
-                      <span>Other Properties by Michael Johnson</span>
+                      <span>Comparable Properties</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
@@ -1018,8 +1018,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       ))}
                     </div>
                     <div className="text-center pb-2">
-                      <Link to="/properties?seller=Michael+Johnson" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
-                        View All Properties by Michael Johnson <i className="fas fa-arrow-right ml-2"></i>
+                      <Link to="/properties" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                        View All Comparable Properties <i className="fas fa-arrow-right ml-2"></i>
                       </Link>
                     </div>
                   </AccordionContent>
