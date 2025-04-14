@@ -992,16 +992,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   <AccordionContent className="px-6 py-4">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div>
-                        <div className="rounded-lg overflow-hidden bg-gray-100 h-[300px] mb-4 flex items-center justify-center">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-medium text-[#09261E]">Location</h4>
+                          <div className="font-medium text-gray-700">Population: {demographicData.population.toLocaleString()}</div>
+                        </div>
+                        <div className="rounded-lg overflow-hidden bg-gray-100 h-[350px] mb-6 flex items-center justify-center">
                           <div className="text-center">
                             <MapPinned className="h-12 w-12 mx-auto text-gray-400 mb-3" />
                             <Button variant="outline" className="bg-white">View on Map</Button>
                           </div>
-                        </div>
-                        
-                        <div className="mb-6">
-                          <h4 className="font-medium mb-2 text-[#09261E]">Population</h4>
-                          <p className="text-gray-700">{demographicData.population.toLocaleString()}</p>
                         </div>
                       </div>
                       
@@ -1151,89 +1150,79 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       </div>
                       
-                      {/* Year Housing Was Built */}
-                      <div>
-                        <h4 className="font-medium mb-3 text-[#09261E]">Year Housing Was Built</h4>
-                        <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
-                          {demographicData.yearBuilt.map((item, index) => (
+                      {/* Year Housing Was Built and Age Distribution - Side by Side */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Year Housing Built - Bar Chart */}
+                        <div>
+                          <h4 className="font-medium mb-3 text-[#09261E]">Year Housing Was Built</h4>
+                          <div className="space-y-2">
+                            {demographicData.yearBuilt.map((item, index) => (
+                              <div key={index} className="w-full">
+                                <div className="flex justify-between text-xs mb-1">
+                                  <span>{item.group}</span>
+                                  <span>{item.percentage}%</span>
+                                </div>
+                                <div className="h-6 w-full bg-gray-100 rounded-sm overflow-hidden">
+                                  <div 
+                                    className="h-full"
+                                    style={{ 
+                                      width: `${item.percentage}%`,
+                                      backgroundColor: [
+                                        'rgba(19, 83, 65, 0.95)', // darkest
+                                        'rgba(19, 83, 65, 0.85)', 
+                                        'rgba(19, 83, 65, 0.75)', 
+                                        'rgba(19, 83, 65, 0.65)', 
+                                        'rgba(19, 83, 65, 0.55)'
+                                      ][index % 5]
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Age Distribution - Pie Chart */}
+                        <div>
+                          <h4 className="font-medium mb-3 text-[#09261E]">Age Distribution</h4>
+                          <div className="relative w-full aspect-square max-w-[200px] mx-auto">
+                            {/* Create pie chart using conic-gradient */}
                             <div 
-                              key={index}
-                              className="h-full float-left" 
-                              style={{
-                                width: `${item.percentage}%`,
-                                backgroundColor: [
-                                  'rgba(9, 38, 30, 0.95)', // darkest
-                                  'rgba(9, 38, 30, 0.85)', 
-                                  'rgba(9, 38, 30, 0.75)', 
-                                  'rgba(9, 38, 30, 0.65)', 
-                                  'rgba(9, 38, 30, 0.55)'
-                                ][index % 5]
+                              className="w-full h-full rounded-full"
+                              style={{ 
+                                background: `conic-gradient(
+                                  rgba(128, 51, 68, 0.95) 0% ${demographicData.ageDistribution[0].percentage}%, 
+                                  rgba(128, 51, 68, 0.85) ${demographicData.ageDistribution[0].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage}%, 
+                                  rgba(128, 51, 68, 0.75) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage}%, 
+                                  rgba(128, 51, 68, 0.65) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage}%,
+                                  rgba(128, 51, 68, 0.55) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage + demographicData.ageDistribution[4].percentage}%,
+                                  rgba(128, 51, 68, 0.45) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage + demographicData.ageDistribution[4].percentage}% 100%
+                                )`
                               }}
                             />
-                          ))}
-                        </div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
-                          {demographicData.yearBuilt.map((item, index) => (
-                            <div key={index} className="flex items-center text-xs">
-                              <div 
-                                className="w-3 h-3 rounded-full mr-1"
-                                style={{
-                                  backgroundColor: [
-                                    'rgba(9, 38, 30, 0.95)', // darkest
-                                    'rgba(9, 38, 30, 0.85)', 
-                                    'rgba(9, 38, 30, 0.75)', 
-                                    'rgba(9, 38, 30, 0.65)', 
-                                    'rgba(9, 38, 30, 0.55)'
-                                  ][index % 5]
-                                }}
-                              />
-                              <span>{item.group}: {item.percentage}%</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* Age Distribution - Moved to bottom per your request */}
-                      <div>
-                        <h4 className="font-medium mb-3 text-[#09261E]">Age Distribution</h4>
-                        <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
-                          {demographicData.ageDistribution.map((item, index) => (
-                            <div 
-                              key={index}
-                              className="h-full float-left" 
-                              style={{
-                                width: `${item.percentage}%`,
-                                backgroundColor: [
-                                  'rgba(128, 51, 68, 0.95)', // darkest wine
-                                  'rgba(128, 51, 68, 0.85)', 
-                                  'rgba(128, 51, 68, 0.75)', 
-                                  'rgba(128, 51, 68, 0.65)', 
-                                  'rgba(128, 51, 68, 0.55)', 
-                                  'rgba(128, 51, 68, 0.45)'
-                                ][index % 6]
-                              }}
-                            />
-                          ))}
-                        </div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
-                          {demographicData.ageDistribution.map((item, index) => (
-                            <div key={index} className="flex items-center text-xs">
-                              <div 
-                                className="w-3 h-3 rounded-full mr-1"
-                                style={{
-                                  backgroundColor: [
-                                    'rgba(128, 51, 68, 0.95)', // darkest wine
-                                    'rgba(128, 51, 68, 0.85)', 
-                                    'rgba(128, 51, 68, 0.75)', 
-                                    'rgba(128, 51, 68, 0.65)', 
-                                    'rgba(128, 51, 68, 0.55)', 
-                                    'rgba(128, 51, 68, 0.45)'
-                                  ][index % 6]
-                                }}
-                              />
-                              <span>{item.group}: {item.percentage}%</span>
-                            </div>
-                          ))}
+                            {/* Center hole to create donut */}
+                            <div className="absolute top-1/2 left-1/2 w-[40%] h-[40%] bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+                          </div>
+                          <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-4">
+                            {demographicData.ageDistribution.map((item, index) => (
+                              <div key={index} className="flex items-center text-xs">
+                                <div 
+                                  className="w-3 h-3 rounded-full mr-1"
+                                  style={{
+                                    backgroundColor: [
+                                      'rgba(128, 51, 68, 0.95)', 
+                                      'rgba(128, 51, 68, 0.85)', 
+                                      'rgba(128, 51, 68, 0.75)', 
+                                      'rgba(128, 51, 68, 0.65)', 
+                                      'rgba(128, 51, 68, 0.55)', 
+                                      'rgba(128, 51, 68, 0.45)'
+                                    ][index % 6]
+                                  }}
+                                />
+                                <span>{item.group}: {item.percentage}%</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                       

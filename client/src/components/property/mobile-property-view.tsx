@@ -634,89 +634,81 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                       </div>
                     </div>
                     
-                    {/* Year Housing Was Built */}
+                    {/* Year Housing Was Built and Age Distribution - Side by Side */}
                     <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Year Housing Was Built</div>
-                      <div className="h-6 w-full bg-gray-200 rounded-full overflow-hidden">
-                        {demographicData.yearBuilt.map((item, index) => (
-                          <div 
-                            key={index}
-                            className="h-full float-left" 
-                            style={{
-                              width: `${item.percentage}%`,
-                              backgroundColor: [
-                                'rgba(9, 38, 30, 0.95)', // darkest
-                                'rgba(9, 38, 30, 0.85)', 
-                                'rgba(9, 38, 30, 0.75)', 
-                                'rgba(9, 38, 30, 0.65)', 
-                                'rgba(9, 38, 30, 0.55)'
-                              ][index % 5]
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
-                        {demographicData.yearBuilt.map((item, index) => (
-                          <div key={index} className="flex items-center text-xs">
+                      <div className="grid grid-cols-1 gap-6">
+                        {/* Year Housing Built - Bar Chart */}
+                        <div>
+                          <div className="text-sm font-medium mb-2">Year Housing Was Built</div>
+                          <div className="space-y-2">
+                            {demographicData.yearBuilt.map((item, index) => (
+                              <div key={index} className="w-full">
+                                <div className="flex justify-between text-xs mb-1">
+                                  <span>{item.group}</span>
+                                  <span>{item.percentage}%</span>
+                                </div>
+                                <div className="h-5 w-full bg-gray-100 rounded-sm overflow-hidden">
+                                  <div 
+                                    className="h-full"
+                                    style={{ 
+                                      width: `${item.percentage}%`,
+                                      backgroundColor: [
+                                        'rgba(19, 83, 65, 0.95)', // darkest
+                                        'rgba(19, 83, 65, 0.85)', 
+                                        'rgba(19, 83, 65, 0.75)', 
+                                        'rgba(19, 83, 65, 0.65)', 
+                                        'rgba(19, 83, 65, 0.55)'
+                                      ][index % 5]
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Age Distribution - Pie Chart */}
+                        <div>
+                          <div className="text-sm font-medium mb-2 mt-4">Age Distribution</div>
+                          <div className="relative w-full aspect-square max-w-[180px] mx-auto">
+                            {/* Create pie chart using conic-gradient */}
                             <div 
-                              className="w-3 h-3 rounded-full mr-1"
-                              style={{
-                                backgroundColor: [
-                                  'rgba(9, 38, 30, 0.95)', // darkest
-                                  'rgba(9, 38, 30, 0.85)', 
-                                  'rgba(9, 38, 30, 0.75)', 
-                                  'rgba(9, 38, 30, 0.65)', 
-                                  'rgba(9, 38, 30, 0.55)'
-                                ][index % 5]
+                              className="w-full h-full rounded-full"
+                              style={{ 
+                                background: `conic-gradient(
+                                  rgba(128, 51, 68, 0.95) 0% ${demographicData.ageDistribution[0].percentage}%, 
+                                  rgba(128, 51, 68, 0.85) ${demographicData.ageDistribution[0].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage}%, 
+                                  rgba(128, 51, 68, 0.75) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage}%, 
+                                  rgba(128, 51, 68, 0.65) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage}%,
+                                  rgba(128, 51, 68, 0.55) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage + demographicData.ageDistribution[4].percentage}%,
+                                  rgba(128, 51, 68, 0.45) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage + demographicData.ageDistribution[4].percentage}% 100%
+                                )`
                               }}
                             />
-                            <span>{item.group}: {item.percentage}%</span>
+                            {/* Center hole to create donut */}
+                            <div className="absolute top-1/2 left-1/2 w-[40%] h-[40%] bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    {/* Age Distribution - Moved to bottom per your request */}
-                    <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Age Distribution</div>
-                      <div className="h-6 w-full bg-gray-200 rounded-full overflow-hidden">
-                        {demographicData.ageDistribution.map((item, index) => (
-                          <div 
-                            key={index}
-                            className="h-full float-left" 
-                            style={{
-                              width: `${item.percentage}%`,
-                              backgroundColor: [
-                                'rgba(128, 51, 68, 0.95)', // darkest wine
-                                'rgba(128, 51, 68, 0.85)', 
-                                'rgba(128, 51, 68, 0.75)', 
-                                'rgba(128, 51, 68, 0.65)', 
-                                'rgba(128, 51, 68, 0.55)', 
-                                'rgba(128, 51, 68, 0.45)'
-                              ][index % 6]
-                            }}
-                          />
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
-                        {demographicData.ageDistribution.map((item, index) => (
-                          <div key={index} className="flex items-center text-xs">
-                            <div 
-                              className="w-3 h-3 rounded-full mr-1"
-                              style={{
-                                backgroundColor: [
-                                  'rgba(128, 51, 68, 0.95)', // darkest wine
-                                  'rgba(128, 51, 68, 0.85)', 
-                                  'rgba(128, 51, 68, 0.75)', 
-                                  'rgba(128, 51, 68, 0.65)', 
-                                  'rgba(128, 51, 68, 0.55)', 
-                                  'rgba(128, 51, 68, 0.45)'
-                                ][index % 6]
-                              }}
-                            />
-                            <span>{item.group}: {item.percentage}%</span>
+                          <div className="flex flex-wrap justify-center gap-x-3 gap-y-2 mt-3">
+                            {demographicData.ageDistribution.map((item, index) => (
+                              <div key={index} className="flex items-center text-xs">
+                                <div 
+                                  className="w-3 h-3 rounded-full mr-1"
+                                  style={{
+                                    backgroundColor: [
+                                      'rgba(128, 51, 68, 0.95)', 
+                                      'rgba(128, 51, 68, 0.85)', 
+                                      'rgba(128, 51, 68, 0.75)', 
+                                      'rgba(128, 51, 68, 0.65)', 
+                                      'rgba(128, 51, 68, 0.55)', 
+                                      'rgba(128, 51, 68, 0.45)'
+                                    ][index % 6]
+                                  }}
+                                />
+                                <span>{item.group}: {item.percentage}%</span>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        </div>
                       </div>
                     </div>
                     
