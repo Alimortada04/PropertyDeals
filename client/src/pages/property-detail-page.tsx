@@ -988,13 +988,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 </AccordionItem>
               </Accordion>
               
-              {/* Comparable Properties Section */}
+              {/* Seller's Other Properties Section */}
               <Accordion type="single" defaultValue="comparable" collapsible className="w-full">
                 <AccordionItem value="comparable" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">🏘️</span>
-                      <span>Comparable Properties</span>
+                      <span>Other Properties by Michael Johnson</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
@@ -1018,8 +1018,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       ))}
                     </div>
                     <div className="text-center pb-2">
-                      <Link to="/properties" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
-                        View All Comparable Properties <i className="fas fa-arrow-right ml-2"></i>
+                      <Link to="/properties?seller=Michael+Johnson" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                        View All Properties by Michael Johnson <i className="fas fa-arrow-right ml-2"></i>
                       </Link>
                     </div>
                   </AccordionContent>
@@ -1105,7 +1105,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       {/* Smart Property Recommendations */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-8">Similar Properties</h2>
+          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-8">Other Properties by Michael Johnson</h2>
           
           {/* Location-based recommendations using recommendation engine */}
           {property && (
