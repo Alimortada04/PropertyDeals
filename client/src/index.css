@@ -28,6 +28,14 @@
   .sidebar-transition {
     @apply transition-all duration-300;
   }
+  
+  .dropdown-trigger {
+    @apply hover:bg-[#09261E]/5 transition-colors;
+  }
+  
+  .dropdown-trigger svg {
+    @apply hover:text-[#803344] transition-colors;
+  }
 }
 
 @layer utilities {
