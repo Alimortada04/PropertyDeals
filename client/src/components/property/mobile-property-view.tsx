@@ -30,13 +30,13 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   
-  // Sample property images
+  // Property images - using actual images that match the property
   const propertyImages = [
-    property.imageUrl || 'https://source.unsplash.com/random/800x600/?house',
-    'https://source.unsplash.com/random/800x600/?kitchen',
-    'https://source.unsplash.com/random/800x600/?bathroom',
-    'https://source.unsplash.com/random/800x600/?bedroom',
-    'https://source.unsplash.com/random/800x600/?garden',
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=800&h=600&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800&h=600&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=800&h=600&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?q=80&w=800&h=600&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?q=80&w=800&h=600&auto=format&fit=crop',
   ];
   
   // Format address for display
@@ -256,66 +256,68 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </AccordionItem>
         </Accordion>
         
-        {/* Other accordions - Closed by default */}
+        {/* The Numbers section */}
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="pricing" className="border-b border-gray-200">
+          <AccordionItem value="numbers" className="border-b border-gray-200">
             <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
               <div className="flex items-center">
-                <span className="mr-3 text-lg">💰</span>
-                <span>Pricing & Financials</span>
+                <span className="mr-3 text-lg">🔢</span>
+                <span>The Numbers</span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-4 py-4">
-              <div className="space-y-4">
-                <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                  <div className="font-medium">Asking Price</div>
-                  <div className="font-bold text-[#09261E]">${property.price?.toLocaleString()}</div>
-                </div>
-                <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                  <div className="font-medium">Price per sq ft</div>
-                  <div>
-                    ${property.squareFeet 
-                      ? Math.round((property.price || 0) / property.squareFeet).toLocaleString() 
-                      : 'N/A'}
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <div className="font-medium">Rent</div>
+                  <div className="font-semibold text-[#09261E] flex items-center">
+                    $3,672<span className="text-sm text-gray-500 ml-1">/month</span>
                   </div>
                 </div>
-                <div className="flex justify-between items-center border-b border-gray-100 pb-2">
-                  <div className="font-medium">Est. Monthly Payment</div>
-                  <div>$1,750/mo</div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="font-medium">Estimated Repair Costs</div>
+                  <div className="font-semibold text-[#09261E] flex items-center">
+                    $22,950
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="font-medium">Estimated Monthly Expenses</div>
+                  <div className="font-semibold text-[#09261E] flex items-center">
+                    $1,377<span className="text-sm text-gray-500 ml-1">/month</span>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="font-medium">ARV</div>
+                  <div className="font-semibold text-[#09261E]">$550,800</div>
+                </div>
+                
+                <div className="border-t border-gray-200 pt-4">
+                  <div className="grid grid-cols-3 gap-y-4 gap-x-2">
+                    <div>
+                      <div className="text-sm text-gray-500">Cap Rate</div>
+                      <div className="font-semibold">5.2%</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Cash-on-Cash Return</div>
+                      <div className="font-semibold">7.8%</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Monthly Rent %</div>
+                      <div className="font-semibold">0.76%</div>
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="pt-2">
-                  <h4 className="font-medium mb-2">Payment Breakdown</h4>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center text-sm">
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                        <span>Principal & Interest</span>
-                      </div>
-                      <div>$1,250</div>
-                    </div>
-                    <div className="flex justify-between items-center text-sm">
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                        <span>Property Tax</span>
-                      </div>
-                      <div>$250</div>
-                    </div>
-                    <div className="flex justify-between items-center text-sm">
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
-                        <span>Insurance</span>
-                      </div>
-                      <div>$120</div>
-                    </div>
-                    <div className="flex justify-between items-center text-sm">
-                      <div className="flex items-center">
-                        <div className="w-3 h-3 rounded-full bg-purple-500 mr-2"></div>
-                        <span>HOA Fees</span>
-                      </div>
-                      <div>$130</div>
-                    </div>
-                  </div>
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={handleOfferClick}
+                  >
+                    I'm a contractor — Submit a Quote
+                  </Button>
                 </div>
               </div>
             </AccordionContent>
@@ -392,33 +394,273 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         </Accordion>
         
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="investment" className="border-b border-gray-200">
+          <AccordionItem value="calculators" className="border-b border-gray-200">
             <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
               <div className="flex items-center">
-                <span className="mr-3 text-lg">📈</span>
-                <span>Investment Potential</span>
+                <span className="mr-3 text-lg">🧮</span>
+                <span>Calculators</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 py-4">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-50 rounded-md">
+                  <div className="text-lg font-bold mb-3">Flip Calculator</div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">Purchase Price (Automatic)</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">459,000</div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">Repair Costs (Automatic)</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">22,950</div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">ARV</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">550,800</div>
+                      </div>
+                    </div>
+                    
+                    <Button className="w-full bg-[#09261E] hover:bg-[#135341]">
+                      Calculate Profit
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-gray-50 rounded-md">
+                  <div className="text-lg font-bold mb-3">Rental Calculator</div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">Purchase Price (Automatic)</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">459,000</div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">Monthly Rent</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">3,672</div>
+                      </div>
+                    </div>
+                    
+                    <Button className="w-full bg-[#09261E] hover:bg-[#135341]">
+                      Calculate Returns
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <a href="#" className="text-[#09261E] inline-flex items-center text-sm hover:underline">
+                    View All Property Calculators
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="findRep" className="border-b border-gray-200">
+            <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+              <div className="flex items-center">
+                <span className="mr-3 text-lg">👥</span>
+                <span>Find a REP</span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-4 py-4">
               <div className="space-y-4">
-                <div className="p-3 bg-[#09261E]/5 rounded-lg">
-                  <div className="font-medium text-[#09261E] mb-1">Cap Rate</div>
-                  <div className="text-2xl font-bold text-[#09261E]">5.7%</div>
-                  <div className="text-xs text-gray-500 mt-1">Based on current rental estimates</div>
-                </div>
+                <p className="text-gray-700">Connect with local professionals who can help with this property:</p>
                 
-                <div className="p-3 bg-[#09261E]/5 rounded-lg">
-                  <div className="font-medium text-[#09261E] mb-1">Cash-on-Cash Return</div>
-                  <div className="text-2xl font-bold text-[#09261E]">8.2%</div>
-                  <div className="text-xs text-gray-500 mt-1">Assuming 20% down payment</div>
-                </div>
-                
-                <div className="rounded-lg overflow-hidden bg-gray-100 h-[120px] flex items-center justify-center">
-                  <div className="text-center">
-                    <BarChart className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <Button variant="outline" className="bg-white">View Full Analysis</Button>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="border rounded-md p-4 flex flex-col items-center justify-center hover:bg-gray-50 cursor-pointer">
+                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      </svg>
+                    </div>
+                    <div className="text-sm font-medium">Agent</div>
+                  </div>
+                  
+                  <div className="border rounded-md p-4 flex flex-col items-center justify-center hover:bg-gray-50 cursor-pointer">
+                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                    <div className="text-sm font-medium">Contractor</div>
+                  </div>
+                  
+                  <div className="border rounded-md p-4 flex flex-col items-center justify-center hover:bg-gray-50 cursor-pointer">
+                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mb-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div className="text-sm font-medium">Lender</div>
                   </div>
                 </div>
+                
+                <div className="text-center pt-2">
+                  <a href="#" className="text-[#09261E] inline-flex items-center text-sm hover:underline">
+                    View All REPs
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="comparableProperties" className="border-b border-gray-200">
+            <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+              <div className="flex items-center">
+                <span className="mr-3 text-lg">🏘️</span>
+                <span>Comparable Properties</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 py-4">
+              <div className="space-y-4">
+                <div className="space-y-4">
+                  <div className="flex flex-col space-y-4">
+                    <div className="border rounded-md overflow-hidden">
+                      <div className="flex">
+                        <div className="w-1/3">
+                          <img 
+                            src="https://images.unsplash.com/photo-1598228723793-52759bba239c?q=80&w=300&h=200&auto=format&fit=crop" 
+                            alt="456 Elm Street"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="w-2/3 p-3">
+                          <h4 className="font-medium">456 Elm Street</h4>
+                          <p className="text-sm text-gray-500">Milwaukee, WI</p>
+                          <div className="mt-2 flex justify-between">
+                            <div className="font-bold">$439,000</div>
+                            <div className="text-sm text-gray-500">3bd, 2ba</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="border rounded-md overflow-hidden">
+                      <div className="flex">
+                        <div className="w-1/3">
+                          <img 
+                            src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?q=80&w=300&h=200&auto=format&fit=crop" 
+                            alt="789 Oak Road"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="w-2/3 p-3">
+                          <h4 className="font-medium">789 Oak Road</h4>
+                          <p className="text-sm text-gray-500">Milwaukee, WI</p>
+                          <div className="mt-2 flex justify-between">
+                            <div className="font-bold">$475,000</div>
+                            <div className="text-sm text-gray-500">4bd, 3ba</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="border rounded-md overflow-hidden">
+                      <div className="flex">
+                        <div className="w-1/3">
+                          <img 
+                            src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?q=80&w=300&h=200&auto=format&fit=crop" 
+                            alt="101 Pine Lane"
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <div className="w-2/3 p-3">
+                          <h4 className="font-medium">101 Pine Lane</h4>
+                          <p className="text-sm text-gray-500">Milwaukee, WI</p>
+                          <div className="mt-2 flex justify-between">
+                            <div className="font-bold">$495,000</div>
+                            <div className="text-sm text-gray-500">4bd, 2.5ba</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-center pt-2">
+                  <a href="#" className="text-[#09261E] inline-flex items-center text-sm hover:underline">
+                    View All Comparable Properties
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="propertyHistory" className="border-b border-gray-200">
+            <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+              <div className="flex items-center">
+                <span className="mr-3 text-lg">🏛️</span>
+                <span>Property History</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 py-4">
+              <div className="overflow-x-auto">
+                <table className="min-w-full">
+                  <thead>
+                    <tr className="border-b text-left text-xs text-gray-500">
+                      <th className="pb-2 font-medium">DATE</th>
+                      <th className="pb-2 font-medium">EVENT</th>
+                      <th className="pb-2 font-medium">PRICE</th>
+                      <th className="pb-2 font-medium">SOURCE</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-3 pr-4">12/15/2024</td>
+                      <td className="py-3 pr-4">Listed</td>
+                      <td className="py-3 pr-4">$459,000</td>
+                      <td className="py-3 pr-4">PropertyDeals</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-3 pr-4">06/30/2024</td>
+                      <td className="py-3 pr-4">Assessed</td>
+                      <td className="py-3 pr-4">$390,150</td>
+                      <td className="py-3 pr-4">County Records</td>
+                    </tr>
+                    <tr className="border-b border-gray-100">
+                      <td className="py-3 pr-4">01/22/2019</td>
+                      <td className="py-3 pr-4">Sold</td>
+                      <td className="py-3 pr-4">$367,200</td>
+                      <td className="py-3 pr-4">MLS</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="text-xs text-gray-500 mt-2">
+                Property history data is for demonstration purposes. In a production app, this would be pulled from public records.
               </div>
             </AccordionContent>
           </AccordionItem>
