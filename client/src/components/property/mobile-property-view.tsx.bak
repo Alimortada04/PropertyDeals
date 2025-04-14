@@ -70,106 +70,6 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
     setOfferModalOpen(true);
   };
 
-  // Fetch zip code demographic data
-  const fetchZipCodeData = async (zipCode: string) => {
-    try {
-      // In a real implementation, this would make a fetch to the unitedstateszipcodes.org API
-      // For now, we'll return mock data based on the provided requirements
-      return {
-        demographics: {
-          population: 32451,
-          ageDistribution: [
-            { group: 'Under 18', percentage: 21.5 },
-            { group: '18-24', percentage: 9.7 },
-            { group: '25-34', percentage: 15.3 },
-            { group: '35-54', percentage: 26.8 },
-            { group: '55-64', percentage: 12.1 },
-            { group: '65+', percentage: 14.6 },
-          ],
-          raceDistribution: [
-            { group: 'White', percentage: 68.2 },
-            { group: 'Black', percentage: 12.4 },
-            { group: 'Hispanic', percentage: 10.8 },
-            { group: 'Asian', percentage: 5.7 },
-            { group: 'Other', percentage: 2.9 },
-          ],
-          genderDistribution: [
-            { group: 'Male', percentage: 48.3 },
-            { group: 'Female', percentage: 51.7 },
-          ],
-          housingStatus: [
-            { group: 'Owner Occupied', percentage: 65.4 },
-            { group: 'Renter Occupied', percentage: 28.7 },
-            { group: 'Vacant', percentage: 5.9 },
-          ],
-        }
-      };
-    } catch (error) {
-      console.error('Error fetching zip code data:', error);
-      return null;
-    }
-  };
-
-  // Sample seller properties
-  const sellerProperties = [
-    {
-      id: 1,
-      title: "Victorian Charm",
-      address: "789 Victorian Lane, Milwaukee, WI",
-      price: 425000,
-      bedrooms: 3,
-      bathrooms: 2.5,
-      imageUrl: "https://images.unsplash.com/photo-1575517111839-3a3843ee7f5d?q=80&w=300&h=200&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      title: "Lakeside Retreat",
-      address: "421 Lake View Drive, Milwaukee, WI",
-      price: 589000,
-      bedrooms: 4,
-      bathrooms: 3,
-      imageUrl: "https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?q=80&w=300&h=200&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      title: "Downtown Loft",
-      address: "50 Urban Street #302, Milwaukee, WI",
-      price: 349000,
-      bedrooms: 2,
-      bathrooms: 2,
-      imageUrl: "https://images.unsplash.com/photo-1567496898669-ee935f5f647a?q=80&w=300&h=200&auto=format&fit=crop",
-    }
-  ];
-  
-  // Sample demographic data
-  const demographicData = {
-    population: 32451,
-    ageDistribution: [
-      { group: 'Under 18', percentage: 21.5 },
-      { group: '18-24', percentage: 9.7 },
-      { group: '25-34', percentage: 15.3 },
-      { group: '35-54', percentage: 26.8 },
-      { group: '55-64', percentage: 12.1 },
-      { group: '65+', percentage: 14.6 },
-    ],
-    raceDistribution: [
-      { group: 'White', percentage: 68.2 },
-      { group: 'Black', percentage: 12.4 },
-      { group: 'Hispanic', percentage: 10.8 },
-      { group: 'Asian', percentage: 5.7 },
-      { group: 'Other', percentage: 2.9 },
-    ],
-    genderDistribution: [
-      { group: 'Male', percentage: 48.3 },
-      { group: 'Female', percentage: 51.7 },
-    ],
-    housingStatus: [
-      { group: 'Owner Occupied', percentage: 65.4 },
-      { group: 'Renter Occupied', percentage: 28.7 },
-      { group: 'Vacant', percentage: 5.9 },
-    ],
-  };
-
   return (
     <div className="min-h-screen bg-white relative lg:hidden">
       {/* Image Carousel */}
@@ -440,82 +340,51 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                 </div>
               </div>
               
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div>
                   <h4 className="font-medium mb-2">Address</h4>
                   <p className="text-gray-700">{formattedAddress}</p>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium mb-3">Demographics</h4>
-                  <div className="rounded-lg bg-gray-50 p-4">
-                    <div className="text-sm font-medium mb-2">Population: {demographicData.population.toLocaleString()}</div>
-                    
-                    <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Age Distribution</div>
-                      <div className="h-6 w-full bg-gray-200 rounded-full overflow-hidden">
-                        {demographicData.ageDistribution.map((item, index) => (
-                          <div 
-                            key={index}
-                            className="h-full float-left" 
-                            style={{
-                              width: `${item.percentage}%`,
-                              backgroundColor: [
-                                '#EF4444', // red
-                                '#F59E0B', // amber
-                                '#10B981', // green
-                                '#3B82F6', // blue
-                                '#8B5CF6', // purple
-                                '#EC4899'  // pink
-                              ][index % 6]
-                            }}
-                          />
+                  <h4 className="font-medium mb-2">Nearby Amenities</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Schools</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4].map((i) => (
+                          <Star key={i} className="h-4 w-4 text-yellow-400" fill="#FBBF24" />
                         ))}
+                        <Star className="h-4 w-4 text-gray-300" />
                       </div>
-                      <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
-                        {demographicData.ageDistribution.map((item, index) => (
-                          <div key={index} className="flex items-center text-xs">
-                            <div 
-                              className="w-3 h-3 rounded-full mr-1"
-                              style={{
-                                backgroundColor: [
-                                  '#EF4444', // red
-                                  '#F59E0B', // amber
-                                  '#10B981', // green
-                                  '#3B82F6', // blue
-                                  '#8B5CF6', // purple
-                                  '#EC4899'  // pink
-                                ][index % 6]
-                              }}
-                            />
-                            <span>{item.group}: {item.percentage}%</span>
-                          </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Shopping</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <Star key={i} className="h-4 w-4 text-yellow-400" fill="#FBBF24" />
                         ))}
                       </div>
                     </div>
-                    
-                    <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Housing Status</div>
-                      <div className="flex flex-wrap gap-y-2">
-                        {demographicData.housingStatus.map((item, index) => (
-                          <div key={index} className="w-full">
-                            <div className="flex justify-between text-xs mb-1">
-                              <span>{item.group}</span>
-                              <span>{item.percentage}%</span>
-                            </div>
-                            <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-[#09261E]" 
-                                style={{ width: `${item.percentage}%` }}
-                              />
-                            </div>
-                          </div>
+                    <div className="flex justify-between">
+                      <span>Parks</span>
+                      <div className="flex">
+                        {[1, 2, 3].map((i) => (
+                          <Star key={i} className="h-4 w-4 text-yellow-400" fill="#FBBF24" />
+                        ))}
+                        {[1, 2].map((i) => (
+                          <Star key={i} className="h-4 w-4 text-gray-300" />
                         ))}
                       </div>
                     </div>
-                    
-                    <div className="text-center text-xs text-gray-500">
-                      Data sourced from unitedstateszipcodes.org
+                    <div className="flex justify-between">
+                      <span>Transportation</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4].map((i) => (
+                          <Star key={i} className="h-4 w-4 text-yellow-400" fill="#FBBF24" />
+                        ))}
+                        <Star className="h-4 w-4 text-gray-300" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -796,43 +665,14 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        
-        {/* Other properties by same seller */}
-        <div className="px-4 py-6">
-          <h2 className="text-xl font-bold mb-4">Other Properties by Michael Johnson</h2>
-          <div className="space-y-4">
-            {sellerProperties.map((property) => (
-              <div key={property.id} className="border rounded-md overflow-hidden">
-                <div className="flex">
-                  <div className="w-1/3">
-                    <img 
-                      src={property.imageUrl} 
-                      alt={property.title}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div className="w-2/3 p-3">
-                    <h4 className="font-medium">{property.title}</h4>
-                    <p className="text-sm text-gray-500">{property.address}</p>
-                    <div className="mt-2 flex justify-between">
-                      <div className="font-bold">${property.price.toLocaleString()}</div>
-                      <div className="text-sm text-gray-500">{property.bedrooms}bd, {property.bathrooms}ba</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-            
-            <div className="text-center pt-2">
-              <a href="#" className="text-[#09261E] inline-flex items-center text-sm hover:underline">
-                View All Properties by Michael Johnson
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
+      </div>
+      
+      {/* Floating CTA Bar */}
+      <MobileFloatingCTA
+        onClick={handleContactClick}
+        sellerName="Michael Johnson"
+        sellerImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"
+      />
       </div>
       
       {/* Floating CTA Bar */}
