@@ -4,7 +4,7 @@ import { useParams } from "wouter";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Share2, Heart, MapPin, Home, ChevronRight, ChevronLeft, X, ChevronsRight, Mail, MessageSquare, Phone } from "lucide-react";
+import { Share2, Heart, MapPin, Home, ChevronRight, ChevronLeft, ChevronDown, X, ChevronsRight, Mail, MessageSquare, Phone, Calculator, HelpCircle, InfoIcon, BedDouble, Bath, SquareIcon, Calendar, Home as HomeIcon, Car, Ruler } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -40,6 +40,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger
+} from "@/components/ui/collapsible";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { insertPropertyInquirySchema, InsertPropertyInquiry } from "@shared/schema";
@@ -358,43 +363,59 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   <AccordionContent className="px-6 py-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-4">
                       <div>
-                        <h3 className="font-medium text-[#09261E] mb-3 text-lg">Property Features</h3>
-                        <div className="space-y-3">
-                          <div className="flex items-start">
-                            <div className="w-40 text-gray-500 flex-shrink-0">Property Type</div>
-                            <div className="font-medium">{property.propertyType || 'Single Family'}</div>
-                          </div>
-                          <div className="flex items-start">
-                            <div className="w-40 text-gray-500 flex-shrink-0">Year Built</div>
-                            <div className="font-medium">1998</div>
-                          </div>
-                          <div className="flex items-start">
-                            <div className="w-40 text-gray-500 flex-shrink-0">Square Feet</div>
-                            <div className="font-medium">{property.squareFeet?.toLocaleString() || 'N/A'}</div>
-                          </div>
-                          <div className="flex items-start">
-                            <div className="w-40 text-gray-500 flex-shrink-0">Lot Size</div>
-                            <div className="font-medium">{property.lotSize || '0.25 acres'}</div>
-                          </div>
-                          <div className="flex items-start">
-                            <div className="w-40 text-gray-500 flex-shrink-0">Bedrooms</div>
+                        <h3 className="font-medium text-[#09261E] mb-4 text-lg">Key Property Features</h3>
+                        <div className="space-y-4">
+                          <div className="flex items-center">
+                            <BedDouble className="text-[#09261E] w-5 h-5 mr-3" />
+                            <div className="w-32 text-gray-600 flex-shrink-0">Bedrooms</div>
                             <div className="font-medium">{property.bedrooms}</div>
                           </div>
-                          <div className="flex items-start">
-                            <div className="w-40 text-gray-500 flex-shrink-0">Bathrooms</div>
+                          <div className="flex items-center">
+                            <Bath className="text-[#09261E] w-5 h-5 mr-3" />
+                            <div className="w-32 text-gray-600 flex-shrink-0">Bathrooms</div>
                             <div className="font-medium">{property.bathrooms}</div>
+                          </div>
+                          <div className="flex items-center">
+                            <SquareIcon className="text-[#09261E] w-5 h-5 mr-3" />
+                            <div className="w-32 text-gray-600 flex-shrink-0">Square Feet</div>
+                            <div className="font-medium">{property.squareFeet?.toLocaleString() || 'N/A'}</div>
+                          </div>
+                          <div className="flex items-center">
+                            <Ruler className="text-[#09261E] w-5 h-5 mr-3" />
+                            <div className="w-32 text-gray-600 flex-shrink-0">Lot Size</div>
+                            <div className="font-medium">{property.lotSize || '0.25 acres'}</div>
+                          </div>
+                          <div className="flex items-center">
+                            <Calendar className="text-[#09261E] w-5 h-5 mr-3" />
+                            <div className="w-32 text-gray-600 flex-shrink-0">Year Built</div>
+                            <div className="font-medium">1998</div>
+                          </div>
+                          <div className="flex items-center">
+                            <HomeIcon className="text-[#09261E] w-5 h-5 mr-3" />
+                            <div className="w-32 text-gray-600 flex-shrink-0">Property Type</div>
+                            <div className="font-medium">{property.propertyType || 'Single Family'}</div>
+                          </div>
+                          <div className="flex items-center">
+                            <Car className="text-[#09261E] w-5 h-5 mr-3" />
+                            <div className="w-32 text-gray-600 flex-shrink-0">Parking</div>
+                            <div className="font-medium">2-car garage</div>
+                          </div>
+                          <div className="flex items-center">
+                            <Ruler className="text-[#09261E] w-5 h-5 mr-3" />
+                            <div className="w-32 text-gray-600 flex-shrink-0">Price per sqft</div>
+                            <div className="font-medium">${property.squareFeet ? Math.round(property.price / property.squareFeet) : 'N/A'}</div>
                           </div>
                         </div>
                       </div>
                       <div>
-                        <h3 className="font-medium text-[#09261E] mb-3 text-lg">Additional Information</h3>
-                        <div className="space-y-3">
+                        <h3 className="font-medium text-[#09261E] mb-4 text-lg">Additional Information</h3>
+                        <div className="space-y-4">
                           <div className="flex items-start">
-                            <div className="w-40 text-gray-500 flex-shrink-0">Heating</div>
+                            <div className="w-40 text-gray-600 flex-shrink-0">Heating</div>
                             <div className="font-medium">Forced air, Natural gas</div>
                           </div>
                           <div className="flex items-start">
-                            <div className="w-40 text-gray-500 flex-shrink-0">Cooling</div>
+                            <div className="w-40 text-gray-600 flex-shrink-0">Cooling</div>
                             <div className="font-medium">Central air</div>
                           </div>
                           <div className="flex items-start">
