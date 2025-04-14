@@ -9,6 +9,10 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface MobilePropertyViewProps {
   property: Property;
@@ -23,6 +27,8 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [offerModalOpen, setOfferModalOpen] = useState(false);
   
   // Sample property images
   const propertyImages = [
@@ -54,6 +60,14 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
 
   const toggleFavorite = () => {
     setIsFavorite(!isFavorite);
+  };
+  
+  const handleContactClick = () => {
+    setContactModalOpen(true);
+  };
+  
+  const handleOfferClick = () => {
+    setOfferModalOpen(true);
   };
 
   return (
@@ -108,7 +122,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           <Button 
             size="sm" 
             className="bg-[#09261E] hover:bg-[#135341] text-white flex-1"
-            onClick={onContactSeller}
+            onClick={handleContactClick}
           >
             Contact
           </Button>
@@ -413,10 +427,102 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
       
       {/* Floating CTA Bar */}
       <MobileFloatingCTA
-        onClick={onContactSeller}
+        onClick={handleContactClick}
         sellerName="Michael Johnson"
         sellerImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"
       />
+      
+      {/* Contact Seller Modal */}
+      <Dialog open={contactModalOpen} onOpenChange={setContactModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Contact Seller</DialogTitle>
+            <DialogDescription>
+              Send a message to the property seller. They will respond to your inquiry as soon as possible.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="name" className="text-right">
+                Name
+              </FormLabel>
+              <Input id="name" className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="email" className="text-right">
+                Email
+              </FormLabel>
+              <Input id="email" className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="phone" className="text-right">
+                Phone
+              </FormLabel>
+              <Input id="phone" className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="message" className="text-right">
+                Message
+              </FormLabel>
+              <Textarea id="message" className="col-span-3" placeholder="I'm interested in this property and would like to schedule a viewing." />
+            </div>
+          </div>
+          
+          <div className="flex justify-end">
+            <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Send Message</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Get Contractor Quote Modal */}
+      <Dialog open={offerModalOpen} onOpenChange={setOfferModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Get Contractor Quotes</DialogTitle>
+            <DialogDescription>
+              Request quotes from our network of verified contractors for renovations on this property.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="name" className="text-right">
+                Name
+              </FormLabel>
+              <Input id="name" className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="email" className="text-right">
+                Email
+              </FormLabel>
+              <Input id="email" className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="phone" className="text-right">
+                Phone
+              </FormLabel>
+              <Input id="phone" className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="workType" className="text-right">
+                Work Type
+              </FormLabel>
+              <Input id="workType" className="col-span-3" placeholder="Kitchen remodel, bathroom update, etc." />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <FormLabel htmlFor="details" className="text-right">
+                Details
+              </FormLabel>
+              <Textarea id="details" className="col-span-3" placeholder="Please provide details about the work needed..." />
+            </div>
+          </div>
+          
+          <div className="flex justify-end">
+            <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Request Quotes</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

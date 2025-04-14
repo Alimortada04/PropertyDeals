@@ -29,7 +29,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
         <MessageCircle size={22} />
       </button>
       
-      <div className="flex items-center">
+      <a href="/profile/seller" className="flex items-center">
         <Avatar className="h-10 w-10 border border-gray-300">
           <AvatarImage src={sellerImage} alt={sellerName} />
           <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">{initials}</AvatarFallback>
@@ -38,7 +38,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
           <div className="text-sm font-medium text-[#09261E]">{sellerName}</div>
           <div className="text-xs text-gray-500">Seller</div>
         </div>
-      </div>
+      </a>
       
       <button 
         className="flex items-center justify-center bg-[#09261E]/10 text-[#09261E] h-12 w-12 rounded-full"
