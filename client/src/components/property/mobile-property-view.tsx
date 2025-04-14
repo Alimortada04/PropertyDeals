@@ -478,21 +478,20 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-4 py-4">
-              <div className="rounded-lg overflow-hidden bg-gray-100 h-[200px] mb-4 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPinned className="h-10 w-10 mx-auto text-gray-400 mb-2" />
-                  <Button variant="outline" className="bg-white">View on Map</Button>
-                </div>
-              </div>
-              
               <div className="space-y-5">
-                <div>
-                  <h4 className="font-medium mb-2">Population</h4>
-                  <p className="text-gray-700">{demographicData.population.toLocaleString()}</p>
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="font-medium">Location</h4>
+                  <div className="font-medium text-gray-700">Population: {demographicData.population.toLocaleString()}</div>
+                </div>
+                
+                <div className="mb-4 h-[250px] bg-gray-200 rounded-lg flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPinned className="h-10 w-10 mx-auto text-gray-400 mb-2" />
+                    <Button size="sm" variant="outline" className="bg-white">View on Map</Button>
+                  </div>
                 </div>
                 
                 <div>
-                  <h4 className="font-medium mb-3">Demographics</h4>
                   <div className="rounded-lg bg-gray-50 p-4">
                     
                     {/* Home Values - Now first per your request */}
