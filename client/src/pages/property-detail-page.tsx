@@ -82,6 +82,13 @@ const demographicData = {
     { group: 'Asian', percentage: 5.7 },
     { group: 'Other', percentage: 2.9 },
   ],
+  educationalAttainment: [
+    { group: 'Less than High School', percentage: 8.5 },
+    { group: 'High School Grad', percentage: 25.2 },
+    { group: 'Some College', percentage: 28.6 },
+    { group: 'Bachelor\'s Degree', percentage: 24.9 },
+    { group: 'Graduate Degree', percentage: 12.8 },
+  ],
   genderDistribution: [
     { group: 'Male', percentage: 48.3 },
     { group: 'Female', percentage: 51.7 },
