@@ -1028,8 +1028,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
             
             {/* Right Sidebar - Contact Interested Card */}
-            <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
-              <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md lg:sticky lg:top-6">
+            <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0 relative">
+              <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md sticky top-6">
                 <div className="p-4">
                   <h3 className="text-2xl font-bold text-[#09261E]">Interested in this property?</h3>
                   <p className="text-gray-600">Contact the seller or schedule a viewing</p>
