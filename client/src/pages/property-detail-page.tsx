@@ -74,6 +74,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showMessageBox, setShowMessageBox] = useState(false);
   const [messageText, setMessageText] = useState("");
+  const isMobile = useIsMobile();
   
   // Get property data
   const { data: property, isLoading, error } = useQuery({
@@ -178,9 +179,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
   
-  // Check if we're on mobile - placing this hook with other hooks to maintain consistent order
-  const isMobile = useIsMobile();
-  
   // Calculate days since listed - in a real app this would come from the database
   const daysOnMarket: number = 5;
   
@@ -198,19 +196,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const handleContactSeller = () => {
     setContactModalOpen(true);
   };
-
-  // If on mobile, show mobile optimized view
-  if (isMobile) {
-    return (
-      <MobilePropertyView 
-        property={property}
-        onBack={() => window.history.back()}
-        onContactSeller={handleContactSeller}
-      />
-    );
-  }
   
-  return (
+  // Render the appropriate view based on device
+  return isMobile ? (
+    <MobilePropertyView 
+      property={property}
+      onBack={() => window.history.back()}
+      onContactSeller={handleContactSeller}
+    />
+  ) : (
     <TooltipProvider>
       {/* Property Hero Section with Photo Gallery */}
       <section className="relative bg-white">
