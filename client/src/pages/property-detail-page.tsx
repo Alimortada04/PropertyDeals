@@ -1011,22 +1011,42 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           {/* Home Values - Now first per your request */}
                           <div className="mb-5">
                             <div className="text-sm font-medium mb-2">Home Values</div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                            <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
                               {demographicData.homeValues.map((item, index) => (
-                                <div key={index} className="w-full">
-                                  <div className="flex justify-between text-sm mb-1">
-                                    <span>{item.group}</span>
-                                    <span>{item.percentage}%</span>
-                                  </div>
-                                  <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                                    <div 
-                                      className="h-full"
-                                      style={{ 
-                                        width: `${item.percentage}%`,
-                                        backgroundColor: `rgba(19, 83, 65, ${0.6 + index * 0.07})`
-                                      }}
-                                    />
-                                  </div>
+                                <div 
+                                  key={index}
+                                  className="h-full float-left" 
+                                  style={{
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: [
+                                      'rgba(19, 83, 65, 0.95)', // dark green (primary)
+                                      'rgba(19, 83, 65, 0.8)',  // medium green
+                                      'rgba(19, 83, 65, 0.65)', // light green
+                                      'rgba(128, 51, 68, 0.65)', // light wine
+                                      'rgba(128, 51, 68, 0.8)',  // medium wine
+                                      'rgba(128, 51, 68, 0.95)'  // dark wine (secondary)
+                                    ][index % 6]
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                              {demographicData.homeValues.map((item, index) => (
+                                <div key={index} className="flex items-center text-xs">
+                                  <div 
+                                    className="w-3 h-3 rounded-full mr-1"
+                                    style={{
+                                      backgroundColor: [
+                                        'rgba(19, 83, 65, 0.95)', // dark green (primary)
+                                        'rgba(19, 83, 65, 0.8)',  // medium green
+                                        'rgba(19, 83, 65, 0.65)', // light green
+                                        'rgba(128, 51, 68, 0.65)', // light wine
+                                        'rgba(128, 51, 68, 0.8)',  // medium wine
+                                        'rgba(128, 51, 68, 0.95)'  // dark wine (secondary)
+                                      ][index % 6]
+                                    }}
+                                  />
+                                  <span>{item.group}: {item.percentage}%</span>
                                 </div>
                               ))}
                             </div>
@@ -1035,22 +1055,38 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           {/* Housing Ownership - Now second per your request */}
                           <div className="mb-5">
                             <div className="text-sm font-medium mb-2">Housing Ownership</div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                            <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
                               {demographicData.ownershipType.map((item, index) => (
-                                <div key={index} className="w-full">
-                                  <div className="flex justify-between text-sm mb-1">
-                                    <span>{item.group}</span>
-                                    <span>{item.percentage}%</span>
-                                  </div>
-                                  <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                                    <div 
-                                      className="h-full"
-                                      style={{ 
-                                        width: `${item.percentage}%`,
-                                        backgroundColor: `rgba(9, 38, 30, ${0.7 + index * 0.1})`
-                                      }}
-                                    />
-                                  </div>
+                                <div 
+                                  key={index}
+                                  className="h-full float-left" 
+                                  style={{
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: [
+                                      'rgba(19, 83, 65, 0.95)', // dark green
+                                      'rgba(19, 83, 65, 0.75)', // medium green
+                                      'rgba(128, 51, 68, 0.75)', // medium wine
+                                      'rgba(229, 159, 159, 0.8)'  // salmon
+                                    ][index]
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                              {demographicData.ownershipType.map((item, index) => (
+                                <div key={index} className="flex items-center text-xs">
+                                  <div 
+                                    className="w-3 h-3 rounded-full mr-1"
+                                    style={{
+                                      backgroundColor: [
+                                        'rgba(19, 83, 65, 0.95)', // dark green
+                                        'rgba(19, 83, 65, 0.75)', // medium green
+                                        'rgba(128, 51, 68, 0.75)', // medium wine
+                                        'rgba(229, 159, 159, 0.8)'  // salmon
+                                      ][index]
+                                    }}
+                                  />
+                                  <span>{item.group}: {item.percentage}%</span>
                                 </div>
                               ))}
                             </div>
@@ -1073,25 +1109,43 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       </div>
                       
-                      {/* Household Income with single bars */}
+                      {/* Household Income with single bar */}
                       <div>
                         <h4 className="font-medium mb-3 text-[#09261E]">Household Income</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                        <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
                           {demographicData.householdIncome.map((item, index) => (
-                            <div key={index} className="w-full">
-                              <div className="flex justify-between text-sm mb-1">
-                                <span>{item.group}</span>
-                                <span>{item.percentage}%</span>
-                              </div>
-                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full"
-                                  style={{ 
-                                    width: `${item.percentage}%`,
-                                    backgroundColor: `rgba(19, 83, 65, ${0.7 + index * 0.05})`
-                                  }}
-                                />
-                              </div>
+                            <div 
+                              key={index}
+                              className="h-full float-left" 
+                              style={{
+                                width: `${item.percentage}%`,
+                                backgroundColor: [
+                                  'rgba(19, 83, 65, 0.95)', // dark green
+                                  'rgba(19, 83, 65, 0.85)', 
+                                  'rgba(19, 83, 65, 0.75)', 
+                                  'rgba(19, 83, 65, 0.65)', 
+                                  'rgba(19, 83, 65, 0.55)'
+                                ][index % 5]
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                          {demographicData.householdIncome.map((item, index) => (
+                            <div key={index} className="flex items-center text-xs">
+                              <div 
+                                className="w-3 h-3 rounded-full mr-1"
+                                style={{
+                                  backgroundColor: [
+                                    'rgba(19, 83, 65, 0.95)', // dark green
+                                    'rgba(19, 83, 65, 0.85)', 
+                                    'rgba(19, 83, 65, 0.75)', 
+                                    'rgba(19, 83, 65, 0.65)', 
+                                    'rgba(19, 83, 65, 0.55)'
+                                  ][index % 5]
+                                }}
+                              />
+                              <span>{item.group}: {item.percentage}%</span>
                             </div>
                           ))}
                         </div>
@@ -1100,22 +1154,40 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       {/* Year Housing Was Built */}
                       <div>
                         <h4 className="font-medium mb-3 text-[#09261E]">Year Housing Was Built</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                        <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
                           {demographicData.yearBuilt.map((item, index) => (
-                            <div key={index} className="w-full">
-                              <div className="flex justify-between text-sm mb-1">
-                                <span>{item.group}</span>
-                                <span>{item.percentage}%</span>
-                              </div>
-                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full"
-                                  style={{ 
-                                    width: `${item.percentage}%`,
-                                    backgroundColor: `rgba(9, 38, 30, ${0.6 + index * 0.1})`
-                                  }}
-                                />
-                              </div>
+                            <div 
+                              key={index}
+                              className="h-full float-left" 
+                              style={{
+                                width: `${item.percentage}%`,
+                                backgroundColor: [
+                                  'rgba(9, 38, 30, 0.95)', // darkest
+                                  'rgba(9, 38, 30, 0.85)', 
+                                  'rgba(9, 38, 30, 0.75)', 
+                                  'rgba(9, 38, 30, 0.65)', 
+                                  'rgba(9, 38, 30, 0.55)'
+                                ][index % 5]
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                          {demographicData.yearBuilt.map((item, index) => (
+                            <div key={index} className="flex items-center text-xs">
+                              <div 
+                                className="w-3 h-3 rounded-full mr-1"
+                                style={{
+                                  backgroundColor: [
+                                    'rgba(9, 38, 30, 0.95)', // darkest
+                                    'rgba(9, 38, 30, 0.85)', 
+                                    'rgba(9, 38, 30, 0.75)', 
+                                    'rgba(9, 38, 30, 0.65)', 
+                                    'rgba(9, 38, 30, 0.55)'
+                                  ][index % 5]
+                                }}
+                              />
+                              <span>{item.group}: {item.percentage}%</span>
                             </div>
                           ))}
                         </div>
@@ -1124,22 +1196,42 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       {/* Age Distribution - Moved to bottom per your request */}
                       <div>
                         <h4 className="font-medium mb-3 text-[#09261E]">Age Distribution</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                        <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
                           {demographicData.ageDistribution.map((item, index) => (
-                            <div key={index} className="w-full">
-                              <div className="flex justify-between text-sm mb-1">
-                                <span>{item.group}</span>
-                                <span>{item.percentage}%</span>
-                              </div>
-                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full"
-                                  style={{ 
-                                    width: `${item.percentage}%`,
-                                    backgroundColor: `rgba(128, 51, 68, ${0.5 + index * 0.1})`
-                                  }}
-                                />
-                              </div>
+                            <div 
+                              key={index}
+                              className="h-full float-left" 
+                              style={{
+                                width: `${item.percentage}%`,
+                                backgroundColor: [
+                                  'rgba(128, 51, 68, 0.95)', // darkest wine
+                                  'rgba(128, 51, 68, 0.85)', 
+                                  'rgba(128, 51, 68, 0.75)', 
+                                  'rgba(128, 51, 68, 0.65)', 
+                                  'rgba(128, 51, 68, 0.55)', 
+                                  'rgba(128, 51, 68, 0.45)'
+                                ][index % 6]
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                          {demographicData.ageDistribution.map((item, index) => (
+                            <div key={index} className="flex items-center text-xs">
+                              <div 
+                                className="w-3 h-3 rounded-full mr-1"
+                                style={{
+                                  backgroundColor: [
+                                    'rgba(128, 51, 68, 0.95)', // darkest wine
+                                    'rgba(128, 51, 68, 0.85)', 
+                                    'rgba(128, 51, 68, 0.75)', 
+                                    'rgba(128, 51, 68, 0.65)', 
+                                    'rgba(128, 51, 68, 0.55)', 
+                                    'rgba(128, 51, 68, 0.45)'
+                                  ][index % 6]
+                                }}
+                              />
+                              <span>{item.group}: {item.percentage}%</span>
                             </div>
                           ))}
                         </div>
@@ -1148,22 +1240,28 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       {/* Gender Distribution - Moved to bottom per your request */}
                       <div>
                         <h4 className="font-medium mb-3 text-[#09261E]">Gender Distribution</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                        <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
                           {demographicData.genderDistribution.map((item, index) => (
-                            <div key={index} className="w-full">
-                              <div className="flex justify-between text-sm mb-1">
-                                <span>{item.group}</span>
-                                <span>{item.percentage}%</span>
-                              </div>
-                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full"
-                                  style={{ 
-                                    width: `${item.percentage}%`,
-                                    backgroundColor: index === 0 ? 'rgba(19, 83, 65, 0.8)' : 'rgba(128, 51, 68, 0.8)'
-                                  }}
-                                />
-                              </div>
+                            <div 
+                              key={index}
+                              className="h-full float-left" 
+                              style={{
+                                width: `${item.percentage}%`,
+                                backgroundColor: index === 0 ? 'rgba(19, 83, 65, 0.9)' : 'rgba(128, 51, 68, 0.9)'
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                          {demographicData.genderDistribution.map((item, index) => (
+                            <div key={index} className="flex items-center text-xs">
+                              <div 
+                                className="w-3 h-3 rounded-full mr-1"
+                                style={{
+                                  backgroundColor: index === 0 ? 'rgba(19, 83, 65, 0.9)' : 'rgba(128, 51, 68, 0.9)'
+                                }}
+                              />
+                              <span>{item.group}: {item.percentage}%</span>
                             </div>
                           ))}
                         </div>
