@@ -5,7 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { 
-  Share2, Heart, MapPin, Home, ChevronRight, ChevronLeft, ChevronDown, X, 
+  Share2, Heart, MapPin, MapPinned, Home, ChevronRight, ChevronLeft, ChevronDown, X, 
   ChevronsRight, Mail, MessageSquare, Phone, Calculator, HelpCircle, Info, 
   BedDouble, Bath, SquareIcon, Calendar, Home as HomeIcon, Car, Ruler, 
   Wind, Snowflake, Building, Construction, Hammer, Trees, Wrench,
@@ -58,6 +58,80 @@ import { apiRequest } from "@/lib/queryClient";
 import { allProperties, similarProperties } from "@/lib/data";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobilePropertyView from "@/components/property/mobile-property-view";
+
+// Sample demographic data from unitedstateszipcodes.org
+const demographicData = {
+  population: 36327,
+  ageDistribution: [
+    { group: 'Under 18', percentage: 21.5 },
+    { group: '18-24', percentage: 9.7 },
+    { group: '25-34', percentage: 15.3 },
+    { group: '35-54', percentage: 26.8 },
+    { group: '55-64', percentage: 12.1 },
+    { group: '65+', percentage: 14.6 },
+  ],
+  raceDistribution: [
+    { group: 'White', percentage: 68.2 },
+    { group: 'Black', percentage: 12.4 },
+    { group: 'Hispanic', percentage: 10.8 },
+    { group: 'Asian', percentage: 5.7 },
+    { group: 'Other', percentage: 2.9 },
+  ],
+  genderDistribution: [
+    { group: 'Male', percentage: 48.3 },
+    { group: 'Female', percentage: 51.7 },
+  ],
+  housingStatus: [
+    { group: 'Owner Occupied', percentage: 65.4 },
+    { group: 'Renter Occupied', percentage: 28.7 },
+    { group: 'Vacant', percentage: 5.9 },
+  ],
+  housingTypes: [
+    { group: 'In Occupied Housing Units', percentage: 91.5 },
+    { group: 'Nursing Facilities', percentage: 0.7 },
+    { group: 'College Student Housing', percentage: 7.5 },
+    { group: 'Other Noninstitutional', percentage: 0.4 },
+  ],
+  yearBuilt: [
+    { group: '2014 or later', percentage: 4.2 },
+    { group: '2010-2013', percentage: 3.6 },
+    { group: '2000-2009', percentage: 8.1 },
+    { group: '1990-1999', percentage: 7.3 },
+    { group: '1980-1989', percentage: 6.9 },
+    { group: '1970-1979', percentage: 10.2 },
+    { group: '1960-1969', percentage: 11.7 },
+    { group: '1950-1959', percentage: 15.4 },
+    { group: 'Before 1950', percentage: 32.6 },
+  ],
+  ownershipType: [
+    { group: 'Owned with mortgage', percentage: 49.3 },
+    { group: 'Owned free and clear', percentage: 16.1 },
+    { group: 'Renter occupied', percentage: 28.7 },
+    { group: 'Vacant', percentage: 5.9 },
+  ],
+  homeValues: [
+    { group: 'Less than $100K', percentage: 2.1 },
+    { group: '$100K-$199K', percentage: 8.3 },
+    { group: '$200K-$299K', percentage: 18.5 },
+    { group: '$300K-$499K', percentage: 39.2 },
+    { group: '$500K-$999K', percentage: 26.7 },
+    { group: '$1M or more', percentage: 5.2 },
+  ],
+  monthlyRent: [
+    { type: 'Studio', rent: 895 },
+    { type: '1 Bedroom', rent: 1095 },
+    { type: '2 Bedroom', rent: 1450 },
+    { type: '3+ Bedroom', rent: 1850 },
+  ],
+  householdIncome: [
+    { group: 'Less than $25K', percentage: 15.3 },
+    { group: '$25K-$49K', percentage: 17.6 },
+    { group: '$50K-$74K', percentage: 16.1 },
+    { group: '$75K-$99K', percentage: 13.8 },
+    { group: '$100K-$149K', percentage: 18.4 },
+    { group: '$150K or more', percentage: 18.8 },
+  ],
+};
 
 interface PropertyDetailPageProps {
   id: string;
@@ -901,6 +975,249 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       <Link to="/tools" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
                         View All Property Calculators <i className="fas fa-arrow-right ml-2"></i>
                       </Link>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+              
+              {/* Location & Demographics Section */}
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="demographics" className="border-b border-gray-200">
+                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+                    <div className="flex items-center">
+                      <span className="mr-3 text-2xl">📍</span>
+                      <span>Location & Demographics</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 py-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div>
+                        <div className="rounded-lg overflow-hidden bg-gray-100 h-[300px] mb-4 flex items-center justify-center">
+                          <div className="text-center">
+                            <MapPinned className="h-12 w-12 mx-auto text-gray-400 mb-3" />
+                            <Button variant="outline" className="bg-white">View on Map</Button>
+                          </div>
+                        </div>
+                        
+                        <div className="mb-6">
+                          <h4 className="font-medium mb-2 text-[#09261E]">Address</h4>
+                          <p className="text-gray-700">{property.address}, {property.city}, {property.state} {property.zipCode}</p>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-medium mb-4 text-[#09261E] text-lg">Demographics</h4>
+                        <div className="rounded-lg bg-gray-50 p-5">
+                          <div className="text-sm font-medium mb-3">Population: {demographicData.population.toLocaleString()}</div>
+                          
+                          <div className="mb-5">
+                            <div className="text-sm font-medium mb-2">Age Distribution</div>
+                            <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
+                              {demographicData.ageDistribution.map((item, index) => (
+                                <div 
+                                  key={index}
+                                  className="h-full float-left" 
+                                  style={{
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: [
+                                      '#EF4444', // red
+                                      '#F59E0B', // amber
+                                      '#10B981', // green
+                                      '#3B82F6', // blue
+                                      '#8B5CF6', // purple
+                                      '#EC4899'  // pink
+                                    ][index % 6]
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                              {demographicData.ageDistribution.map((item, index) => (
+                                <div key={index} className="flex items-center text-xs">
+                                  <div 
+                                    className="w-3 h-3 rounded-full mr-1"
+                                    style={{
+                                      backgroundColor: [
+                                        '#EF4444', // red
+                                        '#F59E0B', // amber
+                                        '#10B981', // green
+                                        '#3B82F6', // blue
+                                        '#8B5CF6', // purple
+                                        '#EC4899'  // pink
+                                      ][index % 6]
+                                    }}
+                                  />
+                                  <span>{item.group}: {item.percentage}%</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          <div className="mb-5">
+                            <div className="text-sm font-medium mb-2">Gender Distribution</div>
+                            <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
+                              {demographicData.genderDistribution.map((item, index) => (
+                                <div 
+                                  key={index}
+                                  className="h-full float-left" 
+                                  style={{
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
+                                  }}
+                                />
+                              ))}
+                            </div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                              {demographicData.genderDistribution.map((item, index) => (
+                                <div key={index} className="flex items-center text-xs">
+                                  <div 
+                                    className="w-3 h-3 rounded-full mr-1"
+                                    style={{
+                                      backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
+                                    }}
+                                  />
+                                  <span>{item.group}: {item.percentage}%</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6 space-y-6">
+                      <div>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Housing Type</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                          {demographicData.housingTypes.map((item, index) => (
+                            <div key={index} className="w-full">
+                              <div className="flex justify-between text-sm mb-1">
+                                <span>{item.group}</span>
+                                <span>{item.percentage}%</span>
+                              </div>
+                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-[#09261E]" 
+                                  style={{ width: `${item.percentage}%` }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Year Housing Was Built</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                          {demographicData.yearBuilt.map((item, index) => (
+                            <div key={index} className="w-full">
+                              <div className="flex justify-between text-sm mb-1">
+                                <span>{item.group}</span>
+                                <span>{item.percentage}%</span>
+                              </div>
+                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full"
+                                  style={{ 
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: `hsl(${210 - index * 20}, 80%, 60%)`
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Housing Ownership</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                          {demographicData.ownershipType.map((item, index) => (
+                            <div key={index} className="w-full">
+                              <div className="flex justify-between text-sm mb-1">
+                                <span>{item.group}</span>
+                                <span>{item.percentage}%</span>
+                              </div>
+                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full"
+                                  style={{ 
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: [
+                                      '#10B981', // green
+                                      '#3B82F6', // blue
+                                      '#F59E0B', // amber
+                                      '#6B7280'  // gray
+                                    ][index]
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Home Values</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                          {demographicData.homeValues.map((item, index) => (
+                            <div key={index} className="w-full">
+                              <div className="flex justify-between text-sm mb-1">
+                                <span>{item.group}</span>
+                                <span>{item.percentage}%</span>
+                              </div>
+                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full"
+                                  style={{ 
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: `hsl(${120 + index * 30}, 70%, 45%)`
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Monthly Rent Costs</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {demographicData.monthlyRent.map((item, index) => (
+                            <div key={index} className="border rounded-md bg-white p-4">
+                              <div className="text-sm text-gray-500 mb-1">{item.type}</div>
+                              <div className="font-semibold text-lg">${item.rent}/mo</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Household Income</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+                          {demographicData.householdIncome.map((item, index) => (
+                            <div key={index} className="w-full">
+                              <div className="flex justify-between text-sm mb-1">
+                                <span>{item.group}</span>
+                                <span>{item.percentage}%</span>
+                              </div>
+                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full"
+                                  style={{ 
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: `hsl(${180 + index * 30}, 70%, 40%)`
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center text-xs text-gray-500 mt-6">
+                      Data sourced from unitedstateszipcodes.org
                     </div>
                   </AccordionContent>
                 </AccordionItem>
