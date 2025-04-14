@@ -992,11 +992,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   <AccordionContent className="px-6 py-4">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <div>
-                        <div className="flex justify-between items-center mb-2">
-                          <h4 className="font-medium text-[#09261E]">Location</h4>
-                          <div className="font-medium text-gray-700">Population: {demographicData.population.toLocaleString()}</div>
+                        <div className="mb-2">
+                          <div className="font-semibold text-[#09261E]">Population: {demographicData.population.toLocaleString()}</div>
                         </div>
-                        <div className="rounded-lg overflow-hidden bg-gray-100 h-[350px] mb-6 flex items-center justify-center">
+                        <div className="rounded-lg overflow-hidden bg-gray-100 h-[450px] mb-0 flex items-center justify-center">
                           <div className="text-center">
                             <MapPinned className="h-12 w-12 mx-auto text-gray-400 mb-3" />
                             <Button variant="outline" className="bg-white">View on Map</Button>
@@ -1119,11 +1118,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               style={{
                                 width: `${item.percentage}%`,
                                 backgroundColor: [
-                                  'rgba(19, 83, 65, 0.95)', // dark green
-                                  'rgba(19, 83, 65, 0.85)', 
-                                  'rgba(19, 83, 65, 0.75)', 
-                                  'rgba(19, 83, 65, 0.65)', 
-                                  'rgba(19, 83, 65, 0.55)'
+                                  'rgba(128, 51, 68, 0.95)', // dark wine 
+                                  'rgba(128, 51, 68, 0.80)', 
+                                  'rgba(128, 51, 68, 0.65)',
+                                  'rgba(19, 83, 65, 0.75)', // medium green
+                                  'rgba(19, 83, 65, 0.95)'  // dark green
                                 ][index % 5]
                               }}
                             />
@@ -1136,11 +1135,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                 className="w-3 h-3 rounded-full mr-1"
                                 style={{
                                   backgroundColor: [
-                                    'rgba(19, 83, 65, 0.95)', // dark green
-                                    'rgba(19, 83, 65, 0.85)', 
-                                    'rgba(19, 83, 65, 0.75)', 
-                                    'rgba(19, 83, 65, 0.65)', 
-                                    'rgba(19, 83, 65, 0.55)'
+                                    'rgba(128, 51, 68, 0.95)', // dark wine 
+                                    'rgba(128, 51, 68, 0.80)', 
+                                    'rgba(128, 51, 68, 0.65)',
+                                    'rgba(19, 83, 65, 0.75)', // medium green
+                                    'rgba(19, 83, 65, 0.95)'  // dark green
                                   ][index % 5]
                                 }}
                               />
@@ -1191,12 +1190,12 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               className="w-full h-full rounded-full"
                               style={{ 
                                 background: `conic-gradient(
-                                  rgba(128, 51, 68, 0.95) 0% ${demographicData.ageDistribution[0].percentage}%, 
-                                  rgba(128, 51, 68, 0.85) ${demographicData.ageDistribution[0].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage}%, 
-                                  rgba(128, 51, 68, 0.75) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage}%, 
-                                  rgba(128, 51, 68, 0.65) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage}%,
-                                  rgba(128, 51, 68, 0.55) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage + demographicData.ageDistribution[4].percentage}%,
-                                  rgba(128, 51, 68, 0.45) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage + demographicData.ageDistribution[4].percentage}% 100%
+                                  rgba(19, 83, 65, 0.95) 0% ${demographicData.ageDistribution[0].percentage}%, 
+                                  rgba(128, 51, 68, 0.90) ${demographicData.ageDistribution[0].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage}%, 
+                                  rgba(128, 51, 68, 0.80) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage}%, 
+                                  rgba(128, 51, 68, 0.70) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage}%,
+                                  rgba(128, 51, 68, 0.60) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage}% ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage + demographicData.ageDistribution[4].percentage}%,
+                                  rgba(128, 51, 68, 0.50) ${demographicData.ageDistribution[0].percentage + demographicData.ageDistribution[1].percentage + demographicData.ageDistribution[2].percentage + demographicData.ageDistribution[3].percentage + demographicData.ageDistribution[4].percentage}% 100%
                                 )`
                               }}
                             />
@@ -1209,14 +1208,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                 <div 
                                   className="w-3 h-3 rounded-full mr-1"
                                   style={{
-                                    backgroundColor: [
-                                      'rgba(128, 51, 68, 0.95)', 
-                                      'rgba(128, 51, 68, 0.85)', 
-                                      'rgba(128, 51, 68, 0.75)', 
-                                      'rgba(128, 51, 68, 0.65)', 
-                                      'rgba(128, 51, 68, 0.55)', 
-                                      'rgba(128, 51, 68, 0.45)'
-                                    ][index % 6]
+                                    backgroundColor: index === 0 
+                                    ? 'rgba(19, 83, 65, 0.95)' // Under 18 - Green
+                                    : [
+                                      'rgba(128, 51, 68, 0.90)', 
+                                      'rgba(128, 51, 68, 0.80)', 
+                                      'rgba(128, 51, 68, 0.70)', 
+                                      'rgba(128, 51, 68, 0.60)', 
+                                      'rgba(128, 51, 68, 0.50)'
+                                    ][(index - 1) % 5]
                                   }}
                                 />
                                 <span>{item.group}: {item.percentage}%</span>
