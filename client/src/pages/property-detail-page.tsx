@@ -464,40 +464,97 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                      <div className="space-y-4">
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-500">Estimated Rent</h4>
-                          <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.008).toFixed(0)}/month</p>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-500">Estimated Expenses</h4>
-                          <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.003).toFixed(0)}/month</p>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-500">Property Tax</h4>
-                          <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.018).toFixed(0)}/year</p>
+                    <div className="grid grid-cols-1 gap-5 mb-6">
+                      {/* Rent */}
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                        <span className="text-gray-600 font-medium">Rent</span>
+                        <span className="font-semibold text-[#09261E]">${(property.price * 0.008).toFixed(0)}/month</span>
+                      </div>
+                      
+                      {/* Estimated Repair Costs with Contractor Avatar */}
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                        <span className="text-gray-600 font-medium">Estimated Repair Costs</span>
+                        <div className="flex items-center">
+                          <span className="font-semibold text-[#09261E] mr-2">${(property.price * 0.05).toFixed(0)}</span>
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage src="https://source.unsplash.com/random/100x100/?contractor" alt="Contractor" />
+                            <AvatarFallback className="text-xs bg-gray-200">CT</AvatarFallback>
+                          </Avatar>
                         </div>
                       </div>
-                      <div className="space-y-4">
+                      
+                      {/* Monthly Expenses with Dropdown */}
+                      <Collapsible className="border-b border-gray-100 pb-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-600 font-medium">Estimated Monthly Expenses</span>
+                          <div className="flex items-center">
+                            <span className="font-semibold text-[#09261E] mr-2">${(property.price * 0.003).toFixed(0)}/month</span>
+                            <CollapsibleTrigger asChild>
+                              <Button variant="ghost" size="sm" className="p-0 h-6 w-6">
+                                <ChevronDown className="h-4 w-4 text-gray-500" />
+                              </Button>
+                            </CollapsibleTrigger>
+                          </div>
+                        </div>
+                        <CollapsibleContent className="mt-3 pl-6 space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">Property Tax</span>
+                            <span className="text-gray-700">${Math.round(property.price * 0.01 / 12).toLocaleString()}/mo</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">Insurance</span>
+                            <span className="text-gray-700">${Math.round(property.price * 0.005 / 12).toLocaleString()}/mo</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">HOA</span>
+                            <span className="text-gray-700">$150/mo</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">Maintenance</span>
+                            <span className="text-gray-700">${Math.round(property.price * 0.001 / 12).toLocaleString()}/mo</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-500">Utilities</span>
+                            <span className="text-gray-700">$75/mo (est.)</span>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                      
+                      {/* ARV with Tooltip */}
+                      <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                        <div className="flex items-center">
+                          <span className="text-gray-600 font-medium">ARV</span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <HelpCircle className="h-4 w-4 ml-1 text-gray-400" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>After Repair Value</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <span className="font-semibold text-[#09261E]">${(property.price * 1.2).toFixed(0)}</span>
+                      </div>
+                      
+                      {/* Optional: Additional metrics in a condensed grid */}
+                      <div className="grid grid-cols-2 gap-4 mt-2">
                         <div>
-                          <h4 className="text-sm font-medium text-gray-500">Estimated Repair Costs</h4>
-                          <p className="text-lg font-semibold text-[#09261E]">${(property.price * 0.05).toFixed(0)}</p>
+                          <h4 className="text-sm font-medium text-gray-500">Cap Rate</h4>
+                          <p className="text-lg font-semibold text-[#09261E]">5.2%</p>
                         </div>
                         <div>
-                          <h4 className="text-sm font-medium text-gray-500">After Repair Value (ARV)</h4>
-                          <p className="text-lg font-semibold text-[#09261E]">${(property.price * 1.2).toFixed(0)}</p>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-500">Price per Sqft</h4>
-                          <p className="text-lg font-semibold text-[#09261E]">${property.squareFeet ? (property.price / property.squareFeet).toFixed(2) : "N/A"}</p>
+                          <h4 className="text-sm font-medium text-gray-500">Cash-on-Cash Return</h4>
+                          <p className="text-lg font-semibold text-[#09261E]">7.8%</p>
                         </div>
                       </div>
                     </div>
-                    <div className="border-t border-gray-200 pt-4 pb-2">
-                      <Button variant="outline" className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white">
-                        <i className="fas fa-tools mr-2"></i> I'm a contractor — Submit a Quote
-                      </Button>
+                    <div className="border-t border-gray-200 pt-4 pb-2 text-center">
+                      <Link 
+                        to="/contractor-quote" 
+                        className="text-[#09261E] inline-block hover:underline text-sm"
+                      >
+                        I'm a contractor — Submit a Quote
+                      </Link>
                     </div>
                   </AccordionContent>
                 </AccordionItem>
