@@ -718,7 +718,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <InfoIcon className="h-3.5 w-3.5 ml-1.5 text-gray-500" />
+                                    <Info className="h-3.5 w-3.5 ml-1.5 text-gray-500" />
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     <p className="text-xs">After Repair Value</p>
