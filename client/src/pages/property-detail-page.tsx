@@ -698,18 +698,18 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price (Automatic)</label>
                             <Input 
                               type="text" 
-                              value={`$${property.price.toLocaleString()}`} 
+                              defaultValue={`$${property.price.toLocaleString()}`} 
                               className="bg-white" 
-                              disabled 
+                              id="purchase-price-input"
                             />
                           </div>
                           <div>
                             <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs (Automatic)</label>
                             <Input 
                               type="text" 
-                              value={`$${(property.price * 0.05).toFixed(0)}`} 
+                              defaultValue={`$${(property.price * 0.05).toFixed(0)}`} 
                               className="bg-white" 
-                              disabled 
+                              id="repair-costs-input"
                             />
                           </div>
                           <div>
@@ -757,15 +757,17 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
                             onClick={() => {
                               // Parse inputs
+                              const purchasePriceStr = (document.getElementById('purchase-price-input') as HTMLInputElement).value.replace(/[$,]/g, '');
+                              const repairCostsStr = (document.getElementById('repair-costs-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const arvStr = (document.getElementById('arv-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const holdingCostsStr = (document.getElementById('holding-costs-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const sellingCostsStr = (document.getElementById('selling-costs-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               
+                              const purchasePrice = parseFloat(purchasePriceStr) || property.price;
+                              const repairCosts = parseFloat(repairCostsStr) || property.price * 0.05;
                               const arv = parseFloat(arvStr) || property.price * 1.2;
                               const holdingCosts = parseFloat(holdingCostsStr) || property.price * 0.02;
                               const sellingCosts = parseFloat(sellingCostsStr) || property.price * 0.06;
-                              const purchasePrice = property.price;
-                              const repairCosts = property.price * 0.05;
                               
                               // Calculate profit
                               const profit = arv - (purchasePrice + repairCosts + holdingCosts + sellingCosts);
@@ -794,9 +796,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price (Automatic)</label>
                             <Input 
                               type="text" 
-                              value={`$${property.price.toLocaleString()}`} 
+                              defaultValue={`$${property.price.toLocaleString()}`} 
                               className="bg-white" 
-                              disabled 
+                              id="rental-purchase-price-input"
                             />
                           </div>
                           <div>
@@ -832,14 +834,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
                             onClick={() => {
                               // Parse inputs
+                              const purchasePriceStr = (document.getElementById('rental-purchase-price-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const rentStr = (document.getElementById('monthly-rent-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const expensesStr = (document.getElementById('monthly-expenses-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const downPaymentStr = (document.getElementById('down-payment-input') as HTMLInputElement).value.replace(/[%,]/g, '');
                               
+                              const purchasePrice = parseFloat(purchasePriceStr) || property.price;
                               const monthlyRent = parseFloat(rentStr) || property.price * 0.008;
                               const monthlyExpenses = parseFloat(expensesStr) || property.price * 0.003;
                               const downPaymentPercent = parseFloat(downPaymentStr) || 20;
-                              const purchasePrice = property.price;
                               
                               // Calculate metrics
                               const annualRent = monthlyRent * 12;
@@ -1353,7 +1356,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           onClick={() => setViewingMap(false)}
         >
           <div 
-            className="bg-white rounded-lg p-4 max-w-5xl w-full h-[80vh] overflow-hidden"
+            className="bg-white rounded-lg p-4 max-w-3xl w-full h-[60vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
