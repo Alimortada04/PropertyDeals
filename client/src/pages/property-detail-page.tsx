@@ -1000,55 +1000,33 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                         
                         <div className="mb-6">
-                          <h4 className="font-medium mb-2 text-[#09261E]">Address</h4>
-                          <p className="text-gray-700">{property.address}, {property.city}, {property.state} {property.zipCode}</p>
+                          <h4 className="font-medium mb-2 text-[#09261E]">Population</h4>
+                          <p className="text-gray-700">{demographicData.population.toLocaleString()}</p>
                         </div>
                       </div>
                       
                       <div>
-                        <h4 className="font-medium mb-4 text-[#09261E] text-lg">Demographics</h4>
                         <div className="rounded-lg bg-gray-50 p-5">
-                          <div className="text-sm font-medium mb-3">Population: {demographicData.population.toLocaleString()}</div>
                           
                           {/* Home Values - Now first per your request */}
                           <div className="mb-5">
                             <div className="text-sm font-medium mb-2">Home Values</div>
-                            <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
                               {demographicData.homeValues.map((item, index) => (
-                                <div 
-                                  key={index}
-                                  className="h-full float-left" 
-                                  style={{
-                                    width: `${item.percentage}%`,
-                                    backgroundColor: [
-                                      '#10B981', // green
-                                      '#3B82F6', // blue
-                                      '#8B5CF6', // purple
-                                      '#F59E0B', // amber
-                                      '#EF4444', // red
-                                      '#EC4899'  // pink
-                                    ][index % 6]
-                                  }}
-                                />
-                              ))}
-                            </div>
-                            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
-                              {demographicData.homeValues.map((item, index) => (
-                                <div key={index} className="flex items-center text-xs">
-                                  <div 
-                                    className="w-3 h-3 rounded-full mr-1"
-                                    style={{
-                                      backgroundColor: [
-                                        '#10B981', // green
-                                        '#3B82F6', // blue
-                                        '#8B5CF6', // purple
-                                        '#F59E0B', // amber
-                                        '#EF4444', // red
-                                        '#EC4899'  // pink
-                                      ][index % 6]
-                                    }}
-                                  />
-                                  <span>{item.group}: {item.percentage}%</span>
+                                <div key={index} className="w-full">
+                                  <div className="flex justify-between text-sm mb-1">
+                                    <span>{item.group}</span>
+                                    <span>{item.percentage}%</span>
+                                  </div>
+                                  <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full"
+                                      style={{ 
+                                        width: `${item.percentage}%`,
+                                        backgroundColor: `rgba(19, 83, 65, ${0.6 + index * 0.07})`
+                                      }}
+                                    />
+                                  </div>
                                 </div>
                               ))}
                             </div>
@@ -1057,38 +1035,22 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           {/* Housing Ownership - Now second per your request */}
                           <div className="mb-5">
                             <div className="text-sm font-medium mb-2">Housing Ownership</div>
-                            <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
                               {demographicData.ownershipType.map((item, index) => (
-                                <div 
-                                  key={index}
-                                  className="h-full float-left" 
-                                  style={{
-                                    width: `${item.percentage}%`,
-                                    backgroundColor: [
-                                      '#10B981', // green
-                                      '#3B82F6', // blue
-                                      '#F59E0B', // amber
-                                      '#6B7280'  // gray
-                                    ][index]
-                                  }}
-                                />
-                              ))}
-                            </div>
-                            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
-                              {demographicData.ownershipType.map((item, index) => (
-                                <div key={index} className="flex items-center text-xs">
-                                  <div 
-                                    className="w-3 h-3 rounded-full mr-1"
-                                    style={{
-                                      backgroundColor: [
-                                        '#10B981', // green
-                                        '#3B82F6', // blue
-                                        '#F59E0B', // amber
-                                        '#6B7280'  // gray
-                                      ][index]
-                                    }}
-                                  />
-                                  <span>{item.group}: {item.percentage}%</span>
+                                <div key={index} className="w-full">
+                                  <div className="flex justify-between text-sm mb-1">
+                                    <span>{item.group}</span>
+                                    <span>{item.percentage}%</span>
+                                  </div>
+                                  <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full"
+                                      style={{ 
+                                        width: `${item.percentage}%`,
+                                        backgroundColor: `rgba(9, 38, 30, ${0.7 + index * 0.1})`
+                                      }}
+                                    />
+                                  </div>
                                 </div>
                               ))}
                             </div>
@@ -1126,7 +1088,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                   className="h-full"
                                   style={{ 
                                     width: `${item.percentage}%`,
-                                    backgroundColor: `hsl(${180 + index * 30}, 70%, 40%)`
+                                    backgroundColor: `rgba(19, 83, 65, ${0.7 + index * 0.05})`
                                   }}
                                 />
                               </div>
@@ -1150,7 +1112,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                   className="h-full"
                                   style={{ 
                                     width: `${item.percentage}%`,
-                                    backgroundColor: `hsl(${210 - index * 20}, 80%, 60%)`
+                                    backgroundColor: `rgba(9, 38, 30, ${0.6 + index * 0.1})`
                                   }}
                                 />
                               </div>
@@ -1174,14 +1136,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                   className="h-full"
                                   style={{ 
                                     width: `${item.percentage}%`,
-                                    backgroundColor: [
-                                      '#EF4444', // red
-                                      '#F59E0B', // amber
-                                      '#10B981', // green
-                                      '#3B82F6', // blue
-                                      '#8B5CF6', // purple
-                                      '#EC4899'  // pink
-                                    ][index % 6]
+                                    backgroundColor: `rgba(128, 51, 68, ${0.5 + index * 0.1})`
                                   }}
                                 />
                               </div>
@@ -1205,7 +1160,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                   className="h-full"
                                   style={{ 
                                     width: `${item.percentage}%`,
-                                    backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
+                                    backgroundColor: index === 0 ? 'rgba(19, 83, 65, 0.8)' : 'rgba(128, 51, 68, 0.8)'
                                   }}
                                 />
                               </div>
