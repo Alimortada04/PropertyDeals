@@ -284,12 +284,14 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
             
             {/* Map Preview - Bottom Right */}
-            <div className="col-span-1 row-span-1 relative cursor-pointer" onClick={() => setViewingMap(true)}>
+            <div className="col-span-1 row-span-1 relative cursor-pointer" 
+              onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(formattedAddress)}`, '_blank')}
+            >
               <div className="bg-[#09261E]/10 w-full h-full rounded-br-lg flex items-center justify-center">
                 <MapPin className="h-10 w-10 text-[#09261E]" />
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="bg-black/50 text-white text-sm px-3 py-1 rounded-full">View Map</span>
+                <span className="bg-black/50 text-white text-sm px-3 py-1 rounded-full">Open Google Maps</span>
               </div>
             </div>
           </div>
