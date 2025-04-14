@@ -178,6 +178,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
   
+  // Check if we're on mobile - placing this hook with other hooks to maintain consistent order
+  const isMobile = useIsMobile();
+  
   // Calculate days since listed - in a real app this would come from the database
   const daysOnMarket: number = 5;
   
@@ -190,9 +193,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         : "This property has been added to your watchlist",
     });
   };
-  
-  // Check if we're on mobile
-  const isMobile = useIsMobile();
 
   // Handle contact seller action
   const handleContactSeller = () => {
