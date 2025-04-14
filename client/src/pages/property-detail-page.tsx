@@ -184,7 +184,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   };
   
   return (
-    <>
+    <TooltipProvider>
       {/* Property Hero Section with Photo Gallery */}
       <section className="relative bg-white">
         <div className="container mx-auto px-4 pt-12 pb-8">
@@ -1099,6 +1099,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           </div>
         </div>
       )}
-    </>
+    </TooltipProvider>
   );
 }
