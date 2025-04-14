@@ -96,7 +96,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               <Badge variant="secondary" className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
                 Built in 2015
               </Badge>
-              {property.isOffMarket && (
+              {property.status?.toLowerCase().includes('off-market') && (
                 <Badge className="bg-[#803344] hover:bg-[#803344]">Off-Market Deal</Badge>
               )}
             </div>

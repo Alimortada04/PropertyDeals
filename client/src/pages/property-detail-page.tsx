@@ -56,6 +56,8 @@ import { useToast } from "@/hooks/use-toast";
 import { insertPropertyInquirySchema, InsertPropertyInquiry } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { allProperties, similarProperties } from "@/lib/data";
+import { useIsMobile } from "@/hooks/use-mobile";
+import MobilePropertyView from "@/components/property/mobile-property-view";
 
 interface PropertyDetailPageProps {
   id: string;
