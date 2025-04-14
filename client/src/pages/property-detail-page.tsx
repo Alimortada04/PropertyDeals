@@ -687,9 +687,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <div className="bg-white p-4 border-y border-gray-200">
                   <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
                     <Link to="/sellers/michael-johnson" className="flex items-center group">
-                      <div className="h-16 w-16 rounded-full overflow-hidden border border-gray-200 relative">
-                        <img src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" className="w-full h-full object-cover" />
-                      </div>
+                      <Avatar className="h-16 w-16 border border-gray-200">
+                        <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
+                        <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">MJ</AvatarFallback>
+                      </Avatar>
                       <div className="ml-3">
                         <div className="font-medium text-xl text-[#09261E] group-hover:underline">Michael Johnson</div>
                         <div className="text-gray-500 text-sm flex items-center">
@@ -700,26 +701,18 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </div>
                   
                   <Button 
-                    className="w-full bg-[#09261E] hover:bg-[#09261E] mb-3 py-6 rounded-md text-base font-medium" 
+                    className="w-full bg-[#09261E] hover:bg-[#135341] mb-3 py-6 rounded-md text-base font-medium transition-all transform hover:scale-[1.02]" 
                     onClick={() => setContactModalOpen(true)}
                   >
                     Contact Seller
                   </Button>
                   
                   <Button 
-                    className="w-full bg-gray-50 text-gray-800 hover:bg-gray-50 mb-3 py-6 rounded-md text-base font-medium border border-gray-300" 
+                    className="w-full bg-gray-50 text-gray-800 hover:bg-gray-100 hover:border-gray-400 transition-all mb-3 py-6 rounded-md text-base font-medium border border-gray-300 transform hover:scale-[1.02]" 
                     variant="outline"
                     onClick={() => setOfferModalOpen(true)}
                   >
                     Make an Offer
-                  </Button>
-                  
-                  <Button 
-                    className="w-full bg-gray-50 text-gray-800 hover:bg-gray-50 mb-3 py-6 rounded-md text-base font-medium border border-gray-300 flex items-center justify-center"
-                    variant="outline"
-                  >
-                    <MapPin className="h-5 w-5 mr-2" />
-                    View Map
                   </Button>
                   
                   <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-center text-gray-500 text-sm">
@@ -888,7 +881,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <Link to="/sellers/michael-johnson" className="flex items-center group">
                   <Avatar className="h-14 w-14 border border-gray-200">
                     <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
-                    <AvatarFallback>MJ</AvatarFallback>
+                    <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">MJ</AvatarFallback>
                   </Avatar>
                   <div className="ml-3">
                     <div className="font-medium text-lg text-[#09261E] group-hover:underline">Michael Johnson</div>
