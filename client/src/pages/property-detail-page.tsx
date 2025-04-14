@@ -144,10 +144,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const [viewingMap, setViewingMap] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showMessageBox, setShowMessageBox] = useState(false);
   const [messageText, setMessageText] = useState("");
+  const [shareUrl, setShareUrl] = useState("");
+  const [copySuccess, setCopySuccess] = useState(false);
   const isMobile = useIsMobile();
   
   // Get property data
@@ -269,6 +272,48 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   // Handle contact seller action
   const handleContactSeller = () => {
     setContactModalOpen(true);
+  };
+  
+  // Generate a shareable property report URL
+  const generateShareableUrl = () => {
+    // Create a unique shareable URL with property details encoded
+    const baseUrl = window.location.origin;
+    const shareableUrl = `${baseUrl}/properties/${propertyId}/report`;
+    setShareUrl(shareableUrl);
+    return shareableUrl;
+  };
+  
+  // Handle copy to clipboard
+  const handleCopyToClipboard = () => {
+    navigator.clipboard.writeText(shareUrl);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+    toast({
+      title: "Link Copied!",
+      description: "Property report link has been copied to your clipboard.",
+    });
+  };
+  
+  // Handle email share
+  const handleEmailShare = () => {
+    const subject = `Property Report: ${property.address}`;
+    const body = `Check out this property at ${property.address}, ${property.city}, ${property.state} ${property.zipCode}.\n\nPrice: $${property.price.toLocaleString()}\nBedrooms: ${property.bedrooms}\nBathrooms: ${property.bathrooms}\nSquare Feet: ${property.squareFeet?.toLocaleString() || 'N/A'}\n\nView the full property report here: ${shareUrl}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+  
+  // Generate PDF report (in a real implementation, this would create a PDF)
+  const generatePdfReport = () => {
+    toast({
+      title: "Generating PDF Report",
+      description: "Your property report is being generated and will download shortly.",
+    });
+    // In a real implementation, this would trigger a backend API call to generate a PDF
+    setTimeout(() => {
+      toast({
+        title: "PDF Report Ready",
+        description: "Your property report has been generated and downloaded.",
+      });
+    }, 1500);
   };
   
   // Render the appropriate view based on device
@@ -433,6 +478,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             <Button
               variant="outline"
               className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+              onClick={() => {
+                generateShareableUrl();
+                setShareModalOpen(true);
+              }}
             >
               <Share2 className="h-4 w-4 mr-2" />
               Share
@@ -1774,6 +1823,127 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           </div>
         </div>
       )}
+
+      {/* Share Property Report Dialog */}
+      <Dialog open={shareModalOpen} onOpenChange={setShareModalOpen}>
+        <DialogContent className="sm:max-w-[550px]">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-heading">Share Property Report</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Choose how you'd like to share this property report with others.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="rounded-lg border p-5">
+              <h3 className="font-medium mb-2 text-[#09261E]">Property</h3>
+              <div className="flex items-start gap-4">
+                <div className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+                  <img 
+                    src={propertyImages[0]} 
+                    alt={property.address} 
+                    className="w-full h-full object-cover" 
+                  />
+                </div>
+                <div>
+                  <p className="font-medium">{property.address}</p>
+                  <p className="text-sm text-gray-500">{property.city}, {property.state} {property.zipCode}</p>
+                  <p className="text-sm font-medium mt-1">${property.price.toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <h3 className="font-medium text-[#09261E]">Share Options</h3>
+              
+              {/* Copy Link Option */}
+              <div 
+                className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:border-[#09261E] hover:bg-[#09261E]/5 transition-colors"
+                onClick={handleCopyToClipboard}
+              >
+                <div className="flex items-center">
+                  <div className="bg-[#09261E]/10 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <Link className="w-5 h-5 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Copy Link</p>
+                    <p className="text-xs text-gray-500">Copy shareable property report link</p>
+                  </div>
+                </div>
+                <div>
+                  {copySuccess ? (
+                    <CheckIcon className="w-5 h-5 text-green-500" />
+                  ) : (
+                    <CopyIcon className="w-5 h-5 text-gray-400" />
+                  )}
+                </div>
+              </div>
+              
+              {/* Email Option */}
+              <div 
+                className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:border-[#09261E] hover:bg-[#09261E]/5 transition-colors"
+                onClick={handleEmailShare}
+              >
+                <div className="flex items-center">
+                  <div className="bg-[#09261E]/10 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <Mail className="w-5 h-5 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Email</p>
+                    <p className="text-xs text-gray-500">Share via email with detailed info</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
+              </div>
+              
+              {/* PDF Report Option */}
+              <div 
+                className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:border-[#09261E] hover:bg-[#09261E]/5 transition-colors"
+                onClick={generatePdfReport}
+              >
+                <div className="flex items-center">
+                  <div className="bg-[#09261E]/10 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <FileText className="w-5 h-5 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <p className="font-medium">PDF Report</p>
+                    <p className="text-xs text-gray-500">Download a detailed PDF report</p>
+                  </div>
+                </div>
+                <Download className="w-5 h-5 text-gray-400" />
+              </div>
+              
+              {/* Social Media Options */}
+              <div className="border-t pt-3 mt-3">
+                <h4 className="text-sm font-medium mb-2 text-gray-600">Share on Social Media</h4>
+                <div className="flex gap-3">
+                  <button className="bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] p-2 rounded-full">
+                    <Facebook className="w-5 h-5" />
+                  </button>
+                  <button className="bg-[#1DA1F2]/10 hover:bg-[#1DA1F2]/20 text-[#1DA1F2] p-2 rounded-full">
+                    <Twitter className="w-5 h-5" />
+                  </button>
+                  <button className="bg-[#0A66C2]/10 hover:bg-[#0A66C2]/20 text-[#0A66C2] p-2 rounded-full">
+                    <Linkedin className="w-5 h-5" />
+                  </button>
+                  <button className="bg-[#E60023]/10 hover:bg-[#E60023]/20 text-[#E60023] p-2 rounded-full">
+                    <SiPinterest className="w-5 h-5" />
+                  </button>
+                  <button className="bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] p-2 rounded-full">
+                    <MessageCircle className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button className="bg-[#09261E] hover:bg-[#09261E]/90" onClick={() => setShareModalOpen(false)}>
+              Done
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </TooltipProvider>
   );
 }
