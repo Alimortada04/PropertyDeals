@@ -484,17 +484,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     <div className="grid grid-cols-1 gap-5 mb-6">
                       {/* Rent with Dropdown for Multiple Units */}
                       <Collapsible className="border-b border-gray-100 pb-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600 font-medium">Rent</span>
-                          <div className="flex items-center">
-                            <span className="font-semibold text-[#09261E] mr-2">${(property.price * 0.008).toFixed(0)}/month</span>
-                            <CollapsibleTrigger asChild>
-                              <Button variant="ghost" size="sm" className="p-0 h-6 w-6 hover:bg-[#09261E]/5">
-                                <ChevronDown className="h-4 w-4 text-gray-500 hover:text-[#803344]" />
-                              </Button>
-                            </CollapsibleTrigger>
+                        <CollapsibleTrigger className="w-full">
+                          <div className="flex justify-between items-center cursor-pointer hover:text-[#803344] group">
+                            <span className="text-gray-600 font-medium group-hover:text-[#803344]">Rent</span>
+                            <div className="flex items-center">
+                              <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">${(property.price * 0.008).toFixed(0)}/month</span>
+                              <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
+                            </div>
                           </div>
-                        </div>
+                        </CollapsibleTrigger>
                         <CollapsibleContent className="mt-3 pl-6 space-y-2">
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-500">Main Unit</span>
@@ -591,17 +589,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       
                       {/* Monthly Expenses with Dropdown */}
                       <Collapsible className="border-b border-gray-100 pb-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600 font-medium">Estimated Monthly Expenses</span>
-                          <div className="flex items-center">
-                            <span className="font-semibold text-[#09261E] mr-2">${(property.price * 0.003).toFixed(0)}/month</span>
-                            <CollapsibleTrigger asChild>
-                              <Button variant="ghost" size="sm" className="p-0 h-6 w-6 hover:bg-[#09261E]/5">
-                                <ChevronDown className="h-4 w-4 text-gray-500 hover:text-[#803344]" />
-                              </Button>
-                            </CollapsibleTrigger>
+                        <CollapsibleTrigger className="w-full">
+                          <div className="flex justify-between items-center cursor-pointer hover:text-[#803344] group">
+                            <span className="text-gray-600 font-medium group-hover:text-[#803344]">Estimated Monthly Expenses</span>
+                            <div className="flex items-center">
+                              <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">${(property.price * 0.003).toFixed(0)}/month</span>
+                              <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
+                            </div>
                           </div>
-                        </div>
+                        </CollapsibleTrigger>
                         <CollapsibleContent className="mt-3 pl-6 space-y-2">
                           <div className="flex justify-between text-sm">
                             <span className="text-gray-500">Property Tax</span>
