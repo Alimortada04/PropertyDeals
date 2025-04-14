@@ -12,13 +12,18 @@ import {
   PercentSquare, DollarSign, MoveRight, User
 } from "lucide-react";
 import {
+  Link as LinkIcon, Check as CheckIcon, Copy as CopyIcon, Download,
+  FileText, Facebook, Twitter, Linkedin, MessageCircle
+} from "lucide-react";
+import { SiPinterest } from "react-icons/si";
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
@@ -1863,7 +1868,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               >
                 <div className="flex items-center">
                   <div className="bg-[#09261E]/10 w-10 h-10 rounded-full flex items-center justify-center mr-3">
-                    <Link className="w-5 h-5 text-[#09261E]" />
+                    <LinkIcon className="w-5 h-5 text-[#09261E]" />
                   </div>
                   <div>
                     <p className="font-medium">Copy Link</p>
