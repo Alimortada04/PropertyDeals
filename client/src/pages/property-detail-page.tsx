@@ -1010,21 +1010,22 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         <div className="rounded-lg bg-gray-50 p-5">
                           <div className="text-sm font-medium mb-3">Population: {demographicData.population.toLocaleString()}</div>
                           
+                          {/* Home Values - Now first per your request */}
                           <div className="mb-5">
-                            <div className="text-sm font-medium mb-2">Age Distribution</div>
+                            <div className="text-sm font-medium mb-2">Home Values</div>
                             <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
-                              {demographicData.ageDistribution.map((item, index) => (
+                              {demographicData.homeValues.map((item, index) => (
                                 <div 
                                   key={index}
                                   className="h-full float-left" 
                                   style={{
                                     width: `${item.percentage}%`,
                                     backgroundColor: [
-                                      '#EF4444', // red
-                                      '#F59E0B', // amber
                                       '#10B981', // green
                                       '#3B82F6', // blue
                                       '#8B5CF6', // purple
+                                      '#F59E0B', // amber
+                                      '#EF4444', // red
                                       '#EC4899'  // pink
                                     ][index % 6]
                                   }}
@@ -1032,17 +1033,17 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               ))}
                             </div>
                             <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
-                              {demographicData.ageDistribution.map((item, index) => (
+                              {demographicData.homeValues.map((item, index) => (
                                 <div key={index} className="flex items-center text-xs">
                                   <div 
                                     className="w-3 h-3 rounded-full mr-1"
                                     style={{
                                       backgroundColor: [
-                                        '#EF4444', // red
-                                        '#F59E0B', // amber
                                         '#10B981', // green
                                         '#3B82F6', // blue
                                         '#8B5CF6', // purple
+                                        '#F59E0B', // amber
+                                        '#EF4444', // red
                                         '#EC4899'  // pink
                                       ][index % 6]
                                     }}
@@ -1053,27 +1054,38 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             </div>
                           </div>
                           
+                          {/* Housing Ownership - Now second per your request */}
                           <div className="mb-5">
-                            <div className="text-sm font-medium mb-2">Gender Distribution</div>
+                            <div className="text-sm font-medium mb-2">Housing Ownership</div>
                             <div className="h-7 w-full bg-gray-200 rounded-full overflow-hidden">
-                              {demographicData.genderDistribution.map((item, index) => (
+                              {demographicData.ownershipType.map((item, index) => (
                                 <div 
                                   key={index}
                                   className="h-full float-left" 
                                   style={{
                                     width: `${item.percentage}%`,
-                                    backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
+                                    backgroundColor: [
+                                      '#10B981', // green
+                                      '#3B82F6', // blue
+                                      '#F59E0B', // amber
+                                      '#6B7280'  // gray
+                                    ][index]
                                   }}
                                 />
                               ))}
                             </div>
                             <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
-                              {demographicData.genderDistribution.map((item, index) => (
+                              {demographicData.ownershipType.map((item, index) => (
                                 <div key={index} className="flex items-center text-xs">
                                   <div 
                                     className="w-3 h-3 rounded-full mr-1"
                                     style={{
-                                      backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
+                                      backgroundColor: [
+                                        '#10B981', // green
+                                        '#3B82F6', // blue
+                                        '#F59E0B', // amber
+                                        '#6B7280'  // gray
+                                      ][index]
                                     }}
                                   />
                                   <span>{item.group}: {item.percentage}%</span>
@@ -1086,10 +1098,24 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </div>
                     
                     <div className="mt-6 space-y-6">
+                      {/* Monthly Rent Costs */}
                       <div>
-                        <h4 className="font-medium mb-3 text-[#09261E]">Housing Type</h4>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Monthly Rent Costs</h4>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {demographicData.monthlyRent.map((item, index) => (
+                            <div key={index} className="border rounded-md bg-white p-4">
+                              <div className="text-sm text-gray-500 mb-1">{item.type}</div>
+                              <div className="font-semibold text-lg">${item.rent}/mo</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Household Income with single bars */}
+                      <div>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Household Income</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
-                          {demographicData.housingTypes.map((item, index) => (
+                          {demographicData.householdIncome.map((item, index) => (
                             <div key={index} className="w-full">
                               <div className="flex justify-between text-sm mb-1">
                                 <span>{item.group}</span>
@@ -1097,8 +1123,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </div>
                               <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
                                 <div 
-                                  className="h-full bg-[#09261E]" 
-                                  style={{ width: `${item.percentage}%` }}
+                                  className="h-full"
+                                  style={{ 
+                                    width: `${item.percentage}%`,
+                                    backgroundColor: `hsl(${180 + index * 30}, 70%, 40%)`
+                                  }}
                                 />
                               </div>
                             </div>
@@ -1106,6 +1135,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       </div>
                       
+                      {/* Year Housing Was Built */}
                       <div>
                         <h4 className="font-medium mb-3 text-[#09261E]">Year Housing Was Built</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
@@ -1129,10 +1159,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       </div>
                       
+                      {/* Age Distribution - Moved to bottom per your request */}
                       <div>
-                        <h4 className="font-medium mb-3 text-[#09261E]">Housing Ownership</h4>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Age Distribution</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
-                          {demographicData.ownershipType.map((item, index) => (
+                          {demographicData.ageDistribution.map((item, index) => (
                             <div key={index} className="w-full">
                               <div className="flex justify-between text-sm mb-1">
                                 <span>{item.group}</span>
@@ -1144,11 +1175,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                   style={{ 
                                     width: `${item.percentage}%`,
                                     backgroundColor: [
+                                      '#EF4444', // red
+                                      '#F59E0B', // amber
                                       '#10B981', // green
                                       '#3B82F6', // blue
-                                      '#F59E0B', // amber
-                                      '#6B7280'  // gray
-                                    ][index]
+                                      '#8B5CF6', // purple
+                                      '#EC4899'  // pink
+                                    ][index % 6]
                                   }}
                                 />
                               </div>
@@ -1157,10 +1190,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       </div>
                       
+                      {/* Gender Distribution - Moved to bottom per your request */}
                       <div>
-                        <h4 className="font-medium mb-3 text-[#09261E]">Home Values</h4>
+                        <h4 className="font-medium mb-3 text-[#09261E]">Gender Distribution</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
-                          {demographicData.homeValues.map((item, index) => (
+                          {demographicData.genderDistribution.map((item, index) => (
                             <div key={index} className="w-full">
                               <div className="flex justify-between text-sm mb-1">
                                 <span>{item.group}</span>
@@ -1171,42 +1205,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                   className="h-full"
                                   style={{ 
                                     width: `${item.percentage}%`,
-                                    backgroundColor: `hsl(${120 + index * 30}, 70%, 45%)`
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-medium mb-3 text-[#09261E]">Monthly Rent Costs</h4>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                          {demographicData.monthlyRent.map((item, index) => (
-                            <div key={index} className="border rounded-md bg-white p-4">
-                              <div className="text-sm text-gray-500 mb-1">{item.type}</div>
-                              <div className="font-semibold text-lg">${item.rent}/mo</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-medium mb-3 text-[#09261E]">Household Income</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
-                          {demographicData.householdIncome.map((item, index) => (
-                            <div key={index} className="w-full">
-                              <div className="flex justify-between text-sm mb-1">
-                                <span>{item.group}</span>
-                                <span>{item.percentage}%</span>
-                              </div>
-                              <div className="h-2.5 w-full bg-gray-200 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full"
-                                  style={{ 
-                                    width: `${item.percentage}%`,
-                                    backgroundColor: `hsl(${180 + index * 30}, 70%, 40%)`
+                                    backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
                                   }}
                                 />
                               </div>

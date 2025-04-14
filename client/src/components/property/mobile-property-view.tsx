@@ -496,21 +496,22 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                   <div className="rounded-lg bg-gray-50 p-4">
                     <div className="text-sm font-medium mb-2">Population: {demographicData.population.toLocaleString()}</div>
                     
+                    {/* Home Values - Now first per your request */}
                     <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Age Distribution</div>
+                      <div className="text-sm font-medium mb-2">Home Values</div>
                       <div className="h-6 w-full bg-gray-200 rounded-full overflow-hidden">
-                        {demographicData.ageDistribution.map((item, index) => (
+                        {demographicData.homeValues.map((item, index) => (
                           <div 
                             key={index}
                             className="h-full float-left" 
                             style={{
                               width: `${item.percentage}%`,
                               backgroundColor: [
-                                '#EF4444', // red
-                                '#F59E0B', // amber
                                 '#10B981', // green
                                 '#3B82F6', // blue
                                 '#8B5CF6', // purple
+                                '#F59E0B', // amber
+                                '#EF4444', // red
                                 '#EC4899'  // pink
                               ][index % 6]
                             }}
@@ -518,17 +519,17 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                         ))}
                       </div>
                       <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
-                        {demographicData.ageDistribution.map((item, index) => (
+                        {demographicData.homeValues.map((item, index) => (
                           <div key={index} className="flex items-center text-xs">
                             <div 
                               className="w-3 h-3 rounded-full mr-1"
                               style={{
                                 backgroundColor: [
-                                  '#EF4444', // red
-                                  '#F59E0B', // amber
                                   '#10B981', // green
                                   '#3B82F6', // blue
                                   '#8B5CF6', // purple
+                                  '#F59E0B', // amber
+                                  '#EF4444', // red
                                   '#EC4899'  // pink
                                 ][index % 6]
                               }}
@@ -539,27 +540,38 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                       </div>
                     </div>
                     
+                    {/* Housing Ownership - Now second per your request */}
                     <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Gender Distribution</div>
+                      <div className="text-sm font-medium mb-2">Housing Ownership</div>
                       <div className="h-6 w-full bg-gray-200 rounded-full overflow-hidden">
-                        {demographicData.genderDistribution.map((item, index) => (
+                        {demographicData.ownershipType.map((item, index) => (
                           <div 
                             key={index}
                             className="h-full float-left" 
                             style={{
                               width: `${item.percentage}%`,
-                              backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
+                              backgroundColor: [
+                                '#10B981', // green
+                                '#3B82F6', // blue
+                                '#F59E0B', // amber
+                                '#6B7280'  // gray
+                              ][index]
                             }}
                           />
                         ))}
                       </div>
                       <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
-                        {demographicData.genderDistribution.map((item, index) => (
+                        {demographicData.ownershipType.map((item, index) => (
                           <div key={index} className="flex items-center text-xs">
                             <div 
                               className="w-3 h-3 rounded-full mr-1"
                               style={{
-                                backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
+                                backgroundColor: [
+                                  '#10B981', // green
+                                  '#3B82F6', // blue
+                                  '#F59E0B', // amber
+                                  '#6B7280'  // gray
+                                ][index]
                               }}
                             />
                             <span>{item.group}: {item.percentage}%</span>
@@ -568,10 +580,24 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                       </div>
                     </div>
                     
+                    {/* Monthly Rent Costs - Kept in same position */}
                     <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Housing Type</div>
+                      <div className="text-sm font-medium mb-2">Monthly Rent Costs</div>
+                      <div className="grid grid-cols-2 gap-3">
+                        {demographicData.monthlyRent.map((item, index) => (
+                          <div key={index} className="border rounded-md bg-white p-3">
+                            <div className="text-xs text-gray-500 mb-1">{item.type}</div>
+                            <div className="font-semibold">${item.rent}/mo</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Household Income with single bars */}
+                    <div className="mb-4">
+                      <div className="text-sm font-medium mb-2">Household Income</div>
                       <div className="flex flex-wrap gap-y-2">
-                        {demographicData.housingTypes.map((item, index) => (
+                        {demographicData.householdIncome.map((item, index) => (
                           <div key={index} className="w-full">
                             <div className="flex justify-between text-xs mb-1">
                               <span>{item.group}</span>
@@ -579,8 +605,11 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                             </div>
                             <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
                               <div 
-                                className="h-full bg-[#09261E]" 
-                                style={{ width: `${item.percentage}%` }}
+                                className="h-full"
+                                style={{ 
+                                  width: `${item.percentage}%`,
+                                  backgroundColor: `hsl(${180 + index * 30}, 70%, 40%)`
+                                }}
                               />
                             </div>
                           </div>
@@ -588,6 +617,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                       </div>
                     </div>
                     
+                    {/* Year Housing Was Built */}
                     <div className="mb-4">
                       <div className="text-sm font-medium mb-2">Year Housing Was Built</div>
                       <div className="flex flex-wrap gap-y-2">
@@ -611,10 +641,11 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                       </div>
                     </div>
                     
+                    {/* Age Distribution - Moved to bottom per your request */}
                     <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Housing Ownership</div>
+                      <div className="text-sm font-medium mb-2">Age Distribution</div>
                       <div className="flex flex-wrap gap-y-2">
-                        {demographicData.ownershipType.map((item, index) => (
+                        {demographicData.ageDistribution.map((item, index) => (
                           <div key={index} className="w-full">
                             <div className="flex justify-between text-xs mb-1">
                               <span>{item.group}</span>
@@ -626,11 +657,13 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                                 style={{ 
                                   width: `${item.percentage}%`,
                                   backgroundColor: [
+                                    '#EF4444', // red
+                                    '#F59E0B', // amber
                                     '#10B981', // green
                                     '#3B82F6', // blue
-                                    '#F59E0B', // amber
-                                    '#6B7280'  // gray
-                                  ][index]
+                                    '#8B5CF6', // purple
+                                    '#EC4899'  // pink
+                                  ][index % 6]
                                 }}
                               />
                             </div>
@@ -639,10 +672,11 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                       </div>
                     </div>
                     
+                    {/* Gender Distribution - Moved to bottom per your request */}
                     <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Home Values</div>
+                      <div className="text-sm font-medium mb-2">Gender Distribution</div>
                       <div className="flex flex-wrap gap-y-2">
-                        {demographicData.homeValues.map((item, index) => (
+                        {demographicData.genderDistribution.map((item, index) => (
                           <div key={index} className="w-full">
                             <div className="flex justify-between text-xs mb-1">
                               <span>{item.group}</span>
@@ -653,42 +687,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                                 className="h-full"
                                 style={{ 
                                   width: `${item.percentage}%`,
-                                  backgroundColor: `hsl(${120 + index * 30}, 70%, 45%)`
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Monthly Rent Costs</div>
-                      <div className="grid grid-cols-2 gap-3">
-                        {demographicData.monthlyRent.map((item, index) => (
-                          <div key={index} className="border rounded-md bg-white p-3">
-                            <div className="text-xs text-gray-500 mb-1">{item.type}</div>
-                            <div className="font-semibold">${item.rent}/mo</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <div className="text-sm font-medium mb-2">Household Income</div>
-                      <div className="flex flex-wrap gap-y-2">
-                        {demographicData.householdIncome.map((item, index) => (
-                          <div key={index} className="w-full">
-                            <div className="flex justify-between text-xs mb-1">
-                              <span>{item.group}</span>
-                              <span>{item.percentage}%</span>
-                            </div>
-                            <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                              <div 
-                                className="h-full"
-                                style={{ 
-                                  width: `${item.percentage}%`,
-                                  backgroundColor: `hsl(${180 + index * 30}, 70%, 40%)`
+                                  backgroundColor: index === 0 ? '#3B82F6' : '#EC4899'
                                 }}
                               />
                             </div>
