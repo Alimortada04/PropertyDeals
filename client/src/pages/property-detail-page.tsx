@@ -517,8 +517,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           <Dialog>
                             <DialogTrigger asChild>
                               <Avatar className="h-6 w-6 cursor-pointer hover:ring-2 hover:ring-offset-1 hover:ring-[#09261E]/50 transition-all">
-                                <AvatarImage src="https://source.unsplash.com/random/100x100/?contractor" alt="Contractor" />
-                                <AvatarFallback className="text-xs bg-gray-200">CT</AvatarFallback>
+                                <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=120&h=120&auto=format&fit=crop" alt="Contractor" />
+                                <AvatarFallback className="text-xs bg-gray-200">MJ</AvatarFallback>
                               </Avatar>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
@@ -531,7 +531,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               <div className="mt-2 space-y-4">
                                 <div className="flex items-center space-x-4">
                                   <Avatar className="h-12 w-12">
-                                    <AvatarImage src="https://source.unsplash.com/random/100x100/?contractor" alt="Contractor" />
+                                    <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=120&h=120&auto=format&fit=crop" alt="Contractor" />
                                     <AvatarFallback className="bg-gray-200">MJ</AvatarFallback>
                                   </Avatar>
                                   <div>
@@ -626,11 +626,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       <div className="flex justify-between items-center border-b border-gray-100 pb-3">
                         <div className="flex items-center">
                           <span className="text-gray-600 font-medium">ARV</span>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
+                          <Tooltip delayDuration={0}>
+                            <TooltipTrigger>
                               <HelpCircle className="h-4 w-4 ml-1 text-gray-400 cursor-help" />
                             </TooltipTrigger>
-                            <TooltipContent className="bg-white p-2 rounded shadow-lg border z-50">
+                            <TooltipContent side="top" className="bg-white p-2 rounded shadow-lg border z-50">
                               <p className="text-sm font-medium">After Repair Value</p>
                             </TooltipContent>
                           </Tooltip>
@@ -658,14 +658,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           <div className="flex items-center">
                             <DollarSign className="h-4 w-4 mr-1 text-[#09261E]" />
                             <h4 className="text-sm font-medium text-gray-500">Monthly Rent %</h4>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <HelpCircle className="h-3 w-3 ml-1 text-gray-400 cursor-help" />
-                              </TooltipTrigger>
-                              <TooltipContent className="bg-white p-2 rounded shadow-lg border z-50">
-                                <p className="text-xs">Monthly Rent ÷ (Purchase Price + Repair Costs) × 100</p>
-                              </TooltipContent>
-                            </Tooltip>
                           </div>
                           <p className="text-lg font-semibold text-[#09261E]">
                             {((property.price * 0.008) / (property.price + property.price * 0.05) * 100).toFixed(2)}%
@@ -862,7 +854,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             <div className="font-medium text-[#09261E] mb-1 truncate">{comp.address}</div>
                             <div className="text-gray-600 text-sm mb-2">{comp.city}, {comp.state}</div>
                             <div className="flex justify-between">
-                              <div className="font-bold text-[#09261E]">${comp.price.toLocaleString()}</div>
+                              <div className="font-bold text-[#09261E]">${comp.price?.toLocaleString() || 'Price unavailable'}</div>
                               <div className="text-sm text-gray-500">{comp.bedrooms}bd, {comp.bathrooms}ba</div>
                             </div>
                           </div>
@@ -891,7 +883,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
                     <Link to="/sellers/michael-johnson" className="flex items-center group">
                       <Avatar className="h-16 w-16 border border-gray-200">
-                        <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
+                        <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop" alt="Seller" />
                         <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">MJ</AvatarFallback>
                       </Avatar>
                       <div className="ml-3">
@@ -988,7 +980,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       )}
                     </div>
                     <div className="p-4">
-                      <div className="font-bold text-[#09261E] mb-1">${prop.price.toLocaleString()}</div>
+                      <div className="font-bold text-[#09261E] mb-1">${prop.price?.toLocaleString() || 'Price unavailable'}</div>
                       <div className="text-gray-700 mb-2 truncate">{prop.address}</div>
                       <div className="flex text-sm text-gray-600 mb-3">
                         <div className="mr-3">{prop.bedrooms} bd</div>
@@ -1012,50 +1004,26 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           onClick={() => setViewingAllPhotos(false)}
         >
           <div 
-            className="relative max-w-5xl w-full bg-black"
+            className="relative max-w-5xl w-full h-[90vh] bg-white rounded-lg overflow-hidden shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button 
-              className="absolute top-4 right-4 text-white bg-black/50 p-2 rounded-full hover:bg-black/80 transition-colors z-10"
+              className="absolute top-4 right-4 text-gray-700 bg-white/90 p-2 rounded-full hover:bg-gray-200 transition-colors z-10"
               onClick={() => setViewingAllPhotos(false)}
             >
               <X className="h-6 w-6" />
             </button>
             
-            <div className="relative h-[70vh]">
-              <img 
-                src={propertyImages[currentPhotoIndex]} 
-                alt={property.address} 
-                className="w-full h-full object-contain" 
-              />
-              
-              {/* Navigation Arrows */}
-              <div className="absolute inset-0 flex items-center justify-between px-4">
-                <button 
-                  className="bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors"
-                  onClick={() => setCurrentPhotoIndex(prev => (prev === 0 ? propertyImages.length - 1 : prev - 1))}
-                >
-                  <ChevronLeft className="h-8 w-8" />
-                </button>
-                <button 
-                  className="bg-black/60 text-white rounded-full p-2 hover:bg-black/80 transition-colors"
-                  onClick={() => setCurrentPhotoIndex(prev => (prev === propertyImages.length - 1 ? 0 : prev + 1))}
-                >
-                  <ChevronRight className="h-8 w-8" />
-                </button>
-              </div>
-            </div>
-            
-            {/* Thumbnails */}
-            <div className="bg-black p-4 overflow-x-auto">
-              <div className="flex space-x-2">
+            <div className="p-6 h-full overflow-y-auto">
+              <h2 className="text-2xl font-bold text-[#09261E] mb-4">Property Photos</h2>
+              <div className="space-y-6">
                 {propertyImages.map((img, i) => (
-                  <div 
-                    key={i}
-                    className={`w-24 h-16 flex-shrink-0 cursor-pointer ${i === currentPhotoIndex ? 'ring-2 ring-white' : ''}`}
-                    onClick={() => setCurrentPhotoIndex(i)}
-                  >
-                    <img src={img} alt={`Thumbnail ${i}`} className="w-full h-full object-cover" />
+                  <div key={i} className="border border-gray-200 rounded-lg overflow-hidden">
+                    <img 
+                      src={img} 
+                      alt={`Photo ${i+1} of ${property.address}`} 
+                      className="w-full object-contain" 
+                    />
                   </div>
                 ))}
               </div>
@@ -1083,7 +1051,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               <div className="border-b border-gray-200 pb-4 mb-4">
                 <Link to="/sellers/michael-johnson" className="flex items-center group">
                   <Avatar className="h-14 w-14 border border-gray-200">
-                    <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
+                    <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop" alt="Seller" />
                     <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">MJ</AvatarFallback>
                   </Avatar>
                   <div className="ml-3">
