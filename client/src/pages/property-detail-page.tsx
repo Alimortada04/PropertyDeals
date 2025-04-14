@@ -980,13 +980,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 </AccordionItem>
               </Accordion>
               
-              {/* Location & Demographics Section */}
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="demographics" className="border-b border-gray-200">
+              {/* Location Section */}
+              <Accordion type="single" defaultValue="location" collapsible className="w-full">
+                <AccordionItem value="location" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">📍</span>
-                      <span>Location & Demographics</span>
+                      <span>Location</span>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
