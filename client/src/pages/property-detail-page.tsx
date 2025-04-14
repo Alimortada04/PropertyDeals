@@ -347,7 +347,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8 space-y-6">
               
               {/* Property Details Section */}
-              <Accordion type="single" defaultValue="details" className="w-full">
+              <Accordion type="single" defaultValue="details" collapsible className="w-full">
                 <AccordionItem value="details" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -434,7 +434,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
 
               {/* The Numbers Section */}
-              <Accordion type="single" defaultValue="numbers" className="w-full">
+              <Accordion type="single" defaultValue="numbers" collapsible className="w-full">
                 <AccordionItem value="numbers" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -483,7 +483,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Relevant Calculators Section */}
-              <Accordion type="single" defaultValue="calculators" className="w-full">
+              <Accordion type="single" defaultValue="calculators" collapsible className="w-full">
                 <AccordionItem value="calculators" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -541,7 +541,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Find a REP Section */}
-              <Accordion type="single" defaultValue="reps" className="w-full">
+              <Accordion type="single" defaultValue="reps" collapsible className="w-full">
                 <AccordionItem value="reps" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -589,7 +589,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Property History Section */}
-              <Accordion type="single" defaultValue="history" className="w-full">
+              <Accordion type="single" defaultValue="history" collapsible className="w-full">
                 <AccordionItem value="history" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -638,7 +638,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Comparable Properties Section */}
-              <Accordion type="single" defaultValue="comparable" className="w-full">
+              <Accordion type="single" defaultValue="comparable" collapsible className="w-full">
                 <AccordionItem value="comparable" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -678,7 +678,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             
             {/* Right Sidebar - Contact Interested Card */}
             <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
-              <div className="bg-gray-50 rounded-lg overflow-hidden lg:sticky lg:top-6">
+              <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md lg:sticky lg:top-6">
                 <div className="p-4">
                   <h3 className="text-2xl font-bold text-[#09261E]">Interested in this property?</h3>
                   <p className="text-gray-600">Contact the seller or schedule a viewing</p>
@@ -686,15 +686,17 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 
                 <div className="bg-white p-4 border-y border-gray-200">
                   <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
-                    <div className="h-16 w-16 rounded-full overflow-hidden border border-gray-200">
-                      <img src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="ml-3">
-                      <div className="font-medium text-xl text-[#09261E]">Michael Johnson</div>
-                      <div className="text-gray-500 text-sm flex items-center">
-                        Seller <span className="mx-1">•</span> Responds in 24hrs
+                    <Link to="/sellers/michael-johnson" className="flex items-center group">
+                      <div className="h-16 w-16 rounded-full overflow-hidden border border-gray-200 relative">
+                        <img src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" className="w-full h-full object-cover" />
                       </div>
-                    </div>
+                      <div className="ml-3">
+                        <div className="font-medium text-xl text-[#09261E] group-hover:underline">Michael Johnson</div>
+                        <div className="text-gray-500 text-sm flex items-center">
+                          Seller <span className="mx-1">•</span> Responds in 24hrs
+                        </div>
+                      </div>
+                    </Link>
                   </div>
                   
                   <Button 
@@ -713,20 +715,20 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </Button>
                   
                   <Button 
-                    className="w-full bg-gray-50 text-gray-800 hover:bg-gray-50 py-6 rounded-md text-base font-medium border border-gray-300 flex items-center justify-center"
+                    className="w-full bg-gray-50 text-gray-800 hover:bg-gray-50 mb-3 py-6 rounded-md text-base font-medium border border-gray-300 flex items-center justify-center"
                     variant="outline"
                   >
                     <MapPin className="h-5 w-5 mr-2" />
                     View Map
                   </Button>
-                </div>
-                
-                <div className="py-5 flex items-center justify-center text-gray-500 text-sm">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  142 people viewed this property
+                  
+                  <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-center text-gray-500 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    142 people viewed this property
+                  </div>
                 </div>
                 
                 <div className="bg-gray-50 p-4 text-gray-600 text-sm space-y-1">
@@ -883,18 +885,18 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             
             <div className="p-5">
               <div className="border-b border-gray-200 pb-4 mb-4">
-                <div className="flex items-center">
+                <Link to="/sellers/michael-johnson" className="flex items-center group">
                   <Avatar className="h-14 w-14 border border-gray-200">
                     <AvatarImage src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" />
                     <AvatarFallback>MJ</AvatarFallback>
                   </Avatar>
                   <div className="ml-3">
-                    <div className="font-medium text-lg text-[#09261E]">Michael Johnson</div>
+                    <div className="font-medium text-lg text-[#09261E] group-hover:underline">Michael Johnson</div>
                     <div className="text-gray-500 flex items-center text-sm">
                       Seller <span className="mx-2">•</span> Responds in 24hrs
                     </div>
                   </div>
-                </div>
+                </Link>
               </div>
               
               <Form {...form}>
