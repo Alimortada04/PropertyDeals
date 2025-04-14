@@ -347,9 +347,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8 space-y-6">
               
               {/* Property Details Section */}
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" defaultValue="details" className="w-full">
                 <AccordionItem value="details" className="border-b border-gray-200">
-                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:bg-[#135341]/5 transition-colors justify-start">
+                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">🏠</span>
                       <span>Property Details</span>
@@ -434,9 +434,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
 
               {/* The Numbers Section */}
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" defaultValue="numbers" className="w-full">
                 <AccordionItem value="numbers" className="border-b border-gray-200">
-                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:bg-[#135341]/5 transition-colors justify-start">
+                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">🧮</span>
                       <span>The Numbers</span>
@@ -483,9 +483,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Relevant Calculators Section */}
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" defaultValue="calculators" className="w-full">
                 <AccordionItem value="calculators" className="border-b border-gray-200">
-                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:bg-[#135341]/5 transition-colors justify-start">
+                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">📈</span>
                       <span>Relevant Calculators</span>
@@ -541,9 +541,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Find a REP Section */}
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" defaultValue="reps" className="w-full">
                 <AccordionItem value="reps" className="border-b border-gray-200">
-                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:bg-[#135341]/5 transition-colors justify-start">
+                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">🧑‍🔧</span>
                       <span>Find a REP</span>
@@ -589,9 +589,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Property History Section */}
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" defaultValue="history" className="w-full">
                 <AccordionItem value="history" className="border-b border-gray-200">
-                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:bg-[#135341]/5 transition-colors justify-start">
+                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">🏛</span>
                       <span>Property History</span>
@@ -638,9 +638,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Comparable Properties Section */}
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" defaultValue="comparable" className="w-full">
                 <AccordionItem value="comparable" className="border-b border-gray-200">
-                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:bg-[#135341]/5 transition-colors justify-start">
+                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
                       <span className="mr-3 text-2xl">🏘️</span>
                       <span>Comparable Properties</span>
@@ -679,33 +679,33 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             {/* Right Sidebar - Contact Interested Card */}
             <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
               <div className="bg-gray-50 rounded-lg overflow-hidden lg:sticky lg:top-6">
-                <div className="p-4 pb-6">
-                  <h3 className="text-2xl font-heading font-bold text-[#09261E] mb-1">Interested in this property?</h3>
+                <div className="p-4">
+                  <h3 className="text-2xl font-bold text-[#09261E]">Interested in this property?</h3>
                   <p className="text-gray-600">Contact the seller or schedule a viewing</p>
                 </div>
                 
-                <div className="bg-white p-4 pb-6 border-y border-gray-200">
-                  <div className="flex items-center mb-6">
+                <div className="bg-white p-4 border-y border-gray-200">
+                  <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
                     <div className="h-16 w-16 rounded-full overflow-hidden border border-gray-200">
                       <img src="https://source.unsplash.com/random/100x100/?portrait" alt="Seller" className="w-full h-full object-cover" />
                     </div>
                     <div className="ml-3">
                       <div className="font-medium text-xl text-[#09261E]">Michael Johnson</div>
                       <div className="text-gray-500 text-sm flex items-center">
-                        Seller <span className="mx-2">•</span> Responds in 24hrs
+                        Seller <span className="mx-1">•</span> Responds in 24hrs
                       </div>
                     </div>
                   </div>
                   
                   <Button 
-                    className="w-full bg-[#09261E] hover:bg-[#135341] mb-3 py-6 rounded-md text-base font-medium" 
+                    className="w-full bg-[#09261E] hover:bg-[#09261E] mb-3 py-6 rounded-md text-base font-medium" 
                     onClick={() => setContactModalOpen(true)}
                   >
                     Contact Seller
                   </Button>
                   
                   <Button 
-                    className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 mb-3 py-6 rounded-md text-base font-medium border border-gray-200" 
+                    className="w-full bg-gray-50 text-gray-800 hover:bg-gray-50 mb-3 py-6 rounded-md text-base font-medium border border-gray-300" 
                     variant="outline"
                     onClick={() => setOfferModalOpen(true)}
                   >
@@ -713,7 +713,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </Button>
                   
                   <Button 
-                    className="w-full bg-gray-100 text-gray-800 hover:bg-gray-200 py-6 rounded-md text-base font-medium border border-gray-200 flex items-center justify-center"
+                    className="w-full bg-gray-50 text-gray-800 hover:bg-gray-50 py-6 rounded-md text-base font-medium border border-gray-300 flex items-center justify-center"
                     variant="outline"
                   >
                     <MapPin className="h-5 w-5 mr-2" />
