@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Hide scrollbar for the image carousel */
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* Internet Explorer and Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari, Opera */
+  }
+  
+  /* Smoother transitions for expandable sheet */
+  .transition-height {
+    transition-property: height;
+    transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+  }
+}
+
+/* Custom scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
 @layer base {
   * {
     @apply border-border;
