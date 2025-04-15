@@ -502,45 +502,41 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         </div>
       </section>
 
+      {/* Sticky Navigation Menu */}
+      <section className="sticky top-0 z-40 py-2 bg-white shadow-sm border-b border-gray-200">
+        <div className="container mx-auto px-4">
+          <div className="hidden md:flex items-center justify-center gap-6 py-2 max-w-fit mx-auto">
+            <a href="#numbers" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+              <Calculator className="h-4 w-4 mr-1.5" />
+              Numbers
+            </a>
+            <a href="#calculators" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+              <PercentSquare className="h-4 w-4 mr-1.5" />
+              Calculators
+            </a>
+            <a href="#location" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+              <MapPin className="h-4 w-4 mr-1.5" />
+              Location
+            </a>
+            <a href="#reps" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+              <Wrench className="h-4 w-4 mr-1.5" />
+              REPs
+            </a>
+            <a href="#history" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+              <FileText className="h-4 w-4 mr-1.5" />
+              History
+            </a>
+          </div>
+        </div>
+      </section>
+      
       {/* Main Property Details Section */}
-      <section className="py-6 bg-white border-t border-gray-200">
+      <section className="py-6 bg-white">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row">
             {/* Left Column with Main Sections */}
             <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8 space-y-6">
-              
-              {/* Quick Navigation Menu */}
-              <div className="hidden md:flex items-center justify-start gap-6 py-3 px-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-6 sticky top-4 z-30">
-                <a href="#details" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
-                  <ClipboardList className="h-4 w-4 mr-1.5" />
-                  Details
-                </a>
-                <a href="#numbers" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
-                  <Calculator className="h-4 w-4 mr-1.5" />
-                  Numbers
-                </a>
-                <a href="#calculators" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
-                  <PercentSquare className="h-4 w-4 mr-1.5" />
-                  Calculators
-                </a>
-                <a href="#location" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
-                  <MapPin className="h-4 w-4 mr-1.5" />
-                  Location
-                </a>
-                <a href="#reps" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
-                  <Wrench className="h-4 w-4 mr-1.5" />
-                  Find REPs
-                </a>
-                <a href="#history" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
-                  <FileText className="h-4 w-4 mr-1.5" />
-                  History
-                </a>
-                <a href="#comparable" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
-                  <Building className="h-4 w-4 mr-1.5" />
-                  Comparable
-                </a>
-              </div>
-              
+            
               {/* Property Details Section */}
               <Accordion id="details" type="single" defaultValue="details" collapsible className="w-full">
                 <AccordionItem value="details" className="border-b border-gray-200">
