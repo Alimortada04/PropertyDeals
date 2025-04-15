@@ -1463,7 +1463,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             
             {/* Right Sidebar - Contact Interested Card */}
             <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
-              <div className="lg:sticky lg:top-24 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md">
+              <div className="lg:sticky lg:top-24 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md" style={{ position: "sticky", top: "6rem", zIndex: 10 }}>
                 <div className="p-4">
                   <h3 className="text-2xl font-bold text-[#09261E]">Interested in this property?</h3>
                   <p className="text-gray-600">Contact the seller or schedule a viewing</p>
@@ -1516,15 +1516,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </div>
               
               {/* Contact Card - Mobile Version */}
-              <div className="lg:hidden sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-10">
-                <div className="flex items-center justify-between mb-2">
+              <div className="lg:hidden sticky bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg" style={{ zIndex: 30 }}>
+                <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-bold text-[#09261E]">${property.price.toLocaleString()}</h3>
+                    <h3 className="font-bold text-[#09261E] text-lg">${property.price.toLocaleString()}</h3>
                     <p className="text-gray-600 text-xs">Interested in this property?</p>
                   </div>
                   <Button 
-                    className="bg-[#09261E] hover:bg-[#135341]"
-                    size="sm"
+                    className="bg-[#09261E] hover:bg-[#135341] px-5"
+                    size="default"
                     onClick={() => setContactModalOpen(true)}
                   >
                     Contact Seller

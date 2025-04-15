@@ -5,7 +5,8 @@ import MobileFloatingCTA from './mobile-floating-cta';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { 
   MapPin, Calendar, Ruler, Home, Building, Users, FileText, 
-  BarChart, DollarSign, MapPinned, Bookmark, Star, Heart, Share
+  BarChart, DollarSign, MapPinned, Bookmark, Star, Heart, Share,
+  Bath, Square as SquareIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -29,6 +30,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
   const [isFavorite, setIsFavorite] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   
   // Property images - using actual images that match the property
   const propertyImages = [
@@ -270,7 +272,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             variant="outline" 
             size="sm" 
             className="border-gray-200 text-gray-700 flex-1 mr-2"
-            onClick={() => setShareModalOpen(true)}
+            onClick={() => alert("Share functionality coming soon!")}
           >
             <Share className="h-4 w-4 mr-1.5" />
             Share
