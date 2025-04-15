@@ -8,8 +8,8 @@ import {
   Share2, Heart, MapPin, MapPinned, Home, ChevronRight, ChevronLeft, ChevronDown, X, 
   ChevronsRight, Mail, MessageSquare, Phone, Calculator, HelpCircle, Info, 
   BedDouble, Bath, SquareIcon, Calendar, Home as HomeIcon, Car, Ruler, 
-  Wind, Snowflake, Building, Construction, Hammer, Trees, Wrench,
-  PercentSquare, DollarSign, MoveRight, User
+  Wind, Snowflake, Building, Construction, Hammer, Trees, Wrench, Users,
+  PercentSquare, DollarSign, MoveRight, User, ClipboardList
 } from "lucide-react";
 import {
   Link as LinkIcon, Check as CheckIcon, Copy as CopyIcon, Download,
@@ -1051,6 +1051,88 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
+                    {/* Nested Accordion for Demographics */}
+                    <Accordion type="single" collapsible className="w-full mb-6 border border-gray-200 rounded-lg overflow-hidden">
+                      <AccordionItem value="demographics" className="border-none">
+                        <AccordionTrigger className="px-4 py-3 bg-gray-50 text-lg font-heading font-semibold text-[#09261E] hover:no-underline hover:bg-gray-100 transition-colors">
+                          <div className="flex items-center">
+                            <User className="mr-2 h-5 w-5 text-[#09261E]" />
+                            <span>Demographics</span>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="bg-white px-4 py-6 border-t border-gray-200">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Population */}
+                            <div className="space-y-4">
+                              <h4 className="font-medium text-[#09261E]">Population</h4>
+                              <div className="flex justify-between items-center">
+                                <span className="text-gray-600">Total Population</span>
+                                <span className="font-bold text-[#09261E]">124,356</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-gray-600">Median Age</span>
+                                <span className="font-bold text-[#09261E]">37.2</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-gray-600">Households</span>
+                                <span className="font-bold text-[#09261E]">48,903</span>
+                              </div>
+                            </div>
+                            
+                            {/* Household Income */}
+                            <div className="space-y-4">
+                              <h4 className="font-medium text-[#09261E]">Household Income</h4>
+                              <div className="flex justify-between items-center">
+                                <span className="text-gray-600">Median Income</span>
+                                <span className="font-bold text-[#09261E]">$56,842</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-gray-600">Average Income</span>
+                                <span className="font-bold text-[#09261E]">$68,125</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-gray-600">Per Capita Income</span>
+                                <span className="font-bold text-[#09261E]">$32,590</span>
+                              </div>
+                            </div>
+                            
+                            {/* Age Distribution */}
+                            <div className="space-y-4 md:col-span-2">
+                              <h4 className="font-medium text-[#09261E]">Age Distribution</h4>
+                              <div className="h-8 w-full bg-gray-200 rounded-full overflow-hidden">
+                                <div className="h-full float-left bg-[#09261E]/90" style={{ width: '18%' }}></div>
+                                <div className="h-full float-left bg-[#09261E]/75" style={{ width: '26%' }}></div>
+                                <div className="h-full float-left bg-[#09261E]/60" style={{ width: '22%' }}></div>
+                                <div className="h-full float-left bg-[#803344]/60" style={{ width: '19%' }}></div>
+                                <div className="h-full float-left bg-[#803344]/75" style={{ width: '15%' }}></div>
+                              </div>
+                              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                <div className="flex items-center text-xs">
+                                  <div className="w-3 h-3 rounded-full mr-1 bg-[#09261E]/90"></div>
+                                  <span>Under 18: 18%</span>
+                                </div>
+                                <div className="flex items-center text-xs">
+                                  <div className="w-3 h-3 rounded-full mr-1 bg-[#09261E]/75"></div>
+                                  <span>18-34: 26%</span>
+                                </div>
+                                <div className="flex items-center text-xs">
+                                  <div className="w-3 h-3 rounded-full mr-1 bg-[#09261E]/60"></div>
+                                  <span>35-54: 22%</span>
+                                </div>
+                                <div className="flex items-center text-xs">
+                                  <div className="w-3 h-3 rounded-full mr-1 bg-[#803344]/60"></div>
+                                  <span>55-74: 19%</span>
+                                </div>
+                                <div className="flex items-center text-xs">
+                                  <div className="w-3 h-3 rounded-full mr-1 bg-[#803344]/75"></div>
+                                  <span>75+: 15%</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                     {/* 2x4 Grid Layout */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Row 1-2, Column 1: Map - spans 1 column and 2 rows */}
@@ -1166,7 +1248,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       </div>
                       
                       {/* Row 4, Columns 1-2: Year Housing Built - spans 2 columns and 1 row, converted to vertical bar chart */}
-                      <div className="col-span-2">
+                      <div className="col-span-2 mt-6">
                         <h4 className="font-medium mb-3 text-[#09261E]">Year Housing Was Built</h4>
                         <div className="grid grid-cols-9 gap-1 h-[180px] items-end">
                           {demographicData.yearBuilt.map((item, index) => (
