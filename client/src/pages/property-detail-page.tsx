@@ -1281,7 +1281,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                   backgroundColor: index < 4 
                                     ? `rgba(19, 83, 65, ${0.95 - index * 0.1})` // greens for newer homes
                                     : `rgba(128, 51, 68, ${0.55 + (index-4) * 0.1})`, // wine colors for older homes
-                                  height: `${Math.max(15, item.percentage)}px`
+                                  height: `${Math.max(30, item.percentage * 1.5)}px`
                                 }}
                               />
                               <div className="absolute bottom-full left-0 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
