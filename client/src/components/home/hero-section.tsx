@@ -124,7 +124,7 @@ export default function HeroSection() {
               <span className="block relative">
                 <span className="relative inline-block">
                   Powered by Real Estate.
-                  <span className="absolute -bottom-2 left-0 right-0 h-3 bg-[#E59F9F]/40 -z-10"></span>
+                  <span className="absolute -bottom-2 left-0 right-0 h-3 bg-[#803344]/40 -z-10"></span>
                 </span>
               </span>
             </h1>
