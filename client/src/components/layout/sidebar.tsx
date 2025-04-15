@@ -185,7 +185,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       {/* Mobile Menu that slides in from left */}
       <div 
         id="mobile-menu" 
-        className="fixed top-0 left-0 bottom-0 w-[250px] bg-white z-50 lg:hidden hidden shadow-lg transition-transform duration-300 ease-in-out -translate-x-full overscroll-contain"
+        className="fixed top-0 left-0 bottom-0 w-[250px] bg-white z-[200] lg:hidden hidden shadow-lg transition-transform duration-300 ease-in-out -translate-x-full overscroll-contain"
       >
         <div className="h-full overflow-y-auto">
           <div className="flex items-center px-4 py-3 border-b">
@@ -441,7 +441,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         className={`
           fixed top-0 left-0 h-screen overflow-y-auto shadow-lg
           transition-all duration-200 ease-in-out bg-white
-          ${isOpen ? 'translate-x-0 z-60' : '-translate-x-full lg:translate-x-0 z-50'}
+          ${isOpen ? 'translate-x-0 z-[200]' : '-translate-x-full lg:translate-x-0 z-[200]'}
           ${isExpanded ? 'w-64' : 'w-16'}
           ${isMobile ? 'w-[250px]' : ''}
         `}
