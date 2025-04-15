@@ -510,10 +510,14 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8 space-y-6">
               
               {/* Quick Navigation Menu */}
-              <div className="hidden md:flex items-center justify-start gap-8 py-3 px-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-6 sticky top-0 z-20">
+              <div className="hidden md:flex items-center justify-start gap-6 py-3 px-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-6 sticky top-4 z-30">
                 <a href="#details" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
                   <ClipboardList className="h-4 w-4 mr-1.5" />
                   Details
+                </a>
+                <a href="#numbers" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+                  <Calculator className="h-4 w-4 mr-1.5" />
+                  Numbers
                 </a>
                 <a href="#calculators" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
                   <PercentSquare className="h-4 w-4 mr-1.5" />
@@ -652,7 +656,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
 
               {/* The Numbers Section */}
-              <Accordion id="calculators" type="single" defaultValue="numbers" collapsible className="w-full">
+              <Accordion id="numbers" type="single" defaultValue="numbers" collapsible className="w-full">
                 <AccordionItem value="numbers" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -1275,35 +1279,37 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       </div>
                       
-                      {/* Row 4, Columns 1-2: Year Housing Built - spans 2 columns and 1 row, converted to vertical bar chart */}
-                      <div className="col-span-2 mt-6">
-                        <h4 className="font-medium mb-3 text-[#09261E]">Year Housing Was Built</h4>
-                        <div className="grid grid-cols-9 gap-1 h-[180px] items-end">
-                          {demographicData.yearBuilt.map((item, index) => (
-                            <div key={index} className="flex flex-col items-center">
-                              <div 
-                                className="w-full rounded-t-sm"
-                                style={{ 
-                                  height: `${Math.max(15, item.percentage * 3)}%`,
-                                  backgroundColor: [
-                                    'rgba(19, 83, 65, 0.95)', // darkest
-                                    'rgba(19, 83, 65, 0.90)',
-                                    'rgba(19, 83, 65, 0.85)', 
-                                    'rgba(19, 83, 65, 0.80)',
-                                    'rgba(19, 83, 65, 0.75)', 
-                                    'rgba(19, 83, 65, 0.70)',
-                                    'rgba(19, 83, 65, 0.65)',
-                                    'rgba(19, 83, 65, 0.60)',
-                                    'rgba(19, 83, 65, 0.55)'
-                                  ][index]
-                                }}
-                              />
-                              <div className="text-xs text-center mt-2 whitespace-nowrap overflow-hidden text-ellipsis" style={{ maxWidth: '100%', transform: 'rotate(-45deg)', transformOrigin: 'left top', fontSize: '10px' }}>
+                      {/* Row 4, Columns 1-2: Year Housing Built - spans 2 columns and 1 row, improved chart */}
+                      <div className="col-span-2 mt-6 bg-white p-4 rounded-lg border border-gray-200">
+                        <h4 className="font-medium mb-4 text-[#09261E] text-lg">Year Housing Was Built</h4>
+                        <div className="flex flex-col">
+                          <div className="flex items-end gap-1 h-[160px] mb-4">
+                            {demographicData.yearBuilt.map((item, index) => (
+                              <div key={index} className="flex-1 flex flex-col items-center relative group">
+                                <div className="absolute -top-7 left-1/2 transform -translate-x-1/2 bg-[#09261E] text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                                  {item.group}: {item.percentage}%
+                                </div>
+                                <div 
+                                  className="w-full rounded-t-md hover:shadow-md transition-all duration-200 hover:scale-y-105 cursor-pointer group-hover:brightness-110"
+                                  style={{ 
+                                    height: `${Math.max(20, item.percentage * 3.5)}%`,
+                                    backgroundColor: index < 4 
+                                      ? `rgba(19, 83, 65, ${0.95 - index * 0.1})` // greens
+                                      : `rgba(128, 51, 68, ${0.55 + (index-4) * 0.1})` // wine colors
+                                  }}
+                                />
+                                <div className="font-medium text-sm mt-2 text-center">{item.percentage}%</div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="grid grid-cols-9 gap-1 mt-1 border-t pt-2">
+                            {demographicData.yearBuilt.map((item, index) => (
+                              <div key={index} className="text-xs text-center font-medium">
                                 {item.group}
                               </div>
-                              <div className="text-xs font-medium mt-1">{item.percentage}%</div>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
+                          <div className="text-center text-gray-500 text-xs mt-3">Housing age distribution in {property.city}, {property.state}</div>
                         </div>
                       </div>
                     
@@ -1452,7 +1458,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             
             {/* Right Sidebar - Contact Interested Card */}
             <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0 relative">
-              <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md sticky top-6">
+              <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md sticky top-24">
                 <div className="p-4">
                   <h3 className="text-2xl font-bold text-[#09261E]">Interested in this property?</h3>
                   <p className="text-gray-600">Contact the seller or schedule a viewing</p>
