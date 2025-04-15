@@ -227,19 +227,29 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
       {/* Property Header */}
       <div className="px-4 py-3 border-b border-gray-200">
         <div className="flex justify-between items-start mb-2">
-          <div>
-            <h1 className="text-2xl font-bold text-[#09261E]">${property.price?.toLocaleString()}</h1>
-            <div className="flex text-sm space-x-4 mt-1 text-gray-600">
-              <div>{property.bedrooms} bd</div>
-              <div>{property.bathrooms} ba</div>
-              <div>{property.squareFeet?.toLocaleString() || 'N/A'} sq ft</div>
+          <div className="flex-1">
+            <div className="flex items-baseline justify-between">
+              <h1 className="text-2xl font-bold text-[#09261E]">${property.price?.toLocaleString()}</h1>
+              <span className="text-xs text-gray-500">
+                ${property.squareFeet ? Math.round((property.price || 0) / property.squareFeet).toLocaleString() : 'N/A'}/sqft
+              </span>
             </div>
+            
+            <div className="flex flex-wrap gap-2 my-2">
+              <Badge variant="secondary" className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                {property.propertyType || 'Single Family'}
+              </Badge>
+              <Badge variant="secondary" className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                Light Rehab
+              </Badge>
+              <Badge variant="secondary" className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
+                5 days on PropertyDeals
+              </Badge>
+            </div>
+            
             <div className="text-sm text-gray-500 mt-1">
-              {property.address}, {property.city}, {property.state}
+              {property.address}, {property.city}, {property.state} {property.zipCode}
             </div>
-          </div>
-          <div className="bg-[#09261E]/10 text-[#09261E] text-xs font-semibold px-2 py-1 rounded">
-            FOR SALE
           </div>
         </div>
         
@@ -248,11 +258,11 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           <Button 
             variant="outline" 
             size="sm" 
-            className="border-gray-200 text-gray-700 flex-1 mr-2"
+            className="border-gray-200 bg-[#803344] text-white hover:bg-[#803344]/90 flex-1 mr-2"
             onClick={toggleFavorite}
           >
             <Heart 
-              className={`h-4 w-4 mr-1.5 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} 
+              className={`h-4 w-4 mr-1.5 ${isFavorite ? 'fill-white' : ''}`} 
             />
             {isFavorite ? 'Saved' : 'Save'}
           </Button>
@@ -260,6 +270,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             variant="outline" 
             size="sm" 
             className="border-gray-200 text-gray-700 flex-1 mr-2"
+            onClick={() => setShareModalOpen(true)}
           >
             <Share className="h-4 w-4 mr-1.5" />
             Share
@@ -276,29 +287,39 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
       
       {/* Main Content */}
       <div className="pb-24"> {/* Padding bottom for floating CTA */}
-        {/* Property Overview */}
-        <div className="px-4 py-4 border-b border-gray-200">
-          <div className="text-sm text-gray-500 mb-2 flex items-center">
-            <MapPin size={14} className="mr-1" />
-            Listed by HelloRealty LLC
+        {/* Property Stats - Key Details */}
+        <div className="px-4 py-4 border-b border-gray-200 grid grid-cols-2 gap-4">
+          <div className="flex items-center">
+            <Building className="text-[#09261E] w-5 h-5 mr-3" />
+            <div>
+              <div className="text-gray-600 text-sm">Bedrooms</div>
+              <div className="font-medium">{property.bedrooms}</div>
+            </div>
           </div>
           
-          <div className="flex flex-wrap gap-2 mb-4">
-            <Badge variant="secondary" className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
-              {property.propertyType}
-            </Badge>
-            <Badge variant="secondary" className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]">
-              Built in 2015
-            </Badge>
-            {property.status?.toLowerCase().includes('off-market') && (
-              <Badge className="bg-[#803344] hover:bg-[#803344]">Off-Market Deal</Badge>
-            )}
+          <div className="flex items-center">
+            <Bath className="text-[#09261E] w-5 h-5 mr-3" />
+            <div>
+              <div className="text-gray-600 text-sm">Bathrooms</div>
+              <div className="font-medium">{property.bathrooms}</div>
+            </div>
           </div>
           
-          <p className="text-gray-700 leading-relaxed">
-            {property.description || 
-              "This beautiful property offers modern features and a convenient location. Recently updated with high-end finishes and spacious rooms perfect for entertaining. The neighborhood provides easy access to schools, parks, and shopping."}
-          </p>
+          <div className="flex items-center">
+            <SquareIcon className="text-[#09261E] w-5 h-5 mr-3" />
+            <div>
+              <div className="text-gray-600 text-sm">Square Feet</div>
+              <div className="font-medium">{property.squareFeet?.toLocaleString() || 'N/A'}</div>
+            </div>
+          </div>
+          
+          <div className="flex items-center">
+            <Ruler className="text-[#09261E] w-5 h-5 mr-3" />
+            <div>
+              <div className="text-gray-600 text-sm">Lot Size</div>
+              <div className="font-medium">{property.lotSize || '0.25 acres'}</div>
+            </div>
+          </div>
         </div>
         
         {/* Property Stats Summary */}

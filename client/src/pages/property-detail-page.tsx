@@ -1463,7 +1463,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             
             {/* Right Sidebar - Contact Interested Card */}
             <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
-              <div className="lg:sticky lg:top-20 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md">
+              <div className="lg:sticky lg:top-24 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md">
                 <div className="p-4">
                   <h3 className="text-2xl font-bold text-[#09261E]">Interested in this property?</h3>
                   <p className="text-gray-600">Contact the seller or schedule a viewing</p>
@@ -1649,7 +1649,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
       
       {/* Email Signup CTA */}
-      <section className="py-16 bg-gradient-to-r from-[#09261E] to-[#135341] text-white">
+      <section className="py-16 bg-gradient-to-r from-[#09261E] to-[#135341] text-white mb-0">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">Don't Miss Out on New Deals</h2>
