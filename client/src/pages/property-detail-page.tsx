@@ -1315,7 +1315,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Find a REP Section */}
-              <Accordion type="single" defaultValue="reps" collapsible className="w-full">
+              <Accordion id="reps" type="single" defaultValue="reps" collapsible className="w-full">
                 <AccordionItem value="reps" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -1363,7 +1363,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Property History Section */}
-              <Accordion type="single" defaultValue="history" collapsible className="w-full">
+              <Accordion id="history" type="single" defaultValue="history" collapsible className="w-full">
                 <AccordionItem value="history" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -1412,7 +1412,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Comparable Properties Section */}
-              <Accordion type="single" defaultValue="comparable" collapsible className="w-full">
+              <Accordion id="comparable" type="single" defaultValue="comparable" collapsible className="w-full">
                 <AccordionItem value="comparable" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
