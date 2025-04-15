@@ -6,7 +6,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { 
   MapPin, Calendar, Ruler, Home, Building, Users, FileText, 
   BarChart, DollarSign, MapPinned, Bookmark, Star, Heart, Share,
-  Bath, Square as SquareIcon
+  Bath, Square as SquareIcon, Link as LinkIcon, Mail, Check as CheckIcon,
+  Copy as CopyIcon, ChevronRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -31,6 +32,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
   
   // Property images - using actual images that match the property
   const propertyImages = [
@@ -70,6 +72,25 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
   
   const handleOfferClick = () => {
     setOfferModalOpen(true);
+  };
+  
+  // Share functionality
+  const handleCopyToClipboard = () => {
+    const propertyUrl = `https://propertydeals.com/properties/${property.id}`;
+    navigator.clipboard.writeText(propertyUrl);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
+  
+  const handleEmailShare = () => {
+    const subject = `Check out this property: ${property.address}`;
+    const body = `I found this interesting property on PropertyDeals!\n\n${property.address}, ${property.city}, ${property.state}\nPrice: $${property.price?.toLocaleString()}\n\nSee more details here: https://propertydeals.com/properties/${property.id}`;
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+  
+  const generatePdfReport = () => {
+    alert("PDF report will be generated and downloaded.");
+    // In a real implementation, this would call a backend API to generate a PDF
   };
 
   // Fetch zip code demographic data
@@ -358,64 +379,39 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center">
-                  <Building className="w-5 h-5 text-gray-500 mr-2" />
-                  <div>
-                    <p className="text-sm font-medium">Type</p>
-                    <p className="text-gray-700">{property.propertyType}</p>
-                  </div>
+              <div className="grid grid-cols-2 gap-y-4">
+                <div>
+                  <div className="text-sm text-gray-500">Type</div>
+                  <div className="font-semibold text-[#09261E]">{property.propertyType}</div>
                 </div>
-                <div className="flex items-center">
-                  <Ruler className="w-5 h-5 text-gray-500 mr-2" />
-                  <div>
-                    <p className="text-sm font-medium">Size</p>
-                    <p className="text-gray-700">{property.squareFeet?.toLocaleString() || 'N/A'} sq ft</p>
-                  </div>
+                <div>
+                  <div className="text-sm text-gray-500">Size</div>
+                  <div className="font-semibold text-[#09261E]">{property.squareFeet?.toLocaleString() || 'N/A'} sq ft</div>
                 </div>
-                <div className="flex items-center">
-                  <Home className="w-5 h-5 text-gray-500 mr-2" />
-                  <div>
-                    <p className="text-sm font-medium">Bedrooms</p>
-                    <p className="text-gray-700">{property.bedrooms}</p>
-                  </div>
+                <div>
+                  <div className="text-sm text-gray-500">Bedrooms</div>
+                  <div className="font-semibold text-[#09261E]">{property.bedrooms}</div>
                 </div>
-                <div className="flex items-center">
-                  <Users className="w-5 h-5 text-gray-500 mr-2" />
-                  <div>
-                    <p className="text-sm font-medium">Bathrooms</p>
-                    <p className="text-gray-700">{property.bathrooms}</p>
-                  </div>
+                <div>
+                  <div className="text-sm text-gray-500">Bathrooms</div>
+                  <div className="font-semibold text-[#09261E]">{property.bathrooms}</div>
                 </div>
-                <div className="flex items-center">
-                  <Calendar className="w-5 h-5 text-gray-500 mr-2" />
-                  <div>
-                    <p className="text-sm font-medium">Year Built</p>
-                    <p className="text-gray-700">2015</p>
-                  </div>
+                <div>
+                  <div className="text-sm text-gray-500">Year Built</div>
+                  <div className="font-semibold text-[#09261E]">2015</div>
                 </div>
-                <div className="flex items-center">
-                  <FileText className="w-5 h-5 text-gray-500 mr-2" />
-                  <div>
-                    <p className="text-sm font-medium">MLS #</p>
-                    <p className="text-gray-700">MLS12345</p>
-                  </div>
+                <div>
+                  <div className="text-sm text-gray-500">MLS #</div>
+                  <div className="font-semibold text-[#09261E]">MLS12345</div>
                 </div>
               </div>
               
-              <div className="mt-4">
-                <h4 className="font-medium mb-2">Features & Amenities</h4>
-                <div className="grid grid-cols-2 gap-2">
+              <div className="mt-6 border-t border-gray-200 pt-4">
+                <div className="text-sm text-gray-500 mb-3">Features & Amenities</div>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                   {features.map((feature, index) => (
-                    <div key={index} className="flex items-center">
-                      <div className={`w-4 h-4 mr-2 rounded-full flex items-center justify-center ${feature.present ? 'bg-[#09261E]' : 'bg-gray-200'}`}>
-                        {feature.present && (
-                          <span className="text-white text-[8px]">✓</span>
-                        )}
-                      </div>
-                      <span className={feature.present ? 'text-gray-800' : 'text-gray-400 line-through'}>
-                        {feature.name}
-                      </span>
+                    <div key={index} className={`text-sm ${feature.present ? 'text-[#09261E]' : 'text-gray-400 line-through'}`}>
+                      {feature.present ? '✓' : '✗'} {feature.name}
                     </div>
                   ))}
                 </div>
