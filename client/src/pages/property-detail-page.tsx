@@ -509,8 +509,36 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             {/* Left Column with Main Sections */}
             <div className="w-full lg:w-2/3 xl:w-3/4 lg:pr-8 space-y-6">
               
+              {/* Quick Navigation Menu */}
+              <div className="hidden md:flex items-center justify-start gap-8 py-3 px-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-6 sticky top-0 z-20">
+                <a href="#details" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+                  <ClipboardList className="h-4 w-4 mr-1.5" />
+                  Details
+                </a>
+                <a href="#calculators" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+                  <PercentSquare className="h-4 w-4 mr-1.5" />
+                  Calculators
+                </a>
+                <a href="#location" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+                  <MapPin className="h-4 w-4 mr-1.5" />
+                  Location
+                </a>
+                <a href="#reps" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+                  <Wrench className="h-4 w-4 mr-1.5" />
+                  Find REPs
+                </a>
+                <a href="#history" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+                  <FileText className="h-4 w-4 mr-1.5" />
+                  History
+                </a>
+                <a href="#comparable" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+                  <Building className="h-4 w-4 mr-1.5" />
+                  Comparable
+                </a>
+              </div>
+              
               {/* Property Details Section */}
-              <Accordion type="single" defaultValue="details" collapsible className="w-full">
+              <Accordion id="details" type="single" defaultValue="details" collapsible className="w-full">
                 <AccordionItem value="details" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -624,7 +652,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
 
               {/* The Numbers Section */}
-              <Accordion type="single" defaultValue="numbers" collapsible className="w-full">
+              <Accordion id="calculators" type="single" defaultValue="numbers" collapsible className="w-full">
                 <AccordionItem value="numbers" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
@@ -1042,7 +1070,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Accordion>
               
               {/* Location Section */}
-              <Accordion type="single" defaultValue="location" collapsible className="w-full">
+              <Accordion id="location" type="single" defaultValue="location" collapsible className="w-full">
                 <AccordionItem value="location" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
