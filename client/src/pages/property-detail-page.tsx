@@ -547,70 +547,76 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
-                    <div className="grid grid-cols-2 gap-6 mb-4">
-                      <div className="flex items-center">
-                        <HomeIcon className="text-[#09261E] w-6 h-6 mr-3" />
+                    <div className="grid grid-cols-3 md:grid-cols-3 gap-4 mb-6">
+                      <div className="flex items-start">
+                        <BedDouble className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
-                          <div className="text-gray-600 text-sm">Property Type</div>
-                          <div className="font-semibold text-lg">{property.propertyType || 'Single-family'}</div>
+                          <div className="text-gray-600 text-xs">Bedrooms</div>
+                          <div className="font-semibold">{property.bedrooms}</div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center">
-                        <SquareIcon className="text-[#09261E] w-6 h-6 mr-3" />
+                      <div className="flex items-start">
+                        <Bath className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
-                          <div className="text-gray-600 text-sm">Square Feet</div>
-                          <div className="font-semibold text-lg">{property.squareFeet?.toLocaleString() || '3,500'} sq ft</div>
+                          <div className="text-gray-600 text-xs">Bathrooms</div>
+                          <div className="font-semibold">{property.bathrooms}</div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center">
-                        <Calendar className="text-[#09261E] w-6 h-6 mr-3" />
+                      <div className="flex items-start">
+                        <SquareIcon className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
-                          <div className="text-gray-600 text-sm">Year Built</div>
-                          <div className="font-semibold text-lg">1886</div>
+                          <div className="text-gray-600 text-xs">Square Feet</div>
+                          <div className="font-semibold">{property.squareFeet?.toLocaleString() || '3,500'} sq ft</div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center">
-                        <DollarSign className="text-[#09261E] w-6 h-6 mr-3" />
+                      <div className="flex items-start">
+                        <Ruler className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
-                          <div className="text-gray-600 text-sm">Price per sqft</div>
-                          <div className="font-semibold text-lg">${property.squareFeet ? Math.round(property.price / property.squareFeet) : '98'} Redfin Estimate per sq ft</div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4 mt-6">
-                      <div className="flex items-center">
-                        <BedDouble className="text-[#09261E] w-6 h-6 mr-3" />
-                        <div>
-                          <div className="text-gray-600 text-sm">Bedrooms</div>
-                          <div className="font-semibold text-lg">{property.bedrooms}</div>
+                          <div className="text-gray-600 text-xs">Lot Size</div>
+                          <div className="font-semibold">{property.lotSize || '0.25 acres'}</div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center">
-                        <Bath className="text-[#09261E] w-6 h-6 mr-3" />
+                      <div className="flex items-start">
+                        <Calendar className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
-                          <div className="text-gray-600 text-sm">Bathrooms</div>
-                          <div className="font-semibold text-lg">{property.bathrooms}</div>
+                          <div className="text-gray-600 text-xs">Year Built</div>
+                          <div className="font-semibold">1886</div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center">
-                        <Car className="text-[#09261E] w-6 h-6 mr-3" />
+                      <div className="flex items-start">
+                        <HomeIcon className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
-                          <div className="text-gray-600 text-sm">Parking</div>
-                          <div className="font-semibold text-lg">2-car garage</div>
+                          <div className="text-gray-600 text-xs">Property Type</div>
+                          <div className="font-semibold">{property.propertyType || 'Single-family'}</div>
                         </div>
                       </div>
                       
-                      <div className="flex items-center">
-                        <Building className="text-[#09261E] w-6 h-6 mr-3" />
+                      <div className="flex items-start">
+                        <DollarSign className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
-                          <div className="text-gray-600 text-sm">Basement</div>
-                          <div className="font-semibold text-lg">Full, finished</div>
+                          <div className="text-gray-600 text-xs">Price per sqft</div>
+                          <div className="font-semibold">${property.squareFeet ? Math.round(property.price / property.squareFeet) : '98'}/sq ft</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start">
+                        <Car className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                        <div>
+                          <div className="text-gray-600 text-xs">Parking</div>
+                          <div className="font-semibold">2-car garage</div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start">
+                        <Building className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                        <div>
+                          <div className="text-gray-600 text-xs">Basement</div>
+                          <div className="font-semibold">Full, finished</div>
                         </div>
                       </div>
                     </div>
@@ -1255,35 +1261,47 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       </div>
                       
-                      {/* Row 4, Columns 1-2: Year Housing Built - visual bar graph */}
-                      <div className="col-span-2 mt-6 bg-white p-6 rounded-lg border border-gray-200">
-                        <h4 className="font-medium mb-4 text-[#09261E] text-lg">Year Housing Was Built</h4>
-                        <div className="space-y-3">
+                      {/* Row 4, Columns 1-2: Year Housing Built - compact horizontal bar chart */}
+                      <div className="col-span-2 mt-6 bg-white p-4 rounded-lg border border-gray-200">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-medium text-[#09261E] text-base">Year Housing Was Built</h4>
+                          <div className="text-xs text-gray-500">Average age: 56 years</div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-1 mb-2">
                           {demographicData.yearBuilt.map((item, index) => (
-                            <div key={index} className="space-y-1">
-                              <div className="flex justify-between items-center text-sm">
-                                <span className="font-medium">{item.group}</span>
-                                <span className="text-gray-600">{item.percentage}%</span>
-                              </div>
-                              <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full"
-                                  style={{ 
-                                    width: `${item.percentage}%`,
-                                    backgroundColor: index < 4 
-                                      ? `rgba(19, 83, 65, ${0.95 - index * 0.1})` // greens for newer homes
-                                      : `rgba(128, 51, 68, ${0.55 + (index-4) * 0.1})` // wine colors for older homes
-                                  }}
-                                />
+                            <div 
+                              key={index} 
+                              className="relative group flex-1"
+                              title={`${item.group}: ${item.percentage}%`}
+                            >
+                              <div 
+                                className="h-8 rounded-sm" 
+                                style={{ 
+                                  backgroundColor: index < 4 
+                                    ? `rgba(19, 83, 65, ${0.95 - index * 0.1})` // greens for newer homes
+                                    : `rgba(128, 51, 68, ${0.55 + (index-4) * 0.1})`, // wine colors for older homes
+                                  height: `${Math.max(15, item.percentage)}px`
+                                }}
+                              />
+                              <div className="absolute bottom-full left-0 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                {item.group}: {item.percentage}%
                               </div>
                             </div>
                           ))}
-                          <div className="pt-3 mt-3 border-t border-gray-100">
-                            <div className="flex justify-between text-sm text-gray-500">
-                              <span>Most common housing age: Before 1950 ({demographicData.yearBuilt[8].percentage}%)</span>
-                              <span>Average age: 56 years</span>
-                            </div>
-                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between text-xs text-gray-500 mt-1">
+                          <span>2020+</span>
+                          <span>2000-19</span>
+                          <span>1980-99</span>
+                          <span>1960-79</span>
+                          <span>1940-59</span>
+                          <span>&lt;1940</span>
+                        </div>
+                        
+                        <div className="text-xs text-center text-gray-500 mt-2">
+                          Most common housing age: Before 1950 ({demographicData.yearBuilt[8].percentage}%)
                         </div>
                       </div>
                     
