@@ -9,9 +9,10 @@ interface PropertyCalculatorProps {
   property: ExtendedProperty;
   scrollY: number;
   isVisible: boolean;
+  onHoverChange?: (isHovered: boolean) => void; // callback for hover state changes
 }
 
-export default function PropertyCalculator({ property, scrollY, isVisible }: PropertyCalculatorProps) {
+export default function PropertyCalculator({ property, scrollY, isVisible, onHoverChange }: PropertyCalculatorProps) {
   const [calculatorMode, setCalculatorMode] = useState<'flip' | 'rental'>('flip');
   const [isCalculatorVisible, setIsCalculatorVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -25,6 +26,17 @@ export default function PropertyCalculator({ property, scrollY, isVisible }: Pro
     
     return () => clearTimeout(timer);
   }, [property.id]);
+  
+  // Handle hover state changes and notify parent component
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (onHoverChange) onHoverChange(true);
+  };
+  
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (onHoverChange) onHoverChange(false);
+  };
   
   // Calculate placeholder values based on property price
   const price = property.price || 250000;
@@ -57,8 +69,8 @@ export default function PropertyCalculator({ property, scrollY, isVisible }: Pro
           : '0 15px 30px -10px rgba(9, 38, 30, 0.15)',
         transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, z-index 0s'
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Calculator Header */}
       <div className="flex justify-between items-center mb-4">
@@ -186,7 +198,7 @@ export default function PropertyCalculator({ property, scrollY, isVisible }: Pro
       
       {/* Curved decorative element */}
       <div 
-        className="absolute -bottom-10 -right-10 w-20 h-20 rounded-full bg-[#E59F9F]/10 opacity-50"
+        className="absolute -bottom-10 -right-10 w-20 h-20 rounded-full bg-[#803344]/10 opacity-50"
         style={{
           filter: 'blur(15px)',
         }}

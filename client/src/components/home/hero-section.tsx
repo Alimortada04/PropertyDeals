@@ -61,6 +61,7 @@ export default function HeroSection() {
   const { relativePosition } = { relativePosition: { x: 0, y: 0 } };
   // Track current featured property (rotating among featured properties)
   const [currentFeaturedIndex, setCurrentFeaturedIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false); // State to track if rotation is paused
   const featuredProperty = featuredProperties[currentFeaturedIndex];
   
   // Combine all properties for the carousel
@@ -81,8 +82,15 @@ export default function HeroSection() {
     setIsVisible(true);
   }, []);
   
-  // Rotate through featured properties
+  // Callback for handling hover on property calculator or property card
+  const handleCardHover = (isHovered: boolean) => {
+    setIsPaused(isHovered); // Pause rotation when either card is hovered
+  };
+  
+  // Rotate through featured properties, but only when not paused
   useEffect(() => {
+    if (isPaused) return; // Skip setting interval if paused
+    
     const interval = setInterval(() => {
       setCurrentFeaturedIndex((prev) => 
         prev >= featuredProperties.length - 1 ? 0 : prev + 1
@@ -90,7 +98,7 @@ export default function HeroSection() {
     }, 5000); // Change property every 5 seconds
     
     return () => clearInterval(interval);
-  }, []);
+  }, [isPaused]); // Re-run effect when isPaused changes
 
   return (
     <div 
@@ -281,6 +289,7 @@ export default function HeroSection() {
                 property={featuredProperty} 
                 scrollY={scrollY} 
                 isVisible={isVisible}
+                onHoverChange={handleCardHover}
               />
               
               <Link 
@@ -292,6 +301,7 @@ export default function HeroSection() {
                   transformStyle: 'preserve-3d',
                   boxShadow: '0 10px 30px -5px rgba(9, 38, 30, 0.15)'
                 }}
+                onMouseEnter={() => handleCardHover(true)}
                 onMouseMove={(e) => {
                   const card = e.currentTarget;
                   const rect = card.getBoundingClientRect();
@@ -312,6 +322,8 @@ export default function HeroSection() {
                   // Reset to original transform
                   card.style.transform = `translate3d(0, ${-scrollY * 0.05}px, 0) rotate(-2deg)`;
                   card.style.boxShadow = '0 10px 30px -5px rgba(9, 38, 30, 0.15)';
+                  // Resume property rotation
+                  handleCardHover(false);
                 }}
               >
                 {/* Property image with zoom effect */}
@@ -326,7 +338,7 @@ export default function HeroSection() {
                   {/* Property tags */}
                   <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
                     {featuredProperty.offMarketDeal && (
-                      <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#E59F9F] shadow-sm inline-flex items-center gap-1">
+                      <div className="px-3 py-1 rounded-full text-xs font-medium bg-white/90 backdrop-blur-sm text-[#803344] shadow-sm inline-flex items-center gap-1">
                         <span className="md:inline hidden">⭐</span> Off-Market Deal
                       </div>
                     )}
@@ -380,26 +392,39 @@ export default function HeroSection() {
               </Link>
               
               {/* REP card - only visible on desktop */}
-              <div 
-                className="absolute md:top-[-10%] md:right-[15%] top-[-20%] right-[0%] md:w-[50%] w-[70%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform hidden lg:block"
-                style={{
-                  transform: `translate3d(0, ${Math.min(40, scrollY * 0.02)}px, 0) rotate(2deg)`,
-                  transition: 'transform 0.2s ease-out'
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-[#135341]/10 flex items-center justify-center text-[#135341]">
-                    <Users className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-[#09261E]">REP Network</h4>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <LiveCounterDisplay baseNumber={900} />
-                      <span className="text-xs text-gray-500">Verified Professionals</span>
+              <Link href="/rep-room" className="block hidden lg:block">
+                <div 
+                  className="absolute md:top-[-10%] md:right-[15%] top-[-20%] right-[0%] md:w-[50%] w-[70%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform cursor-pointer group transition-all duration-300 hover:shadow-2xl"
+                  style={{
+                    transform: `translate3d(0, ${Math.min(40, scrollY * 0.02)}px, 0) rotate(2deg)`,
+                    transition: 'transform 0.2s ease-out, box-shadow 0.3s ease, border-color 0.3s ease'
+                  }}
+                >
+                  <div className="flex items-center gap-3 relative">
+                    {/* Pulsing background effect that appears on hover */}
+                    <div className="absolute inset-0 bg-[#135341]/5 rounded-xl scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500"></div>
+                    
+                    {/* Adding subtle pulse animation to icon */}
+                    <div className="w-12 h-12 rounded-full bg-[#135341]/10 flex items-center justify-center text-[#135341] relative z-10 group-hover:bg-[#135341]/20 transition-colors duration-300">
+                      <Users className="h-6 w-6 group-hover:scale-110 transition-transform duration-300" />
+                      
+                      {/* Pulsing circle animation */}
+                      <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 animate-ping-slow bg-[#135341]/10"></div>
+                    </div>
+                    
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-1.5">
+                        <h4 className="font-medium text-[#09261E] group-hover:text-[#135341] transition-colors duration-300">REP Network</h4>
+                        <ArrowRight className="h-4 w-0 group-hover:w-4 opacity-0 group-hover:opacity-100 transition-all duration-300 text-[#135341]" />
+                      </div>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <LiveCounterDisplay baseNumber={900} />
+                        <span className="text-xs text-gray-500">Verified Professionals</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
               
               {/* Connection lines - simplified and reduced */}
               <svg 
@@ -408,7 +433,7 @@ export default function HeroSection() {
                 <defs>
                   <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#09261E" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#E59F9F" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#803344" stopOpacity="0.2" />
                   </linearGradient>
                 </defs>
                 <line x1="30%" y1="40%" x2="70%" y2="80%" stroke="url(#lineGradient)" strokeWidth="2" strokeDasharray="5,5" />
