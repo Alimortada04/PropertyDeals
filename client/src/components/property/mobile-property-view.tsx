@@ -272,7 +272,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             variant="outline" 
             size="sm" 
             className="border-gray-200 text-gray-700 flex-1 mr-2"
-            onClick={() => alert("Share functionality coming soon!")}
+            onClick={() => setShareModalOpen(true)}
           >
             <Share className="h-4 w-4 mr-1.5" />
             Share
