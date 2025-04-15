@@ -1462,8 +1462,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
             
             {/* Right Sidebar - Contact Interested Card */}
-            <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0 relative">
-              <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md sticky top-24">
+            <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
+              <div className="sticky top-20 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md">
                 <div className="p-4">
                   <h3 className="text-2xl font-bold text-[#09261E]">Interested in this property?</h3>
                   <p className="text-gray-600">Contact the seller or schedule a viewing</p>
@@ -1584,6 +1584,94 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </div>
             </div>
           )}
+        </div>
+      </section>
+      
+      {/* Similar Deals Section */}
+      <section className="py-12 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-8">Similar Deals You Might Like</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {similarProperties.slice(0, 4).map((prop, index) => (
+              <div key={index} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <div className="relative">
+                  <img 
+                    src={prop.imageUrl || 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?q=80&w=400&h=300&auto=format&fit=crop'} 
+                    alt={prop.address} 
+                    className="w-full h-48 object-cover" 
+                  />
+                  <div className="absolute top-2 right-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="bg-white/80 hover:bg-white h-7 w-7 rounded-full"
+                    >
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  {prop.offMarketDeal && (
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-[#803344] hover:bg-[#803344]">Off-Market</Badge>
+                    </div>
+                  )}
+                  {prop.newListing && (
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-[#135341] hover:bg-[#135341]">New Listing</Badge>
+                    </div>
+                  )}
+                  {prop.priceDrop && (
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-orange-500 hover:bg-orange-500">Price Drop</Badge>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <div className="font-bold text-[#09261E] mb-1">${prop.price?.toLocaleString() || 'Price unavailable'}</div>
+                  <div className="text-gray-700 mb-2 truncate">{prop.address}</div>
+                  <div className="flex text-sm text-gray-600 mb-3">
+                    <div className="mr-3">{prop.bedrooms} bd</div>
+                    <div className="mr-3">{prop.bathrooms} ba</div>
+                    <div>{prop.squareFeet?.toLocaleString() || 'N/A'} sqft</div>
+                  </div>
+                  <div className="text-xs text-gray-500">{prop.city}, {prop.state}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center mt-8">
+            <Button className="bg-[#09261E] hover:bg-[#135341] px-8">
+              View All Similar Properties
+            </Button>
+          </div>
+        </div>
+      </section>
+      
+      {/* Email Signup CTA */}
+      <section className="py-16 bg-gradient-to-r from-[#09261E] to-[#135341] text-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">Don't Miss Out on New Deals</h2>
+            <p className="text-white/80 mb-8 text-lg">
+              Get notified about new properties in this area and receive personalized recommendations.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row max-w-lg mx-auto gap-3">
+              <Input 
+                type="email" 
+                placeholder="Your email address" 
+                className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus-visible:ring-white/30"
+              />
+              <Button className="bg-[#803344] hover:bg-[#803344]/90 whitespace-nowrap">
+                Sign Up Now
+              </Button>
+            </div>
+            
+            <p className="mt-4 text-sm text-white/60">
+              We respect your privacy and won't share your information.
+            </p>
+          </div>
         </div>
       </section>
       
