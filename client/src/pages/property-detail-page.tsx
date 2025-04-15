@@ -547,91 +547,54 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-4">
-                      <div>
-                        <h3 className="font-medium text-[#09261E] mb-4 text-lg">Key Property Features</h3>
-                        <div className="space-y-4">
-                          <div className="flex items-center">
-                            <BedDouble className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Bedrooms</div>
-                            <div className="font-medium">{property.bedrooms}</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Bath className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Bathrooms</div>
-                            <div className="font-medium">{property.bathrooms}</div>
-                          </div>
-                          <div className="flex items-center">
-                            <SquareIcon className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Square Feet</div>
-                            <div className="font-medium">{property.squareFeet?.toLocaleString() || 'N/A'}</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Ruler className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Lot Size</div>
-                            <div className="font-medium">{property.lotSize || '0.25 acres'}</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Calendar className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Year Built</div>
-                            <div className="font-medium">1998</div>
-                          </div>
-                          <div className="flex items-center">
-                            <HomeIcon className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Property Type</div>
-                            <div className="font-medium">{property.propertyType || 'Single Family'}</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Car className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Parking</div>
-                            <div className="font-medium">2-car garage</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Ruler className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Price per sqft</div>
-                            <div className="font-medium">${property.squareFeet ? Math.round(property.price / property.squareFeet) : 'N/A'}</div>
-                          </div>
-                        </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
+                      <div className="flex flex-col items-center p-4 border border-gray-200 rounded-lg">
+                        <BedDouble className="text-[#09261E] w-8 h-8 mb-2" />
+                        <div className="text-gray-600 text-sm">Bedrooms</div>
+                        <div className="font-medium text-lg">{property.bedrooms}</div>
                       </div>
-                      <div>
-                        <h3 className="font-medium text-[#09261E] mb-4 text-lg">Additional Information</h3>
-                        <div className="space-y-4">
-                          <div className="flex items-center">
-                            <Wind className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Heating</div>
-                            <div className="font-medium">Forced air, Natural gas</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Snowflake className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Cooling</div>
-                            <div className="font-medium">Central air</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Car className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Parking</div>
-                            <div className="font-medium">2 car garage, Attached</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Building className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Basement</div>
-                            <div className="font-medium">Full, Partially finished</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Construction className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Construction</div>
-                            <div className="font-medium">Wood frame, Vinyl siding</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Home className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Roof</div>
-                            <div className="font-medium">Asphalt shingle</div>
-                          </div>
-                          <div className="flex items-center">
-                            <Trees className="text-[#09261E] w-5 h-5 mr-3" />
-                            <div className="w-32 text-gray-600 flex-shrink-0">Landscaping</div>
-                            <div className="font-medium">Professional, Sprinkler system</div>
-                          </div>
-                        </div>
+                      <div className="flex flex-col items-center p-4 border border-gray-200 rounded-lg">
+                        <Bath className="text-[#09261E] w-8 h-8 mb-2" />
+                        <div className="text-gray-600 text-sm">Bathrooms</div>
+                        <div className="font-medium text-lg">{property.bathrooms}</div>
+                      </div>
+                      <div className="flex flex-col items-center p-4 border border-gray-200 rounded-lg">
+                        <SquareIcon className="text-[#09261E] w-8 h-8 mb-2" />
+                        <div className="text-gray-600 text-sm">Square Feet</div>
+                        <div className="font-medium text-lg">{property.squareFeet?.toLocaleString() || 'N/A'}</div>
+                      </div>
+                      <div className="flex flex-col items-center p-4 border border-gray-200 rounded-lg">
+                        <Ruler className="text-[#09261E] w-8 h-8 mb-2" />
+                        <div className="text-gray-600 text-sm">Lot Size</div>
+                        <div className="font-medium text-lg">{property.lotSize || '0.25 acres'}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mb-4">
+                      <div className="flex items-center">
+                        <Calendar className="text-[#09261E] w-5 h-5 mr-3" />
+                        <div className="w-32 text-gray-600 flex-shrink-0">Year Built</div>
+                        <div className="font-medium">1998</div>
+                      </div>
+                      <div className="flex items-center">
+                        <HomeIcon className="text-[#09261E] w-5 h-5 mr-3" />
+                        <div className="w-32 text-gray-600 flex-shrink-0">Property Type</div>
+                        <div className="font-medium">{property.propertyType || 'Single Family'}</div>
+                      </div>
+                      <div className="flex items-center">
+                        <Car className="text-[#09261E] w-5 h-5 mr-3" />
+                        <div className="w-32 text-gray-600 flex-shrink-0">Parking</div>
+                        <div className="font-medium">2-car garage</div>
+                      </div>
+                      <div className="flex items-center">
+                        <Ruler className="text-[#09261E] w-5 h-5 mr-3" />
+                        <div className="w-32 text-gray-600 flex-shrink-0">Price per sqft</div>
+                        <div className="font-medium">${property.squareFeet ? Math.round(property.price / property.squareFeet) : 'N/A'}</div>
+                      </div>
+                      <div className="flex items-center">
+                        <Building className="text-[#09261E] w-5 h-5 mr-3" />
+                        <div className="w-32 text-gray-600 flex-shrink-0">Basement</div>
+                        <div className="font-medium">Full, Partially finished</div>
                       </div>
                     </div>
                     
@@ -1263,7 +1226,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </div>
                     
                       {/* Row 3, Columns 1-2: Monthly Rent Costs - spans 2 columns and 1 row */}
-                      <div className="col-span-2">
+                      <div className="col-span-2 mt-10">
                         <h4 className="font-medium mb-3 text-[#09261E]">Monthly Rent Costs</h4>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                           {demographicData.monthlyRent.map((item, index) => (
@@ -1649,7 +1612,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
       
       {/* Email Signup CTA */}
-      <section className="py-16 bg-gradient-to-r from-[#09261E] to-[#135341] text-white mb-0">
+      <section className="py-16 bg-gradient-to-r from-[#09261E] to-[#135341] text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">Don't Miss Out on New Deals</h2>
