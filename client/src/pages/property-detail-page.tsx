@@ -514,7 +514,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <AccordionItem value="details" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
-                      <span className="mr-3 text-2xl">🏠</span>
+                      <Home className="mr-3 h-6 w-6 text-[#09261E]" />
                       <span>Property Details</span>
                     </div>
                   </AccordionTrigger>
@@ -628,7 +628,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <AccordionItem value="numbers" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
-                      <span className="mr-3 text-2xl">🧮</span>
+                      <Calculator className="mr-3 h-6 w-6 text-[#09261E]" />
                       <span>The Numbers</span>
                     </div>
                   </AccordionTrigger>
@@ -834,7 +834,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <AccordionItem value="calculators" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
-                      <span className="mr-3 text-2xl">📈</span>
+                      <PercentSquare className="mr-3 h-6 w-6 text-[#09261E]" />
                       <span>Calculators</span>
                     </div>
                   </AccordionTrigger>
@@ -1046,7 +1046,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <AccordionItem value="location" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
-                      <span className="mr-3 text-2xl">📍</span>
+                      <MapPin className="mr-3 h-6 w-6 text-[#09261E]" />
                       <span>Location</span>
                     </div>
                   </AccordionTrigger>
@@ -1209,7 +1209,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <AccordionItem value="reps" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
-                      <span className="mr-3 text-2xl">🧑‍🔧</span>
+                      <Wrench className="mr-3 h-6 w-6 text-[#09261E]" />
                       <span>Find a REP</span>
                     </div>
                   </AccordionTrigger>
@@ -1257,7 +1257,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <AccordionItem value="history" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
-                      <span className="mr-3 text-2xl">🏛</span>
+                      <FileText className="mr-3 h-6 w-6 text-[#09261E]" />
                       <span>Property History</span>
                     </div>
                   </AccordionTrigger>
@@ -1306,7 +1306,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <AccordionItem value="comparable" className="border-b border-gray-200">
                   <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                     <div className="flex items-center">
-                      <span className="mr-3 text-2xl">🏘️</span>
+                      <Building className="mr-3 h-6 w-6 text-[#09261E]" />
                       <span>Comparable Properties</span>
                     </div>
                   </AccordionTrigger>
