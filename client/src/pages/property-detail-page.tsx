@@ -1802,14 +1802,24 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   />
                   
                   <div className="mt-6">
-                    <Button type="submit" className="w-full bg-[#09261E] hover:bg-[#135341] py-6">
-                      {inquiryMutation.isPending ? (
-                        <div className="flex items-center">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                          Sending...
-                        </div>
-                      ) : "Send Message"}
-                    </Button>
+                    <div className="flex gap-3">
+                      <Button 
+                        type="button" 
+                        className="bg-[#803344] hover:bg-[#803344]/90 py-6 flex-shrink-0"
+                        onClick={() => window.location.href = "tel:+15555555555"}
+                      >
+                        <Phone className="h-5 w-5 mr-1" />
+                        Call
+                      </Button>
+                      <Button type="submit" className="w-full bg-[#09261E] hover:bg-[#135341] py-6">
+                        {inquiryMutation.isPending ? (
+                          <div className="flex items-center">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                            Sending...
+                          </div>
+                        ) : "Send Message"}
+                      </Button>
+                    </div>
                     
                     <div className="mt-4 text-center text-sm text-gray-500">
                       By submitting, you agree to our <Link to="/terms" className="text-[#09261E] hover:underline">Terms of Service</Link>
