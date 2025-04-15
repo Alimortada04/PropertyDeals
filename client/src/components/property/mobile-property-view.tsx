@@ -279,9 +279,11 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         {/* Action Buttons */}
         <div className="flex justify-between mt-3">
           <Button 
-            variant="outline" 
+            variant={isFavorite ? "default" : "outline"} 
             size="sm" 
-            className="border-gray-200 bg-[#803344] text-white hover:bg-[#803344]/90 flex-1 mr-2"
+            className={`${isFavorite 
+              ? "bg-[#803344] text-white hover:bg-[#803344]/90" 
+              : "border-[#803344] text-[#803344] hover:bg-[#803344]/10"} flex-1 mr-2`}
             onClick={toggleFavorite}
           >
             <Heart 
@@ -345,29 +347,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </div>
         </div>
         
-        {/* Property Stats Summary */}
-        <div className="px-4 py-4 grid grid-cols-2 gap-y-3 border-b border-gray-200">
-          <div>
-            <div className="text-xs text-gray-500">PROPERTY TYPE</div>
-            <div className="font-medium">{property.propertyType}</div>
-          </div>
-          <div>
-            <div className="text-xs text-gray-500">YEAR BUILT</div>
-            <div className="font-medium">2015</div>
-          </div>
-          <div>
-            <div className="text-xs text-gray-500">PRICE/SQ FT</div>
-            <div className="font-medium">
-              ${property.squareFeet 
-                ? Math.round((property.price || 0) / property.squareFeet).toLocaleString() 
-                : 'N/A'}
-            </div>
-          </div>
-          <div>
-            <div className="text-xs text-gray-500">LOT SIZE</div>
-            <div className="font-medium">{property.lotSize || '0.25 acres'}</div>
-          </div>
-        </div>
+        {/* Mobile content is streamlined - directly move to accordions */}
         
         {/* Property Details Accordion - Open by default */}
         <Accordion type="single" defaultValue="details" collapsible className="w-full">
@@ -664,11 +644,13 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                                   <span>{item.group}</span>
                                   <span>{item.percentage}%</span>
                                 </div>
-                                <div className="h-5 w-full bg-gray-100 rounded-sm overflow-hidden">
+                                <div className="relative h-10 w-full bg-gray-100 rounded-sm overflow-hidden">
                                   <div 
-                                    className="h-full"
+                                    className="h-full group cursor-pointer"
+                                    title={`${item.group}: ${item.percentage}%`}
                                     style={{ 
                                       width: `${item.percentage}%`,
+                                      height: `${Math.max(30, item.percentage * 1.5)}px`,
                                       backgroundColor: [
                                         'rgba(19, 83, 65, 0.95)', // darkest
                                         'rgba(19, 83, 65, 0.85)', 
