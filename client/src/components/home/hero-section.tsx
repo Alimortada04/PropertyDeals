@@ -106,7 +106,7 @@ export default function HeroSection() {
       className="relative bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden min-h-[100vh] top-0 mt-0 pt-24 md:pt-24 lg:pt-0"
       style={{ marginTop: "0" }}
     >
-      {/* New background elements */}
+      {/* Background elements */}
       <BackgroundElements scrollY={scrollY} />
       
       {/* Main hero content - Split layout */}

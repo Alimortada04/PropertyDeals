@@ -23,7 +23,7 @@ export default function BackgroundElements({ scrollY }: BackgroundElementsProps)
         
         {/* Community-themed orb */}
         <div 
-          className="absolute -left-[10%] bottom-[5%] w-[55vw] h-[55vw] max-w-[900px] max-h-[900px] rounded-full bg-gradient-to-tr from-[#E59F9F]/15 to-[#803344]/15 blur-3xl"
+          className="absolute -left-[10%] bottom-[5%] w-[55vw] h-[55vw] max-w-[900px] max-h-[900px] rounded-full bg-gradient-to-tr from-[#803344]/15 to-[#803344]/20 blur-3xl"
           style={{
             transform: `translate3d(0, ${scrollY * -0.01}px, 0)`,
           }}
