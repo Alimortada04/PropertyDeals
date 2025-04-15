@@ -1179,6 +1179,76 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </div>
         </DialogContent>
       </Dialog>
+      
+      {/* Share Dialog */}
+      <Dialog open={shareModalOpen} onOpenChange={setShareModalOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="text-[#09261E]">Share this Property</DialogTitle>
+            <DialogDescription>
+              Share this property with others via link, email, or social media.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-2">
+            <div className="border rounded-lg overflow-hidden">
+              {/* Copy Link Option */}
+              <div className="border-b p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <LinkIcon className="w-5 h-5 text-[#09261E] mr-3" />
+                    <div className="font-medium">Copy Link</div>
+                  </div>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className={`${copySuccess ? 'bg-green-50 text-green-600 border-green-200' : 'border-gray-200'}`}
+                    onClick={handleCopyToClipboard}
+                  >
+                    {copySuccess ? (
+                      <><CheckIcon className="h-4 w-4 mr-1" /> Copied</>
+                    ) : (
+                      <><CopyIcon className="h-4 w-4 mr-1" /> Copy</>
+                    )}
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Email Option */}
+              <div className="border-b p-4">
+                <div 
+                  className="flex items-center justify-between cursor-pointer" 
+                  onClick={handleEmailShare}
+                >
+                  <div className="flex items-center">
+                    <Mail className="w-5 h-5 text-[#09261E] mr-3" />
+                    <div className="font-medium">Email</div>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-gray-400" />
+                </div>
+              </div>
+              
+              {/* PDF Report Option */}
+              <div className="p-4">
+                <div 
+                  className="flex items-center justify-between cursor-pointer"
+                  onClick={generatePdfReport}
+                >
+                  <div className="flex items-center">
+                    <FileText className="w-5 h-5 text-[#09261E] mr-3" />
+                    <div className="font-medium">PDF Report</div>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-gray-400" />
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-center text-sm text-gray-500 mt-4">
+              This property link will be active until the property is sold or removed by the seller.
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
