@@ -132,7 +132,7 @@ export default function HeroSection() {
               <span className="block relative">
                 <span className="relative inline-block">
                   Powered by Real Estate.
-                  <span className="absolute -bottom-2 left-0 right-0 h-3 bg-[#803344]/40 -z-10"></span>
+                  <span className="absolute -bottom-2 left-0 right-0 h-3 mt-2 bg-[#803344]/40 -z-10" style={{ marginTop: "6px" }}></span>
                 </span>
               </span>
             </h1>
@@ -392,18 +392,18 @@ export default function HeroSection() {
               </Link>
               
               {/* REP card - only visible on desktop */}
-              <Link href="/rep-room" className="block hidden lg:block">
+              <Link href="/reps" className="block hidden lg:block absolute md:top-[-10%] md:right-[15%] top-[-20%] right-[0%] md:w-[50%] w-[70%] z-30">
                 <div 
-                  className="absolute md:top-[-10%] md:right-[15%] top-[-20%] right-[0%] md:w-[50%] w-[70%] rounded-xl shadow-xl bg-white p-4 z-30 will-change-transform cursor-pointer group transition-all duration-300 hover:shadow-2xl"
+                  className="w-full rounded-xl shadow-xl bg-white p-4 will-change-transform cursor-pointer group transition-all duration-300 hover:shadow-2xl border border-transparent hover:border-[#135341]/20 overflow-hidden"
                   style={{
                     transform: `translate3d(0, ${Math.min(40, scrollY * 0.02)}px, 0) rotate(2deg)`,
-                    transition: 'transform 0.2s ease-out, box-shadow 0.3s ease, border-color 0.3s ease'
+                    transition: 'transform 0.3s ease-out, box-shadow 0.3s ease, border-color 0.3s ease'
                   }}
                 >
+                  {/* Full card background hover effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#135341]/5 to-[#135341]/10 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out"></div>
+                  
                   <div className="flex items-center gap-3 relative">
-                    {/* Pulsing background effect that appears on hover */}
-                    <div className="absolute inset-0 bg-[#135341]/5 rounded-xl scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500"></div>
-                    
                     {/* Adding subtle pulse animation to icon */}
                     <div className="w-12 h-12 rounded-full bg-[#135341]/10 flex items-center justify-center text-[#135341] relative z-10 group-hover:bg-[#135341]/20 transition-colors duration-300">
                       <Users className="h-6 w-6 group-hover:scale-110 transition-transform duration-300" />

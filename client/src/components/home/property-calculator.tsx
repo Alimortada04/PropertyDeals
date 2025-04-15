@@ -13,7 +13,7 @@ interface PropertyCalculatorProps {
 }
 
 export default function PropertyCalculator({ property, scrollY, isVisible, onHoverChange }: PropertyCalculatorProps) {
-  const [calculatorMode, setCalculatorMode] = useState<'flip' | 'rental'>('flip');
+  const [calculatorMode, setCalculatorMode] = useState<'flip' | 'rent'>('flip');
   const [isCalculatorVisible, setIsCalculatorVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   
@@ -53,7 +53,7 @@ export default function PropertyCalculator({ property, scrollY, isVisible, onHov
   return (
     <div
       className={cn(
-        "absolute top-[20%] right-[-5%] w-[70%] bg-white/95 backdrop-blur-md rounded-xl shadow-xl p-5 overflow-hidden transform will-change-transform transition-all duration-500",
+        "absolute top-[20%] right-[-5%] w-[70%] bg-white/95 backdrop-blur-md rounded-xl shadow-xl p-5 overflow-hidden transform will-change-transform",
         {
           'opacity-0 translate-x-10': !isVisible || !isCalculatorVisible,
           'opacity-100 translate-x-0': isVisible && isCalculatorVisible,
@@ -64,10 +64,11 @@ export default function PropertyCalculator({ property, scrollY, isVisible, onHov
       style={{
         transform: `translate3d(${isVisible && isCalculatorVisible ? 0 : 10}px, ${scrollY * 0.01}px, 0) rotate(3deg)`,
         transformStyle: 'preserve-3d',
+        opacity: isVisible && isCalculatorVisible ? 1 : 0,
         boxShadow: isHovered 
           ? '0 25px 50px -5px rgba(9, 38, 30, 0.25)' 
           : '0 15px 30px -10px rgba(9, 38, 30, 0.15)',
-        transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, z-index 0s'
+        transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease, box-shadow 0.3s ease'
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -82,7 +83,7 @@ export default function PropertyCalculator({ property, scrollY, isVisible, onHov
         {/* Mode toggle */}
         <div className="flex rounded-full overflow-hidden border border-gray-200 text-xs">
           <button
-            className={cn("px-3 py-1 transition-colors", {
+            className={cn("px-4 py-1.5 transition-colors font-medium", {
               "bg-[#135341] text-white": calculatorMode === "flip",
               "bg-gray-100 text-gray-700": calculatorMode !== "flip"
             })}
@@ -91,13 +92,13 @@ export default function PropertyCalculator({ property, scrollY, isVisible, onHov
             Flip
           </button>
           <button
-            className={cn("px-3 py-1 transition-colors", {
-              "bg-[#135341] text-white": calculatorMode === "rental",
-              "bg-gray-100 text-gray-700": calculatorMode !== "rental"
+            className={cn("px-4 py-1.5 transition-colors font-medium", {
+              "bg-[#135341] text-white": calculatorMode === "rent",
+              "bg-gray-100 text-gray-700": calculatorMode !== "rent"
             })}
-            onClick={() => setCalculatorMode('rental')}
+            onClick={() => setCalculatorMode('rent')}
           >
-            Rental
+            Rent
           </button>
         </div>
       </div>
@@ -146,7 +147,7 @@ export default function PropertyCalculator({ property, scrollY, isVisible, onHov
               </div>
             </div>
           </>
-        ) : (
+        ) : calculatorMode === 'rent' ? (
           <>
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-lg bg-gray-50 p-3">
@@ -181,7 +182,7 @@ export default function PropertyCalculator({ property, scrollY, isVisible, onHov
               </div>
             </div>
           </>
-        )}
+        ) : null}
       </div>
       
       {/* CTA Button */}
