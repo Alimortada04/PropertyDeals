@@ -1515,9 +1515,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
       
       {/* Smart Property Recommendations */}
-      <section className="py-12 bg-white">
+      <section className="py-8 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-8">More Deals by Michael</h2>
+          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-6">More Deals by Michael</h2>
           
           {/* Location-based recommendations using recommendation engine */}
           {property && (
@@ -1566,9 +1566,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
       
       {/* Similar Deals Section */}
-      <section className="py-12 bg-gray-50">
+      <section className="py-8 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-8">Similar Deals You Might Like</h2>
+          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-6">Similar Deals You Might Like</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {similarProperties.slice(0, 4).map((prop, index) => (
@@ -1627,11 +1627,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
       
       {/* Email Signup CTA */}
-      <section className="py-16 bg-gradient-to-r from-[#09261E] to-[#135341] text-white">
+      <section className="py-10 bg-gradient-to-r from-[#09261E] to-[#135341] text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4">Don't Miss Out on New Deals</h2>
-            <p className="text-white/80 mb-8 text-lg">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-3">Don't Miss Out on New Deals</h2>
+            <p className="text-white/80 mb-6 text-lg">
               Get notified about new properties in this area and receive personalized recommendations.
             </p>
             
@@ -1646,7 +1646,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </Button>
             </div>
             
-            <p className="mt-4 text-sm text-white/60">
+            <p className="mt-3 text-sm text-white/60">
               We respect your privacy and won't share your information.
             </p>
           </div>
