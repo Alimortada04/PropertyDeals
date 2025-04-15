@@ -503,9 +503,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
 
       {/* Sticky Navigation Menu */}
-      <section className="sticky top-0 z-40 py-2 bg-white shadow-sm border-b border-gray-200">
+      <div className="sticky top-0 z-40 py-2 bg-white shadow-sm border-b border-gray-200">
         <div className="container mx-auto px-4">
-          <div className="hidden md:flex items-center justify-center gap-6 py-2 max-w-fit mx-auto">
+          <div className="hidden md:flex items-center justify-center gap-8 py-2 max-w-fit mx-auto">
             <a href="#numbers" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
               <Calculator className="h-4 w-4 mr-1.5" />
               Numbers
@@ -528,7 +528,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </a>
           </div>
         </div>
-      </section>
+      </div>
       
       {/* Main Property Details Section */}
       <section className="py-6 bg-white">
@@ -1331,25 +1331,34 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
                       <Link to="/reps?type=agent&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
                         <div className="text-center">
-                          <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                            <i className="fas fa-user-tie text-[#09261E]"></i>
-                          </div>
+                          <Avatar className="w-14 h-14 mx-auto mb-2 border-2 border-[#09261E]/20">
+                            <AvatarImage src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=150&h=150&auto=format&fit=crop" alt="Real Estate Agent" />
+                            <AvatarFallback className="bg-[#09261E]/10">
+                              <User className="h-6 w-6 text-[#09261E]" />
+                            </AvatarFallback>
+                          </Avatar>
                           <h3 className="font-medium text-[#09261E]">Agent</h3>
                         </div>
                       </Link>
                       <Link to="/reps?type=contractor&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
                         <div className="text-center">
-                          <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                            <i className="fas fa-hammer text-[#09261E]"></i>
-                          </div>
+                          <Avatar className="w-14 h-14 mx-auto mb-2 border-2 border-[#09261E]/20">
+                            <AvatarImage src="https://images.unsplash.com/photo-1541647376583-8934aaf3448a?q=80&w=150&h=150&auto=format&fit=crop" alt="Contractor" />
+                            <AvatarFallback className="bg-[#09261E]/10">
+                              <Hammer className="h-6 w-6 text-[#09261E]" />
+                            </AvatarFallback>
+                          </Avatar>
                           <h3 className="font-medium text-[#09261E]">Contractor</h3>
                         </div>
                       </Link>
                       <Link to="/reps?type=lender&location=Milwaukee" className="bg-white border border-[#09261E]/20 rounded-md p-3 hover:bg-[#09261E]/5 transition-colors">
                         <div className="text-center">
-                          <div className="w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mx-auto mb-2">
-                            <i className="fas fa-hand-holding-usd text-[#09261E]"></i>
-                          </div>
+                          <Avatar className="w-14 h-14 mx-auto mb-2 border-2 border-[#09261E]/20">
+                            <AvatarImage src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=150&h=150&auto=format&fit=crop" alt="Lender" />
+                            <AvatarFallback className="bg-[#09261E]/10">
+                              <DollarSign className="h-6 w-6 text-[#09261E]" />
+                            </AvatarFallback>
+                          </Avatar>
                           <h3 className="font-medium text-[#09261E]">Lender</h3>
                         </div>
                       </Link>
@@ -1530,7 +1539,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       {/* Smart Property Recommendations */}
       <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-8">Other Properties by Michael Johnson</h2>
+          <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-8">More Deals by Michael</h2>
           
           {/* Location-based recommendations using recommendation engine */}
           {property && (
