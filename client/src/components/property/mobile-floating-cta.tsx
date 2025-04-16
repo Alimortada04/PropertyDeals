@@ -41,7 +41,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.1)] p-0 z-30 flex items-center justify-between">
+    <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.1)] p-0 z-30 flex items-center justify-between border-t-2 border-[#803344]">
       <button 
         className="flex items-center justify-center bg-[#803344] text-white h-14 w-14 rounded-none"
         onClick={handlePhoneClick}
@@ -50,7 +50,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
       </button>
       
       <a href="#" className="flex items-center px-2 h-14" onClick={(e) => e.preventDefault()}>
-        <Avatar className="h-10 w-10 border border-gray-300">
+        <Avatar className="h-10 w-10 border-2 border-[#803344]">
           <AvatarImage src={sellerImage} alt={sellerName} />
           <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">{initials}</AvatarFallback>
         </Avatar>
