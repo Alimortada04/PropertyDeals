@@ -60,13 +60,13 @@ export default function StickySearchFilter({
   const [showBottomSection, setShowBottomSection] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Make the search/filter bar sticky on scroll and handle bottom section visibility
+  // Make the search/filter bar always sticky
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Always sticky after scrolling a bit
-      setIsSticky(currentScrollY > 10);
+      // Always sticky now
+      setIsSticky(true);
       
       // Hide bottom section when scrolling down, show when scrolling up
       if (currentScrollY > lastScrollY + 5) {
@@ -81,6 +81,9 @@ export default function StickySearchFilter({
       setLastScrollY(currentScrollY);
     };
     
+    // Set initially to sticky
+    setIsSticky(true);
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
@@ -88,8 +91,8 @@ export default function StickySearchFilter({
   return (
     <div 
       className={cn(
-        "bg-white transition-all duration-200 z-30 w-full border-b border-gray-100",
-        isSticky ? "sticky top-16 left-0 right-0 lg:top-0" : ""
+        "bg-white transition-all duration-200 z-50 w-full border-b border-gray-100",
+        isSticky ? "sticky top-16 left-0 right-0 lg:top-0 shadow-md" : ""
       )}
     >
       {/* Main search bar - full-width, Redfin-inspired layout */}
