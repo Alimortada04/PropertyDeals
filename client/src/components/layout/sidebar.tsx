@@ -450,8 +450,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
       >
         <nav className="flex flex-col h-full">
           {/* Logo */}
-          <div className="h-14 flex items-center justify-center border-b">
-            <Link href="/" className={`flex items-center ${isExpanded ? 'ml-4 justify-start w-full' : 'mx-auto'}`}>
+          <div className="h-14 flex items-center justify-start border-b">
+            <Link href="/" className="flex items-center ml-4 justify-start w-full">
               <img 
                 src="/images/pdLogo.png" 
                 alt="PropertyDeals Logo" 
@@ -476,31 +476,31 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <ul>
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
-                    <Home className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    <Home className="w-5 h-5 flex-shrink-0" />
                     {isExpanded && <span className="ml-3">Home</span>}
                   </Link>
                 </li>
                 <li>
                   <Link href="/properties" className={getNavItemClasses("/properties")}>
-                    <Building className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    <Building className="w-5 h-5 flex-shrink-0" />
                     {isExpanded && <span className="ml-3">Properties</span>}
                   </Link>
                 </li>
                 <li>
                   <Link href="/reps" className={getNavItemClasses("/reps")}>
-                    <Users className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    <Users className="w-5 h-5 flex-shrink-0" />
                     {isExpanded && <span className="ml-3">The REP Room</span>}
                   </Link>
                 </li>
                 <li>
                   <Link href="/discussions" className={getNavItemClasses("/discussions")}>
-                    <MessageCircle className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    <MessageCircle className="w-5 h-5 flex-shrink-0" />
                     {isExpanded && <span className="ml-3">Discussions</span>}
                   </Link>
                 </li>
                 <li>
                   <Link href="/dashboard" className={getNavItemClasses("/dashboard")}>
-                    <LayoutDashboard className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
                     {isExpanded && <span className="ml-3">Dashboard</span>}
                   </Link>
                 </li>
@@ -517,19 +517,19 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <ul>
                 <li>
                   <Link href="/playbook" className={getNavItemClasses("/playbook")}>
-                    <Book className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    <Book className="w-5 h-5 flex-shrink-0" />
                     {isExpanded && <span className="ml-3">PropertyPlaybook</span>}
                   </Link>
                 </li>
                 <li>
                   <Link href="/tools" className={getNavItemClasses("/tools")}>
-                    <Calculator className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    <Calculator className="w-5 h-5 flex-shrink-0" />
                     {isExpanded && <span className="ml-3">Tools</span>}
                   </Link>
                 </li>
                 <li>
                   <Link href="/help" className={getNavItemClasses("/help")}>
-                    <HelpCircle className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                    <HelpCircle className="w-5 h-5 flex-shrink-0" />
                     {isExpanded && <span className="ml-3">Help</span>}
                   </Link>
                 </li>
@@ -550,13 +550,13 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             <ul>
               <li>
                 <Link href="/profile" className={getNavItemClasses("/profile")}>
-                  <UserCircle className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                  <UserCircle className="w-5 h-5 flex-shrink-0" />
                   {isExpanded && <span className="ml-3">Profile</span>}
                 </Link>
               </li>
               <li>
                 <Link href="/settings" className={getNavItemClasses("/settings")}>
-                  <Settings className={`w-5 h-5 flex-shrink-0 ${!isExpanded && 'mx-auto'}`} />
+                  <Settings className="w-5 h-5 flex-shrink-0" />
                   {isExpanded && <span className="ml-3">Settings</span>}
                 </Link>
               </li>
