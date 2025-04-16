@@ -78,39 +78,44 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
       )}
       
       {/* Fixed bottom bar with expandable center */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-4px_10px_rgba(0,0,0,0.1)] z-30 border-t-2 border-[#803344]">
-        {/* Message Button (Left) */}
-        <button 
-          className="absolute left-0 bottom-0 flex items-center justify-center bg-[#09261E] text-white h-14 w-14 rounded-none"
-          onClick={handleMessageClick}
-        >
-          <MessageCircle size={22} className="text-white" />
-        </button>
-        
-        {/* Call Button (Right) */}
-        <button 
-          className="absolute right-0 bottom-0 flex items-center justify-center bg-[#803344] text-white h-14 w-14 rounded-none"
-          onClick={handlePhoneClick}
-        >
-          <Phone size={22} />
-        </button>
+      <div className="fixed bottom-0 left-0 right-0 z-30 border-t-2 border-[#803344] shadow-[0_-4px_10px_rgba(0,0,0,0.1)] bg-gradient-to-r from-[#09261E] to-[#803344]">
+        <div className="flex items-center justify-between h-14 px-6">
+          {/* Message Button (Left) */}
+          <button 
+            className="flex items-center justify-center text-white h-14 w-20"
+            onClick={handleMessageClick}
+          >
+            <MessageCircle size={24} className="text-white" />
+          </button>
+          
+          {/* Empty center space for avatar */}
+          <div className="flex-1"></div>
+          
+          {/* Call Button (Right) */}
+          <button 
+            className="flex items-center justify-center text-white h-14 w-20"
+            onClick={handlePhoneClick}
+          >
+            <Phone size={24} />
+          </button>
+        </div>
         
         {/* Center Avatar Button with expansion */}
-        <div className="relative h-14 flex justify-center">
+        <div className="absolute left-1/2 -translate-x-1/2 -top-10">
           <button 
             onClick={toggleExpand}
-            className={`absolute -top-8 flex items-center justify-center rounded-full shadow-lg
+            className={`flex items-center justify-center rounded-full shadow-lg
               ${isExpanded ? 'bg-[#09261E]' : 'bg-[#09261E]'} 
-              ${isExpanded ? 'w-16 h-16' : 'w-16 h-16'}
+              ${isExpanded ? 'w-20 h-20' : 'w-20 h-20'}
               ${pulseAnimation ? 'animate-pulse-gentle' : ''}
-              transition-all duration-500 z-40
+              transition-all duration-500 z-40 border-2 border-white
             `}
           >
             {isExpanded ? (
               <X size={24} className="text-white animate-fade-in" />
             ) : (
               <div className="relative">
-                <Avatar className="h-full w-full border-2 border-white shadow-2xl">
+                <Avatar className="h-full w-full">
                   <AvatarImage src={sellerImage} alt={sellerName} className="object-cover" />
                   <AvatarFallback className="bg-[#09261E]/10 text-white text-lg">{initials}</AvatarFallback>
                 </Avatar>
