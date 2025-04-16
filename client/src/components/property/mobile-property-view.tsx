@@ -1206,6 +1206,128 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             </AccordionItem>
           </Accordion>
         </div>
+        
+        {/* More Deals by Michael */}
+        <div className="px-4 py-6 border-t border-gray-200">
+          <h3 className="text-lg font-heading font-bold text-[#09261E] mb-4">More Deals by Michael</h3>
+          <div className="grid grid-cols-1 gap-4">
+            {sellerProperties.map((prop) => (
+              <div key={prop.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={prop.imageUrl} 
+                    alt={prop.title} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                  />
+                  <div className="absolute top-2 right-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="bg-white/80 hover:bg-white h-7 w-7 rounded-full"
+                    >
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  {prop.id === 3 && (
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-[#803344] hover:bg-[#803344]">Off-Market</Badge>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <div className="font-bold text-[#09261E] mb-1">${prop.price.toLocaleString()}</div>
+                  <div className="text-gray-700 mb-2 truncate">{prop.address}</div>
+                  <div className="flex text-sm text-gray-600 mb-3">
+                    <div className="mr-3">{prop.bedrooms} bd</div>
+                    <div className="mr-3">{prop.bathrooms} ba</div>
+                    <div>{prop.address.split(',')[0].length}00 sqft</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-4">
+            <Button variant="outline" className="border-[#09261E] text-[#09261E] hover:bg-[#09261E]/10 w-full">
+              View All Properties by Michael
+            </Button>
+          </div>
+        </div>
+        
+        {/* Similar Deals You Might Like */}
+        <div className="px-4 py-6 border-t border-gray-200">
+          <h3 className="text-lg font-heading font-bold text-[#09261E] mb-4">Similar Deals You Might Like</h3>
+          <div className="grid grid-cols-1 gap-4">
+            {sellerProperties.slice().reverse().map((prop) => (
+              <div key={`similar-${prop.id}`} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={prop.imageUrl} 
+                    alt={prop.title} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                  />
+                  <div className="absolute top-2 right-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="bg-white/80 hover:bg-white h-7 w-7 rounded-full"
+                    >
+                      <Heart className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  {prop.id === 2 && (
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-[#135341] hover:bg-[#135341]">New Listing</Badge>
+                    </div>
+                  )}
+                  {prop.id === 1 && (
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-orange-500 hover:bg-orange-500">Price Drop</Badge>
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <div className="font-bold text-[#09261E] mb-1">${prop.price.toLocaleString()}</div>
+                  <div className="text-gray-700 mb-2 truncate">{prop.address}</div>
+                  <div className="flex text-sm text-gray-600 mb-3">
+                    <div className="mr-3">{prop.bedrooms} bd</div>
+                    <div className="mr-3">{prop.bathrooms} ba</div>
+                    <div>{prop.address.split(',')[0].length}00 sqft</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-4">
+            <Button className="bg-[#09261E] hover:bg-[#135341] w-full">
+              View All Similar Properties
+            </Button>
+          </div>
+        </div>
+        
+        {/* Email Signup CTA with wine-colored border */}
+        <div className="px-4 py-8 bg-gradient-to-r from-[#09261E] to-[#135341] text-white border-t-2 border-b-2 border-[#803344]">
+          <div className="text-center">
+            <h3 className="text-xl font-heading font-bold mb-3">Don't Miss Out on New Deals</h3>
+            <p className="text-white/80 mb-6">
+              Get notified about new properties in this area.
+            </p>
+            
+            <div className="flex flex-col gap-3">
+              <Input 
+                type="email" 
+                placeholder="Your email address" 
+                className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus-visible:ring-white/30"
+              />
+              <Button className="bg-[#803344] hover:bg-[#803344]/90">
+                Sign Up Now
+              </Button>
+            </div>
+            
+            <p className="mt-3 text-xs text-white/60">
+              We respect your privacy and won't share your information.
+            </p>
+          </div>
+        </div>
       </div>
       
       {/* Floating CTA Bar */}
