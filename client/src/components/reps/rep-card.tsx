@@ -41,7 +41,8 @@ export default function RepCard({ rep }: RepCardProps) {
     if (isBusiness) {
       setLocation(`/business/${rep.slug}`);
     } else {
-      setLocation(`/rep/${rep.slug}`);
+      // Use the new profile route for normal REPs
+      setLocation(`/reps/${rep.id}`);
     }
   };
 
@@ -220,7 +221,7 @@ export default function RepCard({ rep }: RepCardProps) {
             if (isBusiness) {
               setLocation(`/business/${rep.slug}`);
             } else {
-              setLocation(`/rep/${rep.slug}`);
+              setLocation(`/reps/${rep.id}`);
             }
           }}
         >
