@@ -836,39 +836,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                         </div>
                       </div>
                       
-                      {/* Age Distribution bar */}
-                      <div className="mb-6">
-                        <h5 className="font-medium mb-2">Age Distribution</h5>
-                        <div className="h-6 w-full flex rounded-md overflow-hidden">
-                          <div className="h-full bg-[#09261E] w-[18%]"></div>
-                          <div className="h-full bg-[#135341] w-[26%]"></div>
-                          <div className="h-full bg-[#2A7D6B] w-[22%]"></div>
-                          <div className="h-full bg-[#803344] w-[19%]"></div>
-                          <div className="h-full bg-[#A04054] w-[15%]"></div>
-                        </div>
-                        <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
-                          <div className="flex items-center text-xs">
-                            <div className="w-3 h-3 rounded-full mr-1 bg-[#09261E]"></div>
-                            <span>Under 18: 18%</span>
-                          </div>
-                          <div className="flex items-center text-xs">
-                            <div className="w-3 h-3 rounded-full mr-1 bg-[#135341]"></div>
-                            <span>18-34: 26%</span>
-                          </div>
-                          <div className="flex items-center text-xs">
-                            <div className="w-3 h-3 rounded-full mr-1 bg-[#2A7D6B]"></div>
-                            <span>35-54: 22%</span>
-                          </div>
-                          <div className="flex items-center text-xs">
-                            <div className="w-3 h-3 rounded-full mr-1 bg-[#803344]"></div>
-                            <span>55-74: 19%</span>
-                          </div>
-                          <div className="flex items-center text-xs">
-                            <div className="w-3 h-3 rounded-full mr-1 bg-[#A04054]"></div>
-                            <span>75+: 15%</span>
-                          </div>
-                        </div>
-                      </div>
+                      {/* Removed Age Distribution - it's now directly in the Location section */}
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Map placeholder */}
@@ -1005,6 +973,43 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
+                
+                {/* Age Distribution (moved from Demographics to Location) */}
+                <div className="mt-6 mb-4">
+                  <h4 className="font-medium text-lg mb-3">Age Distribution</h4>
+                  <div className="h-8 w-full flex rounded-md overflow-hidden">
+                    <div className="h-full bg-[#09261E] w-[18%]"></div>
+                    <div className="h-full bg-[#135341] w-[26%]"></div>
+                    <div className="h-full bg-[#2A7D6B] w-[22%]"></div>
+                    <div className="h-full bg-[#803344] w-[19%]"></div>
+                    <div className="h-full bg-[#A04054] w-[15%]"></div>
+                  </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 mt-3">
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#09261E]"></div>
+                      <span>Under 18: 18%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#135341]"></div>
+                      <span>18-34: 26%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#2A7D6B]"></div>
+                      <span>35-54: 22%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#803344]"></div>
+                      <span>55-74: 19%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#A04054]"></div>
+                      <span>75+: 15%</span>
+                    </div>
+                  </div>
+                  <div className="text-center mt-2 text-xs text-gray-500">
+                    Average age of residents: 43.2 years
+                  </div>
+                </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
