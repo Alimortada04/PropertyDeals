@@ -103,8 +103,8 @@ export const reps: Rep[] = [
       state: "WI"
     },
     tagline: "Specializing in premier waterfront real estate since 2008",
-    avatar: "https://randomuser.me/api/portraits/lego/1.jpg",
-    logoUrl: "https://randomuser.me/api/portraits/lego/1.jpg",
+    avatar: "https://logo.clearbit.com/meyerhomes.com",
+    logoUrl: "https://logo.clearbit.com/meyerhomes.com",
     contact: {
       phone: "(414) 555-8200",
       email: "info@lakefrontproperties.com"
@@ -133,8 +133,8 @@ export const reps: Rep[] = [
       state: "WI"
     },
     tagline: "Connecting urbanites with their perfect downtown space",
-    avatar: "https://randomuser.me/api/portraits/lego/6.jpg",
-    logoUrl: "https://randomuser.me/api/portraits/lego/6.jpg",
+    avatar: "https://logo.clearbit.com/urbanhomes.com",
+    logoUrl: "https://logo.clearbit.com/urbanhomes.com",
     contact: {
       phone: "(608) 555-9320",
       email: "contact@urbancorerealty.com"
@@ -277,8 +277,8 @@ export const reps: Rep[] = [
       state: "WI"
     },
     tagline: "Your trusted partner in Wisconsin real estate since 2010",
-    avatar: "https://randomuser.me/api/portraits/lego/5.jpg",
-    logoUrl: "https://randomuser.me/api/portraits/lego/5.jpg",
+    avatar: "https://logo.clearbit.com/summitrealty.net",
+    logoUrl: "https://logo.clearbit.com/summitrealty.net",
     contact: {
       phone: "(414) 555-9876",
       email: "info@summitrealty.com"

@@ -68,15 +68,15 @@ export default function RepCard({ rep }: RepCardProps) {
   // Mini PD Logo component for verified badge
   const PdLogo = () => (
     <img 
-      src="/images/logo.png" 
+      src="/images/pdlogo.png" 
       alt="PropertyDeals" 
-      className="inline-block h-4 w-4 object-contain"
+      className="inline-block h-5 w-5 object-contain ml-1"
     />
   );
 
   return (
     <Card 
-      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-gray-100"
+      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 hover:translate-y-[-4px] group"
       onClick={handleCardClick}
     >
       {/* Top Section */}
@@ -109,10 +109,12 @@ export default function RepCard({ rep }: RepCardProps) {
                 <img 
                   src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
                   alt={rep.name}
-                  className={`${isBusiness ? 'w-20 h-20 rounded-lg' : 'w-24 h-24 rounded-full'} object-cover border-2 border-white shadow-md`}
+                  className={`${isBusiness ? 'w-20 h-20 rounded-lg' : 'w-24 h-24 rounded-full'} object-cover border-2 border-white shadow-md transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg`}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = "https://randomuser.me/api/portraits/lego/1.jpg";
+                    target.src = isBusiness 
+                      ? "https://placehold.co/200x200/e6e6e6/803344?text=Business"
+                      : "https://randomuser.me/api/portraits/lego/1.jpg";
                   }}
                 />
               </div>
