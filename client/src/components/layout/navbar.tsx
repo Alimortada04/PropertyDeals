@@ -16,26 +16,26 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
   // Handle scroll to hide/show navbar - only on desktop and not on Properties or REPs pages
   useEffect(() => {
     if (typeof window === 'undefined' || isMobile) return;
-    
+
     // Always keep navbar visible on Properties and REPs pages
     const isStaticNavbarPage = location === '/properties' || location === '/reps';
     if (isStaticNavbarPage) {
       setVisible(true);
       return () => {}; // No cleanup needed for static pages
     }
-    
+
     const handleScroll = () => {
       const currentScrollPos = window.pageYOffset;
       const isScrolledDown = prevScrollPos < currentScrollPos;
       const isScrolledBeyondThreshold = currentScrollPos > 20;
-      
+
       // Hide when scrolling down, show when scrolling up
       if (isScrolledDown && isScrolledBeyondThreshold) {
         setVisible(false);
       } else {
         setVisible(true);
       }
-      
+
       setPrevScrollPos(currentScrollPos);
     };
 
@@ -49,7 +49,7 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
 
   // Determine if we're on a page that should have a static (scrollable) navbar
   const isStaticNavbarPage = location === '/properties' || location === '/reps';
-  
+
   return (
     <header 
       className={`bg-white shadow-sm ${isStaticNavbarPage ? 'relative' : 'sticky'} top-0 left-0 right-0 z-40 transition-transform duration-300 ${
@@ -71,14 +71,14 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
           {isMobile && (
             <Link href="/" className="ml-2 inline-block">
               <img 
-                src="/images/pdLogo.png" 
+                src="/images/pdLogoalt.png" 
                 alt="PropertyDeals Logo" 
                 className="h-8 w-auto"
               />
             </Link>
           )}
         </div>
-          
+
         {/* Right section - Banner style container */}
         <div className="bg-white shadow-sm py-3 px-5 rounded-bl-lg flex items-center gap-4 self-start">
           {/* Search bar - right aligned beside auth buttons */}
@@ -92,7 +92,7 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
               />
             </div>
           </div>
-          
+
           {/* Auth Buttons */}
           <div className="flex items-center gap-3">
             {user ? (
