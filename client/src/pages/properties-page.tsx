@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import StickySearchFilter from "@/components/common/sticky-search-filter";
+import PropertySearchBar from "@/components/properties/property-search-bar";
 import Breadcrumbs from "@/components/common/breadcrumbs";
 import { allProperties } from "@/lib/data";
 import { MapPin, List, LayoutGrid, ChevronDown, Grid, Save, ChevronRight } from "lucide-react";
