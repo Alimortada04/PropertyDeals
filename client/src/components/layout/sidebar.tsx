@@ -103,7 +103,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      group flex items-center px-3 py-2 mx-0 whitespace-nowrap transition-colors duration-0
+      group flex ${isExpanded ? 'items-center' : 'justify-center'} px-3 py-2 mx-0 whitespace-nowrap transition-colors duration-0
       ${isActive 
         ? 'bg-[#09261E] text-white' 
         : 'text-gray-700 hover:bg-[#D8D8D8]'}
