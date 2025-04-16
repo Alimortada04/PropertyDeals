@@ -876,6 +876,141 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
+                
+                {/* Map placeholder */}
+                <div className="mt-6">
+                  <h5 className="font-medium mb-2">Map</h5>
+                  <div className="bg-gray-200 h-40 rounded-md flex items-center justify-center">
+                    <Button size="sm" variant="outline" className="bg-white">
+                      View on Map
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* Home Values */}
+                <div className="mt-6">
+                  <h5 className="font-medium mb-2">Home Values</h5>
+                  <div className="h-6 w-full flex rounded-md overflow-hidden">
+                    <div className="h-full bg-[#09261E] w-[2.1%]"></div>
+                    <div className="h-full bg-[#135341] w-[8.3%]"></div>
+                    <div className="h-full bg-[#2A7D6B] w-[18.5%]"></div>
+                    <div className="h-full bg-[#803344] w-[39.2%]"></div>
+                    <div className="h-full bg-[#A04054] w-[26.7%]"></div>
+                    <div className="h-full bg-[#C04D64] w-[5.2%]"></div>
+                  </div>
+                  <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#09261E]"></div>
+                      <span>Less than $100K: 2.1%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#135341]"></div>
+                      <span>$100K-$199K: 8.3%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#2A7D6B]"></div>
+                      <span>$200K-$299K: 18.5%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#803344]"></div>
+                      <span>$300K-$499K: 39.2%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#A04054]"></div>
+                      <span>$500K-$999K: 26.7%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#C04D64]"></div>
+                      <span>$1M or more: 5.2%</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Housing Ownership */}
+                <div className="mt-6">
+                  <h5 className="font-medium mb-2">Housing Ownership</h5>
+                  <div className="h-6 w-full flex rounded-md overflow-hidden">
+                    <div className="h-full bg-[#09261E] w-[49.3%]"></div>
+                    <div className="h-full bg-[#135341] w-[16.1%]"></div>
+                    <div className="h-full bg-[#803344] w-[28.7%]"></div>
+                    <div className="h-full bg-[#DDC0C7] w-[5.9%]"></div>
+                  </div>
+                  <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#09261E]"></div>
+                      <span>Owned with mortgage: 49.3%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#135341]"></div>
+                      <span>Owned free and clear: 16.1%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#803344]"></div>
+                      <span>Renter occupied: 28.7%</span>
+                    </div>
+                    <div className="flex items-center text-xs">
+                      <div className="w-3 h-3 rounded-full mr-1 bg-[#DDC0C7]"></div>
+                      <span>Vacant: 5.9%</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Monthly Rent Costs */}
+                <div className="mt-6">
+                  <h5 className="font-medium mb-3">Monthly Rent Costs</h5>
+                  <div className="grid grid-cols-4 gap-4">
+                    <div className="p-3 border border-gray-200 rounded-md text-center">
+                      <div className="text-sm text-gray-500">Studio</div>
+                      <div className="font-bold mt-1">$895/mo</div>
+                    </div>
+                    <div className="p-3 border border-gray-200 rounded-md text-center">
+                      <div className="text-sm text-gray-500">1 Bedroom</div>
+                      <div className="font-bold mt-1">$1095/mo</div>
+                    </div>
+                    <div className="p-3 border border-gray-200 rounded-md text-center">
+                      <div className="text-sm text-gray-500">2 Bedroom</div>
+                      <div className="font-bold mt-1">$1450/mo</div>
+                    </div>
+                    <div className="p-3 border border-gray-200 rounded-md text-center">
+                      <div className="text-sm text-gray-500">3+ Bedroom</div>
+                      <div className="font-bold mt-1">$1850/mo</div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Year Housing Was Built */}
+                <div className="mt-6">
+                  <div className="flex justify-between items-baseline">
+                    <h5 className="font-medium">Year Housing Was Built</h5>
+                    <span className="text-sm text-gray-500">Average age: 56 years</span>
+                  </div>
+                  <div className="mt-2 flex h-12 space-x-1">
+                    <div className="bg-[#09261E] w-[10%] rounded-sm"></div>
+                    <div className="bg-[#135341] w-[12%] rounded-sm"></div>
+                    <div className="bg-[#2A7D6B] w-[15%] rounded-sm"></div>
+                    <div className="bg-[#3A988A] w-[12%] rounded-sm"></div>
+                    <div className="bg-[#803344] w-[10%] rounded-sm"></div>
+                    <div className="bg-[#964257] w-[10%] rounded-sm"></div>
+                    <div className="bg-[#A04054] w-[10%] rounded-sm"></div>
+                    <div className="bg-[#B1546A] w-[8%] rounded-sm"></div>
+                    <div className="bg-[#C04D64] w-[13%] rounded-sm"></div>
+                  </div>
+                  <div className="flex justify-between mt-1 text-xs text-gray-500">
+                    <span>2020+</span>
+                    <span>2000-19</span>
+                    <span>1980-99</span>
+                    <span>1960-79</span>
+                    <span>1940-59</span>
+                    <span>&lt;1940</span>
+                  </div>
+                  <div className="text-center mt-2 text-xs text-gray-500">
+                    Most common housing age: Before 1950 (32.6%)
+                  </div>
+                </div>
+                
+                <div className="text-xs text-gray-500 italic mt-6 text-right">
+                  Data sourced from unitedstateszipcodes.org
+                </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
