@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import RepCard from "@/components/reps/rep-card";
-import StickySearchFilter from "@/components/common/sticky-search-filter";
+import StickySearchBar from "@/components/common/sticky-search-bar";
 import Breadcrumbs from "@/components/common/breadcrumbs";
 import { 
   ToggleGroup, 
@@ -187,7 +187,7 @@ export default function RepsPage() {
       {/* Sticky Search and Filter Section */}
       <div className="sticky top-0 lg:top-0 md:top-16 z-30 bg-white pb-0 px-0 w-full left-0 right-0">
         <div className="w-full">
-          <StickySearchFilter
+          <StickySearchBar
             onSearch={setSearchTerm}
             searchPlaceholder="Search professionals by name, specialty, or keyword..."
             tabs={repTabs}
