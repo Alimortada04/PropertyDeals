@@ -1,0 +1,106 @@
+🧩 Seller/REP Profile Page Layout – Inspired by LinkedIn + Airbnb + CRM
+🔝 1. Header Section (REP Identity)
+Visual impact meets credibility.
+
+Banner Image (custom or default based on REP type)
+
+Avatar Image (circular, overlapping bottom of banner)
+
+Full Name + REP Type Badge (Seller, Contractor, etc.)
+
+Verified Status Badge
+
+🏅 “Top REP”
+
+✅ “PD Certified”
+
+⏳ “Member for 2+ years”
+
+Location + Team/Company (with link to business page)
+
+Social Links (Facebook, Instagram, LinkedIn, Website, etc.)
+
+Optional: "Team Members" link (modal)
+
+🧠 2. About Section
+Let the REP tell their story.
+
+Bio / Mission statement
+
+Areas of specialty (e.g. flips, distressed properties, funding deals)
+
+Deal zones (Milwaukee, Chicago, etc.)
+
+🔄 3. Activity Feed Section
+Builds real-time credibility.
+
+Recent Activity Tiles:
+
+🏡 “Posted a new deal” (link to property)
+
+🗨️ “Replied to a discussion”
+
+🎉 “Closed a deal with [REP Name]”
+
+Add timestamps: “2 days ago”, “last week”, etc.
+
+Optional emoji celebration UI on closings
+
+🔗 4. Connections Section
+Bring the network to life.
+
+Horizontal row of avatars:
+
+People they’ve worked with (name, role)
+
+“+ See All” button opens modal:
+
+Avatars, tags (Contractor, Buyer, etc.), how they’re connected
+
+Option to view that person’s REP profile
+
+🏡 5. Active Deals Section
+Horizontal scroll or grid of listings
+
+Filters: price, location, deal type
+
+CTA: “View all their active listings”
+
+📦 6. Previous Deals Section
+Clean timeline or grid of sold/closed deals
+
+Shows metrics: price, location, close date
+
+Optional: badge for milestones (10 deals closed, etc.)
+
+📞 7. Contact Section
+Make it easy to connect:
+
+In-app message button
+
+Call, Text, Email buttons (if info is public)
+
+Optional QR code to save contact or link to business card
+
+🌟 8. Reviews Section
+Social proof to build trust.
+
+Public reviews with:
+
+Star rating
+
+Short quote
+
+Deal partner (with link if they're on PD)
+
+“Write a Review” button
+
+Sort by recency or rating
+
+🧭 9. Footer Options
+"Refer This REP" (send to another investor)
+
+“Report” (for bad actors)
+
+“Bookmark this REP” (add to your network)
+
