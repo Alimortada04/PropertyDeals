@@ -1145,9 +1145,9 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           {/* Comparable Properties */}
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="comparables" className="border-b border-gray-200">
-              <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#803344] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+              <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
                 <div className="flex items-center">
-                  <Calculator className="mr-3 h-5 w-5 text-[#803344]" />
+                  <Calculator className="mr-3 h-5 w-5 text-[#09261E]" />
                   <span>Comparable Properties</span>
                 </div>
               </AccordionTrigger>
