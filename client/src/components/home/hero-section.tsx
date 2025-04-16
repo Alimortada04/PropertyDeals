@@ -162,7 +162,7 @@ export default function HeroSection() {
                   <ArrowRight className="h-5 w-5 relative z-10 opacity-70 group-hover:translate-x-1 transition-transform ml-1" />
                 </Button>
               </Link>
-              <Link href="/auth">
+              <Link href="/reps">
                 <Button variant="outline" className="bg-white/80 backdrop-blur-sm border-[#135341] text-[#135341] hover:bg-[#135341] hover:text-white rounded-full flex items-center gap-2 px-8 py-6 text-lg font-medium shadow-lg hover:shadow-xl transition-all">
                   <Users className="h-5 w-5" />
                   <span>Join our Community</span>
