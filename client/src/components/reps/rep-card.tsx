@@ -65,13 +65,13 @@ export default function RepCard({ rep }: RepCardProps) {
     }
   };
 
-  // Create a small PD logo for verified icon
+  // Mini PD Logo component for verified badge
   const PdLogo = () => (
-    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block h-4 w-4">
-      <path d="M4 3h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="#803344" />
-      <path d="M6 7.5h3.5c1 0 2.5.8 2.5 2.3 0 1.5-1.4 2.2-2.5 2.2H8v2H6V7.5zm3.5 3c.5 0 1-.3 1-.8 0-.4-.5-.7-1-.7H8v1.5h1.5z" fill="white" />
-      <path d="M13 7.5h-1V14h1c2 0 3-1.5 3-3.25S15 7.5 13 7.5z" fill="white" />
-    </svg>
+    <img 
+      src="/images/logo.png" 
+      alt="PropertyDeals" 
+      className="inline-block h-4 w-4 object-contain"
+    />
   );
 
   return (
@@ -171,7 +171,7 @@ export default function RepCard({ rep }: RepCardProps) {
                   </div>
                 )}
                 
-                {rep.dealsCompleted && rep.type === "seller" || rep.type === "agent" && (
+                {rep.dealsCompleted && (rep.type === "seller" || rep.type === "agent") && (
                   <div className="flex items-center text-gray-700">
                     <Home size={14} className="mr-1 text-gray-500 flex-shrink-0" />
                     <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
