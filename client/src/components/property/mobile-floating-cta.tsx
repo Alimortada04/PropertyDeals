@@ -78,7 +78,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
       )}
       
       {/* Fixed bottom bar with expandable center */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 border-t-2 border-[#803344] shadow-[0_-4px_10px_rgba(0,0,0,0.1)] bg-gradient-to-r from-[#09261E] to-[#803344]">
+      <div className="fixed bottom-0 left-0 right-0 z-30 border-t-2 border-[#803344] shadow-[0_-4px_10px_rgba(0,0,0,0.1)] bg-gradient-to-r from-[#135341] to-[#803344]">
         <div className="flex items-center justify-between h-14 px-6">
           {/* Message Button (Left) */}
           <button 

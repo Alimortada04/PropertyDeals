@@ -12,7 +12,7 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#09261E] text-white pt-16 pb-8 px-6 pr-10">
+    <footer className="bg-[#09261E] text-white pt-16 pb-0 px-6 pr-10">
       <div className="container mx-auto px-4">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
@@ -153,7 +153,7 @@ export default function Footer() {
         </div>
         
         {/* Copyright */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
+        <div className="pt-6 pb-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
           <p>© 2025 PropertyDeals. All rights reserved.</p>
           <div className="mt-4 md:mt-0 flex gap-4">
             <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
