@@ -1345,108 +1345,127 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
       
       {/* Contact Seller Modal */}
       <Dialog open={contactModalOpen} onOpenChange={setContactModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Contact Seller</DialogTitle>
+        <DialogContent className="w-[90%] max-w-[425px] p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl font-heading">Contact Seller</DialogTitle>
             <DialogDescription>
               Send a message to the property seller. They will respond to your inquiry as soon as possible.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="name" className="text-right">
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="name" className="font-medium text-sm">
                 Name
               </FormLabel>
-              <Input id="name" className="col-span-3" />
+              <Input id="name" placeholder="Your full name" />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="email" className="text-right">
+            
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="email" className="font-medium text-sm">
                 Email
               </FormLabel>
-              <Input id="email" className="col-span-3" />
+              <Input id="email" placeholder="your.email@example.com" type="email" />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="phone" className="text-right">
-                Phone
+            
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="phone" className="font-medium text-sm">
+                Phone (optional)
               </FormLabel>
-              <Input id="phone" className="col-span-3" />
+              <Input id="phone" placeholder="(555) 123-4567" type="tel" />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="message" className="text-right">
+            
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="message" className="font-medium text-sm">
                 Message
               </FormLabel>
-              <Textarea id="message" className="col-span-3" placeholder="I'm interested in this property and would like to schedule a viewing." />
+              <Textarea 
+                id="message" 
+                rows={4}
+                placeholder="I'm interested in this property and would like to schedule a viewing." 
+              />
             </div>
           </div>
           
-          <div className="flex justify-end">
-            <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Send Message</Button>
+          <div className="flex justify-end mt-6">
+            <Button type="submit" className="w-full sm:w-auto bg-[#09261E] hover:bg-[#135341] text-white">
+              Send Message
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
       
       {/* Get Contractor Quote Modal */}
       <Dialog open={offerModalOpen} onOpenChange={setOfferModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Get Contractor Quotes</DialogTitle>
+        <DialogContent className="w-[90%] max-w-[425px] p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl font-heading">Get Contractor Quotes</DialogTitle>
             <DialogDescription>
               Request quotes from our network of verified contractors for renovations on this property.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="name" className="text-right">
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="quote-name" className="font-medium text-sm">
                 Name
               </FormLabel>
-              <Input id="name" className="col-span-3" />
+              <Input id="quote-name" placeholder="Your full name" />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="email" className="text-right">
+            
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="quote-email" className="font-medium text-sm">
                 Email
               </FormLabel>
-              <Input id="email" className="col-span-3" />
+              <Input id="quote-email" placeholder="your.email@example.com" type="email" />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="phone" className="text-right">
+            
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="quote-phone" className="font-medium text-sm">
                 Phone
               </FormLabel>
-              <Input id="phone" className="col-span-3" />
+              <Input id="quote-phone" placeholder="(555) 123-4567" type="tel" />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="workType" className="text-right">
+            
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="workType" className="font-medium text-sm">
                 Work Type
               </FormLabel>
-              <Input id="workType" className="col-span-3" placeholder="Kitchen remodel, bathroom update, etc." />
+              <Input id="workType" placeholder="Kitchen remodel, bathroom update, etc." />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <FormLabel htmlFor="details" className="text-right">
+            
+            <div className="space-y-1.5">
+              <FormLabel htmlFor="details" className="font-medium text-sm">
                 Details
               </FormLabel>
-              <Textarea id="details" className="col-span-3" placeholder="Please provide details about the work needed..." />
+              <Textarea 
+                id="details" 
+                rows={4}
+                placeholder="Please provide details about the work needed..." 
+              />
             </div>
           </div>
           
-          <div className="flex justify-end">
-            <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Request Quotes</Button>
+          <div className="flex justify-end mt-6">
+            <Button type="submit" className="w-full sm:w-auto bg-[#09261E] hover:bg-[#135341] text-white">
+              Request Quotes
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
       
       {/* Share Dialog */}
       <Dialog open={shareModalOpen} onOpenChange={setShareModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className="text-[#09261E]">Share this Property</DialogTitle>
+        <DialogContent className="w-[90%] max-w-[425px] p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl font-heading text-[#09261E]">Share this Property</DialogTitle>
             <DialogDescription>
               Share this property with others via link, email, or social media.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4 mt-2">
-            <div className="border rounded-lg overflow-hidden">
+          <div className="space-y-5 mt-2">
+            <div className="border rounded-lg overflow-hidden shadow-sm">
               {/* Copy Link Option */}
               <div className="border-b p-4">
                 <div className="flex items-center justify-between">
@@ -1471,8 +1490,8 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               
               {/* Email Option */}
               <div className="border-b p-4">
-                <div 
-                  className="flex items-center justify-between cursor-pointer" 
+                <button 
+                  className="flex items-center justify-between w-full cursor-pointer text-left" 
                   onClick={handleEmailShare}
                 >
                   <div className="flex items-center">
@@ -1480,13 +1499,13 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                     <div className="font-medium">Email</div>
                   </div>
                   <ChevronRight className="h-5 w-5 text-gray-400" />
-                </div>
+                </button>
               </div>
               
               {/* PDF Report Option */}
               <div className="p-4">
-                <div 
-                  className="flex items-center justify-between cursor-pointer"
+                <button 
+                  className="flex items-center justify-between w-full cursor-pointer text-left"
                   onClick={generatePdfReport}
                 >
                   <div className="flex items-center">
@@ -1494,7 +1513,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                     <div className="font-medium">PDF Report</div>
                   </div>
                   <ChevronRight className="h-5 w-5 text-gray-400" />
-                </div>
+                </button>
               </div>
             </div>
             
