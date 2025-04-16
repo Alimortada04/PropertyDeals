@@ -140,17 +140,17 @@ export default function StickySearchBar({
           className={cn(
             "w-full overflow-hidden transition-all duration-300 ease-in-out",
             isSticky ? "bg-white/90 backdrop-blur-sm border-b border-gray-200" : "bg-white border-b border-gray-200",
-            showBottomSection ? "max-h-16 opacity-100" : "max-h-0 opacity-0"
+            showBottomSection ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
           )}
         >
-          <div className="overflow-x-auto py-3 max-w-7xl mx-auto px-4">
-            <div className="flex space-x-2 overflow-x-auto scrollbar-hide pb-1">
+          <div className="overflow-x-auto py-4 max-w-7xl mx-auto px-4">
+            <div className="flex space-x-3 overflow-x-auto scrollbar-hide pb-2 px-2 pt-1">
               {tabs.map((tab) => (
                 <button
                   key={tab.value}
                   onClick={() => onTabChange && onTabChange(tab.value)}
                   className={cn(
-                    "px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20",
+                    "px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20",
                     tab.value === defaultTab 
                       ? "bg-[#EAF2EF] text-[#135341] shadow-sm" 
                       : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
