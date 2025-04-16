@@ -661,10 +661,10 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-4 py-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                   {/* Flip Calculator */}
-                  <div className="p-5 bg-gray-50 rounded-md">
-                    <h3 className="text-xl font-bold mb-4">Flip Calculator</h3>
+                  <div className="p-5 bg-gray-50 rounded-md border border-gray-200">
+                    <h3 className="text-xl font-bold mb-4 text-[#09261E]">Flip Calculator</h3>
                     
                     <div className="space-y-4">
                       <div>
@@ -714,8 +714,8 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                   </div>
                   
                   {/* Rental Calculator */}
-                  <div className="p-5 bg-gray-50 rounded-md">
-                    <h3 className="text-xl font-bold mb-4">Rental Calculator</h3>
+                  <div className="p-5 bg-gray-50 rounded-md border border-gray-200">
+                    <h3 className="text-xl font-bold mb-4 text-[#09261E]">Rental Calculator</h3>
                     
                     <div className="space-y-4">
                       <div>
