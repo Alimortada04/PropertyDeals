@@ -363,10 +363,10 @@ export default function PropertiesPage() {
   );
   
   return (
-    <div className="flex flex-col min-h-screen pb-12 bg-white">
+    <div className="flex flex-col min-h-screen pb-12 bg-white pt-4">
       {/* Breadcrumb and Header Section - White background */}
       <div className="w-full bg-white">
-        <div className="bg-white container mx-auto px-4 pt-6 pb-6">
+        <div className="bg-white container mx-auto px-4 pt-8 pb-6">
           <div className="flex items-center text-sm text-gray-500 mb-2">
             <Link href="/" className="hover:text-[#135341]">Home</Link>
             <ChevronRight className="h-4 w-4 mx-1" />

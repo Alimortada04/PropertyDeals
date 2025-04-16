@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { Search, Sliders, List, LayoutGrid, Map as MapIcon, ChevronDown } from "lucide-react";
+import "./property-search-bar.css";
 
 interface PropertySearchBarProps {
   onSearch?: (query: string) => void;
@@ -129,12 +130,12 @@ export default function PropertySearchBar({
               step={50000}
               value={priceRange}
               onValueChange={(value) => setPriceRange(value as [number, number])}
-              className="my-5"
+              className="my-5 custom-range-slider"
             />
           </div>
           <div className="flex justify-between text-sm">
-            <span>${priceRange[0].toLocaleString()}</span>
-            <span>${priceRange[1].toLocaleString()}</span>
+            <span className="font-medium">${priceRange[0].toLocaleString()}</span>
+            <span className="font-medium">${priceRange[1].toLocaleString()}</span>
           </div>
         </div>
         
