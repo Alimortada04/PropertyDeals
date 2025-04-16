@@ -2,7 +2,7 @@ export interface Rep {
   id: number;
   name: string;
   slug: string;
-  type: 'seller' | 'contractor' | 'agent' | 'lender';
+  type: 'seller' | 'contractor' | 'agent' | 'lender' | 'appraiser' | 'inspector' | 'mover' | 'landscaper';
   entityType?: 'person' | 'business';
   location: {
     city: string;
@@ -15,6 +15,17 @@ export interface Rep {
     email: string;
   };
   bio: string;
+  // Professional metrics
+  yearsExperience?: number;
+  dealsCompleted?: number;
+  specialties?: string[];
+  rating?: {
+    score: number;
+    reviewCount: number;
+  };
+  isVerified?: boolean;
+  lastActive?: string; // ISO date string
+  responseTime?: string; // e.g., "within 2 hours"
   // Additional fields depending on REP type
   properties?: {
     current?: number[];
@@ -46,6 +57,7 @@ export interface Rep {
   businessLicense?: string;
   website?: string;
   logoUrl?: string;
+  isFeatured?: boolean;
 }
 
 export const reps: Rep[] = [

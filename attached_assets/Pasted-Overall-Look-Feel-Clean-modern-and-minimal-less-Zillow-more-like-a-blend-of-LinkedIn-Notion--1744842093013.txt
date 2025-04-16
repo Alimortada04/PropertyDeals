@@ -1,0 +1,54 @@
+Overall Look & Feel
+Clean, modern, and minimal — less Zillow, more like a blend of LinkedIn, Notion, and Apple’s UI.
+
+Sleek cards with ample white space (or light gray backgrounds in dark mode), soft shadows, and rounded corners (e.g., rounded-2xl).
+
+Use professional fonts: Lato for text, League Spartan Semi-Bold for headers (as you’ve been doing).
+
+Stick to your brand palette — Dark Green (#09261E), Wine (#803344), and Silver (#D8D8D8) — but use colors sparingly for accents only (e.g., badge icons, links, CTAs).
+
+Each card should feel like a profile snapshot, not a loud ad.
+
+📇 Card Content Layout
+Each REP Card should balance visual appeal with quick-glance value. Suggested layout:
+
+Top Section
+Profile Image / Logo – Circular or rounded square (optional placeholder if none)
+
+Name – Bold, slightly larger than the rest
+
+Profession Label – Agent, Wholesaler, Lender, Contractor, etc.
+
+Verified Badge (if applicable) – Small checkmark icon for trust
+
+Middle Section (Quick Info Block)
+Split into 2–3 quick columns or rows:
+
+🏠 Location: "Milwaukee, WI"
+
+💼 Role/Company: “Founder, REI Solutions”
+
+📞 Contact: Email or "Message REP" button
+
+📊 Experience: “5+ Years” or “100+ Deals Closed”
+
+⭐️ Rating or Review Count (if implemented): “★ 4.8 (26 reviews)”
+
+Bottom Section (Optional Tags or CTA)
+Display relevant Tags: e.g. Fix & Flip, Multifamily, Buy & Hold, Contractor – Licensed, Off-Market Deals, Bilingual
+
+CTA Button: "View Profile", "Connect", or "Request Contact"
+
+🧠 UX Best Practices
+Hover interaction on desktop: slightly lifts the card and reveals more info (like mini bio or service specialties).
+
+Filter/sort dropdown above the grid: Role, Location, Tags, Years of Experience, etc.
+
+Responsive: Cards stack vertically on mobile but still feel premium.
+
+Loading shimmer effect while cards load = adds polish.
+
+🔐 Bonus Trust Layer
+Small “last active” timestamp or “responds in X hours” badge (helps make it feel like a live network).
+
+Option to feature “Verified REP” or “Top REP” (like Airbnb Superhost) to highlight active, high-quality users.
