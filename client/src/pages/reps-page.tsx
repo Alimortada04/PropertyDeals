@@ -184,19 +184,17 @@ export default function RepsPage() {
         </div>
       </div>
       
-      {/* Sticky Search and Filter Section */}
-      <div className="sticky top-0 lg:top-0 md:top-16 z-30 bg-white pb-0 px-0 w-full left-0 right-0">
-        <div className="w-full">
-          <StickySearchBar
-            onSearch={setSearchTerm}
-            searchPlaceholder="Search professionals by name, specialty, or keyword..."
-            tabs={repTabs}
-            onTabChange={(value) => setRepType(value as 'all' | RepType)}
-            defaultTab="all"
-            filterContent={filterContent}
-            filterButtonText="Filters"
-          />
-        </div>
+      {/* Enhanced Search and Filter Section */}
+      <div className="w-full">
+        <StickySearchBar
+          onSearch={setSearchTerm}
+          searchPlaceholder="Search professionals by name, specialty, or keyword..."
+          tabs={repTabs}
+          onTabChange={(value: string) => setRepType(value as 'all' | RepType)}
+          defaultTab={repType}
+          filterContent={filterContent}
+          filterButtonText="Filters"
+        />
       </div>
       
       {/* Main Content Area */}

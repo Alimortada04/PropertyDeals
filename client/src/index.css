@@ -4,12 +4,12 @@
 
 @layer utilities {
   /* Hide scrollbar for the image carousel */
-  .hide-scrollbar {
+  .hide-scrollbar, .scrollbar-hide {
     -ms-overflow-style: none;  /* Internet Explorer and Edge */
     scrollbar-width: none;     /* Firefox */
   }
   
-  .hide-scrollbar::-webkit-scrollbar {
+  .hide-scrollbar::-webkit-scrollbar, .scrollbar-hide::-webkit-scrollbar {
     display: none;             /* Chrome, Safari, Opera */
   }
   
