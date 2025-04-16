@@ -8,7 +8,7 @@ import {
   BarChart, DollarSign, MapPinned, Bookmark, Star, Heart, Share,
   Bath, Square as SquareIcon, Link as LinkIcon, Mail, Check as CheckIcon,
   Copy as CopyIcon, ChevronRight, Calculator, PercentSquare, Car, 
-  ArrowRight, ChevronDown, Wrench
+  ArrowRight, ChevronDown, Wrench, BedDouble
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -360,89 +360,91 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-4 py-4">
-                <div className="grid grid-cols-3 gap-6">
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <Building className="text-[#09261E] w-5 h-5 mr-2" />
+                <div className="grid grid-cols-3 md:grid-cols-3 gap-4 mb-6">
+                  <div className="flex items-start">
+                    <BedDouble className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Bedrooms</div>
+                      <div className="font-semibold">{property.bedrooms}</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Bedrooms</div>
-                    <div className="font-semibold">{property.bedrooms}</div>
                   </div>
                   
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <Bath className="text-[#09261E] w-5 h-5 mr-2" />
+                  <div className="flex items-start">
+                    <Bath className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Bathrooms</div>
+                      <div className="font-semibold">{property.bathrooms}</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Bathrooms</div>
-                    <div className="font-semibold">{property.bathrooms}</div>
                   </div>
                   
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <SquareIcon className="text-[#09261E] w-5 h-5 mr-2" />
+                  <div className="flex items-start">
+                    <SquareIcon className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Square Feet</div>
+                      <div className="font-semibold">{property.squareFeet?.toLocaleString() || '3,500'} sq ft</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Square Feet</div>
-                    <div className="font-semibold">{property.squareFeet?.toLocaleString() || 'N/A'} sq ft</div>
                   </div>
                   
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <Ruler className="text-[#09261E] w-5 h-5 mr-2" />
+                  <div className="flex items-start">
+                    <Ruler className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Lot Size</div>
+                      <div className="font-semibold">{property.lotSize || '0.25 acres'}</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Lot Size</div>
-                    <div className="font-semibold">{property.lotSize || '0.28 Acres'}</div>
                   </div>
                   
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <Calendar className="text-[#09261E] w-5 h-5 mr-2" />
+                  <div className="flex items-start">
+                    <Calendar className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Year Built</div>
+                      <div className="font-semibold">1886</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Year Built</div>
-                    <div className="font-semibold">1886</div>
                   </div>
                   
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <Home className="text-[#09261E] w-5 h-5 mr-2" />
+                  <div className="flex items-start">
+                    <Home className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Property Type</div>
+                      <div className="font-semibold">{property.propertyType || 'Single-family'}</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Property Type</div>
-                    <div className="font-semibold">{property.propertyType || 'Single Family'}</div>
                   </div>
                   
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <DollarSign className="text-[#09261E] w-5 h-5 mr-2" />
+                  <div className="flex items-start">
+                    <DollarSign className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Price per sqft</div>
+                      <div className="font-semibold">${property.squareFeet ? Math.round((property.price || 0) / property.squareFeet) : '98'}/sq ft</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Price per sqft</div>
-                    <div className="font-semibold">${property.squareFeet ? Math.round((property.price || 0) / property.squareFeet) : '187'}/sq ft</div>
                   </div>
                   
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <Car className="text-[#09261E] w-5 h-5 mr-2" />
+                  <div className="flex items-start">
+                    <Car className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Parking</div>
+                      <div className="font-semibold">2-car garage</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Parking</div>
-                    <div className="font-semibold">2-car garage</div>
                   </div>
                   
-                  <div className="flex flex-col items-start">
-                    <div className="flex items-center mb-1">
-                      <Building className="text-[#09261E] w-5 h-5 mr-2" />
+                  <div className="flex items-start">
+                    <Building className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
+                    <div>
+                      <div className="text-gray-600 text-xs">Basement</div>
+                      <div className="font-semibold">Full, finished</div>
                     </div>
-                    <div className="text-gray-600 text-sm">Basement</div>
-                    <div className="font-semibold">Full, finished</div>
                   </div>
                 </div>
                 
-                <div className="mt-6 border-t border-gray-200 pt-6">
-                  <h3 className="font-bold text-lg mb-4">Property Description</h3>
-                  <div className="text-gray-700 space-y-4">
-                    <p>This charming Single Family home is nestled in a highly sought-after neighborhood in Milwaukee, WI. With {property.bedrooms} spacious bedrooms and {property.bathrooms} modern bathrooms, this {property.squareFeet?.toLocaleString() || '2,450'} square foot residence offers comfort and style.</p>
-                    
-                    <p>The property features a well-maintained yard, perfect for outdoor entertaining. Recent upgrades include new energy-efficient appliances and updated fixtures throughout. The location provides easy access to local schools, shopping centers, and major highways.</p>
-                    
-                    <p>This property presents an excellent opportunity for both homeowners and investors looking for a solid return on investment in a stable market. Don't miss the chance to add this gem to your portfolio!</p>
-                  </div>
+                <div className="border-t border-gray-200 pt-4 mt-6">
+                  <h3 className="font-medium text-[#09261E] mb-3 text-lg">Property Description</h3>
+                  <p className="text-gray-700 mb-3">
+                    This charming {property.propertyType || 'single-family'} home is nestled in a highly sought-after neighborhood in {property.city}, {property.state}. With {property.bedrooms} spacious bedrooms and {property.bathrooms} modern bathrooms, this {property.squareFeet?.toLocaleString() || ''} square foot residence offers comfort and style.
+                  </p>
+                  <p className="text-gray-700 mb-3">
+                    The property features a well-maintained yard, perfect for outdoor entertaining. Recent upgrades include new energy-efficient appliances and updated fixtures throughout. The location provides easy access to local schools, shopping centers, and major highways.
+                  </p>
+                  <p className="text-gray-700">
+                    This property presents an excellent opportunity for both homeowners and investors looking for a solid return on investment in a stable market. Don't miss the chance to add this gem to your portfolio!
+                  </p>
                 </div>
               </AccordionContent>
             </AccordionItem>
