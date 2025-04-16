@@ -7,7 +7,7 @@ import {
   MapPin, Calendar, Ruler, Home, Building, Users, FileText, 
   BarChart, DollarSign, MapPinned, Bookmark, Star, Heart, Share,
   Bath, Square as SquareIcon, Link as LinkIcon, Mail, Check as CheckIcon,
-  Copy as CopyIcon, ChevronRight
+  Copy as CopyIcon, ChevronRight, Calculator, PercentSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -347,7 +347,305 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </div>
         </div>
         
-        {/* Mobile view just shows the basic info - nothing else below the bedrooms/bathrooms section */}
+        {/* Responsive accordions for mobile view - using the same structure as desktop */}
+        <Accordion type="single" defaultValue="details" collapsible className="w-full">
+          <AccordionItem value="details" className="border-b border-gray-200">
+            <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+              <div className="flex items-center">
+                <Home className="mr-3 h-5 w-5 text-[#09261E]" />
+                <span>Property Details</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 py-4">
+              <div className="grid grid-cols-2 gap-y-4">
+                <div>
+                  <div className="text-sm text-gray-500">Type</div>
+                  <div className="font-semibold text-[#09261E]">{property.propertyType}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500">Size</div>
+                  <div className="font-semibold text-[#09261E]">{property.squareFeet?.toLocaleString() || 'N/A'} sq ft</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500">Bedrooms</div>
+                  <div className="font-semibold text-[#09261E]">{property.bedrooms}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500">Bathrooms</div>
+                  <div className="font-semibold text-[#09261E]">{property.bathrooms}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500">Year Built</div>
+                  <div className="font-semibold text-[#09261E]">2015</div>
+                </div>
+                <div>
+                  <div className="text-sm text-gray-500">MLS #</div>
+                  <div className="font-semibold text-[#09261E]">MLS12345</div>
+                </div>
+              </div>
+              
+              <div className="mt-6 border-t border-gray-200 pt-4">
+                <div className="text-sm text-gray-500 mb-3">Features & Amenities</div>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3">
+                  {features.map((feature, index) => (
+                    <div key={index} className={`text-sm ${feature.present ? 'text-[#09261E]' : 'text-gray-400 line-through'}`}>
+                      {feature.present ? '✓' : '✗'} {feature.name}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        
+        {/* The Numbers section */}
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="numbers" className="border-b border-gray-200">
+            <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+              <div className="flex items-center">
+                <Calculator className="mr-3 h-5 w-5 text-[#09261E]" />
+                <span>The Numbers</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 py-4">
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <div className="font-medium">Rent</div>
+                  <div className="font-semibold text-[#09261E] flex items-center">
+                    $3,672<span className="text-sm text-gray-500 ml-1">/month</span>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="font-medium">Estimated Repair Costs</div>
+                  <div className="font-semibold text-[#09261E] flex items-center">
+                    $22,950
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="font-medium">Estimated Monthly Expenses</div>
+                  <div className="font-semibold text-[#09261E] flex items-center">
+                    $1,377<span className="text-sm text-gray-500 ml-1">/month</span>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <div className="font-medium">ARV</div>
+                  <div className="font-semibold text-[#09261E]">$550,800</div>
+                </div>
+                
+                <div className="border-t border-gray-200 pt-4">
+                  <div className="grid grid-cols-3 gap-y-4 gap-x-2">
+                    <div>
+                      <div className="text-sm text-gray-500">Cap Rate</div>
+                      <div className="font-semibold">5.2%</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Cash-on-Cash Return</div>
+                      <div className="font-semibold">7.8%</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Monthly Rent %</div>
+                      <div className="font-semibold">0.76%</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pt-2">
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={handleOfferClick}
+                  >
+                    I'm a contractor — Submit a Quote
+                  </Button>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        
+        {/* Calculators section */}
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="calculators" className="border-b border-gray-200">
+            <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+              <div className="flex items-center">
+                <PercentSquare className="mr-3 h-5 w-5 text-[#09261E]" />
+                <span>Calculators</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 py-4">
+              <div className="space-y-6">
+                <div className="p-4 bg-gray-50 rounded-md">
+                  <div className="text-lg font-bold mb-3">Flip Calculator</div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">Purchase Price (Automatic)</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">459,000</div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">Repair Costs (Automatic)</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">22,950</div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">ARV</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">550,800</div>
+                      </div>
+                    </div>
+                    
+                    <Button className="w-full bg-[#09261E] hover:bg-[#135341]">
+                      Calculate Profit
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-gray-50 rounded-md">
+                  <div className="text-lg font-bold mb-3">Rental Calculator</div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">Purchase Price (Automatic)</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">459,000</div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <div className="text-sm text-gray-500 mb-1">Monthly Rent</div>
+                      <div className="flex border rounded-md bg-white">
+                        <div className="py-2 px-3 text-gray-700 border-r bg-gray-50">$</div>
+                        <div className="py-2 px-3 flex-1">3,672</div>
+                      </div>
+                    </div>
+                    
+                    <Button className="w-full bg-[#09261E] hover:bg-[#135341]">
+                      Calculate Returns
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+        
+        {/* Location section */}
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="location" className="border-b border-gray-200">
+            <AccordionTrigger className="w-full py-4 px-4 text-xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
+              <div className="flex items-center">
+                <MapPin className="mr-3 h-5 w-5 text-[#09261E]" />
+                <span>Location & Demographics</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="px-4 py-4">
+              <div className="space-y-5">
+                <div className="mb-2">
+                  <div className="font-semibold text-[#09261E]">Population: {demographicData.population.toLocaleString()}</div>
+                </div>
+                
+                <div className="mb-0 h-[200px] bg-gray-200 rounded-lg flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPinned className="h-10 w-10 mx-auto text-gray-400 mb-2" />
+                    <Button size="sm" variant="outline" className="bg-white">View on Map</Button>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="rounded-lg bg-gray-50 p-4">
+                    {/* Year Housing Built - Bar Chart with enhanced bars */}
+                    <div className="mb-4">
+                      <div className="text-sm font-medium mb-2">Year Housing Was Built</div>
+                      <div className="space-y-2">
+                        {demographicData.yearBuilt.map((item, index) => (
+                          <div key={index} className="w-full">
+                            <div className="flex justify-between text-xs mb-1">
+                              <span>{item.group}</span>
+                              <span>{item.percentage}%</span>
+                            </div>
+                            <div className="relative h-10 w-full bg-gray-100 rounded-sm overflow-hidden">
+                              <div 
+                                className="h-full group cursor-pointer"
+                                title={`${item.group}: ${item.percentage}%`}
+                                style={{ 
+                                  width: `${item.percentage}%`,
+                                  height: `${Math.max(30, item.percentage * 1.5)}px`,
+                                  backgroundColor: [
+                                    'rgba(19, 83, 65, 0.95)', // darkest
+                                    'rgba(19, 83, 65, 0.85)', 
+                                    'rgba(19, 83, 65, 0.75)', 
+                                    'rgba(19, 83, 65, 0.65)', 
+                                    'rgba(19, 83, 65, 0.55)'
+                                  ][index % 5]
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Home Values */}
+                    <div className="mb-4">
+                      <div className="text-sm font-medium mb-2">Home Values</div>
+                      <div className="h-6 w-full bg-gray-200 rounded-full overflow-hidden">
+                        {demographicData.homeValues.map((item, index) => (
+                          <div 
+                            key={index}
+                            className="h-full float-left" 
+                            style={{
+                              width: `${item.percentage}%`,
+                              backgroundColor: [
+                                'rgba(19, 83, 65, 0.95)', // dark green (primary)
+                                'rgba(19, 83, 65, 0.8)',  // medium green
+                                'rgba(19, 83, 65, 0.65)', // light green
+                                'rgba(128, 51, 68, 0.65)', // light wine
+                                'rgba(128, 51, 68, 0.8)',  // medium wine
+                                'rgba(128, 51, 68, 0.95)'  // dark wine (secondary)
+                              ][index % 6]
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex flex-wrap gap-x-3 gap-y-2 mt-2">
+                        {demographicData.homeValues.map((item, index) => (
+                          <div key={index} className="flex items-center text-xs">
+                            <div 
+                              className="w-3 h-3 rounded-full mr-1"
+                              style={{
+                                backgroundColor: [
+                                  'rgba(19, 83, 65, 0.95)', // dark green (primary)
+                                  'rgba(19, 83, 65, 0.8)',  // medium green
+                                  'rgba(19, 83, 65, 0.65)', // light green
+                                  'rgba(128, 51, 68, 0.65)', // light wine
+                                  'rgba(128, 51, 68, 0.8)',  // medium wine
+                                  'rgba(128, 51, 68, 0.95)'  // dark wine (secondary)
+                                ][index % 6]
+                              }}
+                            />
+                            <span>{item.group}: {item.percentage}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
       
       {/* Floating CTA Bar */}
