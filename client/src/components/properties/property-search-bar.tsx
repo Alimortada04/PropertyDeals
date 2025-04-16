@@ -272,7 +272,7 @@ export default function PropertySearchBar({
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-3">
           <div className="flex justify-between items-center">
             {/* Left Side - Quick Filters */}
-            <div className="flex items-center gap-3 overflow-x-auto pb-1 flex-1">
+            <div className="flex items-center gap-3 overflow-x-auto px-1 py-2 flex-1">
               {/* Sort Dropdown */}
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-[110px] h-9 text-sm">

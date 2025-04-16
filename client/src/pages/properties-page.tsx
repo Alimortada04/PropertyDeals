@@ -385,118 +385,44 @@ export default function PropertiesPage() {
         </div>
       </div>
       
-      {/* Sticky full-width search bar at the top of the page */}
+      {/* Property Search Bar */}
       <div className="sticky top-0 lg:top-0 md:top-16 z-30 bg-white pb-0 px-0 w-full left-0 right-0">
-        <div className="w-full">
-          <StickySearchFilter
-            onSearch={setSearchTerm}
-            searchPlaceholder="Search properties by location, type, or keyword..."
-            filterContent={advancedFilterContent}
-            filterButtonText="Filters"
-            selectedFilters={activeFilters}
-            onClearFilter={clearFilter}
-          />
-        </div>
-      
-        {/* View controls below search bar but still in sticky section - collapses on scroll down */}
-        <div className={cn(
-          "w-full px-0 overflow-hidden transition-all duration-300 -mt-1",
-          showViewControls ? "max-h-20 opacity-100 py-3" : "max-h-0 opacity-0 py-0"
-        )}>
-          <div className="w-full px-[5%] flex flex-wrap justify-between items-center gap-y-2">
-            {/* Left side controls */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {/* Sort Control */}
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E] h-9 w-36">
-                  <span className="text-sm">Sort: </span>
-                  <SelectValue placeholder="Recommended" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="recommended">Recommended</SelectItem>
-                  <SelectItem value="newest">Newest</SelectItem>
-                  <SelectItem value="price-low">Price (Low to High)</SelectItem>
-                  <SelectItem value="price-high">Price (High to Low)</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Location Dropdown */}
-              <Select defaultValue="any">
-                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E]">
-                  <span className="text-sm">Location: </span>
-                  <SelectValue placeholder="Any" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">Any Location</SelectItem>
-                  <SelectItem value="downtown">Downtown</SelectItem>
-                  <SelectItem value="suburbs">Suburbs</SelectItem>
-                  <SelectItem value="beachfront">Beachfront</SelectItem>
-                  <SelectItem value="mountain">Mountain View</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Property Type Dropdown */}
-              <Select defaultValue="any">
-                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E]">
-                  <span className="text-sm">Type: </span>
-                  <SelectValue placeholder="Any" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">Any Type</SelectItem>
-                  <SelectItem value="house">House</SelectItem>
-                  <SelectItem value="condo">Condo</SelectItem>
-                  <SelectItem value="townhouse">Townhouse</SelectItem>
-                  <SelectItem value="multi-family">Multi-Family</SelectItem>
-                  <SelectItem value="land">Land</SelectItem>
-                </SelectContent>
-              </Select>
-
-              {/* Price Range Dropdown */}
-              <Select defaultValue="any">
-                <SelectTrigger className="w-36 h-9 bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-[#EAF2EF] hover:text-[#09261E]">
-                  <span className="text-sm">Price: </span>
-                  <SelectValue placeholder="Any" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any">Any Price</SelectItem>
-                  <SelectItem value="0-300000">Under $300k</SelectItem>
-                  <SelectItem value="300000-500000">$300k-$500k</SelectItem>
-                  <SelectItem value="500000-750000">$500k-$750k</SelectItem>
-                  <SelectItem value="750000-1000000">$750k-$1M</SelectItem>
-                  <SelectItem value="1000000+">$1M+</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <PropertySearchBar
+          onSearch={setSearchTerm}
+          onFilterChange={(filters) => {
+            // Handle filter changes
+            const newActiveFilters = [];
             
-            {/* Right side - View Toggles */}
-            <div className="border border-gray-200 rounded-md overflow-hidden flex">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className={`h-9 rounded-none ${viewMode === 'list' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                onClick={() => setViewMode('list')}
-              >
-                List
-              </Button>
-              <Button 
-                variant="ghost"
-                size="sm" 
-                className={`h-9 rounded-none ${viewMode === 'map' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                onClick={() => setViewMode('map')}
-              >
-                Map
-              </Button>
-              <Button 
-                variant="ghost"
-                size="sm" 
-                className={`h-9 rounded-none ${viewMode === 'grid' ? 'bg-[#EAF2EF] text-[#09261E]' : 'bg-white text-gray-600'}`}
-                onClick={() => setViewMode('grid')}
-              >
-                Grid
-              </Button>
-            </div>
-          </div>
-        </div>
+            if (filters.priceRange && filters.priceRange[0] > 0) {
+              newActiveFilters.push(`$${filters.priceRange[0].toLocaleString()} - $${filters.priceRange[1].toLocaleString()}`);
+              setFilters(prevFilters => ({
+                ...prevFilters,
+                priceRange: `${filters.priceRange[0]}-${filters.priceRange[1]}`
+              }));
+            }
+            
+            if (filters.location) {
+              newActiveFilters.push(filters.location.charAt(0).toUpperCase() + filters.location.slice(1));
+            }
+            
+            if (filters.propertyType) {
+              const formattedType = filters.propertyType.replace(/_/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase());
+              newActiveFilters.push(formattedType);
+              setFilters(prevFilters => ({
+                ...prevFilters,
+                propertyType: formattedType.toLowerCase()
+              }));
+            }
+            
+            setActiveFilters(newActiveFilters);
+            
+            if (filters.sortBy) {
+              setSortBy(filters.sortBy);
+            }
+          }}
+          onViewModeChange={setViewMode}
+          viewMode={viewMode}
+        />
       </div>
 
       {/* Main Content Area */}
