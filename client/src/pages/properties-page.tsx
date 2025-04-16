@@ -367,14 +367,16 @@ export default function PropertiesPage() {
       {/* Breadcrumb and Header Section - White background */}
       <div className="w-full bg-white">
         <div className="bg-white container mx-auto px-4 pt-8 pb-6">
-          <div className="flex items-center text-sm text-gray-500 mb-2">
+          {/* Breadcrumbs */}
+          <div className="flex items-center text-sm text-gray-500 mb-3">
             <Link href="/" className="hover:text-[#135341]">Home</Link>
             <ChevronRight className="h-4 w-4 mx-1" />
             <span className="text-gray-700 font-medium">Properties</span>
           </div>
           
+          {/* Page Title */}
           <div className="mb-4">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#09261E] mb-2">
+            <h1 className="text-2xl md:text-3xl font-heading font-bold text-[#09261E] mb-2">
               Property Listings
             </h1>
             <p className="text-gray-600 max-w-3xl">
