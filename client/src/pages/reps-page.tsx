@@ -33,14 +33,14 @@ export default function RepsPage() {
   // Define the tab options for the REPs categories
   const repTabs = [
     { value: "all", label: "All" },
-    { value: "seller", label: "Seller" },
-    { value: "agent", label: "Agent" },
-    { value: "contractor", label: "Contractor" },
-    { value: "lender", label: "Lender" },
-    { value: "appraiser", label: "Appraiser" },
-    { value: "inspector", label: "Inspector" },
-    { value: "mover", label: "Mover" },
-    { value: "landscaper", label: "Landscaper" }
+    { value: "seller", label: "Sellers" },
+    { value: "agent", label: "Agents" },
+    { value: "contractor", label: "Contractors" },
+    { value: "lender", label: "Lenders" },
+    { value: "appraiser", label: "Appraisers" },
+    { value: "inspector", label: "Inspectors" },
+    { value: "mover", label: "Movers" },
+    { value: "landscaper", label: "Landscapers" }
   ];
   
   // Filter reps based on search term, type, entity type, and location
@@ -110,12 +110,12 @@ export default function RepsPage() {
         <h4 className="font-medium mb-2 text-sm text-gray-700">REP TYPE</h4>
         <div className="grid grid-cols-2 gap-2">
           {[
-            { id: 'seller', label: 'Seller' },
-            { id: 'agent', label: 'Agent' },
-            { id: 'contractor', label: 'Contractor' },
-            { id: 'lender', label: 'Lender' },
-            { id: 'appraiser', label: 'Appraiser' },
-            { id: 'inspector', label: 'Inspector' }
+            { id: 'seller', label: 'Sellers' },
+            { id: 'agent', label: 'Agents' },
+            { id: 'contractor', label: 'Contractors' },
+            { id: 'lender', label: 'Lenders' },
+            { id: 'appraiser', label: 'Appraisers' },
+            { id: 'inspector', label: 'Inspectors' }
           ].map((type) => (
             <div key={type.id} className="flex items-center space-x-2">
               <Checkbox 
