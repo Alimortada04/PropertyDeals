@@ -3,12 +3,16 @@ import { Property } from '@shared/schema';
 import MobileImageCarousel from './mobile-image-carousel';
 import MobileFloatingCTA from './mobile-floating-cta';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   MapPin, Calendar, Ruler, Home, Building, Users, FileText, 
   BarChart, DollarSign, MapPinned, Bookmark, Star, Heart, Share,
   Bath, Square as SquareIcon, Link as LinkIcon, Mail, Check as CheckIcon,
   Copy as CopyIcon, ChevronRight, Calculator, PercentSquare, Car, 
-  ArrowRight, ChevronDown, Wrench, BedDouble
+  ArrowRight, ChevronDown, Wrench, BedDouble, HelpCircle, MoveRight,
+  Info, MessageSquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -313,38 +317,26 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
       
       {/* Main Content */}
       <div className="pb-24"> {/* Padding bottom for floating CTA */}
-        {/* Property Stats - Key Details */}
-        <div className="px-4 py-4 border-b border-gray-200 grid grid-cols-2 gap-4">
+        {/* Property Stats - Quick Info (just icon and value on one line) */}
+        <div className="px-4 py-4 border-b border-gray-200 grid grid-cols-4 gap-3">
           <div className="flex items-center">
-            <Building className="text-[#09261E] w-5 h-5 mr-3" />
-            <div>
-              <div className="text-gray-600 text-sm">Bedrooms</div>
-              <div className="font-medium">{property.bedrooms}</div>
-            </div>
+            <BedDouble className="text-[#09261E] w-4 h-4 mr-1.5" />
+            <span className="font-medium text-sm">{property.bedrooms}</span>
           </div>
           
           <div className="flex items-center">
-            <Bath className="text-[#09261E] w-5 h-5 mr-3" />
-            <div>
-              <div className="text-gray-600 text-sm">Bathrooms</div>
-              <div className="font-medium">{property.bathrooms}</div>
-            </div>
+            <Bath className="text-[#09261E] w-4 h-4 mr-1.5" />
+            <span className="font-medium text-sm">{property.bathrooms}</span>
           </div>
           
           <div className="flex items-center">
-            <SquareIcon className="text-[#09261E] w-5 h-5 mr-3" />
-            <div>
-              <div className="text-gray-600 text-sm">Square Feet</div>
-              <div className="font-medium">{property.squareFeet?.toLocaleString() || 'N/A'}</div>
-            </div>
+            <SquareIcon className="text-[#09261E] w-4 h-4 mr-1.5" />
+            <span className="font-medium text-sm whitespace-nowrap">{property.squareFeet?.toLocaleString() || '3,500'}</span>
           </div>
           
           <div className="flex items-center">
-            <Ruler className="text-[#09261E] w-5 h-5 mr-3" />
-            <div>
-              <div className="text-gray-600 text-sm">Lot Size</div>
-              <div className="font-medium">{property.lotSize || '0.25 acres'}</div>
-            </div>
+            <Calendar className="text-[#09261E] w-4 h-4 mr-1.5" />
+            <span className="font-medium text-sm">1886</span>
           </div>
         </div>
         
@@ -460,124 +452,200 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-4 py-4">
-                <div className="space-y-6">
-                  {/* Rent Section */}
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="font-medium">Rent</div>
-                      <div className="font-semibold text-[#09261E] flex items-center">
-                        $3672/month <ChevronDown className="h-4 w-4 ml-1" />
+                <div className="grid grid-cols-1 gap-5 mb-6">
+                  {/* Rent with Dropdown for Multiple Units */}
+                  <Collapsible className="border-b border-gray-100 pb-3">
+                    <CollapsibleTrigger className="w-full">
+                      <div className="flex justify-between items-center cursor-pointer hover:text-[#803344] group">
+                        <span className="text-gray-600 font-medium group-hover:text-[#803344]">Rent</span>
+                        <div className="flex items-center">
+                          <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">${(property.price * 0.008).toFixed(0)}/month</span>
+                          <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-3 rounded-md space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Main Unit</span>
-                        <span className="font-medium">$3672/mo</span>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-3 pl-6 space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Main Unit</span>
+                        <span className="text-gray-700">${(property.price * 0.008).toFixed(0)}/mo</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Basement Apartment</span>
-                        <span className="font-medium">$1377/mo</span>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Basement Apartment</span>
+                        <span className="text-gray-700">${(property.price * 0.003).toFixed(0)}/mo</span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Market Analysis</span>
-                        <span className="font-medium">$4039/mo (potential)</span>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Market Analysis</span>
+                        <span className="text-gray-700">${(property.price * 0.008 * 1.1).toFixed(0)}/mo (potential)</span>
                       </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                  
+                  {/* Estimated Repair Costs with Clickable Contractor Avatar */}
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <span className="text-gray-600 font-medium">Estimated Repair Costs</span>
+                    <div className="flex items-center">
+                      <span className="font-semibold text-[#09261E] mr-2">${(property.price * 0.05).toFixed(0)}</span>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Avatar className="h-6 w-6 cursor-pointer hover:ring-2 hover:ring-offset-1 hover:ring-[#09261E]/50 transition-all">
+                            <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=120&h=120&auto=format&fit=crop" alt="Contractor" />
+                            <AvatarFallback className="text-xs bg-gray-200">MJ</AvatarFallback>
+                          </Avatar>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader>
+                            <DialogTitle className="text-xl font-heading">Contractor Quote</DialogTitle>
+                            <DialogDescription className="text-gray-600">
+                              Details from Mike Johnson, certified contractor
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="mt-2 space-y-4">
+                            <div className="flex items-center space-x-4">
+                              <Avatar className="h-12 w-12">
+                                <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=120&h=120&auto=format&fit=crop" alt="Contractor" />
+                                <AvatarFallback className="bg-gray-200">MJ</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <h4 className="font-medium text-[#09261E]">Mike Johnson</h4>
+                                <p className="text-sm text-gray-500">Elite Contractors, LLC</p>
+                                <div className="flex items-center mt-1">
+                                  <span className="text-yellow-500">★★★★★</span>
+                                  <span className="text-sm text-gray-500 ml-1">(28 reviews)</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="border-t border-b py-3">
+                              <h5 className="font-medium mb-2">Quote Details</h5>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Materials</span>
+                                  <span className="font-medium">${(property.price * 0.025).toFixed(0)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Labor</span>
+                                  <span className="font-medium">${(property.price * 0.02).toFixed(0)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Permits & Fees</span>
+                                  <span className="font-medium">${(property.price * 0.005).toFixed(0)}</span>
+                                </div>
+                                <div className="flex justify-between font-medium pt-2 border-t">
+                                  <span>Total</span>
+                                  <span>${(property.price * 0.05).toFixed(0)}</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <h5 className="font-medium mb-2">Work Summary</h5>
+                              <p className="text-sm text-gray-600">Complete interior and exterior renovation including new kitchen, bathrooms, flooring, and roof repair. Timeline: 6-8 weeks.</p>
+                            </div>
+                            
+                            <div className="flex space-x-2">
+                              <Button className="flex-1" onClick={() => window.location.href = "/reps/mike-johnson"}>
+                                <Info className="mr-2 h-4 w-4" />
+                                View Profile
+                              </Button>
+                              <Button variant="outline" className="flex-1">
+                                <MessageSquare className="mr-2 h-4 w-4" />
+                                Message
+                              </Button>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                   
-                  {/* Repair Costs */}
-                  <div className="flex justify-between items-center">
-                    <div className="font-medium">Estimated Repair Costs</div>
-                    <div className="font-semibold text-[#09261E] flex items-center">
-                      $22950
+                  {/* Monthly Expenses with Dropdown */}
+                  <Collapsible className="border-b border-gray-100 pb-3">
+                    <CollapsibleTrigger className="w-full">
+                      <div className="flex justify-between items-center cursor-pointer hover:text-[#803344] group">
+                        <span className="text-gray-600 font-medium group-hover:text-[#803344]">Estimated Monthly Expenses</span>
+                        <div className="flex items-center">
+                          <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">${(property.price * 0.003).toFixed(0)}/month</span>
+                          <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
+                        </div>
+                      </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-3 pl-6 space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Property Tax</span>
+                        <span className="text-gray-700">${Math.round(property.price * 0.01 / 12).toLocaleString()}/mo</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Insurance</span>
+                        <span className="text-gray-700">${Math.round(property.price * 0.005 / 12).toLocaleString()}/mo</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">HOA</span>
+                        <span className="text-gray-700">$150/mo</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Maintenance</span>
+                        <span className="text-gray-700">${Math.round(property.price * 0.001 / 12).toLocaleString()}/mo</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-500">Utilities</span>
+                        <span className="text-gray-700">$75/mo (est.)</span>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                  
+                  {/* ARV with Tooltip */}
+                  <div className="flex justify-between items-center border-b border-gray-100 pb-3">
+                    <div className="flex items-center">
+                      <span className="text-gray-600 font-medium">ARV</span>
+                      <TooltipProvider>
+                        <Tooltip delayDuration={0}>
+                          <TooltipTrigger>
+                            <HelpCircle className="h-4 w-4 ml-1 text-gray-400 cursor-help" />
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="bg-white p-2 rounded shadow-lg border z-50">
+                            <p className="text-sm font-medium">After Repair Value</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
+                    <span className="font-semibold text-[#09261E]">${(property.price * 1.2).toFixed(0)}</span>
                   </div>
                   
-                  {/* Monthly Expenses */}
-                  <div>
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="font-medium">Estimated Monthly Expenses</div>
-                      <div className="font-semibold text-[#09261E] flex items-center">
-                        $1377/month <ChevronDown className="h-4 w-4 ml-1" />
-                      </div>
-                    </div>
-                    
-                    <div className="bg-gray-50 p-3 rounded-md space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Property Tax</span>
-                        <span className="font-medium">$383/mo</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Insurance</span>
-                        <span className="font-medium">$191/mo</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">HOA</span>
-                        <span className="font-medium">$150/mo</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Maintenance</span>
-                        <span className="font-medium">$38/mo</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Utilities</span>
-                        <span className="font-medium">$75/mo (est.)</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* ARV */}
-                  <div className="flex justify-between items-center">
-                    <div className="font-medium flex items-center">
-                      ARV <span className="inline-flex items-center justify-center w-5 h-5 ml-1 text-xs rounded-full border border-gray-300 text-gray-500">?</span>
-                    </div>
-                    <div className="font-semibold text-[#09261E]">$550800</div>
-                  </div>
-                  
-                  {/* Key Metrics */}
-                  <div className="grid grid-cols-3 gap-x-4 gap-y-2 mt-4 border-t border-gray-200 pt-4">
+                  {/* Investment metrics in a grid with Monthly Rent % */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                     <div>
                       <div className="flex items-center">
-                        <span className="p-1 bg-gray-100 rounded mr-2">
-                          <BarChart className="h-4 w-4" />
-                        </span>
-                        <span className="text-sm">Cap Rate</span>
+                        <PercentSquare className="h-4 w-4 mr-1 text-[#09261E]" />
+                        <h4 className="text-sm font-medium text-gray-500">Cap Rate</h4>
                       </div>
-                      <div className="font-semibold mt-1">5.2%</div>
+                      <p className="text-lg font-semibold text-[#09261E]">5.2%</p>
                     </div>
-                    
                     <div>
                       <div className="flex items-center">
-                        <span className="p-1 bg-gray-100 rounded mr-2">
-                          <ArrowRight className="h-4 w-4" />
-                        </span>
-                        <span className="text-sm">Cash-on-Cash Return</span>
+                        <MoveRight className="h-4 w-4 mr-1 text-[#09261E]" />
+                        <h4 className="text-sm font-medium text-gray-500">Cash-on-Cash Return</h4>
                       </div>
-                      <div className="font-semibold mt-1">7.8%</div>
+                      <p className="text-lg font-semibold text-[#09261E]">7.8%</p>
                     </div>
-                    
                     <div>
                       <div className="flex items-center">
-                        <span className="p-1 bg-gray-100 rounded mr-2">
-                          <DollarSign className="h-4 w-4" />
-                        </span>
-                        <span className="text-sm">Monthly Rent %</span>
+                        <DollarSign className="h-4 w-4 mr-1 text-[#09261E]" />
+                        <h4 className="text-sm font-medium text-gray-500">Monthly Rent %</h4>
                       </div>
-                      <div className="font-semibold mt-1">0.76%</div>
+                      <p className="text-lg font-semibold text-[#09261E]">
+                        {((property.price * 0.008) / (property.price + property.price * 0.05) * 100).toFixed(2)}%
+                      </p>
                     </div>
                   </div>
-                  
-                  {/* Contractor CTA */}
-                  <div className="border-t border-gray-200 pt-4 text-center">
-                    <Button 
-                      variant="outline" 
-                      className="w-full" 
-                      onClick={handleOfferClick}
-                    >
-                      I'm a contractor — Submit a Quote
-                    </Button>
-                  </div>
+                </div>
+                <div className="border-t border-gray-200 pt-4 pb-2 text-center">
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={handleOfferClick}
+                  >
+                    I'm a contractor — Submit a Quote
+                  </Button>
                 </div>
               </AccordionContent>
             </AccordionItem>
