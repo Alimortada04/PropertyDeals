@@ -29,6 +29,7 @@ import FHACompliancePage from "@/pages/legal/fha-compliance-page";
 import MainLayout from "@/components/layout/main-layout";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
+import { ScrollToTop } from "@/components/common/scroll-to-top";
 
 function Router() {
   return (
@@ -198,6 +199,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <ScrollToTop />
         <Router />
         <Toaster />
       </AuthProvider>

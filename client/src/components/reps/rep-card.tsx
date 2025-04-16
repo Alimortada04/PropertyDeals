@@ -8,7 +8,7 @@ import {
   Building2, 
   MapPin, 
   MessageCircle, 
-  StarIcon, 
+  Star, 
   Clock, 
   Award, 
   CheckCircle2,
@@ -65,13 +65,18 @@ export default function RepCard({ rep }: RepCardProps) {
     }
   };
 
+  // Create a small PD logo for verified icon
+  const PdLogo = () => (
+    <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className="inline-block h-4 w-4">
+      <path d="M4 3h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="#803344" />
+      <path d="M6 7.5h3.5c1 0 2.5.8 2.5 2.3 0 1.5-1.4 2.2-2.5 2.2H8v2H6V7.5zm3.5 3c.5 0 1-.3 1-.8 0-.4-.5-.7-1-.7H8v1.5h1.5z" fill="white" />
+      <path d="M13 7.5h-1V14h1c2 0 3-1.5 3-3.25S15 7.5 13 7.5z" fill="white" />
+    </svg>
+  );
+
   return (
     <Card 
-      className={`bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-gray-100 ${
-        isHovered ? 'transform translate-y-[-5px]' : ''
-      } ${rep.isFeatured ? 'ring-2 ring-[#09261E]/20' : ''}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer border border-gray-100"
       onClick={handleCardClick}
     >
       {/* Top Section */}
@@ -89,7 +94,7 @@ export default function RepCard({ rep }: RepCardProps) {
         {/* Verified badge */}
         {rep.isVerified && (
           <div className="absolute top-2 left-2 z-10">
-            <Badge className="bg-blue-500 text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
+            <Badge className="bg-[#803344] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
               <CheckCircle2 size={12} />
               Verified
             </Badge>
@@ -100,11 +105,11 @@ export default function RepCard({ rep }: RepCardProps) {
           <div className="flex flex-col items-center">
             {/* Profile Image / Logo */}
             <div className="relative mb-4">
-              <div className={`${isHovered ? 'transform scale-105' : ''} transition-transform duration-300`}>
+              <div>
                 <img 
                   src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
                   alt={rep.name}
-                  className={`${isBusiness ? 'w-20 h-20 rounded-lg' : 'w-24 h-24 rounded-full'} object-cover border-2 border-white shadow-md transition-all duration-300`}
+                  className={`${isBusiness ? 'w-20 h-20 rounded-lg' : 'w-24 h-24 rounded-full'} object-cover border-2 border-white shadow-md`}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = "https://randomuser.me/api/portraits/lego/1.jpg";
@@ -118,8 +123,8 @@ export default function RepCard({ rep }: RepCardProps) {
               <h3 className="font-heading text-xl font-semibold text-gray-800 mb-1 line-clamp-1">
                 {rep.name}
                 {rep.isVerified && (
-                  <span className="inline-block ml-1 text-blue-500">
-                    <CheckCircle2 size={16} className="inline" />
+                  <span className="inline-block ml-1 text-[#803344]">
+                    <PdLogo />
                   </span>
                 )}
               </h3>
@@ -158,44 +163,28 @@ export default function RepCard({ rep }: RepCardProps) {
                 </div>
               )}
               
-              {rep.rating && (
-                <div className="flex items-center text-gray-600 justify-end">
-                  <StarIcon size={14} className="mr-1 text-amber-500 flex-shrink-0" />
-                  <span className="truncate">{rep.rating.score} ({rep.rating.reviewCount})</span>
-                </div>
-              )}
-              
-              {rep.dealsCompleted && (
-                <div className="flex items-center text-gray-600 col-span-2">
-                  <Home size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                  <span className="truncate">{rep.dealsCompleted}+ Deals Closed</span>
-                </div>
-              )}
+              <div className="flex items-center justify-between col-span-2">
+                {rep.rating && (
+                  <div className="flex items-center text-gray-700">
+                    <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+                    <span className="truncate font-medium">{rep.rating.score} ({rep.rating.reviewCount})</span>
+                  </div>
+                )}
+                
+                {rep.dealsCompleted && rep.type === "seller" || rep.type === "agent" && (
+                  <div className="flex items-center text-gray-700">
+                    <Home size={14} className="mr-1 text-gray-500 flex-shrink-0" />
+                    <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
+                  </div>
+                )}
+              </div>
             </div>
             
             {/* Tagline */}
-            <p className="text-gray-600 text-sm mb-4 line-clamp-2 text-center">
+            <p className="text-gray-600 text-sm mb-2 line-clamp-2 text-center">
               {rep.tagline}
             </p>
           </div>
-          
-          {/* Specialties/Tags (Only show when hovered) */}
-          {rep.specialties && rep.specialties.length > 0 && (
-            <div className={`flex flex-wrap justify-center gap-1 mb-3 transition-all duration-300 overflow-hidden ${
-              isHovered ? 'max-h-16 opacity-100' : 'max-h-0 opacity-0'
-            }`}>
-              {rep.specialties.slice(0, 3).map((specialty, index) => (
-                <Badge key={index} variant="outline" className="bg-gray-100 text-gray-600 border-gray-200 text-xs">
-                  {specialty}
-                </Badge>
-              ))}
-              {rep.specialties.length > 3 && (
-                <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-200 text-xs">
-                  +{rep.specialties.length - 3} more
-                </Badge>
-              )}
-            </div>
-          )}
           
           {/* Last Active */}
           {rep.lastActive && (
