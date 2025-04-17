@@ -86,12 +86,14 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       </div>
       
       {/* Banner Image - Flush with top of page and thicker */}
-      <div className="w-full h-60 overflow-hidden relative">
+      <div className="w-full h-48 md:h-60 overflow-hidden relative">
         <img
           src={rep.bannerUrl || "https://images.pexels.com/photos/7031406/pexels-photo-7031406.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
           alt={rep.name}
           className="w-full h-full object-cover"
         />
+        {/* Add a slight gradient overlay for improved text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
       </div>
       
       <div className="container mx-auto px-4">

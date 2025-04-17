@@ -67,6 +67,10 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
         }
       });
   
+  // Limit to 3 activities for display
+  const displayedActivities = filteredActivities.slice(0, 3);
+  const hasMoreActivities = filteredActivities.length > 3;
+  
   return (
     <div id="activity" className="my-8 scroll-mt-24">
       <h2 className="text-2xl font-bold text-[#09261E] mb-4">
@@ -110,9 +114,22 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
                 </CardContent>
               </Card>
             ) : (
-              filteredActivities.map((activity) => (
-                <ActivityCard key={activity.id} activity={activity} />
-              ))
+              <>
+                {displayedActivities.map((activity) => (
+                  <ActivityCard key={activity.id} activity={activity} />
+                ))}
+                
+                {hasMoreActivities && (
+                  <Button 
+                    variant="outline" 
+                    className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+                    onClick={() => window.location.href = "#activity-full"} // This could be replaced with a modal or full page view
+                  >
+                    <ActivityIcon size={16} className="mr-2" />
+                    <span>See all {filteredActivities.length} activities</span>
+                  </Button>
+                )}
+              </>
             )}
           </div>
         </TabsContent>
