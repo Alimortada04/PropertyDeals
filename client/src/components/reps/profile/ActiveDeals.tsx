@@ -148,17 +148,18 @@ function PropertyCard({ property }: { property: Property }) {
         
         {/* Property Tags */}
         <div className="absolute top-2 right-2 flex flex-col gap-1">
-          {property.isOffMarket && (
+          {/* These properties aren't in the schema, so we'll use optional chaining */}
+          {(property as any)?.isOffMarket && (
             <Badge className="bg-amber-500 text-white border-0 px-2 py-1 text-xs">
               Off Market
             </Badge>
           )}
-          {property.isNewListing && (
+          {(property as any)?.isNewListing && (
             <Badge className="bg-green-500 text-white border-0 px-2 py-1 text-xs">
               New Listing
             </Badge>
           )}
-          {property.hasPriceDrop && (
+          {(property as any)?.hasPriceDrop && (
             <Badge className="bg-blue-500 text-white border-0 px-2 py-1 text-xs">
               Price Drop
             </Badge>
@@ -204,10 +205,11 @@ function PropertyCard({ property }: { property: Property }) {
         
         {/* Footer */}
         <div className="flex justify-between items-center mt-2">
-          {property.listedDate && (
+          {/* Using createdAt as a fallback for listedDate */}
+          {((property as any)?.listedDate || property.createdAt) && (
             <div className="flex items-center text-xs text-gray-500">
               <Calendar size={14} className="mr-1" />
-              <span>Listed {new Date(property.listedDate).toLocaleDateString()}</span>
+              <span>Listed {new Date((property as any)?.listedDate || property.createdAt).toLocaleDateString()}</span>
             </div>
           )}
           

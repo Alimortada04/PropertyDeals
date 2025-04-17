@@ -10,15 +10,22 @@ export interface Rep {
   };
   tagline: string;
   avatar: string;
+  bannerUrl?: string;
   contact: {
     phone: string;
     email: string;
   };
+  phone?: string;
+  email?: string;
   bio: string;
   // Professional metrics
   yearsExperience?: number;
   dealsCompleted?: number;
   specialties?: string[];
+  expertise?: string[];
+  propertyTypes?: string[];
+  locationsServed?: string[];
+  credentials?: string[];
   rating?: {
     score: number;
     reviewCount: number;
@@ -26,6 +33,20 @@ export interface Rep {
   isVerified?: boolean;
   lastActive?: string; // ISO date string
   responseTime?: string; // e.g., "within 2 hours"
+  memberSince?: string; // ISO date string
+  social?: {
+    linkedin?: string;
+    instagram?: string;
+    facebook?: string;
+    twitter?: string;
+    youtube?: string;
+    website?: string;
+  };
+  availability?: 'available' | 'limited' | 'unavailable';
+  availabilitySchedule?: {
+    day: string;
+    hours: string;
+  }[];
   // Additional fields depending on REP type
   properties?: {
     current?: number[];
@@ -50,6 +71,9 @@ export interface Rep {
       comment: string;
     }[];
   };
+  additionalInfo?: string;
+  businessName?: string;
+  businessAddress?: string;
   // Business-specific fields
   foundedYear?: number;
   employees?: number;

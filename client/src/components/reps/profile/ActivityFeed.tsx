@@ -251,7 +251,29 @@ function ActivityCard({ activity }: { activity: Activity }) {
           {getContent()}
           
           <div className="mt-2 text-xs text-gray-500">
-            {getRelativeTime(activity.timestamp)}
+            {(() => {
+              // Format relative time (e.g., "2 days ago") - inline implementation
+              const date = new Date(activity.timestamp);
+              const now = new Date();
+              const diffMs = now.getTime() - date.getTime();
+              const diffMins = Math.floor(diffMs / 60000);
+              const diffHours = Math.floor(diffMins / 60);
+              const diffDays = Math.floor(diffHours / 24);
+              
+              if (diffMins < 60) {
+                return diffMins <= 1 ? 'just now' : `${diffMins}m ago`;
+              } else if (diffHours < 24) {
+                return `${diffHours}h ago`;
+              } else if (diffDays < 7) {
+                return `${diffDays}d ago`;
+              } else {
+                return date.toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'short', 
+                  day: 'numeric' 
+                });
+              }
+            })()}
           </div>
         </div>
       </div>

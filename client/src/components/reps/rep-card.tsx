@@ -41,10 +41,8 @@ export default function RepCard({ rep }: RepCardProps) {
     if (isBusiness) {
       setLocation(`/business/${rep.slug}`);
     } else {
-      // Temporarily redirect to reps page until new profile page is implemented
-      setLocation('/reps');
-      // TODO: Implement new REP profile page and restore this:
-      // setLocation(`/rep/${rep.slug}`);
+      // Navigate to the individual REP profile page
+      setLocation(`/reps/${rep.id}`);
     }
   };
 
@@ -223,10 +221,8 @@ export default function RepCard({ rep }: RepCardProps) {
             if (isBusiness) {
               setLocation(`/business/${rep.slug}`);
             } else {
-              // Temporarily redirect to reps page until new profile page is implemented
-              setLocation('/reps');
-              // TODO: Implement new REP profile page and restore this:
-              // setLocation(`/rep/${rep.slug}`);
+              // Navigate to the individual REP profile page
+              setLocation(`/reps/${rep.id}`);
             }
           }}
         >

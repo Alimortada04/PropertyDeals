@@ -55,6 +55,14 @@ function Router() {
           <RepsPage />
         </MainLayout>
       </Route>
+      
+      <Route path="/reps/:id">
+        {params => (
+          <MainLayout>
+            <dynamic import={import('./pages/reps/[id]')} id={params.id} />
+          </MainLayout>
+        )}
+      </Route>
 
       <Route path="/business/:slug">
         {params => (
