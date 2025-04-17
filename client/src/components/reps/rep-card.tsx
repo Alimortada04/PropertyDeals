@@ -87,7 +87,7 @@ export default function RepCard({ rep }: RepCardProps) {
     >
       {/* No badges at top, moved to inside card */}
         
-      <CardContent className="p-4 sm:p-6">
+      <CardContent className="p-3 sm:p-6">
         {/* Desktop layout - vertical */}
         <div className="hidden sm:flex flex-col items-center">
           {/* Profile Image - centered on desktop */}
@@ -169,14 +169,22 @@ export default function RepCard({ rep }: RepCardProps) {
         
         {/* Mobile layout - horizontal (similar to connections) */}
         <div className="sm:hidden">
-          {/* Main content row - no top icons */}
-          <div className="flex items-center space-x-3 relative py-2 mt-1">
-            {/* Profile Image - Left on mobile, vertically centered */}
+          {/* Main content row - with rating at very top */}
+          <div className="flex items-center space-x-3 relative py-1">
+            {/* Top right rating absolute positioned */}
+            <div className="absolute top-[-4px] right-0">
+              <div className="flex items-center text-gray-700 text-xs">
+                <Star size={14} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+                <span className="font-medium">{rep.rating}</span>
+              </div>
+            </div>
+            
+            {/* Profile Image - Left on mobile, vertically centered, BIGGER */}
             <div className="flex-shrink-0 my-auto flex items-center justify-center">
               <img 
                 src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
                 alt={rep.name}
-                className={`${isBusiness ? 'w-14 h-14 rounded-lg' : 'w-14 h-14 rounded-full'} object-cover border-2 border-white shadow-md`}
+                className={`${isBusiness ? 'w-16 h-16 rounded-lg' : 'w-16 h-16 rounded-full'} object-cover border-2 border-white shadow-md`}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = isBusiness 
@@ -188,19 +196,19 @@ export default function RepCard({ rep }: RepCardProps) {
             
             {/* Middle: Name with checkmark, job tag, and location */}
             <div className="flex-1 min-w-0 flex flex-col justify-center">
-              {/* Name with checkmark */}
+              {/* Name with checkmark - BIGGER */}
               <div className="flex items-center mb-1">
-                <h3 className="font-heading text-lg font-semibold text-gray-800 line-clamp-1 mr-1">
+                <h3 className="font-heading text-xl font-semibold text-gray-800 line-clamp-1 mr-1">
                   {rep.name}
                 </h3>
                 {rep.isVerified && (
-                  <CheckCircle2 size={16} className="text-[#803344] flex-shrink-0" />
+                  <CheckCircle2 size={18} className="text-[#803344] flex-shrink-0" />
                 )}
               </div>
               
               <Badge 
                 variant="outline" 
-                className="mb-1.5 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs w-fit"
+                className="mb-1 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs w-fit"
               >
                 {rep.role}
               </Badge>
@@ -211,23 +219,14 @@ export default function RepCard({ rep }: RepCardProps) {
               </div>
             </div>
             
-            {/* Right: Rating and Chevron vertically aligned with name */}
-            <div className="flex flex-col items-end h-full justify-between py-1">
-              {/* Rating aligned with name */}
-              <div className="flex items-center text-gray-700 text-xs">
-                <Star size={14} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-                <span className="font-medium">{rep.rating}</span>
-              </div>
-              
-              {/* Chevron aligned with location (bottom of text) */}
-              <div className="flex items-center justify-center mt-auto">
-                <ChevronRight size={18} className="text-gray-400" />
-              </div>
+            {/* Chevron on right, vertically centered */}
+            <div className="flex items-center justify-center h-full">
+              <ChevronRight size={20} className="text-gray-400" />
             </div>
           </div>
           
-          {/* Bottom section with mutual connections */}
-          <div className="flex items-center pt-1 pb-3">
+          {/* Bottom section with mutual connections - reduced padding */}
+          <div className="flex items-center pt-0.5 pb-2">
             <div className="flex -space-x-2">
               {/* Display mutual connections avatars - we'll show 3 sample ones here */}
               <Avatar className="h-6 w-6 border-2 border-white">
