@@ -178,12 +178,7 @@ export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProp
         </Button>
       </div>
       
-      {/* Custom styles for the hide-scrollbar class */}
-      <style jsx>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
+      {/* We're using inline styles and Tailwind classes to hide scrollbars */}
     </section>
   );
 }

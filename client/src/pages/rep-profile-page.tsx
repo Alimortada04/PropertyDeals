@@ -416,6 +416,11 @@ export default function RepProfilePage() {
       
       {/* Mobile Contact Card - Only visible on mobile */}
       <MobileContactCard rep={enhancedRep} />
+      
+      {/* Similar REPs section */}
+      <div className="container mx-auto px-4 mb-16">
+        <SimilarReps currentRep={enhancedRep} />
+      </div>
     </div>
   );
 }
