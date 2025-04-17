@@ -105,79 +105,15 @@ export default function RepCard({ rep }: RepCardProps) {
         )}
       </div>
         
-      <CardContent className="p-3 sm:p-6">
-        <div className="flex flex-row sm:flex-col sm:items-center">
-          {/* Mobile layout: profile pic right, content left */}
-          <div className="flex-1 order-1 sm:order-none mb-4 pr-3 sm:pr-0">
-            <div className="text-left sm:text-center">
-              <h3 className="font-heading text-lg sm:text-xl font-semibold text-gray-800 mb-1 line-clamp-1">
-                {rep.name}
-                {rep.isVerified && (
-                  <span className="inline-block ml-1 text-[#803344]">
-                    <PdLogo />
-                  </span>
-                )}
-              </h3>
-              
-              <Badge 
-                variant="outline" 
-                className="mb-2 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium"
-              >
-                {rep.role}
-              </Badge>
-            
-              {/* Rating and info section */}
-              <div className="flex flex-col w-full mb-3 text-sm">
-                <div className="flex items-center text-gray-700 w-full mb-2">
-                  <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-                  <span className="truncate font-medium">{rep.rating} ({rep.reviewCount})</span>
-                  
-                  {rep.dealsCompleted && (
-                    <div className="flex items-center text-gray-700 ml-auto sm:ml-2">
-                      <Home size={14} className="mr-1 text-gray-500 flex-shrink-0" />
-                      <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex items-center text-gray-600 w-full mb-2">
-                  <MapPin size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                  <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
-                </div>
-                
-                {rep.responseTime && (
-                  <div className="flex items-center text-gray-600 w-full mb-2">
-                    <Clock size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                    <span className="truncate">{rep.responseTime}</span>
-                  </div>
-                )}
-                
-                {isBusiness ? (
-                  <div className="hidden sm:flex items-center text-gray-600 w-full">
-                    <Building2 size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                    <span className="truncate">Since {rep.foundedYear || 'N/A'}</span>
-                  </div>
-                ) : (
-                  <div className="hidden sm:flex items-center text-gray-600 w-full">
-                    <Briefcase size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                    <span className="truncate">{rep.yearsExperience || '0'}+ Years</span>
-                  </div>
-                )}
-              </div>
-              
-              {/* Bio hidden on mobile */}
-              <p className="hidden sm:block text-gray-600 text-sm mb-2 line-clamp-2 text-center">
-                {rep.bio?.substring(0, 100)}...
-              </p>
-            </div>
-          </div>
-          
-          {/* Profile Image - right on mobile, centered on desktop */}
-          <div className="order-2 sm:order-none ml-auto sm:ml-0 sm:mx-auto">
+      <CardContent className="p-4 sm:p-6">
+        {/* Desktop layout - vertical */}
+        <div className="hidden sm:flex flex-col items-center">
+          {/* Profile Image - centered on desktop */}
+          <div className="mb-3">
             <img 
               src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
               alt={rep.name}
-              className={`${isBusiness ? 'w-16 sm:w-20 h-16 sm:h-20 rounded-lg' : 'w-16 sm:w-24 h-16 sm:h-24 rounded-full'} object-cover border-2 border-white shadow-md transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg`}
+              className={`${isBusiness ? 'w-20 h-20 rounded-lg' : 'w-24 h-24 rounded-full'} object-cover border-2 border-white shadow-md transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg`}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.src = isBusiness 
@@ -186,23 +122,162 @@ export default function RepCard({ rep }: RepCardProps) {
               }}
             />
           </div>
+          
+          {/* Desktop: Content area - centered */}
+          <div className="text-center">
+            <h3 className="font-heading text-xl font-semibold text-gray-800 mb-1 line-clamp-1">
+              {rep.name}
+              {rep.isVerified && (
+                <span className="inline-block ml-1 text-[#803344]">
+                  <PdLogo />
+                </span>
+              )}
+            </h3>
+            
+            <Badge 
+              variant="outline" 
+              className="mb-2 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium"
+            >
+              {rep.role}
+            </Badge>
+          
+            {/* Desktop: Rating and info section */}
+            <div className="flex flex-col w-full mb-3 text-sm">
+              <div className="flex items-center justify-center text-gray-700 w-full mb-2">
+                <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+                <span className="truncate font-medium">{rep.rating} ({rep.reviewCount})</span>
+                
+                {rep.dealsCompleted && (
+                  <div className="flex items-center text-gray-700 ml-2">
+                    <Home size={14} className="mr-1 text-gray-500 flex-shrink-0" />
+                    <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex items-center justify-center text-gray-600 w-full mb-2">
+                <MapPin size={14} className="mr-1 text-gray-400 flex-shrink-0" />
+                <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
+              </div>
+              
+              {rep.responseTime && (
+                <div className="flex items-center justify-center text-gray-600 w-full mb-2">
+                  <Clock size={14} className="mr-1 text-gray-400 flex-shrink-0" />
+                  <span className="truncate">{rep.responseTime}</span>
+                </div>
+              )}
+              
+              {isBusiness ? (
+                <div className="flex items-center justify-center text-gray-600 w-full">
+                  <Building2 size={14} className="mr-1 text-gray-400 flex-shrink-0" />
+                  <span className="truncate">Since {rep.foundedYear || 'N/A'}</span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center text-gray-600 w-full">
+                  <Briefcase size={14} className="mr-1 text-gray-400 flex-shrink-0" />
+                  <span className="truncate">{rep.yearsExperience || '0'}+ Years</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Bio */}
+            <p className="text-gray-600 text-sm mb-2 line-clamp-2 text-center">
+              {rep.bio?.substring(0, 100)}...
+            </p>
+          </div>
         </div>
         
-        {/* Last Active */}
+        {/* Mobile layout - horizontal (similar to connections) */}
+        <div className="sm:hidden flex items-start space-x-3">
+          {/* Profile Image - Left on mobile */}
+          <div className="flex-shrink-0">
+            <img 
+              src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
+              alt={rep.name}
+              className={`${isBusiness ? 'w-14 h-14 rounded-lg' : 'w-14 h-14 rounded-full'} object-cover border-2 border-white shadow-md`}
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = isBusiness 
+                  ? "https://placehold.co/200x200/e6e6e6/803344?text=Business"
+                  : "https://randomuser.me/api/portraits/lego/1.jpg";
+              }}
+            />
+          </div>
+          
+          {/* Middle: Name, role tag, location */}
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading text-base font-semibold text-gray-800 mb-1 line-clamp-1">
+              {rep.name}
+              {rep.isVerified && (
+                <span className="inline-block ml-1 text-[#803344]">
+                  <PdLogo />
+                </span>
+              )}
+            </h3>
+            
+            <Badge 
+              variant="outline" 
+              className="mb-1.5 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs"
+            >
+              {rep.role}
+            </Badge>
+            
+            <div className="flex items-center text-gray-600 text-xs">
+              <MapPin size={12} className="mr-1 text-gray-400 flex-shrink-0" />
+              <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
+            </div>
+          </div>
+          
+          {/* Right: Rating & Badges */}
+          <div className="flex flex-col items-end">
+            {/* Rating */}
+            <div className="flex items-center text-gray-700 text-xs mb-1">
+              <Star size={12} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+              <span className="font-medium">{rep.rating}</span>
+            </div>
+            
+            {/* Deals completed */}
+            {rep.dealsCompleted && (
+              <div className="flex items-center text-gray-700 text-xs mb-2">
+                <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
+              </div>
+            )}
+            
+            {/* View Profile Link */}
+            <Button 
+              size="sm"
+              variant="outline"
+              className="h-7 text-xs px-2 py-0 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors mt-auto"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isBusiness) {
+                  setLocation(`/business/${rep.slug}`);
+                } else {
+                  // Navigate to the individual REP profile page
+                  setLocation(`/reps/${rep.id}`);
+                }
+              }}
+            >
+              View Profile
+            </Button>
+          </div>
+        </div>
+        
+        {/* Last Active - Desktop only */}
         {rep.lastActive && (
-          <div className="text-xs text-gray-500 text-center mt-1">
+          <div className="hidden sm:block text-xs text-gray-500 text-center mt-1">
             {getLastActiveText()}
           </div>
         )}
       </CardContent>
 
-      {/* Bottom CTA Section */}
-      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 flex gap-2">
-        {/* Message button - Hidden on mobile */}
+      {/* Bottom CTA Section - Desktop only */}
+      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 hidden sm:flex gap-2">
+        {/* Message button */}
         <Button 
           variant="outline"
           size="sm"
-          className="hidden sm:flex flex-1 text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors"
+          className="flex-1 text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors"
           onClick={(e) => {
             e.stopPropagation();
             // Open message dialog
