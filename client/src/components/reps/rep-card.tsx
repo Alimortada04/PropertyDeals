@@ -14,8 +14,10 @@ import {
   Award, 
   CheckCircle2,
   Home, 
-  Briefcase
+  Briefcase,
+  ChevronRight
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface RepCardProps {
   rep: Rep;
@@ -189,8 +191,19 @@ export default function RepCard({ rep }: RepCardProps) {
         
         {/* Mobile layout - horizontal (similar to connections) */}
         <div className="sm:hidden">
+          {/* Status icons at top */}
+          <div className="flex items-center gap-2 mb-3 mt-2">
+            {rep.isVerified && (
+              <CheckCircle2 size={16} className="text-[#803344]" />
+            )}
+            
+            {rep.isFeatured && (
+              <Award size={16} className="text-[#09261E]" />
+            )}
+          </div>
+          
           {/* Main content row */}
-          <div className="flex items-center justify-center space-x-3 relative">
+          <div className="flex items-center space-x-3 relative py-4">
             {/* Profile Image - Left on mobile, vertically centered */}
             <div className="flex-shrink-0 my-auto flex items-center justify-center">
               <img 
@@ -210,11 +223,6 @@ export default function RepCard({ rep }: RepCardProps) {
             <div className="flex-1 min-w-0 flex flex-col justify-center">
               <h3 className="font-heading text-base font-semibold text-gray-800 mb-1 line-clamp-1">
                 {rep.name}
-                {rep.isVerified && (
-                  <span className="inline-block ml-1 text-[#803344]">
-                    <PdLogo />
-                  </span>
-                )}
               </h3>
               
               <Badge 
@@ -231,32 +239,42 @@ export default function RepCard({ rep }: RepCardProps) {
             </div>
             
             {/* Top right: Rating */}
-            <div className="absolute top-0 right-0">
+            <div className="absolute top-2 right-0">
               <div className="flex items-center text-gray-700 text-xs">
                 <Star size={12} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
                 <span className="font-medium">{rep.rating}</span>
               </div>
             </div>
             
-            {/* Bottom right: View Profile */}
-            <div className="absolute bottom-0 right-0">
-              <Button 
-                size="sm"
-                variant="outline"
-                className="h-7 text-xs px-2 py-0 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (isBusiness) {
-                    setLocation(`/business/${rep.slug}`);
-                  } else {
-                    // Navigate to the individual REP profile page
-                    setLocation(`/reps/${rep.id}`);
-                  }
-                }}
-              >
-                View Profile
-              </Button>
+            {/* Center right: Chevron */}
+            <div className="flex items-center justify-center h-full">
+              <ChevronRight size={18} className="text-gray-400" />
             </div>
+          </div>
+          
+          {/* Bottom section with mutual connections */}
+          <div className="flex items-center pt-1 pb-3">
+            <div className="flex -space-x-2">
+              {/* Display mutual connections avatars - we'll show 3 sample ones here */}
+              <Avatar className="h-6 w-6 border-2 border-white">
+                <AvatarImage src="https://randomuser.me/api/portraits/men/1.jpg" />
+                <AvatarFallback>MC</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-6 w-6 border-2 border-white">
+                <AvatarImage src="https://randomuser.me/api/portraits/women/2.jpg" />
+                <AvatarFallback>MC</AvatarFallback>
+              </Avatar>
+              <Avatar className="h-6 w-6 border-2 border-white">
+                <AvatarImage src="https://randomuser.me/api/portraits/men/3.jpg" />
+                <AvatarFallback>MC</AvatarFallback>
+              </Avatar>
+              
+              {/* More indicator if needed */}
+              <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600 border-2 border-white">
+                +2
+              </div>
+            </div>
+            <span className="text-xs text-gray-500 ml-2">5 mutual connections</span>
           </div>
         </div>
         
