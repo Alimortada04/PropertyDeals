@@ -98,7 +98,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
         {/* Profile Avatar - Overlaid on banner */}
         <div className="container mx-auto px-4">
           <div className="relative -mt-20">
-            <Avatar className="h-32 w-32 border-4 border-white shadow-sm absolute left-4 sm:left-6 lg:left-8">
+            <Avatar className="h-32 w-32 border-4 border-white absolute left-4 sm:left-6 lg:left-8">
               <AvatarImage src={rep.avatar} alt={rep.name} />
               <AvatarFallback className="text-4xl font-bold">{initials}</AvatarFallback>
             </Avatar>
@@ -108,12 +108,12 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       
       {/* Profile Content - Below banner and avatar */}
       <div className="container mx-auto px-4">
-        <div className="bg-white rounded-md mt-12 pt-4">
+        <div className="bg-white rounded-md mt-6 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-4">
-            {/* Profile info with more top padding to avoid avatar overlap */}
-            <div className="pt-16 md:pt-14 flex flex-col justify-between">
+            {/* Profile info section */}
+            <div className="flex flex-col md:flex-row justify-between items-start">
               {/* Left-aligned content in 4 distinct rows */}
-              <div className="flex-1 mb-4 md:mb-0">
+              <div className="flex-1">
                 {/* Row 1: Name - clear standalone row */}
                 <h1 className="text-2xl font-bold text-[#09261E] text-left mb-3">{rep.name}</h1>
                 
@@ -167,7 +167,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
               </div>
               
               {/* Right column: Social links and buttons - Desktop */}
-              <div className="hidden md:flex md:flex-col md:items-end">
+              <div className="hidden md:flex md:flex-col md:items-end md:pt-0 md:ml-4">
                 <div className="flex gap-2">
                   {social?.linkedin && (
                     <a href={social.linkedin} target="_blank" rel="noopener noreferrer">
