@@ -85,27 +85,7 @@ export default function RepCard({ rep }: RepCardProps) {
       className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 hover:translate-y-[-4px] group"
       onClick={handleCardClick}
     >
-      <div className="relative">
-        {/* Desktop Verified badge */}
-        {rep.isVerified && (
-          <div className="absolute top-2 left-2 z-10 hidden sm:block">
-            <Badge className="bg-[#803344] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
-              <CheckCircle2 size={12} />
-              Verified
-            </Badge>
-          </div>
-        )}
-        
-        {/* Desktop Featured badge */}
-        {rep.isFeatured && (
-          <div className="absolute top-2 right-2 z-10 hidden sm:block">
-            <Badge className="bg-[#09261E] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
-              <Award size={12} />
-              Featured
-            </Badge>
-          </div>
-        )}
-      </div>
+      {/* No badges at top, moved to inside card */}
         
       <CardContent className="p-4 sm:p-6">
         {/* Desktop layout - vertical */}
@@ -127,12 +107,10 @@ export default function RepCard({ rep }: RepCardProps) {
           
           {/* Desktop: Content area - centered */}
           <div className="text-center">
-            <h3 className="font-heading text-xl font-semibold text-gray-800 mb-1 line-clamp-1">
+            <h3 className="font-heading text-xl font-semibold text-gray-800 mb-1 line-clamp-1 flex items-center justify-center">
               {rep.name}
               {rep.isVerified && (
-                <span className="inline-block ml-1 text-[#803344]">
-                  <PdLogo />
-                </span>
+                <CheckCircle2 size={18} className="ml-1 text-[#803344]" />
               )}
             </h3>
             
@@ -191,28 +169,8 @@ export default function RepCard({ rep }: RepCardProps) {
         
         {/* Mobile layout - horizontal (similar to connections) */}
         <div className="sm:hidden">
-          {/* Status icons and rating at top */}
-          <div className="flex items-center justify-between mb-1 mt-1">
-            {/* Left side icons */}
-            <div className="flex items-center gap-2">
-              {rep.isVerified && (
-                <CheckCircle2 size={16} className="text-[#803344]" />
-              )}
-              
-              {rep.isFeatured && (
-                <Award size={16} className="text-[#09261E]" />
-              )}
-            </div>
-            
-            {/* Right side rating - aligned with the icons */}
-            <div className="flex items-center text-gray-700 text-xs">
-              <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-              <span className="font-medium">{rep.rating}</span>
-            </div>
-          </div>
-          
-          {/* Main content row */}
-          <div className="flex items-center space-x-3 relative py-2">
+          {/* Main content row - no top icons */}
+          <div className="flex items-center space-x-3 relative py-2 mt-1">
             {/* Profile Image - Left on mobile, vertically centered */}
             <div className="flex-shrink-0 my-auto flex items-center justify-center">
               <img 
@@ -228,11 +186,17 @@ export default function RepCard({ rep }: RepCardProps) {
               />
             </div>
             
-            {/* Middle: Name, job tag, and location */}
+            {/* Middle: Name with checkmark, job tag, and location */}
             <div className="flex-1 min-w-0 flex flex-col justify-center">
-              <h3 className="font-heading text-base font-semibold text-gray-800 mb-1 line-clamp-1">
-                {rep.name}
-              </h3>
+              {/* Name with checkmark */}
+              <div className="flex items-center mb-1">
+                <h3 className="font-heading text-lg font-semibold text-gray-800 line-clamp-1 mr-1">
+                  {rep.name}
+                </h3>
+                {rep.isVerified && (
+                  <CheckCircle2 size={16} className="text-[#803344] flex-shrink-0" />
+                )}
+              </div>
               
               <Badge 
                 variant="outline" 
@@ -247,9 +211,18 @@ export default function RepCard({ rep }: RepCardProps) {
               </div>
             </div>
             
-            {/* Center right: Chevron */}
-            <div className="flex items-center justify-center h-full">
-              <ChevronRight size={18} className="text-gray-400" />
+            {/* Right: Rating and Chevron vertically aligned with name */}
+            <div className="flex flex-col items-end h-full justify-between py-1">
+              {/* Rating aligned with name */}
+              <div className="flex items-center text-gray-700 text-xs">
+                <Star size={14} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+                <span className="font-medium">{rep.rating}</span>
+              </div>
+              
+              {/* Chevron aligned with location (bottom of text) */}
+              <div className="flex items-center justify-center mt-auto">
+                <ChevronRight size={18} className="text-gray-400" />
+              </div>
             </div>
           </div>
           
