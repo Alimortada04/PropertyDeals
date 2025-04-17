@@ -41,8 +41,12 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
   };
 
   const handlePhoneClick = () => {
-    // In a real app, this would trigger a phone call
-    alert("Calling seller at (555) 123-4567");
+    // Also use the onContactClick handler to open the contact modal
+    if (onContactClick) {
+      onContactClick();
+    } else if (onClick) {
+      onClick();
+    }
   };
 
   const handleProfileClick = () => {
@@ -121,7 +125,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
                   <X size={24} className="text-white animate-fade-in" />
                 </div>
               ) : (
-                <div className="relative w-full h-full p-1.5">
+                <div className="relative w-full h-full p-0.5">
                   <Avatar className="h-full w-full ring-0 ring-offset-0">
                     <AvatarImage src={sellerImage} alt={sellerName} className="object-cover" />
                     <AvatarFallback className="bg-[#09261E]/10 text-white text-lg">{initials}</AvatarFallback>

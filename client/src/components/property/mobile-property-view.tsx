@@ -1339,6 +1339,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
       {/* Floating CTA Bar */}
       <MobileFloatingCTA
         onClick={handleContactClick}
+        onContactClick={handleContactClick}
         sellerName="Michael Johnson"
         sellerImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"
       />
