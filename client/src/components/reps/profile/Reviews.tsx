@@ -87,7 +87,18 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
   }, [searchQuery, reviews]);
   
   if (!reviews || reviews.length === 0) {
-    return null;
+    return (
+      <div id="reviews" className="my-8 scroll-mt-24">
+        <h2 className="text-2xl font-bold text-[#09261E] mb-4">
+          Reviews <span className="text-base font-normal text-gray-500">(0)</span>
+        </h2>
+        <div className="bg-gray-50 border border-gray-200 rounded-md p-8 text-center">
+          <MessageSquare className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+          <h3 className="text-lg font-medium text-gray-900">No reviews yet</h3>
+          <p className="text-gray-500 mt-1">This REP hasn't received any reviews yet. Check back soon!</p>
+        </div>
+      </div>
+    );
   }
   
   // Calculate average rating

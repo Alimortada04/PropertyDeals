@@ -25,7 +25,16 @@ interface ClosedDealsProps {
 
 export default function ClosedDeals({ deals }: ClosedDealsProps) {
   if (!deals || deals.length === 0) {
-    return null;
+    return (
+      <div id="closed-deals" className="my-8 scroll-mt-24">
+        <h2 className="text-2xl font-bold text-[#09261E] mb-4">Closed Deals <span className="text-base font-normal text-gray-500">(0)</span></h2>
+        <div className="bg-gray-50 border border-gray-200 rounded-md p-8 text-center">
+          <CalendarCheck className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+          <h3 className="text-lg font-medium text-gray-900">No closed deals yet</h3>
+          <p className="text-gray-500 mt-1">This REP hasn't closed any deals on our platform yet. Check back soon!</p>
+        </div>
+      </div>
+    );
   }
   
   return (

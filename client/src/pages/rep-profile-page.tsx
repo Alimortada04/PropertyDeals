@@ -365,14 +365,14 @@ export default function RepProfilePage() {
           {/* Active Deals Section */}
           <ActiveDeals properties={activeDeals} />
           
-          {/* Closed Deals Section */}
-          <ClosedDeals deals={closedDeals} />
-          
           {/* Activity Feed Section */}
           <ActivityFeed activities={activities} />
           
           {/* Connections Section */}
           <ConnectionsList connections={connections} />
+          
+          {/* Closed Deals Section */}
+          <ClosedDeals deals={closedDeals} />
           
           {/* Reviews Section */}
           <Reviews reviews={reviews} />
