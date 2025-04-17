@@ -23,9 +23,10 @@ interface RepDealsProps {
   listings: any[];
   deals: any[];
   repId: number;
+  mode?: "active" | "closed" | "all";
 }
 
-export default function RepDeals({ listings, deals, repId }: RepDealsProps) {
+export default function RepDeals({ listings, deals, repId, mode = "all" }: RepDealsProps) {
   // Convert to actual arrays if they're not
   const listingsArray = Array.isArray(listings) ? listings : [];
   const dealsArray = Array.isArray(deals) ? deals : [];
@@ -192,6 +193,52 @@ export default function RepDeals({ listings, deals, repId }: RepDealsProps) {
     );
   };
 
+  // Render content based on mode
+  if (mode === "active") {
+    return (
+      <div>
+        {listingsArray.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {listingsArray.map((listing) => renderDealCard(listing))}
+          </div>
+        ) : (
+          <Card className="bg-muted/50">
+            <CardContent className="flex flex-col items-center justify-center py-10 text-center">
+              <Info className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-medium mb-2">No Active Listings</h3>
+              <p className="text-muted-foreground max-w-md">
+                This REP doesn't have any active property listings at the moment.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    );
+  }
+  
+  if (mode === "closed") {
+    return (
+      <div>
+        {dealsArray.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {dealsArray.map((deal) => renderDealCard(deal, true))}
+          </div>
+        ) : (
+          <Card className="bg-muted/50">
+            <CardContent className="flex flex-col items-center justify-center py-10 text-center">
+              <Info className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-medium mb-2">No Previous Deals</h3>
+              <p className="text-muted-foreground max-w-md">
+                This REP hasn't closed any deals on the platform yet.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    );
+  }
+  
+  // Default "all" mode with tabs
   return (
     <div>
       <Tabs defaultValue="active">
@@ -209,7 +256,7 @@ export default function RepDeals({ listings, deals, repId }: RepDealsProps) {
             </TabsTrigger>
             <TabsTrigger value="previous" className="flex items-center gap-1">
               <PackageCheck className="h-4 w-4" />
-              <span className="hidden sm:inline">Previous</span>
+              <span className="hidden sm:inline">Closed</span>
               <Badge variant="secondary" className="ml-1">{dealsArray.length}</Badge>
             </TabsTrigger>
           </TabsList>
@@ -242,7 +289,7 @@ export default function RepDeals({ listings, deals, repId }: RepDealsProps) {
             <Card className="bg-muted/50">
               <CardContent className="flex flex-col items-center justify-center py-10 text-center">
                 <Info className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Previous Deals</h3>
+                <h3 className="text-lg font-medium mb-2">No Closed Deals</h3>
                 <p className="text-muted-foreground max-w-md">
                   This REP hasn't closed any deals on the platform yet.
                 </p>
