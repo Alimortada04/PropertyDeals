@@ -86,16 +86,31 @@ export default function RepProfilePage() {
   
   useEffect(() => {
     if (properties && rep) {
-      // Filter properties to display as active deals
-      const activeProperties = properties.slice(0, 3);
+      // Create more active deals by duplicating and modifying properties
+      const expandedProperties = [...properties];
+      
+      // If not enough properties, duplicate and modify them to get up to 10
+      while (expandedProperties.length < 10) {
+        // Clone properties and modify some attributes
+        const clonedProperties = properties.map(p => ({
+          ...p,
+          id: p.id + expandedProperties.length * 100, // ensure unique ids
+          title: p.title + (expandedProperties.length > properties.length ? ` (${Math.floor(expandedProperties.length / properties.length)})` : ''),
+          price: p.price * (0.85 + Math.random() * 0.3), // vary prices by ±15%
+        }));
+        expandedProperties.push(...clonedProperties);
+      }
+      
+      // Use first 10 for active deals
+      const activeProperties = expandedProperties.slice(0, 10);
       setActiveDeals(activeProperties);
       
-      // Create sample closed deals
-      const sampleClosedDeals: ClosedDeal[] = properties.slice(3, 6).map((property, index) => ({
+      // Create 4 sample closed deals
+      const sampleClosedDeals: ClosedDeal[] = expandedProperties.slice(10, 14).map((property, index) => ({
         ...property,
-        closedDate: new Date(Date.now() - (index + 1) * 30 * 24 * 60 * 60 * 1000).toISOString(), // 1-3 months ago
-        buyer: ['John Smith', 'Maria Rodriguez', 'Alex Chen'][index],
-        buyerId: [4, 5, 6][index]
+        closedDate: new Date(Date.now() - (index + 1) * 30 * 24 * 60 * 60 * 1000).toISOString(), // 1-4 months ago
+        buyer: ['John Smith', 'Maria Rodriguez', 'Alex Chen', 'Taylor Wilson'][index],
+        buyerId: [4, 5, 6, 7][index]
       }));
       setClosedDeals(sampleClosedDeals);
       
@@ -255,6 +270,8 @@ export default function RepProfilePage() {
     social: rep.social || {
       linkedin: "https://linkedin.com",
       instagram: "https://instagram.com",
+      facebook: "https://facebook.com",
+      twitter: "https://twitter.com",
       website: rep.website || "https://example.com"
     },
     // Sample availability
@@ -264,8 +281,7 @@ export default function RepProfilePage() {
       { day: "Saturday", hours: "10:00 AM - 2:00 PM" },
       { day: "Sunday", hours: "Closed" }
     ],
-    // Sample expertise
-    expertise: rep.expertise || rep.specialties || ["Real Estate Transactions", "Market Analysis", "Property Marketing"],
+    // Keep other necessary information without specialties
     propertyTypes: rep.propertyTypes || ["Single Family", "Multi-Family", "Luxury Homes"],
     locationsServed: rep.locationsServed || [`${rep.location.city} Area`, "Surrounding Suburbs"],
     credentials: rep.credentials || ["Licensed Real Estate Professional", `${rep.yearsExperience}+ Years Experience`],
@@ -274,28 +290,38 @@ export default function RepProfilePage() {
   
   if (!enhancedRep) {
     return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={() => window.history.back()}
-            className="mb-6"
-          >
-            <ArrowLeft size={18} className="mr-2" />
-            Back
-          </Button>
-          
-          <h1 className="text-4xl font-heading font-bold text-[#09261E] mb-6">REP Not Found</h1>
-          <p className="text-lg text-gray-600">
-            The REP profile you're looking for doesn't exist or has been removed.
-          </p>
-          
-          <Button 
-            className="mt-6 bg-[#09261E] hover:bg-[#135341]"
-            onClick={() => window.location.href = '/reps'}
-          >
-            Browse All REPs
-          </Button>
+      <div className="min-h-screen bg-white">
+        <div className="h-48 overflow-hidden relative bg-gradient-to-r from-[#09261E] to-[#124B39]">
+          <div className="absolute top-4 left-4 z-10">
+            <Button 
+              variant="ghost" 
+              onClick={() => window.history.back()}
+              className="bg-white/80 hover:bg-white/90 text-gray-800"
+            >
+              <ArrowLeft size={16} className="mr-2" />
+              Back to REPs
+            </Button>
+          </div>
+        </div>
+        
+        <div className="container mx-auto px-4 -mt-12">
+          <div className="bg-white rounded-lg shadow-lg p-8 text-center max-w-lg mx-auto">
+            <div className="w-20 h-20 mx-auto bg-red-50 rounded-full flex items-center justify-center mb-4">
+              <Users size={36} className="text-[#803344]" />
+            </div>
+            
+            <h1 className="text-3xl font-bold text-[#09261E] mb-3">REP Not Found</h1>
+            <p className="text-gray-600 mb-6">
+              The REP profile you're looking for doesn't exist or has been removed.
+            </p>
+            
+            <Button 
+              className="bg-[#09261E] hover:bg-[#135341]"
+              onClick={() => window.location.href = '/reps'}
+            >
+              Browse All REPs
+            </Button>
+          </div>
         </div>
       </div>
     );
@@ -322,19 +348,7 @@ export default function RepProfilePage() {
   
   return (
     <div className="min-h-screen bg-white">
-      {/* Back Button */}
-      <div className="container mx-auto px-4 py-4">
-        <Button 
-          variant="ghost" 
-          onClick={() => window.history.back()}
-          className="flex items-center text-gray-600 hover:text-[#09261E]"
-        >
-          <ArrowLeft size={18} className="mr-2" />
-          <span>Back to REPs</span>
-        </Button>
-      </div>
-      
-      {/* Profile Header */}
+      {/* Profile Header - Back button now integrated in header */}
       <ProfileHeader rep={enhancedRep} />
       
       {/* Sticky Navigation */}

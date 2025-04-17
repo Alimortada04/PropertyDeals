@@ -28,7 +28,7 @@ export default function StickyNav({
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      const headerHeight = 400; // Approximate height of the header section
+      const headerHeight = 250; // Reduced height to account for new LinkedIn-style header
       setIsSticky(offset > headerHeight);
       
       // Determine active section based on scroll position
@@ -73,95 +73,113 @@ export default function StickyNav({
   };
   
   return (
-    <nav className={`bg-white border-b border-gray-200 w-full z-10 transition-all duration-200 ${
+    <nav className={`bg-white w-full z-10 transition-all duration-200 ${
       isSticky ? "sticky top-0 shadow-sm" : ""
     }`}>
       <div className="container mx-auto px-4">
-        <div className="flex overflow-x-auto hide-scrollbar">
-          <Button
-            variant={activeSection === "active-deals" ? "default" : "ghost"}
-            className={`py-5 px-4 rounded-none border-b-2 ${
-              activeSection === "active-deals" 
-                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
-                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
-            }`}
-            onClick={() => scrollToSection("active-deals")}
-          >
-            <Briefcase size={18} className="mr-2" />
-            <span>Active Deals</span>
-            {activeDealsCount > 0 && (
-              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs">
-                {activeDealsCount}
-              </span>
-            )}
-          </Button>
-          
-          <Button
-            variant={activeSection === "closed-deals" ? "default" : "ghost"}
-            className={`py-5 px-4 rounded-none border-b-2 ${
-              activeSection === "closed-deals" 
-                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
-                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
-            }`}
-            onClick={() => scrollToSection("closed-deals")}
-          >
-            <CheckSquare size={18} className="mr-2" />
-            <span>Closed Deals</span>
-            {closedDealsCount > 0 && (
-              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs">
-                {closedDealsCount}
-              </span>
-            )}
-          </Button>
-          
-          <Button
-            variant={activeSection === "activity" ? "default" : "ghost"}
-            className={`py-5 px-4 rounded-none border-b-2 ${
-              activeSection === "activity" 
-                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
-                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
-            }`}
-            onClick={() => scrollToSection("activity")}
-          >
-            <Activity size={18} className="mr-2" />
-            <span>Activity</span>
-          </Button>
-          
-          <Button
-            variant={activeSection === "connections" ? "default" : "ghost"}
-            className={`py-5 px-4 rounded-none border-b-2 ${
-              activeSection === "connections" 
-                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
-                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
-            }`}
-            onClick={() => scrollToSection("connections")}
-          >
-            <Users size={18} className="mr-2" />
-            <span>Connections</span>
-            {connectionsCount > 0 && (
-              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs">
-                {connectionsCount}
-              </span>
-            )}
-          </Button>
-          
-          <Button
-            variant={activeSection === "reviews" ? "default" : "ghost"}
-            className={`py-5 px-4 rounded-none border-b-2 ${
-              activeSection === "reviews" 
-                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
-                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
-            }`}
-            onClick={() => scrollToSection("reviews")}
-          >
-            <MessageSquare size={18} className="mr-2" />
-            <span>Reviews</span>
-            {reviewsCount > 0 && (
-              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs">
-                {reviewsCount}
-              </span>
-            )}
-          </Button>
+        <div className="flex items-center h-14 overflow-x-auto hide-scrollbar">
+          <div className="flex items-center relative gap-x-1.5">
+            <Button
+              variant="ghost"
+              className={`rounded-full h-9 border ${
+                activeSection === "active-deals" 
+                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
+              }`}
+              onClick={() => scrollToSection("active-deals")}
+            >
+              <Briefcase size={16} className="mr-1.5" />
+              <span>Active Deals</span>
+              {activeDealsCount > 0 && (
+                <span className={`ml-1.5 rounded-full ${
+                  activeSection === "active-deals" 
+                    ? "bg-white text-[#09261E]" 
+                    : "bg-gray-100 text-gray-700"
+                } px-1.5 py-0.5 text-xs font-medium`}>
+                  {activeDealsCount}
+                </span>
+              )}
+            </Button>
+            
+            <Button
+              variant="ghost"
+              className={`rounded-full h-9 border ${
+                activeSection === "closed-deals" 
+                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
+              }`}
+              onClick={() => scrollToSection("closed-deals")}
+            >
+              <CheckSquare size={16} className="mr-1.5" />
+              <span>Closed Deals</span>
+              {closedDealsCount > 0 && (
+                <span className={`ml-1.5 rounded-full ${
+                  activeSection === "closed-deals" 
+                    ? "bg-white text-[#09261E]" 
+                    : "bg-gray-100 text-gray-700"
+                } px-1.5 py-0.5 text-xs font-medium`}>
+                  {closedDealsCount}
+                </span>
+              )}
+            </Button>
+            
+            <Button
+              variant="ghost"
+              className={`rounded-full h-9 border ${
+                activeSection === "activity" 
+                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
+              }`}
+              onClick={() => scrollToSection("activity")}
+            >
+              <Activity size={16} className="mr-1.5" />
+              <span>Activity</span>
+            </Button>
+            
+            <Button
+              variant="ghost"
+              className={`rounded-full h-9 border ${
+                activeSection === "connections" 
+                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
+              }`}
+              onClick={() => scrollToSection("connections")}
+            >
+              <Users size={16} className="mr-1.5" />
+              <span>Connections</span>
+              {connectionsCount > 0 && (
+                <span className={`ml-1.5 rounded-full ${
+                  activeSection === "connections" 
+                    ? "bg-white text-[#09261E]" 
+                    : "bg-gray-100 text-gray-700"
+                } px-1.5 py-0.5 text-xs font-medium`}>
+                  {connectionsCount}
+                </span>
+              )}
+            </Button>
+            
+            <Button
+              variant="ghost"
+              className={`rounded-full h-9 border ${
+                activeSection === "reviews" 
+                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
+              }`}
+              onClick={() => scrollToSection("reviews")}
+            >
+              <MessageSquare size={16} className="mr-1.5" />
+              <span>Reviews</span>
+              {reviewsCount > 0 && (
+                <span className={`ml-1.5 rounded-full ${
+                  activeSection === "reviews" 
+                    ? "bg-white text-[#09261E]" 
+                    : "bg-gray-100 text-gray-700"
+                } px-1.5 py-0.5 text-xs font-medium`}>
+                  {reviewsCount}
+                </span>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </nav>
