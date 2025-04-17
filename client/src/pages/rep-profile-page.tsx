@@ -211,7 +211,7 @@ export default function RepProfilePage() {
           </h1>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
             <Badge variant="outline" className="bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium inline-flex items-center">
-              {rep.role}
+              {rep.role || 'Professional'}
             </Badge>
             
             {rep.topRep && (
@@ -226,7 +226,7 @@ export default function RepProfilePage() {
             {/* Location */}
             <div className="flex items-center">
               <MapPin size={14} className="mr-1 text-gray-400" />
-              <span>{rep.location}</span>
+              <span>{rep.location || 'Location not specified'}</span>
             </div>
             
             {/* Company */}
@@ -242,29 +242,29 @@ export default function RepProfilePage() {
             {/* Member Since */}
             <div className="flex items-center">
               <Calendar size={14} className="mr-1 text-gray-400" />
-              <span>Member since {formatDate(rep.memberSince)}</span>
+              <span>Member since {rep.memberSince ? formatDate(rep.memberSince) : 'N/A'}</span>
             </div>
           </div>
           
           {/* Stats Summary */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 bg-gray-50 p-4 rounded-lg">
             <div className="text-center">
-              <div className="font-bold text-2xl text-gray-900">{rep.stats.dealsClosed}</div>
+              <div className="font-bold text-2xl text-gray-900">{rep.stats?.dealsClosed || 0}</div>
               <div className="text-sm text-gray-500">Deals Closed</div>
             </div>
             <div className="text-center">
-              <div className="font-bold text-2xl text-gray-900">{rep.stats.activeListings}</div>
+              <div className="font-bold text-2xl text-gray-900">{rep.stats?.activeListings || 0}</div>
               <div className="text-sm text-gray-500">Active Listings</div>
             </div>
             <div className="text-center">
               <div className="flex justify-center items-center">
-                <span className="font-bold text-2xl text-gray-900 mr-1">{rep.stats.rating}</span>
+                <span className="font-bold text-2xl text-gray-900 mr-1">{rep.stats?.rating || 0}</span>
                 <Star size={16} className="text-amber-500 fill-amber-500" />
               </div>
               <div className="text-sm text-gray-500">Rating</div>
             </div>
             <div className="text-center">
-              <div className="font-bold text-2xl text-gray-900">{rep.stats.responseRate}%</div>
+              <div className="font-bold text-2xl text-gray-900">{rep.stats?.responseRate || 0}%</div>
               <div className="text-sm text-gray-500">Response Rate</div>
             </div>
           </div>
@@ -343,7 +343,7 @@ export default function RepProfilePage() {
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">About</h2>
               <p className="text-gray-600">
-                {rep.bio}
+                {rep.bio || 'No bio information available.'}
               </p>
             </div>
             
@@ -462,17 +462,17 @@ export default function RepProfilePage() {
               <div className="flex justify-between items-center mb-3">
                 <h2 className="text-xl font-semibold text-gray-900">Reviews ({reviews.length})</h2>
                 <div className="flex items-center text-gray-700">
-                  <span className="font-bold mr-1">{rep.stats.rating}</span>
+                  <span className="font-bold mr-1">{rep.stats?.rating || 0}</span>
                   <div className="flex">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star 
                         key={i} 
                         size={16} 
-                        className={i < Math.floor(rep.stats.rating) ? "text-amber-500 fill-amber-500" : "text-gray-300"} 
+                        className={i < Math.floor(rep.stats?.rating || 0) ? "text-amber-500 fill-amber-500" : "text-gray-300"} 
                       />
                     ))}
                   </div>
-                  <span className="ml-1 text-sm text-gray-500">({rep.stats.reviewCount})</span>
+                  <span className="ml-1 text-sm text-gray-500">({rep.stats?.reviewCount || 0})</span>
                 </div>
               </div>
               
