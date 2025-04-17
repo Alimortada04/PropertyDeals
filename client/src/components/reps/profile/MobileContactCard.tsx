@@ -91,7 +91,7 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                 }
               }}
             >
-              <Share2 className="h-6 w-6" />
+              <Share2 className="h-5 w-5" />
             </button>
             
             {/* Profile/Connect Button */}
