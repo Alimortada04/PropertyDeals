@@ -77,7 +77,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
   const social = rep.social as Record<string, string> || {};
   
   return (
-    <div className="relative mb-6 mt-16">
+    <div className="relative mb-6 mt-20">
       {/* Banner Image with Gradient Overlay */}
       <div className="relative">
         <div 

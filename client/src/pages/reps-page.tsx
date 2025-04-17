@@ -172,7 +172,7 @@ export default function RepsPage() {
     <div className="flex flex-col min-h-screen pb-12 bg-white">
       {/* Breadcrumb and Header Section - White background */}
       <div className="w-full bg-white">
-        <div className="container mx-auto px-4 pt-6 pb-6">
+        <div className="container mx-auto px-4 pt-16 pb-6 md:pt-6">
           {/* Breadcrumbs */}
           <div className="mb-3">
             <Breadcrumbs />
