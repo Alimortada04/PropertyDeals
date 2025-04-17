@@ -5,7 +5,7 @@ import { Rep, reps } from "@/lib/rep-data";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Users } from "lucide-react";
 
 // Import all the components for the REP profile page
 import ProfileHeader from "@/components/reps/profile/ProfileHeader";

@@ -64,16 +64,28 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
       
       <Tabs defaultValue="all" onValueChange={setActiveTab}>
         <TabsList className="mb-4 bg-gray-50">
-          <TabsTrigger value="all" className="data-[state=active]:bg-white">
+          <TabsTrigger 
+            value="all" 
+            className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+          >
             All Activity
           </TabsTrigger>
-          <TabsTrigger value="posts" className="data-[state=active]:bg-white">
+          <TabsTrigger 
+            value="posts" 
+            className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+          >
             Posts
           </TabsTrigger>
-          <TabsTrigger value="deals" className="data-[state=active]:bg-white">
+          <TabsTrigger 
+            value="deals" 
+            className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+          >
             Deals
           </TabsTrigger>
-          <TabsTrigger value="comments" className="data-[state=active]:bg-white">
+          <TabsTrigger 
+            value="comments" 
+            className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+          >
             Comments
           </TabsTrigger>
         </TabsList>

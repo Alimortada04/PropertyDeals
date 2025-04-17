@@ -150,16 +150,14 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
             Reviews <span className="text-base font-normal text-gray-500">({reviews.length})</span>
           </h2>
           
-          {hasMoreReviews && (
-            <Button 
-              variant="link" 
-              className="text-[#09261E] font-medium"
-              onClick={() => setIsModalOpen(true)}
-            >
-              View All
-              <ChevronRight size={16} className="ml-1" />
-            </Button>
-          )}
+          <Button 
+            variant="link" 
+            className="text-[#09261E] font-medium"
+            onClick={() => setIsModalOpen(true)}
+          >
+            View All
+            <ChevronRight size={16} className="ml-1" />
+          </Button>
         </div>
         
         {/* Review summary */}

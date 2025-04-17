@@ -74,7 +74,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       </Button>
       
       {/* Back Button - Desktop only */}
-      <div className="hidden md:block absolute top-4 left-4 z-10">
+      <div className="hidden md:block absolute top-4 left-12 z-10">
         <Button 
           variant="ghost" 
           onClick={() => window.history.back()}
@@ -85,8 +85,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
         </Button>
       </div>
       
-      {/* Banner Image - Flush with top of page */}
-      <div className="w-full h-48 overflow-hidden relative">
+      {/* Banner Image - Flush with top of page and thicker */}
+      <div className="w-full h-60 overflow-hidden relative">
         <img
           src={rep.bannerUrl || "https://images.pexels.com/photos/7031406/pexels-photo-7031406.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
           alt={rep.name}
@@ -144,134 +144,201 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   </div>
                 </div>
                 
-                {/* Social Links - Colored by brand */}
-                <div className="hidden md:flex gap-2 mt-1">
-                  {rep.social?.linkedin && (
-                    <a href={rep.social.linkedin} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/30">
-                        <Linkedin className="h-5 w-5" />
-                      </Button>
-                    </a>
-                  )}
+                {/* Social Links and Action Buttons - Colored by brand */}
+                <div className="hidden md:block">
+                  <div className="flex gap-2 mt-1">
+                    {rep.social?.linkedin && (
+                      <a href={rep.social.linkedin} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/30">
+                          <Linkedin className="h-5 w-5" />
+                        </Button>
+                      </a>
+                    )}
+                    
+                    {rep.social?.instagram && (
+                      <a href={rep.social.instagram} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/10 border-[#E1306C]/30">
+                          <Instagram className="h-5 w-5" />
+                        </Button>
+                      </a>
+                    )}
+                    
+                    {rep.social?.facebook && (
+                      <a href={rep.social.facebook} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/30">
+                          <Facebook className="h-5 w-5" />
+                        </Button>
+                      </a>
+                    )}
+                    
+                    {rep.social?.twitter && (
+                      <a href={rep.social.twitter} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border-[#1DA1F2]/30">
+                          <Twitter className="h-5 w-5" />
+                        </Button>
+                      </a>
+                    )}
+                  </div>
                   
-                  {rep.social?.instagram && (
-                    <a href={rep.social.instagram} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/10 border-[#E1306C]/30">
-                        <Instagram className="h-5 w-5" />
-                      </Button>
-                    </a>
-                  )}
-                  
-                  {rep.social?.facebook && (
-                    <a href={rep.social.facebook} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/30">
-                        <Facebook className="h-5 w-5" />
-                      </Button>
-                    </a>
-                  )}
-                  
-                  {rep.social?.twitter && (
-                    <a href={rep.social.twitter} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border-[#1DA1F2]/30">
-                        <Twitter className="h-5 w-5" />
-                      </Button>
-                    </a>
-                  )}
+                  {/* Connect & Share Buttons */}
+                  <div className="flex mt-3 gap-2">
+                    <Button className="bg-[#09261E] hover:bg-[#135341]">
+                      <Star className="mr-2 h-4 w-4" />
+                      <span>Connect</span>
+                    </Button>
+                    
+                    <Popover open={shareOpen} onOpenChange={setShareOpen}>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" size="icon" className="h-10 w-10">
+                          <Share2 className="h-4 w-4" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-80 p-0" align="end">
+                        <div className="p-4 border-b">
+                          <h3 className="font-medium">Share this profile</h3>
+                          <p className="text-sm text-gray-500 mt-1">Copy the link or share to social media</p>
+                        </div>
+                        <div className="p-4 space-y-3">
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="flex-1 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10"
+                              onClick={() => {
+                                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+                                setShareOpen(false);
+                              }}
+                            >
+                              <Linkedin className="h-4 w-4 mr-2" />
+                              LinkedIn
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="flex-1 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10"
+                              onClick={() => {
+                                window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check out ${rep.name} on PropertyDeals`, '_blank');
+                                setShareOpen(false);
+                              }}
+                            >
+                              <Twitter className="h-4 w-4 mr-2" />
+                              Twitter
+                            </Button>
+                          </div>
+                          <div className="flex border rounded-md overflow-hidden">
+                            <div className="bg-gray-50 p-2 flex-1 text-gray-500 text-sm truncate">
+                              {window.location.href}
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              className="rounded-none h-10" 
+                              onClick={copyProfileLink}
+                            >
+                              {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
+                            </Button>
+                          </div>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Connect & Share Buttons */}
-          <div className="flex mt-4 gap-2">
-            <Button className="flex-1 md:flex-none bg-[#09261E] hover:bg-[#135341]">
-              <Star className="mr-2 h-4 w-4" />
-              <span>Connect</span>
-            </Button>
+          {/* Mobile Social Links and Buttons */}
+          <div className="flex flex-col md:hidden gap-2 mt-4 border-t pt-4">
+            <div className="flex gap-2">
+              {rep.social?.linkedin && (
+                <a href={rep.social.linkedin} target="_blank" rel="noopener noreferrer" className="flex-1">
+                  <Button variant="outline" size="sm" className="w-full text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/30">
+                    <Linkedin className="h-4 w-4 mr-1.5" />
+                    LinkedIn
+                  </Button>
+                </a>
+              )}
+              
+              {rep.social?.instagram && (
+                <a href={rep.social.instagram} target="_blank" rel="noopener noreferrer" className="flex-1">
+                  <Button variant="outline" size="sm" className="w-full text-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/10 border-[#E1306C]/30">
+                    <Instagram className="h-4 w-4 mr-1.5" />
+                    Instagram
+                  </Button>
+                </a>
+              )}
+              
+              {rep.social?.facebook && (
+                <a href={rep.social.facebook} target="_blank" rel="noopener noreferrer" className="flex-1">
+                  <Button variant="outline" size="sm" className="w-full text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/30">
+                    <Facebook className="h-4 w-4 mr-1.5" />
+                    Facebook
+                  </Button>
+                </a>
+              )}
+            </div>
             
-            <Popover open={shareOpen} onOpenChange={setShareOpen}>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" className="h-10 w-10">
-                  <Share2 className="h-4 w-4" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 p-0" align="end">
-                <div className="p-4 border-b">
-                  <h3 className="font-medium">Share this profile</h3>
-                  <p className="text-sm text-gray-500 mt-1">Copy the link or share to social media</p>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="flex-1 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10"
-                      onClick={() => {
-                        window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
-                        setShareOpen(false);
-                      }}
-                    >
-                      <Linkedin className="h-4 w-4 mr-2" />
-                      LinkedIn
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="flex-1 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10"
-                      onClick={() => {
-                        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check out ${rep.name} on PropertyDeals`, '_blank');
-                        setShareOpen(false);
-                      }}
-                    >
-                      <Twitter className="h-4 w-4 mr-2" />
-                      Twitter
-                    </Button>
+            {/* Connect & Share Buttons for Mobile */}
+            <div className="flex mt-3 gap-2">
+              <Button className="flex-1 bg-[#09261E] hover:bg-[#135341]">
+                <Star className="mr-2 h-4 w-4" />
+                <span>Connect</span>
+              </Button>
+              
+              <Popover open={shareOpen} onOpenChange={setShareOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="flex-1">
+                    <Share2 className="mr-2 h-4 w-4" />
+                    <span>Share</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-0" align="end">
+                  <div className="p-4 border-b">
+                    <h3 className="font-medium">Share this profile</h3>
+                    <p className="text-sm text-gray-500 mt-1">Copy the link or share to social media</p>
                   </div>
-                  <div className="flex border rounded-md overflow-hidden">
-                    <div className="bg-gray-50 p-2 flex-1 text-gray-500 text-sm truncate">
-                      {window.location.href}
+                  <div className="p-4 space-y-3">
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10"
+                        onClick={() => {
+                          window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+                          setShareOpen(false);
+                        }}
+                      >
+                        <Linkedin className="h-4 w-4 mr-2" />
+                        LinkedIn
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10"
+                        onClick={() => {
+                          window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check out ${rep.name} on PropertyDeals`, '_blank');
+                          setShareOpen(false);
+                        }}
+                      >
+                        <Twitter className="h-4 w-4 mr-2" />
+                        Twitter
+                      </Button>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      className="rounded-none h-10" 
-                      onClick={copyProfileLink}
-                    >
-                      {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
-                    </Button>
+                    <div className="flex border rounded-md overflow-hidden">
+                      <div className="bg-gray-50 p-2 flex-1 text-gray-500 text-sm truncate">
+                        {window.location.href}
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        className="rounded-none h-10" 
+                        onClick={copyProfileLink}
+                      >
+                        {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </PopoverContent>
-            </Popover>
-          </div>
-          
-          {/* Mobile Social Links */}
-          <div className="flex md:hidden gap-2 mt-4 border-t pt-4">
-            {rep.social?.linkedin && (
-              <a href={rep.social.linkedin} target="_blank" rel="noopener noreferrer" className="flex-1">
-                <Button variant="outline" size="sm" className="w-full text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/30">
-                  <Linkedin className="h-4 w-4 mr-1.5" />
-                  LinkedIn
-                </Button>
-              </a>
-            )}
-            
-            {rep.social?.instagram && (
-              <a href={rep.social.instagram} target="_blank" rel="noopener noreferrer" className="flex-1">
-                <Button variant="outline" size="sm" className="w-full text-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/10 border-[#E1306C]/30">
-                  <Instagram className="h-4 w-4 mr-1.5" />
-                  Instagram
-                </Button>
-              </a>
-            )}
-            
-            {rep.social?.facebook && (
-              <a href={rep.social.facebook} target="_blank" rel="noopener noreferrer" className="flex-1">
-                <Button variant="outline" size="sm" className="w-full text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/30">
-                  <Facebook className="h-4 w-4 mr-1.5" />
-                  Facebook
-                </Button>
-              </a>
-            )}
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         </div>
       </div>

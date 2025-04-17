@@ -81,9 +81,9 @@ export default function StickyNav({
           <div className="flex items-center relative gap-x-1.5">
             <Button
               variant="ghost"
-              className={`rounded-full h-9 border ${
+              className={`rounded-md h-9 border ${
                 activeSection === "active-deals" 
-                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  ? "text-[#09261E] font-medium border-[#09261E]" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
               }`}
               onClick={() => scrollToSection("active-deals")}
@@ -103,9 +103,9 @@ export default function StickyNav({
             
             <Button
               variant="ghost"
-              className={`rounded-full h-9 border ${
+              className={`rounded-md h-9 border ${
                 activeSection === "closed-deals" 
-                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  ? "text-[#09261E] font-medium border-[#09261E]" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
               }`}
               onClick={() => scrollToSection("closed-deals")}
@@ -125,9 +125,9 @@ export default function StickyNav({
             
             <Button
               variant="ghost"
-              className={`rounded-full h-9 border ${
+              className={`rounded-md h-9 border ${
                 activeSection === "activity" 
-                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  ? "text-[#09261E] font-medium border-[#09261E]" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
               }`}
               onClick={() => scrollToSection("activity")}
@@ -138,9 +138,9 @@ export default function StickyNav({
             
             <Button
               variant="ghost"
-              className={`rounded-full h-9 border ${
+              className={`rounded-md h-9 border ${
                 activeSection === "connections" 
-                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  ? "text-[#09261E] font-medium border-[#09261E]" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
               }`}
               onClick={() => scrollToSection("connections")}
@@ -160,9 +160,9 @@ export default function StickyNav({
             
             <Button
               variant="ghost"
-              className={`rounded-full h-9 border ${
+              className={`rounded-md h-9 border ${
                 activeSection === "reviews" 
-                  ? "bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]" 
+                  ? "text-[#09261E] font-medium border-[#09261E]" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
               }`}
               onClick={() => scrollToSection("reviews")}

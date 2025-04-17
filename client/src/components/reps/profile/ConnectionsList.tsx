@@ -76,16 +76,14 @@ export default function ConnectionsList({ connections }: ConnectionsListProps) {
             Connections <span className="text-base font-normal text-gray-500">({connections.length})</span>
           </h2>
           
-          {hasMoreConnections && (
-            <Button 
-              variant="link" 
-              className="text-[#09261E] font-medium"
-              onClick={() => setIsModalOpen(true)}
-            >
-              View All
-              <ChevronRight size={16} className="ml-1" />
-            </Button>
-          )}
+          <Button 
+            variant="link" 
+            className="text-[#09261E] font-medium"
+            onClick={() => setIsModalOpen(true)}
+          >
+            View All
+            <ChevronRight size={16} className="ml-1" />
+          </Button>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
