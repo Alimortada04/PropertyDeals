@@ -17,6 +17,7 @@ import ConnectionsList from "@/components/reps/profile/ConnectionsList";
 import Reviews from "@/components/reps/profile/Reviews";
 import AboutSection from "@/components/reps/profile/AboutSection";
 import ContactCard from "@/components/reps/profile/ContactCard";
+import MobileContactCard from "@/components/reps/profile/MobileContactCard";
 
 // Sample data interfaces for the components
 interface ClosedDeal extends Property {
@@ -411,6 +412,9 @@ export default function RepProfilePage() {
           <ContactCard rep={enhancedRep} className="mt-10" />
         </div>
       </div>
+      
+      {/* Mobile Contact Card - Only visible on mobile */}
+      <MobileContactCard rep={enhancedRep} />
     </div>
   );
 }
