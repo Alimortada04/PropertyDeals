@@ -141,9 +141,6 @@ export class MemStorage implements IStorage {
     
     // Create sample REPs
     this.initSampleReps();
-    
-    // Create sample properties
-    this.initSampleProperties(sellerId, seller2Id);
   }
   
   private initSampleReps() {
@@ -443,7 +440,7 @@ export class MemStorage implements IStorage {
     }
   }
 
-  private initSampleProperties(sellerId: number, seller2Id: number) {
+  private initSampleProperties() {
     // Sample properties data
     const sampleProperties: Omit<Property, 'id'>[] = [
       {
@@ -570,6 +567,90 @@ export class MemStorage implements IStorage {
         condition: "Major Rehab",
         features: ["Brick Exterior", "Full Attic", "Corner Lot"],
         imageUrl: "https://images.unsplash.com/photo-1628624747186-a941c476b7ef",
+        sellerId: sellerId,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        title: "Abandoned Victorian",
+        address: "1245 Heritage Avenue",
+        city: "Pittsburgh",
+        state: "PA",
+        zipCode: "15222",
+        price: 125000,
+        description: "Historic Victorian that's been vacant for 5 years. Needs complete renovation but retains original architectural details worth preserving.",
+        bedrooms: 5,
+        bathrooms: 2,
+        squareFeet: 2850,
+        lotSize: "0.25 Acres",
+        yearBuilt: 1897,
+        propertyType: "Single Family",
+        status: "off-market",
+        condition: "Historic Rehab",
+        features: ["Original Woodwork", "Pocket Doors", "Stained Glass"],
+        imageUrl: "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
+        sellerId: seller2Id,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        title: "Water Damaged Bungalow",
+        address: "578 Leaky Roof Road",
+        city: "Indianapolis",
+        state: "IN",
+        zipCode: "46201",
+        price: 78500,
+        description: "Charming bungalow with water damage from a roof leak. Property has been remediated and is now dry, ready for renovation.",
+        bedrooms: 2,
+        bathrooms: 1,
+        squareFeet: 1250,
+        lotSize: "0.12 Acres",
+        yearBuilt: 1945,
+        propertyType: "Single Family",
+        status: "off-market",
+        condition: "Medium Rehab",
+        features: ["Original Moldings", "Hardwood Under Carpet", "Unfinished Basement"],
+        imageUrl: "https://images.unsplash.com/photo-1575517111839-3a3843ee7f5d",
+        sellerId: sellerId,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        title: "Neglected Ranch House",
+        address: "1032 Forgotten Lane",
+        city: "Columbus",
+        state: "OH",
+        zipCode: "43215",
+        price: 110000,
+        description: "Ranch-style home that's been neglected for years. Solid foundation but needs all new systems and cosmetic updates throughout.",
+        bedrooms: 3,
+        bathrooms: 1.5,
+        squareFeet: 1580,
+        lotSize: "0.3 Acres",
+        yearBuilt: 1964,
+        propertyType: "Single Family",
+        status: "off-market",
+        condition: "Medium Rehab",
+        features: ["Large Backyard", "Single-Level Living", "Attached Garage"],
+        imageUrl: "https://images.unsplash.com/photo-1627843240167-b1f9a9f0c0f7",
+        sellerId: seller2Id,
+        createdAt: new Date().toISOString(),
+      },
+      {
+        title: "Probate Sale Property",
+        address: "421 Estate Circle",
+        city: "Cincinnati",
+        state: "OH",
+        zipCode: "45202",
+        price: 96000,
+        description: "Estate sale through probate. Home has been vacant for over a year and needs updating throughout, but has great bones and character.",
+        bedrooms: 4,
+        bathrooms: 2,
+        squareFeet: 2200,
+        lotSize: "0.24 Acres",
+        yearBuilt: 1952,
+        propertyType: "Single Family",
+        status: "off-market",
+        condition: "Light Rehab",
+        features: ["Built-ins", "Fireplace", "Mature Trees"],
+        imageUrl: "https://images.unsplash.com/photo-1568605114967-8130f3a36994",
         sellerId: sellerId,
         createdAt: new Date().toISOString(),
       }
