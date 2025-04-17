@@ -87,20 +87,6 @@ export default function AboutSection({ rep }: AboutSectionProps) {
             </div>
           )}
           
-          {/* Property Types */}
-          {rep.propertyTypes && rep.propertyTypes.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Property Types</h3>
-              <div className="flex flex-wrap gap-2">
-                {rep.propertyTypes.map((type, index) => (
-                  <Badge key={index} variant="secondary" className="bg-gray-100">
-                    {type}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-          
           {/* Credentials */}
           {rep.credentials && rep.credentials.length > 0 && (
             <div className="mb-6">

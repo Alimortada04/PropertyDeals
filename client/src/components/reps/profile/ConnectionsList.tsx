@@ -179,8 +179,12 @@ interface ConnectionCardProps {
 }
 
 function ConnectionCard({ connection }: ConnectionCardProps) {
-  // Normalize title: change "Real Estate Agent" to "Agent"
-  const normalizedTitle = connection.title.replace("Real Estate Agent", "Agent");
+  const [connectionSent, setConnectionSent] = useState(false);
+  
+  // Normalize title: change "Real Estate Agent" to "Agent" and "Real Estate Agency" to "Agency"
+  const normalizedTitle = connection.title
+    .replace("Real Estate Agent", "Agent")
+    .replace("Real Estate Agency", "Agency");
   
   const initials = connection.name
     .split(' ')
@@ -199,21 +203,37 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
     ? "rounded-lg" 
     : "rounded-full";
   
+  const handleConnectionRequest = () => {
+    setConnectionSent(true);
+    // In a real app, this would send the connection request to the server
+    setTimeout(() => {
+      // After 3 seconds, revert back to the original state - for demo purposes only
+      // In a real app, this would stay in the "sent" state
+      setConnectionSent(false);
+    }, 3000);
+  };
+  
   return (
     <div className="relative flex items-start p-4 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
       {/* Mutual Connection Status Indicator - Top Right */}
       {connection.isMutual ? (
-        <div className="absolute top-2 right-2 w-6 h-6 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
+        <div className="absolute top-4 right-4 w-6 h-6 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
           <Check size={14} />
         </div>
       ) : (
         <Button 
           size="sm" 
           variant="outline"
-          className="absolute top-2 right-2 w-6 h-6 p-0 rounded-full border-gray-300 hover:bg-[#09261E]/10 hover:border-[#09261E]"
+          className="absolute top-4 right-4 w-6 h-6 p-0 rounded-full border-gray-300 hover:bg-[#09261E]/10 hover:border-[#09261E]"
           title="Send connection request"
+          onClick={handleConnectionRequest}
+          disabled={connectionSent}
         >
-          <CirclePlus size={12} />
+          {connectionSent ? (
+            <Mail size={12} className="text-[#09261E] animate-pulse" />
+          ) : (
+            <UserPlus size={12} />
+          )}
         </Button>
       )}
       

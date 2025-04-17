@@ -108,8 +108,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       
       {/* Profile Content - Below banner and avatar */}
       <div className="container mx-auto px-4">
-        <div className="bg-white rounded-md shadow-sm mt-12 pt-4">
-          <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-white rounded-md mt-12 pt-4">
+          <div className="px-4 sm:px-6 lg:px-8 py-4">
             {/* Profile info with more top padding to avoid avatar overlap */}
             <div className="pt-16 md:pt-14 flex flex-col justify-between">
               {/* Left-aligned content in 4 distinct rows */}
@@ -342,7 +342,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       
       {/* Mobile Social Links and Buttons */}
       <div className="container mx-auto px-4 md:hidden">
-        <div className="bg-white rounded-md shadow-sm p-4">
+        <div className="bg-white rounded-md p-4">
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
               {social?.linkedin && (
