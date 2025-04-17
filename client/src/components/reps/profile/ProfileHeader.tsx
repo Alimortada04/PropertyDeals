@@ -110,47 +110,49 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       <div className="container mx-auto px-4">
         <div className="bg-white rounded-md shadow-sm mt-12 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col md:flex-row justify-between md:items-start">
-              {/* Left column: Basic info section */}
-              <div className="flex-1 mb-4 md:mb-0 md:pr-8">
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <h1 className="text-2xl font-bold text-[#09261E]">{rep.name}</h1>
+            {/* Profile info with more top padding to avoid avatar overlap */}
+            <div className="pt-12 md:pt-10 flex flex-col justify-between">
+              {/* Left-aligned content in 4 rows */}
+              <div className="flex-1 mb-4 md:mb-0">
+                {/* Row 1: Name */}
+                <h1 className="text-2xl font-bold text-[#09261E] text-left">{rep.name}</h1>
+                
+                {/* Row 2: Tags - PD Certified, REP tag, Rating */}
+                <div className="flex flex-wrap items-center gap-3 my-2 text-left">
                   {rep.isVerified && (
                     <Badge className="bg-[#09261E]">
                       <BadgeCheck className="h-3.5 w-3.5 mr-1" />
-                      <span>Verified</span>
+                      <span>PD Certified</span>
                     </Badge>
                   )}
-                </div>
-                
-                <div className="mb-3">
+                  
                   <Badge variant="outline" className="px-2 py-1 border-[#803344]/30 text-[#803344]">
                     {rep.role}
                   </Badge>
+                  
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                    <span className="ml-1 text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
+                    <span className="ml-1 text-gray-600">({rep.reviewCount})</span>
+                  </div>
                 </div>
                 
-                <div className="flex items-center mb-3">
-                  <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <span className="ml-2 text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
-                  <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
-                </div>
-                
-                <div className="flex flex-wrap items-start mb-2">
+                {/* Row 3: Location and Experience */}
+                <div className="flex flex-wrap items-center gap-4 mb-2 text-left">
                   <div className="flex items-center text-gray-600">
                     <MapPin className="h-4 w-4 mr-1" />
                     <span>{rep.locationCity}, {rep.locationState}</span>
                   </div>
-                </div>
-                
-                <div className="flex flex-wrap items-start mb-2">
+                  
                   <div className="flex items-center text-gray-600">
                     <Award className="h-4 w-4 mr-1" />
                     <span>{rep.yearsExperience}+ years experience</span>
                   </div>
                 </div>
                 
+                {/* Row 4: Website/Link */}
                 {rep.website && (
-                  <div className="flex items-center mt-1">
+                  <div className="flex items-center mt-1 text-left">
                     <a 
                       href={rep.website} 
                       target="_blank" 
