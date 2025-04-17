@@ -339,7 +339,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     <TooltipProvider>
       {/* Property Hero Section with Photo Gallery */}
       <section className="relative bg-white">
-        <div className="container mx-auto px-4 pt-4 pb-8">
+        <div className="container mx-auto px-4 pt-2 pb-8">
           {/* Breadcrumb Navigation */}
           <nav className="flex text-sm text-gray-500 mb-4 items-center">
             <Link to="/" className="hover:text-[#09261E]">Home</Link>
