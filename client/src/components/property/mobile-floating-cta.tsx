@@ -102,34 +102,27 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
         
         {/* Center Avatar Button with expansion */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-10">
-          {/* Custom dual-border avatar button */}
+          {/* Gradient background avatar button */}
           <div className="relative">
-            {/* Background border container with green bottom half, white top half */}
-            <div className="absolute inset-0 rounded-full overflow-hidden" style={{ zIndex: 40 }}>
-              <div className="absolute w-full h-1/2 bg-white top-0"></div>
-              <div className="absolute w-full h-1/2 bg-[#09261E] bottom-0"></div>
-            </div>
-            
-            {/* Actual button with slightly smaller size to show the border */}
+            {/* Circular button with gradient background */}
             <button 
               onClick={toggleExpand}
               className={`flex items-center justify-center rounded-full shadow-lg
-                ${isExpanded ? 'bg-[#09261E]' : 'bg-[#09261E]'} 
                 ${isExpanded ? 'w-20 h-20' : 'w-20 h-20'}
                 ${pulseAnimation ? 'animate-pulse-gentle' : ''}
-                transition-all duration-500 z-40 relative
+                transition-all duration-500 z-40 overflow-hidden
               `}
               style={{ 
-                zIndex: 41,
-                border: '2px solid transparent',
-                margin: '2px'
+                background: 'linear-gradient(to bottom, white, #09261E)'
               }}
             >
               {isExpanded ? (
-                <X size={24} className="text-white animate-fade-in" />
+                <div className="absolute inset-0 flex items-center justify-center bg-[#09261E]">
+                  <X size={24} className="text-white animate-fade-in" />
+                </div>
               ) : (
-                <div className="relative">
-                  <Avatar className="h-full w-full">
+                <div className="relative w-full h-full p-1.5">
+                  <Avatar className="h-full w-full ring-0 ring-offset-0">
                     <AvatarImage src={sellerImage} alt={sellerName} className="object-cover" />
                     <AvatarFallback className="bg-[#09261E]/10 text-white text-lg">{initials}</AvatarFallback>
                   </Avatar>
