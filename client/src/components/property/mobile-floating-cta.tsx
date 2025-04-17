@@ -108,7 +108,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
               ${isExpanded ? 'bg-[#09261E]' : 'bg-[#09261E]'} 
               ${isExpanded ? 'w-20 h-20' : 'w-20 h-20'}
               ${pulseAnimation ? 'animate-pulse-gentle' : ''}
-              transition-all duration-500 z-40 border-2 border-white
+              transition-all duration-500 z-40 border-2 border-[#09261E]
             `}
           >
             {isExpanded ? (
