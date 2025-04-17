@@ -1,128 +1,145 @@
-import { Rep } from "@/lib/rep-data";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from "react";
 import { 
   MapPin, 
-  ArrowLeft,
   Star, 
   Award, 
-  Share2, 
+  Calendar, 
+  Globe, 
+  Home, 
+  Users,
   Linkedin, 
   Instagram, 
   Facebook, 
   Twitter, 
-  Globe,
-  Youtube,
-  ThumbsUp,
-  ThumbsDown,
+  Share2,
+  Check,
   Copy,
-  Check
+  CreditCard,
+  BadgeCheck,
+  UserPlus,
+  PenSquare
 } from "lucide-react";
-import { useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { formatRelativeTime } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Rep } from "@shared/schema";
 
 interface ProfileHeaderProps {
   rep: Rep;
 }
 
 export default function ProfileHeader({ rep }: ProfileHeaderProps) {
-  const [copied, setCopied] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [bannerHeight, setBannerHeight] = useState("250px");
   
+  // Calculate avatar initials from name
   const initials = rep.name
     .split(" ")
-    .map((n) => n[0])
+    .map(word => word[0])
     .join("")
     .toUpperCase();
-
-  const isBusinessAccount = rep.role.toLowerCase().includes('agency') || 
-    rep.role.toLowerCase().includes('brokerage') || 
-    rep.role.toLowerCase().includes('group') || 
-    rep.role.toLowerCase().includes('associates');
+  
+  // Extract domain name from website URL
+  const websiteDomain = (rep.website || rep.social?.website) ? 
+    new URL(rep.website || rep.social?.website as string).hostname.replace("www.", "") : 
+    "";
     
-  const avatarBorderClass = isBusinessAccount 
-    ? "rounded-lg border-4" 
-    : "rounded-full border-4";
-    
-  // Extract domain from website for display
-  const websiteDomain = rep.website ? 
-    new URL(rep.website).hostname.replace('www.', '') : 
-    (rep.social?.website ? new URL(rep.social.website).hostname.replace('www.', '') : '');
-    
+  // Function to handle copying profile link
   const copyProfileLink = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(window.location.href);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 3000);
   };
   
+  // Responsive banner height
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setBannerHeight("150px");
+      } else if (window.innerWidth < 1024) {
+        setBannerHeight("200px");
+      } else {
+        setBannerHeight("250px");
+      }
+    };
+    
+    handleResize(); // Call on initial render
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
   return (
-    <div className="w-full pt-0 mt-0 mb-0">
-      {/* Back Button - Mobile only, absolute positioned */}
-      <Button 
-        variant="ghost" 
-        onClick={() => window.history.back()}
-        className="absolute top-4 left-4 z-10 md:hidden bg-white/80 hover:bg-white/90 rounded-full h-10 w-10 p-0"
-        size="icon"
+    <div className="relative mb-6">
+      {/* Banner Image with Gradient Overlay */}
+      <div 
+        className="w-full relative" 
+        style={{ 
+          height: bannerHeight, 
+          backgroundImage: `url(${rep.bannerImage || 'https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }}
       >
-        <ArrowLeft size={20} />
-      </Button>
-      
-      {/* Back Button - Desktop only, aligned with content */}
-      <div className="hidden md:block absolute top-4 left-[max(5%,calc(50%-590px))] z-10 ml-4">
-        <Button 
-          variant="ghost" 
-          onClick={() => window.history.back()}
-          className="bg-white/80 hover:bg-white/90 text-gray-800"
-        >
-          <ArrowLeft size={16} className="mr-2" />
-          Back to REPs
-        </Button>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/40 flex items-end">
+          <div className="container mx-auto px-4 pb-4 text-white">
+            <div className="flex">
+              <h1 className="text-4xl font-bold text-white px-4 hidden">
+                {rep.name}
+              </h1>
+            </div>
+          </div>
+        </div>
       </div>
       
-      {/* Banner Image - Flush with top of page and thicker */}
-      <div className="w-full h-48 md:h-60 overflow-hidden relative">
-        <img
-          src={rep.bannerUrl || "https://images.pexels.com/photos/7031406/pexels-photo-7031406.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
-          alt={rep.name}
-          className="w-full h-full object-cover"
-        />
-        {/* Add a slight gradient overlay for improved text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none"></div>
-      </div>
-      
+      {/* Profile Content */}
       <div className="container mx-auto px-4">
-        {/* Profile Information Section - Using LinkedIn style */}
-        <div className="relative -mt-16 pb-4">
-          {/* Avatar & Name */}
-          <div className="flex flex-col items-start">
-            <Avatar className={`h-32 w-32 ${avatarBorderClass} border-white bg-white shadow-md`}>
-              <AvatarImage src={rep.avatar} alt={rep.name} />
-              <AvatarFallback className={avatarBorderClass.replace('border-4', '')}>
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            
-            <div className="mt-4 w-full">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-[#09261E]">{rep.name}</h1>
+        <div className="bg-white rounded-md shadow-sm relative -mt-24">
+          <div className="px-4 sm:px-6 lg:px-8 py-6">
+            <div className="flex flex-col md:flex-row md:items-center">
+              {/* Profile Avatar */}
+              <div className="mr-6 flex-shrink-0">
+                <Avatar className="h-32 w-32 border-4 border-white shadow-sm">
+                  <AvatarImage src={rep.avatar} alt={rep.name} />
+                  <AvatarFallback className="text-4xl font-bold">{initials}</AvatarFallback>
+                </Avatar>
+              </div>
+              
+              <div className="flex flex-col md:flex-row flex-1 justify-between">
+                <div className="mt-4 md:mt-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h1 className="text-2xl font-bold text-[#09261E]">{rep.name}</h1>
+                    {rep.verified && (
+                      <Badge className="bg-[#09261E]">
+                        <BadgeCheck className="h-3.5 w-3.5 mr-1" />
+                        <span>Verified</span>
+                      </Badge>
+                    )}
+                  </div>
                   
-                  <div className="flex flex-wrap items-center gap-2 mt-2">
-                    <Badge className="bg-[#803344] hover:bg-[#803344] text-white font-medium px-3 py-1">
-                      {rep.role}
+                  <div className="mt-1">
+                    <Badge variant="outline" className="px-2 py-1 border-[#803344]/30 text-[#803344]">
+                      {rep.title || "Real Estate Agent"}
                     </Badge>
-                    
-                    <div className="flex items-center text-amber-500">
-                      <Star className="h-4 w-4 fill-amber-500" />
-                      <span className="ml-1 text-gray-800 font-medium">{rep.rating}</span>
-                      <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
+                  </div>
+                  
+                  <div className="flex items-center mt-3">
+                    <div className="flex">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`h-4 w-4 ${
+                            star <= Math.floor(rep.rating)
+                              ? "text-amber-500 fill-amber-500"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
                     </div>
+                    <span className="ml-2 text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
+                    <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
                   </div>
                   
                   <div className="flex flex-wrap items-center gap-x-4 mt-2">
@@ -131,19 +148,21 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                       <span>{rep.location.city}, {rep.location.state}</span>
                     </div>
                     
-                    {(rep.website || rep.social?.website) && (
+                    <div className="flex items-center text-gray-600">
+                      <Award className="h-4 w-4 mr-1" />
+                      <span>{rep.yearsExperience}+ years experience</span>
+                    </div>
+                  </div>
+                  
+                  {(rep.website || rep.social?.website) && (
+                    <div className="mt-2">
                       <a href={rep.website || rep.social?.website} target="_blank" rel="noopener noreferrer" 
                         className="text-blue-600 hover:underline flex items-center">
                         <Globe className="h-4 w-4 mr-1" />
                         <span>{websiteDomain}</span>
                       </a>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center mt-2 text-gray-600">
-                    <Award className="h-4 w-4 mr-1" />
-                    <span>{rep.yearsExperience}+ years experience</span>
-                  </div>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Social Links and Action Buttons - Colored by brand */}
@@ -195,7 +214,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                           <Share2 className="h-4 w-4" />
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-80 p-0" align="end">
+                      <PopoverContent className="w-80 p-0" align="end" side="bottom" sideOffset={5}>
                         <div className="p-4">
                           <h3 className="text-xl font-semibold">Share Profile</h3>
                           <p className="text-sm text-gray-500 mt-1">Choose how you'd like to share this profile with others.</p>
@@ -364,7 +383,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                     <span>Share</span>
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-80 p-0" align="end">
+                <PopoverContent className="w-80 p-0" align="end" side="bottom" sideOffset={5}>
                   <div className="p-4 border-b">
                     <h3 className="font-medium">Share this profile</h3>
                     <p className="text-sm text-gray-500 mt-1">Copy the link or share to social media</p>
