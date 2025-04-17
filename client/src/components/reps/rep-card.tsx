@@ -171,8 +171,8 @@ export default function RepCard({ rep }: RepCardProps) {
         <div className="sm:hidden">
           {/* Main content row - with rating at very top */}
           <div className="flex items-center space-x-3 relative py-1">
-            {/* Top right rating absolute positioned */}
-            <div className="absolute top-[-4px] right-0">
+            {/* Top right rating absolute positioned with slight top spacing */}
+            <div className="absolute top-[2px] right-0">
               <div className="flex items-center text-gray-700 text-xs">
                 <Star size={14} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
                 <span className="font-medium">{rep.rating}</span>
@@ -219,9 +219,9 @@ export default function RepCard({ rep }: RepCardProps) {
               </div>
             </div>
             
-            {/* Chevron on right, bigger and perfectly centered */}
-            <div className="flex items-center justify-center h-full ml-1">
-              <ChevronRight size={24} className="text-gray-400" />
+            {/* Chevron on right, moved down and bigger */}
+            <div className="flex items-end justify-center h-full ml-1 pb-1">
+              <ChevronRight size={28} className="text-gray-400" />
             </div>
           </div>
           
