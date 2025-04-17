@@ -76,7 +76,7 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
           <div className="flex justify-center items-center gap-x-8 w-full">
             {/* Share button - uses native share API */}
             <button 
-              className="flex flex-col items-center justify-center rounded-lg w-14 h-14 bg-white border-2 border-gray-300 text-[#09261E] hover:border-gray-400 hover:scale-105 transform transition-all duration-200"
+              className="flex flex-col items-center justify-center rounded-lg w-12 h-12 bg-white border-2 border-gray-300 text-[#09261E] hover:border-gray-400 hover:scale-105 transform transition-all duration-200"
               aria-label="Share REP profile"
               onClick={() => {
                 if (navigator.share) {
@@ -91,32 +91,22 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                 }
               }}
             >
-              <Share2 className="h-8 w-8" />
+              <Share2 className="h-6 w-6" />
             </button>
             
             {/* Profile/Connect Button */}
             <Dialog open={socialsDialogOpen} onOpenChange={setSocialsDialogOpen}>
               <DialogTrigger asChild>
                 <button 
-                  className="flex flex-col items-center justify-center rounded-lg w-14 h-14 bg-[#09261E] text-white hover:bg-[#135341] hover:scale-105 transform transition-all duration-200"
+                  className="flex flex-col items-center justify-center rounded-lg w-12 h-12 bg-[#09261E] text-white hover:bg-[#135341] hover:scale-105 transform transition-all duration-200"
                   aria-label="Connect with REP"
                 >
-                  <UserPlus className="h-8 w-8" />
+                  <UserPlus className="h-6 w-6" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="w-[95vw] sm:max-w-md rounded-t-xl rounded-b-none p-4 pt-4 pb-6 fixed bottom-0 top-auto translate-y-0 border-t-2 border-[#09261E]">
-                <div className="absolute right-4 top-4">
-                  <button 
-                    className="rounded-full h-8 w-8 inline-flex items-center justify-center border border-gray-200 hover:bg-gray-100"
-                    onClick={() => setSocialsDialogOpen(false)}
-                  >
-                    <svg width="18" height="18" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
-                    </svg>
-                  </button>
-                </div>
+              <DialogContent className="w-[95vw] sm:max-w-md rounded-t-xl rounded-b-none p-4 pt-5 pb-6 fixed bottom-0 top-auto translate-y-0 border-t-2 border-[#09261E]">
                 <DialogHeader>
-                  <DialogTitle className="text-center text-xl mb-4">Connect with {rep.name}</DialogTitle>
+                  <DialogTitle className="text-center text-2xl font-semibold mb-5">Connect with {rep.name}</DialogTitle>
                 </DialogHeader>
                 
                 {/* Social media icons row */}
@@ -264,11 +254,11 @@ END:VCARD`;
             
             {/* Message button */}
             <button 
-              className="flex flex-col items-center justify-center rounded-lg w-14 h-14 bg-white border-2 border-gray-300 text-[#09261E] hover:border-gray-400 hover:scale-105 transform transition-all duration-200"
+              className="flex flex-col items-center justify-center rounded-lg w-12 h-12 bg-white border-2 border-gray-300 text-[#09261E] hover:border-gray-400 hover:scale-105 transform transition-all duration-200"
               aria-label="Message this REP"
               onClick={() => window.open(`mailto:${contact?.email || ''}`)}
             >
-              <MessageSquare className="h-8 w-8" />
+              <MessageSquare className="h-6 w-6" />
             </button>
           </div>
         </div>
