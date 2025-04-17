@@ -1,0 +1,129 @@
+✅ OVERVIEW
+Please rebuild the REP profile page at /reps/[id] to match the layout and functionality of a modern professional profile, similar to LinkedIn, Airbnb, and CRM dashboards. The goal is to create a personalized, trustworthy, and comprehensive presence for each REP.
+
+📍 PAGE ROUTE & STRUCTURE
+Path: /reps/[id]
+
+Use dynamic routing (based on REP id or slug)
+
+Component File: src/pages/reps/[id].tsx
+
+Create supporting components in: src/components/reps/
+
+📐 SECTION BREAKDOWN
+1. Header Section – Visual Identity
+Layout inspired by LinkedIn headers
+
+Banner image (full width, customizable)
+
+Avatar image (circular, overlaps banner)
+
+Full Name with REP role (e.g. “Seller”, “Agent”, “Contractor”)
+
+Badges (conditionally rendered):
+
+✅ “PD Certified”
+
+🏅 “Top REP”
+
+⏳ “Member for 2+ years”
+
+Location and Team/Company name with link
+
+Social icons linking to:
+
+Website
+
+LinkedIn
+
+Instagram
+
+Facebook
+
+YouTube (if available)
+
+2. About Section
+Short description or mission statement
+
+Specialties (e.g. “Multifamily deals”, “Fix & Flip”, “Private Lending”)
+
+Service area (cities, zip codes)
+
+3. Activity Feed Section
+Card-style recent actions:
+
+“Posted a new deal”
+
+“Closed a deal with [Other REP] 🎉”
+
+“Replied to a thread”
+
+Include time indicators: "3 days ago", "last week"
+
+Include icons or emoji for engagement (🏡 💬 🎉)
+
+4. Connections Section
+Row of user avatars for REPs they’ve worked with
+
+Show name, REP role, and “Connected through [Deal/Thread]”
+
+“See All” button → opens modal with:
+
+All connected REPs
+
+Quick info (name, role, thumbnail, tag)
+
+Links to their profiles
+
+5. Active Deals Section
+Grid of currently listed properties by this REP
+
+Each card links to /p/[id]
+
+Include filter options (price, type, location)
+
+If no active deals, show empty state with CTA to upload one
+
+6. Previous Deals Section
+Grid or timeline of past/closed deals
+
+Include image, price, location, close date, buyer/REP if known
+
+Add badges or milestones for volume (e.g. “10 Deals Closed”)
+
+7. Contact Section
+In-platform Message REP button
+
+If public: show Call, Text, Email options
+
+Add QR code or “Save to Contacts” download button (optional)
+
+8. Public Reviews Section
+List of reviews:
+
+Rating (out of 5 stars)
+
+Short comment/testimonial
+
+Reviewer name + image (if available)
+
+“Leave a Review” button with form modal
+
+Sort reviews by: Newest | Highest Rated
+
+🏁 Footer (Optional Enhancements)
+“Refer this REP” button
+
+“Bookmark this REP” or “Add to My Network”
+
+“Report profile” (if user behavior is suspicious)
+
+⚙️ TECH REQUIREMENTS
+Data Source: Pull all relevant REP info from Supabase (or current DB)
+
+Responsive: Layout must adjust for desktop and mobile
+
+Animations: Use Tailwind transitions for modals, scrolls, etc.
+
+Fallbacks: If no data exists for a section (e.g. no reviews), show an empty state with light encouragement (e.g. “Be the first to review this REP!”)
+
