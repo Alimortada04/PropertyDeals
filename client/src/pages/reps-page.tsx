@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { reps, getRepsByType, getRepsByEntityType, Rep } from "@/lib/rep-data";
+import { Rep as MockRep } from "@/lib/rep-data";
+import { Rep } from "@shared/schema";
+import { useQuery } from "@tanstack/react-query";
 import {
   Select,
   SelectContent,
@@ -14,21 +16,28 @@ import RepCard from "@/components/reps/rep-card";
 import StickySearchBar from "@/components/common/sticky-search-bar";
 import Breadcrumbs from "@/components/common/breadcrumbs";
 import { 
-  ToggleGroup, 
+  ToggleGroup,
+
   ToggleGroupItem 
 } from "@/components/ui/toggle-group";
-import { UserRound, Building2 } from "lucide-react";
+import { UserRound, Building2, Loader2 } from "lucide-react";
 
 type RepType = 'seller' | 'contractor' | 'agent' | 'lender' | 'appraiser' | 'inspector' | 'mover' | 'landscaper';
-type EntityType = 'person' | 'business' | 'all';
+type EntityType = 'individual' | 'business' | 'all';
 
 export default function RepsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [repType, setRepType] = useState<RepType | 'all'>("all");
-  const [entityType, setEntityType] = useState<EntityType>("person");
+  const [entityType, setEntityType] = useState<EntityType>("individual");
   const [location, setLocation] = useState("");
   const [sortBy, setSortBy] = useState("popularity");
-  const [filteredReps, setFilteredReps] = useState<Rep[]>(reps);
+  const [filteredReps, setFilteredReps] = useState<Rep[]>([]);
+  
+  // Fetch reps from API
+  const { data: reps, isLoading, isError } = useQuery<Rep[]>({
+    queryKey: ['/api/reps'],
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
   
   // Define the tab options for the REPs categories
   const repTabs = [
@@ -45,12 +54,9 @@ export default function RepsPage() {
   
   // Filter reps based on search term, type, entity type, and location
   useEffect(() => {
-    let results = [...reps];
+    if (!reps) return;
     
-    // Filter by professional type
-    if (repType !== 'all') {
-      results = results.filter(rep => rep.type === repType);
-    }
+    let results = [...reps];
     
     // Filter by entity type (person or business)
     if (entityType !== 'all') {
@@ -62,8 +68,7 @@ export default function RepsPage() {
       const term = searchTerm.toLowerCase();
       results = results.filter(rep => 
         rep.name.toLowerCase().includes(term) || 
-        rep.tagline.toLowerCase().includes(term) ||
-        rep.bio.toLowerCase().includes(term)
+        (rep.bio && rep.bio.toLowerCase().includes(term))
       );
     }
     
@@ -71,28 +76,29 @@ export default function RepsPage() {
     if (location) {
       const loc = location.toLowerCase();
       results = results.filter(rep => 
-        rep.location.city.toLowerCase().includes(loc) || 
-        rep.location.state.toLowerCase().includes(loc)
+        (rep.locationCity && rep.locationCity.toLowerCase().includes(loc)) || 
+        (rep.locationState && rep.locationState.toLowerCase().includes(loc))
       );
     }
     
     // Sort results
     switch (sortBy) {
       case "popularity":
-        // For demo purposes, we'll just randomize
-        results.sort(() => 0.5 - Math.random());
+        // Sort by rating (highest first)
+        results.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       case "name":
         results.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case "distance":
         // In a real app, this would use geolocation
+        // For now, just randomize
         results.sort(() => 0.5 - Math.random());
         break;
     }
     
     setFilteredReps(results);
-  }, [searchTerm, repType, entityType, location, sortBy]);
+  }, [reps, searchTerm, repType, entityType, location, sortBy]);
   
   // Filter modal content
   const filterContent = (
@@ -151,7 +157,7 @@ export default function RepsPage() {
       <div className="flex justify-between pt-4">
         <Button variant="outline" onClick={() => {
           setRepType('all');
-          setEntityType('person');
+          setEntityType('individual');
           setLocation('');
           setSortBy('popularity');
         }}>
@@ -214,11 +220,11 @@ export default function RepsPage() {
               ></div>
               <button
                 className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
-                  entityType !== 'business' 
+                  entityType === 'individual' 
                     ? 'text-[#09261E] font-medium' 
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
-                onClick={() => setEntityType('person')}
+                onClick={() => setEntityType('individual')}
               >
                 <UserRound size={14} className="mr-1.5" />
                 <span className="text-sm">People</span>

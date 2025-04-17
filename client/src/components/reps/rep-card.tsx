@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { Rep } from "@/lib/rep-data";
+import { Rep as MockRep } from "@/lib/rep-data";
+import { Rep } from "@shared/schema";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +25,11 @@ export default function RepCard({ rep }: RepCardProps) {
   const [, setLocation] = useLocation();
   const [isHovered, setIsHovered] = useState(false);
   
-  const repTypeLabels = {
+  // Use the role field from the database
+  const isBusiness = rep.entityType === "business";
+  
+  // Role labels
+  const repTypeLabels: Record<string, string> = {
     'seller': 'Seller',
     'contractor': 'Contractor',
     'agent': 'Agent',
@@ -34,8 +39,6 @@ export default function RepCard({ rep }: RepCardProps) {
     'mover': 'Mover',
     'landscaper': 'Landscaper'
   };
-  
-  const isBusiness = rep.entityType === "business";
   
   const handleCardClick = () => {
     if (isBusiness) {
@@ -136,7 +139,7 @@ export default function RepCard({ rep }: RepCardProps) {
                 variant="outline" 
                 className="mb-2 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium"
               >
-                {repTypeLabels[rep.type]}
+                {rep.role}
               </Badge>
             </div>
             
@@ -144,7 +147,7 @@ export default function RepCard({ rep }: RepCardProps) {
             <div className="grid grid-cols-2 gap-3 w-full mb-3 text-sm">
               <div className="flex items-center text-gray-600">
                 <MapPin size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                <span className="truncate">{rep.location.city}, {rep.location.state}</span>
+                <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
               </div>
               
               {rep.responseTime && (
@@ -157,24 +160,22 @@ export default function RepCard({ rep }: RepCardProps) {
               {isBusiness ? (
                 <div className="flex items-center text-gray-600">
                   <Building2 size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                  <span className="truncate">Since {rep.foundedYear}</span>
+                  <span className="truncate">Since {rep.foundedYear || 'N/A'}</span>
                 </div>
               ) : (
                 <div className="flex items-center text-gray-600">
                   <Briefcase size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                  <span className="truncate">{rep.yearsExperience || '5'}+ Years</span>
+                  <span className="truncate">{rep.yearsExperience || '0'}+ Years</span>
                 </div>
               )}
               
               <div className="flex items-center justify-between col-span-2">
-                {rep.rating && (
-                  <div className="flex items-center text-gray-700">
-                    <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-                    <span className="truncate font-medium">{rep.rating.score} ({rep.rating.reviewCount})</span>
-                  </div>
-                )}
+                <div className="flex items-center text-gray-700">
+                  <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+                  <span className="truncate font-medium">{rep.rating} ({rep.reviewCount})</span>
+                </div>
                 
-                {rep.dealsCompleted && (rep.type === "seller" || rep.type === "agent") && (
+                {rep.dealsCompleted && (
                   <div className="flex items-center text-gray-700">
                     <Home size={14} className="mr-1 text-gray-500 flex-shrink-0" />
                     <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
@@ -183,9 +184,9 @@ export default function RepCard({ rep }: RepCardProps) {
               </div>
             </div>
             
-            {/* Tagline */}
+            {/* Bio excerpt as tagline */}
             <p className="text-gray-600 text-sm mb-2 line-clamp-2 text-center">
-              {rep.tagline}
+              {rep.bio?.substring(0, 100)}...
             </p>
           </div>
           

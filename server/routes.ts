@@ -2,8 +2,11 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertPropertyInquirySchema, insertPropertySchema } from "@shared/schema";
+import { insertPropertyInquirySchema, insertPropertySchema, insertRepSchema } from "@shared/schema";
 import { RecommendationEngine } from "./recommendation";
+import { db } from "./db";
+import { reps } from "@shared/schema";
+import { eq, like } from "drizzle-orm";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
@@ -174,6 +177,101 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error getting recommendations:', error);
       res.status(500).json({ message: "Failed to get recommendations" });
+    }
+  });
+
+  // REPs endpoints
+  app.get("/api/reps", async (_req, res) => {
+    try {
+      const repsList = await db.select().from(reps);
+      res.json(repsList);
+    } catch (error) {
+      console.error('Error fetching REPs:', error);
+      res.status(500).json({ message: "Failed to fetch REPs" });
+    }
+  });
+
+  app.get("/api/reps/:id", async (req, res) => {
+    try {
+      const repId = parseInt(req.params.id);
+      const [rep] = await db.select().from(reps).where(eq(reps.id, repId));
+      
+      if (!rep) {
+        return res.status(404).json({ message: "REP not found" });
+      }
+      
+      res.json(rep);
+    } catch (error) {
+      console.error('Error fetching REP:', error);
+      res.status(500).json({ message: "Failed to fetch REP" });
+    }
+  });
+
+  app.get("/api/reps/slug/:slug", async (req, res) => {
+    try {
+      const slug = req.params.slug;
+      const [rep] = await db.select().from(reps).where(eq(reps.slug, slug));
+      
+      if (!rep) {
+        return res.status(404).json({ message: "REP not found" });
+      }
+      
+      res.json(rep);
+    } catch (error) {
+      console.error('Error fetching REP by slug:', error);
+      res.status(500).json({ message: "Failed to fetch REP" });
+    }
+  });
+
+  app.post("/api/reps", async (req, res) => {
+    try {
+      const repData = insertRepSchema.parse(req.body);
+      const [newRep] = await db.insert(reps).values(repData).returning();
+      res.status(201).json(newRep);
+    } catch (error) {
+      console.error('Error creating REP:', error);
+      res.status(400).json({ message: "Invalid REP data", error });
+    }
+  });
+
+  app.put("/api/reps/:id", async (req, res) => {
+    try {
+      const repId = parseInt(req.params.id);
+      const repData = req.body;
+      
+      const [rep] = await db.select().from(reps).where(eq(reps.id, repId));
+      if (!rep) {
+        return res.status(404).json({ message: "REP not found" });
+      }
+      
+      const [updatedRep] = await db
+        .update(reps)
+        .set(repData)
+        .where(eq(reps.id, repId))
+        .returning();
+      
+      res.json(updatedRep);
+    } catch (error) {
+      console.error('Error updating REP:', error);
+      res.status(400).json({ message: "Invalid REP data", error });
+    }
+  });
+
+  app.delete("/api/reps/:id", async (req, res) => {
+    try {
+      const repId = parseInt(req.params.id);
+      
+      const [rep] = await db.select().from(reps).where(eq(reps.id, repId));
+      if (!rep) {
+        return res.status(404).json({ message: "REP not found" });
+      }
+      
+      await db.delete(reps).where(eq(reps.id, repId));
+      
+      res.status(204).send();
+    } catch (error) {
+      console.error('Error deleting REP:', error);
+      res.status(500).json({ message: "Failed to delete REP" });
     }
   });
 

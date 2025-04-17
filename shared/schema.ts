@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, doublePrecision } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, doublePrecision, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -45,6 +45,50 @@ export const propertyInquiries = pgTable("propertyInquiries", {
   createdAt: text("createdAt").notNull(),
 });
 
+export const reps = pgTable("reps", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  role: text("role").notNull(),
+  locationCity: text("locationCity").notNull(),
+  locationState: text("locationState").notNull(),
+  avatar: text("avatar").notNull(),
+  yearsExperience: integer("yearsExperience").notNull(),
+  rating: doublePrecision("rating").notNull(),
+  reviewCount: integer("reviewCount").notNull(),
+  specialties: text("specialties").array(),
+  bio: text("bio").notNull(),
+  slug: text("slug"),
+  isFeatured: boolean("isFeatured").default(false),
+  entityType: text("entityType").default("individual"), // individual or business
+  isVerified: boolean("isVerified").default(false),
+  
+  // Additional properties for enhanced profile
+  memberSince: timestamp("memberSince"),
+  lastActive: timestamp("lastActive"),
+  responseTime: text("responseTime"),
+  contactPhone: text("contactPhone"),
+  contactEmail: text("contactEmail"),
+  bannerUrl: text("bannerUrl"),
+  website: text("website"),
+  social: jsonb("social"), // LinkedIn, Instagram, etc.
+  availability: text("availability"),
+  availabilitySchedule: jsonb("availabilitySchedule"),
+  expertise: text("expertise").array(),
+  propertyTypes: text("propertyTypes").array(),
+  locationsServed: text("locationsServed").array(),
+  credentials: text("credentials").array(),
+  additionalInfo: text("additionalInfo"),
+  
+  // Business-specific fields
+  businessName: text("businessName"),
+  foundedYear: integer("foundedYear"),
+  logoUrl: text("logoUrl"),
+  businessAddress: text("businessAddress"),
+  tagline: text("tagline"),
+  dealsCompleted: integer("dealsCompleted"),
+  teamSize: integer("teamSize")
+});
+
 // Schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -64,6 +108,10 @@ export const insertPropertyInquirySchema = createInsertSchema(propertyInquiries)
   createdAt: true,
 });
 
+export const insertRepSchema = createInsertSchema(reps).omit({
+  id: true,
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -73,3 +121,6 @@ export type Property = typeof properties.$inferSelect;
 
 export type InsertPropertyInquiry = z.infer<typeof insertPropertyInquirySchema>;
 export type PropertyInquiry = typeof propertyInquiries.$inferSelect;
+
+export type InsertRep = z.infer<typeof insertRepSchema>;
+export type Rep = typeof reps.$inferSelect;
