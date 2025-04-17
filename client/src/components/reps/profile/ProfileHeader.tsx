@@ -77,7 +77,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
   const social = rep.social as Record<string, string> || {};
   
   return (
-    <div className="relative mb-6 mt-20">
+    <div className="relative mb-6 mt-16">
       {/* Banner Image with Gradient Overlay */}
       <div className="relative">
         <div 
@@ -93,6 +93,14 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
           <a href="/reps" className="absolute left-4 top-4 z-10 bg-white/80 hover:bg-white backdrop-blur-sm p-2 rounded-full shadow-md transition-colors">
             <ArrowLeft className="h-5 w-5 text-gray-700" />
           </a>
+          
+          {/* Verified badge - top right */}
+          {((rep as any).isVerified || rep.isFeatured) && (
+            <div className="absolute right-4 top-4 z-10 bg-white/80 hover:bg-white backdrop-blur-sm p-2 rounded-full shadow-md transition-colors">
+              <BadgeCheck className="h-5 w-5 text-[#09261E] fill-[#09261E]" />
+            </div>
+          )}
+          
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/40"></div>
         </div>
         

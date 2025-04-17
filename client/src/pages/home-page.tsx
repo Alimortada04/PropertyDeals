@@ -115,7 +115,7 @@ export default function HomePage() {
   };
 
   return (
-    <div ref={homePageRef} className="relative overflow-x-hidden max-w-full">
+    <div ref={homePageRef} className="relative overflow-x-hidden max-w-full pt-16 md:pt-0">
       {/* Hero Section - Full height splash with animated components */}
       <HeroSection />
       
