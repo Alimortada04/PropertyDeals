@@ -189,32 +189,8 @@ export default function RepCard({ rep }: RepCardProps) {
         
         {/* Mobile layout - horizontal (similar to connections) */}
         <div className="sm:hidden">
-          {/* Tags on top - horizontal arrangement */}
-          <div className={`flex flex-wrap gap-1.5 mb-3 ${(rep.isVerified || rep.isFeatured) ? 'mt-2' : ''}`}>
-            {rep.isVerified && (
-              <Badge className="bg-[#803344] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
-                <CheckCircle2 size={10} />
-                Verified
-              </Badge>
-            )}
-            
-            {rep.isFeatured && (
-              <Badge className="bg-[#09261E] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
-                <Award size={10} />
-                Featured
-              </Badge>
-            )}
-            
-            <Badge 
-              variant="outline" 
-              className="bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs"
-            >
-              {rep.role}
-            </Badge>
-          </div>
-          
           {/* Main content row */}
-          <div className="flex items-center justify-center space-x-3 relative pb-9">
+          <div className="flex items-center justify-center space-x-3 relative">
             {/* Profile Image - Left on mobile, vertically centered */}
             <div className="flex-shrink-0 my-auto flex items-center justify-center">
               <img 
@@ -230,7 +206,7 @@ export default function RepCard({ rep }: RepCardProps) {
               />
             </div>
             
-            {/* Middle: Name and location */}
+            {/* Middle: Name, job tag, and location */}
             <div className="flex-1 min-w-0 flex flex-col justify-center">
               <h3 className="font-heading text-base font-semibold text-gray-800 mb-1 line-clamp-1">
                 {rep.name}
@@ -241,29 +217,28 @@ export default function RepCard({ rep }: RepCardProps) {
                 )}
               </h3>
               
+              <Badge 
+                variant="outline" 
+                className="mb-1.5 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs w-fit"
+              >
+                {rep.role}
+              </Badge>
+              
               <div className="flex items-center text-gray-600 text-xs">
                 <MapPin size={12} className="mr-1 text-gray-400 flex-shrink-0" />
                 <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
               </div>
             </div>
             
-            {/* Right: Rating & Deals */}
-            <div className="flex flex-col items-end justify-center">
-              {/* Rating */}
-              <div className="flex items-center text-gray-700 text-xs mb-1">
+            {/* Top right: Rating */}
+            <div className="absolute top-0 right-0">
+              <div className="flex items-center text-gray-700 text-xs">
                 <Star size={12} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
                 <span className="font-medium">{rep.rating}</span>
               </div>
-              
-              {/* Deals completed */}
-              {rep.dealsCompleted && (
-                <div className="flex items-center text-gray-700 text-xs">
-                  <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
-                </div>
-              )}
             </div>
             
-            {/* View Profile Link - Bottom right position */}
+            {/* Bottom right: View Profile */}
             <div className="absolute bottom-0 right-0">
               <Button 
                 size="sm"
