@@ -191,19 +191,28 @@ export default function RepCard({ rep }: RepCardProps) {
         
         {/* Mobile layout - horizontal (similar to connections) */}
         <div className="sm:hidden">
-          {/* Status icons at top */}
-          <div className="flex items-center gap-2 mb-3 mt-2">
-            {rep.isVerified && (
-              <CheckCircle2 size={16} className="text-[#803344]" />
-            )}
+          {/* Status icons and rating at top */}
+          <div className="flex items-center justify-between mb-1 mt-1">
+            {/* Left side icons */}
+            <div className="flex items-center gap-2">
+              {rep.isVerified && (
+                <CheckCircle2 size={16} className="text-[#803344]" />
+              )}
+              
+              {rep.isFeatured && (
+                <Award size={16} className="text-[#09261E]" />
+              )}
+            </div>
             
-            {rep.isFeatured && (
-              <Award size={16} className="text-[#09261E]" />
-            )}
+            {/* Right side rating - aligned with the icons */}
+            <div className="flex items-center text-gray-700 text-xs">
+              <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+              <span className="font-medium">{rep.rating}</span>
+            </div>
           </div>
           
           {/* Main content row */}
-          <div className="flex items-center space-x-3 relative py-4">
+          <div className="flex items-center space-x-3 relative py-2">
             {/* Profile Image - Left on mobile, vertically centered */}
             <div className="flex-shrink-0 my-auto flex items-center justify-center">
               <img 
@@ -235,14 +244,6 @@ export default function RepCard({ rep }: RepCardProps) {
               <div className="flex items-center text-gray-600 text-xs">
                 <MapPin size={12} className="mr-1 text-gray-400 flex-shrink-0" />
                 <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
-              </div>
-            </div>
-            
-            {/* Top right: Rating - positioned at very top */}
-            <div className="absolute top-[-2px] right-0">
-              <div className="flex items-center text-gray-700 text-xs">
-                <Star size={12} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-                <span className="font-medium">{rep.rating}</span>
               </div>
             </div>
             
