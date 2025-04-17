@@ -145,24 +145,24 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   <div className="flex flex-wrap items-center gap-x-4 mt-2">
                     <div className="flex items-center text-gray-600">
                       <MapPin className="h-4 w-4 mr-1" />
-                      <span>{rep.location.city}, {rep.location.state}</span>
+                      <span>{rep.locationCity || (rep.location?.city || "")}, {rep.locationState || (rep.location?.state || "")}</span>
                     </div>
                     
-                    <div className="flex items-center text-gray-600">
-                      <Award className="h-4 w-4 mr-1" />
-                      <span>{rep.yearsExperience}+ years experience</span>
-                    </div>
+                    {(rep.website || rep.social?.website) && (
+                      <div className="flex items-center">
+                        <a href={rep.website || rep.social?.website} target="_blank" rel="noopener noreferrer" 
+                          className="text-blue-600 hover:underline flex items-center">
+                          <Globe className="h-4 w-4 mr-1" />
+                          <span>{websiteDomain}</span>
+                        </a>
+                      </div>
+                    )}
                   </div>
                   
-                  {(rep.website || rep.social?.website) && (
-                    <div className="mt-2">
-                      <a href={rep.website || rep.social?.website} target="_blank" rel="noopener noreferrer" 
-                        className="text-blue-600 hover:underline flex items-center">
-                        <Globe className="h-4 w-4 mr-1" />
-                        <span>{websiteDomain}</span>
-                      </a>
-                    </div>
-                  )}
+                  <div className="flex items-center text-gray-600 mt-2">
+                    <Award className="h-4 w-4 mr-1" />
+                    <span>{rep.yearsExperience}+ years experience</span>
+                  </div>
                 </div>
                 
                 {/* Social Links and Action Buttons - Colored by brand */}
@@ -229,7 +229,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                             </Avatar>
                             <div>
                               <h4 className="font-medium text-lg">{rep.name}</h4>
-                              <p className="text-gray-500 text-sm">{rep.location.city}, {rep.location.state}</p>
+                              <p className="text-gray-500 text-sm">{rep.locationCity || (rep.location?.city || "")}, {rep.locationState || (rep.location?.state || "")}</p>
                               <div className="flex items-center text-amber-500 mt-1">
                                 <Star className="h-3 w-3 fill-amber-500" />
                                 <span className="ml-1 text-xs text-gray-800 font-medium">{rep.rating}</span>
