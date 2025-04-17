@@ -31,12 +31,12 @@ export default function StickyNav({
       const headerHeight = 250; // Reduced height to account for new LinkedIn-style header
       setIsSticky(offset > headerHeight);
       
-      // Determine active section based on scroll position
+      // Determine active section based on scroll position (reordered sections with closed deals at the end)
       const sections = [
         { id: "active-deals", offset: document.getElementById("active-deals")?.offsetTop || 0 },
-        { id: "closed-deals", offset: document.getElementById("closed-deals")?.offsetTop || 0 },
         { id: "activity", offset: document.getElementById("activity")?.offsetTop || 0 },
         { id: "connections", offset: document.getElementById("connections")?.offsetTop || 0 },
+        { id: "closed-deals", offset: document.getElementById("closed-deals")?.offsetTop || 0 },
         { id: "reviews", offset: document.getElementById("reviews")?.offsetTop || 0 }
       ];
       
@@ -104,28 +104,6 @@ export default function StickyNav({
             <Button
               variant="ghost"
               className={`rounded-md h-9 border ${
-                activeSection === "closed-deals" 
-                  ? "text-[#09261E] font-medium border-[#09261E]" 
-                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
-              }`}
-              onClick={() => scrollToSection("closed-deals")}
-            >
-              <CheckSquare size={16} className="mr-1.5" />
-              <span>Closed Deals</span>
-              {closedDealsCount > 0 && (
-                <span className={`ml-1.5 rounded-full ${
-                  activeSection === "closed-deals" 
-                    ? "bg-white text-[#09261E]" 
-                    : "bg-gray-100 text-gray-700"
-                } px-1.5 py-0.5 text-xs font-medium`}>
-                  {closedDealsCount}
-                </span>
-              )}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              className={`rounded-md h-9 border ${
                 activeSection === "activity" 
                   ? "text-[#09261E] font-medium border-[#09261E]" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
@@ -154,6 +132,28 @@ export default function StickyNav({
                     : "bg-gray-100 text-gray-700"
                 } px-1.5 py-0.5 text-xs font-medium`}>
                   {connectionsCount}
+                </span>
+              )}
+            </Button>
+            
+            <Button
+              variant="ghost"
+              className={`rounded-md h-9 border ${
+                activeSection === "closed-deals" 
+                  ? "text-[#09261E] font-medium border-[#09261E]" 
+                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
+              }`}
+              onClick={() => scrollToSection("closed-deals")}
+            >
+              <CheckSquare size={16} className="mr-1.5" />
+              <span>Closed Deals</span>
+              {closedDealsCount > 0 && (
+                <span className={`ml-1.5 rounded-full ${
+                  activeSection === "closed-deals" 
+                    ? "bg-white text-[#09261E]" 
+                    : "bg-gray-100 text-gray-700"
+                } px-1.5 py-0.5 text-xs font-medium`}>
+                  {closedDealsCount}
                 </span>
               )}
             </Button>

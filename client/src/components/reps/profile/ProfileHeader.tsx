@@ -62,7 +62,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
   };
   
   return (
-    <div className="w-full">
+    <div className="w-full pt-0 mt-0 mb-0">
       {/* Back Button - Mobile only, absolute positioned */}
       <Button 
         variant="ghost" 
@@ -73,8 +73,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
         <ArrowLeft size={20} />
       </Button>
       
-      {/* Back Button - Desktop only */}
-      <div className="hidden md:block absolute top-4 left-12 z-10">
+      {/* Back Button - Desktop only, aligned with content */}
+      <div className="hidden md:block absolute top-4 left-[max(5%,calc(50%-590px))] z-10 ml-4">
         <Button 
           variant="ghost" 
           onClick={() => window.history.back()}
@@ -194,49 +194,120 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-80 p-0" align="end">
-                        <div className="p-4 border-b">
-                          <h3 className="font-medium">Share this profile</h3>
-                          <p className="text-sm text-gray-500 mt-1">Copy the link or share to social media</p>
+                        <div className="p-4">
+                          <h3 className="text-xl font-semibold">Share Profile</h3>
+                          <p className="text-sm text-gray-500 mt-1">Choose how you'd like to share this profile with others.</p>
                         </div>
-                        <div className="p-4 space-y-3">
+                        
+                        {/* REP Info */}
+                        <div className="p-4 border-y bg-gray-50/80">
+                          <div className="flex gap-3">
+                            <Avatar className="h-14 w-14 rounded-md border border-gray-200">
+                              <AvatarImage src={rep.avatar} alt={rep.name} />
+                              <AvatarFallback className="rounded-md">{initials}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <h4 className="font-medium text-lg">{rep.name}</h4>
+                              <p className="text-gray-500 text-sm">{rep.location.city}, {rep.location.state}</p>
+                              <div className="flex items-center text-amber-500 mt-1">
+                                <Star className="h-3 w-3 fill-amber-500" />
+                                <span className="ml-1 text-xs text-gray-800 font-medium">{rep.rating}</span>
+                                <span className="ml-1 text-xs text-gray-600">({rep.reviewCount})</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Share Options */}
+                        <div className="p-4">
+                          <h4 className="font-medium mb-3">Share Options</h4>
+                          
+                          <div className="space-y-3">
+                            <div className="flex items-center p-3 rounded-lg border hover:bg-gray-50 cursor-pointer" onClick={copyProfileLink}>
+                              <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                                <Copy className="h-5 w-5 text-gray-600" />
+                              </div>
+                              <div className="flex-1">
+                                <h5 className="font-medium">Copy Link</h5>
+                                <p className="text-xs text-gray-500">Copy shareable profile link</p>
+                              </div>
+                              {copied ? <Check className="h-5 w-5 text-green-600" /> : null}
+                            </div>
+                            
+                            <div className="flex items-center p-3 rounded-lg border hover:bg-gray-50 cursor-pointer" onClick={() => {
+                              window.open(`mailto:?subject=Check out ${rep.name} on PropertyDeals&body=I thought you might be interested in this real estate professional: ${window.location.href}`, '_blank');
+                              setShareOpen(false);
+                            }}>
+                              <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                                <div className="text-gray-600">📧</div>
+                              </div>
+                              <div>
+                                <h5 className="font-medium">Email</h5>
+                                <p className="text-xs text-gray-500">Share via email with detailed info</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Social Media */}
+                        <div className="p-4 border-t">
+                          <h4 className="font-medium mb-2">Share on Social Media</h4>
                           <div className="flex gap-2">
                             <Button 
                               variant="outline" 
-                              size="sm" 
-                              className="flex-1 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10"
+                              size="icon"
+                              className="flex-1 rounded-full h-10 w-10 p-0 text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/20"
                               onClick={() => {
-                                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+                                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
                                 setShareOpen(false);
                               }}
                             >
-                              <Linkedin className="h-4 w-4 mr-2" />
-                              LinkedIn
+                              <Facebook className="h-5 w-5" />
                             </Button>
                             <Button 
                               variant="outline" 
-                              size="sm" 
-                              className="flex-1 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10"
+                              size="icon"
+                              className="flex-1 rounded-full h-10 w-10 p-0 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border-[#1DA1F2]/20"
                               onClick={() => {
                                 window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check out ${rep.name} on PropertyDeals`, '_blank');
                                 setShareOpen(false);
                               }}
                             >
-                              <Twitter className="h-4 w-4 mr-2" />
-                              Twitter
+                              <Twitter className="h-5 w-5" />
                             </Button>
-                          </div>
-                          <div className="flex border rounded-md overflow-hidden">
-                            <div className="bg-gray-50 p-2 flex-1 text-gray-500 text-sm truncate">
-                              {window.location.href}
-                            </div>
                             <Button 
-                              variant="ghost" 
-                              className="rounded-none h-10" 
-                              onClick={copyProfileLink}
+                              variant="outline" 
+                              size="icon"
+                              className="flex-1 rounded-full h-10 w-10 p-0 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/20"
+                              onClick={() => {
+                                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+                                setShareOpen(false);
+                              }}
                             >
-                              {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
+                              <Linkedin className="h-5 w-5" />
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="icon"
+                              className="flex-1 rounded-full h-10 w-10 p-0 text-[#25D366] hover:text-[#25D366] hover:bg-[#25D366]/10 border-[#25D366]/20"
+                              onClick={() => {
+                                window.open(`https://wa.me/?text=${encodeURIComponent(`Check out ${rep.name} on PropertyDeals: ${window.location.href}`)}`, '_blank');
+                                setShareOpen(false);
+                              }}
+                            >
+                              <div className="text-[#25D366]">📱</div>
                             </Button>
                           </div>
+                        </div>
+                        
+                        <div className="p-4 border-t flex justify-end">
+                          <Button 
+                            variant="outline" 
+                            onClick={() => setShareOpen(false)}
+                            className="w-20"
+                          >
+                            Done
+                          </Button>
                         </div>
                       </PopoverContent>
                     </Popover>
