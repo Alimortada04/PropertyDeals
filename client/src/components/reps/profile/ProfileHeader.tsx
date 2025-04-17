@@ -108,17 +108,17 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       
       {/* Profile Content - Below banner and avatar */}
       <div className="container mx-auto px-4">
-        <div className="bg-white rounded-md mt-20 pt-4">
+        <div className="bg-white rounded-md mt-28 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-4">
             {/* Profile info section */}
             <div className="flex flex-col md:flex-row justify-between items-start">
               {/* Left-aligned content in 4 distinct rows */}
               <div className="flex-1">
                 {/* Row 1: Name - clear standalone row */}
-                <h1 className="text-2xl font-bold text-[#09261E] text-left mb-3">{rep.name}</h1>
+                <h1 className="text-2xl font-bold text-[#09261E] text-left mb-2">{rep.name}</h1>
                 
                 {/* Row 2: Tags in single row - PD Certified, REP tag, Rating */}
-                <div className="flex flex-wrap items-center gap-3 mb-3 text-left">
+                <div className="flex flex-wrap items-center gap-3 mb-2 text-left">
                   {rep.isVerified && (
                     <Badge className="bg-[#09261E]">
                       <BadgeCheck className="h-3.5 w-3.5 mr-1" />
@@ -137,13 +137,12 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   </div>
                 </div>
                 
-                {/* Row 3: Location and Experience - clearly separated */}
-                <div className="flex flex-wrap items-center gap-4 mb-3 text-left">
+                {/* Row 3: Location and Experience - compact */}
+                <div className="flex flex-wrap items-center gap-3 mb-2 text-left">
                   <div className="flex items-center text-gray-600">
                     <MapPin className="h-4 w-4 mr-1" />
-                    <span>{rep.locationCity}, {rep.locationState}</span>
+                    <span>Miami Lakes, {rep.locationCity}, {rep.locationState}</span>
                   </div>
-                  
                   <div className="flex items-center text-gray-600">
                     <Award className="h-4 w-4 mr-1" />
                     <span>{rep.yearsExperience}+ years experience</span>
@@ -341,7 +340,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       </div>
       
       {/* Mobile Social Links and Buttons */}
-      <div className="container mx-auto px-4 md:hidden mt-6">
+      <div className="container mx-auto px-4 md:hidden mt-10">
         <div className="bg-white rounded-md p-4">
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
