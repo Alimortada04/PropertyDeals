@@ -45,8 +45,10 @@ interface Connection {
   avatar: string;
   title: string;
   type: string;
+  location?: string;
   connectedDate: string;
   isMutual?: boolean;
+  mutualConnections?: { id: number; name: string; avatar: string }[];
 }
 
 interface Review {
@@ -170,8 +172,14 @@ export default function RepProfilePage() {
           avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
           title: 'Real Estate Agent',
           type: 'agent',
+          location: 'San Francisco, CA',
           connectedDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-          isMutual: true
+          isMutual: true,
+          mutualConnections: [
+            { id: 7, name: 'Robert Chang', avatar: 'https://randomuser.me/api/portraits/men/42.jpg' },
+            { id: 13, name: 'David Park', avatar: 'https://randomuser.me/api/portraits/men/22.jpg' },
+            { id: 15, name: 'Lisa Wong', avatar: 'https://randomuser.me/api/portraits/women/32.jpg' }
+          ]
         },
         {
           id: 3,
@@ -179,7 +187,11 @@ export default function RepProfilePage() {
           avatar: 'https://randomuser.me/api/portraits/men/67.jpg',
           title: 'Contractor',
           type: 'contractor',
-          connectedDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString()
+          location: 'Oakland, CA',
+          connectedDate: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
+          mutualConnections: [
+            { id: 7, name: 'Robert Chang', avatar: 'https://randomuser.me/api/portraits/men/42.jpg' }
+          ]
         },
         {
           id: 6,
@@ -187,8 +199,15 @@ export default function RepProfilePage() {
           avatar: 'https://randomuser.me/api/portraits/women/62.jpg',
           title: 'Real Estate Agent',
           type: 'agent',
+          location: 'Los Angeles, CA',
           connectedDate: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
-          isMutual: true
+          isMutual: true,
+          mutualConnections: [
+            { id: 7, name: 'Robert Chang', avatar: 'https://randomuser.me/api/portraits/men/42.jpg' },
+            { id: 9, name: 'Summit Realty Group', avatar: 'https://logo.clearbit.com/summitrealty.net' },
+            { id: 13, name: 'David Park', avatar: 'https://randomuser.me/api/portraits/men/22.jpg' },
+            { id: 14, name: 'Michael Patel', avatar: 'https://randomuser.me/api/portraits/men/80.jpg' }
+          ]
         },
         {
           id: 7,
@@ -196,7 +215,11 @@ export default function RepProfilePage() {
           avatar: 'https://randomuser.me/api/portraits/men/42.jpg',
           title: 'Contractor',
           type: 'contractor',
-          connectedDate: new Date(Date.now() - 75 * 24 * 60 * 60 * 1000).toISOString()
+          location: 'San Jose, CA',
+          connectedDate: new Date(Date.now() - 75 * 24 * 60 * 60 * 1000).toISOString(),
+          mutualConnections: [
+            { id: 13, name: 'David Park', avatar: 'https://randomuser.me/api/portraits/men/22.jpg' }
+          ]
         },
         {
           id: 13,
@@ -204,6 +227,7 @@ export default function RepProfilePage() {
           avatar: 'https://randomuser.me/api/portraits/men/22.jpg',
           title: 'Real Estate Agent',
           type: 'agent',
+          location: 'Palo Alto, CA',
           connectedDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString()
         },
         {
@@ -212,6 +236,7 @@ export default function RepProfilePage() {
           avatar: 'https://logo.clearbit.com/summitrealty.net',
           title: 'Real Estate Agency',
           type: 'agent',
+          location: 'Mountain View, CA',
           connectedDate: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString()
         }
       ];
