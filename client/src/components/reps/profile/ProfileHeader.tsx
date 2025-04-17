@@ -110,10 +110,10 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       <div className="container mx-auto px-4">
         <div className="bg-white rounded-md shadow-sm mt-12 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-6">
-            <div className="w-full">
-              {/* Basic info section */}
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-col md:flex-row justify-between md:items-start">
+              {/* Left column: Basic info section */}
+              <div className="flex-1 mb-4 md:mb-0 md:pr-8">
+                <div className="flex flex-wrap items-center gap-2 mb-2">
                   <h1 className="text-2xl font-bold text-[#09261E]">{rep.name}</h1>
                   {rep.isVerified && (
                     <Badge className="bg-[#09261E]">
@@ -123,25 +123,27 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   )}
                 </div>
                 
-                <div className="mt-1">
+                <div className="mb-3">
                   <Badge variant="outline" className="px-2 py-1 border-[#803344]/30 text-[#803344]">
                     {rep.role}
                   </Badge>
                 </div>
                 
-                <div className="flex items-center mt-3">
+                <div className="flex items-center mb-3">
                   <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
                   <span className="ml-2 text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
                   <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
                 </div>
                 
-                <div className="flex flex-wrap items-start mt-2">
+                <div className="flex flex-wrap items-start mb-2">
                   <div className="flex items-center text-gray-600">
                     <MapPin className="h-4 w-4 mr-1" />
                     <span>{rep.locationCity}, {rep.locationState}</span>
                   </div>
-                  
-                  <div className="flex items-center text-gray-600 ml-4">
+                </div>
+                
+                <div className="flex flex-wrap items-start mb-2">
+                  <div className="flex items-center text-gray-600">
                     <Award className="h-4 w-4 mr-1" />
                     <span>{rep.yearsExperience}+ years experience</span>
                   </div>
@@ -162,46 +164,44 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                 )}
               </div>
               
-              {/* Social links and buttons - Desktop */}
-              <div className="hidden md:block mt-4">
-                <div className="flex justify-end">
-                  <div className="flex gap-2">
-                    {social?.linkedin && (
-                      <a href={social.linkedin} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/30">
-                          <Linkedin className="h-5 w-5" />
-                        </Button>
-                      </a>
-                    )}
-                    
-                    {social?.instagram && (
-                      <a href={social.instagram} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/10 border-[#E1306C]/30">
-                          <Instagram className="h-5 w-5" />
-                        </Button>
-                      </a>
-                    )}
-                    
-                    {social?.facebook && (
-                      <a href={social.facebook} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/30">
-                          <Facebook className="h-5 w-5" />
-                        </Button>
-                      </a>
-                    )}
-                    
-                    {social?.twitter && (
-                      <a href={social.twitter} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border-[#1DA1F2]/30">
-                          <Twitter className="h-5 w-5" />
-                        </Button>
-                      </a>
-                    )}
-                  </div>
+              {/* Right column: Social links and buttons - Desktop */}
+              <div className="hidden md:flex md:flex-col md:items-end">
+                <div className="flex gap-2">
+                  {social?.linkedin && (
+                    <a href={social.linkedin} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/30">
+                        <Linkedin className="h-5 w-5" />
+                      </Button>
+                    </a>
+                  )}
+                  
+                  {social?.instagram && (
+                    <a href={social.instagram} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/10 border-[#E1306C]/30">
+                        <Instagram className="h-5 w-5" />
+                      </Button>
+                    </a>
+                  )}
+                  
+                  {social?.facebook && (
+                    <a href={social.facebook} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/30">
+                        <Facebook className="h-5 w-5" />
+                      </Button>
+                    </a>
+                  )}
+                  
+                  {social?.twitter && (
+                    <a href={social.twitter} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border-[#1DA1F2]/30">
+                        <Twitter className="h-5 w-5" />
+                      </Button>
+                    </a>
+                  )}
                 </div>
                 
                 {/* Connect & Share Buttons */}
-                <div className="flex justify-end mt-3 gap-2">
+                <div className="flex mt-3 gap-2">
                   <Button className="bg-[#09261E] hover:bg-[#135341]">
                     <UserPlus className="mr-2 h-4 w-4" />
                     <span>Connect</span>
