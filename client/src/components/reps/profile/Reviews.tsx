@@ -9,7 +9,9 @@ import {
   ThumbsDown, 
   ChevronRight,
   Search,
-  MessageSquare
+  MessageSquare,
+  Info,
+  Lock
 } from "lucide-react";
 import { formatRelativeTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,7 +24,21 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { useToast } from "@/hooks/use-toast";
 
 interface Review {
   id: number;
@@ -44,12 +60,27 @@ interface ReviewsProps {
   reviews: Review[];
 }
 
+// Review form schema
+const reviewFormSchema = z.object({
+  rating: z.number().min(1, "Please select a rating").max(5),
+  reviewText: z.string().min(10, "Review must be at least 10 characters").max(1000, "Review must be less than 1000 characters"),
+  dealTitle: z.string().optional(),
+});
+
+type ReviewFormValues = z.infer<typeof reviewFormSchema>;
+
 export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  const [currentRating, setCurrentRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const { toast } = useToast();
   
   // Initialize reviews with like/dislike data if not present
   useEffect(() => {
