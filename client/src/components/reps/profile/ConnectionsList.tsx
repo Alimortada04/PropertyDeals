@@ -12,7 +12,8 @@ import {
   Search,
   Users,
   Mail,
-  CirclePlus
+  CirclePlus,
+  MapPin
 } from "lucide-react";
 import {
   Dialog,
@@ -239,19 +240,20 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
         </Avatar>
         
         <div className="ml-3 flex-1">
-          <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6 text-sm">{connection.name}</h3>
+          <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6 text-sm mb-1.5">{connection.name}</h3>
           
-          <div className="mt-0 flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1 mb-1.5">
             <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300">
               {normalizedTitle}
             </Badge>
-            
-            {connection.location && (
-              <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300 text-gray-600">
-                {connection.location}
-              </Badge>
-            )}
           </div>
+          
+          {connection.location && (
+            <div className="flex items-center text-xs text-gray-600 mb-1.5">
+              <MapPin size={12} className="mr-1 text-gray-500" />
+              <span>{connection.location}</span>
+            </div>
+          )}
           
           {/* Mutual connections avatars */}
           {connection.mutualConnections && connection.mutualConnections.length > 0 && (
