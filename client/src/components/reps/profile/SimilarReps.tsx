@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Rep, reps } from "@/lib/rep-data";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Users } from "lucide-react";
 import RepCard from "./RepCard";
 
 interface SimilarRepsProps {
@@ -9,17 +9,23 @@ interface SimilarRepsProps {
   maxReps?: number;
 }
 
-export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProps) {
-  const [similarReps, setSimilarReps] = useState<(Rep & { similarityReason?: string })[]>([]);
-  const [isMobile, setIsMobile] = useState(false);
+export default function SimilarReps({ currentRep, maxReps = 10 }: SimilarRepsProps) {
+  const [similarReps, setSimilarReps] = useState<Rep[]>([]);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   
-  // Detect if mobile view for responsive display
-  useEffect(() => {
-    const checkIfMobile = () => setIsMobile(window.innerWidth < 768);
-    checkIfMobile();
-    window.addEventListener("resize", checkIfMobile);
-    return () => window.removeEventListener("resize", checkIfMobile);
-  }, []);
+  // Handle scrolling the carousel
+  const scroll = (direction: 'left' | 'right') => {
+    if (!scrollContainerRef.current) return;
+    
+    const container = scrollContainerRef.current;
+    const scrollAmount = container.clientWidth * 0.75;
+    
+    if (direction === 'left') {
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
   
   useEffect(() => {
     // Find REPs that match the current REP's characteristics
@@ -32,23 +38,17 @@ export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProp
       // First pass - score all REPs based on similarity
       const scoredReps = otherReps.map(rep => {
         let score = 0;
-        let similarityReason = "";
         
         // Same location 
         if (rep.location.city === currentRep.location.city) {
           score += 40;
-          similarityReason = `Also based in ${rep.location.city}`;
         } else if (rep.location.state === currentRep.location.state) {
           score += 20;
-          similarityReason = `Also serves ${rep.location.state}`;
         }
         
         // Same role/specialty
         if (rep.role === currentRep.role) {
           score += 30;
-          if (!similarityReason) {
-            similarityReason = `Also a ${rep.role}`;
-          }
         }
         
         // Shared specialties
@@ -59,28 +59,22 @@ export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProp
           
           if (sharedSpecialties.length > 0) {
             score += sharedSpecialties.length * 10;
-            if (!similarityReason) {
-              similarityReason = `Specializes in ${sharedSpecialties[0]}`;
-            }
           }
         }
         
         // Highly rated REPs get a small boost
         if (rep.rating >= 4.7) {
           score += 10;
-          // Don't set similarity reason for this
         }
         
         // Featured REPs get a small boost
         if (rep.isFeatured) {
           score += 5;
-          // Don't set similarity reason for this
         }
         
         return {
           ...rep,
-          similarityScore: score,
-          similarityReason
+          similarityScore: score
         };
       });
       
@@ -94,11 +88,7 @@ export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProp
         const remainingReps = scoredReps
           .filter(rep => !sortedReps.some(r => r.id === rep.id))
           .sort(() => 0.5 - Math.random())
-          .slice(0, maxReps - sortedReps.length)
-          .map(rep => ({
-            ...rep,
-            similarityReason: "Recently joined PropertyDeals"
-          }));
+          .slice(0, maxReps - sortedReps.length);
         
         sortedReps.push(...remainingReps);
       }
@@ -113,10 +103,6 @@ export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProp
     return null;
   }
   
-  // Limit displayed REPs based on screen size
-  const visibleReps = isMobile ? similarReps.slice(0, 3) : similarReps.slice(0, 6);
-  const hasMoreReps = similarReps.length > visibleReps.length;
-  
   return (
     <section className="mb-8 mt-10" id="similar-reps">
       {/* Section header */}
@@ -126,20 +112,42 @@ export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProp
           <h2 className="text-xl font-semibold text-[#09261E]">Other Similar REPs</h2>
         </div>
         
-        <Button 
-          variant="link" 
-          className="text-[#09261E] font-medium"
-          onClick={() => window.location.href = '/reps'}
-        >
-          View All
-          <ChevronRight size={16} className="ml-1" />
-        </Button>
+        {/* Desktop navigation arrows */}
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-8 w-8 rounded-full border-gray-300"
+            onClick={() => scroll('left')}
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="h-8 w-8 rounded-full border-gray-300"
+            onClick={() => scroll('right')}
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
       
-      {/* Grid layout for REP cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {visibleReps.map(rep => (
-          <RepCard key={rep.id} rep={rep} similarityReason={rep.similarityReason} />
+      {/* Scrollable carousel for REP cards */}
+      <div 
+        ref={scrollContainerRef}
+        className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar snap-x"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {similarReps.map(rep => (
+          <div 
+            key={rep.id} 
+            className="min-w-[150px] w-[150px] flex-shrink-0 snap-start"
+          >
+            <RepCard rep={rep} />
+          </div>
         ))}
       </div>
       
@@ -152,6 +160,8 @@ export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProp
         <Users size={16} className="mr-2" />
         <span>Explore all REPs</span>
       </Button>
+      
+      {/* Custom styles applied with inline style and class */}
     </section>
   );
 }

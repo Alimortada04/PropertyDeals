@@ -47,7 +47,7 @@ export default function RepCard({ rep, similarityReason }: RepCardProps) {
 
   return (
     <Link href={`/reps/${rep.id}`}>
-      <div className="flex items-center p-3 rounded-lg border border-gray-200 hover:shadow-md hover:bg-gray-50 transition-all h-full">
+      <div className="p-3 rounded-lg border border-gray-200 hover:shadow-md hover:bg-gray-50 transition-all h-full flex flex-col items-center text-center">
         {/* Featured indicator */}
         {rep.isFeatured && (
           <div className="absolute top-2 right-2 w-5 h-5 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
@@ -55,33 +55,20 @@ export default function RepCard({ rep, similarityReason }: RepCardProps) {
           </div>
         )}
         
-        <Avatar className={`h-12 w-12 ${avatarBorderClass}`}>
+        <Avatar className={`h-16 w-16 mb-3 ${avatarBorderClass}`}>
           <AvatarImage src={rep.avatar} alt={rep.name} />
           <AvatarFallback className={avatarBorderClass}>{initials}</AvatarFallback>
         </Avatar>
         
-        <div className="ml-3 flex-1">
-          <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6 text-sm mb-1.5">{rep.name}</h3>
-          
-          <div className="flex flex-wrap gap-1 mb-1.5">
-            <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300">
-              {normalizedTitle}
-            </Badge>
-          </div>
-          
-          <div className="flex items-center text-xs text-gray-600 mb-1.5">
-            <MapPin size={12} className="mr-1 text-gray-500" />
-            <span>{location}</span>
-          </div>
-          
-          {similarityReason && (
-            <div className="text-xs text-gray-500 mt-2">
-              {similarityReason}
-            </div>
-          )}
-          
-          {/* Empty div for consistent card height */}
-          {!similarityReason && <div className="mt-2 h-5"></div>}
+        <h3 className="font-semibold text-gray-900 line-clamp-1 text-sm mb-2">{rep.name}</h3>
+        
+        <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300 mb-2">
+          {normalizedTitle}
+        </Badge>
+        
+        <div className="flex items-center text-xs text-gray-600 mb-2">
+          <MapPin size={12} className="mr-1 text-gray-500" />
+          <span>{location}</span>
         </div>
       </div>
     </Link>

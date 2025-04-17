@@ -256,32 +256,36 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
           )}
           
           {/* Mutual connections avatars */}
-          {connection.mutualConnections && connection.mutualConnections.length > 0 && (
-            <div className="flex items-center mt-2 space-x-1">
-              <div className="flex -space-x-2">
-                {connection.mutualConnections.slice(0, 3).map((mutual, index) => (
-                  <Avatar key={index} className="h-5 w-5 border border-white rounded-full">
-                    <AvatarImage src={mutual.avatar} alt={mutual.name} />
-                    <AvatarFallback className="text-[8px]">
-                      {mutual.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                ))}
+          <div className="mt-2 h-5">
+            {connection.mutualConnections && connection.mutualConnections.length > 0 ? (
+              <div className="flex items-center space-x-1">
+                <div className="flex -space-x-2">
+                  {connection.mutualConnections.slice(0, 3).map((mutual, index) => (
+                    <Avatar key={index} className="h-5 w-5 border border-white rounded-full">
+                      <AvatarImage src={mutual.avatar} alt={mutual.name} />
+                      <AvatarFallback className="text-[8px]">
+                        {mutual.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  ))}
+                  
+                  {connection.mutualConnections.length > 3 && (
+                    <div className="h-5 w-5 rounded-full bg-gray-100 border border-white flex items-center justify-center text-[8px] font-medium text-gray-600">
+                      +{connection.mutualConnections.length - 3}
+                    </div>
+                  )}
+                </div>
                 
-                {connection.mutualConnections.length > 3 && (
-                  <div className="h-5 w-5 rounded-full bg-gray-100 border border-white flex items-center justify-center text-[8px] font-medium text-gray-600">
-                    +{connection.mutualConnections.length - 3}
-                  </div>
-                )}
+                <span className="text-xs text-gray-500">
+                  {connection.mutualConnections.length === 1 
+                    ? '1 Mutual' 
+                    : `${connection.mutualConnections.length} Mutuals`}
+                </span>
               </div>
-              
-              <span className="text-xs text-gray-500">
-                {connection.mutualConnections.length === 1 
-                  ? '1 Mutual' 
-                  : `${connection.mutualConnections.length} Mutuals`}
-              </span>
-            </div>
-          )}
+            ) : (
+              <span className="text-[10px] text-gray-400 italic">No mutual connections</span>
+            )}
+          </div>
         </div>
       </div>
     </a>
