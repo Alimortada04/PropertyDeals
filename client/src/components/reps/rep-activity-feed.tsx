@@ -1,137 +1,172 @@
-import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Link } from 'wouter';
 import { 
-  Activity, 
   Home, 
+  Star, 
   MessageCircle, 
-  TrendingUp, 
-  PartyPopper, 
-  MoreVertical, 
-  CheckCircle,
-  ThumbsUp,
-  Hand
-} from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+  UserPlus, 
+  Award,
+  Clock
+} from 'lucide-react';
 
-interface RepActivityFeedProps {
-  activities: any[];
-  repId: number;
+interface Activity {
+  id: number;
+  type: 'listing' | 'deal' | 'review' | 'connection' | 'award' | 'other';
+  date: string;
+  content: string;
+  user?: {
+    id: number;
+    name: string;
+    avatar: string;
+  };
+  entityId?: number; // ID of the property, review, etc.
+  link?: string;
 }
 
-export default function RepActivityFeed({ activities, repId }: RepActivityFeedProps) {
-  // Convert to actual array if it's not
-  const activitiesArray = Array.isArray(activities) ? activities : [];
+interface RepActivityFeedProps {
+  activities: Activity[];
+}
 
-  // Sort activities by date (newest first)
-  const sortedActivities = [...activitiesArray].sort((a, b) => {
-    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-  });
-
-  // Get activity icon based on activity type
-  const getActivityIcon = (type: string) => {
-    switch (type?.toLowerCase()) {
+export default function RepActivityFeed({ activities }: RepActivityFeedProps) {
+  if (!activities || activities.length === 0) {
+    return (
+      <div className="text-center py-8 bg-gray-50 rounded-lg">
+        <MessageCircle size={40} className="mx-auto text-gray-300 mb-3" />
+        <h3 className="text-lg font-medium text-gray-700 mb-1">No Activity Yet</h3>
+        <p className="text-gray-500 text-sm">There hasn't been any activity recorded yet.</p>
+      </div>
+    );
+  }
+  
+  // Format date to relative time (e.g., 2 days ago)
+  const formatRelativeTime = (dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) {
+      return 'just now';
+    }
+    
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} ${diffInMinutes === 1 ? 'minute' : 'minutes'} ago`;
+    }
+    
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours} ${diffInHours === 1 ? 'hour' : 'hours'} ago`;
+    }
+    
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays < 30) {
+      return `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago`;
+    }
+    
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths < 12) {
+      return `${diffInMonths} ${diffInMonths === 1 ? 'month' : 'months'} ago`;
+    }
+    
+    const diffInYears = Math.floor(diffInMonths / 12);
+    return `${diffInYears} ${diffInYears === 1 ? 'year' : 'years'} ago`;
+  };
+  
+  // Get icon for activity type
+  const getActivityIcon = (type: Activity['type']) => {
+    switch (type) {
       case 'listing':
-        return <Home className="h-4 w-4 text-blue-500" />;
-      case 'comment':
-        return <MessageCircle className="h-4 w-4 text-purple-500" />;
-      case 'market_update':
-        return <TrendingUp className="h-4 w-4 text-green-500" />;
+        return <Home className="text-indigo-500" />;
       case 'deal':
-        return <PartyPopper className="h-4 w-4 text-amber-500" />;
+        return <Award className="text-green-500" />;
+      case 'review':
+        return <Star className="text-amber-500" />;
+      case 'connection':
+        return <UserPlus className="text-blue-500" />;
+      case 'award':
+        return <Award className="text-purple-500" />;
       default:
-        return <CheckCircle className="h-4 w-4 text-primary" />;
+        return <MessageCircle className="text-gray-500" />;
     }
   };
-
-  // Generate random engagement counts - normally these would come from the activity data
-  const getRandomCount = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-
-  // Format timestamp to relative time
-  const formatTimestamp = (timestamp: string) => {
-    try {
-      return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
-    } catch (e) {
-      return "Recently";
+  
+  // Get activity type label
+  const getActivityTypeLabel = (type: Activity['type']) => {
+    switch (type) {
+      case 'listing':
+        return 'New Listing';
+      case 'deal':
+        return 'Closed Deal';
+      case 'review':
+        return 'New Review';
+      case 'connection':
+        return 'New Connection';
+      case 'award':
+        return 'Achievement';
+      default:
+        return 'Activity';
     }
   };
-
+  
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Activity className="h-5 w-5" />
-          Activity
-        </CardTitle>
-        <CardDescription>Recent actions and updates</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4 max-h-[500px] overflow-y-auto pr-1">
-        {sortedActivities.length > 0 ? (
-          sortedActivities.map((activity) => (
-            <div 
-              key={activity.id} 
-              className="pb-4 border-b last:border-b-0 last:pb-0"
-            >
-              <div className="flex gap-3">
-                <div className="flex-shrink-0 mt-1">
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    {getActivityIcon(activity.type)}
+    <div className="space-y-4">
+      {activities.map((activity) => (
+        <Card key={activity.id} className="border border-gray-100 hover:shadow-sm transition-all">
+          <CardContent className="p-4">
+            <div className="flex gap-3">
+              {/* Activity Icon */}
+              <div className="h-10 w-10 flex items-center justify-center rounded-full bg-gray-50">
+                {getActivityIcon(activity.type)}
+              </div>
+              
+              <div className="flex-1">
+                <div className="flex flex-wrap justify-between items-start gap-2 mb-1">
+                  {/* Activity Type Badge */}
+                  <Badge variant="outline" className="font-normal text-xs">
+                    {getActivityTypeLabel(activity.type)}
+                  </Badge>
+                  
+                  {/* Time */}
+                  <div className="flex items-center text-xs text-gray-500">
+                    <Clock size={12} className="mr-1" />
+                    {formatRelativeTime(activity.date)}
                   </div>
                 </div>
                 
-                <div className="flex-1">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm font-medium">{activity.content}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {formatTimestamp(activity.timestamp)}
-                      </p>
-                    </div>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
+                {/* Content */}
+                <p className="text-sm text-gray-700 mb-2">
+                  {activity.content}
+                </p>
+                
+                {/* User Info (if available) */}
+                {activity.user && (
+                  <div className="flex items-center mt-2">
+                    <Avatar className="h-6 w-6 mr-2">
+                      <AvatarImage src={activity.user.avatar} alt={activity.user.name} />
+                      <AvatarFallback>{activity.user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                    </Avatar>
+                    <Link href={`/reps/${activity.user.id}`} className="text-xs text-gray-600 hover:text-[#135341] hover:underline">
+                      {activity.user.name}
+                    </Link>
                   </div>
-                  
-                  {activity.imageUrl && (
-                    <div className="mt-2 rounded-md overflow-hidden bg-muted">
-                      <img 
-                        src={activity.imageUrl} 
-                        alt="Activity" 
-                        className="w-full h-auto object-cover" 
-                      />
-                    </div>
-                  )}
-                  
-                  <div className="flex gap-4 mt-3">
-                    <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground text-xs">
-                      <ThumbsUp className="h-3.5 w-3.5 mr-1.5" />
-                      {getRandomCount(0, 12)}
-                    </Button>
-                    <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground text-xs">
-                      <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
-                      {getRandomCount(0, 5)}
-                    </Button>
-                    <Button variant="ghost" size="sm" className="h-8 px-2 text-muted-foreground text-xs">
-                      <Hand className="h-3.5 w-3.5 mr-1.5" />
-                      {getRandomCount(0, 20)}
-                    </Button>
+                )}
+                
+                {/* Link to entity (if available) */}
+                {activity.link && (
+                  <div className="mt-2">
+                    <Link href={activity.link} className="text-xs text-[#135341] hover:underline">
+                      View Details
+                    </Link>
                   </div>
-                </div>
+                )}
               </div>
             </div>
-          ))
-        ) : (
-          <div className="text-center py-4">
-            <Activity className="h-10 w-10 text-muted-foreground mx-auto mb-3 opacity-30" />
-            <h3 className="text-sm font-medium mb-1">No Recent Activity</h3>
-            <p className="text-xs text-muted-foreground mb-4">
-              This REP hasn't posted any activities recently
-            </p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
   );
 }
