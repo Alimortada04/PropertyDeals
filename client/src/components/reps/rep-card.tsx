@@ -188,78 +188,100 @@ export default function RepCard({ rep }: RepCardProps) {
         </div>
         
         {/* Mobile layout - horizontal (similar to connections) */}
-        <div className="sm:hidden flex items-start space-x-3">
-          {/* Profile Image - Left on mobile */}
-          <div className="flex-shrink-0">
-            <img 
-              src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
-              alt={rep.name}
-              className={`${isBusiness ? 'w-14 h-14 rounded-lg' : 'w-14 h-14 rounded-full'} object-cover border-2 border-white shadow-md`}
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = isBusiness 
-                  ? "https://placehold.co/200x200/e6e6e6/803344?text=Business"
-                  : "https://randomuser.me/api/portraits/lego/1.jpg";
-              }}
-            />
-          </div>
-          
-          {/* Middle: Name, role tag, location */}
-          <div className="flex-1 min-w-0">
-            <h3 className="font-heading text-base font-semibold text-gray-800 mb-1 line-clamp-1">
-              {rep.name}
-              {rep.isVerified && (
-                <span className="inline-block ml-1 text-[#803344]">
-                  <PdLogo />
-                </span>
-              )}
-            </h3>
+        <div className="sm:hidden">
+          {/* Tags on top - horizontal arrangement */}
+          <div className={`flex flex-wrap gap-1.5 mb-3 ${(rep.isVerified || rep.isFeatured) ? 'mt-2' : ''}`}>
+            {rep.isVerified && (
+              <Badge className="bg-[#803344] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
+                <CheckCircle2 size={10} />
+                Verified
+              </Badge>
+            )}
+            
+            {rep.isFeatured && (
+              <Badge className="bg-[#09261E] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
+                <Award size={10} />
+                Featured
+              </Badge>
+            )}
             
             <Badge 
               variant="outline" 
-              className="mb-1.5 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs"
+              className="bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs"
             >
               {rep.role}
             </Badge>
-            
-            <div className="flex items-center text-gray-600 text-xs">
-              <MapPin size={12} className="mr-1 text-gray-400 flex-shrink-0" />
-              <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
-            </div>
           </div>
           
-          {/* Right: Rating & Badges */}
-          <div className="flex flex-col items-end">
-            {/* Rating */}
-            <div className="flex items-center text-gray-700 text-xs mb-1">
-              <Star size={12} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-              <span className="font-medium">{rep.rating}</span>
+          {/* Main content row */}
+          <div className="flex items-center justify-center space-x-3 relative pb-9">
+            {/* Profile Image - Left on mobile, vertically centered */}
+            <div className="flex-shrink-0 my-auto flex items-center justify-center">
+              <img 
+                src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
+                alt={rep.name}
+                className={`${isBusiness ? 'w-14 h-14 rounded-lg' : 'w-14 h-14 rounded-full'} object-cover border-2 border-white shadow-md`}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = isBusiness 
+                    ? "https://placehold.co/200x200/e6e6e6/803344?text=Business"
+                    : "https://randomuser.me/api/portraits/lego/1.jpg";
+                }}
+              />
             </div>
             
-            {/* Deals completed */}
-            {rep.dealsCompleted && (
-              <div className="flex items-center text-gray-700 text-xs mb-2">
-                <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
+            {/* Middle: Name and location */}
+            <div className="flex-1 min-w-0 flex flex-col justify-center">
+              <h3 className="font-heading text-base font-semibold text-gray-800 mb-1 line-clamp-1">
+                {rep.name}
+                {rep.isVerified && (
+                  <span className="inline-block ml-1 text-[#803344]">
+                    <PdLogo />
+                  </span>
+                )}
+              </h3>
+              
+              <div className="flex items-center text-gray-600 text-xs">
+                <MapPin size={12} className="mr-1 text-gray-400 flex-shrink-0" />
+                <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
               </div>
-            )}
+            </div>
             
-            {/* View Profile Link */}
-            <Button 
-              size="sm"
-              variant="outline"
-              className="h-7 text-xs px-2 py-0 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors mt-auto"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (isBusiness) {
-                  setLocation(`/business/${rep.slug}`);
-                } else {
-                  // Navigate to the individual REP profile page
-                  setLocation(`/reps/${rep.id}`);
-                }
-              }}
-            >
-              View Profile
-            </Button>
+            {/* Right: Rating & Deals */}
+            <div className="flex flex-col items-end justify-center">
+              {/* Rating */}
+              <div className="flex items-center text-gray-700 text-xs mb-1">
+                <Star size={12} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+                <span className="font-medium">{rep.rating}</span>
+              </div>
+              
+              {/* Deals completed */}
+              {rep.dealsCompleted && (
+                <div className="flex items-center text-gray-700 text-xs">
+                  <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
+                </div>
+              )}
+            </div>
+            
+            {/* View Profile Link - Bottom right position */}
+            <div className="absolute bottom-0 right-0">
+              <Button 
+                size="sm"
+                variant="outline"
+                className="h-7 text-xs px-2 py-0 border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (isBusiness) {
+                    setLocation(`/business/${rep.slug}`);
+                  } else {
+                    // Navigate to the individual REP profile page
+                    setLocation(`/reps/${rep.id}`);
+                  }
+                }}
+              >
+                View Profile
+              </Button>
+            </div>
           </div>
         </div>
         
