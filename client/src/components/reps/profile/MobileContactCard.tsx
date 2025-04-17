@@ -76,7 +76,7 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
           <div className="flex justify-center items-center gap-x-10 w-full">
             {/* Share button - uses native share API */}
             <button 
-              className="flex flex-col items-center justify-center rounded-full w-14 h-14 bg-[#09261E] text-white hover:scale-105 transform transition-transform duration-200"
+              className="flex flex-col items-center justify-center rounded-full w-12 h-12 bg-[#09261E] text-white hover:scale-105 transform transition-transform duration-200"
               aria-label="Share REP profile"
               onClick={() => {
                 if (navigator.share) {
@@ -91,17 +91,17 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                 }
               }}
             >
-              <Share2 className="h-7 w-7" />
+              <Share2 className="h-6 w-6" />
             </button>
             
             {/* Profile/Connect Button */}
             <Dialog open={socialsDialogOpen} onOpenChange={setSocialsDialogOpen}>
               <DialogTrigger asChild>
                 <button 
-                  className="flex flex-col items-center justify-center rounded-full w-14 h-14 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
+                  className="flex flex-col items-center justify-center rounded-full w-12 h-12 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
                   aria-label="Connect with REP"
                 >
-                  <UserPlus className="h-7 w-7" />
+                  <UserPlus className="h-6 w-6" />
                 </button>
               </DialogTrigger>
               <DialogContent className="w-[95vw] rounded-t-xl rounded-b-none p-4 pt-6 pb-8 fixed bottom-0 top-auto translate-y-0 border-t-2 border-[#09261E]">
@@ -117,9 +117,9 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Connect on LinkedIn"
-                      className="p-3 rounded-full bg-gray-100 text-[#0077B5] hover:bg-[#0077B5]/10 transition-colors duration-200"
+                      className="p-2.5 rounded-full bg-gray-100 text-[#0077B5] hover:bg-[#0077B5]/10 transition-colors duration-200"
                     >
-                      <Linkedin className="h-6 w-6" />
+                      <Linkedin className="h-5 w-5" />
                     </a>
                   )}
                   
@@ -129,9 +129,9 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Follow on Instagram"
-                      className="p-3 rounded-full bg-gray-100 text-[#E1306C] hover:bg-[#E1306C]/10 transition-colors duration-200"
+                      className="p-2.5 rounded-full bg-gray-100 text-[#E1306C] hover:bg-[#E1306C]/10 transition-colors duration-200"
                     >
-                      <Instagram className="h-6 w-6" />
+                      <Instagram className="h-5 w-5" />
                     </a>
                   )}
                   
@@ -141,9 +141,9 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Follow on Facebook"
-                      className="p-3 rounded-full bg-gray-100 text-[#1877F2] hover:bg-[#1877F2]/10 transition-colors duration-200"
+                      className="p-2.5 rounded-full bg-gray-100 text-[#1877F2] hover:bg-[#1877F2]/10 transition-colors duration-200"
                     >
-                      <Facebook className="h-6 w-6" />
+                      <Facebook className="h-5 w-5" />
                     </a>
                   )}
                   
@@ -153,9 +153,9 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Follow on Twitter"
-                      className="p-3 rounded-full bg-gray-100 text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-colors duration-200"
+                      className="p-2.5 rounded-full bg-gray-100 text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-colors duration-200"
                     >
-                      <Twitter className="h-6 w-6" />
+                      <Twitter className="h-5 w-5" />
                     </a>
                   )}
                 </div>
@@ -213,11 +213,11 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
             
             {/* Message button */}
             <button 
-              className="flex flex-col items-center justify-center rounded-full w-14 h-14 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
+              className="flex flex-col items-center justify-center rounded-full w-12 h-12 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
               aria-label="Message this REP"
               onClick={() => window.open(`mailto:${contact?.email || ''}`)}
             >
-              <MessageSquare className="h-7 w-7" />
+              <MessageSquare className="h-6 w-6" />
             </button>
           </div>
         </div>
