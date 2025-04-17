@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Property } from '@shared/schema';
 import { 
   PhoneCall, 
   Mail, 
@@ -36,97 +35,44 @@ import RepConnectionsList from '@/components/reps/rep-connections-list';
 import RepPropertyCard from '@/components/reps/rep-property-card';
 import RepReviewCard from '@/components/reps/rep-review-card';
 
-// Types for REP Profile Data
-interface RepStats {
-  dealsClosed: number;
-  activeListings: number;
-  rating: number;
-  reviewCount: number;
-  responseRate: number;
-}
-
-interface ContactInfo {
-  phone?: string;
-  email?: string;
-}
-
-interface SocialLinks {
-  facebook?: string;
-  instagram?: string;
-  twitter?: string;
-  linkedin?: string;
-}
-
-interface RepData {
-  id: number;
-  name: string;
-  role: string;
-  avatar: string;
-  banner?: string;
-  verified: boolean;
-  topRep: boolean;
-  location: string;
-  companyId?: number;
-  company?: string;
-  memberSince: string;
-  stats: RepStats;
-  contactInfo?: ContactInfo;
-  socialLinks?: SocialLinks;
-  bio: string;
-  specialties?: string[];
-  areas?: string[];
-}
-
-interface Deal {
-  id: number;
-  property: Property;
-  closedDate: string;
-  soldPrice: number;
-  role: 'listing_agent' | 'buyers_agent' | 'seller' | 'buyer';
-}
-
-interface Listing extends Property {
-  listedDate: string;
-}
-
 export default function RepProfilePage() {
-  const params = useParams<{ id: string }>();
-  const repId = params.id ? parseInt(params.id) : 0;
+  const params = useParams();
+  const repId = parseInt(params.id);
   const [, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState('about');
   
   // Fetch rep data
-  const { data: rep = {} as RepData, isLoading: isLoadingRep } = useQuery<RepData>({
+  const { data: rep = {}, isLoading: isLoadingRep } = useQuery({
     queryKey: [`/api/reps/${repId}`],
     enabled: !isNaN(repId),
   });
   
   // Fetch active listings
-  const { data: listings = [] as Listing[], isLoading: isLoadingListings } = useQuery<Listing[]>({
+  const { data: listings = [], isLoading: isLoadingListings } = useQuery({
     queryKey: [`/api/reps/${repId}/listings`],
     enabled: !isNaN(repId),
   });
   
   // Fetch closed deals
-  const { data: deals = [] as Deal[], isLoading: isLoadingDeals } = useQuery<Deal[]>({
+  const { data: deals = [], isLoading: isLoadingDeals } = useQuery({
     queryKey: [`/api/reps/${repId}/deals`],
     enabled: !isNaN(repId),
   });
   
   // Fetch reviews
-  const { data: reviews = [] as any[], isLoading: isLoadingReviews } = useQuery<any[]>({
+  const { data: reviews = [], isLoading: isLoadingReviews } = useQuery({
     queryKey: [`/api/reps/${repId}/reviews`],
     enabled: !isNaN(repId),
   });
   
   // Fetch connections
-  const { data: connections = [] as any[], isLoading: isLoadingConnections } = useQuery<any[]>({
+  const { data: connections = [], isLoading: isLoadingConnections } = useQuery({
     queryKey: [`/api/reps/${repId}/connections`],
     enabled: !isNaN(repId),
   });
   
   // Fetch activity
-  const { data: activities = [] as any[], isLoading: isLoadingActivity } = useQuery<any[]>({
+  const { data: activities = [], isLoading: isLoadingActivity } = useQuery({
     queryKey: [`/api/reps/${repId}/activity`],
     enabled: !isNaN(repId),
   });
@@ -136,7 +82,7 @@ export default function RepProfilePage() {
                      isLoadingReviews || isLoadingConnections || isLoadingActivity;
                      
   // Function to format date
-  const formatDate = (dateString: string): string => {
+  const formatDate = (dateString) => {
     try {
       const date = new Date(dateString);
       return new Intl.DateTimeFormat('en-US', { 
