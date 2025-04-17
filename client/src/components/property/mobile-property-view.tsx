@@ -1341,6 +1341,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         onClick={handleContactClick}
         onContactClick={handleContactClick}
         sellerName="Michael Johnson"
+        sellerPosition="Real Estate Agent"
         sellerImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"
       />
       
