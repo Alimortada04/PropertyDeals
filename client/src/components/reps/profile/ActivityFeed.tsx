@@ -93,80 +93,155 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
   const hasMoreActivities = filteredActivities.length > 3;
   
   return (
-    <div id="activity" className="my-8 scroll-mt-24">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-[#09261E]">
-          Activity <span className="text-base font-normal text-gray-500">({activities.length})</span>
-        </h2>
+    <>
+      <div id="activity" className="my-8 scroll-mt-24">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-[#09261E]">
+            Activity <span className="text-base font-normal text-gray-500">({activities.length})</span>
+          </h2>
+          
+          <Button 
+            variant="link" 
+            className="text-[#09261E] font-medium"
+            onClick={() => setShowAllActivitiesDialog(true)}
+          >
+            View All
+            <ChevronRight size={16} className="ml-1" />
+          </Button>
+        </div>
         
-        <Button 
-          variant="link" 
-          className="text-[#09261E] font-medium"
-          onClick={() => setShowAllActivitiesDialog(true)}
-        >
-          View All
-          <ChevronRight size={16} className="ml-1" />
-        </Button>
+        <Tabs defaultValue="all" onValueChange={setActiveTab}>
+          <TabsList className="mb-4 bg-gray-50">
+            <TabsTrigger 
+              value="all" 
+              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+            >
+              All Activity
+            </TabsTrigger>
+            <TabsTrigger 
+              value="posts" 
+              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+            >
+              Posts
+            </TabsTrigger>
+            <TabsTrigger 
+              value="deals" 
+              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+            >
+              Deals
+            </TabsTrigger>
+            <TabsTrigger 
+              value="comments" 
+              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+            >
+              Comments
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value={activeTab} className="mt-0">
+            <div className="space-y-4">
+              {filteredActivities.length === 0 ? (
+                <Card>
+                  <CardContent className="p-5 text-center text-gray-500">
+                    No activities to display in this category.
+                  </CardContent>
+                </Card>
+              ) : (
+                <>
+                  {displayedActivities.map((activity) => (
+                    <ActivityCard key={activity.id} activity={activity} />
+                  ))}
+                  
+                  {hasMoreActivities && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+                      onClick={() => setShowAllActivitiesDialog(true)}
+                    >
+                      <ActivityIcon size={16} className="mr-2" />
+                      <span>See all {filteredActivities.length} activities</span>
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
       
-      <Tabs defaultValue="all" onValueChange={setActiveTab}>
-        <TabsList className="mb-4 bg-gray-50">
-          <TabsTrigger 
-            value="all" 
-            className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
-          >
-            All Activity
-          </TabsTrigger>
-          <TabsTrigger 
-            value="posts" 
-            className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
-          >
-            Posts
-          </TabsTrigger>
-          <TabsTrigger 
-            value="deals" 
-            className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
-          >
-            Deals
-          </TabsTrigger>
-          <TabsTrigger 
-            value="comments" 
-            className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
-          >
-            Comments
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value={activeTab} className="mt-0">
-          <div className="space-y-4">
-            {filteredActivities.length === 0 ? (
-              <Card>
-                <CardContent className="p-5 text-center text-gray-500">
-                  No activities to display in this category.
-                </CardContent>
-              </Card>
-            ) : (
-              <>
-                {displayedActivities.map((activity) => (
-                  <ActivityCard key={activity.id} activity={activity} />
-                ))}
-                
-                {hasMoreActivities && (
-                  <Button 
-                    variant="outline" 
-                    className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
-                    onClick={() => setShowAllActivitiesDialog(true)}
-                  >
-                    <ActivityIcon size={16} className="mr-2" />
-                    <span>See all {filteredActivities.length} activities</span>
-                  </Button>
-                )}
-              </>
-            )}
+      {/* All Activities Dialog */}
+      <Dialog open={showAllActivitiesDialog} onOpenChange={setShowAllActivitiesDialog}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="text-2xl">All Activity</DialogTitle>
+            <DialogDescription className="text-base text-gray-500">
+              Browse all {activities.length} activities from this REP
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="relative my-3">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input 
+              placeholder="Search activity..." 
+              className="pl-9 border-gray-300"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-        </TabsContent>
-      </Tabs>
-    </div>
+          
+          <Tabs defaultValue="all" onValueChange={setActiveTab} className="flex-1 overflow-hidden flex flex-col">
+            <TabsList className="mb-4 bg-gray-50">
+              <TabsTrigger 
+                value="all" 
+                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+              >
+                All Activity
+              </TabsTrigger>
+              <TabsTrigger 
+                value="posts" 
+                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+              >
+                Posts
+              </TabsTrigger>
+              <TabsTrigger 
+                value="deals" 
+                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+              >
+                Deals
+              </TabsTrigger>
+              <TabsTrigger 
+                value="comments" 
+                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white rounded-md"
+              >
+                Comments
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value={activeTab} className="mt-0 flex-1 overflow-y-auto pr-2 -mr-2">
+              <div className="space-y-4 py-2">
+                {filteredActivities.length === 0 ? (
+                  <div className="py-16 text-center">
+                    <ActivityIcon className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+                    <h3 className="text-lg font-medium text-gray-900">No activities found</h3>
+                    <p className="text-gray-500 mt-1">Try adjusting your search criteria or filters</p>
+                  </div>
+                ) : (
+                  filteredActivities.map((activity) => (
+                    <ActivityCard key={activity.id} activity={activity} />
+                  ))
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+          
+          <DialogFooter className="pt-2 border-t mt-2">
+            <Button variant="outline" onClick={() => setShowAllActivitiesDialog(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
