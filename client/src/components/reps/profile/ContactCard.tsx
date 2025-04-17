@@ -19,7 +19,7 @@ export default function ContactCard({ rep, className = "" }: ContactCardProps) {
   const isAvailable = rep.availability === "available";
   
   return (
-    <div className={`sticky top-24 ${className}`}>
+    <div className={`sticky top-24 hidden md:block ${className}`}>
       <Card className="shadow-md">
         <CardHeader className="pb-2">
           <CardTitle className="text-xl font-bold text-[#09261E]">Contact {rep.name}</CardTitle>
@@ -85,28 +85,41 @@ export default function ContactCard({ rep, className = "" }: ContactCardProps) {
               variant="outline" 
               className="w-full flex justify-center items-center h-9"
               onClick={() => {
-                // Logic to create a contact with REP info
+                // Create a vCard for the contact
                 if (rep.contact) {
-                  const contactInfo = {
-                    name: rep.name,
-                    phone: rep.contact.phone,
-                    email: rep.contact.email,
-                    // Additional fields would be added here in a real app
-                  };
+                  const vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN:${rep.name}
+ORG:PropertyDeals
+TITLE:${rep.role}
+${rep.contact?.phone ? `TEL;TYPE=WORK,VOICE:${rep.contact.phone}` : ''}
+${rep.contact?.email ? `EMAIL;TYPE=WORK:${rep.contact.email}` : ''}
+${rep.website ? `URL:${rep.website}` : ''}
+END:VCARD`;
                   
-                  // In a real app, we would use the Contacts API or create a vCard
-                  alert("Contact information saved to your device contacts");
+                  const blob = new Blob([vCardData], { type: 'text/vcard' });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = url;
+                  link.download = `${rep.name.replace(/\s+/g, '-')}-PropertyDeals.vcf`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
                 }
               }}
             >
-              <UserPlus size={15} className="mr-2" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
               <span>Add to Contacts</span>
             </Button>
           </div>
         </CardContent>
         
         <CardFooter className="flex-col pt-0">
-          <p className="text-xs text-gray-500 mt-3 text-center">
+          <p className="text-xs text-gray-500 mt-2 mb-1 text-center">
             By contacting this real estate professional, you agree to the terms of service and privacy policy.
           </p>
         </CardFooter>
