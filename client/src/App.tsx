@@ -11,8 +11,6 @@ import AuthPage from "@/pages/auth-page";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
 import RepsPage from "@/pages/reps-page";
-import RepDetailPage from "@/pages/rep-detail-page";
-import RepProfilePage from "@/pages/rep-profile-page";
 import BusinessDetailPage from "@/pages/business-detail-page";
 import ConnectPage from "@/pages/connect-page";
 import DiscussionsPage from "@/pages/discussions-page";
@@ -57,20 +55,7 @@ function Router() {
           <RepsPage />
         </MainLayout>
       </Route>
-      <Route path="/rep/:slug">
-        {params => (
-          <MainLayout>
-            <RepDetailPage slug={params.slug} />
-          </MainLayout>
-        )}
-      </Route>
-      <Route path="/reps/:id">
-        {params => (
-          <MainLayout>
-            <RepProfilePage />
-          </MainLayout>
-        )}
-      </Route>
+
       <Route path="/business/:slug">
         {params => (
           <MainLayout>
