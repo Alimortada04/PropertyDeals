@@ -143,7 +143,7 @@ export default function RepCard({ rep }: RepCardProps) {
               </Badge>
             </div>
             
-            {/* Quick Info Block */}
+            {/* Quick Info Block - Responsive */}
             <div className="grid grid-cols-2 gap-3 w-full mb-3 text-sm">
               <div className="flex items-center text-gray-600">
                 <MapPin size={14} className="mr-1 text-gray-400 flex-shrink-0" />
@@ -157,13 +157,14 @@ export default function RepCard({ rep }: RepCardProps) {
                 </div>
               )}
               
+              {/* Years experience - hidden on mobile */}
               {isBusiness ? (
-                <div className="flex items-center text-gray-600">
+                <div className="hidden sm:flex items-center text-gray-600">
                   <Building2 size={14} className="mr-1 text-gray-400 flex-shrink-0" />
                   <span className="truncate">Since {rep.foundedYear || 'N/A'}</span>
                 </div>
               ) : (
-                <div className="flex items-center text-gray-600">
+                <div className="hidden sm:flex items-center text-gray-600">
                   <Briefcase size={14} className="mr-1 text-gray-400 flex-shrink-0" />
                   <span className="truncate">{rep.yearsExperience || '0'}+ Years</span>
                 </div>
@@ -184,8 +185,8 @@ export default function RepCard({ rep }: RepCardProps) {
               </div>
             </div>
             
-            {/* Bio excerpt as tagline */}
-            <p className="text-gray-600 text-sm mb-2 line-clamp-2 text-center">
+            {/* Bio excerpt as tagline - hidden on mobile */}
+            <p className="hidden sm:block text-gray-600 text-sm mb-2 line-clamp-2 text-center">
               {rep.bio?.substring(0, 100)}...
             </p>
           </div>
@@ -201,10 +202,11 @@ export default function RepCard({ rep }: RepCardProps) {
 
       {/* Bottom CTA Section */}
       <CardFooter className="px-4 pb-4 pt-0 flex gap-2">
+        {/* Message button - Hidden on mobile */}
         <Button 
           variant="outline"
           size="sm"
-          className="flex-1 text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors"
+          className="hidden sm:flex flex-1 text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors"
           onClick={(e) => {
             e.stopPropagation();
             // Open message dialog
