@@ -44,8 +44,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
     .toUpperCase();
   
   // Extract domain name from website URL
-  const websiteDomain = (rep.website || rep.social?.website) ? 
-    new URL(rep.website || rep.social?.website as string).hostname.replace("www.", "") : 
+  const websiteDomain = rep.website ? 
+    new URL(rep.website).hostname.replace("www.", "") : 
     "";
     
   // Function to handle copying profile link
@@ -71,6 +71,9 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Get social media properties safely
+  const social = rep.social as Record<string, string> || {};
   
   return (
     <div className="relative mb-6">
@@ -80,7 +83,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
           className="w-full relative" 
           style={{ 
             height: bannerHeight, 
-            backgroundImage: `url(${rep.bannerImage || 'https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'})`,
+            backgroundImage: `url(${rep.bannerUrl || 'https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
@@ -103,239 +106,245 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
         </div>
       </div>
       
-      {/* Profile Content - Below banner with space for avatar */}
+      {/* Profile Content - Below banner and avatar */}
       <div className="container mx-auto px-4">
         <div className="bg-white rounded-md shadow-sm mt-12 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col md:flex-row md:items-start">
-              {/* Empty div to create space where the avatar would have been */}
-              <div className="mr-6 flex-shrink-0 w-32 h-0 md:h-auto"></div>
-              
-              <div className="flex flex-col md:flex-row flex-1 justify-between">
-                <div className="mt-4 md:mt-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-2xl font-bold text-[#09261E]">{rep.name}</h1>
-                    {rep.verified && (
-                      <Badge className="bg-[#09261E]">
-                        <BadgeCheck className="h-3.5 w-3.5 mr-1" />
-                        <span>Verified</span>
-                      </Badge>
-                    )}
-                  </div>
-                  
-                  <div className="mt-1">
-                    <Badge variant="outline" className="px-2 py-1 border-[#803344]/30 text-[#803344]">
-                      {rep.title || "Real Estate Agent"}
+            <div className="w-full">
+              {/* Basic info section */}
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-2xl font-bold text-[#09261E]">{rep.name}</h1>
+                  {rep.isVerified && (
+                    <Badge className="bg-[#09261E]">
+                      <BadgeCheck className="h-3.5 w-3.5 mr-1" />
+                      <span>Verified</span>
                     </Badge>
-                  </div>
-                  
-                  <div className="flex items-center mt-3">
-                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                    <span className="ml-2 text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
-                    <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
-                  </div>
-                  
-                  <div className="flex flex-wrap items-start mt-2">
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      <span>{rep.locationCity || (rep.location?.city || "")}, {rep.locationState || (rep.location?.state || "")}</span>
-                    </div>
-                    
-                    <div className="flex items-center text-gray-600 ml-4">
-                      <Award className="h-4 w-4 mr-1" />
-                      <span>{rep.yearsExperience}+ years experience</span>
-                    </div>
-                  </div>
-                  
-                  {(rep.website || rep.social?.website) && (
-                    <div className="flex items-center mt-1">
-                      <a href={rep.website || rep.social?.website} target="_blank" rel="noopener noreferrer" 
-                        className="text-blue-600 hover:underline flex items-center">
-                        <Globe className="h-4 w-4 mr-1" />
-                        <span>{websiteDomain}</span>
-                      </a>
-                    </div>
                   )}
                 </div>
                 
-                {/* Social Links and Action Buttons - Colored by brand */}
-                <div className="hidden md:block">
-                  <div className="flex gap-2 mt-1">
-                    {rep.social?.linkedin && (
-                      <a href={rep.social.linkedin} target="_blank" rel="noopener noreferrer">
+                <div className="mt-1">
+                  <Badge variant="outline" className="px-2 py-1 border-[#803344]/30 text-[#803344]">
+                    {rep.role}
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center mt-3">
+                  <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                  <span className="ml-2 text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
+                  <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
+                </div>
+                
+                <div className="flex flex-wrap items-start mt-2">
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    <span>{rep.locationCity}, {rep.locationState}</span>
+                  </div>
+                  
+                  <div className="flex items-center text-gray-600 ml-4">
+                    <Award className="h-4 w-4 mr-1" />
+                    <span>{rep.yearsExperience}+ years experience</span>
+                  </div>
+                </div>
+                
+                {rep.website && (
+                  <div className="flex items-center mt-1">
+                    <a 
+                      href={rep.website} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-blue-600 hover:underline flex items-center"
+                    >
+                      <Globe className="h-4 w-4 mr-1" />
+                      <span>{websiteDomain}</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+              
+              {/* Social links and buttons - Desktop */}
+              <div className="hidden md:block mt-4">
+                <div className="flex justify-end">
+                  <div className="flex gap-2">
+                    {social?.linkedin && (
+                      <a href={social.linkedin} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/30">
                           <Linkedin className="h-5 w-5" />
                         </Button>
                       </a>
                     )}
                     
-                    {rep.social?.instagram && (
-                      <a href={rep.social.instagram} target="_blank" rel="noopener noreferrer">
+                    {social?.instagram && (
+                      <a href={social.instagram} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/10 border-[#E1306C]/30">
                           <Instagram className="h-5 w-5" />
                         </Button>
                       </a>
                     )}
                     
-                    {rep.social?.facebook && (
-                      <a href={rep.social.facebook} target="_blank" rel="noopener noreferrer">
+                    {social?.facebook && (
+                      <a href={social.facebook} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/30">
                           <Facebook className="h-5 w-5" />
                         </Button>
                       </a>
                     )}
                     
-                    {rep.social?.twitter && (
-                      <a href={rep.social.twitter} target="_blank" rel="noopener noreferrer">
+                    {social?.twitter && (
+                      <a href={social.twitter} target="_blank" rel="noopener noreferrer">
                         <Button variant="outline" size="sm" className="h-9 w-9 p-0 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border-[#1DA1F2]/30">
                           <Twitter className="h-5 w-5" />
                         </Button>
                       </a>
                     )}
                   </div>
+                </div>
+                
+                {/* Connect & Share Buttons */}
+                <div className="flex justify-end mt-3 gap-2">
+                  <Button className="bg-[#09261E] hover:bg-[#135341]">
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    <span>Connect</span>
+                  </Button>
                   
-                  {/* Connect & Share Buttons */}
-                  <div className="flex mt-3 gap-2">
-                    <Button className="bg-[#09261E] hover:bg-[#135341]">
-                      <Star className="mr-2 h-4 w-4" />
-                      <span>Connect</span>
-                    </Button>
-                    
-                    <Popover open={shareOpen} onOpenChange={setShareOpen}>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" size="icon" className="h-10 w-10">
-                          <Share2 className="h-4 w-4" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-80 p-0" align="end" side="bottom" sideOffset={5}>
-                        <div className="p-4">
-                          <h3 className="text-xl font-semibold">Share Profile</h3>
-                          <p className="text-sm text-gray-500 mt-1">Choose how you'd like to share this profile with others.</p>
-                        </div>
-                        
-                        {/* REP Info */}
-                        <div className="p-4 border-y bg-gray-50/80">
-                          <div className="flex gap-3">
-                            <Avatar className="h-14 w-14 rounded-md border border-gray-200">
-                              <AvatarImage src={rep.avatar} alt={rep.name} />
-                              <AvatarFallback className="rounded-md">{initials}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <h4 className="font-medium text-lg">{rep.name}</h4>
-                              <p className="text-gray-500 text-sm">{rep.locationCity || (rep.location?.city || "")}, {rep.locationState || (rep.location?.state || "")}</p>
-                              <div className="flex items-center mt-1">
-                                <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-                                <span className="ml-1 text-amber-500 text-xs font-medium">{rep.rating.toFixed(1)}</span>
-                                <span className="ml-1 text-xs text-gray-600">({rep.reviewCount} reviews)</span>
-                              </div>
+                  <Popover open={shareOpen} onOpenChange={setShareOpen}>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" size="icon" className="h-10 w-10">
+                        <Share2 className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-0" align="end" side="bottom" sideOffset={5}>
+                      <div className="p-4">
+                        <h3 className="text-xl font-semibold">Share Profile</h3>
+                        <p className="text-sm text-gray-500 mt-1">Choose how you'd like to share this profile with others.</p>
+                      </div>
+                      
+                      {/* REP Info */}
+                      <div className="p-4 border-y bg-gray-50/80">
+                        <div className="flex gap-3">
+                          <Avatar className="h-14 w-14 rounded-md border border-gray-200">
+                            <AvatarImage src={rep.avatar} alt={rep.name} />
+                            <AvatarFallback className="rounded-md">{initials}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h4 className="font-medium text-lg">{rep.name}</h4>
+                            <p className="text-gray-500 text-sm">{rep.locationCity}, {rep.locationState}</p>
+                            <div className="flex items-center mt-1">
+                              <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
+                              <span className="ml-1 text-amber-500 text-xs font-medium">{rep.rating.toFixed(1)}</span>
+                              <span className="ml-1 text-xs text-gray-600">({rep.reviewCount} reviews)</span>
                             </div>
                           </div>
                         </div>
+                      </div>
+                      
+                      {/* Share Options */}
+                      <div className="p-4">
+                        <h4 className="font-medium mb-3">Share Options</h4>
                         
-                        {/* Share Options */}
-                        <div className="p-4">
-                          <h4 className="font-medium mb-3">Share Options</h4>
+                        <div className="space-y-3">
+                          <div className="flex items-center p-3 rounded-lg border hover:bg-gray-50 cursor-pointer" onClick={copyProfileLink}>
+                            <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                              <Copy className="h-5 w-5 text-gray-600" />
+                            </div>
+                            <div className="flex-1">
+                              <h5 className="font-medium">Copy Link</h5>
+                              <p className="text-xs text-gray-500">Copy shareable profile link</p>
+                            </div>
+                            {copied ? <Check className="h-5 w-5 text-green-600" /> : null}
+                          </div>
                           
-                          <div className="space-y-3">
-                            <div className="flex items-center p-3 rounded-lg border hover:bg-gray-50 cursor-pointer" onClick={copyProfileLink}>
-                              <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
-                                <Copy className="h-5 w-5 text-gray-600" />
-                              </div>
-                              <div className="flex-1">
-                                <h5 className="font-medium">Copy Link</h5>
-                                <p className="text-xs text-gray-500">Copy shareable profile link</p>
-                              </div>
-                              {copied ? <Check className="h-5 w-5 text-green-600" /> : null}
+                          <div className="flex items-center p-3 rounded-lg border hover:bg-gray-50 cursor-pointer" onClick={() => {
+                            window.open(`mailto:?subject=Check out ${rep.name} on PropertyDeals&body=I thought you might be interested in this real estate professional: ${window.location.href}`, '_blank');
+                            setShareOpen(false);
+                          }}>
+                            <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                              <div className="text-gray-600">📧</div>
                             </div>
-                            
-                            <div className="flex items-center p-3 rounded-lg border hover:bg-gray-50 cursor-pointer" onClick={() => {
-                              window.open(`mailto:?subject=Check out ${rep.name} on PropertyDeals&body=I thought you might be interested in this real estate professional: ${window.location.href}`, '_blank');
-                              setShareOpen(false);
-                            }}>
-                              <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
-                                <div className="text-gray-600">📧</div>
-                              </div>
-                              <div>
-                                <h5 className="font-medium">Email</h5>
-                                <p className="text-xs text-gray-500">Share via email with detailed info</p>
-                              </div>
+                            <div>
+                              <h5 className="font-medium">Email</h5>
+                              <p className="text-xs text-gray-500">Share via email with detailed info</p>
                             </div>
                           </div>
                         </div>
-                        
-                        {/* Social Media */}
-                        <div className="p-4 border-t">
-                          <h4 className="font-medium mb-2">Share on Social Media</h4>
-                          <div className="flex gap-2">
-                            <Button 
-                              variant="outline" 
-                              size="icon"
-                              className="flex-1 rounded-full h-10 w-10 p-0 text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/20"
-                              onClick={() => {
-                                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
-                                setShareOpen(false);
-                              }}
-                            >
-                              <Facebook className="h-5 w-5" />
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="icon"
-                              className="flex-1 rounded-full h-10 w-10 p-0 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border-[#1DA1F2]/20"
-                              onClick={() => {
-                                window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check out ${rep.name} on PropertyDeals`, '_blank');
-                                setShareOpen(false);
-                              }}
-                            >
-                              <Twitter className="h-5 w-5" />
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="icon"
-                              className="flex-1 rounded-full h-10 w-10 p-0 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/20"
-                              onClick={() => {
-                                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
-                                setShareOpen(false);
-                              }}
-                            >
-                              <Linkedin className="h-5 w-5" />
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="icon"
-                              className="flex-1 rounded-full h-10 w-10 p-0 text-[#25D366] hover:text-[#25D366] hover:bg-[#25D366]/10 border-[#25D366]/20"
-                              onClick={() => {
-                                window.open(`https://wa.me/?text=${encodeURIComponent(`Check out ${rep.name} on PropertyDeals: ${window.location.href}`)}`, '_blank');
-                                setShareOpen(false);
-                              }}
-                            >
-                              <div className="text-[#25D366]">📱</div>
-                            </Button>
-                          </div>
-                        </div>
-                        
-                        <div className="p-4 border-t flex justify-end">
+                      </div>
+                      
+                      {/* Social Media */}
+                      <div className="p-4 border-t">
+                        <h4 className="font-medium mb-2">Share on Social Media</h4>
+                        <div className="flex gap-2">
                           <Button 
                             variant="outline" 
-                            onClick={() => setShareOpen(false)}
-                            className="w-20"
+                            size="icon"
+                            className="flex-1 rounded-full h-10 w-10 p-0 text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/20"
+                            onClick={() => {
+                              window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+                              setShareOpen(false);
+                            }}
                           >
-                            Done
+                            <Facebook className="h-5 w-5" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            className="flex-1 rounded-full h-10 w-10 p-0 text-[#1DA1F2] hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 border-[#1DA1F2]/20"
+                            onClick={() => {
+                              window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Check out ${rep.name} on PropertyDeals`, '_blank');
+                              setShareOpen(false);
+                            }}
+                          >
+                            <Twitter className="h-5 w-5" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            className="flex-1 rounded-full h-10 w-10 p-0 text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/20"
+                            onClick={() => {
+                              window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+                              setShareOpen(false);
+                            }}
+                          >
+                            <Linkedin className="h-5 w-5" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="icon"
+                            className="flex-1 rounded-full h-10 w-10 p-0 text-[#25D366] hover:text-[#25D366] hover:bg-[#25D366]/10 border-[#25D366]/20"
+                            onClick={() => {
+                              window.open(`https://wa.me/?text=${encodeURIComponent(`Check out ${rep.name} on PropertyDeals: ${window.location.href}`)}`, '_blank');
+                              setShareOpen(false);
+                            }}
+                          >
+                            <div className="text-[#25D366]">📱</div>
                           </Button>
                         </div>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                      </div>
+                      
+                      <div className="p-4 border-t flex justify-end">
+                        <Button 
+                          variant="outline" 
+                          onClick={() => setShareOpen(false)}
+                          className="w-20"
+                        >
+                          Done
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
             </div>
           </div>
-          
-          {/* Mobile Social Links and Buttons */}
-          <div className="flex flex-col md:hidden gap-2 mt-4 border-t pt-4">
+        </div>
+      </div>
+      
+      {/* Mobile Social Links and Buttons */}
+      <div className="container mx-auto px-4 md:hidden">
+        <div className="bg-white rounded-md shadow-sm p-4">
+          <div className="flex flex-col gap-2">
             <div className="flex gap-2">
-              {rep.social?.linkedin && (
-                <a href={rep.social.linkedin} target="_blank" rel="noopener noreferrer" className="flex-1">
+              {social?.linkedin && (
+                <a href={social.linkedin} target="_blank" rel="noopener noreferrer" className="flex-1">
                   <Button variant="outline" size="sm" className="w-full text-[#0077B5] hover:text-[#0077B5] hover:bg-[#0077B5]/10 border-[#0077B5]/30">
                     <Linkedin className="h-4 w-4 mr-1.5" />
                     LinkedIn
@@ -343,8 +352,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                 </a>
               )}
               
-              {rep.social?.instagram && (
-                <a href={rep.social.instagram} target="_blank" rel="noopener noreferrer" className="flex-1">
+              {social?.instagram && (
+                <a href={social.instagram} target="_blank" rel="noopener noreferrer" className="flex-1">
                   <Button variant="outline" size="sm" className="w-full text-[#E1306C] hover:text-[#E1306C] hover:bg-[#E1306C]/10 border-[#E1306C]/30">
                     <Instagram className="h-4 w-4 mr-1.5" />
                     Instagram
@@ -352,8 +361,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                 </a>
               )}
               
-              {rep.social?.facebook && (
-                <a href={rep.social.facebook} target="_blank" rel="noopener noreferrer" className="flex-1">
+              {social?.facebook && (
+                <a href={social.facebook} target="_blank" rel="noopener noreferrer" className="flex-1">
                   <Button variant="outline" size="sm" className="w-full text-[#1877F2] hover:text-[#1877F2] hover:bg-[#1877F2]/10 border-[#1877F2]/30">
                     <Facebook className="h-4 w-4 mr-1.5" />
                     Facebook
@@ -365,7 +374,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
             {/* Connect & Share Buttons for Mobile */}
             <div className="flex mt-3 gap-2">
               <Button className="flex-1 bg-[#09261E] hover:bg-[#135341]">
-                <Star className="mr-2 h-4 w-4" />
+                <UserPlus className="mr-2 h-4 w-4" />
                 <span>Connect</span>
               </Button>
               
