@@ -108,8 +108,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       
       {/* Profile Content - Below banner and avatar */}
       <div className="container mx-auto px-4">
-        <div className="bg-white rounded-md mt-28 pt-4">
-          <div className="px-4 sm:px-6 lg:px-8 py-4">
+        <div className="bg-white rounded-md mt-28 pt-2">
+          <div className="px-4 sm:px-6 lg:px-8 pt-4 pb-1">
             {/* Profile info section */}
             <div className="flex flex-col md:flex-row justify-between items-start">
               {/* Left-aligned content in 4 distinct rows */}
