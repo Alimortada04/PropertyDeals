@@ -163,7 +163,7 @@ export default function StickyNav({
               className={`rounded-md h-9 border ${
                 activeSection === "reviews" 
                   ? "text-[#09261E] font-medium border-[#09261E]" 
-                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-100"
+                  : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-50"
               }`}
               onClick={() => scrollToSection("reviews")}
             >

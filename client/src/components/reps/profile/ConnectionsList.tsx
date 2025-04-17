@@ -106,16 +106,14 @@ export default function ConnectionsList({ connections }: ConnectionsListProps) {
           ))}
         </div>
         
-        {hasMoreConnections && (
-          <Button 
-            variant="outline" 
-            className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <Users size={16} className="mr-2" />
-            <span>View all {connections.length} connections</span>
-          </Button>
-        )}
+        <Button 
+          variant="outline" 
+          className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+          onClick={() => setIsModalOpen(true)}
+        >
+          <Users size={16} className="mr-2" />
+          <span>View all {connections.length} connections</span>
+        </Button>
       </div>
       
       {/* All Connections Modal */}

@@ -228,16 +228,14 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
           ))}
         </div>
         
-        {hasMoreReviews && (
-          <Button 
-            variant="outline" 
-            className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
-            onClick={() => setIsModalOpen(true)}
-          >
-            <MessageSquare size={16} className="mr-2" />
-            <span>See all {reviews.length} reviews</span>
-          </Button>
-        )}
+        <Button 
+          variant="outline" 
+          className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+          onClick={() => setIsModalOpen(true)}
+        >
+          <MessageSquare size={16} className="mr-2" />
+          <span>See all {reviews.length} reviews</span>
+        </Button>
       </div>
       
       {/* All Reviews Modal */}
