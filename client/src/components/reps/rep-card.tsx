@@ -125,7 +125,7 @@ export default function RepCard({ rep }: RepCardProps) {
             </div>
             
             {/* Name and Profession */}
-            <div className="text-center mb-4">
+            <div className="text-center mb-4 mt-2 sm:mt-0">
               <h3 className="font-heading text-lg sm:text-xl font-semibold text-gray-800 mb-1 line-clamp-1">
                 {rep.name}
                 {rep.isVerified && (
@@ -143,15 +143,30 @@ export default function RepCard({ rep }: RepCardProps) {
               </Badge>
             </div>
             
-            {/* Quick Info Block - Responsive */}
-            <div className="grid grid-cols-2 gap-3 w-full mb-3 text-sm">
-              <div className="flex items-center text-gray-600">
+            {/* Quick Info Block - Responsive & Reorganized */}
+            <div className="flex flex-col w-full mb-3 text-sm">
+              {/* Rating - Now at the top and full width */}
+              <div className="flex items-center text-gray-700 w-full mb-2">
+                <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
+                <span className="truncate font-medium">{rep.rating} ({rep.reviewCount})</span>
+                
+                {rep.dealsCompleted && (
+                  <div className="flex items-center text-gray-700 ml-auto">
+                    <Home size={14} className="mr-1 text-gray-500 flex-shrink-0" />
+                    <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
+                  </div>
+                )}
+              </div>
+              
+              {/* Location - Now full width */}
+              <div className="flex items-center text-gray-600 w-full mb-2">
                 <MapPin size={14} className="mr-1 text-gray-400 flex-shrink-0" />
                 <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
               </div>
               
+              {/* Response time */}
               {rep.responseTime && (
-                <div className="flex items-center text-gray-600 justify-end">
+                <div className="flex items-center text-gray-600 w-full mb-2">
                   <Clock size={14} className="mr-1 text-gray-400 flex-shrink-0" />
                   <span className="truncate">{rep.responseTime}</span>
                 </div>
@@ -159,30 +174,16 @@ export default function RepCard({ rep }: RepCardProps) {
               
               {/* Years experience - hidden on mobile */}
               {isBusiness ? (
-                <div className="hidden sm:flex items-center text-gray-600">
+                <div className="hidden sm:flex items-center text-gray-600 w-full">
                   <Building2 size={14} className="mr-1 text-gray-400 flex-shrink-0" />
                   <span className="truncate">Since {rep.foundedYear || 'N/A'}</span>
                 </div>
               ) : (
-                <div className="hidden sm:flex items-center text-gray-600">
+                <div className="hidden sm:flex items-center text-gray-600 w-full">
                   <Briefcase size={14} className="mr-1 text-gray-400 flex-shrink-0" />
                   <span className="truncate">{rep.yearsExperience || '0'}+ Years</span>
                 </div>
               )}
-              
-              <div className="flex items-center justify-between col-span-2">
-                <div className="flex items-center text-gray-700">
-                  <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-                  <span className="truncate font-medium">{rep.rating} ({rep.reviewCount})</span>
-                </div>
-                
-                {rep.dealsCompleted && (
-                  <div className="flex items-center text-gray-700">
-                    <Home size={14} className="mr-1 text-gray-500 flex-shrink-0" />
-                    <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
-                  </div>
-                )}
-              </div>
             </div>
             
             {/* Bio excerpt as tagline - hidden on mobile */}
