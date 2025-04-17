@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Mail, Phone, MessageCircle, Calendar, Clock } from "lucide-react";
+import { Mail, Phone, MessageCircle, UserPlus, Clock, Calendar } from "lucide-react";
 import { useState } from "react";
 
 interface ContactCardProps {
@@ -84,9 +84,23 @@ export default function ContactCard({ rep, className = "" }: ContactCardProps) {
             <Button 
               variant="outline" 
               className="w-full flex justify-center items-center h-9"
+              onClick={() => {
+                // Logic to create a contact with REP info
+                if (rep.contact) {
+                  const contactInfo = {
+                    name: rep.name,
+                    phone: rep.contact.phone,
+                    email: rep.contact.email,
+                    // Additional fields would be added here in a real app
+                  };
+                  
+                  // In a real app, we would use the Contacts API or create a vCard
+                  alert("Contact information saved to your device contacts");
+                }
+              }}
             >
-              <Calendar size={15} className="mr-2" />
-              <span>Schedule Meeting</span>
+              <UserPlus size={15} className="mr-2" />
+              <span>Add to Contacts</span>
             </Button>
           </div>
         </CardContent>

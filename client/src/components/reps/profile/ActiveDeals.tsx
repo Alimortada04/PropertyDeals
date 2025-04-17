@@ -11,7 +11,8 @@ import {
   Bath, 
   SquareCode, 
   MapPin,
-  Building
+  Building,
+  Eye
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -169,7 +170,8 @@ function PropertyCard({ property }: { property: Property }) {
             {formatCurrency(property.price)}
           </div>
           <Badge variant="outline" className="text-xs flex items-center gap-1">
-            <span>{viewCount}</span> views
+            <Eye size={12} className="mr-0.5" />
+            <span>{viewCount}</span>
           </Badge>
         </div>
         

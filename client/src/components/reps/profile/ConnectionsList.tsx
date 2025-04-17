@@ -214,25 +214,25 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
   };
   
   return (
-    <div className="relative flex items-start p-4 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
+    <div className="relative flex items-center p-3 rounded-lg border border-gray-200 hover:shadow-md transition-all">
       {/* Mutual Connection Status Indicator - Top Right */}
       {connection.isMutual ? (
-        <div className="absolute top-4 right-4 w-6 h-6 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
-          <Check size={14} />
+        <div className="absolute top-2 right-2 w-5 h-5 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
+          <Check size={12} />
         </div>
       ) : (
         <Button 
           size="sm" 
           variant="outline"
-          className="absolute top-4 right-4 w-6 h-6 p-0 rounded-full border-gray-300 hover:bg-[#09261E]/10 hover:border-[#09261E]"
+          className="absolute top-2 right-2 w-5 h-5 p-0 rounded-full border-gray-300 hover:bg-[#09261E]/10 hover:border-[#09261E]"
           title="Send connection request"
           onClick={handleConnectionRequest}
           disabled={connectionSent}
         >
           {connectionSent ? (
-            <Mail size={12} className="text-[#09261E] animate-pulse" />
+            <Mail size={10} className="text-[#09261E] animate-pulse" />
           ) : (
-            <UserPlus size={12} />
+            <UserPlus size={10} />
           )}
         </Button>
       )}
@@ -243,22 +243,21 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
       </Avatar>
       
       <div className="ml-3 flex-1">
-        <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6">{connection.name}</h3>
+        <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6 text-sm">{connection.name}</h3>
         
-        <div className="mt-0.5">
+        <div className="mt-0">
           <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300">
             {normalizedTitle}
           </Badge>
         </div>
         
-        <div className="mt-2">
-          <Button 
-            size="sm" 
-            variant="ghost" 
-            className="h-7 px-2 text-xs text-[#09261E] hover:bg-[#09261E]/10"
+        <div className="mt-1">
+          <a 
+            href="#" 
+            className="text-xs text-[#09261E] hover:text-[#803344] hover:underline inline-block"
           >
-            <span>View Profile</span>
-          </Button>
+            View profile
+          </a>
         </div>
       </div>
     </div>
