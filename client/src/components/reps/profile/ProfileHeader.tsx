@@ -59,7 +59,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
-        setBannerHeight("150px");
+        // Keep same height as desktop for mobile
+        setBannerHeight("250px");
       } else if (window.innerWidth < 1024) {
         setBannerHeight("200px");
       } else {
