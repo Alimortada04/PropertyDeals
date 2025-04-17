@@ -70,13 +70,13 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
   return (
     <>
       {/* Main sticky card visible on mobile only */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white py-4 md:hidden z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] border-t border-gray-100">
+      <div className="fixed bottom-0 left-0 right-0 bg-white py-3 md:hidden z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] border-t border-gray-100">
         <div className="flex items-center justify-center">
           {/* Action buttons - reordered with larger tap areas */}
-          <div className="flex justify-center items-center gap-x-10 w-full">
+          <div className="flex justify-center items-center gap-x-6 w-full">
             {/* Share button - uses native share API */}
             <button 
-              className="flex flex-col items-center justify-center rounded-full w-12 h-12 bg-[#09261E] text-white hover:scale-105 transform transition-transform duration-200"
+              className="flex flex-col items-center justify-center rounded-lg w-14 h-14 bg-[#09261E] text-white hover:scale-105 transform transition-transform duration-200"
               aria-label="Share REP profile"
               onClick={() => {
                 if (navigator.share) {
@@ -91,35 +91,35 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                 }
               }}
             >
-              <Share2 className="h-6 w-6" />
+              <Share2 className="h-8 w-8" />
             </button>
             
             {/* Profile/Connect Button */}
             <Dialog open={socialsDialogOpen} onOpenChange={setSocialsDialogOpen}>
               <DialogTrigger asChild>
                 <button 
-                  className="flex flex-col items-center justify-center rounded-full w-12 h-12 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
+                  className="flex flex-col items-center justify-center rounded-lg w-14 h-14 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
                   aria-label="Connect with REP"
                 >
-                  <UserPlus className="h-6 w-6" />
+                  <UserPlus className="h-8 w-8" />
                 </button>
               </DialogTrigger>
-              <DialogContent className="w-[95vw] rounded-t-xl rounded-b-none p-4 pt-6 pb-8 fixed bottom-0 top-auto translate-y-0 border-t-2 border-[#09261E]">
+              <DialogContent className="w-[95vw] rounded-t-xl rounded-b-none p-4 pt-4 pb-6 fixed bottom-0 top-auto translate-y-0 border-t-2 border-[#09261E]">
                 <DialogHeader>
-                  <DialogTitle className="text-center text-xl mb-6">Connect with {rep.name}</DialogTitle>
+                  <DialogTitle className="text-center text-xl mb-4">Connect with {rep.name}</DialogTitle>
                 </DialogHeader>
                 
                 {/* Social media icons row */}
-                <div className="flex justify-center items-center gap-4 mb-6">
+                <div className="flex justify-center items-center gap-3 mb-5">
                   {social?.linkedin && (
                     <a 
                       href={social.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Connect on LinkedIn"
-                      className="p-2.5 rounded-full bg-gray-100 text-[#0077B5] hover:bg-[#0077B5]/10 transition-colors duration-200"
+                      className="p-2 rounded-md bg-[#0077B5]/10 border border-[#0077B5]/30 text-[#0077B5] hover:bg-[#0077B5]/20 transition-colors duration-200"
                     >
-                      <Linkedin className="h-5 w-5" />
+                      <Linkedin className="h-7 w-7" />
                     </a>
                   )}
                   
@@ -129,9 +129,9 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Follow on Instagram"
-                      className="p-2.5 rounded-full bg-gray-100 text-[#E1306C] hover:bg-[#E1306C]/10 transition-colors duration-200"
+                      className="p-2 rounded-md bg-[#E1306C]/10 border border-[#E1306C]/30 text-[#E1306C] hover:bg-[#E1306C]/20 transition-colors duration-200"
                     >
-                      <Instagram className="h-5 w-5" />
+                      <Instagram className="h-7 w-7" />
                     </a>
                   )}
                   
@@ -141,9 +141,9 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Follow on Facebook"
-                      className="p-2.5 rounded-full bg-gray-100 text-[#1877F2] hover:bg-[#1877F2]/10 transition-colors duration-200"
+                      className="p-2 rounded-md bg-[#1877F2]/10 border border-[#1877F2]/30 text-[#1877F2] hover:bg-[#1877F2]/20 transition-colors duration-200"
                     >
-                      <Facebook className="h-5 w-5" />
+                      <Facebook className="h-7 w-7" />
                     </a>
                   )}
                   
@@ -153,9 +153,9 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Follow on Twitter"
-                      className="p-2.5 rounded-full bg-gray-100 text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-colors duration-200"
+                      className="p-2 rounded-md bg-[#1DA1F2]/10 border border-[#1DA1F2]/30 text-[#1DA1F2] hover:bg-[#1DA1F2]/20 transition-colors duration-200"
                     >
-                      <Twitter className="h-5 w-5" />
+                      <Twitter className="h-7 w-7" />
                     </a>
                   )}
                 </div>
@@ -169,7 +169,7 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       setSocialsDialogOpen(false);
                     }}
                   >
-                    <div className="h-10 w-10 bg-[#09261E] rounded-full flex items-center justify-center text-white">
+                    <div className="h-10 w-10 bg-[#09261E] rounded-md flex items-center justify-center text-white">
                       <UserPlus className="h-5 w-5" />
                     </div>
                     <div>
@@ -183,7 +183,7 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       href={`tel:${contact.phone}`}
                       className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
                     >
-                      <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center">
+                      <div className="h-10 w-10 bg-[#09261E]/10 border border-[#09261E]/20 rounded-md flex items-center justify-center">
                         <Phone className="h-5 w-5 text-[#09261E]" />
                       </div>
                       <div>
@@ -198,7 +198,7 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       href={`mailto:${contact.email}`}
                       className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
                     >
-                      <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center">
+                      <div className="h-10 w-10 bg-[#09261E]/10 border border-[#09261E]/20 rounded-md flex items-center justify-center">
                         <Mail className="h-5 w-5 text-[#09261E]" />
                       </div>
                       <div>
@@ -207,17 +207,58 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       </div>
                     </a>
                   )}
+                  
+                  {/* Add to Contacts button */}
+                  {(contact?.phone || contact?.email) && (
+                    <div 
+                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer"
+                      onClick={() => {
+                        // In a real app, this would trigger native contact APIs or download a vCard
+                        const vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN:${rep.name}
+ORG:PropertyDeals
+TITLE:${rep.role}
+${contact?.phone ? `TEL;TYPE=WORK,VOICE:${contact.phone}` : ''}
+${contact?.email ? `EMAIL;TYPE=WORK:${contact.email}` : ''}
+${rep.website ? `URL:${rep.website}` : ''}
+END:VCARD`;
+                        
+                        const blob = new Blob([vCardData], { type: 'text/vcard' });
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `${rep.name.replace(/\s+/g, '-')}-PropertyDeals.vcf`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                      }}
+                    >
+                      <div className="h-10 w-10 bg-[#803344]/10 border border-[#803344]/30 rounded-md flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#803344" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="9" cy="7" r="4"></circle>
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h5 className="font-medium">Add to Contacts</h5>
+                        <p className="text-xs text-gray-500">Save contact details to your device</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </DialogContent>
             </Dialog>
             
             {/* Message button */}
             <button 
-              className="flex flex-col items-center justify-center rounded-full w-12 h-12 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
+              className="flex flex-col items-center justify-center rounded-lg w-14 h-14 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
               aria-label="Message this REP"
               onClick={() => window.open(`mailto:${contact?.email || ''}`)}
             >
-              <MessageSquare className="h-6 w-6" />
+              <MessageSquare className="h-8 w-8" />
             </button>
           </div>
         </div>
