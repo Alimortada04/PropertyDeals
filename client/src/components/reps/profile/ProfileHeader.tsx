@@ -74,38 +74,37 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
   return (
     <div className="relative mb-6">
       {/* Banner Image with Gradient Overlay */}
-      <div 
-        className="w-full relative" 
-        style={{ 
-          height: bannerHeight, 
-          backgroundImage: `url(${rep.bannerImage || 'https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/40 flex items-end">
-          <div className="container mx-auto px-4 pb-4 text-white">
-            <div className="flex">
-              <h1 className="text-4xl font-bold text-white px-4 hidden">
-                {rep.name}
-              </h1>
-            </div>
+      <div className="relative">
+        <div 
+          className="w-full relative" 
+          style={{ 
+            height: bannerHeight, 
+            backgroundImage: `url(${rep.bannerImage || 'https://images.unsplash.com/photo-1602941525421-8f8b81d3edbb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80'})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/40"></div>
+        </div>
+        
+        {/* Profile Avatar - Overlaid on banner */}
+        <div className="container mx-auto px-4">
+          <div className="relative -mt-20">
+            <Avatar className="h-32 w-32 border-4 border-white shadow-sm absolute left-4 sm:left-6 lg:left-8">
+              <AvatarImage src={rep.avatar} alt={rep.name} />
+              <AvatarFallback className="text-4xl font-bold">{initials}</AvatarFallback>
+            </Avatar>
           </div>
         </div>
       </div>
       
-      {/* Profile Content */}
+      {/* Profile Content - Below banner with space for avatar */}
       <div className="container mx-auto px-4">
-        <div className="bg-white rounded-md shadow-sm relative -mt-24">
+        <div className="bg-white rounded-md shadow-sm mt-12 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col md:flex-row md:items-center">
-              {/* Profile Avatar */}
-              <div className="mr-6 flex-shrink-0">
-                <Avatar className="h-32 w-32 border-4 border-white shadow-sm">
-                  <AvatarImage src={rep.avatar} alt={rep.name} />
-                  <AvatarFallback className="text-4xl font-bold">{initials}</AvatarFallback>
-                </Avatar>
-              </div>
+            <div className="flex flex-col md:flex-row md:items-start">
+              {/* Empty div to create space where the avatar would have been */}
+              <div className="mr-6 flex-shrink-0 w-32 h-0 md:h-auto"></div>
               
               <div className="flex flex-col md:flex-row flex-1 justify-between">
                 <div className="mt-4 md:mt-0">
