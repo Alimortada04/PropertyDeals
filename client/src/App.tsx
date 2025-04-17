@@ -64,6 +64,13 @@ function Router() {
           </MainLayout>
         )}
       </Route>
+      <Route path="/reps/:id">
+        {params => (
+          <MainLayout>
+            <RepProfilePage />
+          </MainLayout>
+        )}
+      </Route>
       <Route path="/business/:slug">
         {params => (
           <MainLayout>
