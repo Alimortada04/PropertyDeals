@@ -671,7 +671,7 @@ export default function DiscussionsPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 pb-20" data-content-area>
+    <div className="container mx-auto px-4 py-8 pb-20 pt-16 md:pt-8" data-content-area>
       {/* Breadcrumbs */}
       <div className="mb-3">
         <Breadcrumbs />
