@@ -1518,13 +1518,24 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     <h3 className="font-bold text-[#09261E] text-lg">${property.price.toLocaleString()}</h3>
                     <p className="text-gray-600 text-xs">Interested in this property?</p>
                   </div>
-                  <Button 
-                    className="bg-white border-gray-200 hover:bg-gray-50 px-5 text-[#09261E]"
-                    size="default"
-                    onClick={() => setContactModalOpen(true)}
-                  >
-                    Contact Seller
-                  </Button>
+                  <div className="flex space-x-2">
+                    <Button
+                      className="bg-white hover:bg-gray-50 text-[#09261E] h-10 w-10 rounded-full p-0 flex items-center justify-center border border-gray-200"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => window.location.href = "tel:+15555555555"}
+                    >
+                      <Phone className="h-5 w-5 text-[#09261E]" />
+                    </Button>
+                    <Button
+                      className="bg-white hover:bg-gray-50 text-[#09261E] px-5 border border-gray-200"
+                      variant="outline"
+                      size="default"
+                      onClick={() => setContactModalOpen(true)}
+                    >
+                      Contact Seller
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1645,11 +1656,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
       
       {/* Email Signup CTA */}
-      <section className="py-10 bg-gradient-to-r from-[#09261E] to-[#135341] text-white">
+      <section className="py-10 bg-white border-t border-gray-100 text-gray-900">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-3">Don't Miss Out on New Deals</h2>
-            <p className="text-white/80 mb-6 text-lg">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-3 text-[#09261E]">Don't Miss Out on New Deals</h2>
+            <p className="text-gray-600 mb-6 text-lg">
               Get notified about new properties in this area and receive personalized recommendations.
             </p>
             
@@ -1657,14 +1668,14 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               <Input 
                 type="email" 
                 placeholder="Your email address" 
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus-visible:ring-white/30"
+                className="border-gray-200 focus-visible:ring-[#09261E]/20"
               />
-              <Button className="bg-[#803344] hover:bg-[#803344]/90 whitespace-nowrap">
+              <Button className="bg-[#09261E] hover:bg-[#135341] whitespace-nowrap">
                 Sign Up Now
               </Button>
             </div>
             
-            <p className="mt-3 text-sm text-white/60">
+            <p className="mt-3 text-sm text-gray-500">
               We respect your privacy and won't share your information.
             </p>
           </div>
@@ -1805,10 +1816,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     <div className="flex gap-3">
                       <Button 
                         type="button" 
-                        className="bg-[#803344] hover:bg-[#803344]/90 py-6 flex-shrink-0"
+                        className="bg-white border-gray-200 text-[#09261E] hover:bg-gray-50 py-6 flex-shrink-0"
+                        variant="outline"
                         onClick={() => window.location.href = "tel:+15555555555"}
                       >
-                        <Phone className="h-5 w-5 mr-1" />
+                        <Phone className="h-5 w-5 mr-1 text-[#09261E]" />
                         Call
                       </Button>
                       <Button type="submit" className="w-full bg-[#09261E] hover:bg-[#135341] py-6">
@@ -1845,12 +1857,12 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             <h2 className="text-2xl font-bold text-[#09261E] mb-4">Make an Offer</h2>
               
             <div className="mb-6">
-              <div className="bg-[#803344]/10 border border-[#803344]/20 rounded-md p-4 mb-4">
-                <h4 className="font-heading text-[#803344] font-bold mb-2">Sign up or login required</h4>
+              <div className="bg-gray-50 border border-gray-200 rounded-md p-4 mb-4">
+                <h4 className="font-heading text-[#09261E] font-bold mb-2">Sign up or login required</h4>
                 <p className="text-gray-700 text-sm mb-3">
                   To submit an offer, you'll need to create an account or login to your existing account.
                 </p>
-                <Link to="/auth" className="bg-[#803344] text-white rounded-md py-2 px-4 text-sm font-medium inline-block hover:bg-[#803344]/90 transition-colors">
+                <Link to="/auth" className="bg-[#09261E] text-white rounded-md py-2 px-4 text-sm font-medium inline-block hover:bg-[#135341] transition-colors">
                   Sign up or Login
                 </Link>
               </div>
