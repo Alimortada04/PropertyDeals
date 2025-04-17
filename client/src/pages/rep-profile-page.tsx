@@ -18,6 +18,7 @@ import Reviews from "@/components/reps/profile/Reviews";
 import AboutSection from "@/components/reps/profile/AboutSection";
 import ContactCard from "@/components/reps/profile/ContactCard";
 import MobileContactCard from "@/components/reps/profile/MobileContactCard";
+import SimilarReps from "@/components/reps/profile/SimilarReps";
 
 // Sample data interfaces for the components
 interface ClosedDeal extends Property {
