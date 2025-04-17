@@ -19,7 +19,7 @@ export default function SellerDashboard() {
     enabled: !!user && user.userType === "seller",
   });
 
-  const { data: inquiries, isLoading: inquiriesLoading } = useQuery({
+  const { data: inquiries, isLoading: inquiriesLoading } = useQuery<any[]>({
     queryKey: ["/api/seller/inquiries"],
     enabled: !!user && user.userType === "seller",
   });
@@ -60,7 +60,7 @@ export default function SellerDashboard() {
             <CardTitle className="text-lg font-medium text-gray-500">Total Inquiries</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-[#09261E]">{inquiriesLoading ? "..." : inquiries?.length || 0}</div>
+            <div className="text-3xl font-bold text-[#09261E]">{inquiriesLoading ? "..." : (Array.isArray(inquiries) ? inquiries.length : 0)}</div>
             <p className="text-sm text-gray-500 mt-1">Potential buyers</p>
           </CardContent>
         </Card>
