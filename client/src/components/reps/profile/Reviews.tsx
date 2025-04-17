@@ -336,11 +336,26 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
         
         <Button 
           variant="outline" 
-          className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+          className="w-full mb-2 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
           onClick={() => setIsModalOpen(true)}
         >
           <MessageSquare size={16} className="mr-2" />
           <span>See all {reviews.length} reviews</span>
+        </Button>
+        
+        <Button 
+          variant="outline" 
+          className="w-full bg-[#f8f9fa] border-gray-300 text-gray-700 hover:bg-[#eff1f3] hover:text-[#09261E] hover:border-[#09261E]"
+          onClick={() => {
+            if (!isLoggedIn) {
+              setLoginModalOpen(true);
+            } else {
+              setIsReviewFormOpen(true);
+            }
+          }}
+        >
+          <Star size={16} className="mr-2" />
+          <span>Leave a Review</span>
         </Button>
       </div>
       

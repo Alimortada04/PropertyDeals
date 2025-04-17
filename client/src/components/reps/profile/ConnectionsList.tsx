@@ -30,8 +30,10 @@ interface Connection {
   avatar: string;
   title: string;
   type: string;
+  location?: string;
   connectedDate: string;
   isMutual?: boolean;
+  mutualConnections?: { id: number; name: string; avatar: string }[];
 }
 
 interface ConnectionsListProps {
@@ -214,52 +216,72 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
   };
   
   return (
-    <div className="relative flex items-center p-3 rounded-lg border border-gray-200 hover:shadow-md transition-all">
-      {/* Mutual Connection Status Indicator - Top Right */}
-      {connection.isMutual ? (
-        <div className="absolute top-2 right-2 w-5 h-5 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
-          <Check size={12} />
-        </div>
-      ) : (
-        <Button 
-          size="sm" 
-          variant="outline"
-          className="absolute top-2 right-2 w-5 h-5 p-0 rounded-full border-gray-300 hover:bg-[#09261E]/10 hover:border-[#09261E]"
-          title="Send connection request"
-          onClick={handleConnectionRequest}
-          disabled={connectionSent}
-        >
-          {connectionSent ? (
-            <Mail size={10} className="text-[#09261E] animate-pulse" />
-          ) : (
-            <UserPlus size={10} />
+    <a 
+      href={`/reps/${connection.id}`} 
+      className="block relative cursor-pointer group"
+      onClick={(e) => {
+        if (e.target instanceof HTMLButtonElement) {
+          e.preventDefault(); // Prevent navigation when clicking the button
+        }
+      }}
+    >
+      <div className="flex items-center p-3 rounded-lg border border-gray-200 group-hover:shadow-md group-hover:bg-gray-50 transition-all">
+        {/* Connection Status Indicator - Only show checkmark for connections */}
+        {connection.isMutual && (
+          <div className="absolute top-2 right-2 w-5 h-5 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
+            <Check size={12} />
+          </div>
+        )}
+        
+        <Avatar className={`h-12 w-12 ${avatarBorderClass}`}>
+          <AvatarImage src={connection.avatar} alt={connection.name} />
+          <AvatarFallback className={avatarBorderClass}>{initials}</AvatarFallback>
+        </Avatar>
+        
+        <div className="ml-3 flex-1">
+          <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6 text-sm">{connection.name}</h3>
+          
+          <div className="mt-0 flex flex-wrap gap-1">
+            <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300">
+              {normalizedTitle}
+            </Badge>
+            
+            {connection.location && (
+              <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300 text-gray-600">
+                {connection.location}
+              </Badge>
+            )}
+          </div>
+          
+          {/* Mutual connections avatars */}
+          {connection.mutualConnections && connection.mutualConnections.length > 0 && (
+            <div className="flex items-center mt-2 space-x-1">
+              <div className="flex -space-x-2">
+                {connection.mutualConnections.slice(0, 3).map((mutual, index) => (
+                  <Avatar key={index} className="h-5 w-5 border border-white rounded-full">
+                    <AvatarImage src={mutual.avatar} alt={mutual.name} />
+                    <AvatarFallback className="text-[8px]">
+                      {mutual.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                ))}
+                
+                {connection.mutualConnections.length > 3 && (
+                  <div className="h-5 w-5 rounded-full bg-gray-100 border border-white flex items-center justify-center text-[8px] font-medium text-gray-600">
+                    +{connection.mutualConnections.length - 3}
+                  </div>
+                )}
+              </div>
+              
+              <span className="text-xs text-gray-500">
+                {connection.mutualConnections.length === 1 
+                  ? '1 mutual connection' 
+                  : `${connection.mutualConnections.length} mutual connections`}
+              </span>
+            </div>
           )}
-        </Button>
-      )}
-      
-      <Avatar className={`h-12 w-12 ${avatarBorderClass}`}>
-        <AvatarImage src={connection.avatar} alt={connection.name} />
-        <AvatarFallback className={avatarBorderClass}>{initials}</AvatarFallback>
-      </Avatar>
-      
-      <div className="ml-3 flex-1">
-        <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6 text-sm">{connection.name}</h3>
-        
-        <div className="mt-0">
-          <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300">
-            {normalizedTitle}
-          </Badge>
-        </div>
-        
-        <div className="mt-1">
-          <a 
-            href="#" 
-            className="text-xs text-[#09261E] hover:text-[#803344] hover:underline inline-block"
-          >
-            View profile
-          </a>
         </div>
       </div>
-    </div>
+    </a>
   );
 }
