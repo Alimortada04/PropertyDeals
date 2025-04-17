@@ -365,6 +365,9 @@ export default function RepProfilePage() {
           {/* Active Deals Section */}
           <ActiveDeals properties={activeDeals} />
           
+          {/* About Section */}
+          <AboutSection rep={enhancedRep} />
+          
           {/* Activity Feed Section */}
           <ActivityFeed activities={activities} />
           
@@ -376,9 +379,6 @@ export default function RepProfilePage() {
           
           {/* Reviews Section */}
           <Reviews reviews={reviews} />
-          
-          {/* About Section */}
-          <AboutSection rep={enhancedRep} />
         </div>
         
         {/* Sidebar */}
