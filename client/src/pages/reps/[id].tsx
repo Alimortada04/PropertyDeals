@@ -323,7 +323,7 @@ export default function RepProfilePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Back Button */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-4 pt-20">
         <Button 
           variant="ghost" 
           onClick={() => window.history.back()}

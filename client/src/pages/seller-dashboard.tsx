@@ -30,7 +30,7 @@ export default function SellerDashboard() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-10">
+    <div className="container mx-auto px-4 py-10 pt-20">
       <div className="flex flex-col md:flex-row justify-between items-start mb-8">
         <div>
           <h1 className="text-3xl font-heading font-bold text-[#09261E] mb-2">Seller Dashboard</h1>
