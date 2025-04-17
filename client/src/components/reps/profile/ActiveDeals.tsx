@@ -140,23 +140,21 @@ function PropertyCard({ property }: { property: Property }) {
     return `${daysSincePosted} days ago`;
   };
   
+  // Generate random view count between 25-150
+  const viewCount = Math.floor(Math.random() * 125) + 25;
+  
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
       {/* Property Image */}
       <div className="h-48 w-full relative">
         <img
           src={property.imageUrl || `https://source.unsplash.com/featured/?house,property&sig=${property.id}`}
-          alt={property.title}
+          alt={property.address}
           className="w-full h-full object-cover"
         />
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-          <h3 className="text-white font-semibold truncate">{property.title}</h3>
-          <p className="text-white/90 text-sm truncate">{property.address}</p>
+          <h3 className="text-white font-semibold truncate">{property.address}</h3>
         </div>
-        
-        <Badge className="absolute top-2 right-2 bg-[#09261E] hover:bg-[#09261E]">
-          ACTIVE
-        </Badge>
         
         <div className="absolute top-2 left-2 flex items-center bg-black/60 text-white text-xs py-1 px-2 rounded-full">
           <Clock size={12} className="mr-1" />
@@ -170,8 +168,8 @@ function PropertyCard({ property }: { property: Property }) {
           <div className="text-lg font-bold text-[#09261E]">
             {formatCurrency(property.price)}
           </div>
-          <Badge variant="outline" className="text-xs">
-            {property.propertyType || "Residential"}
+          <Badge variant="outline" className="text-xs flex items-center gap-1">
+            <span>{viewCount}</span> views
           </Badge>
         </div>
         
@@ -207,7 +205,7 @@ function PropertyCard({ property }: { property: Property }) {
           {property.propertyType && (
             <div className="flex items-center text-xs text-gray-700">
               <Home size={14} className="mr-1" />
-              <span>{property.propertyType}</span>
+              <span>{property.propertyType === "Single Family" ? "SFH" : property.propertyType}</span>
             </div>
           )}
         </div>

@@ -78,9 +78,19 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const [currentRating, setCurrentRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // For demo purposes, assume user is logged in
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const { toast } = useToast();
+  
+  // Initialize form with react-hook-form
+  const form = useForm<ReviewFormValues>({
+    resolver: zodResolver(reviewFormSchema),
+    defaultValues: {
+      rating: 0,
+      reviewText: "",
+      dealTitle: "",
+    },
+  });
   
   // Initialize reviews with like/dislike data if not present
   useEffect(() => {
@@ -184,6 +194,60 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
   const visibleReviews = isMobile ? reviews.slice(0, 3) : reviews.slice(0, 4);
   const hasMoreReviews = reviews.length > visibleReviews.length;
   
+  // Handle form submission
+  const onSubmit = (data: ReviewFormValues) => {
+    // Create a new review with current date
+    const newReview: Review = {
+      id: Date.now(), // Use timestamp as id for demo
+      reviewerId: 101, // Demo user ID
+      reviewerName: "John Smith", // Current user name
+      reviewerAvatar: "", // Could be a default avatar
+      rating: data.rating,
+      text: data.reviewText,
+      date: new Date().toISOString(),
+      dealTitle: data.dealTitle || undefined,
+      likes: 0,
+      dislikes: 0,
+      userReaction: null
+    };
+    
+    // Add the new review to the list and sort again
+    const updatedReviews = [...reviews, newReview].sort((a, b) => 
+      (b.likes || 0) - (a.likes || 0)
+    );
+    
+    setReviews(updatedReviews);
+    setIsReviewFormOpen(false);
+    
+    // Reset form
+    form.reset({
+      rating: 0,
+      reviewText: "",
+      dealTitle: "",
+    });
+    
+    // Show success toast
+    toast({
+      title: "Review submitted",
+      description: "Thank you for sharing your experience!",
+    });
+  };
+  
+  // Handle star rating interaction
+  const handleStarClick = (rating: number) => {
+    setCurrentRating(rating);
+    form.setValue("rating", rating);
+  };
+  
+  // Handle review button click
+  const handleReviewClick = () => {
+    if (!isLoggedIn) {
+      setLoginModalOpen(true);
+    } else {
+      setIsReviewFormOpen(true);
+    }
+  };
+
   return (
     <>
       <div id="reviews" className="my-8 scroll-mt-24">
@@ -192,14 +256,25 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
             Reviews <span className="text-base font-normal text-gray-500">({reviews.length})</span>
           </h2>
           
-          <Button 
-            variant="link" 
-            className="text-[#09261E] font-medium"
-            onClick={() => setIsModalOpen(true)}
-          >
-            View All
-            <ChevronRight size={16} className="ml-1" />
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="outline"
+              className="text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white h-9"
+              onClick={handleReviewClick}
+            >
+              <MessageSquare size={15} className="mr-1.5" />
+              Leave a Review
+            </Button>
+            
+            <Button 
+              variant="link" 
+              className="text-[#09261E] font-medium"
+              onClick={() => setIsModalOpen(true)}
+            >
+              View All
+              <ChevronRight size={16} className="ml-1" />
+            </Button>
+          </div>
         </div>
         
         {/* Review summary */}
@@ -320,6 +395,167 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
               Close
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Review submission dialog */}
+      <Dialog open={isReviewFormOpen} onOpenChange={setIsReviewFormOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Leave a Review</DialogTitle>
+            <DialogDescription>
+              Share your experience with this real estate professional.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-3">
+              {/* Star Rating */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Rating</label>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`h-8 w-8 flex items-center justify-center rounded-md hover:bg-amber-50 transition-colors`}
+                      onClick={() => handleStarClick(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                    >
+                      <Star
+                        size={24}
+                        className={`${
+                          star <= (hoverRating || currentRating)
+                            ? "text-amber-500 fill-amber-500"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+                {form.formState.errors.rating && (
+                  <p className="text-sm font-medium text-red-500 mt-1">
+                    {form.formState.errors.rating.message}
+                  </p>
+                )}
+              </div>
+              
+              {/* Deal Title (Optional) */}
+              <FormField
+                control={form.control}
+                name="dealTitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel>Related Property (Optional)</FormLabel>
+                    </div>
+                    <FormControl>
+                      <Input placeholder="e.g. 123 Main St, Miami" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      If your review is about a specific property transaction
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              {/* Review Text */}
+              <FormField
+                control={form.control}
+                name="reviewText"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Your Review</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Share your experience with this real estate professional..."
+                        className="min-h-[120px] resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="flex justify-between items-center pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsReviewFormOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit"
+                  className="bg-[#09261E] hover:bg-[#135341]"
+                  disabled={form.formState.isSubmitting}
+                >
+                  {form.formState.isSubmitting ? (
+                    <>
+                      <span className="mr-2">Submitting</span>
+                      <span className="animate-spin">↻</span>
+                    </>
+                  ) : (
+                    "Submit Review"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Login required modal */}
+      <Dialog open={loginModalOpen} onOpenChange={setLoginModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Lock className="h-5 w-5 text-amber-500" />
+              <span>Account Required</span>
+            </DialogTitle>
+            <DialogDescription>
+              You need to be logged in to leave a review.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="flex flex-col gap-4 py-4">
+            <p className="text-sm text-gray-600 flex items-start gap-2">
+              <Info className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+              <span>
+                Reviews help other users find trustworthy real estate professionals.
+                Please sign in or create an account to share your experience.
+              </span>
+            </p>
+            
+            <div className="flex justify-between gap-3 mt-2">
+              <Button 
+                className="flex-1" 
+                variant="outline"
+                onClick={() => {
+                  setLoginModalOpen(false);
+                  // For demo purposes, we'll simulate logging in
+                  setIsLoggedIn(true);
+                  setIsReviewFormOpen(true);
+                }}
+              >
+                Sign In
+              </Button>
+              <Button 
+                className="flex-1 bg-[#09261E] hover:bg-[#135341]"
+                onClick={() => {
+                  setLoginModalOpen(false);
+                  // For demo purposes, we'll simulate logging in
+                  setIsLoggedIn(true);
+                  setIsReviewFormOpen(true);
+                }}
+              >
+                Create Account
+              </Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </>
