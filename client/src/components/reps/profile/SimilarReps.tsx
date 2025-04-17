@@ -1,7 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Rep, reps } from "@/lib/rep-data";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Users } from "lucide-react";
+import { ChevronRight, Users } from "lucide-react";
 import RepCard from "./RepCard";
 
 interface SimilarRepsProps {
@@ -11,21 +11,15 @@ interface SimilarRepsProps {
 
 export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProps) {
   const [similarReps, setSimilarReps] = useState<(Rep & { similarityReason?: string })[]>([]);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
   
-  // Handle scrolling the carousel
-  const scroll = (direction: 'left' | 'right') => {
-    if (!scrollContainerRef.current) return;
-    
-    const container = scrollContainerRef.current;
-    const scrollAmount = container.clientWidth * 0.75;
-    
-    if (direction === 'left') {
-      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    } else {
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
+  // Detect if mobile view for responsive display
+  useEffect(() => {
+    const checkIfMobile = () => setIsMobile(window.innerWidth < 768);
+    checkIfMobile();
+    window.addEventListener("resize", checkIfMobile);
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
   
   useEffect(() => {
     // Find REPs that match the current REP's characteristics
@@ -119,66 +113,45 @@ export default function SimilarReps({ currentRep, maxReps = 6 }: SimilarRepsProp
     return null;
   }
   
+  // Limit displayed REPs based on screen size
+  const visibleReps = isMobile ? similarReps.slice(0, 3) : similarReps.slice(0, 6);
+  const hasMoreReps = similarReps.length > visibleReps.length;
+  
   return (
     <section className="mb-8 mt-10" id="similar-reps">
       {/* Section header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-[#09261E]" />
           <h2 className="text-xl font-semibold text-[#09261E]">Other Similar REPs</h2>
         </div>
         
-        {/* Desktop navigation arrows */}
-        <div className="hidden md:flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="h-8 w-8 rounded-full border-gray-300"
-            onClick={() => scroll('left')}
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="h-8 w-8 rounded-full border-gray-300"
-            onClick={() => scroll('right')}
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button 
+          variant="link" 
+          className="text-[#09261E] font-medium"
+          onClick={() => window.location.href = '/reps'}
+        >
+          View All
+          <ChevronRight size={16} className="ml-1" />
+        </Button>
       </div>
       
-      {/* Scrollable REP cards container */}
-      <div 
-        ref={scrollContainerRef}
-        className="flex overflow-x-auto gap-4 pb-4 hide-scrollbar snap-x snap-mandatory"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {similarReps.map(rep => (
-          <div 
-            key={rep.id} 
-            className="min-w-[220px] w-[220px] snap-start"
-          >
-            <RepCard rep={rep} similarityReason={rep.similarityReason} />
-          </div>
+      {/* Grid layout for REP cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {visibleReps.map(rep => (
+          <RepCard key={rep.id} rep={rep} similarityReason={rep.similarityReason} />
         ))}
       </div>
       
       {/* Link to view all REPs */}
-      <div className="flex justify-center mt-4">
-        <Button 
-          variant="outline" 
-          className="border-[#09261E] text-[#09261E] hover:bg-[#09261E]/5"
-          onClick={() => window.location.href = '/reps'}
-        >
-          Explore All REPs
-        </Button>
-      </div>
-      
-      {/* We're using inline styles and Tailwind classes to hide scrollbars */}
+      <Button 
+        variant="outline" 
+        className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+        onClick={() => window.location.href = '/reps'}
+      >
+        <Users size={16} className="mr-2" />
+        <span>Explore all REPs</span>
+      </Button>
     </section>
   );
 }

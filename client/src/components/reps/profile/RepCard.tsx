@@ -1,9 +1,7 @@
 import { Rep } from "@/lib/rep-data";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { BadgeCheck, MapPin, Star } from "lucide-react";
+import { BadgeCheck, MapPin } from "lucide-react";
 import { Link } from "wouter";
 
 interface RepCardProps {
@@ -21,60 +19,71 @@ export default function RepCard({ rep, similarityReason }: RepCardProps) {
 
   // Format location for display
   const location = `${rep.location.city}, ${rep.location.state}`;
+  
+  // Normalize title: simplify to one word from full role
+  const normalizedTitle = rep.role
+    .replace("Real Estate Agent", "Agent")
+    .replace("Real Estate Agency", "Agency")
+    .replace("Real Estate Advisor", "Advisor")
+    .replace("Commercial Property Specialist", "Commercial")
+    .replace("Residential Real Estate", "Residential")
+    .replace("Investment Property Expert", "Investor")
+    .replace("New Construction Specialist", "Construction")
+    .replace("Rural & Farm Property Expert", "Rural")
+    .replace("First-time Homebuyer Specialist", "Homebuyer")
+    .replace("Historic Property Specialists", "Historic");
+    
+  // Check if it's a business account
+  const isBusinessAccount = rep.name.includes('&') || 
+    rep.name.includes('Group') || 
+    rep.name.includes('Properties') || 
+    rep.name.includes('Associates') ||
+    rep.name.includes('Agency') ||
+    rep.name.includes('Realty');
+  
+  const avatarBorderClass = isBusinessAccount 
+    ? "rounded-lg" 
+    : "rounded-full";
 
   return (
-    <Card className="h-full flex flex-col hover:shadow-md transition-shadow duration-200 border-gray-200">
-      <CardContent className="pt-6 pb-2 flex-grow">
-        <div className="flex flex-col items-center mb-3">
-          <Avatar className="h-16 w-16 mb-3">
-            <AvatarImage src={rep.avatar} alt={rep.name} />
-            <AvatarFallback className="text-lg font-bold">{initials}</AvatarFallback>
-          </Avatar>
+    <Link href={`/reps/${rep.id}`}>
+      <div className="flex items-center p-3 rounded-lg border border-gray-200 hover:shadow-md hover:bg-gray-50 transition-all h-full">
+        {/* Featured indicator */}
+        {rep.isFeatured && (
+          <div className="absolute top-2 right-2 w-5 h-5 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
+            <BadgeCheck size={12} />
+          </div>
+        )}
+        
+        <Avatar className={`h-12 w-12 ${avatarBorderClass}`}>
+          <AvatarImage src={rep.avatar} alt={rep.name} />
+          <AvatarFallback className={avatarBorderClass}>{initials}</AvatarFallback>
+        </Avatar>
+        
+        <div className="ml-3 flex-1">
+          <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6 text-sm mb-1.5">{rep.name}</h3>
           
-          <h3 className="font-medium text-center text-base">{rep.name}</h3>
-          
-          <div className="flex items-center gap-1 mt-1">
-            {rep.isFeatured && (
-              <Badge className="bg-[#09261E] text-[10px] h-4 px-1 gap-0.5">
-                <BadgeCheck className="h-2.5 w-2.5" />
-                <span>Verified</span>
-              </Badge>
-            )}
-            
-            <Badge variant="outline" className="text-xs h-4 px-1.5 border-[#803344]/30 text-[#803344]">
-              {rep.role}
+          <div className="flex flex-wrap gap-1 mb-1.5">
+            <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300">
+              {normalizedTitle}
             </Badge>
           </div>
           
-          <div className="flex items-center text-gray-600 text-xs mt-2">
-            <MapPin className="h-3 w-3 mr-1" />
+          <div className="flex items-center text-xs text-gray-600 mb-1.5">
+            <MapPin size={12} className="mr-1 text-gray-500" />
             <span>{location}</span>
           </div>
           
-          <div className="flex items-center mt-1.5">
-            <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-            <span className="ml-1 text-xs text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
-            <span className="ml-1 text-[10px] text-gray-500">({rep.reviewCount})</span>
-          </div>
+          {similarityReason && (
+            <div className="text-xs text-gray-500 mt-2">
+              {similarityReason}
+            </div>
+          )}
+          
+          {/* Empty div for consistent card height */}
+          {!similarityReason && <div className="mt-2 h-5"></div>}
         </div>
-        
-        {similarityReason && (
-          <div className="text-xs text-gray-500 text-center mt-2 px-2">
-            {similarityReason}
-          </div>
-        )}
-      </CardContent>
-      
-      <CardFooter className="pt-0 pb-4">
-        <Link href={`/reps/${rep.id}`}>
-          <Button 
-            variant="outline" 
-            className="w-full text-sm h-8 border-[#09261E] text-[#09261E] hover:bg-[#09261E]/5"
-          >
-            View Profile
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
+      </div>
+    </Link>
   );
 }

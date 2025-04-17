@@ -277,8 +277,8 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
               
               <span className="text-xs text-gray-500">
                 {connection.mutualConnections.length === 1 
-                  ? '1 mutual connection' 
-                  : `${connection.mutualConnections.length} mutual connections`}
+                  ? '1 Mutual' 
+                  : `${connection.mutualConnections.length} Mutuals`}
               </span>
             </div>
           )}

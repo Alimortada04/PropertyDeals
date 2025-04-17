@@ -418,7 +418,7 @@ export default function RepProfilePage() {
       <MobileContactCard rep={enhancedRep} />
       
       {/* Similar REPs section */}
-      <div className="container mx-auto px-4 mb-32 md:mb-16">
+      <div className="container mx-auto px-4 mb-44 md:mb-16">
         <SimilarReps currentRep={enhancedRep} />
       </div>
     </div>
