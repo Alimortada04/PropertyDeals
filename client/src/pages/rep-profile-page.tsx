@@ -173,7 +173,7 @@ export default function RepProfilePage() {
       <div className="relative mb-6">
         {/* Banner Image */}
         <div className="h-48 md:h-64 bg-gradient-to-r from-[#135341]/80 to-[#803344]/80 rounded-b-lg overflow-hidden relative">
-          {rep.banner && rep.name && (
+          {rep.banner && (
             <img 
               src={rep.banner} 
               alt={`${rep.name}'s cover`}
@@ -187,8 +187,8 @@ export default function RepProfilePage() {
           <div className="flex flex-col md:flex-row items-center md:items-end">
             {/* Profile Picture */}
             <Avatar className="w-28 h-28 border-4 border-white rounded-full shadow-md">
-              <AvatarImage src={rep.avatar} alt={rep.name || 'Profile'} />
-              <AvatarFallback>{rep.name ? rep.name.split(' ').map(n => n[0]).join('') : 'U'}</AvatarFallback>
+              <AvatarImage src={rep.avatar} alt={rep.name} />
+              <AvatarFallback>{rep.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
             </Avatar>
             
             {/* Verification badge */}
@@ -207,7 +207,7 @@ export default function RepProfilePage() {
         {/* Basic Information */}
         <div className="mb-6">
           <h1 className="font-heading text-3xl font-bold text-gray-900 mb-1">
-            {rep.name || 'Real Estate Professional'}
+            {rep.name}
           </h1>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
             <Badge variant="outline" className="bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium inline-flex items-center">
