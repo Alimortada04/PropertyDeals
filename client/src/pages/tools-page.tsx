@@ -67,7 +67,7 @@ export default function ToolsPage() {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container mx-auto px-4 py-12 pt-20">
       {/* Breadcrumbs */}
       <div className="mb-4">
         <Breadcrumbs />
