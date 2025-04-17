@@ -88,9 +88,9 @@ export default function RepCard({ rep }: RepCardProps) {
       {/* No badges at top, moved to inside card */}
         
       <CardContent className="p-3 sm:p-6">
-        {/* Desktop layout - vertical */}
-        <div className="hidden sm:flex flex-col items-center">
-          {/* Profile Image - centered on desktop */}
+        {/* Unified layout for all screen sizes */}
+        <div className="flex flex-col items-center">
+          {/* Profile Image - centered */}
           <div className="mb-3">
             <img 
               src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
@@ -105,7 +105,7 @@ export default function RepCard({ rep }: RepCardProps) {
             />
           </div>
           
-          {/* Desktop: Content area - centered */}
+          {/* Content area - centered */}
           <div className="text-center">
             <h3 className="font-heading text-xl font-semibold text-gray-800 mb-1 line-clamp-1 flex items-center justify-center">
               {rep.name}
@@ -121,7 +121,7 @@ export default function RepCard({ rep }: RepCardProps) {
               {rep.role}
             </Badge>
           
-            {/* Desktop: Rating and info section */}
+            {/* Rating and location section - simplified */}
             <div className="flex flex-col w-full mb-3 text-sm">
               <div className="flex items-center justify-center text-gray-700 w-full mb-2">
                 <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
@@ -146,121 +146,45 @@ export default function RepCard({ rep }: RepCardProps) {
                   <span className="truncate">{rep.responseTime}</span>
                 </div>
               )}
-              
-              {isBusiness ? (
-                <div className="flex items-center justify-center text-gray-600 w-full">
-                  <Building2 size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                  <span className="truncate">Since {rep.foundedYear || 'N/A'}</span>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center text-gray-600 w-full">
-                  <Briefcase size={14} className="mr-1 text-gray-400 flex-shrink-0" />
-                  <span className="truncate">{rep.yearsExperience || '0'}+ Years</span>
-                </div>
-              )}
             </div>
             
-            {/* Bio */}
-            <p className="text-gray-600 text-sm mb-2 line-clamp-2 text-center">
-              {rep.bio?.substring(0, 100)}...
-            </p>
+            {/* Mutual connections */}
+            <div className="flex items-center justify-center pt-0.5 pb-2">
+              <div className="flex -space-x-2">
+                {/* Display mutual connections avatars */}
+                <Avatar className="h-6 w-6 border-2 border-white">
+                  <AvatarImage src="https://randomuser.me/api/portraits/men/1.jpg" />
+                  <AvatarFallback>MC</AvatarFallback>
+                </Avatar>
+                <Avatar className="h-6 w-6 border-2 border-white">
+                  <AvatarImage src="https://randomuser.me/api/portraits/women/2.jpg" />
+                  <AvatarFallback>MC</AvatarFallback>
+                </Avatar>
+                <Avatar className="h-6 w-6 border-2 border-white">
+                  <AvatarImage src="https://randomuser.me/api/portraits/men/3.jpg" />
+                  <AvatarFallback>MC</AvatarFallback>
+                </Avatar>
+                
+                {/* More indicator if needed */}
+                <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600 border-2 border-white">
+                  +2
+                </div>
+              </div>
+              <span className="text-xs text-gray-500 ml-2">5 mutuals</span>
+            </div>
           </div>
         </div>
         
-        {/* Mobile layout - horizontal (similar to connections) */}
-        <div className="sm:hidden">
-          {/* Main content row - with rating at very top */}
-          <div className="flex items-center space-x-3 relative py-1">
-            {/* Top right rating absolute positioned with slight top spacing */}
-            <div className="absolute top-[2px] right-0">
-              <div className="flex items-center text-gray-700 text-xs">
-                <Star size={14} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-                <span className="font-medium">{rep.rating}</span>
-              </div>
-            </div>
-            
-            {/* Profile Image - Left on mobile, vertically centered, BIGGER */}
-            <div className="flex-shrink-0 my-auto flex items-center justify-center">
-              <img 
-                src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
-                alt={rep.name}
-                className={`${isBusiness ? 'w-16 h-16 rounded-lg' : 'w-16 h-16 rounded-full'} object-cover border-2 border-white shadow-md`}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = isBusiness 
-                    ? "https://placehold.co/200x200/e6e6e6/803344?text=Business"
-                    : "https://randomuser.me/api/portraits/lego/1.jpg";
-                }}
-              />
-            </div>
-            
-            {/* Middle: Name with checkmark, job tag, and location */}
-            <div className="flex-1 min-w-0 flex flex-col justify-center">
-              {/* Name with checkmark - BIGGER */}
-              <div className="flex items-center mb-1">
-                <h3 className="font-heading text-xl font-semibold text-gray-800 line-clamp-1 mr-1">
-                  {rep.name}
-                </h3>
-                {rep.isVerified && (
-                  <CheckCircle2 size={18} className="text-[#803344] flex-shrink-0" />
-                )}
-              </div>
-              
-              <Badge 
-                variant="outline" 
-                className="mb-1 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs w-fit"
-              >
-                {rep.role}
-              </Badge>
-              
-              <div className="flex items-center text-gray-600 text-xs">
-                <MapPin size={12} className="mr-1 text-gray-400 flex-shrink-0" />
-                <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
-              </div>
-            </div>
-            
-            {/* Chevron on right, moved down and bigger */}
-            <div className="flex items-end justify-center h-full ml-1 pb-1">
-              <ChevronRight size={28} className="text-gray-400" />
-            </div>
-          </div>
-          
-          {/* Bottom section with mutual connections - reduced padding */}
-          <div className="flex items-center pt-0.5 pb-2">
-            <div className="flex -space-x-2">
-              {/* Display mutual connections avatars - we'll show 3 sample ones here */}
-              <Avatar className="h-6 w-6 border-2 border-white">
-                <AvatarImage src="https://randomuser.me/api/portraits/men/1.jpg" />
-                <AvatarFallback>MC</AvatarFallback>
-              </Avatar>
-              <Avatar className="h-6 w-6 border-2 border-white">
-                <AvatarImage src="https://randomuser.me/api/portraits/women/2.jpg" />
-                <AvatarFallback>MC</AvatarFallback>
-              </Avatar>
-              <Avatar className="h-6 w-6 border-2 border-white">
-                <AvatarImage src="https://randomuser.me/api/portraits/men/3.jpg" />
-                <AvatarFallback>MC</AvatarFallback>
-              </Avatar>
-              
-              {/* More indicator if needed */}
-              <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600 border-2 border-white">
-                +2
-              </div>
-            </div>
-            <span className="text-xs text-gray-500 ml-2">5 mutuals</span>
-          </div>
-        </div>
-        
-        {/* Last Active - Desktop only */}
+        {/* Last Active */}
         {rep.lastActive && (
-          <div className="hidden sm:block text-xs text-gray-500 text-center mt-1">
+          <div className="text-xs text-gray-500 text-center mt-1">
             {getLastActiveText()}
           </div>
         )}
       </CardContent>
 
-      {/* Bottom CTA Section - Desktop only */}
-      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 hidden sm:flex gap-2">
+      {/* Bottom CTA Section - All screen sizes */}
+      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 flex gap-2">
         {/* Message button */}
         <Button 
           variant="outline"
