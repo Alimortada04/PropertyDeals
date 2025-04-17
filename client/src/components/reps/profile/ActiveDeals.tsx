@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Property } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,15 +10,35 @@ import {
   BedDouble, 
   Bath, 
   SquareCode, 
-  MapPin 
+  MapPin,
+  Building
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 interface ActiveDealsProps {
   properties: Property[];
 }
 
 export default function ActiveDeals({ properties }: ActiveDealsProps) {
+  const [showAllPropertiesDialog, setShowAllPropertiesDialog] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter properties based on search query when viewing all
+  const filteredProperties = properties?.filter(property => 
+    !searchQuery || 
+    property.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    property.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    property.city?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    property.state?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    property.zipCode?.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+
+  // Show only the first 3 properties in the main view
+  const displayedProperties = properties?.slice(0, 3) || [];
+  
   if (!properties || properties.length === 0) {
     return (
       <div id="active-deals" className="my-8 scroll-mt-24">
@@ -35,15 +56,74 @@ export default function ActiveDeals({ properties }: ActiveDealsProps) {
   
   return (
     <div id="active-deals" className="my-8 scroll-mt-24">
-      <h2 className="text-2xl font-bold text-[#09261E] mb-4">
-        Active Deals <span className="text-base font-normal text-gray-500">({properties.length})</span>
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-[#09261E]">
+          Active Deals <span className="text-base font-normal text-gray-500">({properties.length})</span>
+        </h2>
+        
+        {properties.length > 3 && (
+          <Button 
+            variant="outline" 
+            className="text-[#09261E] border-[#09261E] hover:bg-gray-50 h-9 text-sm"
+            onClick={() => setShowAllPropertiesDialog(true)}
+          >
+            View All <ArrowRight size={14} className="ml-1.5" />
+          </Button>
+        )}
+      </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {properties.map((property) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {displayedProperties.map((property) => (
           <PropertyCard key={property.id} property={property} />
         ))}
       </div>
+      
+      {/* All Properties Dialog */}
+      <Dialog open={showAllPropertiesDialog} onOpenChange={setShowAllPropertiesDialog}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>All Active Properties</DialogTitle>
+            <DialogDescription>
+              Browse all properties that this REP is currently representing.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {/* Search Bar */}
+          <div className="relative mb-4">
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Search by address, city, or property name"
+              className="pl-9 py-2"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          
+          {/* Properties Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredProperties.map((property) => (
+              <PropertyCard key={property.id} property={property} />
+            ))}
+          </div>
+          
+          {filteredProperties.length === 0 && (
+            <div className="text-center py-8">
+              <Building className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+              <h3 className="text-lg font-medium">No properties found</h3>
+              <p className="text-gray-500">Try adjusting your search criteria</p>
+            </div>
+          )}
+          
+          <DialogFooter className="mt-4">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowAllPropertiesDialog(false)}
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

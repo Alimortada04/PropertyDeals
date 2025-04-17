@@ -83,7 +83,7 @@ export default function StickyNav({
               variant="ghost"
               className={`rounded-md h-9 border ${
                 activeSection === "active-deals" 
-                  ? "text-[#09261E] font-medium border-[#09261E]" 
+                  ? "text-[#09261E] font-medium border-[#09261E] hover:bg-gray-50" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-50"
               }`}
               onClick={() => scrollToSection("active-deals")}
@@ -105,7 +105,7 @@ export default function StickyNav({
               variant="ghost"
               className={`rounded-md h-9 border ${
                 activeSection === "activity" 
-                  ? "text-[#09261E] font-medium border-[#09261E]" 
+                  ? "text-[#09261E] font-medium border-[#09261E] hover:bg-gray-50" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-50"
               }`}
               onClick={() => scrollToSection("activity")}
@@ -118,7 +118,7 @@ export default function StickyNav({
               variant="ghost"
               className={`rounded-md h-9 border ${
                 activeSection === "connections" 
-                  ? "text-[#09261E] font-medium border-[#09261E]" 
+                  ? "text-[#09261E] font-medium border-[#09261E] hover:bg-gray-50" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-50"
               }`}
               onClick={() => scrollToSection("connections")}
@@ -140,7 +140,7 @@ export default function StickyNav({
               variant="ghost"
               className={`rounded-md h-9 border ${
                 activeSection === "closed-deals" 
-                  ? "text-[#09261E] font-medium border-[#09261E]" 
+                  ? "text-[#09261E] font-medium border-[#09261E] hover:bg-gray-50" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-50"
               }`}
               onClick={() => scrollToSection("closed-deals")}
@@ -162,7 +162,7 @@ export default function StickyNav({
               variant="ghost"
               className={`rounded-md h-9 border ${
                 activeSection === "reviews" 
-                  ? "text-[#09261E] font-medium border-[#09261E]" 
+                  ? "text-[#09261E] font-medium border-[#09261E] hover:bg-gray-50" 
                   : "bg-transparent text-gray-700 border-gray-200 hover:bg-gray-50"
               }`}
               onClick={() => scrollToSection("reviews")}
