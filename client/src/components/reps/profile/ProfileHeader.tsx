@@ -97,7 +97,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
         
         {/* Profile Avatar - Overlaid on banner */}
         <div className="container mx-auto px-4">
-          <div className="relative -mt-20">
+          <div className="relative -mt-16">
             <Avatar className="h-32 w-32 border-4 border-white absolute left-4 sm:left-6 lg:left-8">
               <AvatarImage src={rep.avatar} alt={rep.name} />
               <AvatarFallback className="text-4xl font-bold">{initials}</AvatarFallback>
@@ -108,7 +108,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       
       {/* Profile Content - Below banner and avatar */}
       <div className="container mx-auto px-4">
-        <div className="bg-white rounded-md mt-6 pt-4">
+        <div className="bg-white rounded-md mt-20 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-4">
             {/* Profile info section */}
             <div className="flex flex-col md:flex-row justify-between items-start">
@@ -341,7 +341,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       </div>
       
       {/* Mobile Social Links and Buttons */}
-      <div className="container mx-auto px-4 md:hidden">
+      <div className="container mx-auto px-4 md:hidden mt-6">
         <div className="bg-white rounded-md p-4">
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
