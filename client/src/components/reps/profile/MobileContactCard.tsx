@@ -1,4 +1,4 @@
-import { Rep } from "@shared/schema";
+import { Rep } from "@/lib/rep-data";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { 
