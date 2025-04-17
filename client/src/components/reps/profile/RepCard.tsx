@@ -25,6 +25,7 @@ export default function RepCard({ rep, similarityReason }: RepCardProps) {
     .replace("Real Estate Agent", "Agent")
     .replace("Real Estate Agency", "Agency")
     .replace("Real Estate Advisor", "Advisor")
+    .replace("Real Estate Brokerage", "Brokerage")
     .replace("Commercial Property Specialist", "Commercial")
     .replace("Residential Real Estate", "Residential")
     .replace("Investment Property Expert", "Investor")
