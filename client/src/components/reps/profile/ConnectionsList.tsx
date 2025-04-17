@@ -217,12 +217,7 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
           )}
         </div>
         
-        <div className="flex items-center justify-between mt-1.5">
-          <div className="flex items-center text-xs text-gray-500">
-            <Calendar size={12} className="mr-1" />
-            <span>Connected {formatRelativeTime(connection.connectedDate)}</span>
-          </div>
-          
+        <div className="flex items-center justify-end mt-1.5">
           <Button 
             size="sm" 
             variant="ghost" 

@@ -4,6 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { 
   MessageSquare, 
   Calendar, 
@@ -12,7 +21,9 @@ import {
   CheckSquare,
   UserPlus,
   Activity as ActivityIcon,
-  FileText
+  FileText,
+  Search,
+  ChevronRight
 } from "lucide-react";
 
 interface Activity {
@@ -35,6 +46,8 @@ interface ActivityFeedProps {
 
 export default function ActivityFeed({ activities }: ActivityFeedProps) {
   const [activeTab, setActiveTab] = useState<string>("all");
+  const [showAllActivitiesDialog, setShowAllActivitiesDialog] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   if (!activities || activities.length === 0) {
     return (
@@ -51,21 +64,29 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
     );
   }
   
-  // Filter activities based on active tab
-  const filteredActivities = activeTab === "all" 
-    ? activities 
-    : activities.filter(activity => {
-        switch (activeTab) {
-          case "posts":
-            return activity.type === "post";
-          case "deals":
-            return activity.type === "deal_posted" || activity.type === "deal_closed";
-          case "comments":
-            return activity.type === "comment";
-          default:
-            return true;
-        }
-      });
+  // Filter activities based on active tab and search query
+  const filteredActivities = activities.filter(activity => {
+    // Filter by tab first
+    const passesTabFilter = activeTab === "all" ? true : (
+      activeTab === "posts" ? activity.type === "post" :
+      activeTab === "deals" ? (activity.type === "deal_posted" || activity.type === "deal_closed") :
+      activeTab === "comments" ? activity.type === "comment" : true
+    );
+    
+    // Then filter by search query if one exists
+    if (!passesTabFilter) return false;
+    if (!searchQuery) return true;
+    
+    const lowerQuery = searchQuery.toLowerCase();
+    
+    // Search in various fields based on activity type
+    return (
+      (activity.content && activity.content.toLowerCase().includes(lowerQuery)) ||
+      (activity.dealTitle && activity.dealTitle.toLowerCase().includes(lowerQuery)) ||
+      (activity.threadTitle && activity.threadTitle.toLowerCase().includes(lowerQuery)) ||
+      (activity.connectionName && activity.connectionName.toLowerCase().includes(lowerQuery))
+    );
+  });
   
   // Limit to 3 activities for display
   const displayedActivities = filteredActivities.slice(0, 3);
@@ -73,9 +94,20 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
   
   return (
     <div id="activity" className="my-8 scroll-mt-24">
-      <h2 className="text-2xl font-bold text-[#09261E] mb-4">
-        Activity <span className="text-base font-normal text-gray-500">({activities.length})</span>
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-[#09261E]">
+          Activity <span className="text-base font-normal text-gray-500">({activities.length})</span>
+        </h2>
+        
+        <Button 
+          variant="link" 
+          className="text-[#09261E] font-medium"
+          onClick={() => setShowAllActivitiesDialog(true)}
+        >
+          View All
+          <ChevronRight size={16} className="ml-1" />
+        </Button>
+      </div>
       
       <Tabs defaultValue="all" onValueChange={setActiveTab}>
         <TabsList className="mb-4 bg-gray-50">
@@ -123,7 +155,7 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
                   <Button 
                     variant="outline" 
                     className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
-                    onClick={() => window.location.href = "#activity-full"} // This could be replaced with a modal or full page view
+                    onClick={() => setShowAllActivitiesDialog(true)}
                   >
                     <ActivityIcon size={16} className="mr-2" />
                     <span>See all {filteredActivities.length} activities</span>
