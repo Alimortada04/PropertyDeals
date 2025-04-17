@@ -110,12 +110,11 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
       <div className="container mx-auto px-4">
         <div className="bg-white rounded-md shadow-sm mt-12 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col md:flex-row justify-between md:items-start gap-x-6 gap-y-2">
+            <div className="flex flex-col md:flex-row justify-between md:items-start">
               {/* Left column: Basic info section */}
               <div className="flex-1 mb-4 md:mb-0 md:pr-8">
-                {/* Full Name */}
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <h1 className="text-2xl font-bold text-[#09261E] font-display">{rep.name}</h1>
+                  <h1 className="text-2xl font-bold text-[#09261E]">{rep.name}</h1>
                   {rep.isVerified && (
                     <Badge className="bg-[#09261E]">
                       <BadgeCheck className="h-3.5 w-3.5 mr-1" />
@@ -124,37 +123,32 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   )}
                 </div>
                 
-                {/* REP Role Badge */}
                 <div className="mb-3">
-                  <Badge variant="outline" className="px-2 py-1 rounded-full border-[#803344]/30 text-[#803344]">
+                  <Badge variant="outline" className="px-2 py-1 border-[#803344]/30 text-[#803344]">
                     {rep.role}
                   </Badge>
                 </div>
                 
-                {/* Rating Summary */}
                 <div className="flex items-center mb-3">
-                  <span className="text-amber-500 mr-1">⭐️</span>
-                  <span className="text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
+                  <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                  <span className="ml-2 text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
                   <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
                 </div>
                 
-                {/* Location */}
                 <div className="flex flex-wrap items-start mb-2">
                   <div className="flex items-center text-gray-600">
-                    <span className="mr-1">📍</span>
+                    <MapPin className="h-4 w-4 mr-1" />
                     <span>{rep.locationCity}, {rep.locationState}</span>
                   </div>
                 </div>
                 
-                {/* Experience */}
                 <div className="flex flex-wrap items-start mb-2">
                   <div className="flex items-center text-gray-600">
-                    <span className="mr-1">⏳</span>
+                    <Award className="h-4 w-4 mr-1" />
                     <span>{rep.yearsExperience}+ years experience</span>
                   </div>
                 </div>
                 
-                {/* Website link */}
                 {rep.website && (
                   <div className="flex items-center mt-1">
                     <a 
@@ -163,7 +157,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                       rel="noopener noreferrer" 
                       className="text-blue-600 hover:underline flex items-center"
                     >
-                      <span className="mr-1">🌐</span>
+                      <Globe className="h-4 w-4 mr-1" />
                       <span>{websiteDomain}</span>
                     </a>
                   </div>
