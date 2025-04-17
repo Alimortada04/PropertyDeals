@@ -38,7 +38,7 @@ export default function RepHeader({ rep, stats, socialLinks }: RepHeaderProps) {
   const defaultAvatar = "https://via.placeholder.com/150?text=REP";
   
   // Social media icons mapping
-  const socialMediaIcons = {
+  const socialMediaIcons: Record<string, React.ReactNode> = {
     website: <Globe className="h-5 w-5" />,
     linkedin: <Linkedin className="h-5 w-5" />,
     instagram: <Instagram className="h-5 w-5" />,

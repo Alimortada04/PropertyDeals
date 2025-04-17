@@ -229,7 +229,7 @@ export default function RepReviews({ reviews, repId, repName }: RepReviewsProps)
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={review.avatar} alt={review.name} />
                     <AvatarFallback>
-                      {review.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      {review.name.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   
