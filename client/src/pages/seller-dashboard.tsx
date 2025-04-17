@@ -161,7 +161,7 @@ export default function SellerDashboard() {
                 </Card>
               ))}
             </div>
-          ) : inquiries && inquiries.length > 0 ? (
+          ) : inquiries && Array.isArray(inquiries) && inquiries.length > 0 ? (
             <div className="space-y-4">
               {inquiries.map((inquiry: any) => (
                 <Card key={inquiry.id}>
