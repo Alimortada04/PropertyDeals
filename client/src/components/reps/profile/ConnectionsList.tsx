@@ -10,7 +10,9 @@ import {
   ChevronRight, 
   X,
   Search,
-  Users
+  Users,
+  Mail,
+  CirclePlus
 } from "lucide-react";
 import {
   Dialog,
@@ -177,6 +179,9 @@ interface ConnectionCardProps {
 }
 
 function ConnectionCard({ connection }: ConnectionCardProps) {
+  // Normalize title: change "Real Estate Agent" to "Agent"
+  const normalizedTitle = connection.title.replace("Real Estate Agent", "Agent");
+  
   const initials = connection.name
     .split(' ')
     .map(word => word[0])
@@ -195,36 +200,44 @@ function ConnectionCard({ connection }: ConnectionCardProps) {
     : "rounded-full";
   
   return (
-    <div className="flex items-start p-4 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
+    <div className="relative flex items-start p-4 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
+      {/* Mutual Connection Status Indicator - Top Right */}
+      {connection.isMutual ? (
+        <div className="absolute top-2 right-2 w-6 h-6 bg-[#09261E] rounded-full flex items-center justify-center text-white shadow-sm">
+          <Check size={14} />
+        </div>
+      ) : (
+        <Button 
+          size="sm" 
+          variant="outline"
+          className="absolute top-2 right-2 w-6 h-6 p-0 rounded-full border-gray-300 hover:bg-[#09261E]/10 hover:border-[#09261E]"
+          title="Send connection request"
+        >
+          <CirclePlus size={12} />
+        </Button>
+      )}
+      
       <Avatar className={`h-12 w-12 ${avatarBorderClass}`}>
         <AvatarImage src={connection.avatar} alt={connection.name} />
         <AvatarFallback className={avatarBorderClass}>{initials}</AvatarFallback>
       </Avatar>
       
       <div className="ml-3 flex-1">
-        <h3 className="font-semibold text-gray-900 line-clamp-1">{connection.name}</h3>
+        <h3 className="font-semibold text-gray-900 line-clamp-1 pr-6">{connection.name}</h3>
         
-        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+        <div className="mt-0.5">
           <Badge variant="outline" className="text-xs py-0 px-1.5 border-gray-300">
-            {connection.title}
+            {normalizedTitle}
           </Badge>
-          
-          {connection.isMutual && (
-            <Badge variant="outline" className="text-xs py-0 px-1.5 border-[#09261E] text-[#09261E]">
-              <Check size={10} className="mr-1" />
-              <span>Mutual</span>
-            </Badge>
-          )}
         </div>
         
-        <div className="flex items-center justify-end mt-1.5">
+        <div className="mt-2">
           <Button 
             size="sm" 
             variant="ghost" 
             className="h-7 px-2 text-xs text-[#09261E] hover:bg-[#09261E]/10"
           >
-            <UserPlus size={12} className="mr-1" />
-            <span>View</span>
+            <span>View Profile</span>
           </Button>
         </div>
       </div>
