@@ -1355,45 +1355,45 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
             <div className="space-y-1.5">
-              <FormLabel htmlFor="name" className="font-medium text-sm">
+              <label htmlFor="name" className="font-medium text-sm">
                 Name
-              </FormLabel>
+              </label>
               <Input id="name" placeholder="Your full name" />
             </div>
             
             <div className="space-y-1.5">
-              <FormLabel htmlFor="email" className="font-medium text-sm">
+              <label htmlFor="email" className="font-medium text-sm">
                 Email
-              </FormLabel>
+              </label>
               <Input id="email" placeholder="your.email@example.com" type="email" />
             </div>
             
             <div className="space-y-1.5">
-              <FormLabel htmlFor="phone" className="font-medium text-sm">
+              <label htmlFor="phone" className="font-medium text-sm">
                 Phone (optional)
-              </FormLabel>
+              </label>
               <Input id="phone" placeholder="(555) 123-4567" type="tel" />
             </div>
             
             <div className="space-y-1.5">
-              <FormLabel htmlFor="message" className="font-medium text-sm">
+              <label htmlFor="message" className="font-medium text-sm">
                 Message
-              </FormLabel>
+              </label>
               <Textarea 
                 id="message" 
                 rows={4}
                 placeholder="I'm interested in this property and would like to schedule a viewing." 
               />
             </div>
-          </div>
-          
-          <div className="flex justify-end mt-6">
-            <Button type="submit" className="w-full sm:w-auto bg-[#09261E] hover:bg-[#135341] text-white">
-              Send Message
-            </Button>
-          </div>
+            
+            <div className="flex justify-end mt-6">
+              <Button type="submit" className="w-full sm:w-auto bg-[#09261E] hover:bg-[#135341] text-white">
+                Send Message
+              </Button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
       
@@ -1407,52 +1407,52 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-4">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
             <div className="space-y-1.5">
-              <FormLabel htmlFor="quote-name" className="font-medium text-sm">
+              <label htmlFor="quote-name" className="font-medium text-sm">
                 Name
-              </FormLabel>
+              </label>
               <Input id="quote-name" placeholder="Your full name" />
             </div>
             
             <div className="space-y-1.5">
-              <FormLabel htmlFor="quote-email" className="font-medium text-sm">
+              <label htmlFor="quote-email" className="font-medium text-sm">
                 Email
-              </FormLabel>
+              </label>
               <Input id="quote-email" placeholder="your.email@example.com" type="email" />
             </div>
             
             <div className="space-y-1.5">
-              <FormLabel htmlFor="quote-phone" className="font-medium text-sm">
+              <label htmlFor="quote-phone" className="font-medium text-sm">
                 Phone
-              </FormLabel>
+              </label>
               <Input id="quote-phone" placeholder="(555) 123-4567" type="tel" />
             </div>
             
             <div className="space-y-1.5">
-              <FormLabel htmlFor="workType" className="font-medium text-sm">
+              <label htmlFor="workType" className="font-medium text-sm">
                 Work Type
-              </FormLabel>
+              </label>
               <Input id="workType" placeholder="Kitchen remodel, bathroom update, etc." />
             </div>
             
             <div className="space-y-1.5">
-              <FormLabel htmlFor="details" className="font-medium text-sm">
+              <label htmlFor="details" className="font-medium text-sm">
                 Details
-              </FormLabel>
+              </label>
               <Textarea 
                 id="details" 
                 rows={4}
                 placeholder="Please provide details about the work needed..." 
               />
             </div>
-          </div>
-          
-          <div className="flex justify-end mt-6">
-            <Button type="submit" className="w-full sm:w-auto bg-[#09261E] hover:bg-[#135341] text-white">
-              Request Quotes
-            </Button>
-          </div>
+            
+            <div className="flex justify-end mt-6">
+              <Button type="submit" className="w-full sm:w-auto bg-[#09261E] hover:bg-[#135341] text-white">
+                Request Quotes
+              </Button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
       
