@@ -86,9 +86,9 @@ export default function RepCard({ rep }: RepCardProps) {
       onClick={handleCardClick}
     >
       <div className="relative">
-        {/* Verified badge */}
+        {/* Desktop Verified badge */}
         {rep.isVerified && (
-          <div className="absolute top-2 left-2 z-10">
+          <div className="absolute top-2 left-2 z-10 hidden sm:block">
             <Badge className="bg-[#803344] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
               <CheckCircle2 size={12} />
               Verified
@@ -96,9 +96,9 @@ export default function RepCard({ rep }: RepCardProps) {
           </div>
         )}
         
-        {/* Featured badge - moved to left on small screens, right on larger screens */}
+        {/* Desktop Featured badge */}
         {rep.isFeatured && (
-          <div className="absolute sm:top-2 sm:right-2 top-10 left-2 z-10">
+          <div className="absolute top-2 right-2 z-10 hidden sm:block">
             <Badge className="bg-[#09261E] text-white border-0 px-2 py-1 text-xs flex items-center gap-1">
               <Award size={12} />
               Featured
@@ -238,8 +238,8 @@ export default function RepCard({ rep }: RepCardProps) {
               </div>
             </div>
             
-            {/* Top right: Rating */}
-            <div className="absolute top-2 right-0">
+            {/* Top right: Rating - positioned at very top */}
+            <div className="absolute top-[-2px] right-0">
               <div className="flex items-center text-gray-700 text-xs">
                 <Star size={12} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
                 <span className="font-medium">{rep.rating}</span>
@@ -274,7 +274,7 @@ export default function RepCard({ rep }: RepCardProps) {
                 +2
               </div>
             </div>
-            <span className="text-xs text-gray-500 ml-2">5 mutual connections</span>
+            <span className="text-xs text-gray-500 ml-2">5 mutuals</span>
           </div>
         </div>
         
