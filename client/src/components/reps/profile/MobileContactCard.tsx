@@ -70,15 +70,14 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
   return (
     <>
       {/* Main sticky card visible on mobile only */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white py-3 px-5 md:hidden z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.1)]">
-        <div className="flex items-center justify-between">
-          {/* Action buttons - reordered */}
-          <div className="flex justify-center gap-8 w-full">
-            {/* Share button - now using native share API */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-12 w-12 text-[#09261E] hover:bg-gray-100 flex flex-col items-center justify-center"
+      <div className="fixed bottom-0 left-0 right-0 bg-white py-4 md:hidden z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.1)] border-t border-gray-100">
+        <div className="flex items-center justify-center">
+          {/* Action buttons - reordered with larger tap areas */}
+          <div className="flex justify-center items-center gap-x-10 w-full">
+            {/* Share button - uses native share API */}
+            <button 
+              className="flex flex-col items-center justify-center rounded-full w-14 h-14 bg-[#09261E] text-white hover:scale-105 transform transition-transform duration-200"
+              aria-label="Share REP profile"
               onClick={() => {
                 if (navigator.share) {
                   navigator.share({
@@ -92,25 +91,75 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                 }
               }}
             >
-              <Share2 className="h-5 w-5 mb-1" />
-              <span className="text-[10px]">Share</span>
-            </Button>
+              <Share2 className="h-7 w-7" />
+            </button>
             
-            {/* Profile/Connect Button - replacing both External Link and Connect buttons */}
+            {/* Profile/Connect Button */}
             <Dialog open={socialsDialogOpen} onOpenChange={setSocialsDialogOpen}>
               <DialogTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="h-12 w-12 text-[#09261E] hover:bg-gray-100 flex flex-col items-center justify-center"
+                <button 
+                  className="flex flex-col items-center justify-center rounded-full w-14 h-14 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
+                  aria-label="Connect with REP"
                 >
-                  <UserPlus className="h-5 w-5 mb-1" />
-                  <span className="text-[10px]">Connect</span>
-                </Button>
+                  <UserPlus className="h-7 w-7" />
+                </button>
               </DialogTrigger>
               <DialogContent className="w-[95vw] rounded-t-xl rounded-b-none p-4 pt-6 pb-8 fixed bottom-0 top-auto translate-y-0 border-t-2 border-[#09261E]">
                 <DialogHeader>
                   <DialogTitle className="text-center text-xl mb-6">Connect with {rep.name}</DialogTitle>
                 </DialogHeader>
+                
+                {/* Social media icons row */}
+                <div className="flex justify-center items-center gap-4 mb-6">
+                  {social?.linkedin && (
+                    <a 
+                      href={social.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Connect on LinkedIn"
+                      className="p-3 rounded-full bg-gray-100 text-[#0077B5] hover:bg-[#0077B5]/10 transition-colors duration-200"
+                    >
+                      <Linkedin className="h-6 w-6" />
+                    </a>
+                  )}
+                  
+                  {social?.instagram && (
+                    <a 
+                      href={social.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Follow on Instagram"
+                      className="p-3 rounded-full bg-gray-100 text-[#E1306C] hover:bg-[#E1306C]/10 transition-colors duration-200"
+                    >
+                      <Instagram className="h-6 w-6" />
+                    </a>
+                  )}
+                  
+                  {social?.facebook && (
+                    <a 
+                      href={social.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Follow on Facebook"
+                      className="p-3 rounded-full bg-gray-100 text-[#1877F2] hover:bg-[#1877F2]/10 transition-colors duration-200"
+                    >
+                      <Facebook className="h-6 w-6" />
+                    </a>
+                  )}
+                  
+                  {social?.twitter && (
+                    <a 
+                      href={social.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Follow on Twitter"
+                      className="p-3 rounded-full bg-gray-100 text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-colors duration-200"
+                    >
+                      <Twitter className="h-6 w-6" />
+                    </a>
+                  )}
+                </div>
+                
                 <div className="space-y-3">
                   {/* Connect on PropertyDeals option */}
                   <div 
@@ -129,19 +178,17 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                     </div>
                   </div>
                   
-                  {rep.website && (
+                  {contact?.phone && (
                     <a 
-                      href={rep.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={`tel:${contact.phone}`}
                       className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
                     >
                       <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center">
-                        <Globe className="h-5 w-5 text-[#09261E]" />
+                        <Phone className="h-5 w-5 text-[#09261E]" />
                       </div>
                       <div>
-                        <h5 className="font-medium">Website</h5>
-                        <p className="text-xs text-gray-500">{new URL(rep.website).hostname.replace("www.", "")}</p>
+                        <h5 className="font-medium">Phone</h5>
+                        <p className="text-xs text-gray-500">{contact.phone}</p>
                       </div>
                     </a>
                   )}
@@ -160,103 +207,18 @@ export default function MobileContactCard({ rep }: MobileContactCardProps) {
                       </div>
                     </a>
                   )}
-                  
-                  {contact?.phone && (
-                    <a 
-                      href={`tel:${contact.phone}`}
-                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
-                    >
-                      <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center">
-                        <Phone className="h-5 w-5 text-[#09261E]" />
-                      </div>
-                      <div>
-                        <h5 className="font-medium">Phone</h5>
-                        <p className="text-xs text-gray-500">{contact.phone}</p>
-                      </div>
-                    </a>
-                  )}
-                  
-                  {social?.linkedin && (
-                    <a 
-                      href={social.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
-                    >
-                      <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-[#0077B5]">
-                        <Linkedin className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h5 className="font-medium">LinkedIn</h5>
-                        <p className="text-xs text-gray-500">Connect professionally</p>
-                      </div>
-                    </a>
-                  )}
-                  
-                  {social?.instagram && (
-                    <a 
-                      href={social.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
-                    >
-                      <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-[#E1306C]">
-                        <Instagram className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h5 className="font-medium">Instagram</h5>
-                        <p className="text-xs text-gray-500">Follow latest projects</p>
-                      </div>
-                    </a>
-                  )}
-                  
-                  {social?.facebook && (
-                    <a 
-                      href={social.facebook}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
-                    >
-                      <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-[#1877F2]">
-                        <Facebook className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h5 className="font-medium">Facebook</h5>
-                        <p className="text-xs text-gray-500">Connect and follow</p>
-                      </div>
-                    </a>
-                  )}
-                  
-                  {social?.twitter && (
-                    <a 
-                      href={social.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50"
-                    >
-                      <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-[#1DA1F2]">
-                        <Twitter className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h5 className="font-medium">Twitter</h5>
-                        <p className="text-xs text-gray-500">Latest updates</p>
-                      </div>
-                    </a>
-                  )}
                 </div>
               </DialogContent>
             </Dialog>
             
             {/* Message button */}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-12 w-12 text-[#09261E] hover:bg-gray-100 flex flex-col items-center justify-center"
+            <button 
+              className="flex flex-col items-center justify-center rounded-full w-14 h-14 bg-white border-2 border-[#09261E] text-[#09261E] hover:bg-gray-50 hover:scale-105 transform transition-all duration-200"
+              aria-label="Message this REP"
               onClick={() => window.open(`mailto:${contact?.email || ''}`)}
             >
-              <MessageSquare className="h-5 w-5 mb-1" />
-              <span className="text-[10px]">Message</span>
-            </Button>
+              <MessageSquare className="h-7 w-7" />
+            </button>
           </div>
         </div>
       </div>
