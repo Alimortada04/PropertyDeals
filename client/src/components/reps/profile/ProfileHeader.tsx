@@ -1,20 +1,21 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Rep } from "@/lib/rep-data";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { formatRelativeTime } from "@/lib/utils";
 import { 
-  CheckCircle2, 
   MapPin, 
-  Trophy, 
+  Calendar, 
   Clock, 
-  Phone, 
-  Mail, 
-  MessageCircle,
+  Star, 
+  Award, 
+  Share2, 
   Linkedin, 
   Instagram, 
-  Globe, 
-  Youtube,
-  Bookmark,
-  Share2
+  Facebook, 
+  Twitter, 
+  Globe,
+  Youtube
 } from "lucide-react";
 
 interface ProfileHeaderProps {
@@ -22,216 +23,229 @@ interface ProfileHeaderProps {
 }
 
 export default function ProfileHeader({ rep }: ProfileHeaderProps) {
-  // Calculate membership duration
-  const getMembershipDuration = () => {
-    if (!rep.memberSince) return "New Member";
-    
-    const memberSince = new Date(rep.memberSince);
-    const now = new Date();
-    const diffMonths = (now.getFullYear() - memberSince.getFullYear()) * 12 + 
-                      now.getMonth() - memberSince.getMonth();
-    
-    if (diffMonths < 1) return "New Member";
-    if (diffMonths < 12) return `Member for ${diffMonths} month${diffMonths !== 1 ? 's' : ''}`;
-    
-    const years = Math.floor(diffMonths / 12);
-    return `Member for ${years} year${years !== 1 ? 's' : ''}`;
-  };
-  
-  // Last active text
-  const getLastActiveText = () => {
-    if (!rep.lastActive) return null;
-    
-    const lastActive = new Date(rep.lastActive);
-    const now = new Date();
-    const diffMs = now.getTime() - lastActive.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHours / 24);
-    
-    if (diffMins < 60) {
-      return diffMins <= 5 ? 'Active now' : `Last active ${diffMins}m ago`;
-    } else if (diffHours < 24) {
-      return `Last active ${diffHours}h ago`;
-    } else {
-      return `Last active ${diffDays}d ago`;
-    }
-  };
+  const initials = rep.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
+  const isBusinessAccount = rep.role.toLowerCase().includes('agency') || 
+    rep.role.toLowerCase().includes('brokerage') || 
+    rep.role.toLowerCase().includes('group') || 
+    rep.role.toLowerCase().includes('associates');
+    
+  const avatarBorderClass = isBusinessAccount 
+    ? "rounded-lg border-4" 
+    : "rounded-full border-4";
+    
+  const memberSinceDate = rep.memberSince ? new Date(rep.memberSince) : null;
+  const lastActiveDate = rep.lastActive ? new Date(rep.lastActive) : null;
+  
   return (
-    <div className="relative">
+    <div className="w-full">
       {/* Banner Image */}
-      <div 
-        className="w-full h-48 md:h-64 bg-gradient-to-r from-[#09261E]/90 to-[#803344]/80 relative overflow-hidden"
-        style={{
-          backgroundImage: rep.bannerUrl ? `url(${rep.bannerUrl})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        {/* Overlay gradient for text readability */}
-        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px]"></div>
+      <div className="w-full h-60 md:h-72 lg:h-80 overflow-hidden relative">
+        <img
+          src={rep.bannerUrl || "https://images.pexels.com/photos/7031406/pexels-photo-7031406.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"}
+          alt={rep.name}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
       </div>
       
-      {/* Profile Section (overlapping the banner) */}
       <div className="container mx-auto px-4">
-        <div className="relative -mt-20 pb-6 flex flex-col md:flex-row gap-6 items-start">
-          {/* Avatar Image (circular, overlapping banner) */}
-          <div className="z-10">
-            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white">
-              <img 
-                src={rep.avatar} 
-                alt={rep.name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = "https://randomuser.me/api/portraits/lego/1.jpg";
-                }}
-              />
+        {/* Profile Information Section */}
+        <div className="relative -mt-20 pb-5 flex flex-col md:flex-row">
+          {/* Avatar & Name */}
+          <div className="flex flex-col md:flex-row md:items-end">
+            <Avatar className={`h-32 w-32 ${avatarBorderClass} border-white bg-white shadow-md`}>
+              <AvatarImage src={rep.avatar} alt={rep.name} />
+              <AvatarFallback className={avatarBorderClass.replace('border-4', '')}>
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            
+            <div className="mt-4 md:mt-0 md:ml-6 md:mb-1">
+              <h1 className="text-3xl md:text-4xl font-bold text-[#09261E]">{rep.name}</h1>
+              
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <Badge className="bg-[#803344] hover:bg-[#803344] text-white font-medium px-3 py-1">
+                  {rep.role}
+                </Badge>
+                
+                <div className="flex items-center text-amber-500">
+                  <Star className="h-4 w-4 fill-amber-500" />
+                  <span className="ml-1 text-gray-800 font-medium">{rep.rating}</span>
+                  <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
+                </div>
+                
+                <div className="flex items-center text-gray-600">
+                  <Award className="h-4 w-4 mr-1" />
+                  <span>{rep.yearsExperience}+ years experience</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center mt-2 text-gray-600">
+                <MapPin className="h-4 w-4 mr-1" />
+                <span>{rep.location.city}, {rep.location.state}</span>
+              </div>
             </div>
           </div>
           
-          {/* Identity Information */}
-          <div className="flex-1 pt-4 md:pt-16">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-              <div>
-                {/* Name, Title, Badges, etc. */}
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <h1 className="text-3xl md:text-4xl font-heading font-bold text-gray-800">
-                    {rep.name}
-                  </h1>
-                  
-                  <Badge variant="outline" className="bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium">
-                    {rep.type.charAt(0).toUpperCase() + rep.type.slice(1)}
-                  </Badge>
-                  
-                  {rep.isVerified && (
-                    <Badge className="bg-[#803344] text-white border-0 ml-1 flex items-center gap-1">
-                      <CheckCircle2 size={12} />
-                      PD Certified
-                    </Badge>
-                  )}
-                  
-                  {rep.isFeatured && (
-                    <Badge className="bg-amber-500 text-white border-0 ml-1 flex items-center gap-1">
-                      <Trophy size={12} />
-                      Top REP
-                    </Badge>
-                  )}
+          {/* Connect Button - Desktop */}
+          <div className="hidden md:flex mt-4 md:mt-0 md:ml-auto md:self-end">
+            <Button className="bg-[#09261E] hover:bg-[#135341]">
+              <Star className="mr-2 h-4 w-4" />
+              <span>Connect</span>
+            </Button>
+            
+            <Button variant="outline" className="ml-2" size="icon">
+              <Share2 className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+        
+        {/* Connect Button - Mobile */}
+        <div className="md:hidden flex mt-4">
+          <Button className="flex-1 bg-[#09261E] hover:bg-[#135341]">
+            <Star className="mr-2 h-4 w-4" />
+            <span>Connect</span>
+          </Button>
+          
+          <Button variant="outline" className="ml-2" size="icon">
+            <Share2 className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        {/* Additional Info */}
+        <div className="mt-6 flex flex-col md:flex-row">
+          <div className="md:w-2/3 border-b md:border-b-0 md:border-r border-gray-200 pb-6 md:pb-0 md:pr-6">
+            {/* Specialties/Expertise */}
+            <h3 className="text-lg font-semibold text-[#09261E] mb-2">Specialties</h3>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {(rep.specialties || []).map((specialty, index) => (
+                <Badge key={index} variant="secondary" className="bg-gray-100">
+                  {specialty}
+                </Badge>
+              ))}
+            </div>
+            
+            {/* Profile Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-500">Member Since</span>
+                <div className="flex items-center mt-1">
+                  <Calendar className="h-4 w-4 text-gray-400 mr-1" />
+                  <span className="font-medium">{
+                    memberSinceDate
+                      ? memberSinceDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })
+                      : 'N/A'
+                  }</span>
                 </div>
-                
-                {/* Metadata Row */}
-                <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-3">
-                  <div className="flex items-center">
-                    <MapPin size={16} className="mr-1 text-gray-400" />
-                    <span>{rep.location.city}, {rep.location.state}</span>
-                  </div>
-                  
-                  {rep.memberSince && (
-                    <div className="flex items-center">
-                      <Clock size={16} className="mr-1 text-gray-400" />
-                      <span>{getMembershipDuration()}</span>
-                    </div>
-                  )}
-                  
-                  {rep.lastActive && (
-                    <div className="flex items-center text-[#09261E] font-medium">
-                      <span>{getLastActiveText()}</span>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Business name if available */}
-                {rep.businessName && (
-                  <div className="text-gray-700 font-medium mb-3">
-                    Business: <a href="#" className="text-[#09261E] hover:underline">{rep.businessName}</a>
-                  </div>
-                )}
-                
-                {/* Social Links */}
-                <div className="flex gap-2 mb-4">
-                  {rep.social?.linkedin && (
-                    <a href={rep.social.linkedin} target="_blank" rel="noopener noreferrer" 
-                       className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-[#0077B5] hover:text-white transition-colors">
-                      <Linkedin size={16} />
-                    </a>
-                  )}
-                  {rep.social?.instagram && (
-                    <a href={rep.social.instagram} target="_blank" rel="noopener noreferrer"
-                       className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gradient-to-tr from-[#f79334] via-[#bc2a8d] to-[#4c68d7] hover:text-white transition-colors">
-                      <Instagram size={16} />
-                    </a>
-                  )}
-                  {rep.social?.website && (
-                    <a href={rep.social.website} target="_blank" rel="noopener noreferrer"
-                       className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-800 hover:text-white transition-colors">
-                      <Globe size={16} />
-                    </a>
-                  )}
-                  {rep.social?.youtube && (
-                    <a href={rep.social.youtube} target="_blank" rel="noopener noreferrer"
-                       className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-red-600 hover:text-white transition-colors">
-                      <Youtube size={16} />
-                    </a>
-                  )}
-                </div>
-                
-                {/* Tagline */}
-                <p className="text-gray-600 max-w-2xl">
-                  {rep.tagline}
-                </p>
               </div>
               
-              {/* Contact Actions - Right Side */}
-              <div className="flex flex-col gap-2 w-full md:w-auto">
-                <Button 
-                  size="lg" 
-                  className="bg-[#09261E] hover:bg-[#135341] w-full md:w-auto transition-all duration-300 flex items-center gap-2"
-                >
-                  <MessageCircle size={18} />
-                  Message
-                </Button>
-                
-                <div className="flex gap-2 w-full">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="flex-1 text-[#09261E] border-[#09261E] hover:bg-[#09261E]/10 transition-colors flex items-center gap-1"
-                  >
-                    <Phone size={16} />
-                    {rep.phone ? 'Call' : 'No Phone'}
-                  </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="flex-1 text-[#09261E] border-[#09261E] hover:bg-[#09261E]/10 transition-colors flex items-center gap-1"
-                  >
-                    <Mail size={16} />
-                    Email
-                  </Button>
-                </div>
-                
-                <div className="flex gap-2 w-full">
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="flex-1 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center gap-1"
-                  >
-                    <Bookmark size={16} className="text-gray-500" />
-                    <span className="text-xs">Save</span>
-                  </Button>
-                  
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="flex-1 text-gray-600 hover:bg-gray-100 transition-colors flex items-center justify-center gap-1"
-                  >
-                    <Share2 size={16} className="text-gray-500" />
-                    <span className="text-xs">Share</span>
-                  </Button>
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-500">Last Active</span>
+                <div className="flex items-center mt-1">
+                  <Clock className="h-4 w-4 text-gray-400 mr-1" />
+                  <span className="font-medium">{
+                    lastActiveDate
+                      ? formatRelativeTime(lastActiveDate)
+                      : 'N/A'
+                  }</span>
                 </div>
               </div>
+              
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-500">Response Time</span>
+                <div className="flex items-center mt-1">
+                  <span className="font-medium">{rep.responseTime || 'N/A'}</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col">
+                <span className="text-sm text-gray-500">Reviews</span>
+                <div className="flex items-center mt-1">
+                  <Star className="h-4 w-4 text-amber-500 fill-amber-500 mr-1" />
+                  <span className="font-medium">{rep.rating} ({rep.reviewCount})</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Social Links & Contact */}
+          <div className="md:w-1/3 pt-6 md:pt-0 md:pl-6">
+            {/* Social Links */}
+            <h3 className="text-lg font-semibold text-[#09261E] mb-2">Connect</h3>
+            <div className="flex flex-wrap gap-3 mb-4">
+              {rep.social?.linkedin && (
+                <a href={rep.social.linkedin} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="h-9 w-9 p-0">
+                    <Linkedin className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
+              
+              {rep.social?.instagram && (
+                <a href={rep.social.instagram} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="h-9 w-9 p-0">
+                    <Instagram className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
+              
+              {rep.social?.facebook && (
+                <a href={rep.social.facebook} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="h-9 w-9 p-0">
+                    <Facebook className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
+              
+              {rep.social?.twitter && (
+                <a href={rep.social.twitter} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="h-9 w-9 p-0">
+                    <Twitter className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
+              
+              {rep.social?.youtube && (
+                <a href={rep.social.youtube} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="h-9 w-9 p-0">
+                    <Youtube className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
+              
+              {rep.website || rep.social?.website && (
+                <a href={rep.website || rep.social?.website} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm" className="h-9 w-9 p-0">
+                    <Globe className="h-4 w-4" />
+                  </Button>
+                </a>
+              )}
+            </div>
+            
+            {/* Contact Info */}
+            <div className="mt-4">
+              {rep.contact?.phone && (
+                <div className="flex items-center mb-2">
+                  <span className="text-sm font-medium">Phone:</span>
+                  <a href={`tel:${rep.contact.phone}`} className="ml-2 text-[#09261E] hover:underline">
+                    {rep.contact.phone}
+                  </a>
+                </div>
+              )}
+              
+              {rep.contact?.email && (
+                <div className="flex items-center">
+                  <span className="text-sm font-medium">Email:</span>
+                  <a href={`mailto:${rep.contact.email}`} className="ml-2 text-[#09261E] hover:underline">
+                    {rep.contact.email}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>

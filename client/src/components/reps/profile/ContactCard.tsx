@@ -1,212 +1,197 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { Rep } from "@/lib/rep-data";
-import {
-  Phone,
-  Mail,
-  MessageCircle,
-  Download,
-  QrCode,
-  ArrowUpRight,
-  PhoneIcon,
-  Clock
-} from "lucide-react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Mail, Phone, MessageCircle, Calendar, Clock } from "lucide-react";
+import { useState } from "react";
 
 interface ContactCardProps {
   rep: Rep;
   className?: string;
 }
 
-export default function ContactCard({ rep, className }: ContactCardProps) {
-  const [qrModalOpen, setQrModalOpen] = useState(false);
+export default function ContactCard({ rep, className = "" }: ContactCardProps) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
   
-  const isAvailable = rep.availability !== "unavailable";
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSending(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsSending(false);
+      setIsSent(true);
+      setName("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
+      
+      // Reset the sent status after a few seconds
+      setTimeout(() => {
+        setIsSent(false);
+      }, 5000);
+    }, 1000);
+  };
+  
+  const isAvailable = rep.availability === "available";
   
   return (
-    <>
-      <Card className={`overflow-hidden shadow-md sticky top-[calc(70px+1rem)] ${className}`}>
-        <CardContent className="p-5">
-          <h3 className="font-heading font-semibold text-lg text-gray-800 mb-4">
-            Contact {rep.name.split(' ')[0]}
-          </h3>
+    <div className={`sticky top-24 ${className}`}>
+      <Card className="shadow-md">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl font-bold text-[#09261E]">Contact {rep.name}</CardTitle>
           
-          {!isAvailable && (
-            <div className="mb-4 p-3 bg-amber-50 border border-amber-100 rounded-lg flex items-center text-sm text-amber-800">
-              <Clock size={18} className="mr-2 text-amber-600" />
-              <div>
-                <p className="font-medium">Currently Not Available</p>
-                <p className="text-xs mt-0.5">This REP is not accepting new projects at this time.</p>
-              </div>
+          {rep.responseTime && (
+            <div className="flex items-center text-sm text-gray-600 mt-1">
+              <Clock size={14} className="mr-1.5" />
+              <span>Typically responds {rep.responseTime}</span>
             </div>
           )}
           
-          <div className="space-y-3">
+          <div className="flex items-center mt-2">
+            <Badge variant={isAvailable ? "default" : "outline"} className={isAvailable ? "bg-green-600 hover:bg-green-700" : "text-red-500 border-red-500"}>
+              {isAvailable ? "Available Now" : "Away"}
+            </Badge>
+          </div>
+        </CardHeader>
+        
+        <CardContent className="pt-3">
+          {isAvailable && rep.availabilitySchedule && (
+            <div className="mb-4 text-sm">
+              <p className="text-gray-500 font-medium mb-1">Available Hours:</p>
+              {rep.availabilitySchedule.map((item, index) => (
+                <div key={index} className="flex justify-between mb-0.5">
+                  <span className="text-gray-700 font-medium">{item.day}:</span>
+                  <span className="text-gray-600">{item.hours}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          <div className="space-y-3 mb-4">
+            {rep.contact && rep.contact.phone && (
+              <Button 
+                variant="outline" 
+                className="w-full flex justify-center items-center h-9"
+                onClick={() => window.open(`tel:${rep.contact.phone}`)}
+              >
+                <Phone size={15} className="mr-2" />
+                <span>Call</span>
+              </Button>
+            )}
+            
+            {rep.contact && rep.contact.email && (
+              <Button 
+                variant="outline" 
+                className="w-full flex justify-center items-center h-9"
+                onClick={() => window.open(`mailto:${rep.contact.email}`)}
+              >
+                <Mail size={15} className="mr-2" />
+                <span>Email</span>
+              </Button>
+            )}
+            
             <Button 
-              size="lg"
-              className={`w-full bg-[#09261E] hover:bg-[#135341] ${!isAvailable && 'opacity-70 cursor-not-allowed'}`}
-              disabled={!isAvailable}
+              className="w-full flex justify-center items-center h-9 bg-[#803344] hover:bg-[#6a2a38]"
             >
-              <MessageCircle size={18} className="mr-2" />
-              Message
+              <MessageCircle size={15} className="mr-2" />
+              <span>Message</span>
             </Button>
             
-            <div className="grid grid-cols-2 gap-3">
-              <Button 
-                variant="outline"
-                className={`text-[#09261E] border-[#09261E] hover:bg-[#09261E]/10 ${!rep.phone && 'opacity-70 cursor-not-allowed'} ${!isAvailable && 'opacity-70 cursor-not-allowed'}`}
-                disabled={!rep.phone || !isAvailable}
-              >
-                <Phone size={16} className="mr-2" />
-                Call
-              </Button>
-              
-              <Button 
-                variant="outline"
-                className={`text-[#09261E] border-[#09261E] hover:bg-[#09261E]/10 ${!isAvailable && 'opacity-70 cursor-not-allowed'}`}
-                disabled={!isAvailable}
-              >
-                <Mail size={16} className="mr-2" />
-                Email
-              </Button>
-            </div>
-            
-            {/* Availability Schedule */}
-            {rep.availabilitySchedule && (
-              <div className="border-t border-gray-100 pt-3 mt-3">
-                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center">
-                  <Clock size={14} className="mr-1 text-gray-500" />
-                  Availability
-                </h4>
-                <div className="text-sm text-gray-600 space-y-1">
-                  {rep.availabilitySchedule.map((schedule, index) => (
-                    <div key={index} className="flex justify-between">
-                      <span>{schedule.day}</span>
-                      <span className="font-medium">{schedule.hours}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* Contact Actions */}
-            <div className="border-t border-gray-100 pt-3 mt-3 grid grid-cols-2 gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-600 hover:text-[#09261E] hover:bg-[#09261E]/10"
-                onClick={() => setQrModalOpen(true)}
-              >
-                <QrCode size={14} className="mr-1.5" />
-                QR Code
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-600 hover:text-[#09261E] hover:bg-[#09261E]/10"
-              >
-                <Download size={14} className="mr-1.5" />
-                Save Contact
-              </Button>
-            </div>
-            
-            {/* Social Links */}
-            {rep.social && Object.keys(rep.social).length > 0 && (
-              <div className="border-t border-gray-100 pt-3 mt-3">
-                <h4 className="text-sm font-medium text-gray-700 mb-2">
-                  Social & Business
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {rep.social.website && (
-                    <a 
-                      href={rep.social.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs px-3 py-1.5 border border-gray-200 rounded-full text-gray-700 hover:border-[#09261E]/30 hover:bg-[#09261E]/5 transition-colors flex items-center"
-                    >
-                      Website
-                      <ArrowUpRight size={12} className="ml-1" />
-                    </a>
-                  )}
-                  {rep.social.linkedin && (
-                    <a 
-                      href={rep.social.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs px-3 py-1.5 border border-gray-200 rounded-full text-gray-700 hover:border-[#0077B5]/30 hover:bg-[#0077B5]/5 transition-colors flex items-center"
-                    >
-                      LinkedIn
-                      <ArrowUpRight size={12} className="ml-1" />
-                    </a>
-                  )}
-                  {rep.social.instagram && (
-                    <a 
-                      href={rep.social.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-xs px-3 py-1.5 border border-gray-200 rounded-full text-gray-700 hover:border-[#E1306C]/30 hover:bg-[#E1306C]/5 transition-colors flex items-center"
-                    >
-                      Instagram
-                      <ArrowUpRight size={12} className="ml-1" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
-            
-            {/* Response Time */}
-            {rep.responseTime && (
-              <div className="mt-3 text-xs text-gray-500 flex items-center justify-center">
-                <Clock size={12} className="mr-1 text-gray-400" />
-                <span>Typically responds in {rep.responseTime}</span>
-              </div>
-            )}
+            <Button 
+              variant="outline" 
+              className="w-full flex justify-center items-center h-9"
+            >
+              <Calendar size={15} className="mr-2" />
+              <span>Schedule Meeting</span>
+            </Button>
           </div>
-        </CardContent>
-      </Card>
-      
-      {/* QR Code Modal */}
-      <Dialog open={qrModalOpen} onOpenChange={setQrModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Contact {rep.name}</DialogTitle>
-          </DialogHeader>
           
-          <div className="flex flex-col items-center p-4">
-            <div className="w-48 h-48 bg-white p-2 rounded-lg border border-gray-200 mb-4 flex items-center justify-center">
-              {/* QR Code would be generated here */}
-              <div className="w-full h-full bg-gray-100 rounded flex items-center justify-center text-gray-400">
-                QR Code
+          {!isSent ? (
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <p className="text-sm font-medium text-gray-600">Send a quick message:</p>
+              
+              <div>
+                <Label htmlFor="name" className="sr-only">Name</Label>
+                <Input 
+                  id="name" 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  placeholder="Your name" 
+                  required 
+                  className="text-sm h-9"
+                />
               </div>
-            </div>
-            
-            <p className="text-sm text-gray-600 text-center mb-3">
-              Scan this code to save contact information for {rep.name}
-            </p>
-            
-            <div className="grid grid-cols-1 gap-3 w-full max-w-xs">
-              {rep.phone && (
-                <Button variant="outline" className="flex items-center justify-center gap-2">
-                  <PhoneIcon size={16} />
-                  <span>{rep.phone}</span>
-                </Button>
-              )}
               
-              <Button variant="outline" className="flex items-center justify-center gap-2">
-                <Mail size={16} />
-                <span>{rep.email || 'Contact via PropertyDeals'}</span>
-              </Button>
+              <div>
+                <Label htmlFor="email" className="sr-only">Email</Label>
+                <Input 
+                  id="email" 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  placeholder="Your email" 
+                  required 
+                  className="text-sm h-9"
+                />
+              </div>
               
-              <Button className="bg-[#09261E] hover:bg-[#135341]">
-                <Download size={16} className="mr-2" />
-                Download vCard
+              <div>
+                <Label htmlFor="phone" className="sr-only">Phone</Label>
+                <Input 
+                  id="phone" 
+                  type="tel" 
+                  value={phone} 
+                  onChange={(e) => setPhone(e.target.value)} 
+                  placeholder="Your phone (optional)" 
+                  className="text-sm h-9"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="message" className="sr-only">Message</Label>
+                <Textarea 
+                  id="message" 
+                  value={message} 
+                  onChange={(e) => setMessage(e.target.value)} 
+                  placeholder="Your message" 
+                  required 
+                  className="text-sm min-h-[80px] resize-none"
+                />
+              </div>
+              
+              <Button 
+                type="submit" 
+                className="w-full bg-[#09261E] hover:bg-[#135341]"
+                disabled={isSending}
+              >
+                {isSending ? "Sending..." : "Send Message"}
               </Button>
+            </form>
+          ) : (
+            <div className="bg-green-50 border border-green-200 rounded-md p-3 text-center">
+              <p className="text-green-700 font-medium">Message sent!</p>
+              <p className="text-green-600 text-sm mt-1">
+                {rep.name} will get back to you soon.
+              </p>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+          )}
+        </CardContent>
+        
+        <CardFooter className="flex-col pt-0">
+          <p className="text-xs text-gray-500 mt-3 text-center">
+            By contacting this real estate professional, you agree to the terms of service and privacy policy.
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }

@@ -1,3 +1,4 @@
+import React from "react";
 import { Switch, Route, Redirect } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -11,6 +12,7 @@ import AuthPage from "@/pages/auth-page";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
 import RepsPage from "@/pages/reps-page";
+import RepProfilePage from "@/pages/rep-profile-page";
 import BusinessDetailPage from "@/pages/business-detail-page";
 import ConnectPage from "@/pages/connect-page";
 import DiscussionsPage from "@/pages/discussions-page";
@@ -59,7 +61,7 @@ function Router() {
       <Route path="/reps/:id">
         {params => (
           <MainLayout>
-            <dynamic import={import('./pages/reps/[id]')} id={params.id} />
+            <RepProfilePage />
           </MainLayout>
         )}
       </Route>

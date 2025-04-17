@@ -1,19 +1,7 @@
-import { useState } from "react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogFooter,
-  DialogDescription
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { StarIcon } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { Star, Calendar, Home } from "lucide-react";
+import { formatRelativeTime } from "@/lib/utils";
 
 interface Review {
   id: number;
@@ -32,244 +20,132 @@ interface ReviewsProps {
 }
 
 export default function Reviews({ reviews }: ReviewsProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [sortOrder, setSortOrder] = useState<"newest" | "highest">("newest");
-  const [writeReviewOpen, setWriteReviewOpen] = useState(false);
+  if (!reviews || reviews.length === 0) {
+    return null;
+  }
   
   // Calculate average rating
-  const averageRating = reviews.length > 0
-    ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
-    : 0;
+  const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
   
-  // Sort reviews based on selected order
-  const sortedReviews = [...reviews].sort((a, b) => {
-    if (sortOrder === "newest") {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    } else {
-      return b.rating - a.rating;
-    }
-  });
+  // Count ratings by stars (5★, 4★, etc.)
+  const ratingCounts = {
+    5: reviews.filter(r => r.rating === 5).length,
+    4: reviews.filter(r => r.rating === 4).length,
+    3: reviews.filter(r => r.rating === 3).length,
+    2: reviews.filter(r => r.rating === 2).length,
+    1: reviews.filter(r => r.rating === 1).length,
+  };
   
   return (
-    <section id="reviews" className="py-10">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-          <div>
-            <h2 className="text-2xl font-heading font-bold text-gray-800">
-              Reviews
-              <span className="ml-2 text-lg text-gray-500">{reviews.length}</span>
-            </h2>
-            
-            {reviews.length > 0 && (
+    <div id="reviews" className="my-8 scroll-mt-24">
+      <h2 className="text-2xl font-bold text-[#09261E] mb-4">
+        Reviews <span className="text-base font-normal text-gray-500">({reviews.length})</span>
+      </h2>
+      
+      {/* Review summary */}
+      <Card className="mb-6">
+        <CardContent className="p-5">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+            {/* Average rating */}
+            <div className="flex flex-col items-center">
+              <div className="text-4xl font-bold text-[#09261E]">{averageRating.toFixed(1)}</div>
               <div className="flex items-center mt-1">
-                <div className="flex items-center mr-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <StarIcon
-                      key={star}
-                      size={18}
-                      className={cn(
-                        "text-gray-300 fill-gray-300",
-                        star <= Math.round(averageRating) && "text-amber-500 fill-amber-500"
-                      )}
-                    />
-                  ))}
-                </div>
-                <span className="text-gray-700 font-medium">
-                  {averageRating.toFixed(1)}
-                </span>
-              </div>
-            )}
-          </div>
-          
-          <div className="flex mt-4 md:mt-0 space-x-3">
-            <Select
-              value={sortOrder}
-              onValueChange={(value) => setSortOrder(value as "newest" | "highest")}
-            >
-              <SelectTrigger className="w-[130px]">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="highest">Top Rated</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Button 
-              onClick={() => setWriteReviewOpen(true)}
-              className="bg-[#09261E] hover:bg-[#135341]"
-            >
-              Write a Review
-            </Button>
-          </div>
-        </div>
-        
-        {/* Reviews List */}
-        {reviews.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {sortedReviews.map((review, index) => (
-              <ReviewCard key={index} review={review} />
-            ))}
-          </div>
-        ) : (
-          <Card className="bg-white rounded-xl overflow-hidden shadow-sm">
-            <CardContent className="p-8 flex flex-col items-center text-center">
-              <div className="flex mb-3">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <StarIcon
+                  <Star
                     key={star}
-                    size={24}
-                    className="text-gray-300"
+                    size={16}
+                    className={`${
+                      star <= Math.round(averageRating)
+                        ? "text-amber-500 fill-amber-500"
+                        : "text-gray-300 fill-gray-300"
+                    }`}
                   />
                 ))}
               </div>
-              <h3 className="text-xl font-medium text-gray-700 mb-2">No Reviews Yet</h3>
-              <p className="text-gray-500 max-w-md mb-4">
-                Be the first to leave a review for this REP and help others in the community.
-              </p>
-              <Button 
-                className="bg-[#09261E] hover:bg-[#135341] text-white"
-                onClick={() => setWriteReviewOpen(true)}
-              >
-                Write First Review
-              </Button>
-            </CardContent>
-          </Card>
-        )}
-        
-        {/* Write Review Modal */}
-        <Dialog open={writeReviewOpen} onOpenChange={setWriteReviewOpen}>
-          <DialogContent className="sm:max-w-lg">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-heading">Write a Review</DialogTitle>
-              <DialogDescription>
-                Share your experience with this REP to help others in the community.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="space-y-4 py-4">
-              <div className="flex items-center justify-center space-x-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    className="focus:outline-none transition-colors"
-                    // onClick when implementing functionality
-                  >
-                    <StarIcon
-                      size={32}
-                      className="text-gray-300 hover:text-amber-500 hover:fill-amber-500"
-                    />
-                  </button>
-                ))}
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="review-text">Your Review</Label>
-                <Textarea 
-                  id="review-text" 
-                  placeholder="Share your experience working with this REP..."
-                  rows={5}
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label>Deal Reference (Optional)</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a deal you worked on together" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="none">None - General Review</SelectItem>
-                    {/* Deal options would be populated here */}
-                  </SelectContent>
-                </Select>
-              </div>
+              <div className="text-sm text-gray-500 mt-1">{reviews.length} reviews</div>
             </div>
             
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setWriteReviewOpen(false)}>
-                Cancel
-              </Button>
-              <Button className="bg-[#09261E] hover:bg-[#135341]">
-                Submit Review
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            {/* Rating breakdown */}
+            <div className="flex-1 w-full">
+              {[5, 4, 3, 2, 1].map((stars) => (
+                <div key={stars} className="flex items-center mb-1.5">
+                  <div className="w-12 text-sm text-gray-600 font-medium">{stars} stars</div>
+                  <div className="flex-1 mx-3 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-amber-500 rounded-full"
+                      style={{
+                        width: `${(ratingCounts[stars as keyof typeof ratingCounts] / reviews.length) * 100}%`,
+                      }}
+                    />
+                  </div>
+                  <div className="w-8 text-xs text-gray-500">
+                    {ratingCounts[stars as keyof typeof ratingCounts]}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Individual reviews */}
+      <div className="space-y-4">
+        {reviews.map((review) => (
+          <ReviewCard key={review.id} review={review} />
+        ))}
       </div>
-    </section>
+    </div>
   );
 }
 
 function ReviewCard({ review }: { review: Review }) {
-  // Format the date
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
-    });
-  };
+  const initials = review.reviewerName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
   
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
+    <Card>
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
-          <a href={`/reps/${review.reviewerId}`} className="flex-shrink-0">
-            <img
-              src={review.reviewerAvatar}
-              alt={review.reviewerName}
-              className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "https://randomuser.me/api/portraits/lego/1.jpg";
-              }}
-            />
-          </a>
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={review.reviewerAvatar} alt={review.reviewerName} />
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
           
           <div className="flex-1">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-              <a 
-                href={`/reps/${review.reviewerId}`}
-                className="font-medium text-gray-800 hover:text-[#09261E]"
-              >
-                {review.reviewerName}
-              </a>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4">
+              <h3 className="font-semibold">{review.reviewerName}</h3>
               
-              <div className="flex items-center mt-1 md:mt-0">
+              <div className="flex items-center">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <StarIcon
+                  <Star
                     key={star}
-                    size={16}
-                    className={cn(
-                      "text-gray-300 fill-gray-300",
-                      star <= review.rating && "text-amber-500 fill-amber-500"
-                    )}
+                    size={14}
+                    className={`${
+                      star <= review.rating
+                        ? "text-amber-500 fill-amber-500"
+                        : "text-gray-300 fill-gray-300"
+                    }`}
                   />
                 ))}
               </div>
+              
+              <div className="text-sm text-gray-500 flex items-center">
+                <Calendar size={14} className="mr-1" />
+                <span>{formatRelativeTime(review.date)}</span>
+              </div>
             </div>
             
-            <p className="text-sm text-gray-500 mt-1">
-              {formatDate(review.date)}
-            </p>
-            
-            {review.dealId && review.dealTitle && (
-              <div className="mt-1 mb-2">
-                <a 
-                  href={`/p/${review.dealId}`}
-                  className="text-xs px-2 py-1 bg-[#09261E]/10 rounded-full text-[#09261E] inline-block"
-                >
-                  Deal: {review.dealTitle}
-                </a>
+            {review.dealTitle && (
+              <div className="flex items-center text-sm text-gray-600 mt-1 mb-2">
+                <Home size={14} className="mr-1" />
+                <span>For: {review.dealTitle}</span>
               </div>
             )}
             
-            <p className="text-gray-700 mt-2">
-              {review.text}
-            </p>
+            <p className="text-gray-700 mt-2">{review.text}</p>
           </div>
         </div>
       </CardContent>

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import { 
-  Home, 
-  Calendar, 
+  Briefcase, 
+  CheckSquare, 
   Activity, 
   Users, 
-  Star 
+  MessageSquare 
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface StickyNavProps {
   activeDealsCount: number;
@@ -21,151 +21,147 @@ export default function StickyNav({
   reviewsCount, 
   connectionsCount 
 }: StickyNavProps) {
-  const [activeSection, setActiveSection] = useState("active-deals");
-  const [isSticky, setIsSticky] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("active-deals");
+  const [isSticky, setIsSticky] = useState<boolean>(false);
   
-  // Handle scroll events to detect when sections come into view
+  // Detect scroll position to make the navbar sticky
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100; // Offset for navbar height
+      const offset = window.scrollY;
+      const headerHeight = 400; // Approximate height of the header section
+      setIsSticky(offset > headerHeight);
       
-      // Check if we should make the nav sticky
-      if (scrollPosition > 300) { // Arbitrary threshold
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
-      
-      // Detect which section is in view
+      // Determine active section based on scroll position
       const sections = [
-        { id: "active-deals", element: document.getElementById("active-deals") },
-        { id: "closed-deals", element: document.getElementById("closed-deals") },
-        { id: "activity", element: document.getElementById("activity") },
-        { id: "connections", element: document.getElementById("connections") },
-        { id: "reviews", element: document.getElementById("reviews") }
+        { id: "active-deals", offset: document.getElementById("active-deals")?.offsetTop || 0 },
+        { id: "closed-deals", offset: document.getElementById("closed-deals")?.offsetTop || 0 },
+        { id: "activity", offset: document.getElementById("activity")?.offsetTop || 0 },
+        { id: "connections", offset: document.getElementById("connections")?.offsetTop || 0 },
+        { id: "reviews", offset: document.getElementById("reviews")?.offsetTop || 0 }
       ];
       
-      // Find the section that's currently in view
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        if (section.element) {
-          const topPosition = section.element.offsetTop;
-          if (scrollPosition >= topPosition - 100) { // 100px offset
-            setActiveSection(section.id);
-            break;
-          }
-        }
-      }
+      // Adjust for navbar height and add some buffer for better UX
+      const adjustedScrollPosition = offset + 100;
+      
+      // Find the current section
+      const currentSection = sections
+        .filter(section => section.offset > 0)
+        .reduce((prev, current) => {
+          return (adjustedScrollPosition >= current.offset && current.offset > prev.offset) 
+            ? current 
+            : prev;
+        }, { id: "active-deals", offset: 0 });
+      
+      setActiveSection(currentSection.id);
     };
     
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
   
-  // Scroll to section
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const yOffset = -70; // Offset for sticky header
-      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: "smooth" });
+    const section = document.getElementById(sectionId);
+    if (section) {
+      // Scroll with offset for the sticky nav
+      const yOffset = -90;
+      const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
       setActiveSection(sectionId);
     }
   };
   
   return (
-    <nav 
-      className={cn(
-        "bg-white w-full py-3 transition-all duration-300 border-b border-t border-gray-200 z-20",
-        isSticky && "sticky top-0 shadow-sm"
-      )}
-    >
+    <nav className={`bg-white border-b border-gray-200 w-full z-10 transition-all duration-200 ${
+      isSticky ? "sticky top-0 shadow-sm" : ""
+    }`}>
       <div className="container mx-auto px-4">
-        <div className="flex justify-between overflow-x-auto hide-scrollbar">
-          <button 
-            onClick={() => scrollToSection("active-deals")}
-            className={cn(
-              "flex items-center px-4 py-2 text-gray-700 whitespace-nowrap font-medium rounded-lg transition-all",
+        <div className="flex overflow-x-auto hide-scrollbar">
+          <Button
+            variant={activeSection === "active-deals" ? "default" : "ghost"}
+            className={`py-5 px-4 rounded-none border-b-2 ${
               activeSection === "active-deals" 
-                ? "text-[#09261E] bg-[#09261E]/10" 
-                : "hover:bg-gray-100"
-            )}
+                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
+                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
+            }`}
+            onClick={() => scrollToSection("active-deals")}
           >
-            <Home size={18} className="mr-2" />
+            <Briefcase size={18} className="mr-2" />
             <span>Active Deals</span>
             {activeDealsCount > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center h-5 w-5 bg-[#09261E] text-white text-xs rounded-full">
+              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs">
                 {activeDealsCount}
               </span>
             )}
-          </button>
+          </Button>
           
-          <button 
-            onClick={() => scrollToSection("closed-deals")}
-            className={cn(
-              "flex items-center px-4 py-2 text-gray-700 whitespace-nowrap font-medium rounded-lg transition-all",
+          <Button
+            variant={activeSection === "closed-deals" ? "default" : "ghost"}
+            className={`py-5 px-4 rounded-none border-b-2 ${
               activeSection === "closed-deals" 
-                ? "text-[#09261E] bg-[#09261E]/10" 
-                : "hover:bg-gray-100"
-            )}
+                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
+                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
+            }`}
+            onClick={() => scrollToSection("closed-deals")}
           >
-            <Calendar size={18} className="mr-2" />
+            <CheckSquare size={18} className="mr-2" />
             <span>Closed Deals</span>
             {closedDealsCount > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center h-5 w-5 bg-[#09261E] text-white text-xs rounded-full">
+              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs">
                 {closedDealsCount}
               </span>
             )}
-          </button>
+          </Button>
           
-          <button 
-            onClick={() => scrollToSection("activity")}
-            className={cn(
-              "flex items-center px-4 py-2 text-gray-700 whitespace-nowrap font-medium rounded-lg transition-all",
+          <Button
+            variant={activeSection === "activity" ? "default" : "ghost"}
+            className={`py-5 px-4 rounded-none border-b-2 ${
               activeSection === "activity" 
-                ? "text-[#09261E] bg-[#09261E]/10" 
-                : "hover:bg-gray-100"
-            )}
+                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
+                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
+            }`}
+            onClick={() => scrollToSection("activity")}
           >
             <Activity size={18} className="mr-2" />
             <span>Activity</span>
-          </button>
+          </Button>
           
-          <button 
-            onClick={() => scrollToSection("connections")}
-            className={cn(
-              "flex items-center px-4 py-2 text-gray-700 whitespace-nowrap font-medium rounded-lg transition-all",
+          <Button
+            variant={activeSection === "connections" ? "default" : "ghost"}
+            className={`py-5 px-4 rounded-none border-b-2 ${
               activeSection === "connections" 
-                ? "text-[#09261E] bg-[#09261E]/10" 
-                : "hover:bg-gray-100"
-            )}
+                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
+                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
+            }`}
+            onClick={() => scrollToSection("connections")}
           >
             <Users size={18} className="mr-2" />
             <span>Connections</span>
             {connectionsCount > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center h-5 w-5 bg-[#09261E] text-white text-xs rounded-full">
+              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs">
                 {connectionsCount}
               </span>
             )}
-          </button>
+          </Button>
           
-          <button 
-            onClick={() => scrollToSection("reviews")}
-            className={cn(
-              "flex items-center px-4 py-2 text-gray-700 whitespace-nowrap font-medium rounded-lg transition-all",
+          <Button
+            variant={activeSection === "reviews" ? "default" : "ghost"}
+            className={`py-5 px-4 rounded-none border-b-2 ${
               activeSection === "reviews" 
-                ? "text-[#09261E] bg-[#09261E]/10" 
-                : "hover:bg-gray-100"
-            )}
+                ? "border-[#09261E] bg-transparent text-[#09261E] hover:bg-gray-50" 
+                : "border-transparent text-gray-600 hover:text-[#09261E] hover:bg-gray-50"
+            }`}
+            onClick={() => scrollToSection("reviews")}
           >
-            <Star size={18} className="mr-2" />
+            <MessageSquare size={18} className="mr-2" />
             <span>Reviews</span>
             {reviewsCount > 0 && (
-              <span className="ml-2 inline-flex items-center justify-center h-5 w-5 bg-[#09261E] text-white text-xs rounded-full">
+              <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs">
                 {reviewsCount}
               </span>
             )}
-          </button>
+          </Button>
         </div>
       </div>
     </nav>
