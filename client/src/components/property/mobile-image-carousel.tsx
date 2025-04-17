@@ -71,7 +71,7 @@ const MobileImageCarousel: React.FC<MobileImageCarouselProps> = ({
   };
   
   return (
-    <div className="relative w-full bg-black mt-16">
+    <div className="relative w-full bg-black mt-20">
       {/* Navigation header */}
       <div className="absolute top-0 left-0 right-0 z-10 p-3 flex justify-between">
         <Button 
