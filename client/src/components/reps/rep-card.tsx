@@ -219,9 +219,9 @@ export default function RepCard({ rep }: RepCardProps) {
               </div>
             </div>
             
-            {/* Chevron on right, vertically centered */}
-            <div className="flex items-center justify-center h-full">
-              <ChevronRight size={20} className="text-gray-400" />
+            {/* Chevron on right, bigger and perfectly centered */}
+            <div className="flex items-center justify-center h-full ml-1">
+              <ChevronRight size={24} className="text-gray-400" />
             </div>
           </div>
           
