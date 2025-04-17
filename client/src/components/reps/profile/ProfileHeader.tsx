@@ -17,7 +17,8 @@ import {
   CreditCard,
   BadgeCheck,
   UserPlus,
-  PenSquare
+  PenSquare,
+  ArrowLeft
 } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -84,6 +85,10 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
             backgroundPosition: 'center'
           }}
         >
+          {/* Back arrow bubble */}
+          <a href="/reps" className="absolute left-4 top-4 z-10 bg-white/80 hover:bg-white backdrop-blur-sm p-2 rounded-full shadow-md transition-colors">
+            <ArrowLeft className="h-5 w-5 text-gray-700" />
+          </a>
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/40"></div>
         </div>
         
@@ -125,43 +130,32 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   </div>
                   
                   <div className="flex items-center mt-3">
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={`h-4 w-4 ${
-                            star <= Math.floor(rep.rating)
-                              ? "text-amber-500 fill-amber-500"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
+                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
                     <span className="ml-2 text-amber-500 font-medium">{rep.rating.toFixed(1)}</span>
                     <span className="ml-1 text-gray-600">({rep.reviewCount} reviews)</span>
                   </div>
                   
-                  <div className="flex flex-wrap items-center gap-x-4 mt-2">
+                  <div className="flex flex-wrap items-start mt-2">
                     <div className="flex items-center text-gray-600">
                       <MapPin className="h-4 w-4 mr-1" />
                       <span>{rep.locationCity || (rep.location?.city || "")}, {rep.locationState || (rep.location?.state || "")}</span>
                     </div>
                     
-                    {(rep.website || rep.social?.website) && (
-                      <div className="flex items-center">
-                        <a href={rep.website || rep.social?.website} target="_blank" rel="noopener noreferrer" 
-                          className="text-blue-600 hover:underline flex items-center">
-                          <Globe className="h-4 w-4 mr-1" />
-                          <span>{websiteDomain}</span>
-                        </a>
-                      </div>
-                    )}
+                    <div className="flex items-center text-gray-600 ml-4">
+                      <Award className="h-4 w-4 mr-1" />
+                      <span>{rep.yearsExperience}+ years experience</span>
+                    </div>
                   </div>
                   
-                  <div className="flex items-center text-gray-600 mt-2">
-                    <Award className="h-4 w-4 mr-1" />
-                    <span>{rep.yearsExperience}+ years experience</span>
-                  </div>
+                  {(rep.website || rep.social?.website) && (
+                    <div className="flex items-center mt-1">
+                      <a href={rep.website || rep.social?.website} target="_blank" rel="noopener noreferrer" 
+                        className="text-blue-600 hover:underline flex items-center">
+                        <Globe className="h-4 w-4 mr-1" />
+                        <span>{websiteDomain}</span>
+                      </a>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Social Links and Action Buttons - Colored by brand */}
@@ -229,10 +223,10 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                             <div>
                               <h4 className="font-medium text-lg">{rep.name}</h4>
                               <p className="text-gray-500 text-sm">{rep.locationCity || (rep.location?.city || "")}, {rep.locationState || (rep.location?.state || "")}</p>
-                              <div className="flex items-center text-amber-500 mt-1">
-                                <Star className="h-3 w-3 fill-amber-500" />
-                                <span className="ml-1 text-xs text-gray-800 font-medium">{rep.rating}</span>
-                                <span className="ml-1 text-xs text-gray-600">({rep.reviewCount})</span>
+                              <div className="flex items-center mt-1">
+                                <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
+                                <span className="ml-1 text-amber-500 text-xs font-medium">{rep.rating.toFixed(1)}</span>
+                                <span className="ml-1 text-xs text-gray-600">({rep.reviewCount} reviews)</span>
                               </div>
                             </div>
                           </div>
