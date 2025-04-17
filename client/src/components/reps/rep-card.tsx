@@ -105,7 +105,7 @@ export default function RepCard({ rep }: RepCardProps) {
           </div>
         )}
         
-        <CardContent className="p-6">
+        <CardContent className="p-3 sm:p-6">
           <div className="flex flex-col items-center">
             {/* Profile Image / Logo */}
             <div className="relative mb-4">
@@ -113,7 +113,7 @@ export default function RepCard({ rep }: RepCardProps) {
                 <img 
                   src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
                   alt={rep.name}
-                  className={`${isBusiness ? 'w-20 h-20 rounded-lg' : 'w-24 h-24 rounded-full'} object-cover border-2 border-white shadow-md transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg`}
+                  className={`${isBusiness ? 'w-16 sm:w-20 h-16 sm:h-20 rounded-lg' : 'w-16 sm:w-24 h-16 sm:h-24 rounded-full'} object-cover border-2 border-white shadow-md transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg`}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = isBusiness 
@@ -126,7 +126,7 @@ export default function RepCard({ rep }: RepCardProps) {
             
             {/* Name and Profession */}
             <div className="text-center mb-4">
-              <h3 className="font-heading text-xl font-semibold text-gray-800 mb-1 line-clamp-1">
+              <h3 className="font-heading text-lg sm:text-xl font-semibold text-gray-800 mb-1 line-clamp-1">
                 {rep.name}
                 {rep.isVerified && (
                   <span className="inline-block ml-1 text-[#803344]">
@@ -201,7 +201,7 @@ export default function RepCard({ rep }: RepCardProps) {
       </div>
 
       {/* Bottom CTA Section */}
-      <CardFooter className="px-4 pb-4 pt-0 flex gap-2">
+      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 flex gap-2">
         {/* Message button - Hidden on mobile */}
         <Button 
           variant="outline"

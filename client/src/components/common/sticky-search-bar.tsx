@@ -90,7 +90,7 @@ export default function StickySearchBar({
     <div 
       ref={searchBarRef}
       className={cn(
-        "transition-all duration-300 z-50 w-full",
+        "transition-all duration-300 z-20 w-full",
         isSticky ? 
           "sticky top-0 left-0 right-0 shadow-md" : 
           "relative"
