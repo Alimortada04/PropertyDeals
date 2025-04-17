@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { formatRelativeTime } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Rep } from "@shared/schema";
+import { Rep } from "@/lib/rep-data";
 
 interface ProfileHeaderProps {
   rep: Rep;
@@ -142,7 +142,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                 <div className="flex flex-wrap items-center gap-3 mb-2 text-left">
                   <div className="flex items-center text-gray-600">
                     <MapPin className="h-4 w-4 mr-1" />
-                    <span>Miami Lakes, {rep.locationCity}, {rep.locationState}</span>
+                    <span>Miami Lakes, {rep.location.city}, {rep.location.state}</span>
                   </div>
                   <div className="flex items-center text-gray-600">
                     <Award className="h-4 w-4 mr-1" />
@@ -152,7 +152,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                 
                 {/* Row 4: Website/Link - clear standalone row */}
                 {rep.website && (
-                  <div className="flex items-center mt-1 text-left">
+                  <div className="flex items-center mt-0 mb-1 text-left">
                     <a 
                       href={rep.website} 
                       target="_blank" 
@@ -230,7 +230,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                           </Avatar>
                           <div>
                             <h4 className="font-medium text-lg">{rep.name}</h4>
-                            <p className="text-gray-500 text-sm">{rep.locationCity}, {rep.locationState}</p>
+                            <p className="text-gray-500 text-sm">{rep.location.city}, {rep.location.state}</p>
                             <div className="flex items-center mt-1">
                               <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
                               <span className="ml-1 text-amber-500 text-xs font-medium">{rep.rating.toFixed(1)}</span>
