@@ -111,14 +111,14 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
         <div className="bg-white rounded-md shadow-sm mt-12 pt-4">
           <div className="px-4 sm:px-6 lg:px-8 py-6">
             {/* Profile info with more top padding to avoid avatar overlap */}
-            <div className="pt-12 md:pt-10 flex flex-col justify-between">
-              {/* Left-aligned content in 4 rows */}
+            <div className="pt-16 md:pt-14 flex flex-col justify-between">
+              {/* Left-aligned content in 4 distinct rows */}
               <div className="flex-1 mb-4 md:mb-0">
-                {/* Row 1: Name */}
-                <h1 className="text-2xl font-bold text-[#09261E] text-left">{rep.name}</h1>
+                {/* Row 1: Name - clear standalone row */}
+                <h1 className="text-2xl font-bold text-[#09261E] text-left mb-3">{rep.name}</h1>
                 
-                {/* Row 2: Tags - PD Certified, REP tag, Rating */}
-                <div className="flex flex-wrap items-center gap-3 my-2 text-left">
+                {/* Row 2: Tags in single row - PD Certified, REP tag, Rating */}
+                <div className="flex flex-wrap items-center gap-3 mb-3 text-left">
                   {rep.isVerified && (
                     <Badge className="bg-[#09261E]">
                       <BadgeCheck className="h-3.5 w-3.5 mr-1" />
@@ -137,8 +137,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   </div>
                 </div>
                 
-                {/* Row 3: Location and Experience */}
-                <div className="flex flex-wrap items-center gap-4 mb-2 text-left">
+                {/* Row 3: Location and Experience - clearly separated */}
+                <div className="flex flex-wrap items-center gap-4 mb-3 text-left">
                   <div className="flex items-center text-gray-600">
                     <MapPin className="h-4 w-4 mr-1" />
                     <span>{rep.locationCity}, {rep.locationState}</span>
@@ -150,7 +150,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   </div>
                 </div>
                 
-                {/* Row 4: Website/Link */}
+                {/* Row 4: Website/Link - clear standalone row */}
                 {rep.website && (
                   <div className="flex items-center mt-1 text-left">
                     <a 
