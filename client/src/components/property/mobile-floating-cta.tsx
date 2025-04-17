@@ -80,48 +80,63 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
       {/* Fixed bottom bar with expandable center */}
       <div className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-200 shadow-md bg-white">
         <div className="flex items-center justify-between h-14 px-6">
-          {/* Message Button (Left) */}
-          <button 
-            className="flex items-center justify-center text-[#09261E] h-14 w-20"
-            onClick={handleMessageClick}
-          >
-            <MessageCircle size={24} className="text-[#09261E]" />
-          </button>
-          
-          {/* Empty center space for avatar */}
-          <div className="flex-1"></div>
-          
-          {/* Call Button (Right) */}
+          {/* Call Button (Left) */}
           <button 
             className="flex items-center justify-center text-[#09261E] h-14 w-20"
             onClick={handlePhoneClick}
           >
             <Phone size={24} className="text-[#09261E]" />
           </button>
+          
+          {/* Empty center space for avatar */}
+          <div className="flex-1"></div>
+          
+          {/* Message Button (Right) */}
+          <button 
+            className="flex items-center justify-center text-[#09261E] h-14 w-20"
+            onClick={handleMessageClick}
+          >
+            <MessageCircle size={24} className="text-[#09261E]" />
+          </button>
         </div>
         
         {/* Center Avatar Button with expansion */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-10">
-          <button 
-            onClick={toggleExpand}
-            className={`flex items-center justify-center rounded-full shadow-lg
-              ${isExpanded ? 'bg-[#09261E]' : 'bg-[#09261E]'} 
-              ${isExpanded ? 'w-20 h-20' : 'w-20 h-20'}
-              ${pulseAnimation ? 'animate-pulse-gentle' : ''}
-              transition-all duration-500 z-40 border-2 border-[#09261E]
-            `}
-          >
-            {isExpanded ? (
-              <X size={24} className="text-white animate-fade-in" />
-            ) : (
-              <div className="relative">
-                <Avatar className="h-full w-full">
-                  <AvatarImage src={sellerImage} alt={sellerName} className="object-cover" />
-                  <AvatarFallback className="bg-[#09261E]/10 text-white text-lg">{initials}</AvatarFallback>
-                </Avatar>
-              </div>
-            )}
-          </button>
+          {/* Custom dual-border avatar button */}
+          <div className="relative">
+            {/* Background border container with green bottom half, white top half */}
+            <div className="absolute inset-0 rounded-full overflow-hidden" style={{ zIndex: 40 }}>
+              <div className="absolute w-full h-1/2 bg-white top-0"></div>
+              <div className="absolute w-full h-1/2 bg-[#09261E] bottom-0"></div>
+            </div>
+            
+            {/* Actual button with slightly smaller size to show the border */}
+            <button 
+              onClick={toggleExpand}
+              className={`flex items-center justify-center rounded-full shadow-lg
+                ${isExpanded ? 'bg-[#09261E]' : 'bg-[#09261E]'} 
+                ${isExpanded ? 'w-20 h-20' : 'w-20 h-20'}
+                ${pulseAnimation ? 'animate-pulse-gentle' : ''}
+                transition-all duration-500 z-40 relative
+              `}
+              style={{ 
+                zIndex: 41,
+                border: '2px solid transparent',
+                margin: '2px'
+              }}
+            >
+              {isExpanded ? (
+                <X size={24} className="text-white animate-fade-in" />
+              ) : (
+                <div className="relative">
+                  <Avatar className="h-full w-full">
+                    <AvatarImage src={sellerImage} alt={sellerName} className="object-cover" />
+                    <AvatarFallback className="bg-[#09261E]/10 text-white text-lg">{initials}</AvatarFallback>
+                  </Avatar>
+                </div>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
