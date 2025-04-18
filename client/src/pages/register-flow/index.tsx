@@ -328,46 +328,102 @@ export default function RegisterFlowPage() {
     setCurrentStep("email");
   };
 
+  // State for loading states
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  
   // Send email verification code
   const sendVerificationCode = async () => {
     const email = emailForm.getValues("email");
     if (!email || emailForm.formState.errors.email) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address",
+        variant: "destructive"
+      });
       return;
     }
 
-    // In a real app, you would call an API endpoint to send the verification code
-    // For now, we'll simulate it
-    toast({
-      title: "Verification code sent",
-      description: `A verification code has been sent to ${email}`,
-    });
+    // Show loading state
+    setIsSendingCode(true);
     
-    setVerificationSent(true);
-    
-    // Auto-fill for demo purposes
-    setTimeout(() => {
-      emailForm.setValue("verificationCode", "123456");
-    }, 1000);
+    try {
+      // In a real app, you would call an API endpoint to send the verification code
+      // For now, we'll simulate it with a timeout
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Verification code sent",
+        description: `A verification code has been sent to ${email}`,
+      });
+      
+      setVerificationSent(true);
+      
+      // Auto-fill for demo purposes
+      setTimeout(() => {
+        emailForm.setValue("verificationCode", "123456");
+      }, 1000);
+    } catch (error) {
+      toast({
+        title: "Failed to send code",
+        description: "Please check your email address and try again",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSendingCode(false);
+    }
   };
 
   // Verify email code
-  const verifyEmailCode = () => {
+  const verifyEmailCode = async () => {
     const code = emailForm.getValues("verificationCode");
     
-    // In a real app, you would validate the code against what was sent
-    // For now, we'll accept any 6-digit code
-    if (code && code.length === 6) {
-      setEmailVerified(true);
+    if (!code) {
       toast({
-        title: "Email verified",
-        description: "Your email has been verified successfully",
-      });
-    } else {
-      toast({
-        title: "Invalid code",
-        description: "Please enter a valid verification code",
+        title: "Missing verification code",
+        description: "Please enter the 6-digit code sent to your email",
         variant: "destructive"
       });
+      return;
+    }
+    
+    setIsVerifyingCode(true);
+    
+    try {
+      // In a real app, you would validate the code against what was sent
+      // Simulate a network request with a timeout
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      if (code.length === 6) {
+        setEmailVerified(true);
+        toast({
+          title: "Email verified",
+          description: "Your email has been verified successfully",
+        });
+        
+        // Auto proceed to next step after successful verification
+        setTimeout(() => {
+          setRegistrationData(prev => ({
+            ...prev,
+            email: emailForm.getValues("email")
+          }));
+          setCurrentStep("password");
+        }, 1200);
+      } else {
+        toast({
+          title: "Invalid code",
+          description: "Please enter a valid 6-digit verification code",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Verification failed",
+        description: "Please try again or request a new code",
+        variant: "destructive"
+      });
+    } finally {
+      setIsVerifyingCode(false);
     }
   };
 
@@ -400,44 +456,92 @@ export default function RegisterFlowPage() {
     setCurrentStep("phone");
   };
 
+  // State for SMS loading
+  const [isSendingSms, setIsSendingSms] = useState(false);
+  const [isVerifyingSms, setIsVerifyingSms] = useState(false);
+
   // Send SMS verification code
-  const sendSmsCode = () => {
+  const sendSmsCode = async () => {
     const phone = phoneForm.getValues("phone");
     if (!phone || phoneForm.formState.errors.phone) {
+      toast({
+        title: "Invalid phone number",
+        description: "Please enter a valid phone number",
+        variant: "destructive"
+      });
       return;
     }
 
-    // In a real app, you would call an API to send the SMS code
-    toast({
-      title: "SMS code sent",
-      description: `A verification code has been sent to ${phone}`,
-    });
+    setIsSendingSms(true);
     
-    setSmsSent(true);
-    
-    // Auto-fill for demo purposes
-    setTimeout(() => {
-      phoneForm.setValue("smsCode", "123456");
-    }, 1000);
+    try {
+      // In a real app, you would call an API to send the SMS code
+      // Simulate API request
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      toast({
+        title: "SMS code sent",
+        description: `A verification code has been sent to ${phone}`,
+      });
+      
+      setSmsSent(true);
+      
+      // Auto-fill for demo purposes
+      setTimeout(() => {
+        phoneForm.setValue("smsCode", "123456");
+      }, 1000);
+    } catch (error) {
+      toast({
+        title: "Failed to send code",
+        description: "Please check your phone number and try again",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSendingSms(false);
+    }
   };
 
   // Verify SMS code
-  const verifySmsCode = () => {
+  const verifySmsCode = async () => {
     const code = phoneForm.getValues("smsCode");
     
-    // In a real app, you would validate the code
-    if (code && code.length === 6) {
-      setPhoneVerified(true);
+    if (!code) {
       toast({
-        title: "Phone verified",
-        description: "Your phone number has been verified successfully",
-      });
-    } else {
-      toast({
-        title: "Invalid code",
-        description: "Please enter a valid SMS code",
+        title: "Missing verification code",
+        description: "Please enter the 6-digit code sent to your phone",
         variant: "destructive"
       });
+      return;
+    }
+    
+    setIsVerifyingSms(true);
+    
+    try {
+      // In a real app, you would validate the code
+      // Simulate network request
+      await new Promise(resolve => setTimeout(resolve, 600));
+      
+      if (code.length === 6) {
+        setPhoneVerified(true);
+        toast({
+          title: "Phone verified",
+          description: "Your phone number has been verified successfully",
+        });
+      } else {
+        toast({
+          title: "Invalid code",
+          description: "Please enter a valid 6-digit SMS code",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Verification failed",
+        description: "Please try again or request a new code",
+        variant: "destructive"
+      });
+    } finally {
+      setIsVerifyingSms(false);
     }
   };
 
@@ -660,19 +764,34 @@ export default function RegisterFlowPage() {
                               placeholder="Enter the 6-digit code" 
                               {...field} 
                               className="bg-white/90 h-10"
+                              disabled={isVerifyingCode}
                             />
                             <Button 
                               type="button" 
                               variant="outline"
                               onClick={verifyEmailCode}
+                              disabled={isVerifyingCode || !field.value}
+                              className="min-w-[80px]"
                             >
-                              Verify
+                              {isVerifyingCode ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                'Verify'
+                              )}
                             </Button>
                           </div>
                         </FormControl>
                         <FormMessage />
                         <p className="text-xs text-gray-400 mt-1">
-                          Didn't receive the code? <button type="button" className="text-[#135341] hover:underline" onClick={sendVerificationCode}>Resend</button>
+                          Didn't receive the code? {" "}
+                          <button 
+                            type="button" 
+                            className="text-[#135341] hover:underline" 
+                            onClick={sendVerificationCode}
+                            disabled={isSendingCode}
+                          >
+                            {isSendingCode ? 'Sending...' : 'Resend'}
+                          </button>
                         </p>
                       </FormItem>
                     )}
@@ -693,7 +812,11 @@ export default function RegisterFlowPage() {
                     className={`flex-1 ${
                       primaryRole === 'rep' ? 'bg-[#803344] hover:bg-[#a34d5e]' : 'bg-[#09261E] hover:bg-[#0f3e2a]'
                     } text-white flex items-center justify-center gap-2`}
-                    disabled={emailVerified ? false : (!verificationSent || !emailForm.getValues("verificationCode"))}
+                    disabled={
+                      emailVerified ? false : 
+                      isSendingCode ? true :
+                      (!verificationSent || !emailForm.getValues("verificationCode"))
+                    }
                   >
                     {
                       emailVerified ? (
@@ -701,10 +824,20 @@ export default function RegisterFlowPage() {
                           <span>Continue</span>
                           <ArrowRight className="h-4 w-4" />
                         </>
+                      ) : isSendingCode ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          <span>Sending...</span>
+                        </>
                       ) : !verificationSent ? (
                         <>
                           <span>Get Verification Code</span>
                           <ArrowRight className="h-4 w-4" />
+                        </>
+                      ) : isVerifyingCode ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          <span>Verifying...</span>
                         </>
                       ) : (
                         <>
@@ -735,50 +868,52 @@ export default function RegisterFlowPage() {
                 </div>
                 
                 {/* Social registration options */}
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <Separator className="w-full" />
+                <div className="mt-8 mb-2">
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator className="w-full" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-white px-4 text-sm text-gray-500 font-medium">
+                        Or sign up with
+                      </span>
+                    </div>
                   </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="bg-white px-2 text-xs text-gray-400">
-                      OR SIGN UP WITH
-                    </span>
+                  
+                  <div className="flex justify-center gap-6 mt-6">
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      size="icon"
+                      className="w-12 h-12 rounded-full border border-gray-200 text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
+                      onClick={() => handleSocialRegistration('Google')}
+                    >
+                      <SiGoogle className="h-5 w-5" />
+                      <span className="sr-only">Sign up with Google</span>
+                    </Button>
+                    
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      size="icon"
+                      className="w-12 h-12 rounded-full border border-gray-200 text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
+                      onClick={() => handleSocialRegistration('Apple')}
+                    >
+                      <SiApple className="h-5 w-5" />
+                      <span className="sr-only">Sign up with Apple</span>
+                    </Button>
+                    
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      size="icon"
+                      className="w-12 h-12 rounded-full border border-gray-200 text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
+                      onClick={() => handleSocialRegistration('Facebook')}
+                    >
+                      <SiFacebook className="h-5 w-5 text-[#1877F2]" />
+                      <span className="sr-only">Sign up with Facebook</span>
+                    </Button>
                   </div>
-                </div>
-                
-                <div className="flex justify-center gap-4">
-                  <Button 
-                    type="button"
-                    variant="outline" 
-                    size="icon"
-                    className="w-12 h-12 rounded-full border text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
-                    onClick={() => handleSocialRegistration('Google')}
-                  >
-                    <SiGoogle className="h-5 w-5" />
-                    <span className="sr-only">Sign up with Google</span>
-                  </Button>
-                  
-                  <Button 
-                    type="button"
-                    variant="outline" 
-                    size="icon"
-                    className="w-12 h-12 rounded-full border text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
-                    onClick={() => handleSocialRegistration('Apple')}
-                  >
-                    <SiApple className="h-5 w-5" />
-                    <span className="sr-only">Sign up with Apple</span>
-                  </Button>
-                  
-                  <Button 
-                    type="button"
-                    variant="outline" 
-                    size="icon"
-                    className="w-12 h-12 rounded-full border text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
-                    onClick={() => handleSocialRegistration('Facebook')}
-                  >
-                    <SiFacebook className="h-5 w-5 text-[#1877F2]" />
-                    <span className="sr-only">Sign up with Facebook</span>
-                  </Button>
                 </div>
               </form>
             </Form>
@@ -918,19 +1053,34 @@ export default function RegisterFlowPage() {
                               placeholder="Enter the 6-digit code" 
                               {...field} 
                               className="bg-white/90 h-10"
+                              disabled={isVerifyingSms}
                             />
                             <Button 
                               type="button" 
                               variant="outline"
                               onClick={verifySmsCode}
+                              disabled={isVerifyingSms || !field.value}
+                              className="min-w-[80px]"
                             >
-                              Verify
+                              {isVerifyingSms ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                'Verify'
+                              )}
                             </Button>
                           </div>
                         </FormControl>
                         <FormMessage />
                         <p className="text-xs text-gray-400 mt-1">
-                          Didn't receive the code? <button type="button" className="text-[#135341] hover:underline" onClick={sendSmsCode}>Resend</button>
+                          Didn't receive the code? {" "}
+                          <button 
+                            type="button" 
+                            className="text-[#135341] hover:underline" 
+                            onClick={sendSmsCode}
+                            disabled={isSendingSms}
+                          >
+                            {isSendingSms ? "Sending..." : "Resend"}
+                          </button>
                         </p>
                       </FormItem>
                     )}
