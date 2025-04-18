@@ -24,77 +24,86 @@ export default function PlaybookPage() {
   const playBookResources: PlaybookResource[] = [
     {
       id: "property-dictionary",
-      icon: <BookOpen size={32} strokeWidth={1.5} />,
+      icon: <BookOpen size={18} strokeWidth={1.5} />,
       title: "PropertyDictionary",
       description: "Comprehensive glossary of real estate terms and definitions for investors and professionals.",
       path: "/playbook/property-dictionary",
       audience: ["general"],
       updatedAt: "2 days ago",
-      isTrending: true
+      isTrending: true,
+      coverImage: "https://images.unsplash.com/photo-1634655377962-e6e7b730e04d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cmVhbCUyMGVzdGF0ZSUyMHRlcm1zfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "due-diligence",
-      icon: <FileCheck size={32} strokeWidth={1.5} />,
+      icon: <FileCheck size={18} strokeWidth={1.5} />,
       title: "Due Diligence Checklist",
       description: "Complete step-by-step checklist for thorough property research and evaluation.",
       audience: ["general"],
-      isComingSoon: true
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2hlY2tsaXN0JTIwcHJvcGVydHl8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "investment-strategies",
-      icon: <BarChart3 size={32} strokeWidth={1.5} />,
+      icon: <BarChart3 size={18} strokeWidth={1.5} />,
       title: "Investment Strategies",
       description: "Overview of popular real estate investment strategies with pros and cons of each approach.",
       audience: ["general"],
-      isComingSoon: true
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1460472178825-e5240623afd5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHJlYWwlMjBlc3RhdGUlMjBpbnZlc3RtZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "video-tutorials",
-      icon: <Video size={32} strokeWidth={1.5} />,
+      icon: <Video size={18} strokeWidth={1.5} />,
       title: "Video Tutorials",
       description: "Watch step-by-step video tutorials on various aspects of real estate investing.",
       audience: ["general"],
-      isComingSoon: true
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1551818255-e6e10975bc17?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dmlkZW8lMjB0dXRvcmlhbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "creative-financing",
-      icon: <Book size={32} strokeWidth={1.5} />,
+      icon: <Book size={18} strokeWidth={1.5} />,
       title: "Creative Financing Guide",
       description: "Explore alternative financing methods beyond traditional mortgages for your real estate investments.",
       audience: ["buyers", "reps"],
-      isComingSoon: true
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1589666564459-92e970d690e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1vcnRnYWdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "disposition-guide",
-      icon: <Briefcase size={32} strokeWidth={1.5} />,
+      icon: <Briefcase size={18} strokeWidth={1.5} />,
       title: "Disposition & Buyer Building Playbook",
       description: "Strategies for sellers to maximize property value and build a reliable buyer network.",
       audience: ["sellers", "reps"],
-      isComingSoon: true
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fHJlYWwlMjBlc3RhdGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "property-walkthrough",
-      icon: <FileText size={32} strokeWidth={1.5} />,
+      icon: <FileText size={18} strokeWidth={1.5} />,
       title: "How to Walk a Property Guide",
       description: "Learn how to effectively evaluate properties during inspections and identify potential issues.",
       audience: ["sellers", "reps"],
-      isComingSoon: true
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1606676539940-12768ce0e762?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG9tZSUyMGluc3BlY3Rpb258ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "ethics-compliance",
-      icon: <HelpCircle size={32} strokeWidth={1.5} />,
+      icon: <HelpCircle size={18} strokeWidth={1.5} />,
       title: "Ethics & Compliance Center",
       description: "Resources on real estate ethics, legal requirements, and maintaining compliance.",
       audience: ["sellers", "reps"],
-      isComingSoon: true
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1589391886645-d51941baf7fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGxhd3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "deal-anatomy",
-      icon: <BarChart3 size={32} strokeWidth={1.5} />,
+      icon: <BarChart3 size={18} strokeWidth={1.5} />,
       title: "Live Deal Anatomy / Case Studies",
       description: "Detailed analysis of successful real estate deals with lessons learned and key takeaways.",
       audience: ["general"],
-      isComingSoon: true
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVhbCUyMGVzdGF0ZSUyMGFuYWx5c2lzfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
     }
   ];
 

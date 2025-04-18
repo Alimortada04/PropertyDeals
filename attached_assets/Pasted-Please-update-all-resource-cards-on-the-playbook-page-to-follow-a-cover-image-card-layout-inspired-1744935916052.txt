@@ -1,0 +1,82 @@
+Please update all resource cards on the /playbook page to follow a cover-image card layout, inspired by modern learning libraries like Skool.com. This layout should make each resource feel like a visual module or “chapter” in the PropertyPlaybook.
+
+✅ CARD STRUCTURE (TOP → BOTTOM)
+🔹 1. Cover Image (Top 40%)
+Use a cover image at the top of the card
+
+Suggested size: w-full h-32 (or h-40 on large screens)
+
+Styling:
+
+tailwind
+Copy
+Edit
+object-cover rounded-t-xl
+Fallback: If no specific image is available, show a branded illustration or category icon
+
+🔹 2. Card Body (Bottom 60%)
+Title: bold and clear (e.g. text-lg font-semibold text-[#09261E])
+
+Subtitle or Description: max 1–2 lines (e.g. text-sm text-gray-600)
+
+Audience Tags: optional badges like REP / Buyer / Seller
+
+CTA Button: “View Resource”
+
+Style:
+
+tailwind
+Copy
+Edit
+bg-[#09261E] text-white px-4 py-2 rounded hover:bg-[#135341] transition text-sm
+🎨 STYLING GUIDELINES
+Card Container:
+
+tailwind
+Copy
+Edit
+bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition hover:scale-[1.02]
+max-w-sm
+Card Grid:
+
+Responsive: 4 cards/row desktop, 2 on tablet, 1 on mobile
+
+Grid spacing: gap-6 or gap-8
+
+Hover Behavior:
+
+Slight scale-up on card: hover:scale-105
+
+Optional: fade-in overlay or icon badge on image corner
+
+📦 OPTIONAL ENHANCEMENTS
+Add top-left or top-right badge for:
+
+New, Coming Soon, Popular, Checklist, etc.
+
+Example badge style:
+
+tailwind
+Copy
+Edit
+absolute top-2 left-2 bg-[#135341] text-white text-xs px-2 py-1 rounded
+Add a tooltip or modal preview on hover (optional for future)
+
+🔁 INTEGRATION NOTES
+This layout should work with the new tabbed Playbook layout you’re building (where users can filter cards by audience).
+
+Each card can pull from a central card list with:
+
+ts
+Copy
+Edit
+{
+  title: string;
+  description: string;
+  image: string;
+  audience: string[];
+  route: string;
+  comingSoon?: boolean;
+}
+If a card is comingSoon, do not link it — instead, show a disabled CTA and a “Coming Soon” badge.
+
