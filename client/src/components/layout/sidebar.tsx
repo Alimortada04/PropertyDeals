@@ -103,7 +103,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      group flex ${isExpanded ? 'items-center' : 'justify-center'} px-3 py-1.5 mx-0 whitespace-nowrap transition-colors duration-0
+      group flex items-center px-3 py-1.5 mx-0 whitespace-nowrap transition-colors duration-0
       ${isActive 
         ? 'bg-[#09261E] text-white' 
         : 'text-gray-700 hover:bg-[#D8D8D8]'}
@@ -471,25 +471,33 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <ul>
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
-                    <Home className="w-5 h-5 flex-shrink-0" />
+                    <div className={`${!isExpanded ? 'mx-auto' : ''}`}>
+                      <Home className="w-5 h-5 flex-shrink-0" />
+                    </div>
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Home</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/properties" className={getNavItemClasses("/properties")}>
-                    <Building className="w-5 h-5 flex-shrink-0" />
+                    <div className={`${!isExpanded ? 'mx-auto' : ''}`}>
+                      <Building className="w-5 h-5 flex-shrink-0" />
+                    </div>
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Properties</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/reps" className={getNavItemClasses("/reps")}>
-                    <Users className="w-5 h-5 flex-shrink-0" />
+                    <div className={`${!isExpanded ? 'mx-auto' : ''}`}>
+                      <Users className="w-5 h-5 flex-shrink-0" />
+                    </div>
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>The REP Room</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/discussions" className={getNavItemClasses("/discussions")}>
-                    <MessageCircle className="w-5 h-5 flex-shrink-0" />
+                    <div className={`${!isExpanded ? 'mx-auto' : ''}`}>
+                      <MessageCircle className="w-5 h-5 flex-shrink-0" />
+                    </div>
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Discussions</span>
                   </Link>
                 </li>
