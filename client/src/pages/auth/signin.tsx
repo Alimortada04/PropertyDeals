@@ -121,11 +121,11 @@ const roleCards = {
   ]
 };
 
-// Background gradients for different roles
+// Background gradients for different roles - softer brand-aligned white-to-hue gradients
 const roleBackgrounds = {
-  buyer: "from-[#09261E] to-[#0f3e2a]",
-  seller: "from-[#135341] to-[#1e6d52]",
-  rep: "from-[#803344] to-[#a34d5e]"
+  buyer: "from-[#F5F5F5] to-[#eaf4f0]",
+  seller: "from-[#F5F5F5] to-[#e9f5ec]",
+  rep: "from-[#F5F5F5] to-[#f5ebed]"
 };
 
 export default function SignInPage() {
@@ -136,7 +136,16 @@ export default function SignInPage() {
   const [selectedRole, setSelectedRole] = useState<Role>('buyer');
   const [animateCards, setAnimateCards] = useState(true);
   const autoCycleTimerRef = useRef<NodeJS.Timeout | null>(null);
-
+  const [progress, setProgress] = useState(100);
+  
+  // Animation frame handler for countdown animation
+  const requestRef = useRef<number>();
+  const previousTimeRef = useRef<number>();
+  const startTimeRef = useRef<number>();
+  
+  // Countdown animation constants
+  const CYCLE_DURATION = 5000; // 5 seconds
+  
   // Auto-focus email input when the form appears
   useEffect(() => {
     if (showEmailForm && emailInputRef.current) {
@@ -146,47 +155,73 @@ export default function SignInPage() {
     }
   }, [showEmailForm]);
   
-  // Auto-cycle through roles
-  useEffect(() => {
-    const startAutoCycle = () => {
-      if (autoCycleTimerRef.current) {
-        clearInterval(autoCycleTimerRef.current);
-      }
-      
-      autoCycleTimerRef.current = setInterval(() => {
-        setSelectedRole(prevRole => {
-          if (prevRole === 'buyer') return 'seller';
-          if (prevRole === 'seller') return 'rep';
-          return 'buyer';
-        });
-        // Briefly disable animations when switching roles automatically
-        setAnimateCards(false);
-        setTimeout(() => setAnimateCards(true), 50);
-      }, 6000);
-    };
+  // Progress animation
+  const animate = useCallback((time: number) => {
+    if (previousTimeRef.current === undefined) {
+      previousTimeRef.current = time;
+      startTimeRef.current = time;
+    }
     
-    startAutoCycle();
+    const elapsed = time - startTimeRef.current!;
+    const remaining = Math.max(0, CYCLE_DURATION - elapsed);
+    const newProgress = (remaining / CYCLE_DURATION) * 100;
+    
+    setProgress(newProgress);
+    
+    if (elapsed < CYCLE_DURATION) {
+      previousTimeRef.current = time;
+      requestRef.current = requestAnimationFrame(animate);
+    } else {
+      // Time to auto-cycle to next role
+      setSelectedRole(prevRole => {
+        if (prevRole === 'buyer') return 'seller';
+        if (prevRole === 'seller') return 'rep';
+        return 'buyer';
+      });
+      
+      // Briefly disable animations when switching roles automatically
+      setAnimateCards(false);
+      setTimeout(() => setAnimateCards(true), 50);
+      
+      // Reset animation
+      startTimeRef.current = time;
+      previousTimeRef.current = time;
+      requestRef.current = requestAnimationFrame(animate);
+    }
+  }, []);
+  
+  // Start countdown animation
+  useEffect(() => {
+    startTimeRef.current = undefined;
+    previousTimeRef.current = undefined;
+    requestRef.current = requestAnimationFrame(animate);
     
     return () => {
-      if (autoCycleTimerRef.current) {
-        clearInterval(autoCycleTimerRef.current);
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
       }
     };
-  }, []);
+  }, [animate]);
   
   // Handle role selection
   const handleRoleSelect = useCallback((role: Role) => {
-    // Reset auto-cycle when user manually selects a role
-    if (autoCycleTimerRef.current) {
-      clearInterval(autoCycleTimerRef.current);
-      autoCycleTimerRef.current = null;
-    }
+    // Only switch if it's a different role
+    if (role === selectedRole) return;
     
     setSelectedRole(role);
+    
     // Briefly disable animations when switching roles manually
     setAnimateCards(false);
     setTimeout(() => setAnimateCards(true), 50);
-  }, []);
+    
+    // Reset animation countdown
+    if (requestRef.current) {
+      cancelAnimationFrame(requestRef.current);
+    }
+    startTimeRef.current = undefined;
+    previousTimeRef.current = undefined;
+    requestRef.current = requestAnimationFrame(animate);
+  }, [selectedRole, animate]);
 
   // Check if the browser supports WebAuthn/biometric authentication
   useEffect(() => {
@@ -289,39 +324,7 @@ export default function SignInPage() {
         </div>
       </div>
       
-      {/* Role toggle buttons */}
-      <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2 sm:space-x-4 overflow-x-auto pb-2 max-w-full no-scrollbar">
-        <button
-          onClick={() => handleRoleSelect('buyer')}
-          className={`px-4 py-1 rounded-full text-sm font-medium border transition-all ${
-            selectedRole === 'buyer' 
-              ? 'bg-[#09261E] text-white shadow-lg scale-105' 
-              : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
-          }`}
-        >
-          For Buyers
-        </button>
-        <button
-          onClick={() => handleRoleSelect('seller')}
-          className={`px-4 py-1 rounded-full text-sm font-medium border transition-all ${
-            selectedRole === 'seller' 
-              ? 'bg-[#135341] text-white shadow-lg scale-105' 
-              : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
-          }`}
-        >
-          For Sellers
-        </button>
-        <button
-          onClick={() => handleRoleSelect('rep')}
-          className={`px-4 py-1 rounded-full text-sm font-medium border transition-all ${
-            selectedRole === 'rep' 
-              ? 'bg-[#803344] text-white shadow-lg scale-105' 
-              : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
-          }`}
-        >
-          For REPs
-        </button>
-      </div>
+      {/* Role toggle buttons - Moved to inside the login form below */}
 
       {/* Floating feature cards in background - Dynamic based on role */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -380,7 +383,73 @@ export default function SignInPage() {
         {/* Card Header */}
         <div className="text-center">
           <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-2">Welcome back</h2>
-          <p className="text-gray-500 text-sm mb-6">Please sign in to continue</p>
+          <p className="text-gray-500 text-sm mb-4">Please sign in to continue</p>
+        </div>
+        
+        {/* Role toggle buttons - Inside login card */}
+        <div className="flex justify-center gap-2 mb-6 overflow-x-auto whitespace-nowrap p-1">
+          <div className="relative">
+            <button
+              onClick={() => handleRoleSelect('buyer')}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
+                selectedRole === 'buyer' 
+                  ? 'bg-[#09261E] text-white shadow-lg' 
+                  : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
+              }`}
+            >
+              For Buyers
+            </button>
+            {selectedRole === 'buyer' && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 overflow-hidden bg-gray-100 rounded-full">
+                <div 
+                  className="h-full bg-white transition-all duration-300 ease-linear" 
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+            )}
+          </div>
+          
+          <div className="relative">
+            <button
+              onClick={() => handleRoleSelect('seller')}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
+                selectedRole === 'seller' 
+                  ? 'bg-[#135341] text-white shadow-lg' 
+                  : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
+              }`}
+            >
+              For Sellers
+            </button>
+            {selectedRole === 'seller' && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 overflow-hidden bg-gray-100 rounded-full">
+                <div 
+                  className="h-full bg-white transition-all duration-300 ease-linear" 
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+            )}
+          </div>
+          
+          <div className="relative">
+            <button
+              onClick={() => handleRoleSelect('rep')}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
+                selectedRole === 'rep' 
+                  ? 'bg-[#803344] text-white shadow-lg' 
+                  : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
+              }`}
+            >
+              For REPs
+            </button>
+            {selectedRole === 'rep' && (
+              <div className="absolute bottom-0 left-0 w-full h-0.5 overflow-hidden bg-gray-100 rounded-full">
+                <div 
+                  className="h-full bg-white transition-all duration-300 ease-linear" 
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+            )}
+          </div>
         </div>
         
         {/* Email login form - Showing by default */}
