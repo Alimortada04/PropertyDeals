@@ -302,7 +302,7 @@ export default function SignInPage() {
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-[#F5F5F5] to-[#E9EBEA] overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700"
+      className="min-h-screen bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700"
     >
       {/* Enhanced radial glow behind the main card */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -313,104 +313,73 @@ export default function SignInPage() {
         } opacity-70 transition-all duration-700`}></div>
       </div>
 
-      {/* Brand header - simple, neutral */}
-      <div className="absolute top-8 sm:top-12 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="inline-flex items-center">
-          <h1 className="font-heading font-bold text-2xl sm:text-3xl text-[#09261E]">PropertyDeals</h1>
-        </div>
-      </div>
+      {/* No brand header as requested */}
       
-      {/* Floating feature cards on larger screens */}
+      {/* Floating feature cards in circular layout */}
       <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-40 left-8 space-y-5">
-          {/* Left side cards */}
-          {animateCards && [
-            roleCards.buyer[0], 
-            roleCards.seller[0], 
-            roleCards.rep[0]
-          ].map((card, index) => {
-            const delay = 200 + (index * 100);
-            const rotation = ['-rotate-1', 'rotate-0', '-rotate-2'][index];
-            
-            return (
-              <div 
-                key={`left-${index}`}
-                className={`animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all ${rotation}`}
-                style={{animationDelay: `${delay}ms`}}
-              >
-                <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative">
-                  {/* Role badge */}
-                  <div className="absolute top-2 right-2">
-                    <span className="text-[10px] uppercase font-semibold bg-[#F0F7F2] px-1.5 py-0.5 rounded-full text-[#135341]">
-                      {index === 0 ? 'For Buyers' : index === 1 ? 'For Sellers' : 'For REPs'}
-                    </span>
+        {/* Circular layout of feature cards */}
+        {animateCards && [
+          // Left side cards (Buyer and Seller)
+          { card: roleCards.buyer[0], position: "absolute top-1/4 -left-2 lg:left-12", role: "buyer", rotate: "-rotate-2" },
+          { card: roleCards.seller[0], position: "absolute top-1/3 left-16 lg:left-32", role: "seller", rotate: "rotate-1" },
+          { card: roleCards.rep[0], position: "absolute bottom-1/3 left-0 lg:left-20", role: "rep", rotate: "-rotate-1" },
+          
+          // Right side cards (Buyer, Seller, Rep)
+          { card: roleCards.buyer[1], position: "absolute top-1/3 -right-2 lg:right-12", role: "buyer", rotate: "rotate-2" },
+          { card: roleCards.seller[1], position: "absolute top-2/3 right-12 lg:right-28", role: "seller", rotate: "-rotate-1.5" },
+          { card: roleCards.rep[1], position: "absolute bottom-1/4 right-0 lg:right-20", role: "rep", rotate: "rotate-1" }
+        ].map((item, index) => {
+          const delay = 200 + (index * 70);
+          const role = item.role;
+          
+          // Role-specific styles
+          const roleBadgeBg = role === 'buyer' ? 'bg-[#F0F7F2]' : 
+                              role === 'seller' ? 'bg-[#EAF7F0]' : 
+                              'bg-[#FFF0F3]';
+                              
+          const roleBadgeText = role === 'buyer' ? 'text-[#135341]' : 
+                               role === 'seller' ? 'text-[#135341]' : 
+                               'text-[#803344]';
+                               
+          const iconBg = role === 'buyer' ? 'bg-[#F0F7F2]' : 
+                        role === 'seller' ? 'bg-[#EAF7F0]' : 
+                        'bg-[#FFF0F3]';
+                        
+          const titleColor = role === 'buyer' ? 'text-[#09261E]' : 
+                           role === 'seller' ? 'text-[#135341]' : 
+                           'text-[#803344]';
+          
+          return (
+            <div 
+              key={`card-${index}`}
+              className={`${item.position} ${item.rotate} animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all`}
+              style={{animationDelay: `${delay}ms`}}
+            >
+              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative">
+                {/* Role badge */}
+                <div className="absolute top-2 right-2">
+                  <span className={`text-[9px] uppercase font-semibold ${roleBadgeBg} px-1.5 py-0.5 rounded-full ${roleBadgeText}`}>
+                    {role === 'buyer' ? 'For Buyers' : 
+                     role === 'seller' ? 'For Sellers' : 
+                     'For REPs'}
+                  </span>
+                </div>
+                
+                <div className="flex items-start space-x-3 mt-6">
+                  <div className={`p-2 rounded-lg shrink-0 ${iconBg}`}>
+                    {item.card.icon}
                   </div>
-                  
-                  <div className="flex items-start space-x-3 mt-6">
-                    <div className={`p-2 rounded-lg shrink-0 ${
-                      index === 2 ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
-                    }`}>
-                      {card.icon}
-                    </div>
-                    <div>
-                      <h3 className={`font-heading font-bold text-base ${
-                        index === 2 ? 'text-[#803344]' : 'text-[#09261E]'
-                      }`}>
-                        {card.title}
-                      </h3>
-                      <p className="text-gray-600 text-xs">{card.description}</p>
-                    </div>
+                  <div>
+                    <h3 className={`font-heading font-bold text-base ${titleColor}`}>
+                      {item.card.title}
+                    </h3>
+                    <p className="text-gray-600 text-xs">{item.card.description}</p>
                   </div>
                 </div>
               </div>
-            );
-          })}
-        </div>
-        
-        <div className="absolute top-40 right-8 space-y-5">
-          {/* Right side cards */}
-          {animateCards && [
-            roleCards.buyer[1], 
-            roleCards.seller[1], 
-            roleCards.rep[1]
-          ].map((card, index) => {
-            const delay = 300 + (index * 100);
-            const rotation = ['rotate-1', '-rotate-1', 'rotate-2'][index];
-            
-            return (
-              <div 
-                key={`right-${index}`}
-                className={`animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all ${rotation}`}
-                style={{animationDelay: `${delay}ms`}}
-              >
-                <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative">
-                  {/* Role badge */}
-                  <div className="absolute top-2 right-2">
-                    <span className="text-[10px] uppercase font-semibold bg-[#F0F7F2] px-1.5 py-0.5 rounded-full text-[#135341]">
-                      {index === 0 ? 'For Buyers' : index === 1 ? 'For Sellers' : 'For REPs'}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3 mt-6">
-                    <div className={`p-2 rounded-lg shrink-0 ${
-                      index === 2 ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
-                    }`}>
-                      {card.icon}
-                    </div>
-                    <div>
-                      <h3 className={`font-heading font-bold text-base ${
-                        index === 2 ? 'text-[#803344]' : 'text-[#09261E]'
-                      }`}>
-                        {card.title}
-                      </h3>
-                      <p className="text-gray-600 text-xs">{card.description}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
       
       {/* Main Sign-In Card - Zoom Style */}
