@@ -530,7 +530,7 @@ export default function RegisterFlowPage() {
                 </div>
                 
                 <Button 
-                  type="submit" 
+                  type="button" 
                   className={`w-full ${
                     selectedRoles.length === 0 
                       ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -539,6 +539,16 @@ export default function RegisterFlowPage() {
                         : 'bg-[#09261E] hover:bg-[#0f3e2a] text-white'
                   } flex items-center justify-center gap-2 transition-colors`}
                   disabled={selectedRoles.length === 0}
+                  onClick={() => {
+                    if (selectedRoles.length > 0) {
+                      // Handle role selection and move to next step
+                      setRegistrationData(prev => ({
+                        ...prev,
+                        roles: selectedRoles
+                      }));
+                      setCurrentStep("email");
+                    }
+                  }}
                 >
                   <span>{selectedRoles.length === 0 ? 'Select a Role to Continue' : 'Continue'}</span>
                   <ArrowRight className="h-4 w-4" />
