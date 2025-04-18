@@ -506,7 +506,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             {/* Resources Section */}
             <div className="mb-4">
               <div className="h-5">
-                <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>
+                <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
                   Resources
                 </h3>
               </div>
@@ -520,13 +520,13 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <li>
                   <Link href="/tools" className={getNavItemClasses("/tools")}>
                     <Calculator className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Tools</span>
+                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Tools</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/help" className={getNavItemClasses("/help")}>
                     <HelpCircle className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Help</span>
+                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Help</span>
                   </Link>
                 </li>
               </ul>
@@ -539,7 +539,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           {/* Profile & Settings */}
           <div className="mt-auto border-t border-gray-200 py-2">
             <div className="h-5">
-              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>
+              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
                 Account
               </h3>
             </div>
@@ -547,13 +547,13 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <li>
                 <Link href="/profile" className={getNavItemClasses("/profile")}>
                   <UserCircle className="w-6 h-6 flex-shrink-0" />
-                  <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Profile</span>
+                  <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Profile</span>
                 </Link>
               </li>
               <li>
                 <Link href="/settings" className={getNavItemClasses("/settings")}>
                   <Settings className="w-6 h-6 flex-shrink-0" />
-                  <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Settings</span>
+                  <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Settings</span>
                 </Link>
               </li>
             </ul>
