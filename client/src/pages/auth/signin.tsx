@@ -302,7 +302,7 @@ export default function SignInPage() {
 
   return (
     <div 
-      className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700`}
+      className="min-h-screen bg-gradient-to-br from-[#F5F5F5] to-[#E9EBEA] overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700"
     >
       {/* Enhanced radial glow behind the main card */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -313,70 +313,110 @@ export default function SignInPage() {
         } opacity-70 transition-all duration-700`}></div>
       </div>
 
-      {/* Rotating role-specific tagline */}
+      {/* Brand header - simple, neutral */}
       <div className="absolute top-8 sm:top-12 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 shadow-sm mb-4">
-          <span className="text-xs font-semibold tracking-wide animate-in fade-in duration-500">
-            <span className={`${
-              selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'  
-            }`}>• </span>
-            <span className="text-[#09261E]">
-              {selectedRole === 'buyer' ? 'MADE FOR BUYERS' : 
-               selectedRole === 'seller' ? 'MADE FOR SELLERS' : 
-               'MADE FOR REPS'}
-            </span>
-            <span className={`${
-              selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'  
-            }`}> •</span>
-          </span>
+        <div className="inline-flex items-center">
+          <h1 className="font-heading font-bold text-2xl sm:text-3xl text-[#09261E]">PropertyDeals</h1>
         </div>
       </div>
       
       {/* Floating feature cards on larger screens */}
-      <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Generate cards based on selected role (for desktop/tablet only) */}
-        {animateCards && roleCards[selectedRole].map((card, index) => {
-          // Define positions based on card.position and screen size
-          let positionClasses = "";
-          let animationClasses = "";
-          
-          // Responsive positioning for different screen sizes
-          if (card.position === "top-left") {
-            positionClasses = "top-24 left-4 md:top-20 md:-left-4 lg:left-16 rotate-[1.5deg]";
-            animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[200ms]";
-          } else if (card.position === "bottom-right") {
-            positionClasses = "bottom-24 right-4 md:bottom-16 md:-right-8 lg:right-20 rotate-[-2deg]";
-            animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[300ms]";
-          } else if (card.position === "middle-left") {
-            positionClasses = "top-1/2 -translate-y-1/2 -left-16 md:-left-8 lg:left-4 rotate-[-1.5deg] hidden md:block";
-            animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[400ms]";
-          } else if (card.position === "top-right") {
-            positionClasses = "top-32 right-4 md:top-28 md:right-0 lg:right-12 rotate-[2deg]";
-            animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[500ms]";
-          }
-          
-          // Optionally add blur to one card for depth effect
-          const blurClass = card.position === "middle-left" ? "blur-[1px]" : "";
-          
-          // Scale down cards on smaller screens
-          const sizeClasses = "w-[200px] md:w-[215px] lg:w-[230px]";
-          
+      <div className="hidden sm:flex flex-wrap gap-4 justify-center items-start max-w-[90vw] mx-auto absolute inset-0 overflow-hidden pointer-events-none top-32 z-0">
+        {/* Buyer cards (2) */}
+        {animateCards && roleCards.buyer.slice(0, 2).map((card, index) => {
+          const delay = 200 + (index * 100);
           return (
             <div 
-              key={`${selectedRole}-${index}-desktop`}
-              className={`absolute ${positionClasses} transform ${animationClasses} hover:-translate-y-1 hover:shadow-lg transition-all`}
+              key={`buyer-${index}`}
+              className={`animate-in fade-in-50 duration-700 delay-[${delay}ms] hover:-translate-y-1 hover:shadow-lg transition-all ${
+                index === 0 ? '-rotate-1 top-24 left-0' : 'rotate-1 top-28 left-4'
+              }`}
+              style={{animationDelay: `${delay}ms`}}
             >
-              <div className={`bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md ${sizeClasses} text-sm border border-gray-100 ${blurClass}`}>
-                <div className="flex items-start space-x-3">
-                  <div className={`p-2 rounded-lg shrink-0 ${
-                    selectedRole === 'rep' ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
-                  }`}>
+              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[180px] md:w-[200px] text-sm border border-gray-100 relative">
+                {/* Role badge */}
+                <div className="absolute top-2 right-2">
+                  <span className="text-xs uppercase font-semibold bg-[#F0F7F2] px-2 py-0.5 rounded-full text-[#135341]">
+                    For Buyers
+                  </span>
+                </div>
+                
+                <div className="flex items-start space-x-3 mt-6">
+                  <div className="p-2 rounded-lg shrink-0 bg-[#F0F7F2]">
                     {card.icon}
                   </div>
                   <div>
-                    <h3 className={`font-heading font-bold text-base ${
-                      selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#09261E]'
-                    }`}>
+                    <h3 className="font-heading font-bold text-base text-[#09261E]">
+                      {card.title}
+                    </h3>
+                    <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        
+        {/* Seller cards (2) */}
+        {animateCards && roleCards.seller.slice(0, 2).map((card, index) => {
+          const delay = 300 + (index * 100);
+          return (
+            <div 
+              key={`seller-${index}`}
+              className={`animate-in fade-in-50 duration-700 delay-[${delay}ms] hover:-translate-y-1 hover:shadow-lg transition-all ${
+                index === 0 ? 'rotate-1 top-20 right-4' : '-rotate-1 top-24 right-0'
+              }`}
+              style={{animationDelay: `${delay}ms`}}
+            >
+              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[180px] md:w-[200px] text-sm border border-gray-100 relative">
+                {/* Role badge */}
+                <div className="absolute top-2 right-2">
+                  <span className="text-xs uppercase font-semibold bg-[#F0F7F2] px-2 py-0.5 rounded-full text-[#135341]">
+                    For Sellers
+                  </span>
+                </div>
+                
+                <div className="flex items-start space-x-3 mt-6">
+                  <div className="p-2 rounded-lg shrink-0 bg-[#F0F7F2]">
+                    {card.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-heading font-bold text-base text-[#09261E]">
+                      {card.title}
+                    </h3>
+                    <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+        
+        {/* REP cards (2) */}
+        {animateCards && roleCards.rep.slice(0, 2).map((card, index) => {
+          const delay = 400 + (index * 100);
+          return (
+            <div 
+              key={`rep-${index}`}
+              className={`animate-in fade-in-50 duration-700 delay-[${delay}ms] hover:-translate-y-1 hover:shadow-lg transition-all ${
+                index === 0 ? '-rotate-1 bottom-24 left-4' : 'rotate-1 bottom-28 right-4'
+              }`}
+              style={{animationDelay: `${delay}ms`}}
+            >
+              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[180px] md:w-[200px] text-sm border border-gray-100 relative">
+                {/* Role badge */}
+                <div className="absolute top-2 right-2">
+                  <span className="text-xs uppercase font-semibold bg-[#FFF0F3] px-2 py-0.5 rounded-full text-[#803344]">
+                    For REPs
+                  </span>
+                </div>
+                
+                <div className="flex items-start space-x-3 mt-6">
+                  <div className="p-2 rounded-lg shrink-0 bg-[#FFF0F3]">
+                    {card.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-heading font-bold text-base text-[#803344]">
                       {card.title}
                     </h3>
                     <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
@@ -485,11 +525,7 @@ export default function SignInPage() {
             
             <Button 
               type="submit" 
-              className={`w-full ${
-                selectedRole === 'buyer' ? 'bg-[#09261E] hover:bg-[#0f3e2a]' :
-                selectedRole === 'seller' ? 'bg-[#135341] hover:bg-[#1e6d52]' :
-                'bg-[#803344] hover:bg-[#a34d5e]'
-              } text-white flex items-center justify-center gap-2 border border-white/20 h-10`}
+              className="w-full bg-[#09261E] hover:bg-[#0f3e2a] text-white flex items-center justify-center gap-2 border border-white/20 h-10"
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? (
@@ -579,9 +615,7 @@ export default function SignInPage() {
             Don't have an account? {" "}
             <Link 
               href="/register" 
-              className={`${
-                selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'
-              } font-semibold hover:underline`}
+              className="text-[#135341] font-semibold hover:underline"
             >
               Create one
             </Link>
