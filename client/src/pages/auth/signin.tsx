@@ -137,14 +137,33 @@ export default function SignInPage() {
   const [animateCards, setAnimateCards] = useState(true);
   const autoCycleTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [progress, setProgress] = useState(100);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
   
   // Animation frame handler for countdown animation
   const requestRef = useRef<number>();
   const previousTimeRef = useRef<number>();
   const startTimeRef = useRef<number>();
   
-  // Countdown animation constants
-  const CYCLE_DURATION = 5000; // 5 seconds
+  // We don't need the countdown animation anymore
+  
+  // Add mouse tracking effect for the parallax
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      // Calculate mouse position relative to center of screen (values from -0.5 to 0.5)
+      const x = ((clientX) / width) - 0.5;
+      const y = ((clientY) / height) - 0.5;
+      
+      setMousePosition({ x, y });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
   
   // Auto-focus email input when the form appears
   useEffect(() => {
