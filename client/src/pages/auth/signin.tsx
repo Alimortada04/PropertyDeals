@@ -121,11 +121,11 @@ const roleCards = {
   ]
 };
 
-// Background gradients for different roles - softer brand-aligned white-to-hue gradients
+// Background gradients for different roles - more saturated brand-aligned gradient
 const roleBackgrounds = {
-  buyer: "from-[#F5F5F5] to-[#eaf4f0]",
-  seller: "from-[#F5F5F5] to-[#e9f5ec]",
-  rep: "from-[#F5F5F5] to-[#f5ebed]"
+  buyer: "from-[#F5F5F5] to-[#d6ebe2]",
+  seller: "from-[#F5F5F5] to-[#d5f0e0]",
+  rep: "from-[#F5F5F5] to-[#f2dfe1]"
 };
 
 export default function SignInPage() {
@@ -304,19 +304,27 @@ export default function SignInPage() {
     <div 
       className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700`}
     >
-      {/* Radial glow behind the main card */}
+      {/* Enhanced radial glow behind the main card */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-        <div className="w-[600px] h-[600px] rounded-full radial-gradient opacity-50"></div>
+        <div className={`w-[700px] h-[700px] rounded-full ${
+          selectedRole === 'buyer' ? 'bg-gradient-radial from-[#d6ebe2]/80 to-transparent' :
+          selectedRole === 'seller' ? 'bg-gradient-radial from-[#d5f0e0]/80 to-transparent' :
+          'bg-gradient-radial from-[#f2dfe1]/80 to-transparent'
+        } opacity-70 transition-all duration-700`}></div>
       </div>
 
-      {/* Small branding tagline */}
+      {/* Rotating role-specific tagline */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
         <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 shadow-sm">
-          <span className="text-xs font-semibold tracking-wide">
+          <span className="text-xs font-semibold tracking-wide animate-in fade-in duration-500">
             <span className={`${
               selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'  
             }`}>• </span>
-            <span className="text-[#09261E]">REAL ESTATE REIMAGINED</span>
+            <span className="text-[#09261E]">
+              {selectedRole === 'buyer' ? 'MADE FOR BUYERS' : 
+               selectedRole === 'seller' ? 'MADE FOR SELLERS' : 
+               'MADE FOR REPS'}
+            </span>
             <span className={`${
               selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'  
             }`}> •</span>
@@ -330,33 +338,37 @@ export default function SignInPage() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Generate cards based on selected role */}
         {animateCards && roleCards[selectedRole].map((card, index) => {
-          // Define positions based on card.position
+          // Define positions based on card.position and screen size
           let positionClasses = "";
           let animationClasses = "";
           
+          // Responsive positioning for different screen sizes
           if (card.position === "top-left") {
-            positionClasses = "top-20 -left-4 sm:left-16 rotate-[1.5deg]";
+            positionClasses = "top-24 left-4 md:top-20 md:-left-4 lg:left-16 rotate-[1.5deg] hidden sm:block";
             animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[200ms]";
           } else if (card.position === "bottom-right") {
-            positionClasses = "bottom-16 -right-8 sm:right-20 rotate-[-2deg]";
+            positionClasses = "bottom-24 right-4 md:bottom-16 md:-right-8 lg:right-20 rotate-[-2deg] hidden sm:block";
             animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[300ms]";
           } else if (card.position === "middle-left") {
-            positionClasses = "top-1/2 -translate-y-1/2 -left-12 sm:left-4 rotate-[-1.5deg]";
+            positionClasses = "top-1/2 -translate-y-1/2 -left-16 md:-left-8 lg:left-4 rotate-[-1.5deg] hidden md:block";
             animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[400ms]";
           } else if (card.position === "top-right") {
-            positionClasses = "top-28 right-0 sm:right-12 rotate-[2deg]";
+            positionClasses = "top-32 right-4 md:top-28 md:right-0 lg:right-12 rotate-[2deg] hidden sm:block";
             animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[500ms]";
           }
           
           // Optionally add blur to one card for depth effect
           const blurClass = card.position === "middle-left" ? "blur-[1px]" : "";
           
+          // Scale down cards on smaller screens
+          const sizeClasses = "w-[200px] md:w-[215px] lg:w-[230px]";
+          
           return (
             <div 
               key={`${selectedRole}-${index}`}
               className={`absolute ${positionClasses} transform ${animationClasses} hover:-translate-y-1 hover:shadow-lg transition-all`}
             >
-              <div className={`bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md w-[230px] text-sm border border-gray-100 ${blurClass}`}>
+              <div className={`bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md ${sizeClasses} text-sm border border-gray-100 ${blurClass}`}>
                 <div className="flex items-start space-x-3">
                   <div className={`p-2 rounded-lg shrink-0 ${
                     selectedRole === 'rep' ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
@@ -369,7 +381,7 @@ export default function SignInPage() {
                     }`}>
                       {card.title}
                     </h3>
-                    <p className="text-gray-600 text-sm">{card.description}</p>
+                    <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
                   </div>
                 </div>
               </div>
@@ -379,77 +391,11 @@ export default function SignInPage() {
       </div>
       
       {/* Main Sign-In Card - Zoom Style */}
-      <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-8 mx-auto relative z-10 space-y-4">
+      <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-6 sm:p-8 mx-auto relative z-10 space-y-4">
         {/* Card Header */}
         <div className="text-center">
           <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-2">Welcome back</h2>
-          <p className="text-gray-500 text-sm mb-4">Please sign in to continue</p>
-        </div>
-        
-        {/* Role toggle buttons - Inside login card */}
-        <div className="flex justify-center gap-2 mb-6 overflow-x-auto whitespace-nowrap p-1">
-          <div className="relative">
-            <button
-              onClick={() => handleRoleSelect('buyer')}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                selectedRole === 'buyer' 
-                  ? 'bg-[#09261E] text-white shadow-lg' 
-                  : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
-              }`}
-            >
-              For Buyers
-            </button>
-            {selectedRole === 'buyer' && (
-              <div className="absolute bottom-0 left-0 w-full h-0.5 overflow-hidden bg-gray-100 rounded-full">
-                <div 
-                  className="h-full bg-white transition-all duration-300 ease-linear" 
-                  style={{ width: `${progress}%` }}
-                ></div>
-              </div>
-            )}
-          </div>
-          
-          <div className="relative">
-            <button
-              onClick={() => handleRoleSelect('seller')}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                selectedRole === 'seller' 
-                  ? 'bg-[#135341] text-white shadow-lg' 
-                  : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
-              }`}
-            >
-              For Sellers
-            </button>
-            {selectedRole === 'seller' && (
-              <div className="absolute bottom-0 left-0 w-full h-0.5 overflow-hidden bg-gray-100 rounded-full">
-                <div 
-                  className="h-full bg-white transition-all duration-300 ease-linear" 
-                  style={{ width: `${progress}%` }}
-                ></div>
-              </div>
-            )}
-          </div>
-          
-          <div className="relative">
-            <button
-              onClick={() => handleRoleSelect('rep')}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                selectedRole === 'rep' 
-                  ? 'bg-[#803344] text-white shadow-lg' 
-                  : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
-              }`}
-            >
-              For REPs
-            </button>
-            {selectedRole === 'rep' && (
-              <div className="absolute bottom-0 left-0 w-full h-0.5 overflow-hidden bg-gray-100 rounded-full">
-                <div 
-                  className="h-full bg-white transition-all duration-300 ease-linear" 
-                  style={{ width: `${progress}%` }}
-                ></div>
-              </div>
-            )}
-          </div>
+          <p className="text-gray-500 text-sm mb-6">Please sign in to continue</p>
         </div>
         
         {/* Email login form - Showing by default */}
