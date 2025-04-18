@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,7 +10,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, ArrowRight, Fingerprint, Key, Mail } from "lucide-react";
+import { 
+  Loader2, 
+  ArrowRight, 
+  Fingerprint, 
+  Key, 
+  Mail, 
+  Home, 
+  DollarSign, 
+  PercentCircle, 
+  Building, 
+  Users,
+  BadgeCheck, 
+  Briefcase, 
+  Megaphone, 
+  Network 
+} from "lucide-react";
 import { SiGoogle, SiApple, SiFacebook } from "react-icons/si";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -21,11 +36,106 @@ const loginSchema = z.object({
   rememberMe: z.boolean().default(true),
 });
 
+// Define role types and card data
+type Role = 'buyer' | 'seller' | 'rep';
+
+// Card data for different roles
+const roleCards = {
+  buyer: [
+    {
+      title: "Off-Market Inventory",
+      description: "Find deals not on Zillow or Redfin",
+      icon: <Home className="w-5 h-5 text-[#135341]" />,
+      position: "top-left"
+    },
+    {
+      title: "Talk Directly to Sellers",
+      description: "Skip middlemen and get fast responses",
+      icon: <Users className="w-5 h-5 text-[#135341]" />,
+      position: "bottom-right"
+    },
+    {
+      title: "Run ROI in Seconds",
+      description: "Analyze profit before you make offers",
+      icon: <PercentCircle className="w-5 h-5 text-[#135341]" />,
+      position: "middle-left"
+    },
+    {
+      title: "Trusted Network",
+      description: "6,000+ verified RE professionals",
+      icon: <BadgeCheck className="w-5 h-5 text-[#135341]" />,
+      position: "top-right"
+    }
+  ],
+  seller: [
+    {
+      title: "Get Cash Offers Fast",
+      description: "Receive offers within 24 hours",
+      icon: <DollarSign className="w-5 h-5 text-[#135341]" />,
+      position: "top-left"
+    },
+    {
+      title: "Skip Repairs",
+      description: "Sell As-Is, No Upgrades Needed",
+      icon: <Building className="w-5 h-5 text-[#135341]" />,
+      position: "bottom-right"
+    },
+    {
+      title: "Verified Buyers Only",
+      description: "Your property is safe and private",
+      icon: <BadgeCheck className="w-5 h-5 text-[#135341]" />,
+      position: "middle-left"
+    },
+    {
+      title: "Direct Communication",
+      description: "No agents or middlemen needed",
+      icon: <Mail className="w-5 h-5 text-[#135341]" />,
+      position: "top-right"
+    }
+  ],
+  rep: [
+    {
+      title: "Grow Your Network",
+      description: "Connect with buyers, sellers, and pros",
+      icon: <Network className="w-5 h-5 text-[#803344]" />,
+      position: "top-left"
+    },
+    {
+      title: "List Your Services",
+      description: "Showcase your skills and get hired",
+      icon: <Briefcase className="w-5 h-5 text-[#803344]" />,
+      position: "bottom-right"
+    },
+    {
+      title: "Verified Leads, Delivered",
+      description: "Real people. Real property. Real potential.",
+      icon: <Megaphone className="w-5 h-5 text-[#803344]" />,
+      position: "middle-left"
+    },
+    {
+      title: "Trusted Professional Network",
+      description: "Join 6,000+ verified RE professionals",
+      icon: <BadgeCheck className="w-5 h-5 text-[#803344]" />,
+      position: "top-right"
+    }
+  ]
+};
+
+// Background gradients for different roles
+const roleBackgrounds = {
+  buyer: "from-[#09261E] to-[#0f3e2a]",
+  seller: "from-[#135341] to-[#1e6d52]",
+  rep: "from-[#803344] to-[#a34d5e]"
+};
+
 export default function SignInPage() {
   const { user, loginMutation } = useAuth();
   const [supportsBiometric, setSupportsBiometric] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const [selectedRole, setSelectedRole] = useState<Role>('buyer');
+  const [animateCards, setAnimateCards] = useState(true);
+  const autoCycleTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-focus email input when the form appears
   useEffect(() => {
@@ -35,6 +145,48 @@ export default function SignInPage() {
       }, 100);
     }
   }, [showEmailForm]);
+  
+  // Auto-cycle through roles
+  useEffect(() => {
+    const startAutoCycle = () => {
+      if (autoCycleTimerRef.current) {
+        clearInterval(autoCycleTimerRef.current);
+      }
+      
+      autoCycleTimerRef.current = setInterval(() => {
+        setSelectedRole(prevRole => {
+          if (prevRole === 'buyer') return 'seller';
+          if (prevRole === 'seller') return 'rep';
+          return 'buyer';
+        });
+        // Briefly disable animations when switching roles automatically
+        setAnimateCards(false);
+        setTimeout(() => setAnimateCards(true), 50);
+      }, 6000);
+    };
+    
+    startAutoCycle();
+    
+    return () => {
+      if (autoCycleTimerRef.current) {
+        clearInterval(autoCycleTimerRef.current);
+      }
+    };
+  }, []);
+  
+  // Handle role selection
+  const handleRoleSelect = useCallback((role: Role) => {
+    // Reset auto-cycle when user manually selects a role
+    if (autoCycleTimerRef.current) {
+      clearInterval(autoCycleTimerRef.current);
+      autoCycleTimerRef.current = null;
+    }
+    
+    setSelectedRole(role);
+    // Briefly disable animations when switching roles manually
+    setAnimateCards(false);
+    setTimeout(() => setAnimateCards(true), 50);
+  }, []);
 
   // Check if the browser supports WebAuthn/biometric authentication
   useEffect(() => {
@@ -114,100 +266,121 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F8FAF8] to-[#E5EAE7] overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative">
+    <div 
+      className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700`}
+    >
       {/* Radial glow behind the main card */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
         <div className="w-[600px] h-[600px] rounded-full radial-gradient opacity-50"></div>
       </div>
 
-      {/* Floating feature cards in background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Top left card */}
-        <div className="absolute top-20 -left-4 sm:left-16 transform rotate-[1.5deg] animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[200ms] hover:-translate-y-1 hover:shadow-lg transition-all">
-          <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md w-[230px] text-sm border border-gray-100">
-            <div className="flex items-start space-x-3">
-              <div className="bg-[#F0F7F2] p-2 rounded-lg shrink-0">
-                <svg className="w-5 h-5 text-[#135341]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-base text-[#09261E]">Direct Connections</h3>
-                <p className="text-gray-600 text-sm">Talk directly with sellers and REPs.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom right card */}
-        <div className="absolute bottom-16 -right-8 sm:right-20 transform rotate-[-2deg] animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[300ms] hover:-translate-y-1 hover:shadow-lg transition-all">
-          <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md w-[230px] text-sm border border-gray-100">
-            <div className="flex items-start space-x-3">
-              <div className="bg-[#F0F7F2] p-2 rounded-lg shrink-0">
-                <svg className="w-5 h-5 text-[#135341]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-base text-[#09261E]">Analyze in Seconds</h3>
-                <p className="text-gray-600 text-sm">Use built-in deal calculators instantly.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Middle left card slightly blurred for depth */}
-        <div className="absolute top-1/2 -translate-y-1/2 -left-12 sm:left-4 transform rotate-[-1.5deg] animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[400ms] hover:-translate-y-1 hover:shadow-lg transition-all">
-          <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg shadow-md w-[230px] text-sm border border-gray-100 blur-[1px]">
-            <div className="flex items-start space-x-3">
-              <div className="bg-[#F0F7F2] p-2 rounded-lg shrink-0">
-                <svg className="w-5 h-5 text-[#135341]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-base text-[#09261E]">Hidden Listings</h3>
-                <p className="text-gray-600 text-sm">Access off-market deals not found on Zillow.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Top right card */}
-        <div className="absolute top-28 right-0 sm:right-12 transform rotate-[2deg] animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[500ms] hover:-translate-y-1 hover:shadow-lg transition-all">
-          <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md w-[230px] text-sm border border-gray-100">
-            <div className="flex items-start space-x-3">
-              <div className="bg-[#F0F7F2] p-2 rounded-lg shrink-0">
-                <svg className="w-5 h-5 text-[#135341]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-heading font-bold text-base text-[#09261E]">Trusted Network</h3>
-                <p className="text-gray-600 text-sm">6,000+ verified RE professionals.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Small branding tagline */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
         <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 shadow-sm">
-          <span className="text-xs text-[#09261E] font-semibold tracking-wide">
-            <span className="text-[#135341]">• </span>
-            REAL ESTATE REIMAGINED
-            <span className="text-[#135341]"> •</span>
+          <span className="text-xs font-semibold tracking-wide">
+            <span className={`${
+              selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'  
+            }`}>• </span>
+            <span className="text-[#09261E]">REAL ESTATE REIMAGINED</span>
+            <span className={`${
+              selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'  
+            }`}> •</span>
           </span>
         </div>
+      </div>
+      
+      {/* Role toggle buttons */}
+      <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-10 flex space-x-2 sm:space-x-4 overflow-x-auto pb-2 max-w-full no-scrollbar">
+        <button
+          onClick={() => handleRoleSelect('buyer')}
+          className={`px-4 py-1 rounded-full text-sm font-medium border transition-all ${
+            selectedRole === 'buyer' 
+              ? 'bg-[#09261E] text-white shadow-lg scale-105' 
+              : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
+          }`}
+        >
+          For Buyers
+        </button>
+        <button
+          onClick={() => handleRoleSelect('seller')}
+          className={`px-4 py-1 rounded-full text-sm font-medium border transition-all ${
+            selectedRole === 'seller' 
+              ? 'bg-[#135341] text-white shadow-lg scale-105' 
+              : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
+          }`}
+        >
+          For Sellers
+        </button>
+        <button
+          onClick={() => handleRoleSelect('rep')}
+          className={`px-4 py-1 rounded-full text-sm font-medium border transition-all ${
+            selectedRole === 'rep' 
+              ? 'bg-[#803344] text-white shadow-lg scale-105' 
+              : 'bg-white/70 hover:bg-white text-[#09261E] shadow-sm'
+          }`}
+        >
+          For REPs
+        </button>
+      </div>
+
+      {/* Floating feature cards in background - Dynamic based on role */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Generate cards based on selected role */}
+        {animateCards && roleCards[selectedRole].map((card, index) => {
+          // Define positions based on card.position
+          let positionClasses = "";
+          let animationClasses = "";
+          
+          if (card.position === "top-left") {
+            positionClasses = "top-20 -left-4 sm:left-16 rotate-[1.5deg]";
+            animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[200ms]";
+          } else if (card.position === "bottom-right") {
+            positionClasses = "bottom-16 -right-8 sm:right-20 rotate-[-2deg]";
+            animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[300ms]";
+          } else if (card.position === "middle-left") {
+            positionClasses = "top-1/2 -translate-y-1/2 -left-12 sm:left-4 rotate-[-1.5deg]";
+            animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[400ms]";
+          } else if (card.position === "top-right") {
+            positionClasses = "top-28 right-0 sm:right-12 rotate-[2deg]";
+            animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[500ms]";
+          }
+          
+          // Optionally add blur to one card for depth effect
+          const blurClass = card.position === "middle-left" ? "blur-[1px]" : "";
+          
+          return (
+            <div 
+              key={`${selectedRole}-${index}`}
+              className={`absolute ${positionClasses} transform ${animationClasses} hover:-translate-y-1 hover:shadow-lg transition-all`}
+            >
+              <div className={`bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md w-[230px] text-sm border border-gray-100 ${blurClass}`}>
+                <div className="flex items-start space-x-3">
+                  <div className={`p-2 rounded-lg shrink-0 ${
+                    selectedRole === 'rep' ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
+                  }`}>
+                    {card.icon}
+                  </div>
+                  <div>
+                    <h3 className={`font-heading font-bold text-base ${
+                      selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#09261E]'
+                    }`}>
+                      {card.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm">{card.description}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
       
       {/* Main Sign-In Card - Zoom Style */}
       <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-8 mx-auto relative z-10 space-y-4">
         {/* Card Header */}
         <div className="text-center">
-          <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-2">Sign in</h2>
-          <p className="text-gray-500 text-sm mb-6">to continue to PropertyDeals</p>
+          <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-2">Welcome back</h2>
+          <p className="text-gray-500 text-sm mb-6">Please sign in to continue</p>
         </div>
         
         {/* Email login form - Showing by default */}
@@ -287,14 +460,23 @@ export default function SignInPage() {
                 )}
               />
               
-              <Link href="/auth/forgot-password" className="text-xs text-[#135341] hover:underline">
+              <Link 
+                href="/auth/forgot-password" 
+                className={`text-xs ${
+                  selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'
+                } hover:underline`}
+              >
                 Forgot password?
               </Link>
             </div>
             
             <Button 
               type="submit" 
-              className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center gap-2 border border-[#135341]/20 h-10"
+              className={`w-full ${
+                selectedRole === 'buyer' ? 'bg-[#09261E] hover:bg-[#0f3e2a]' :
+                selectedRole === 'seller' ? 'bg-[#135341] hover:bg-[#1e6d52]' :
+                'bg-[#803344] hover:bg-[#a34d5e]'
+              } text-white flex items-center justify-center gap-2 border border-white/20 h-10`}
               disabled={loginMutation.isPending}
             >
               {loginMutation.isPending ? (
@@ -382,7 +564,12 @@ export default function SignInPage() {
         <div className="text-center mt-6 space-y-4">
           <p className="text-sm text-gray-500">
             Don't have an account? {" "}
-            <Link href="/register" className="text-[#135341] font-semibold hover:underline">
+            <Link 
+              href="/register" 
+              className={`${
+                selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'
+              } font-semibold hover:underline`}
+            >
               Create one
             </Link>
           </p>

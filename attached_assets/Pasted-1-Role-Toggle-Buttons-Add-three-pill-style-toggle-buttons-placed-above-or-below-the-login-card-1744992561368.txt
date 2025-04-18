@@ -1,0 +1,103 @@
+1. 🎚️ Role Toggle Buttons
+Add three pill-style toggle buttons, placed above or below the login card:
+
+css
+Copy
+Edit
+[ For Buyers ] [ For Sellers ] [ For REPs ]
+Styling:
+tailwind
+Copy
+Edit
+px-4 py-1 rounded-full text-sm font-medium border transition
+bg-white/70 hover:bg-white text-[#09261E] shadow-sm
+Highlight selected tab with a filled or active state
+
+Clicking a tab triggers an update to background + floating cards
+
+Default to Buyers on first load
+
+2. 🎨 Role-Based Background Colors
+Use the following brand-aligned background gradients per role:
+
+
+Role	Color / Gradient Suggestion
+Buyers	bg-[#09261E] or from-[#09261E] to-[#0f3e2a]
+Sellers	bg-[#135341] or from-[#135341] to-[#1e6d52]
+REPs	bg-[#803344] or from-[#803344] to-[#a34d5e]
+Use Tailwind classes or CSS gradients to implement — the transition between roles should animate smoothly.
+
+3. 🧩 Floating Feature Cards (Update per Role)
+Show floating benefit cards that change content per role selection. Cards should:
+
+Be styled consistently:
+
+tailwind
+Copy
+Edit
+bg-white rounded-lg shadow-md px-4 py-3 w-[230px] text-sm border border-gray-100
+Animate in/out on role change (opacity, translate, or framer-motion)
+
+✳️ Content by Role:
+🟢 Buyers (Dark Green)
+🏡 Off-Market Inventory
+Find deals not on Zillow or Redfin
+
+🔍 Talk Directly to Sellers
+Skip middlemen and get fast responses
+
+📊 Run ROI in Seconds
+Analyze profit before you make offers
+
+🟩 Sellers (Light Green)
+💰 Get Cash Offers Fast
+Receive offers within 24 hours
+
+🛠️ Skip Repairs
+Sell As-Is, No Upgrades Needed
+
+✅ Verified Buyers Only
+Your property is safe and private
+
+🟥 REPs (Wine)
+🤝 Grow Your Network
+Connect with buyers, sellers, and pros
+
+💼 List Your Services
+Showcase your skills and get hired
+
+📣 Verified Leads, Delivered
+Real people. Real property. Real potential.
+
+4. 🔄 Auto-Cycle Animation
+Automatically rotate through the 3 roles every 6–7 seconds
+
+If the user manually clicks a role, pause auto-rotation
+
+Optionally use a setInterval + clearInterval logic in React state
+
+💡 Optional Polish
+Add slight blur or radial glow behind main login card
+
+Use a subtle motion fade/scale transition when switching card sets
+
+Use transition-colors or framer-motion for background change
+
+📱 Responsive Behavior
+On mobile:
+
+Role buttons stack or scroll horizontally
+
+Floating cards reduce to 1–2 and animate in behind the auth card
+
+Login form always stays visible and top-priority
+
+✅ TL;DR: Deliverables Checklist
+
+Element	Detail
+Role toggle	3 pill buttons, active state + animations
+Backgrounds	Buyers = #09261E, Sellers = #135341, REPs = #803344
+Floating cards	Updated content per role + motion transitions
+Auth form	Stays centered, unchanged
+Auto-cycle	Rotates every 6–7 sec unless user interacts
+Mobile support	Clean layout + reduced animations for small screens
