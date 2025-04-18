@@ -1,0 +1,147 @@
+✅ Layout Overview
+Use a centered authentication card (floating, elevated)
+
+Maintain the homepage-style gradient background
+
+Add floating feature cards in the background that communicate platform benefits
+
+All elements should feel cohesive, modern, and layered with subtle motion and depth
+
+🔷 1. Background Design
+Use the same background gradient from the homepage:
+
+tailwind
+Copy
+Edit
+bg-gradient-to-br from-[#F5F5F5] to-[#E8EBE8]
+Optional:
+
+Add a faint top-left vignette or radial glow
+
+Add overflow-hidden on the body to prevent floating card clipping
+
+🟩 2. Main Sign-In Card (Centered Panel)
+Create a centered, elevated auth card using the following:
+
+tailwind
+Copy
+Edit
+bg-white/80 backdrop-blur-lg rounded-xl shadow-2xl max-w-md w-full p-8 mx-auto
+Contents:
+Logo (optional small version or symbol mark)
+
+Headline: Welcome back
+
+Subtext: Sign in to your account to continue
+
+Trust badges:
+
+✅ “12,300+ deals closed”
+
+✅ “Trusted by 6,000+ investors”
+
+Style:
+
+tailwind
+Copy
+Edit
+text-sm px-3 py-1 rounded-full bg-[#F0F7F2] text-[#135341] font-medium flex items-center gap-2
+Sign-In Options:
+Google Sign In
+
+Apple Sign In
+
+Face ID / Touch ID
+
+Divider: or continue with email
+
+Button: “Continue with Email” → reveals email/password form
+
+On email form reveal:
+Animate slide/fade in:
+
+tailwind
+Copy
+Edit
+transition-all duration-300 ease-in-out opacity-0 translate-y-2
+// Reveal: opacity-100 translate-y-0
+Autofocus the email field
+
+Keep all fields aligned with CTA width (max-w-[340px])
+
+“Remember Me” toggle
+
+“Forgot Password?” link
+
+Sign-In CTA
+
+🟨 3. Floating Feature Cards (Background Elements)
+Add 3–4 floating UI-style cards in the background, positioned behind the main login form. Each should have:
+
+Card Spec:
+Small icon (top left)
+
+Feature title (bold)
+
+1-line description
+
+Rounded corners, light shadows, white background
+
+Tailwind card class:
+
+tailwind
+Copy
+Edit
+bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-md max-w-xs text-sm
+Example Cards:
+🔗 Direct Connections
+Talk directly with sellers and REPs.
+
+🏘️ Hidden Listings
+Access off-market deals not found on Zillow.
+
+📊 Analyze in Seconds
+Use built-in deal calculators instantly.
+
+🛡️ Trusted Network
+6,000+ verified RE professionals.
+
+Positioning:
+Float cards around the main login card:
+
+One top-left
+
+One bottom-right
+
+One partially offscreen/blurred
+
+Animate on load with framer-motion or @tailwindcss/animate (optional)
+
+📱 Responsive Behavior
+On mobile: collapse into vertical layout
+
+Main login card stays centered
+
+Floating cards fade out or move behind
+
+Buttons go full width with proper spacing (w-full, gap-y-4)
+
+⚙️ Technical Details
+Store biometric session or WebAuthn via navigator.credentials.get() for repeat login
+
+Keep the layout layout-safe on all devices: h-screen flex items-center justify-center
+
+Wrap form logic with persistent session tokens for auto-login
+
+✅ Final Deliverables
+/signin page redesigned using this layout
+
+Main card: floating auth experience
+
+Background: same visual treatment as homepage
+
+Floating benefit cards: use real platform features
+
+Responsive and mobile-friendly
+
+Optional: Animate card entrance, icons, or small float on scroll
