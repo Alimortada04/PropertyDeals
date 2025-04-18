@@ -10,8 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, ArrowRight, Fingerprint, Key } from "lucide-react";
+import { Loader2, ArrowRight, Fingerprint, Key, Mail } from "lucide-react";
 import { SiGoogle, SiApple } from "react-icons/si";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Login form schema
 const loginSchema = z.object({
@@ -23,6 +24,7 @@ const loginSchema = z.object({
 export default function SignInPage() {
   const { user, loginMutation } = useAuth();
   const [supportsBiometric, setSupportsBiometric] = useState(false);
+  const [showEmailForm, setShowEmailForm] = useState(false);
 
   // Check if the browser supports WebAuthn/biometric authentication
   useEffect(() => {
@@ -110,8 +112,8 @@ export default function SignInPage() {
           <p className="text-xl mb-10">Find exclusive off-market real estate opportunities and connect with local investors.</p>
           
           <div className="space-y-6">
-            <div className="flex items-start space-x-4">
-              <div className="bg-white/10 p-3 rounded-full">
+            <div className="flex items-start space-x-4 hover:translate-x-1 transition-transform cursor-pointer">
+              <div className="bg-white/10 p-3 rounded-full transition-colors hover:bg-white/20">
                 <i className="fas fa-search text-white"></i>
               </div>
               <div>
@@ -120,8 +122,8 @@ export default function SignInPage() {
               </div>
             </div>
             
-            <div className="flex items-start space-x-4">
-              <div className="bg-white/10 p-3 rounded-full">
+            <div className="flex items-start space-x-4 hover:translate-x-1 transition-transform cursor-pointer">
+              <div className="bg-white/10 p-3 rounded-full transition-colors hover:bg-white/20">
                 <i className="fas fa-handshake text-white"></i>
               </div>
               <div>
@@ -130,8 +132,8 @@ export default function SignInPage() {
               </div>
             </div>
             
-            <div className="flex items-start space-x-4">
-              <div className="bg-white/10 p-3 rounded-full">
+            <div className="flex items-start space-x-4 hover:translate-x-1 transition-transform cursor-pointer">
+              <div className="bg-white/10 p-3 rounded-full transition-colors hover:bg-white/20">
                 <i className="fas fa-chart-line text-white"></i>
               </div>
               <div>
@@ -147,9 +149,13 @@ export default function SignInPage() {
       <div className="bg-white md:w-1/2 p-8 flex items-center justify-center">
         <Card className="w-full max-w-md border-0 shadow-none">
           <CardContent className="pt-8">
-            <div className="text-center mb-8">
+            <div className="text-center mb-10">
               <h2 className="text-2xl font-heading font-bold text-[#09261E]">Welcome back</h2>
-              <p className="text-gray-500 mt-2">Sign in to your account to continue</p>
+              <p className="text-gray-500 mt-3">Sign in to your account to continue</p>
+              <div className="mt-4 text-gray-600 font-medium text-sm">
+                <span className="bg-green-50 px-3 py-1 rounded-full">12,300+ deals closed</span>
+                <span className="ml-3 bg-green-50 px-3 py-1 rounded-full">Trusted by 6,000+ investors</span>
+              </div>
             </div>
             
             {/* Social login buttons */}
@@ -173,106 +179,128 @@ export default function SignInPage() {
               </Button>
               
               {supportsBiometric && (
-                <Button 
-                  variant="outline" 
-                  className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50" 
-                  onClick={handleBiometricLogin}
-                >
-                  <Fingerprint className="h-4 w-4" />
-                  <span>Sign in with Face ID / Touch ID</span>
-                </Button>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50" 
+                        onClick={handleBiometricLogin}
+                      >
+                        <Fingerprint className="h-4 w-4" />
+                        <span>Sign in with Face ID / Touch ID</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Available on supported devices</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
+              
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50"
+                onClick={() => setShowEmailForm(true)}
+              >
+                <Mail className="h-4 w-4" />
+                <span>Continue with Email</span>
+              </Button>
             </div>
             
-            {/* Divider */}
-            <div className="relative mb-6">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-2 text-gray-500">OR CONTINUE WITH EMAIL</span>
-              </div>
-            </div>
-            
-            {/* Email login form */}
-            <Form {...loginForm}>
-              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                <FormField
-                  control={loginForm.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Username or Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your username or email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+            {showEmailForm && (
+              <>
+                {/* Divider */}
+                <div className="relative mb-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                  </div>
+                  <div className="relative flex justify-center text-xs">
+                    <span className="bg-white px-2 text-gray-500">ENTER YOUR CREDENTIALS</span>
+                  </div>
+                </div>
                 
-                <FormField
-                  control={loginForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex justify-between items-center">
-                        <FormLabel>Password</FormLabel>
-                        <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
-                          Forgot password?
-                        </Link>
-                      </div>
-                      <FormControl>
-                        <Input type="password" placeholder="Enter your password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={loginForm.control}
-                  name="rememberMe"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between space-x-2 space-y-0">
-                      <div className="flex items-center space-x-2">
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormLabel className="text-sm font-normal">Remember me</FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-                
-                <Button 
-                  type="submit" 
-                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center gap-2"
-                  disabled={loginMutation.isPending}
-                >
-                  {loginMutation.isPending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Signing In...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Sign In</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </form>
-            </Form>
+                {/* Email login form */}
+                <Form {...loginForm}>
+                  <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                    <FormField
+                      control={loginForm.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Username or Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter your username or email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={loginForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <div className="flex justify-between items-center">
+                            <FormLabel>Password</FormLabel>
+                            <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
+                              Forgot password?
+                            </Link>
+                          </div>
+                          <FormControl>
+                            <Input type="password" placeholder="Enter your password" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={loginForm.control}
+                      name="rememberMe"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between space-x-2 space-y-0">
+                          <div className="flex items-center space-x-4">
+                            <FormControl>
+                              <Switch
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                            <FormLabel className="text-sm font-normal">Remember me</FormLabel>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center gap-2"
+                      disabled={loginMutation.isPending}
+                    >
+                      {loginMutation.isPending ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Signing In...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Sign In</span>
+                          <ArrowRight className="h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </Form>
+              </>
+            )}
             
             {/* Register link */}
             <div className="text-center mt-6">
               <p className="text-sm text-gray-500">
                 Don't have an account? {" "}
-                <Link href="/register" className="text-primary font-medium hover:underline">
+                <Link href="/register" className="text-[#135341] font-semibold hover:underline">
                   Create one
                 </Link>
               </p>
