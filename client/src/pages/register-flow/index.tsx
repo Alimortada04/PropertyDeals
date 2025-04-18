@@ -785,30 +785,6 @@ export default function RegisterFlowPage() {
                                 </span>
                               </p>
                               
-                              {/* Gmail and Outlook quick links */}
-                              <div className="flex justify-center gap-4 mb-4">
-                                <a 
-                                  href="https://mail.google.com" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
-                                >
-                                  <SiGmail className="h-5 w-5 text-[#EA4335]" />
-                                  Open Gmail
-                                </a>
-                                <a 
-                                  href="https://outlook.live.com/mail" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
-                                >
-                                  <svg className="h-5 w-5 text-[#0078D4]" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M22.8 8.6c0-1-.9-1.9-1.9-1.9H15v7.6h6c1 0 1.9-.9 1.9-1.9V8.6zm-8.4 5.7c0 .3-.3.6-.6.6H3c-.3 0-.6-.3-.6-.6V7.6c0-.3.3-.6.6-.6h10.7c.3 0 .6.3.6.6v6.7z" />
-                                  </svg>
-                                  Open Outlook
-                                </a>
-                              </div>
-                              
                               <div className="flex justify-center">
                                 <OTPInput
                                   maxLength={6}
@@ -838,6 +814,30 @@ export default function RegisterFlowPage() {
                                     </>
                                   )}
                                 />
+                              </div>
+                              
+                              {/* Gmail and Outlook quick links */}
+                              <div className="flex justify-center gap-4 mt-4">
+                                <a 
+                                  href="https://mail.google.com" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
+                                >
+                                  <SiGmail className="h-5 w-5 text-[#EA4335]" />
+                                  Open Gmail
+                                </a>
+                                <a 
+                                  href="https://outlook.live.com/mail" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
+                                >
+                                  <svg className="h-5 w-5 text-[#0078D4]" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M22.8 8.6c0-1-.9-1.9-1.9-1.9H15v7.6h6c1 0 1.9-.9 1.9-1.9V8.6zm-8.4 5.7c0 .3-.3.6-.6.6H3c-.3 0-.6-.3-.6-.6V7.6c0-.3.3-.6.6-.6h10.7c.3 0 .6.3.6.6v6.7z" />
+                                  </svg>
+                                  Open Outlook
+                                </a>
                               </div>
                             </div>
                           </div>
@@ -1044,22 +1044,7 @@ export default function RegisterFlowPage() {
                   )}
                 />
                 
-                {/* Show Password Checkbox */}
-                <div className="flex items-center mt-2">
-                  <input
-                    type="checkbox"
-                    id="show-password"
-                    className="rounded border-gray-300 text-[#135341] focus:ring-[#135341] h-4 w-4"
-                    checked={showPassword && showConfirmPassword}
-                    onChange={(e) => {
-                      setShowPassword(e.target.checked);
-                      setShowConfirmPassword(e.target.checked);
-                    }}
-                  />
-                  <label htmlFor="show-password" className="ml-2 text-sm text-gray-600">
-                    Show password
-                  </label>
-                </div>
+
                 
                 <div className="flex items-center gap-2 pt-2">
                   <Button 
