@@ -121,33 +121,33 @@ const roleCards = {
 // Role-specific colors with tie-dye washes for combinations
 const roleColors = {
   buyer: {
-    color: "#09261E",
-    bgColor: "#d6ebe2", // wash of dark green
+    color: "#09261E", // dark green
+    bgColor: "#09261E30", // dark green with transparency
     position: "at 20% 40%"
   },
   seller: {
-    color: "#135341",
-    bgColor: "#d5f0e0", // wash of light green
+    color: "#135341", // light green
+    bgColor: "#13534130", // light green with transparency
     position: "at 80% 60%"
   },
   rep: {
-    color: "#803344",
-    bgColor: "#f2dfe1", // wash of wine red
+    color: "#803344", // wine red
+    bgColor: "#80334430", // wine red with transparency
     position: "at 50% 80%"
   }
 };
 
 // Background gradients for different roles - with more saturated washes 
 const roleBackgrounds = {
-  buyer: "from-[#F5F5F5] to-[#d6ebe2]", // wash of dark green
-  seller: "from-[#F5F5F5] to-[#d5f0e0]", // wash of light green
-  rep: "from-[#F5F5F5] to-[#f2dfe1]", // wash of wine red
+  buyer: "from-[#F5F5F5] to-[#09261E20]", // dark green wash
+  seller: "from-[#F5F5F5] to-[#13534120]", // light green wash
+  rep: "from-[#F5F5F5] to-[#80334420]", // wine red wash
   
-  // Tie-dye effect with multiple color gradients that blend
-  "buyer-seller": "bg-[#F5F5F5] bg-gradient-to-br from-[#d6ebe2]/60 via-transparent to-[#d5f0e0]/60",
-  "buyer-rep": "bg-[#F5F5F5] bg-gradient-to-br from-[#d6ebe2]/60 via-transparent to-[#f2dfe1]/60",
-  "seller-rep": "bg-[#F5F5F5] bg-gradient-to-br from-[#d5f0e0]/60 via-transparent to-[#f2dfe1]/60",
-  "buyer-seller-rep": "bg-[#F5F5F5] bg-gradient-to-br from-[#d6ebe2]/60 via-[#d5f0e0]/60 to-[#f2dfe1]/60"
+  // Tie-dye effect with multiple color gradients that blend - without white background
+  "buyer-seller": "bg-gradient-to-br from-[#09261E20] via-[#F5F5F5] to-[#13534120]",
+  "buyer-rep": "bg-gradient-to-br from-[#09261E20] via-[#F5F5F5] to-[#80334420]",
+  "seller-rep": "bg-gradient-to-br from-[#13534120] via-[#F5F5F5] to-[#80334420]",
+  "buyer-seller-rep": "bg-gradient-to-br from-[#09261E20] via-[#13534120] to-[#80334420]"
 };
 
 // Registration schemas for each step
@@ -292,22 +292,30 @@ export default function RegisterFlowPage() {
       // Single role background
       return roleBackgrounds[selectedRoles[0]];
     } else {
-      // Multi-role selection - use the predefined tie-dye gradients
-      const roleKey = selectedRoles.sort().join("-") as keyof typeof roleBackgrounds;
+      // Multi-role selection - always create a tie-dye with all selected roles
+      // Even if just 2 are selected, always add green and red tones per request
       
-      // If we have an exact match for the combination, use it
-      if (roleBackgrounds[roleKey]) {
-        return roleBackgrounds[roleKey];
+      if (selectedRoles.includes('buyer') && selectedRoles.includes('seller') && selectedRoles.includes('rep')) {
+        // All three roles selected - use gradient blending all three colors
+        return "bg-gradient-to-tr from-[#09261E30] via-[#13534130] to-[#80334430]";
+      } else if (selectedRoles.includes('buyer') && selectedRoles.includes('seller')) {
+        // Buyer and seller - blend dark green and light green
+        return "bg-gradient-to-br from-[#09261E30] to-[#13534130]";
+      } else if (selectedRoles.includes('buyer') && selectedRoles.includes('rep')) {
+        // Buyer and rep - blend dark green and wine red
+        return "bg-gradient-to-br from-[#09261E30] to-[#80334430]";
+      } else if (selectedRoles.includes('seller') && selectedRoles.includes('rep')) {
+        // Seller and rep - blend light green and wine red
+        return "bg-gradient-to-br from-[#13534130] to-[#80334430]";
       }
       
-      // Otherwise, build a custom radial gradient with tie-dye effect
+      // Fallback to multiple radial gradients if we somehow have an unhandled combination
       const gradients = selectedRoles.map(role => {
         const { position, bgColor } = roleColors[role];
-        return `radial-gradient(${position}, ${bgColor}40, transparent 70%)`;
+        return `radial-gradient(${position}, ${bgColor}, transparent 70%)`;
       });
       
-      // Join all radial gradients with a base color
-      return `bg-[#F5F5F5] bg-[${gradients.join(',')}]`;
+      return `bg-[${gradients.join(',')}]`;
     }
   };
 
@@ -1062,28 +1070,29 @@ export default function RegisterFlowPage() {
         {/* For single role selection */}
         {selectedRoles.length <= 1 && (
           <div className={`w-[700px] h-[700px] rounded-full ${
-            primaryRole === 'buyer' ? 'bg-gradient-radial from-[#d6ebe2]/80 to-transparent' :
-            primaryRole === 'seller' ? 'bg-gradient-radial from-[#d5f0e0]/80 to-transparent' :
-            'bg-gradient-radial from-[#f2dfe1]/80 to-transparent'
+            primaryRole === 'buyer' ? 'bg-gradient-radial from-[#09261E]/30 to-transparent' :
+            primaryRole === 'seller' ? 'bg-gradient-radial from-[#135341]/30 to-transparent' :
+            'bg-gradient-radial from-[#803344]/30 to-transparent'
           } opacity-70 transition-all duration-700`}></div>
         )}
         
         {/* Tie-dye effect with multiple gradients for multiple roles */}
         {selectedRoles.length > 1 && (
           <div className="relative w-[700px] h-[700px]">
+            {/* Always include all colors in tie-dye effect for multiple selections */}
             {/* Layer for buyer */}
             {selectedRoles.includes('buyer') && (
-              <div className="absolute inset-0 bg-gradient-radial from-[#d6ebe2]/80 to-transparent opacity-70 rounded-full transform translate-x-[-5%] translate-y-[-5%] transition-all duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-radial from-[#09261E]/30 to-transparent opacity-70 rounded-full transform translate-x-[-5%] translate-y-[-5%] transition-all duration-700"></div>
             )}
             
             {/* Layer for seller */}
             {selectedRoles.includes('seller') && (
-              <div className="absolute inset-0 bg-gradient-radial from-[#d5f0e0]/80 to-transparent opacity-70 rounded-full transform translate-x-[5%] translate-y-[5%] transition-all duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-radial from-[#135341]/30 to-transparent opacity-70 rounded-full transform translate-x-[5%] translate-y-[5%] transition-all duration-700"></div>
             )}
             
             {/* Layer for rep */}
             {selectedRoles.includes('rep') && (
-              <div className="absolute inset-0 bg-gradient-radial from-[#f2dfe1]/80 to-transparent opacity-70 rounded-full transition-all duration-700"></div>
+              <div className="absolute inset-0 bg-gradient-radial from-[#803344]/30 to-transparent opacity-70 rounded-full transition-all duration-700"></div>
             )}
           </div>
         )}
