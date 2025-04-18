@@ -471,33 +471,25 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <ul>
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
-                    <div className={`${!isExpanded ? 'mx-auto' : ''}`}>
-                      <Home className="w-5 h-5 flex-shrink-0" />
-                    </div>
+                    <Home className="w-5 h-5 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Home</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/properties" className={getNavItemClasses("/properties")}>
-                    <div className={`${!isExpanded ? 'mx-auto' : ''}`}>
-                      <Building className="w-5 h-5 flex-shrink-0" />
-                    </div>
+                    <Building className="w-5 h-5 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Properties</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/reps" className={getNavItemClasses("/reps")}>
-                    <div className={`${!isExpanded ? 'mx-auto' : ''}`}>
-                      <Users className="w-5 h-5 flex-shrink-0" />
-                    </div>
+                    <Users className="w-5 h-5 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>The REP Room</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/discussions" className={getNavItemClasses("/discussions")}>
-                    <div className={`${!isExpanded ? 'mx-auto' : ''}`}>
-                      <MessageCircle className="w-5 h-5 flex-shrink-0" />
-                    </div>
+                    <MessageCircle className="w-5 h-5 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Discussions</span>
                   </Link>
                 </li>
