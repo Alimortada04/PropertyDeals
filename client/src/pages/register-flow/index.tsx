@@ -981,6 +981,41 @@ export default function RegisterFlowPage() {
         );
         
       case "password":
+        // Create local password state variables for this step
+        const [passwordValue, setPasswordValue] = useState("");
+        const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
+        
+        // Submit handler for password form using local state
+        const handlePasswordSubmit = (e: React.FormEvent) => {
+          e.preventDefault();
+          
+          // Validation
+          if (passwordValue !== confirmPasswordValue) {
+            toast({
+              title: "Passwords don't match",
+              description: "Please make sure your passwords match",
+              variant: "destructive"
+            });
+            return;
+          }
+          
+          if (passwordValue.length < 8) {
+            toast({
+              title: "Password too short",
+              description: "Password must be at least 8 characters long",
+              variant: "destructive"
+            });
+            return;
+          }
+          
+          // Update registration data and proceed
+          setRegistrationData(prev => ({
+            ...prev,
+            password: passwordValue
+          }));
+          setCurrentStep("phone");
+        };
+        
         return (
           <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-6 sm:p-8 mx-auto relative z-10">
             <div className="mb-6">
@@ -988,121 +1023,99 @@ export default function RegisterFlowPage() {
               <p className="text-gray-500 text-sm">You're almost there! Set a secure password for your account</p>
             </div>
             
-            <Form {...passwordForm}>
-              <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
-                <FormField
-                  control={passwordForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input 
-                            type={showPassword ? "text" : "password"} 
-                            placeholder="" 
-                            value={field.value || ""}
-                            onChange={field.onChange}
-                            onBlur={field.onBlur}
-                            name={field.name}
-                            ref={field.ref}
-                            className="bg-white/90 h-10 pr-10"
-                          />
-                          <button 
-                            type="button"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-5 w-5" />
-                            ) : (
-                              <Eye className="h-5 w-5" />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={passwordForm.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input 
-                            type={showConfirmPassword ? "text" : "password"} 
-                            placeholder="" 
-                            value={field.value || ""}
-                            onChange={field.onChange}
-                            onBlur={field.onBlur}
-                            name={field.name}
-                            ref={field.ref}
-                            className="bg-white/90 h-10 pr-10"
-                          />
-                          <button 
-                            type="button"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                          >
-                            {showConfirmPassword ? (
-                              <EyeOff className="h-5 w-5" />
-                            ) : (
-                              <Eye className="h-5 w-5" />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-700">Password</label>
+                <div className="relative">
+                  <Input 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="" 
+                    value={passwordValue}
+                    onChange={(e) => setPasswordValue(e.target.value)}
+                    className="bg-white/90 h-10 pr-10"
+                  />
+                  <button 
+                    type="button"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+                {passwordValue.length > 0 && passwordValue.length < 8 && (
+                  <p className="text-xs text-red-500 mt-1">Password must be at least 8 characters</p>
+                )}
+              </div>
+              
+              <div className="space-y-1">
+                <label className="text-sm font-medium text-gray-700">Confirm Password</label>
+                <div className="relative">
+                  <Input 
+                    type={showConfirmPassword ? "text" : "password"} 
+                    placeholder="" 
+                    value={confirmPasswordValue}
+                    onChange={(e) => setConfirmPasswordValue(e.target.value)}
+                    className="bg-white/90 h-10 pr-10"
+                  />
+                  <button 
+                    type="button"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+                {passwordValue && confirmPasswordValue && passwordValue !== confirmPasswordValue && (
+                  <p className="text-xs text-red-500 mt-1">Passwords don't match</p>
+                )}
+              </div>
 
+              <div className="flex items-center gap-2 pt-2">
+                <Button 
+                  variant="outline"
+                  type="button" 
+                  onClick={() => setCurrentStep("email")}
+                >
+                  Back
+                </Button>
                 
-                <div className="flex items-center gap-2 pt-2">
-                  <Button 
-                    variant="outline"
-                    type="button" 
-                    onClick={() => setCurrentStep("email")}
-                  >
-                    Back
-                  </Button>
-                  
-                  <Button 
-                    type="submit" 
-                    className={`flex-1 ${
-                      primaryRole === 'rep' ? 'bg-[#803344] hover:bg-[#a34d5e]' : 'bg-[#09261E] hover:bg-[#0f3e2a]'
-                    } text-white flex items-center justify-center gap-2`}
-                  >
-                    <span>Secure My Account</span>
-                    <Key className="h-4 w-4" />
-                  </Button>
+                <Button 
+                  type="submit" 
+                  className={`flex-1 ${
+                    primaryRole === 'rep' ? 'bg-[#803344] hover:bg-[#a34d5e]' : 'bg-[#09261E] hover:bg-[#0f3e2a]'
+                  } text-white flex items-center justify-center gap-2`}
+                >
+                  <span>Secure My Account</span>
+                  <Key className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              {/* Progress bar at bottom of card */}
+              <div className="mt-6 pt-2">
+                <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
+                  <span>Step 3 of 4</span>
+                  <span>75%</span>
                 </div>
-                
-                {/* Progress bar at bottom of card */}
-                <div className="mt-6 pt-2">
-                  <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
-                    <span>Step 3 of 4</span>
-                    <span>75%</span>
-                  </div>
-                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
-                    <div 
-                      className={`h-full transition-all duration-300 ${
-                        selectedRoles.includes('rep') 
-                          ? 'bg-[#803344]' 
-                          : 'bg-[#135341]'
-                      }`} 
-                      style={{ width: '75%' }}
-                    ></div>
-                  </div>
+                <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                  <div 
+                    className={`h-full transition-all duration-300 ${
+                      selectedRoles.includes('rep') 
+                        ? 'bg-[#803344]' 
+                        : 'bg-[#135341]'
+                    }`} 
+                    style={{ width: '75%' }}
+                  ></div>
                 </div>
-              </form>
-            </Form>
+              </div>
+            </form>
           </div>
         );
         
