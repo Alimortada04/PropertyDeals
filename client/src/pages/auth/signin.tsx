@@ -114,7 +114,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F5F5F5] to-[#E8EBE8] overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8FAF8] to-[#E5EAE7] overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative">
       {/* Floating feature cards in background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Top left card */}
@@ -186,8 +186,19 @@ export default function SignInPage() {
         </div>
       </div>
 
+      {/* Small branding tagline */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 shadow-sm">
+          <span className="text-xs text-[#09261E] font-semibold tracking-wide">
+            <span className="text-[#135341]">• </span>
+            REAL ESTATE REIMAGINED
+            <span className="text-[#135341]"> •</span>
+          </span>
+        </div>
+      </div>
+      
       {/* Main Sign-In Card */}
-      <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/80 backdrop-blur-lg rounded-xl shadow-2xl max-w-md w-full p-8 mx-auto relative z-10">
+      <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-8 mx-auto relative z-10">
         <div className="text-center">
           <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-2">Welcome back</h2>
           <p className="text-gray-500 mb-4">Sign in to your account to continue</p>
@@ -348,7 +359,7 @@ export default function SignInPage() {
                 
                 <Button 
                   type="submit" 
-                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center gap-2"
+                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center gap-2 border border-[#135341]/20"
                   disabled={loginMutation.isPending}
                 >
                   {loginMutation.isPending ? (
