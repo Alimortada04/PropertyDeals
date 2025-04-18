@@ -3,6 +3,15 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { 
+  Calculator, 
+  Cog,
+  DollarSign,
+  BarChart3,
+  FileText,
+  TrendingUp,
+  ArrowRightLeft
+} from "lucide-react";
 
 export interface Tool {
   id: string;
@@ -15,6 +24,9 @@ export interface Tool {
   isPopular?: boolean;
   isNew?: boolean;
   coverImage?: string;
+  inputs?: string[];
+  outputs?: string[];
+  functionType?: "calculator" | "analyzer" | "estimator" | "split";
 }
 
 interface ToolCardProps {
@@ -31,7 +43,10 @@ export default function ToolCard({ tool }: ToolCardProps) {
     isComingSoon, 
     isPopular, 
     isNew,
-    coverImage
+    coverImage,
+    inputs = [],
+    outputs = [],
+    functionType = "calculator"
   } = tool;
 
   // Default cover image URLs based on category
@@ -51,25 +66,58 @@ export default function ToolCard({ tool }: ToolCardProps) {
     }
   };
 
+  // Get function type icon
+  const getFunctionTypeIcon = () => {
+    switch (functionType) {
+      case "calculator":
+        return <Calculator size={18} />;
+      case "analyzer":
+        return <BarChart3 size={18} />;
+      case "estimator":
+        return <FileText size={18} />;
+      case "split":
+        return <ArrowRightLeft size={18} />;
+      default:
+        return <Calculator size={18} />;
+    }
+  };
+
+  // Function type label
+  const getFunctionTypeLabel = () => {
+    return functionType.charAt(0).toUpperCase() + functionType.slice(1);
+  };
+
   const cardUrl = !isComingSoon && path ? path : undefined;
   
   return (
     <div 
       className={cn(
-        "bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col",
-        cardUrl ? "cursor-pointer" : "cursor-default"
+        "relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col border-2 border-[#E5E7EB]",
+        cardUrl ? "cursor-pointer" : "cursor-default",
+        !isComingSoon && "hover:border-[#09261E]"
       )}
       onClick={() => cardUrl && (window.location.href = cardUrl)}
     >
-      {/* Cover Image */}
+      {/* Cover Image with Gradient Overlay */}
       <div className="relative w-full h-48">
+        {/* Tool Type Badge */}
+        <div className="absolute top-2 right-2 z-10">
+          <Badge className="bg-[#135341]/90 text-white border-none px-2 py-1 flex items-center gap-1.5">
+            {getFunctionTypeIcon()}
+            <span>{getFunctionTypeLabel()}</span>
+          </Badge>
+        </div>
+        
+        {/* Gradient Utility Strip */}
+        <div className="absolute top-0 left-0 w-full h-6 bg-gradient-to-r from-[#E1F5EE] to-[#F0F9FF] z-0"></div>
+        
         <img 
           src={coverImage || getDefaultCoverImage()}
           alt={title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover z-0"
         />
         
-        {/* Badges */}
+        {/* Status Badges */}
         <div className="absolute top-0 left-0 p-2 flex flex-col gap-2">
           {isComingSoon && (
             <Badge className="bg-amber-500 hover:bg-amber-600 text-white border-none">
@@ -88,10 +136,18 @@ export default function ToolCard({ tool }: ToolCardProps) {
           )}
         </div>
         
-        {/* Tool Icon - Absolute positioned on image */}
-        <div className="absolute bottom-0 right-0 p-2 bg-[#09261E]/80 text-white rounded-tl-xl">
+        {/* Tool Icon */}
+        <div className="absolute bottom-0 right-0 p-2 bg-[#09261E]/90 text-white rounded-tl-xl">
           {icon}
         </div>
+      </div>
+      
+      {/* Utility Icon Strip */}
+      <div className="flex items-center justify-center gap-2 bg-[#F9FAFB] py-2 border-y border-[#E5E7EB]">
+        <Cog size={14} className="text-gray-500" />
+        <Calculator size={14} className="text-gray-500" />
+        <DollarSign size={14} className="text-gray-500" />
+        <TrendingUp size={14} className="text-gray-500" />
       </div>
       
       {/* Card Content */}
@@ -99,8 +155,17 @@ export default function ToolCard({ tool }: ToolCardProps) {
         {/* Title */}
         <h3 className="text-lg font-semibold text-[#09261E] mb-2">{title}</h3>
         
-        {/* Description */}
-        <p className="text-sm text-gray-600 mb-3">{description}</p>
+        {/* Function Summary instead of description */}
+        <div className="mb-3 bg-[#F9FAFB] p-2 rounded-md border border-[#E5E7EB]">
+          <div className="flex items-center text-xs text-gray-700">
+            <span className="font-medium mr-2">Inputs:</span>
+            <span>{inputs.length > 0 ? inputs.join(", ") : description.split(" ").slice(0, 3).join(" ") + "..."}</span>
+          </div>
+          <div className="flex items-center text-xs text-gray-700 mt-1">
+            <span className="font-medium mr-2">Outputs:</span>
+            <span>{outputs.length > 0 ? outputs.join(", ") : description.split(" ").slice(-3).join(" ")}</span>
+          </div>
+        </div>
         
         {/* Tags */}
         {tags.length > 0 && (
@@ -121,7 +186,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
         <div className="mt-auto">
           {isComingSoon ? (
             <Button 
-              className="w-full bg-gray-100 text-gray-500 hover:bg-gray-200 cursor-not-allowed"
+              className="w-full bg-gray-200 text-gray-500 hover:bg-gray-300 cursor-not-allowed font-medium"
               disabled
             >
               Coming Soon
@@ -130,7 +195,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
             path && (
               <Link href={path}>
                 <Button 
-                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white px-4 py-2 text-sm"
+                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white px-4 py-2 text-sm font-medium border-2 border-[#09261E]"
                   onClick={(e) => e.stopPropagation()} // Prevent event bubbling
                 >
                   Open Tool
@@ -140,6 +205,27 @@ export default function ToolCard({ tool }: ToolCardProps) {
           )}
         </div>
       </div>
+      
+      {/* Hover Preview - Only visible on hover */}
+      {!isComingSoon && (
+        <div className="absolute inset-0 bg-black/75 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 p-4">
+          <div className="bg-white rounded-lg p-3 max-w-[90%]">
+            <h4 className="font-semibold text-sm mb-2 text-[#09261E]">Quick Preview</h4>
+            <p className="text-xs text-gray-700 mb-2">
+              Example: Input ARV $300k, Repairs $50k → Output: Max Offer $165k
+            </p>
+            <Button 
+              className="w-full bg-[#09261E] hover:bg-[#135341] text-white px-4 py-1 text-xs font-medium"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.location.href = path;
+              }}
+            >
+              Try It Now
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

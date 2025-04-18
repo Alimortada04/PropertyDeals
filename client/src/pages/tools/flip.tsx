@@ -28,13 +28,21 @@ import {
 } from "@/components/ui/accordion";
 import Breadcrumbs from "@/components/common/breadcrumbs";
 
-// Schema for the flip calculator form
+interface FormInput {
+  purchasePrice: string;
+  repairCosts: string;
+  holdingCosts: string;
+  sellingCosts: string;
+  arv: string;
+}
+
+// Schema for the form validation
 const flipCalculatorSchema = z.object({
-  purchasePrice: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0")),
-  repairCosts: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0")),
-  holdingCosts: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0")),
-  sellingCosts: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0")),
-  arv: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0"))
+  purchasePrice: z.string().min(1, "Purchase price is required"),
+  repairCosts: z.string().min(1, "Repair costs are required"),
+  holdingCosts: z.string().min(1, "Holding costs are required"),
+  sellingCosts: z.string().min(1, "Selling costs are required"),
+  arv: z.string().min(1, "ARV is required")
 });
 
 type FlipCalculatorValues = z.infer<typeof flipCalculatorSchema>;
@@ -69,19 +77,32 @@ export default function FlipPage() {
   const form = useForm<FlipCalculatorValues>({
     resolver: zodResolver(flipCalculatorSchema),
     defaultValues: {
-      purchasePrice: "200000",
-      repairCosts: "40000",
-      holdingCosts: "5000",
-      sellingCosts: "15000",
-      arv: "300000"
+      purchasePrice: "",
+      repairCosts: "",
+      holdingCosts: "",
+      sellingCosts: "",
+      arv: ""
     },
   });
 
+  // Parse numeric values from string inputs
+  const parseFormValues = (values: FlipCalculatorValues) => {
+    const purchasePrice = parseFloat(values.purchasePrice.replace(/,/g, "")) || 0;
+    const repairCosts = parseFloat(values.repairCosts.replace(/,/g, "")) || 0;
+    const holdingCosts = parseFloat(values.holdingCosts.replace(/,/g, "")) || 0;
+    const sellingCosts = parseFloat(values.sellingCosts.replace(/,/g, "")) || 0;
+    const arv = parseFloat(values.arv.replace(/,/g, "")) || 0;
+    
+    return { purchasePrice, repairCosts, holdingCosts, sellingCosts, arv };
+  };
+
   // Calculate results when form values change
   const calculateResults = (values: FlipCalculatorValues) => {
-    const totalCosts = values.purchasePrice + values.repairCosts + values.holdingCosts + values.sellingCosts;
-    const profitAmount = values.arv - totalCosts;
-    const roi = (profitAmount / totalCosts) * 100;
+    const parsed = parseFormValues(values);
+    
+    const totalCosts = parsed.purchasePrice + parsed.repairCosts + parsed.holdingCosts + parsed.sellingCosts;
+    const profitAmount = parsed.arv - totalCosts;
+    const roi = totalCosts > 0 ? (profitAmount / totalCosts) * 100 : 0;
 
     setResults({
       totalCosts,
@@ -92,29 +113,24 @@ export default function FlipPage() {
 
   // Update calculations on form values change
   useEffect(() => {
-    const subscription = form.watch((value) => {
+    const subscription = form.watch(() => {
       try {
-        // Only calculate if we have all the values and they're valid numbers
-        const formData = form.getValues();
-        if (
-          !isNaN(formData.purchasePrice) &&
-          !isNaN(formData.repairCosts) &&
-          !isNaN(formData.holdingCosts) &&
-          !isNaN(formData.sellingCosts) &&
-          !isNaN(formData.arv)
-        ) {
-          calculateResults(formData);
+        // Only calculate if the form is valid
+        if (form.formState.isValid) {
+          calculateResults(form.getValues());
         }
       } catch (error) {
         console.error("Error calculating results:", error);
       }
     });
     
-    // Run the calculation once on initial render
-    calculateResults(form.getValues());
+    // Initial calculation not needed until form is valid
+    if (form.formState.isValid) {
+      calculateResults(form.getValues());
+    }
 
     return () => subscription.unsubscribe();
-  }, [form.watch]);
+  }, [form.watch, form.formState.isValid]);
 
   // Handle form submission
   const onSubmit = (values: FlipCalculatorValues) => {

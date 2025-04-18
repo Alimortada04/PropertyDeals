@@ -1,0 +1,89 @@
+We want to refine the visual design and UX of the /tools page so that it’s clearly distinct from /playbook. The tools section should feel like an interactive utility toolbox, whereas /playbook feels like a learning library.
+
+The current card layout looks great but is too similar to the Resource cards. Let’s apply the following updates:
+
+✅ 1. Keep What’s Working
+Cover image at the top of each card
+
+Tool title + tags (e.g. Flips, STR, Creative Finance)
+
+Call to Action button (“Open Tool”)
+
+“Coming Soon” cards should remain styled but unclickable
+
+🎨 2. Design Enhancements for Tool Cards
+✅ A. Visual Identity
+Add a subtle utility gradient background or icon strip across the top or behind the cover image
+
+Suggestion: Light gray-blue or soft green background
+
+This helps visually separate tools from educational resources
+
+✅ B. Replace Descriptive Text with Function Summary
+Instead of general descriptions, show:
+
+plaintext
+Copy
+Edit
+ARV, Repairs, Profit → Max Offer Price
+Rent, Expenses → Cash Flow, ROI
+Use a 2–3 term input/output format to visually cue that this is a calculator or actionable app.
+
+✅ C. Add Utility Icons Instead of Book Icons
+Use icons that reinforce tools:
+
+🧮 Calculator
+
+⚙️ Gears
+
+💵 Dollar Stack
+
+📊 Chart
+
+📝 Form/Slider
+
+📈 Growth
+
+Display these either:
+
+As a small overlay badge on the top-right of the image
+
+Or as a mini utility strip beneath the image (flex gap-x-2)
+
+✅ D. (Optional) Hover Interaction: Live Preview
+On hover, consider showing an example use case:
+
+“Input: ARV $300k, Repairs $50k → Max Offer: $165,000”
+
+This can be a tooltip or a quick preview card expansion for desktop view.
+
+🔧 3. UX Adjustments
+Keep the Open Tool CTA as the primary button
+
+Use slightly bolder or darker tones for the button and border to suggest "action" instead of “reading”
+
+Use hover:scale-105, hover:shadow-lg, transition-all for interactivity
+
+🧭 4. Optional Tool Tags
+Add small corner badges for clarity and sorting:
+
+Live Tool
+
+Calculator
+
+Analyzer
+
+Coming Soon
+
+Beta
+
+Example:
+
+html
+Copy
+Edit
+<span class="absolute top-2 left-2 bg-[#135341] text-white text-xs px-2 py-1 rounded">
+  Live Tool
+</span>
+📐 Summary
+We want Tools to feel more like apps or utilities and less like passive learning cards. Apply visual styling, iconography, and copywriting tweaks to communicate this shift while maintaining the clean grid layout you’ve already built.

@@ -32,7 +32,10 @@ export default function ToolsPage() {
       path: "/tools/flip",
       tags: ["Flips"],
       isPopular: true,
-      coverImage: "https://images.unsplash.com/photo-1524813686514-a57563d77965?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Zml4JTIwYW5kJTIwZmxpcHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1524813686514-a57563d77965?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Zml4JTIwYW5kJTIwZmxpcHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Purchase Price", "Repair Costs", "ARV"],
+      outputs: ["Profit", "ROI", "Total Costs"],
+      functionType: "calculator"
     },
     {
       id: "investment",
@@ -41,7 +44,10 @@ export default function ToolsPage() {
       icon: <BarChart3 size={18} strokeWidth={1.5} />,
       path: "/tools/investment",
       tags: ["Buy & Hold"],
-      coverImage: "https://images.unsplash.com/photo-1630937045487-5a50afbb2273?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHJlbnRhbCUyMHByb3BlcnR5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1630937045487-5a50afbb2273?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHJlbnRhbCUyMHByb3BlcnR5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Purchase Price", "Monthly Rent", "Expenses"],
+      outputs: ["Cash Flow", "Cap Rate", "ROI"],
+      functionType: "calculator"
     },
     {
       id: "subto",
@@ -50,7 +56,10 @@ export default function ToolsPage() {
       icon: <FileSpreadsheet size={18} strokeWidth={1.5} />,
       path: "/tools/subto",
       tags: ["Creative Finance"],
-      coverImage: "https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHBheW1lbnQlMjBzY2hlZHVsZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1552960562-daf630e9278b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHBheW1lbnQlMjBzY2hlZHVsZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Loan Balance", "Interest Rate", "Term"],
+      outputs: ["Payment Schedule", "Total Interest"],
+      functionType: "calculator"
     },
     {
       id: "seller-finance",
@@ -59,7 +68,10 @@ export default function ToolsPage() {
       icon: <DollarSign size={18} strokeWidth={1.5} />,
       path: "/tools/seller-finance",
       tags: ["Creative Finance"],
-      coverImage: "https://images.unsplash.com/photo-1633158829875-e5316a358c6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bW9ydGdhZ2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1633158829875-e5316a358c6f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bW9ydGdhZ2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Sale Price", "Down Payment", "Interest Rate"],
+      outputs: ["Monthly Payment", "Balloon Amount"],
+      functionType: "calculator"
     },
     {
       id: "repair-cost",
@@ -69,7 +81,10 @@ export default function ToolsPage() {
       path: "/tools/repair-cost",
       tags: ["Flips", "Wholesale"],
       isNew: true,
-      coverImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9tZSUyMHJlcGFpcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aG9tZSUyMHJlcGFpcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Square Footage", "Repair Items", "Quality Grade"],
+      outputs: ["Total Cost", "Itemized Breakdown"],
+      functionType: "estimator"
     },
     {
       id: "offer-price",
@@ -78,7 +93,10 @@ export default function ToolsPage() {
       icon: <CircleDollarSign size={18} strokeWidth={1.5} />,
       path: "/tools/offer-price",
       tags: ["Wholesale", "Flips"],
-      coverImage: "https://images.unsplash.com/photo-1571757767119-68b8dbed8c97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJpY2UlMjBjYWxjdWxhdG9yfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1571757767119-68b8dbed8c97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJpY2UlMjBjYWxjdWxhdG9yfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+      inputs: ["ARV", "Repair Costs", "Min Profit"],
+      outputs: ["Maximum Offer Price"],
+      functionType: "calculator"
     },
     {
       id: "split",
@@ -87,7 +105,10 @@ export default function ToolsPage() {
       icon: <Percent size={18} strokeWidth={1.5} />,
       path: "/tools/split",
       tags: ["Wholesale", "REPs"],
-      coverImage: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZml0JTIwc3BsaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZml0JTIwc3BsaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Deal Amount", "Partners", "Split Type"],
+      outputs: ["Partner Distributions"],
+      functionType: "split"
     },
     {
       id: "str-analyzer",
@@ -97,7 +118,10 @@ export default function ToolsPage() {
       path: "/tools/str-analyzer",
       tags: ["STR", "Buy & Hold"],
       isPopular: true,
-      coverImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWlyYm5ifGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YWlyYm5ifGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Nightly Rate", "Occupancy", "Expenses"],
+      outputs: ["Monthly Revenue", "Annual Profit"],
+      functionType: "analyzer"
     },
     // Coming Soon Tools
     {
@@ -108,7 +132,10 @@ export default function ToolsPage() {
       path: "/tools/brrrr",
       tags: ["Buy & Hold", "Flips"],
       isComingSoon: true,
-      coverImage: "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmVhbCUyMGVzdGF0ZSUyMGludmVzdG1lbnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmVhbCUyMGVzdGF0ZSUyMGludmVzdG1lbnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Purchase Price", "Rehab Budget", "ARV"],
+      outputs: ["Cash Out Amount", "Cash-on-Cash ROI"],
+      functionType: "analyzer"
     },
     {
       id: "land-flip",
@@ -118,7 +145,10 @@ export default function ToolsPage() {
       path: "/tools/land-flip",
       tags: ["Flips"],
       isComingSoon: true,
-      coverImage: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFuZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFuZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Purchase Price", "Improvements", "Sell Price"],
+      outputs: ["Net Profit", "ROI"],
+      functionType: "calculator"
     },
     {
       id: "loan-costs",
@@ -128,7 +158,10 @@ export default function ToolsPage() {
       path: "/tools/loan-costs",
       tags: ["Creative Finance", "Buy & Hold"],
       isComingSoon: true,
-      coverImage: "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bG9hbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bG9hbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      inputs: ["Loan Amount", "Interest Rate", "Points/Fees"],
+      outputs: ["True APR", "Lifetime Cost"],
+      functionType: "analyzer"
     }
   ];
 
@@ -218,7 +251,7 @@ export default function ToolsPage() {
       
       {/* Tool Cards Grid with Animations */}
       {filteredTools.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center">
           {filteredTools.map((tool, index) => (
             <div 
               key={tool.id} 
