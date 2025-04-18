@@ -302,7 +302,7 @@ export default function SignInPage() {
 
   return (
     <div 
-      className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-hidden flex flex-col items-center justify-center pt-20 sm:pt-12 p-4 sm:p-6 relative transition-colors duration-700`}
+      className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700`}
     >
       {/* Enhanced radial glow behind the main card */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -314,8 +314,8 @@ export default function SignInPage() {
       </div>
 
       {/* Rotating role-specific tagline */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-        <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 shadow-sm">
+      <div className="absolute top-8 sm:top-12 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 shadow-sm my-2 sm:my-0">
           <span className="text-xs font-semibold tracking-wide animate-in fade-in duration-500">
             <span className={`${
               selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'  
