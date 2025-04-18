@@ -930,6 +930,24 @@ export default function RegisterFlowPage() {
                     }
                   </Button>
                 </div>
+                
+                {/* Progress bar at bottom of card */}
+                <div className="mt-6 pt-2">
+                  <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
+                    <span>Step 4 of 4</span>
+                    <span>100%</span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-300 ${
+                        selectedRoles.includes('rep') 
+                          ? 'bg-[#803344]' 
+                          : 'bg-[#135341]'
+                      }`} 
+                      style={{ width: '100%' }}
+                    ></div>
+                  </div>
+                </div>
               </form>
             </Form>
           </div>
