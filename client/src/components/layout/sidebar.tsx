@@ -103,7 +103,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      group flex items-center ${isExpanded ? 'px-3' : 'px-4'} py-0.5 mx-0 whitespace-nowrap transition-colors duration-0
+      group flex items-center ${isExpanded ? 'px-4' : 'px-5'} py-0.5 mx-0 mt-0 whitespace-nowrap transition-colors duration-0
       ${!isExpanded ? 'justify-center' : ''} 
       ${isActive 
         ? 'bg-[#09261E] text-white' 
@@ -467,8 +467,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           </div>
 
           {/* Main Navigation */}
-          <div className="pt-2">
-            <div className="mb-2">
+          <div className="pt-1">
+            <div className="mb-1">
               <ul className="space-y-0.5">
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
@@ -504,8 +504,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             </div>
 
             {/* Resources Section */}
-            <div className="mb-6">
-              <div className="h-6">
+            <div className="mb-4">
+              <div className="h-5">
                 <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>
                   Resources
                 </h3>
@@ -537,8 +537,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           </div>
           
           {/* Profile & Settings */}
-          <div className="mt-auto border-t border-gray-200 py-4">
-            <div className="h-6">
+          <div className="mt-auto border-t border-gray-200 py-2">
+            <div className="h-5">
               <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>
                 Account
               </h3>
