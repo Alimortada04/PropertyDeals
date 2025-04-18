@@ -1,0 +1,134 @@
+PHASE 1: Role Selection (Step 1/4)
+📍 Component: Popup Modal or Step 1 of a Multistep Page
+Headline: “Who are you?”
+
+Subhead: “Choose the role(s) that describe how you’ll use PropertyDeals”
+
+User can select one or more roles:
+
+
+Role	Subtitle	Tooltip / Context
+Buyer	Buy properties from verified sellers	Investors, landlords, flippers
+Seller	Sell properties directly to buyers	Homeowners, wholesalers, agents
+REP	List services, post deals, connect	Agents, contractors, lenders, appraisers
+💡 Design Notes:
+Style like /signin tag carousel: rotating top label:
+
+text
+Copy
+Edit
+Made for Buyers → Made for Sellers → Made for REPs
+Cycle every 5 seconds unless user clicks
+
+Role cards should animate on hover/tap and show clear selection states
+
+✅ Once roles selected → CTA: “Continue”
+
+🧱 PHASE 2: Email Entry + Verification (Step 2/4)
+🎯 Two options:
+Manual Email Signup
+
+Enter email → click “Continue”
+
+Send 6-digit verification code to email
+
+User enters code → progresses
+
+Social Sign-In
+
+Google / Apple / Facebook buttons
+
+If used, skip to Phase 3
+
+UX Notes:
+Email field has autocomplete="email"
+
+Progress bar at top: Step 2 of 4
+
+Show subtext: “We’ll use this email to keep your account secure”
+
+If user uses Google or Apple, don’t show email field — just auto-capture and proceed
+
+🧱 PHASE 3: Create Password (Step 3/4)
+Only show if user signed up manually
+
+Input field + confirm password
+
+Option to reveal password
+
+Button: “Secure My Account”
+
+UI Enhancements:
+Add “You’re almost there!” message above the fields
+
+Keep consistent CTA placement + animations for continuity
+
+🧱 PHASE 4: Phone Verification (Step 4/4)
+Ask for phone number (input w/ country code dropdown)
+
+“We’ll text you a code to confirm your number”
+
+Input 6-digit SMS code
+
+Button: “Verify and Continue”
+
+This is the final step before access is granted
+
+✅ FINAL STEP: Welcome + Get Started (After Verification)
+Show a branded success modal or full-screen confirmation:
+
+🎉 Welcome to PropertyDeals!
+“Your account is ready. You’re now part of the network.”
+
+CTA Button: “Start Exploring”
+
+Secondary: “Build Your Profile” → links to /onboarding
+
+🎯 Design Notes:
+Add confetti emoji 🎊 or celebration animation
+
+Keep color palette matched to user role selected
+
+🔁 Onboarding (Optional/Deferred)
+After entering the platform, guide users with a modal or page asking:
+
+Profile Photo
+
+Location
+
+Bio
+
+Deal Interests / Service Tags
+
+Link social accounts
+
+This is optional but encouraged, and should feel like an opportunity, not a barrier.
+
+💡 GLOBAL DESIGN + UX PRINCIPLES
+
+Principle	Implementation
+✅ Minimal Per Screen	Max 1–2 inputs per step
+✅ Smooth Progress	Use “Step X of 4” + progress bar
+✅ Value-Based Copy	Replace “Sign Up” with “Get access to exclusive deals”
+✅ Auto-Advance	Move forward automatically after SMS or code verification
+✅ Smart Defaults	Pre-fill role if user came from homepage CTA
+✅ Light Animation	Transitions between steps, card hovers, progress motion
+✅ Biometric Ready	Ask user post-login if they want to set up Face ID/Touch ID
+🧭 Suggested Flow Summary
+text
+Copy
+Edit
+Step 1: Select Role(s)
+→ Step 2: Email + Verification Code
+→ Step 3: Password Setup (if manual)
+→ Step 4: Phone Number + SMS Verification
+→ Success Page → Access Free Version
+→ [Optional] Build Profile
+✅ TL;DR – Build These
+
+Step	Feature
+1	Role Selector (multi-select) + rotating banner
+2	Email input → send + verify code OR Google/Apple/Facebook
+3	Password creation (if manual signup)
+4	Phone input + 6-digit SMS verification
+5	Welcome screen + CTA to platform or onboarding

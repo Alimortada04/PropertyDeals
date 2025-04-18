@@ -302,7 +302,7 @@ export default function SignInPage() {
 
   return (
     <div 
-      className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-auto flex flex-col items-center pt-16 pb-12 p-4 sm:p-6 sm:justify-center relative transition-colors duration-700`}
+      className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-hidden flex flex-col items-center justify-center pt-20 sm:pt-12 p-4 sm:p-6 relative transition-colors duration-700`}
     >
       {/* Enhanced radial glow behind the main card */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
