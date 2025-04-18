@@ -120,14 +120,14 @@ const roleCards = {
 
 // Background gradients for different roles - with light washes 
 const roleBackgrounds = {
-  buyer: "from-[#F5F5F5] to-[#d6ebe2]",
-  seller: "from-[#F5F5F5] to-[#d5f0e0]",
-  rep: "from-[#F5F5F5] to-[#f2dfe1]",
+  buyer: "from-[#F5F5F5] to-[#e6f0ec]", // light wash of #09261E
+  seller: "from-[#F5F5F5] to-[#e7f1ed]", // light wash of #135341
+  rep: "from-[#F5F5F5] to-[#f2e5e8]", // light wash of #803344
   // Multi-role combinations with soft spotlight gradients
-  "buyer-seller": "bg-[#F5F5F5] bg-[radial-gradient(at_25%_50%,#09261E10_30%,transparent_70%),radial-gradient(at_75%_50%,#13534110_30%,transparent_70%)]",
-  "buyer-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_25%_50%,#09261E10_30%,transparent_70%),radial-gradient(at_75%_50%,#80334410_30%,transparent_70%)]",
-  "seller-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_25%_50%,#13534110_30%,transparent_70%),radial-gradient(at_75%_50%,#80334410_30%,transparent_70%)]",
-  "buyer-seller-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_15%_50%,#09261E10_25%,transparent_60%),radial-gradient(at_50%_50%,#13534110_25%,transparent_60%),radial-gradient(at_85%_50%,#80334410_25%,transparent_60%)]"
+  "buyer-seller": "bg-[#F5F5F5] bg-[radial-gradient(at_20%_40%,#09261E10,transparent),radial-gradient(at_80%_60%,#13534110,transparent)]",
+  "buyer-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_20%_40%,#09261E10,transparent),radial-gradient(at_80%_60%,#80334410,transparent)]",
+  "seller-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_20%_40%,#13534110,transparent),radial-gradient(at_80%_60%,#80334410,transparent)]",
+  "buyer-seller-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_20%_40%,#09261E10,transparent),radial-gradient(at_80%_60%,#80334410,transparent),radial-gradient(at_50%_80%,#13534110,transparent)]"
 };
 
 // Registration schemas for each step
@@ -1117,7 +1117,7 @@ export default function RegisterFlowPage() {
         <p className="text-sm text-gray-500">
           Already have an account? {" "}
           <Link 
-            href="/auth/signin" 
+            href="/signin" 
             className={`${
               primaryRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'
             } font-semibold hover:underline`}
