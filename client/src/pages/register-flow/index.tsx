@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { Loader2, ArrowRight, Check, Building, Users, UserPlus, Phone, Key, Eye, EyeOff } from "lucide-react";
-import { SiGoogle, SiApple, SiFacebook } from "react-icons/si";
+import { SiGoogle, SiApple, SiFacebook, SiGmail } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 import { OTPInput, SlotProps } from "input-otp";
 
@@ -765,52 +765,60 @@ export default function RegisterFlowPage() {
                         <FormLabel>Verification Code</FormLabel>
                         <FormControl>
                           <div className="space-y-4">
-                            <div className="mb-1">
+                            <div className="mb-3">
                               <p className="text-sm text-gray-600 mb-4 text-center">
                                 Please enter the verification code sent to your email address
                                 <span className="font-semibold block mt-1">{emailForm.getValues("email")}</span>
                               </p>
-                              <OTPInput
-                                maxLength={6}
-                                containerClassName="flex items-center justify-center gap-1 mb-1"
-                                value={field.value || ""}
-                                onChange={(value) => {
-                                  field.onChange(value);
-                                  // Auto-verify when all 6 digits are entered
-                                  if (value.length === 6) {
-                                    setTimeout(() => verifyEmailCode(), 300);
-                                  }
-                                }}
-                                render={({ slots }) => (
-                                  <>
-                                    {slots.map((slot, idx) => (
-                                      <div key={idx} className="relative">
-                                        <input
-                                          {...slot}
-                                          className="w-10 h-12 text-center text-lg font-semibold rounded-md border border-gray-300 focus:ring-1 focus:ring-[#135341] focus:border-[#135341] focus:outline-none transition-all bg-white/90 disabled:opacity-50"
-                                          disabled={isVerifyingCode}
-                                          autoComplete={idx === 0 ? "one-time-code" : "off"}
-                                          inputMode="numeric"
-                                          pattern="[0-9]*"
-                                        />
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
-                              />
-                              {/* Timer similar to Zoom */}
-                              <div className="flex justify-end mt-1">
-                                <div className="text-sm text-gray-500 flex items-center">
-                                  <span className="inline-flex items-center">
-                                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                                    09:59
-                                  </span>
-                                </div>
+                              
+                              <div className="flex items-center gap-2">
+                                <OTPInput
+                                  maxLength={6}
+                                  containerClassName="flex items-center gap-1"
+                                  value={field.value || ""}
+                                  onChange={(value) => {
+                                    field.onChange(value);
+                                    // Auto-verify when all 6 digits are entered
+                                    if (value.length === 6) {
+                                      setTimeout(() => verifyEmailCode(), 300);
+                                    }
+                                  }}
+                                  render={({ slots }) => (
+                                    <>
+                                      {slots.map((slot, idx) => (
+                                        <div key={idx} className="relative">
+                                          <input
+                                            {...slot}
+                                            className="w-10 h-12 text-center text-lg font-semibold rounded-md border border-gray-300 focus:ring-1 focus:ring-[#135341] focus:border-[#135341] focus:outline-none transition-all bg-white/90 disabled:opacity-50"
+                                            disabled={isVerifyingCode}
+                                            autoComplete={idx === 0 ? "one-time-code" : "off"}
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
+                                          />
+                                        </div>
+                                      ))}
+                                    </>
+                                  )}
+                                />
+                                
+                                <Button 
+                                  type="button" 
+                                  variant="outline"
+                                  onClick={verifyEmailCode}
+                                  disabled={isVerifyingCode || !field.value || field.value.length < 6}
+                                  className="h-12 px-3"
+                                >
+                                  {isVerifyingCode ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    'Verify'
+                                  )}
+                                </Button>
                               </div>
                             </div>
                             
                             <div className="flex flex-col space-y-4">
-                              <div className="flex justify-between items-center">
+                              <div className="flex items-center">
                                 <p className="text-xs text-gray-500">
                                   Can't find the email? {" "}
                                   <button 
@@ -826,32 +834,17 @@ export default function RegisterFlowPage() {
                                     {isSendingCode ? 'Sending...' : 'Resend'}
                                   </button>
                                 </p>
-                                
-                                <Button 
-                                  type="button" 
-                                  variant="outline"
-                                  onClick={verifyEmailCode}
-                                  disabled={isVerifyingCode || !field.value || field.value.length < 6}
-                                  className="min-w-[80px]"
-                                  size="sm"
-                                >
-                                  {isVerifyingCode ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                  ) : (
-                                    'Verify'
-                                  )}
-                                </Button>
                               </div>
                               
                               {/* Gmail and Outlook quick links */}
-                              <div className="flex justify-center gap-4 pt-4 pb-2">
+                              <div className="flex justify-center gap-4 pt-2 pb-2">
                                 <a 
                                   href="https://mail.google.com" 
                                   target="_blank" 
                                   rel="noopener noreferrer"
                                   className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
                                 >
-                                  <SiGoogle className="h-5 w-5 text-[#EA4335]" />
+                                  <SiGmail className="h-5 w-5 text-[#EA4335]" />
                                   Open Gmail
                                 </a>
                                 <a 
@@ -1169,51 +1162,59 @@ export default function RegisterFlowPage() {
                         <FormLabel>Verification Code</FormLabel>
                         <FormControl>
                           <div className="space-y-4">
-                            <div className="mb-1">
+                            <div className="mb-3">
                               <p className="text-sm text-gray-600 mb-4 text-center">
                                 Please enter the verification code sent to your phone number
                                 <span className="font-semibold block mt-1">{phoneForm.getValues("phone")}</span>
                               </p>
-                              <OTPInput
-                                maxLength={6}
-                                containerClassName="flex items-center justify-center gap-1 mb-1"
-                                value={field.value || ""}
-                                onChange={(value) => {
-                                  field.onChange(value);
-                                  // Auto-verify when all 6 digits are entered
-                                  if (value.length === 6) {
-                                    setTimeout(() => verifySmsCode(), 300);
-                                  }
-                                }}
-                                render={({ slots }) => (
-                                  <>
-                                    {slots.map((slot, idx) => (
-                                      <div key={idx} className="relative">
-                                        <input
-                                          {...slot}
-                                          className="w-10 h-12 text-center text-lg font-semibold rounded-md border border-gray-300 focus:ring-1 focus:ring-[#135341] focus:border-[#135341] focus:outline-none transition-all bg-white/90 disabled:opacity-50"
-                                          disabled={isVerifyingSms}
-                                          autoComplete={idx === 0 ? "one-time-code" : "off"}
-                                          inputMode="numeric"
-                                          pattern="[0-9]*"
-                                        />
-                                      </div>
-                                    ))}
-                                  </>
-                                )}
-                              />
-                              {/* Timer similar to Zoom */}
-                              <div className="flex justify-end mt-1">
-                                <div className="text-sm text-gray-500 flex items-center">
-                                  <span className="inline-flex items-center">
-                                    <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                                    09:59
-                                  </span>
-                                </div>
+                              
+                              <div className="flex items-center gap-2">
+                                <OTPInput
+                                  maxLength={6}
+                                  containerClassName="flex items-center gap-1"
+                                  value={field.value || ""}
+                                  onChange={(value) => {
+                                    field.onChange(value);
+                                    // Auto-verify when all 6 digits are entered
+                                    if (value.length === 6) {
+                                      setTimeout(() => verifySmsCode(), 300);
+                                    }
+                                  }}
+                                  render={({ slots }) => (
+                                    <>
+                                      {slots.map((slot, idx) => (
+                                        <div key={idx} className="relative">
+                                          <input
+                                            {...slot}
+                                            className="w-10 h-12 text-center text-lg font-semibold rounded-md border border-gray-300 focus:ring-1 focus:ring-[#135341] focus:border-[#135341] focus:outline-none transition-all bg-white/90 disabled:opacity-50"
+                                            disabled={isVerifyingSms}
+                                            autoComplete={idx === 0 ? "one-time-code" : "off"}
+                                            inputMode="numeric"
+                                            pattern="[0-9]*"
+                                          />
+                                        </div>
+                                      ))}
+                                    </>
+                                  )}
+                                />
+                                
+                                <Button 
+                                  type="button" 
+                                  variant="outline"
+                                  onClick={verifySmsCode}
+                                  disabled={isVerifyingSms || !field.value || field.value.length < 6}
+                                  className="h-12 px-3"
+                                >
+                                  {isVerifyingSms ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    'Verify'
+                                  )}
+                                </Button>
                               </div>
                             </div>
                             
-                            <div className="flex justify-between items-center">
+                            <div className="flex items-center">
                               <p className="text-xs text-gray-500">
                                 Didn't receive the code? {" "}
                                 <button 
@@ -1229,21 +1230,6 @@ export default function RegisterFlowPage() {
                                   {isSendingSms ? 'Sending...' : 'Resend'}
                                 </button>
                               </p>
-                              
-                              <Button 
-                                type="button" 
-                                variant="outline"
-                                onClick={verifySmsCode}
-                                disabled={isVerifyingSms || !field.value || field.value.length < 6}
-                                className="min-w-[80px]"
-                                size="sm"
-                              >
-                                {isVerifyingSms ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  'Verify'
-                                )}
-                              </Button>
                             </div>
                           </div>
                         </FormControl>
