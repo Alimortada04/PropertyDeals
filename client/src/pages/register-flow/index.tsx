@@ -1154,9 +1154,9 @@ export default function RegisterFlowPage() {
                         <FormControl>
                           <div className="space-y-4">
                             <div className="mb-3">
-                              <p className="text-sm text-gray-600 mb-4 text-center">
+                              <p className="text-sm text-gray-600 mb-2 text-center">
                                 Please enter the verification code sent to your phone number
-                                <span className="flex items-center justify-center font-semibold mt-1">
+                                <span className="flex items-center justify-center gap-2 font-semibold mt-1">
                                   {phoneForm.getValues("phone")}
                                   <button 
                                     type="button" 
@@ -1202,6 +1202,36 @@ export default function RegisterFlowPage() {
                                     </>
                                   )}
                                 />
+                              </div>
+                              
+                              {/* Add options for text verification, similar to email */}
+                              <div className="flex justify-center gap-4 mt-4">
+                                <a 
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    toast({
+                                      title: "SMS App Opened",
+                                      description: "Your messages app would open in a real implementation"
+                                    });
+                                  }}
+                                  className="inline-flex items-center px-3 py-2 bg-[#F8F9FA] hover:bg-gray-100 rounded-md text-xs font-medium transition-colors"
+                                >
+                                  <Phone className="h-4 w-4 mr-2 text-gray-500" />
+                                  <span>Open Messages App</span>
+                                </a>
+                                <a 
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    phoneForm.setValue("smsCode", "123456");
+                                    setTimeout(() => verifySmsCode(), 300);
+                                  }}
+                                  className="inline-flex items-center px-3 py-2 bg-[#F8F9FA] hover:bg-gray-100 rounded-md text-xs font-medium transition-colors"
+                                >
+                                  <Check className="h-4 w-4 mr-2 text-gray-500" />
+                                  <span>Auto-Complete (Demo)</span>
+                                </a>
                               </div>
                             </div>
                           </div>
