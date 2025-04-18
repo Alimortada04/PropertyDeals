@@ -62,7 +62,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
       onClick={() => cardUrl && (window.location.href = cardUrl)}
     >
       {/* Cover Image */}
-      <div className="relative w-full aspect-[16/9]">
+      <div className="relative w-full h-48">
         <img 
           src={coverImage || getDefaultCoverImage()}
           alt={title}
