@@ -499,6 +499,11 @@ export default function RegisterFlowPage() {
   const [isSendingSms, setIsSendingSms] = useState(false);
   const [isVerifyingSms, setIsVerifyingSms] = useState(false);
 
+  // Monitor phone input state
+  useEffect(() => {
+    phoneForm.watch("phone"); // This enables the form to react to phone input changes
+  }, [phoneForm]);
+
   // Send SMS verification code
   const sendSmsCode = async () => {
     const phone = phoneForm.getValues("phone");
@@ -1221,7 +1226,8 @@ export default function RegisterFlowPage() {
                     className={`flex-1 ${
                       primaryRole === 'rep' ? 'bg-[#803344] hover:bg-[#a34d5e]' : 'bg-[#09261E] hover:bg-[#0f3e2a]'
                     } text-white flex items-center justify-center gap-2`}
-                    disabled={registerMutation.isPending || (!smsSent && !phoneVerified)}
+                    disabled={registerMutation.isPending || 
+                      (!smsSent && !phoneVerified && !phoneForm.getValues("phone"))}
                   >
                     {
                       registerMutation.isPending ? (
