@@ -103,7 +103,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      group flex items-center px-3 py-0.5 mx-0 whitespace-nowrap transition-colors duration-0
+      group flex items-center ${isExpanded ? 'px-3' : 'px-4'} py-0.5 mx-0 whitespace-nowrap transition-colors duration-0
       ${!isExpanded ? 'justify-center' : ''} 
       ${isActive 
         ? 'bg-[#09261E] text-white' 
