@@ -153,23 +153,32 @@ export default function ToolCard({ tool }: ToolCardProps) {
       {/* Card Content */}
       <div className="p-4 flex flex-col flex-grow">
         {/* Title */}
-        <h3 className="text-lg font-semibold text-[#09261E] mb-2">{title}</h3>
+        <h3 className="text-lg font-semibold text-[#09261E] mb-3">{title}</h3>
         
-        {/* Function Summary instead of description */}
-        <div className="mb-3 bg-[#F9FAFB] p-2 rounded-md border border-[#E5E7EB]">
-          <div className="flex items-center text-xs text-gray-700">
-            <span className="font-medium mr-2">Inputs:</span>
-            <span>{inputs.length > 0 ? inputs.join(", ") : description.split(" ").slice(0, 3).join(" ") + "..."}</span>
+        {/* Function Summary - separated inputs and outputs */}
+        <div className="mb-4">
+          <div className="bg-[#E9F5F0] p-2 rounded-t-md border border-[#E5E7EB]">
+            <div className="flex items-center text-xs text-[#09261E]">
+              <span className="font-semibold mr-2">Inputs:</span>
+              <span>{inputs.length > 0 ? inputs.join(", ") : description.split(" ").slice(0, 3).join(" ") + "..."}</span>
+            </div>
           </div>
-          <div className="flex items-center text-xs text-gray-700 mt-1">
-            <span className="font-medium mr-2">Outputs:</span>
-            <span>{outputs.length > 0 ? outputs.join(", ") : description.split(" ").slice(-3).join(" ")}</span>
+          <div className="bg-[#F9FAFB] p-2 rounded-b-md border-b border-l border-r border-[#E5E7EB]">
+            <div className="flex items-center text-xs text-gray-700">
+              <span className="font-semibold mr-2">Outputs:</span>
+              <span>{outputs.length > 0 ? outputs.join(", ") : description.split(" ").slice(-3).join(" ")}</span>
+            </div>
           </div>
         </div>
         
-        {/* Tags */}
+        {/* Description text */}
+        <p className="text-xs text-gray-500 mb-auto">
+          {description}
+        </p>
+        
+        {/* Tags - moved to bottom */}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-3">
+          <div className="flex flex-wrap gap-1 mt-3 pt-2 border-t border-[#E5E7EB]">
             {tags.map(tag => (
               <Badge 
                 key={tag} 
@@ -181,29 +190,6 @@ export default function ToolCard({ tool }: ToolCardProps) {
             ))}
           </div>
         )}
-        
-        {/* CTA Button */}
-        <div className="mt-auto">
-          {isComingSoon ? (
-            <Button 
-              className="w-full bg-gray-200 text-gray-500 hover:bg-gray-300 cursor-not-allowed font-medium"
-              disabled
-            >
-              Coming Soon
-            </Button>
-          ) : (
-            path && (
-              <Link href={path}>
-                <Button 
-                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white px-4 py-2 text-sm font-medium border-2 border-[#09261E]"
-                  onClick={(e) => e.stopPropagation()} // Prevent event bubbling
-                >
-                  Open Tool
-                </Button>
-              </Link>
-            )
-          )}
-        </div>
       </div>
       
       {/* Hover Preview - Only visible on hover */}

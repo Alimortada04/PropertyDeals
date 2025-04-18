@@ -468,7 +468,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           {/* Main Navigation */}
           <div className="py-4">
             <div className="mb-6">
-              <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 mb-0 overflow-hidden'}`}>
+              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
                 Navigation
               </h3>
               <ul>
@@ -507,7 +507,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
 
             {/* Resources Section */}
             <div className="mb-6">
-              <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 mb-0 overflow-hidden'}`}>
+              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
                 Resources
               </h3>
               <ul>
@@ -538,7 +538,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           
           {/* Profile & Settings */}
           <div className="mt-auto border-t border-gray-200 py-4">
-            <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 mb-0 overflow-hidden'}`}>
+            <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
               Account
             </h3>
             <ul>
