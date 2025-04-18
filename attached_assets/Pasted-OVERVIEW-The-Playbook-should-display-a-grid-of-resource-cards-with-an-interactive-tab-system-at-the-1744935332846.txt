@@ -1,0 +1,93 @@
+OVERVIEW
+The Playbook should display a grid of resource cards, with an interactive tab system at the top that filters which cards are visible based on the audience:
+
+css
+Copy
+Edit
+[ All ] [ Buyers ] [ Sellers ] [ REPs ]
+There are no separate pages or folders — everything lives on /playbook and dynamically filters based on the tab selected.
+
+📚 TABS & CARD FILTER LOGIC
+Each tab displays a filtered view of resource cards:
+
+
+Resource	Tabs to Appear Under
+PropertyDictionary	All
+Due Diligence Checklist	All
+Investment Strategies	All
+Video Tutorials	All
+Creative Financing Guide	Buyers, REPs
+Disposition & Buyer Building Playbook	Sellers, REPs
+How to Walk a Property Guide	Sellers, REPs
+Ethics & Compliance Center	Sellers, REPs
+Live Deal Anatomy / Case Studies	All (placeholder card only)
+Each card should include metadata so it can be filtered based on audience tags like:
+
+ts
+Copy
+Edit
+audience: ["buyers", "reps"]
+🧱 CARD COMPONENT DESIGN
+Build a reusable PlaybookCard.tsx component styled like a modern educational platform (library-style):
+
+Design:
+Icon or illustration at the top in a soft circle (bg-[#E9F5F0])
+
+Bold title (e.g. “Creative Financing Guide”)
+
+1-line description
+
+CTA Button: “View Resource”
+
+Style: bg-[#09261E] text-white hover:bg-[#135341] rounded px-4 py-2 text-sm
+
+Optional: Badge like “Coming Soon” for placeholder cards
+
+Interactivity:
+Hover: hover:scale-105 hover:shadow-md transition-all
+
+Card layout: rounded corners, subtle border, spacing (p-4 or p-6)
+
+Responsive Grid:
+4 columns on desktop
+
+2 on tablet
+
+1 column stacked on mobile (grid-cols-1 sm:grid-cols-2 lg:grid-cols-4)
+
+🧭 TAB BEHAVIOR
+Use React state or URL fragment (#buyers, #reps, etc.) to track tab
+
+Clicking a tab should dynamically filter the visible resource cards
+
+Highlight active tab with border-b-2 border-[#09261E] text-[#09261E]
+
+Optional:
+Add a small search bar above the grid to filter by keyword
+
+🏗️ COMPONENTS TO BUILD
+/playbook/index.tsx
+
+PlaybookCard.tsx (reusable component)
+
+TabNav.tsx or internal tab filter logic
+
+Basic data structure for resource cards (can be static or pulled from Supabase)
+
+🔒 TECH CONSIDERATIONS
+“Live Deal Anatomy” should be a placeholder only — no link, and show a “Coming Soon” badge
+
+Use TailwindCSS for all styling
+
+Use fallback icons or images if a card has no assigned visual
+
+Make sure cards gracefully collapse into mobile view
+
+🧠 OPTIONAL UX ENHANCEMENTS
+Animate card entries (fade-in, slide-up)
+
+Show tooltip or hover text on cards for more info
+
+Include subtle Updated X days ago or “🔥 Trending” labels on popular cards
+
+Add icons for the tabs (e.g. 👤 for REPs, 🏠 for Sellers)

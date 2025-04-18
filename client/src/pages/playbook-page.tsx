@@ -1,70 +1,142 @@
-import { Link } from "wouter";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Book, FileText, BookOpen, Video } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
+import { 
+  Book, 
+  FileText, 
+  BookOpen, 
+  Video, 
+  BarChart3, 
+  Briefcase, 
+  FileCheck, 
+  HelpCircle,
+  Search
+} from "lucide-react";
 import Breadcrumbs from "@/components/common/breadcrumbs";
-
-interface GuideCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  path: string;
-}
-
-function GuideCard({ icon, title, description, path }: GuideCardProps) {
-  return (
-    <Card className="flex flex-col h-full transition-all duration-300 hover:shadow-lg hover:translate-y-[-2px]">
-      <CardHeader>
-        <div className="flex justify-center mb-4">
-          <div className="p-3 rounded-full bg-[#09261E]/10 text-[#09261E]">
-            {icon}
-          </div>
-        </div>
-        <CardTitle className="text-center text-xl font-heading text-[#09261E]">{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex-grow">
-        <CardDescription className="text-center text-gray-600">
-          {description}
-        </CardDescription>
-      </CardContent>
-      <CardFooter className="pt-2 pb-4 flex justify-center">
-        <Link href={path}>
-          <Button className="bg-[#09261E] hover:bg-[#135341] text-white">
-            View Resource
-          </Button>
-        </Link>
-      </CardFooter>
-    </Card>
-  );
-}
+import PlaybookCard, { PlaybookResource } from "@/components/playbook/playbook-card";
+import TabNav from "@/components/playbook/tab-nav";
 
 export default function PlaybookPage() {
-  const guides = [
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredResources, setFilteredResources] = useState<PlaybookResource[]>([]);
+
+  // All resources for the Playbook
+  const playBookResources: PlaybookResource[] = [
     {
+      id: "property-dictionary",
       icon: <BookOpen size={32} strokeWidth={1.5} />,
       title: "PropertyDictionary",
       description: "Comprehensive glossary of real estate terms and definitions for investors and professionals.",
-      path: "/playbook/property-dictionary"
+      path: "/playbook/property-dictionary",
+      audience: ["all"],
+      updatedAt: "2 days ago",
+      isTrending: true
     },
     {
-      icon: <FileText size={32} strokeWidth={1.5} />,
+      id: "due-diligence",
+      icon: <FileCheck size={32} strokeWidth={1.5} />,
       title: "Due Diligence Checklist",
       description: "Complete step-by-step checklist for thorough property research and evaluation.",
-      path: "/playbook/due-diligence"
+      path: "/playbook/due-diligence",
+      audience: ["all"],
+      updatedAt: "1 week ago"
     },
     {
-      icon: <Book size={32} strokeWidth={1.5} />,
+      id: "investment-strategies",
+      icon: <BarChart3 size={32} strokeWidth={1.5} />,
       title: "Investment Strategies",
       description: "Overview of popular real estate investment strategies with pros and cons of each approach.",
-      path: "/playbook/investment-strategies"
+      path: "/playbook/investment-strategies",
+      audience: ["all"]
     },
     {
+      id: "video-tutorials",
       icon: <Video size={32} strokeWidth={1.5} />,
       title: "Video Tutorials",
       description: "Watch step-by-step video tutorials on various aspects of real estate investing.",
-      path: "/playbook/video-tutorials"
+      path: "/playbook/video-tutorials",
+      audience: ["all"]
+    },
+    {
+      id: "creative-financing",
+      icon: <Book size={32} strokeWidth={1.5} />,
+      title: "Creative Financing Guide",
+      description: "Explore alternative financing methods beyond traditional mortgages for your real estate investments.",
+      path: "/playbook/creative-financing",
+      audience: ["buyers", "reps"]
+    },
+    {
+      id: "disposition-guide",
+      icon: <Briefcase size={32} strokeWidth={1.5} />,
+      title: "Disposition & Buyer Building Playbook",
+      description: "Strategies for sellers to maximize property value and build a reliable buyer network.",
+      path: "/playbook/disposition-guide",
+      audience: ["sellers", "reps"]
+    },
+    {
+      id: "property-walkthrough",
+      icon: <FileText size={32} strokeWidth={1.5} />,
+      title: "How to Walk a Property Guide",
+      description: "Learn how to effectively evaluate properties during inspections and identify potential issues.",
+      path: "/playbook/property-walkthrough",
+      audience: ["sellers", "reps"]
+    },
+    {
+      id: "ethics-compliance",
+      icon: <HelpCircle size={32} strokeWidth={1.5} />,
+      title: "Ethics & Compliance Center",
+      description: "Resources on real estate ethics, legal requirements, and maintaining compliance.",
+      path: "/playbook/ethics-compliance",
+      audience: ["sellers", "reps"]
+    },
+    {
+      id: "deal-anatomy",
+      icon: <BarChart3 size={32} strokeWidth={1.5} />,
+      title: "Live Deal Anatomy / Case Studies",
+      description: "Detailed analysis of successful real estate deals with lessons learned and key takeaways.",
+      audience: ["all"],
+      isComingSoon: true
     }
   ];
+
+  // Filter resources based on active tab and search term
+  useEffect(() => {
+    let results = [...playBookResources];
+    
+    // Filter by audience tab
+    if (activeTab !== "all") {
+      results = results.filter(resource => 
+        resource.audience.includes("all") || resource.audience.includes(activeTab)
+      );
+    }
+    
+    // Filter by search term
+    if (searchTerm.trim() !== "") {
+      const term = searchTerm.toLowerCase();
+      results = results.filter(resource => 
+        resource.title.toLowerCase().includes(term) || 
+        resource.description.toLowerCase().includes(term)
+      );
+    }
+    
+    setFilteredResources(results);
+  }, [activeTab, searchTerm]);
+
+  // Handle tab change
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    
+    // You could also update the URL fragment for sharing/bookmarking
+    window.location.hash = tab;
+  };
+
+  // Initialize from URL hash if present
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    if (["all", "buyers", "sellers", "reps"].includes(hash)) {
+      setActiveTab(hash);
+    }
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-12 pt-20">
@@ -74,7 +146,7 @@ export default function PlaybookPage() {
       </div>
       
       {/* Page Title */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-8">
         <h1 className="text-4xl md:text-5xl font-heading font-bold text-[#09261E] mb-4">
           PropertyPlaybook: Real Estate Resources
         </h1>
@@ -82,18 +154,44 @@ export default function PlaybookPage() {
           Educational resources to help you navigate the real estate market with confidence.
         </p>
       </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {guides.map((guide, index) => (
-          <GuideCard 
-            key={index}
-            icon={guide.icon}
-            title={guide.title}
-            description={guide.description}
-            path={guide.path}
+
+      {/* Search Bar */}
+      <div className="max-w-md mx-auto mb-8">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <Input
+            type="text"
+            placeholder="Search resources..."
+            className="pl-10 py-2"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-        ))}
+        </div>
       </div>
+      
+      {/* Tab Navigation */}
+      <TabNav activeTab={activeTab} onTabChange={handleTabChange} />
+      
+      {/* Resource Cards Grid with Animations */}
+      {filteredResources.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredResources.map((resource, index) => (
+            <div 
+              key={resource.id} 
+              className={`animate-fadeInUp`}
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <PlaybookCard resource={resource} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 text-gray-500">
+          <p>No resources found matching your criteria. Try adjusting your search or filters.</p>
+        </div>
+      )}
     </div>
   );
 }
