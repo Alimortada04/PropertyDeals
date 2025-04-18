@@ -321,111 +321,96 @@ export default function SignInPage() {
       </div>
       
       {/* Floating feature cards on larger screens */}
-      <div className="hidden sm:flex flex-wrap gap-4 justify-center items-start max-w-[90vw] mx-auto absolute inset-0 overflow-hidden pointer-events-none top-32 z-0">
-        {/* Buyer cards (2) */}
-        {animateCards && roleCards.buyer.slice(0, 2).map((card, index) => {
-          const delay = 200 + (index * 100);
-          return (
-            <div 
-              key={`buyer-${index}`}
-              className={`animate-in fade-in-50 duration-700 delay-[${delay}ms] hover:-translate-y-1 hover:shadow-lg transition-all ${
-                index === 0 ? '-rotate-1 top-24 left-0' : 'rotate-1 top-28 left-4'
-              }`}
-              style={{animationDelay: `${delay}ms`}}
-            >
-              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[180px] md:w-[200px] text-sm border border-gray-100 relative">
-                {/* Role badge */}
-                <div className="absolute top-2 right-2">
-                  <span className="text-xs uppercase font-semibold bg-[#F0F7F2] px-2 py-0.5 rounded-full text-[#135341]">
-                    For Buyers
-                  </span>
-                </div>
-                
-                <div className="flex items-start space-x-3 mt-6">
-                  <div className="p-2 rounded-lg shrink-0 bg-[#F0F7F2]">
-                    {card.icon}
+      <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-40 left-8 space-y-5">
+          {/* Left side cards */}
+          {animateCards && [
+            roleCards.buyer[0], 
+            roleCards.seller[0], 
+            roleCards.rep[0]
+          ].map((card, index) => {
+            const delay = 200 + (index * 100);
+            const rotation = ['-rotate-1', 'rotate-0', '-rotate-2'][index];
+            
+            return (
+              <div 
+                key={`left-${index}`}
+                className={`animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all ${rotation}`}
+                style={{animationDelay: `${delay}ms`}}
+              >
+                <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative">
+                  {/* Role badge */}
+                  <div className="absolute top-2 right-2">
+                    <span className="text-[10px] uppercase font-semibold bg-[#F0F7F2] px-1.5 py-0.5 rounded-full text-[#135341]">
+                      {index === 0 ? 'For Buyers' : index === 1 ? 'For Sellers' : 'For REPs'}
+                    </span>
                   </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-base text-[#09261E]">
-                      {card.title}
-                    </h3>
-                    <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
+                  
+                  <div className="flex items-start space-x-3 mt-6">
+                    <div className={`p-2 rounded-lg shrink-0 ${
+                      index === 2 ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
+                    }`}>
+                      {card.icon}
+                    </div>
+                    <div>
+                      <h3 className={`font-heading font-bold text-base ${
+                        index === 2 ? 'text-[#803344]' : 'text-[#09261E]'
+                      }`}>
+                        {card.title}
+                      </h3>
+                      <p className="text-gray-600 text-xs">{card.description}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
         
-        {/* Seller cards (2) */}
-        {animateCards && roleCards.seller.slice(0, 2).map((card, index) => {
-          const delay = 300 + (index * 100);
-          return (
-            <div 
-              key={`seller-${index}`}
-              className={`animate-in fade-in-50 duration-700 delay-[${delay}ms] hover:-translate-y-1 hover:shadow-lg transition-all ${
-                index === 0 ? 'rotate-1 top-20 right-4' : '-rotate-1 top-24 right-0'
-              }`}
-              style={{animationDelay: `${delay}ms`}}
-            >
-              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[180px] md:w-[200px] text-sm border border-gray-100 relative">
-                {/* Role badge */}
-                <div className="absolute top-2 right-2">
-                  <span className="text-xs uppercase font-semibold bg-[#F0F7F2] px-2 py-0.5 rounded-full text-[#135341]">
-                    For Sellers
-                  </span>
-                </div>
-                
-                <div className="flex items-start space-x-3 mt-6">
-                  <div className="p-2 rounded-lg shrink-0 bg-[#F0F7F2]">
-                    {card.icon}
+        <div className="absolute top-40 right-8 space-y-5">
+          {/* Right side cards */}
+          {animateCards && [
+            roleCards.buyer[1], 
+            roleCards.seller[1], 
+            roleCards.rep[1]
+          ].map((card, index) => {
+            const delay = 300 + (index * 100);
+            const rotation = ['rotate-1', '-rotate-1', 'rotate-2'][index];
+            
+            return (
+              <div 
+                key={`right-${index}`}
+                className={`animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all ${rotation}`}
+                style={{animationDelay: `${delay}ms`}}
+              >
+                <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative">
+                  {/* Role badge */}
+                  <div className="absolute top-2 right-2">
+                    <span className="text-[10px] uppercase font-semibold bg-[#F0F7F2] px-1.5 py-0.5 rounded-full text-[#135341]">
+                      {index === 0 ? 'For Buyers' : index === 1 ? 'For Sellers' : 'For REPs'}
+                    </span>
                   </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-base text-[#09261E]">
-                      {card.title}
-                    </h3>
-                    <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-        
-        {/* REP cards (2) */}
-        {animateCards && roleCards.rep.slice(0, 2).map((card, index) => {
-          const delay = 400 + (index * 100);
-          return (
-            <div 
-              key={`rep-${index}`}
-              className={`animate-in fade-in-50 duration-700 delay-[${delay}ms] hover:-translate-y-1 hover:shadow-lg transition-all ${
-                index === 0 ? '-rotate-1 bottom-24 left-4' : 'rotate-1 bottom-28 right-4'
-              }`}
-              style={{animationDelay: `${delay}ms`}}
-            >
-              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[180px] md:w-[200px] text-sm border border-gray-100 relative">
-                {/* Role badge */}
-                <div className="absolute top-2 right-2">
-                  <span className="text-xs uppercase font-semibold bg-[#FFF0F3] px-2 py-0.5 rounded-full text-[#803344]">
-                    For REPs
-                  </span>
-                </div>
-                
-                <div className="flex items-start space-x-3 mt-6">
-                  <div className="p-2 rounded-lg shrink-0 bg-[#FFF0F3]">
-                    {card.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-base text-[#803344]">
-                      {card.title}
-                    </h3>
-                    <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
+                  
+                  <div className="flex items-start space-x-3 mt-6">
+                    <div className={`p-2 rounded-lg shrink-0 ${
+                      index === 2 ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
+                    }`}>
+                      {card.icon}
+                    </div>
+                    <div>
+                      <h3 className={`font-heading font-bold text-base ${
+                        index === 2 ? 'text-[#803344]' : 'text-[#09261E]'
+                      }`}>
+                        {card.title}
+                      </h3>
+                      <p className="text-gray-600 text-xs">{card.description}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
       
       {/* Main Sign-In Card - Zoom Style */}
@@ -515,9 +500,7 @@ export default function SignInPage() {
               
               <Link 
                 href="/auth/forgot-password" 
-                className={`text-xs ${
-                  selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'
-                } hover:underline`}
+                className="text-xs text-[#135341] hover:underline"
               >
                 Forgot password?
               </Link>
