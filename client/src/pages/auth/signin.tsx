@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,6 +25,16 @@ export default function SignInPage() {
   const { user, loginMutation } = useAuth();
   const [supportsBiometric, setSupportsBiometric] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus email input when the form appears
+  useEffect(() => {
+    if (showEmailForm && emailInputRef.current) {
+      setTimeout(() => {
+        emailInputRef.current?.focus();
+      }, 100);
+    }
+  }, [showEmailForm]);
 
   // Check if the browser supports WebAuthn/biometric authentication
   useEffect(() => {
@@ -151,10 +161,20 @@ export default function SignInPage() {
           <CardContent className="pt-8">
             <div className="text-center mb-10">
               <h2 className="text-2xl font-heading font-bold text-[#09261E]">Welcome back</h2>
-              <p className="text-gray-500 mt-3">Sign in to your account to continue</p>
-              <div className="mt-4 text-gray-600 font-medium text-sm">
-                <span className="bg-green-50 px-3 py-1 rounded-full">12,300+ deals closed</span>
-                <span className="ml-3 bg-green-50 px-3 py-1 rounded-full">Trusted by 6,000+ investors</span>
+              <p className="text-gray-500 mt-3 mb-4">Sign in to your account to continue</p>
+              <div className="flex flex-wrap justify-center gap-3">
+                <span className="inline-flex items-center text-sm px-3 py-1 rounded-full bg-[#F0F7F2] text-[#135341] font-medium">
+                  <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  12,300+ deals closed
+                </span>
+                <span className="inline-flex items-center text-sm px-3 py-1 rounded-full bg-[#F0F7F2] text-[#135341] font-medium">
+                  <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                  Trusted by 6,000+ investors
+                </span>
               </div>
             </div>
             
@@ -201,22 +221,38 @@ export default function SignInPage() {
               <Button 
                 variant="outline" 
                 className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50"
-                onClick={() => setShowEmailForm(true)}
+                onClick={() => setShowEmailForm(!showEmailForm)}
               >
-                <Mail className="h-4 w-4" />
-                <span>Continue with Email</span>
+                {showEmailForm ? (
+                  <>
+                    <Mail className="h-4 w-4" />
+                    <span>Hide Email Form</span>
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-4 w-4" />
+                    <span>Continue with Email</span>
+                  </>
+                )}
               </Button>
             </div>
             
             {showEmailForm && (
-              <>
+              <div className="animate-in fade-in-0 slide-in-from-top-5 duration-300">
                 {/* Divider */}
                 <div className="relative mb-6">
                   <div className="absolute inset-0 flex items-center">
                     <Separator className="w-full" />
                   </div>
                   <div className="relative flex justify-center text-xs">
-                    <span className="bg-white px-2 text-gray-500">ENTER YOUR CREDENTIALS</span>
+                    <span className="bg-white px-2 text-xs uppercase text-gray-400 font-semibold tracking-wider">
+                      <span className="inline-flex items-center">
+                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        Let's sign you in securely
+                      </span>
+                    </span>
                   </div>
                 </div>
                 
@@ -230,7 +266,12 @@ export default function SignInPage() {
                         <FormItem>
                           <FormLabel>Username or Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter your username or email" {...field} />
+                            <Input 
+                              placeholder="Enter your username or email" 
+                              {...field} 
+                              id="email" 
+                              ref={emailInputRef} 
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -291,9 +332,19 @@ export default function SignInPage() {
                         </>
                       )}
                     </Button>
+                    
+                    <div className="text-center mt-2">
+                      <button 
+                        type="button"
+                        onClick={() => setShowEmailForm(false)}
+                        className="text-sm text-gray-500 hover:text-gray-700"
+                      >
+                        Cancel and use another sign-in method
+                      </button>
+                    </div>
                   </form>
                 </Form>
-              </>
+              </div>
             )}
             
             {/* Register link */}
