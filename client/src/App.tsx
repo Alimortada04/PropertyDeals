@@ -17,7 +17,7 @@ import BusinessDetailPage from "@/pages/business-detail-page";
 import ConnectPage from "@/pages/connect-page";
 import DiscussionsPage from "@/pages/discussions-page";
 import ToolsPage from "@/pages/tools-page";
-import FlipCalculatorPage from "@/pages/tools/flip-calculator-page";
+import FlipPage from "@/pages/tools/flip";
 import PlaybookPage from "@/pages/playbook-page";
 import PropertyDictionaryPage from "@/pages/playbook/property-dictionary-page";
 import HelpPage from "@/pages/help-page";
@@ -93,9 +93,9 @@ function Router() {
           <ToolsPage />
         </MainLayout>
       </Route>
-      <Route path="/tools/flip-calculator">
+      <Route path="/tools/flip">
         <MainLayout>
-          <FlipCalculatorPage />
+          <FlipPage />
         </MainLayout>
       </Route>
       <Route path="/playbook">

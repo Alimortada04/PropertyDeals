@@ -30,11 +30,11 @@ import Breadcrumbs from "@/components/common/breadcrumbs";
 
 // Schema for the flip calculator form
 const flipCalculatorSchema = z.object({
-  purchasePrice: z.string().transform((val) => parseFloat(val.replace(/,/g, ""))),
-  repairCosts: z.string().transform((val) => parseFloat(val.replace(/,/g, ""))),
-  holdingCosts: z.string().transform((val) => parseFloat(val.replace(/,/g, ""))),
-  sellingCosts: z.string().transform((val) => parseFloat(val.replace(/,/g, ""))),
-  arv: z.string().transform((val) => parseFloat(val.replace(/,/g, "")))
+  purchasePrice: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0")),
+  repairCosts: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0")),
+  holdingCosts: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0")),
+  sellingCosts: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0")),
+  arv: z.string().transform((val) => parseFloat(val ? val.replace(/,/g, "") : "0"))
 });
 
 type FlipCalculatorValues = z.infer<typeof flipCalculatorSchema>;
@@ -58,7 +58,7 @@ const formatPercentage = (value: number) => {
   }).format(value / 100);
 };
 
-export default function FlipCalculatorPage() {
+export default function FlipPage() {
   const [results, setResults] = useState<{
     totalCosts: number;
     profitAmount: number;
