@@ -103,7 +103,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      group flex items-center px-2 py-1 mx-0 whitespace-nowrap transition-colors duration-0
+      group flex items-center px-3 py-1.5 mx-0 whitespace-nowrap transition-colors duration-0
       ${isActive 
         ? 'bg-[#09261E] text-white' 
         : 'text-gray-700 hover:bg-[#D8D8D8]'}
@@ -442,7 +442,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           fixed top-0 left-0 h-screen overflow-y-auto shadow-lg
           transition-all duration-200 ease-in-out bg-white
           ${isOpen ? 'translate-x-0 z-[200]' : '-translate-x-full lg:translate-x-0 z-[200]'}
-          ${isExpanded ? 'w-60' : 'w-14'}
+          ${isExpanded ? 'w-64' : 'w-16'}
           ${isMobile ? 'w-[250px]' : ''}
         `}
         onMouseEnter={() => !isMobile && setIsExpanded(true)}
@@ -467,8 +467,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
 
           {/* Main Navigation */}
           <div className="pt-2">
-            <div className="mb-1">
-              <ul className="space-y-0.5">
+            <div className="mb-2">
+              <ul>
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
                     <Home className="w-5 h-5 flex-shrink-0" />
@@ -509,7 +509,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                   Resources
                 </h3>
               </div>
-              <ul className="space-y-0.5">
+              <ul>
                 <li>
                   <Link href="/playbook" className={getNavItemClasses("/playbook")}>
                     <Book className="w-5 h-5 flex-shrink-0" />
@@ -542,7 +542,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 Account
               </h3>
             </div>
-            <ul className="space-y-0.5">
+            <ul>
               <li>
                 <Link href="/profile" className={getNavItemClasses("/profile")}>
                   <UserCircle className="w-5 h-5 flex-shrink-0" />
