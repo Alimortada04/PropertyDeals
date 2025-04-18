@@ -103,7 +103,8 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   const getNavItemClasses = (path: string) => {
     const isActive = location === path;
     return `
-      group flex items-center px-3 py-1.5 mx-0 whitespace-nowrap transition-colors duration-0
+      group flex items-center px-3 py-0.5 mx-0 whitespace-nowrap transition-colors duration-0
+      ${!isExpanded ? 'justify-center' : ''} 
       ${isActive 
         ? 'bg-[#09261E] text-white' 
         : 'text-gray-700 hover:bg-[#D8D8D8]'}
@@ -468,7 +469,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           {/* Main Navigation */}
           <div className="pt-2">
             <div className="mb-2">
-              <ul>
+              <ul className="space-y-0.5">
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
                     <Home className="w-5 h-5 flex-shrink-0" />
@@ -509,7 +510,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                   Resources
                 </h3>
               </div>
-              <ul>
+              <ul className="space-y-0.5">
                 <li>
                   <Link href="/playbook" className={getNavItemClasses("/playbook")}>
                     <Book className="w-5 h-5 flex-shrink-0" />
@@ -542,7 +543,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 Account
               </h3>
             </div>
-            <ul>
+            <ul className="space-y-0.5">
               <li>
                 <Link href="/profile" className={getNavItemClasses("/profile")}>
                   <UserCircle className="w-5 h-5 flex-shrink-0" />
