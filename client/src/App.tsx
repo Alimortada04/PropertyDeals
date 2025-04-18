@@ -11,6 +11,7 @@ import SellerDashboard from "@/pages/seller-dashboard";
 import AuthPage from "@/pages/auth-page";
 import SignInPage from "@/pages/auth/signin";
 import RegisterPage from "@/pages/auth/register";
+import ForgotPasswordPage from "@/pages/auth/forgot-password";
 import OnboardingPage from "@/pages/onboarding";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
@@ -141,6 +142,9 @@ function Router() {
       </Route>
       <Route path="/register">
         <RegisterPage />
+      </Route>
+      <Route path="/auth/forgot-password">
+        <ForgotPasswordPage />
       </Route>
       <Route path="/onboarding">
         <ProtectedRoute path="/onboarding" component={() => (

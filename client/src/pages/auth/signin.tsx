@@ -218,8 +218,8 @@ export default function SignInPage() {
                     <FormItem>
                       <div className="flex justify-between items-center">
                         <FormLabel>Password</FormLabel>
-                        <Link href="/auth/forgot-password">
-                          <a className="text-sm text-primary hover:underline">Forgot password?</a>
+                        <Link href="/auth/forgot-password" className="text-sm text-primary hover:underline">
+                          Forgot password?
                         </Link>
                       </div>
                       <FormControl>
@@ -272,8 +272,8 @@ export default function SignInPage() {
             <div className="text-center mt-6">
               <p className="text-sm text-gray-500">
                 Don't have an account? {" "}
-                <Link href="/register">
-                  <a className="text-primary font-medium hover:underline">Create one</a>
+                <Link href="/register" className="text-primary font-medium hover:underline">
+                  Create one
                 </Link>
               </p>
             </div>
