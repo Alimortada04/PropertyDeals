@@ -365,6 +365,11 @@ html {
   .cursor-glow {
     background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(9, 38, 30, 0.12), transparent 45%);
   }
+  
+  /* Radial gradient for sign-in page */
+  .radial-gradient {
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.3), transparent 80%);
+  }
 }
 
 :root {

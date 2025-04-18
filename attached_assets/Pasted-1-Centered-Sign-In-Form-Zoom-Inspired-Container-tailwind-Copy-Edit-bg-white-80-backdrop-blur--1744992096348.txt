@@ -1,0 +1,121 @@
+1. Centered Sign-In Form (Zoom-Inspired)
+📦 Container:
+tailwind
+Copy
+Edit
+bg-white/80 backdrop-blur-lg rounded-xl shadow-2xl max-w-md w-full p-8 mx-auto space-y-4
+🔧 Show This Form by Default:
+Email input (autocomplete="email")
+
+Password input with visibility toggle (eye icon)
+
+“Forgot password?” link
+
+Stay signed in checkbox (default checked)
+
+tsx
+Copy
+Edit
+<label className="flex items-center space-x-2 text-sm text-gray-600">
+  <input type="checkbox" checked className="form-checkbox rounded" />
+  <span>Stay signed in</span>
+</label>
+CTA button: Sign In →
+
+🔁 Divider & Social Auth (Below Form)
+html
+Copy
+Edit
+<hr class="my-6" />
+<p class="text-center text-sm text-gray-400">Or sign in with</p>
+Below that, add icon-only buttons:
+
+Apple
+
+Google
+
+(Optional: Facebook, SSO)
+
+tailwind
+Copy
+Edit
+w-12 h-12 rounded-full border text-xl flex items-center justify-center hover:bg-gray-100 transition
+🔐 Legal Copy:
+html
+Copy
+Edit
+<p class="text-xs text-gray-400 mt-3 text-center">
+  By signing in, you agree to PropertyDeals' 
+  <a href="/privacy" class="underline">Privacy Policy</a> and 
+  <a href="/terms" class="underline">Terms of Use</a>.
+</p>
+✅ 2. Background Design & Floating Cards (Homepage-Style Immersion)
+🎨 Background:
+Use the same gradient as homepage:
+
+tailwind
+Copy
+Edit
+bg-gradient-to-br from-[#F5F5F5] to-[#E8EBE8]
+Add optional radial glow behind main card:
+
+css
+Copy
+Edit
+radial-gradient(ellipse at center, rgba(255,255,255,0.3), transparent 80%)
+🧩 Floating Feature Cards:
+Add 3–5 value-driven UI cards behind or around the main card with subtle depth and offset positioning.
+
+Example Cards:
+
+Title	Icon	Text
+🔗 Direct Connections	🤝	Talk directly with sellers and REPs
+🏘️ Hidden Listings	🏠	Access off-market deals not found on Zillow
+📊 Analyze in Seconds	📈	Use built-in deal calculators instantly
+🛡️ Trusted Network	✅	6,000+ verified RE professionals
+Style:
+tailwind
+Copy
+Edit
+bg-white rounded-lg shadow-md px-4 py-3 w-[230px] text-sm
+border border-gray-100 transition hover:-translate-y-1 hover:shadow-lg
+Positioning:
+Top-left, top-right, bottom-left, bottom-right (staggered)
+
+Slight rotation: rotate-[1.5deg], -rotate-[2deg]
+
+Optional: Add blur-sm to furthest card for layering
+
+🔁 Motion:
+Use framer-motion or subtle @keyframes to float the cards slowly
+
+On hover: increase shadow or lift slightly
+
+Maintain performance — keep motion subtle
+
+📱 Mobile Behavior:
+Stack layout vertically
+
+Center login card
+
+Hide or move floating cards to bottom/fade out
+
+Make all inputs and buttons full-width and tap-friendly
+
+✨ Bonus (Optional but Future-Ready)
+Add biometric icon to Face ID/Touch ID if supported
+
+Pre-fill email if user has signed in before
+
+Support login intent routing (redirect to last visited page)
+
+✅ TL;DR – Deliverables Checklist
+
+Section	Feature
+Login Form	Clean, visible by default, Zoom-style layout
+Social Auth	Icons below form, in a clear grouped row
+Floating Cards	3–5 trust-focused UI cards floating around form
+Background	Gradient background + radial center glow
+Layering	Drop shadows, rotation, subtle motion/hover interaction
+Legal + Trust	Privacy + Terms links + sign-in count badges
+Responsive	Fully mobile-optimized with vertical layout on smaller screens
