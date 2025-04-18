@@ -472,31 +472,31 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <ul className="space-y-0.5">
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
-                    <Home className="w-5 h-5 flex-shrink-0" />
+                    <Home className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Home</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/properties" className={getNavItemClasses("/properties")}>
-                    <Building className="w-5 h-5 flex-shrink-0" />
+                    <Building className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Properties</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/reps" className={getNavItemClasses("/reps")}>
-                    <Users className="w-5 h-5 flex-shrink-0" />
+                    <Users className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>The REP Room</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/discussions" className={getNavItemClasses("/discussions")}>
-                    <MessageCircle className="w-5 h-5 flex-shrink-0" />
+                    <MessageCircle className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Discussions</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/dashboard" className={getNavItemClasses("/dashboard")}>
-                    <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
+                    <LayoutDashboard className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Dashboard</span>
                   </Link>
                 </li>
@@ -513,19 +513,19 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <ul className="space-y-0.5">
                 <li>
                   <Link href="/playbook" className={getNavItemClasses("/playbook")}>
-                    <Book className="w-5 h-5 flex-shrink-0" />
+                    <Book className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>PropertyPlaybook</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/tools" className={getNavItemClasses("/tools")}>
-                    <Calculator className="w-5 h-5 flex-shrink-0" />
+                    <Calculator className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Tools</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/help" className={getNavItemClasses("/help")}>
-                    <HelpCircle className="w-5 h-5 flex-shrink-0" />
+                    <HelpCircle className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Help</span>
                   </Link>
                 </li>
@@ -546,13 +546,13 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             <ul className="space-y-0.5">
               <li>
                 <Link href="/profile" className={getNavItemClasses("/profile")}>
-                  <UserCircle className="w-5 h-5 flex-shrink-0" />
+                  <UserCircle className="w-6 h-6 flex-shrink-0" />
                   <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Profile</span>
                 </Link>
               </li>
               <li>
                 <Link href="/settings" className={getNavItemClasses("/settings")}>
-                  <Settings className="w-5 h-5 flex-shrink-0" />
+                  <Settings className="w-6 h-6 flex-shrink-0" />
                   <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Settings</span>
                 </Link>
               </li>
