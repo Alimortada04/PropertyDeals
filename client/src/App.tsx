@@ -147,7 +147,7 @@ function Router() {
       <Route path="/register-old">
         <RegisterPage />
       </Route>
-      <Route path="/auth/forgot-password">
+      <Route path="/forgot-password">
         <ForgotPasswordPage />
       </Route>
       <Route path="/onboarding">

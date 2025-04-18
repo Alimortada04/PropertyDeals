@@ -367,10 +367,11 @@ export default function SignInPage() {
           return (
             <div 
               key={`card-${index}`}
-              className={`${item.position} ${item.rotate} animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all`}
+              className={`${item.position} ${item.rotate} animate-in fade-in-50 duration-700 transition-all group`}
               style={{animationDelay: `${delay}ms`}}
             >
-              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative">
+              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative 
+                transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-2 group-hover:scale-105 hover:cursor-pointer">
                 {/* Role badge */}
                 <div className="absolute top-2 right-2">
                   <span className={`text-[9px] uppercase font-semibold ${roleBadgeBg} px-1.5 py-0.5 rounded-full ${roleBadgeText}`}>
@@ -397,8 +398,8 @@ export default function SignInPage() {
         })}
       </div>
       
-      {/* Shadow circle behind the login card */}
-      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-black/5 blur-xl -z-0"></div>
+      {/* Light gray circle shape behind the login card */}
+      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-gray-200/30 -z-0"></div>
       
       {/* Main Sign-In Card - Zoom Style */}
       <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-6 sm:p-8 mx-auto relative z-10 space-y-4">
