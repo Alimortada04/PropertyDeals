@@ -262,23 +262,25 @@ export default function SignInPage() {
     >
       {/* Background elements inspired by the home page */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Main green gradient orb - top right */}
+        {/* Main green gradient orb - top right (more saturated on mobile) */}
         <div 
-          className="absolute -right-[10%] -top-[5%] w-[70vw] h-[70vw] max-w-[1100px] max-h-[1100px] rounded-full bg-gradient-to-bl from-[#09261E]/10 to-[#135341]/15 blur-3xl"
+          className="absolute -right-[10%] -top-[5%] w-[70vw] h-[70vw] max-w-[1100px] max-h-[1100px] rounded-full bg-gradient-to-bl from-[#09261E]/20 to-[#135341]/25 sm:from-[#09261E]/10 sm:to-[#135341]/15 blur-3xl"
         />
         
-        {/* Wine/burgundy gradient orb - bottom left */}
+        {/* Wine/burgundy gradient orb - bottom left (more saturated on mobile) */}
         <div 
-          className="absolute -left-[10%] bottom-[5%] w-[55vw] h-[55vw] max-w-[900px] max-h-[900px] rounded-full bg-gradient-to-tr from-[#803344]/10 to-[#803344]/15 blur-3xl"
+          className="absolute -left-[10%] bottom-[5%] w-[55vw] h-[55vw] max-w-[900px] max-h-[900px] rounded-full bg-gradient-to-tr from-[#803344]/20 to-[#803344]/25 sm:from-[#803344]/10 sm:to-[#803344]/15 blur-3xl"
         />
         
-        {/* Role-specific spotlight in the center */}
+        {/* Role-specific spotlight in the center (more saturated on mobile) */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className={`w-[80vw] h-[80vw] rounded-full ${
-            selectedRole === 'buyer' ? 'bg-gradient-radial from-[#d6ebe2]/30 to-transparent' :
-            selectedRole === 'seller' ? 'bg-gradient-radial from-[#d5f0e0]/30 to-transparent' :
-            'bg-gradient-radial from-[#f2dfe1]/30 to-transparent'
-          } opacity-80 transition-all duration-700`}></div>
+          <div className={`w-[80vw] h-[80vw] rounded-full transition-all duration-700 ${
+            selectedRole === 'buyer' 
+              ? 'bg-gradient-radial from-[#d6ebe2]/40 sm:from-[#d6ebe2]/30 to-transparent' 
+              : selectedRole === 'seller' 
+                ? 'bg-gradient-radial from-[#d5f0e0]/40 sm:from-[#d5f0e0]/30 to-transparent' 
+                : 'bg-gradient-radial from-[#f2dfe1]/40 sm:from-[#f2dfe1]/30 to-transparent'
+          } opacity-90 sm:opacity-80`}></div>
         </div>
       </div>
 
@@ -288,17 +290,15 @@ export default function SignInPage() {
       <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
         {/* Circular layout of feature cards */}
         {animateCards && [
-          // Evenly distributed cards - top row (only shown on larger screens)
-          { card: roleCards.buyer[0], position: "absolute top-[15%] left-[15%]", role: "buyer", rotate: "-rotate-1", showOn: "lg" },
-          { card: roleCards.buyer[1], position: "absolute top-[15%] right-[15%]", role: "buyer", rotate: "rotate-1", showOn: "lg" },
+          // Corner placements for medium screens and up (4 cards)
+          { card: roleCards.buyer[0], position: "absolute top-[8%] left-[8%]", role: "buyer", rotate: "-rotate-1", showOn: "md" },
+          { card: roleCards.buyer[1], position: "absolute top-[8%] right-[8%]", role: "buyer", rotate: "rotate-1", showOn: "md" },
+          { card: roleCards.seller[0], position: "absolute bottom-[8%] left-[8%]", role: "seller", rotate: "-rotate-1.5", showOn: "md" },
+          { card: roleCards.seller[1], position: "absolute bottom-[8%] right-[8%]", role: "seller", rotate: "rotate-1.5", showOn: "md" },
           
-          // Middle row - left and right sides (shown on medium screens and up)
-          { card: roleCards.seller[0], position: "absolute top-[45%] left-[8%]", role: "seller", rotate: "-rotate-1.5", showOn: "md" },
-          { card: roleCards.seller[1], position: "absolute top-[45%] right-[8%]", role: "seller", rotate: "rotate-1.5", showOn: "md" },
-          
-          // Bottom row (shown on medium screens and up)
-          { card: roleCards.rep[0], position: "absolute bottom-[15%] left-[18%]", role: "rep", rotate: "rotate-1", showOn: "md" },
-          { card: roleCards.rep[1], position: "absolute bottom-[15%] right-[18%]", role: "rep", rotate: "-rotate-1", showOn: "md" }
+          // Only shown on large screens (2 additional cards for REPs)
+          { card: roleCards.rep[0], position: "absolute top-[40%] left-[5%]", role: "rep", rotate: "rotate-1", showOn: "lg" },
+          { card: roleCards.rep[1], position: "absolute top-[40%] right-[5%]", role: "rep", rotate: "-rotate-1", showOn: "lg" }
         ].map((item, index) => {
           const delay = 200 + (index * 70);
           const role = item.role;
@@ -365,9 +365,9 @@ export default function SignInPage() {
         })}
       </div>
       
-      {/* Light gray circle shape behind the login card with parallax effect - increased opacity */}
+      {/* Light gray circle shape behind the login card with parallax effect - increased opacity (more on mobile) */}
       <div 
-        className="absolute left-1/2 top-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-gray-200/50 -z-0 transition-transform duration-200"
+        className="absolute left-1/2 top-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-gray-200/60 sm:bg-gray-200/50 -z-0 transition-transform duration-200"
         style={{
           transform: `translate(calc(-50% + ${mousePosition.x * -25}px), calc(-50% + ${mousePosition.y * -25}px))`
         }}
