@@ -92,7 +92,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
   return (
     <div 
       className={cn(
-        "relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-105 transition-all h-full flex flex-col border-2 border-[#E5E7EB]",
+        "relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-105 transition-all flex flex-col border-2 border-[#E5E7EB] h-[350px]",
         cardUrl ? "cursor-pointer" : "cursor-default",
         !isComingSoon && "hover:border-[#09261E]"
       )}
@@ -151,34 +151,18 @@ export default function ToolCard({ tool }: ToolCardProps) {
       </div>
       
       {/* Card Content */}
-      <div className="p-4 flex flex-col flex-grow">
+      <div className="p-3 flex flex-col flex-grow">
         {/* Title */}
-        <h3 className="text-lg font-semibold text-[#09261E] mb-3">{title}</h3>
-        
-        {/* Function Summary - separated inputs and outputs */}
-        <div className="mb-4">
-          <div className="bg-[#E9F5F0] p-2 rounded-t-md border border-[#E5E7EB]">
-            <div className="flex items-center text-xs text-[#09261E]">
-              <span className="font-semibold mr-2">Inputs:</span>
-              <span>{inputs.length > 0 ? inputs.join(", ") : description.split(" ").slice(0, 3).join(" ") + "..."}</span>
-            </div>
-          </div>
-          <div className="bg-[#F9FAFB] p-2 rounded-b-md border-b border-l border-r border-[#E5E7EB]">
-            <div className="flex items-center text-xs text-gray-700">
-              <span className="font-semibold mr-2">Outputs:</span>
-              <span>{outputs.length > 0 ? outputs.join(", ") : description.split(" ").slice(-3).join(" ")}</span>
-            </div>
-          </div>
-        </div>
+        <h3 className="text-lg font-semibold text-[#09261E] mb-2">{title}</h3>
         
         {/* Description text */}
-        <p className="text-xs text-gray-500 mb-auto">
+        <p className="text-xs text-gray-600 mb-auto">
           {description}
         </p>
         
-        {/* Tags - moved to bottom */}
+        {/* Tags at bottom */}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-3 pt-2 border-t border-[#E5E7EB]">
+          <div className="flex flex-wrap gap-1 mt-2 pt-2 border-t border-[#E5E7EB]">
             {tags.map(tag => (
               <Badge 
                 key={tag} 

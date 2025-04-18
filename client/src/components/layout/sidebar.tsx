@@ -468,9 +468,11 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           {/* Main Navigation */}
           <div className="py-4">
             <div className="mb-6">
-              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-                Navigation
-              </h3>
+              <div className="h-6">
+                <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 overflow-hidden'}`}>
+                  Navigation
+                </h3>
+              </div>
               <ul>
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
@@ -507,9 +509,11 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
 
             {/* Resources Section */}
             <div className="mb-6">
-              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-                Resources
-              </h3>
+              <div className="h-6">
+                <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 overflow-hidden'}`}>
+                  Resources
+                </h3>
+              </div>
               <ul>
                 <li>
                   <Link href="/playbook" className={getNavItemClasses("/playbook")}>
@@ -538,9 +542,11 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           
           {/* Profile & Settings */}
           <div className="mt-auto border-t border-gray-200 py-4">
-            <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'}`}>
-              Account
-            </h3>
+            <div className="h-6">
+              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 overflow-hidden'}`}>
+                Account
+              </h3>
+            </div>
             <ul>
               <li>
                 <Link href="/profile" className={getNavItemClasses("/profile")}>
