@@ -302,15 +302,28 @@ export default function SignInPage() {
 
   return (
     <div 
-      className="min-h-screen bg-gradient-to-br from-[#f8f8f8] via-white to-[#f2f8f5] overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700"
+      className="min-h-screen bg-white overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700"
     >
-      {/* Enhanced radial glow behind the main card */}
-      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-        <div className={`w-[700px] h-[700px] rounded-full ${
-          selectedRole === 'buyer' ? 'bg-gradient-radial from-[#d6ebe2]/80 to-transparent' :
-          selectedRole === 'seller' ? 'bg-gradient-radial from-[#d5f0e0]/80 to-transparent' :
-          'bg-gradient-radial from-[#f2dfe1]/80 to-transparent'
-        } opacity-70 transition-all duration-700`}></div>
+      {/* Background elements inspired by the home page */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Main green gradient orb - top right */}
+        <div 
+          className="absolute -right-[10%] -top-[5%] w-[70vw] h-[70vw] max-w-[1100px] max-h-[1100px] rounded-full bg-gradient-to-bl from-[#09261E]/10 to-[#135341]/15 blur-3xl"
+        />
+        
+        {/* Wine/burgundy gradient orb - bottom left */}
+        <div 
+          className="absolute -left-[10%] bottom-[5%] w-[55vw] h-[55vw] max-w-[900px] max-h-[900px] rounded-full bg-gradient-to-tr from-[#803344]/10 to-[#803344]/15 blur-3xl"
+        />
+        
+        {/* Role-specific spotlight in the center */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className={`w-[80vw] h-[80vw] rounded-full ${
+            selectedRole === 'buyer' ? 'bg-gradient-radial from-[#d6ebe2]/30 to-transparent' :
+            selectedRole === 'seller' ? 'bg-gradient-radial from-[#d5f0e0]/30 to-transparent' :
+            'bg-gradient-radial from-[#f2dfe1]/30 to-transparent'
+          } opacity-80 transition-all duration-700`}></div>
+        </div>
       </div>
 
       {/* No brand header as requested */}
@@ -319,15 +332,17 @@ export default function SignInPage() {
       <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
         {/* Circular layout of feature cards */}
         {animateCards && [
-          // Left side cards (Buyer and Seller)
-          { card: roleCards.buyer[0], position: "absolute top-1/4 -left-2 lg:left-12", role: "buyer", rotate: "-rotate-2" },
-          { card: roleCards.seller[0], position: "absolute top-1/3 left-16 lg:left-32", role: "seller", rotate: "rotate-1" },
-          { card: roleCards.rep[0], position: "absolute bottom-1/3 left-0 lg:left-20", role: "rep", rotate: "-rotate-1" },
+          // Evenly distributed cards - top row
+          { card: roleCards.buyer[0], position: "absolute top-[15%] left-[15%]", role: "buyer", rotate: "-rotate-1" },
+          { card: roleCards.buyer[1], position: "absolute top-[15%] right-[15%]", role: "buyer", rotate: "rotate-1" },
           
-          // Right side cards (Buyer, Seller, Rep)
-          { card: roleCards.buyer[1], position: "absolute top-1/3 -right-2 lg:right-12", role: "buyer", rotate: "rotate-2" },
-          { card: roleCards.seller[1], position: "absolute top-2/3 right-12 lg:right-28", role: "seller", rotate: "-rotate-1.5" },
-          { card: roleCards.rep[1], position: "absolute bottom-1/4 right-0 lg:right-20", role: "rep", rotate: "rotate-1" }
+          // Middle row - left and right sides
+          { card: roleCards.seller[0], position: "absolute top-[45%] left-[8%]", role: "seller", rotate: "-rotate-1.5" },
+          { card: roleCards.seller[1], position: "absolute top-[45%] right-[8%]", role: "seller", rotate: "rotate-1.5" },
+          
+          // Bottom row
+          { card: roleCards.rep[0], position: "absolute bottom-[15%] left-[18%]", role: "rep", rotate: "rotate-1" },
+          { card: roleCards.rep[1], position: "absolute bottom-[15%] right-[18%]", role: "rep", rotate: "-rotate-1" }
         ].map((item, index) => {
           const delay = 200 + (index * 70);
           const role = item.role;
@@ -381,6 +396,9 @@ export default function SignInPage() {
           );
         })}
       </div>
+      
+      {/* Shadow circle behind the login card */}
+      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-black/5 blur-xl -z-0"></div>
       
       {/* Main Sign-In Card - Zoom Style */}
       <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-6 sm:p-8 mx-auto relative z-10 space-y-4">
@@ -468,7 +486,7 @@ export default function SignInPage() {
               />
               
               <Link 
-                href="/auth/forgot-password" 
+                href="/forgot-password" 
                 className="text-xs text-[#135341] hover:underline"
               >
                 Forgot password?
