@@ -31,7 +31,7 @@ export default function PlaybookPage() {
       audience: ["general"],
       updatedAt: "2 days ago",
       isTrending: true,
-      coverImage: "https://images.unsplash.com/photo-1634655377962-e6e7b730e04d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8cmVhbCUyMGVzdGF0ZSUyMHRlcm1zfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVhbCUyMGVzdGF0ZSUyMGdsb3NzYXJ5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "due-diligence",
@@ -67,7 +67,7 @@ export default function PlaybookPage() {
       description: "Explore alternative financing methods beyond traditional mortgages for your real estate investments.",
       audience: ["buyers", "reps"],
       isComingSoon: true,
-      coverImage: "https://images.unsplash.com/photo-1589666564459-92e970d690e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1vcnRnYWdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+      coverImage: "https://images.unsplash.com/photo-1607863680198-23d4b2565df0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3JlYXRpdmUlMjBmaW5hbmNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
     },
     {
       id: "disposition-guide",
@@ -180,11 +180,11 @@ export default function PlaybookPage() {
       
       {/* Resource Cards Grid with Animations */}
       {filteredResources.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
           {filteredResources.map((resource, index) => (
             <div 
               key={resource.id} 
-              className={`animate-fadeInUp`}
+              className={`animate-fadeInUp w-full max-w-sm`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <PlaybookCard resource={resource} />

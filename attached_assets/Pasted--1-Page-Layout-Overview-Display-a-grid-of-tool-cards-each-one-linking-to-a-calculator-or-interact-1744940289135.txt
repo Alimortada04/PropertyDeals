@@ -1,0 +1,97 @@
+✅ 1. Page Layout Overview
+Display a grid of tool cards, each one linking to a calculator or interactive page
+
+Add category filter tabs or dropdown at the top:
+
+css
+Copy
+Edit
+[ All Tools ] [ Flips ] [ Buy & Hold ] [ Creative Finance ] [ Wholesale ] [ STR ]
+Each tool card can be tagged with categories and dynamically filtered.
+
+✅ 2. Tool Cards to Include
+
+Tool Name	Description	Route	Tags
+Flip Calculator	Estimate profit potential for fix-and-flips	/tools/flip	Flips
+Investment Calculator	Analyze ROI, cash flow, and cap rate for rentals	/tools/investment	Buy & Hold
+Sub-to Calculator	Run payment schedules for subject-to deals	/tools/subto	Creative Finance
+Seller Finance Calculator	Amortization schedule + balloon payment breakdown	/tools/seller-finance	Creative Finance
+Repair Cost Estimator	Estimate repair costs by item with regional benchmarks	/tools/repair-cost	Flips, Wholesale
+Offer Price Calculator	MAO calculator based on ARV, repairs, profit, and wholesale fee	/tools/offer-price	Wholesale, Flips
+Dispo / Assignment Split Calc	JV profit breakdown by % or flat fee	/tools/split	Wholesale, REPs
+Short-Term Rental Analyzer	Airbnb/STR analyzer for nightly rate, occupancy, cash flow	/tools/str-analyzer	STR, Buy & Hold
+🟨 Placeholder Tools to Add Cards Now (No functionality yet)
+BRRRR Deal Analyzer → /tools/brrrr
+
+Land Flip Calculator → /tools/land-flip
+
+Loan Cost Breakdown Tool → /tools/loan-costs
+
+Label these with a “Coming Soon” badge.
+
+🎨 3. Tool Card Design
+Card Component Layout:
+
+Cover icon or image at the top (16:9 or square)
+
+Title: Bold and legible
+
+1-line use case (what the tool helps solve)
+
+CTA: “Open Tool” or “Start Calculating”
+
+Button Style:
+
+tailwind
+Copy
+Edit
+bg-[#09261E] text-white px-4 py-2 rounded hover:bg-[#135341] transition
+Card Style:
+
+tailwind
+Copy
+Edit
+bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg hover:scale-105 transition-all
+Responsive Grid:
+
+Desktop: 4 columns
+
+Tablet: 2 columns
+
+Mobile: 1 column stacked
+
+🔍 4. Filter Behavior
+Add a category filter bar or tab system at the top of the /tools page
+
+Clicking a tab filters visible tools
+
+Tags used for each card (e.g., ["Buy & Hold", "Creative Finance"])
+
+Optional: Add a search input for title/keyword filtering
+
+⚙️ Technical Notes
+Each tool should have its own route like /tools/flip, /tools/investment, etc.
+
+Store tool metadata in a central tools.ts or JSON array:
+
+ts
+Copy
+Edit
+{
+  title: string;
+  description: string;
+  image?: string;
+  route: string;
+  tags: string[];
+  comingSoon?: boolean;
+}
+Coming Soon tools should show a badge and have no active link
+
+📈 Optional UX Enhancements
+Animate card load (fade or slide-up)
+
+Add badges: “🔥 Popular”, “New”, “Coming Soon”
+
+Sticky filter bar on scroll
+
+Allow bookmarking tools to REP dashboards (future)
