@@ -302,7 +302,7 @@ export default function SignInPage() {
 
   return (
     <div 
-      className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 relative transition-colors duration-700`}
+      className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[selectedRole]} overflow-auto flex flex-col items-center pt-16 pb-12 p-4 sm:p-6 sm:justify-center relative transition-colors duration-700`}
     >
       {/* Enhanced radial glow behind the main card */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -332,11 +332,9 @@ export default function SignInPage() {
         </div>
       </div>
       
-      {/* Role toggle buttons - Moved to inside the login form below */}
-
-      {/* Floating feature cards in background - Dynamic based on role */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Generate cards based on selected role */}
+      {/* Floating feature cards on larger screens */}
+      <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Generate cards based on selected role (for desktop/tablet only) */}
         {animateCards && roleCards[selectedRole].map((card, index) => {
           // Define positions based on card.position and screen size
           let positionClasses = "";
@@ -344,16 +342,16 @@ export default function SignInPage() {
           
           // Responsive positioning for different screen sizes
           if (card.position === "top-left") {
-            positionClasses = "top-24 left-4 md:top-20 md:-left-4 lg:left-16 rotate-[1.5deg] hidden sm:block";
+            positionClasses = "top-24 left-4 md:top-20 md:-left-4 lg:left-16 rotate-[1.5deg]";
             animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[200ms]";
           } else if (card.position === "bottom-right") {
-            positionClasses = "bottom-24 right-4 md:bottom-16 md:-right-8 lg:right-20 rotate-[-2deg] hidden sm:block";
+            positionClasses = "bottom-24 right-4 md:bottom-16 md:-right-8 lg:right-20 rotate-[-2deg]";
             animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[300ms]";
           } else if (card.position === "middle-left") {
             positionClasses = "top-1/2 -translate-y-1/2 -left-16 md:-left-8 lg:left-4 rotate-[-1.5deg] hidden md:block";
             animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[400ms]";
           } else if (card.position === "top-right") {
-            positionClasses = "top-32 right-4 md:top-28 md:right-0 lg:right-12 rotate-[2deg] hidden sm:block";
+            positionClasses = "top-32 right-4 md:top-28 md:right-0 lg:right-12 rotate-[2deg]";
             animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[500ms]";
           }
           
@@ -365,7 +363,7 @@ export default function SignInPage() {
           
           return (
             <div 
-              key={`${selectedRole}-${index}`}
+              key={`${selectedRole}-${index}-desktop`}
               className={`absolute ${positionClasses} transform ${animationClasses} hover:-translate-y-1 hover:shadow-lg transition-all`}
             >
               <div className={`bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md ${sizeClasses} text-sm border border-gray-100 ${blurClass}`}>
@@ -596,6 +594,40 @@ export default function SignInPage() {
             <Link href="/terms" className="underline hover:text-gray-600">Terms of Use</Link>.
           </p>
         </div>
+      </div>
+
+      {/* Mobile-only stacked feature cards - Visible only on smaller screens */}
+      <div className="mt-12 sm:hidden space-y-4 max-w-sm mx-auto">
+        <h3 className={`text-center text-sm font-medium ${
+          selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'
+        }`}>
+          {selectedRole === 'buyer' ? 'Buyer Features' : 
+           selectedRole === 'seller' ? 'Seller Features' : 
+           'REP Features'}
+        </h3>
+        
+        {animateCards && roleCards[selectedRole].map((card, index) => (
+          <div 
+            key={`${selectedRole}-${index}-mobile`}
+            className="animate-in fade-in duration-500 delay-300 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md border border-gray-100 w-full"
+          >
+            <div className="flex items-start space-x-3">
+              <div className={`p-2 rounded-lg shrink-0 ${
+                selectedRole === 'rep' ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
+              }`}>
+                {card.icon}
+              </div>
+              <div>
+                <h3 className={`font-heading font-bold text-base ${
+                  selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#09261E]'
+                }`}>
+                  {card.title}
+                </h3>
+                <p className="text-gray-600 text-sm">{card.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
