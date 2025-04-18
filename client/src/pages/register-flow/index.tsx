@@ -12,6 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import { Loader2, ArrowRight, Check, Building, Users, UserPlus, Phone, Key } from "lucide-react";
 import { SiGoogle, SiApple, SiFacebook } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
+import { OTPInput, SlotProps } from "input-otp";
 
 // User types
 type Role = "buyer" | "seller" | "rep";
@@ -759,40 +760,69 @@ export default function RegisterFlowPage() {
                       <FormItem>
                         <FormLabel>Verification Code</FormLabel>
                         <FormControl>
-                          <div className="flex gap-2">
-                            <Input 
-                              placeholder="Enter the 6-digit code" 
-                              {...field} 
-                              className="bg-white/90 h-10"
-                              disabled={isVerifyingCode}
-                            />
-                            <Button 
-                              type="button" 
-                              variant="outline"
-                              onClick={verifyEmailCode}
-                              disabled={isVerifyingCode || !field.value}
-                              className="min-w-[80px]"
-                            >
-                              {isVerifyingCode ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                'Verify'
+                          <div className="space-y-4">
+                            <OTPInput
+                              maxLength={6}
+                              containerClassName="flex items-center justify-between gap-3 mb-4"
+                              value={field.value || ""}
+                              onChange={(value) => {
+                                field.onChange(value);
+                                // Auto-verify when all 6 digits are entered
+                                if (value.length === 6) {
+                                  setTimeout(() => verifyEmailCode(), 300);
+                                }
+                              }}
+                              render={({ slots }) => (
+                                <>
+                                  {slots.map((slot, idx) => (
+                                    <div key={idx} className="relative">
+                                      <input
+                                        {...slot}
+                                        className="w-10 h-12 text-center text-lg font-semibold rounded-md border border-gray-300 focus:ring-2 focus:ring-[#135341] focus:border-[#135341] focus:outline-none transition-all bg-white/90 disabled:opacity-50"
+                                        disabled={isVerifyingCode}
+                                        autoComplete={idx === 0 ? "one-time-code" : "off"}
+                                      />
+                                    </div>
+                                  ))}
+                                </>
                               )}
-                            </Button>
+                            />
+                            
+                            <div className="flex justify-between items-center">
+                              <p className="text-xs text-gray-500">
+                                Didn't receive the code? {" "}
+                                <button 
+                                  type="button" 
+                                  className="text-[#135341] hover:underline" 
+                                  onClick={() => {
+                                    // Clear the OTP fields on resend
+                                    field.onChange("");
+                                    sendVerificationCode();
+                                  }}
+                                  disabled={isSendingCode}
+                                >
+                                  {isSendingCode ? 'Sending...' : 'Resend'}
+                                </button>
+                              </p>
+                              
+                              <Button 
+                                type="button" 
+                                variant="outline"
+                                onClick={verifyEmailCode}
+                                disabled={isVerifyingCode || !field.value || field.value.length < 6}
+                                className="min-w-[80px]"
+                                size="sm"
+                              >
+                                {isVerifyingCode ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  'Verify'
+                                )}
+                              </Button>
+                            </div>
                           </div>
                         </FormControl>
                         <FormMessage />
-                        <p className="text-xs text-gray-400 mt-1">
-                          Didn't receive the code? {" "}
-                          <button 
-                            type="button" 
-                            className="text-[#135341] hover:underline" 
-                            onClick={sendVerificationCode}
-                            disabled={isSendingCode}
-                          >
-                            {isSendingCode ? 'Sending...' : 'Resend'}
-                          </button>
-                        </p>
                       </FormItem>
                     )}
                   />
@@ -1048,40 +1078,69 @@ export default function RegisterFlowPage() {
                       <FormItem>
                         <FormLabel>Verification Code</FormLabel>
                         <FormControl>
-                          <div className="flex gap-2">
-                            <Input 
-                              placeholder="Enter the 6-digit code" 
-                              {...field} 
-                              className="bg-white/90 h-10"
-                              disabled={isVerifyingSms}
-                            />
-                            <Button 
-                              type="button" 
-                              variant="outline"
-                              onClick={verifySmsCode}
-                              disabled={isVerifyingSms || !field.value}
-                              className="min-w-[80px]"
-                            >
-                              {isVerifyingSms ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                'Verify'
+                          <div className="space-y-4">
+                            <OTPInput
+                              maxLength={6}
+                              containerClassName="flex items-center justify-between gap-3 mb-4"
+                              value={field.value || ""}
+                              onChange={(value) => {
+                                field.onChange(value);
+                                // Auto-verify when all 6 digits are entered
+                                if (value.length === 6) {
+                                  setTimeout(() => verifySmsCode(), 300);
+                                }
+                              }}
+                              render={({ slots }) => (
+                                <>
+                                  {slots.map((slot, idx) => (
+                                    <div key={idx} className="relative">
+                                      <input
+                                        {...slot}
+                                        className="w-10 h-12 text-center text-lg font-semibold rounded-md border border-gray-300 focus:ring-2 focus:ring-[#135341] focus:border-[#135341] focus:outline-none transition-all bg-white/90 disabled:opacity-50"
+                                        disabled={isVerifyingSms}
+                                        autoComplete={idx === 0 ? "one-time-code" : "off"}
+                                      />
+                                    </div>
+                                  ))}
+                                </>
                               )}
-                            </Button>
+                            />
+                            
+                            <div className="flex justify-between items-center">
+                              <p className="text-xs text-gray-500">
+                                Didn't receive the code? {" "}
+                                <button 
+                                  type="button" 
+                                  className="text-[#135341] hover:underline" 
+                                  onClick={() => {
+                                    // Clear the OTP fields on resend
+                                    field.onChange("");
+                                    sendSmsCode();
+                                  }}
+                                  disabled={isSendingSms}
+                                >
+                                  {isSendingSms ? 'Sending...' : 'Resend'}
+                                </button>
+                              </p>
+                              
+                              <Button 
+                                type="button" 
+                                variant="outline"
+                                onClick={verifySmsCode}
+                                disabled={isVerifyingSms || !field.value || field.value.length < 6}
+                                className="min-w-[80px]"
+                                size="sm"
+                              >
+                                {isVerifyingSms ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  'Verify'
+                                )}
+                              </Button>
+                            </div>
                           </div>
                         </FormControl>
                         <FormMessage />
-                        <p className="text-xs text-gray-400 mt-1">
-                          Didn't receive the code? {" "}
-                          <button 
-                            type="button" 
-                            className="text-[#135341] hover:underline" 
-                            onClick={sendSmsCode}
-                            disabled={isSendingSms}
-                          >
-                            {isSendingSms ? "Sending..." : "Resend"}
-                          </button>
-                        </p>
                       </FormItem>
                     )}
                   />
