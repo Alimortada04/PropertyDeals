@@ -267,6 +267,16 @@ export default function RegisterFlowPage() {
     };
   }, [autoRotate, currentStep]);
 
+  // Reset password form when entering password step
+  useEffect(() => {
+    if (currentStep === "password") {
+      passwordForm.reset({
+        password: "",
+        confirmPassword: ""
+      });
+    }
+  }, [currentStep, passwordForm]);
+
   // When user selects a role
   const toggleRole = (role: Role) => {
     setSelectedRoles(prev => {
