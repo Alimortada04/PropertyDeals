@@ -815,7 +815,7 @@ export default function RegisterFlowPage() {
                     disabled={
                       emailVerified ? false : 
                       isSendingCode ? true :
-                      (!verificationSent || !emailForm.getValues("verificationCode"))
+                      (verificationSent && !emailForm.getValues("verificationCode"))
                     }
                   >
                     {
@@ -871,10 +871,10 @@ export default function RegisterFlowPage() {
                 <div className="mt-8 mb-2">
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                      <Separator className="w-full" />
+                      <Separator className="w-full bg-gray-200" />
                     </div>
                     <div className="relative flex justify-center">
-                      <span className="bg-white px-4 text-sm text-gray-500 font-medium">
+                      <span className="bg-[#F5F5F5] px-4 text-sm text-gray-500 font-medium">
                         Or sign up with
                       </span>
                     </div>
