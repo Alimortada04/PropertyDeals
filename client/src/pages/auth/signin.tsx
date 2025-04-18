@@ -135,17 +135,8 @@ export default function SignInPage() {
   const emailInputRef = useRef<HTMLInputElement>(null);
   const [selectedRole, setSelectedRole] = useState<Role>('buyer');
   const [animateCards, setAnimateCards] = useState(true);
-  const autoCycleTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const [progress, setProgress] = useState(100);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Animation frame handler for countdown animation
-  const requestRef = useRef<number>();
-  const previousTimeRef = useRef<number>();
-  const startTimeRef = useRef<number>();
-  
-  // We don't need the countdown animation anymore
   
   // Add mouse tracking effect for the parallax
   useEffect(() => {
@@ -174,53 +165,7 @@ export default function SignInPage() {
     }
   }, [showEmailForm]);
   
-  // Progress animation
-  const animate = useCallback((time: number) => {
-    if (previousTimeRef.current === undefined) {
-      previousTimeRef.current = time;
-      startTimeRef.current = time;
-    }
-    
-    const elapsed = time - startTimeRef.current!;
-    const remaining = Math.max(0, CYCLE_DURATION - elapsed);
-    const newProgress = (remaining / CYCLE_DURATION) * 100;
-    
-    setProgress(newProgress);
-    
-    if (elapsed < CYCLE_DURATION) {
-      previousTimeRef.current = time;
-      requestRef.current = requestAnimationFrame(animate);
-    } else {
-      // Time to auto-cycle to next role
-      setSelectedRole(prevRole => {
-        if (prevRole === 'buyer') return 'seller';
-        if (prevRole === 'seller') return 'rep';
-        return 'buyer';
-      });
-      
-      // Briefly disable animations when switching roles automatically
-      setAnimateCards(false);
-      setTimeout(() => setAnimateCards(true), 50);
-      
-      // Reset animation
-      startTimeRef.current = time;
-      previousTimeRef.current = time;
-      requestRef.current = requestAnimationFrame(animate);
-    }
-  }, []);
-  
-  // Start countdown animation
-  useEffect(() => {
-    startTimeRef.current = undefined;
-    previousTimeRef.current = undefined;
-    requestRef.current = requestAnimationFrame(animate);
-    
-    return () => {
-      if (requestRef.current) {
-        cancelAnimationFrame(requestRef.current);
-      }
-    };
-  }, [animate]);
+  // We've removed the auto-cycling animation to show a single view
   
   // Handle role selection
   const handleRoleSelect = useCallback((role: Role) => {
@@ -232,15 +177,7 @@ export default function SignInPage() {
     // Briefly disable animations when switching roles manually
     setAnimateCards(false);
     setTimeout(() => setAnimateCards(true), 50);
-    
-    // Reset animation countdown
-    if (requestRef.current) {
-      cancelAnimationFrame(requestRef.current);
-    }
-    startTimeRef.current = undefined;
-    previousTimeRef.current = undefined;
-    requestRef.current = requestAnimationFrame(animate);
-  }, [selectedRole, animate]);
+  }, [selectedRole]);
 
   // Check if the browser supports WebAuthn/biometric authentication
   useEffect(() => {
@@ -390,7 +327,8 @@ export default function SignInPage() {
               style={{animationDelay: `${delay}ms`}}
             >
               <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative 
-                transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-2 group-hover:scale-105 hover:cursor-pointer">
+                transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-2 group-hover:scale-110 hover:cursor-pointer
+                group-hover:border-white/50 group-hover:bg-white/95 transform origin-bottom">
                 {/* Role badge */}
                 <div className="absolute top-2 right-2">
                   <span className={`text-[9px] uppercase font-semibold ${roleBadgeBg} px-1.5 py-0.5 rounded-full ${roleBadgeText}`}>
@@ -401,14 +339,16 @@ export default function SignInPage() {
                 </div>
                 
                 <div className="flex items-start space-x-3 mt-6">
-                  <div className={`p-2 rounded-lg shrink-0 ${iconBg}`}>
-                    {item.card.icon}
+                  <div className={`p-2 rounded-lg shrink-0 ${iconBg} transition-all duration-300 group-hover:scale-110 group-hover:shadow-sm`}>
+                    <div className="transform transition-transform group-hover:scale-110 duration-300">
+                      {item.card.icon}
+                    </div>
                   </div>
                   <div>
-                    <h3 className={`font-heading font-bold text-base ${titleColor}`}>
+                    <h3 className={`font-heading font-bold text-base ${titleColor} group-hover:translate-x-1 transition-all duration-300`}>
                       {item.card.title}
                     </h3>
-                    <p className="text-gray-600 text-xs">{item.card.description}</p>
+                    <p className="text-gray-600 text-xs group-hover:text-gray-800 transition-all duration-300">{item.card.description}</p>
                   </div>
                 </div>
               </div>
@@ -417,8 +357,13 @@ export default function SignInPage() {
         })}
       </div>
       
-      {/* Light gray circle shape behind the login card */}
-      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-gray-200/30 -z-0"></div>
+      {/* Light gray circle shape behind the login card with parallax effect */}
+      <div 
+        className="absolute left-1/2 top-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-gray-200/30 -z-0 transition-transform duration-200"
+        style={{
+          transform: `translate(calc(-50% + ${mousePosition.x * -25}px), calc(-50% + ${mousePosition.y * -25}px))`
+        }}
+      ></div>
       
       {/* Main Sign-In Card - Zoom Style */}
       <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-6 sm:p-8 mx-auto relative z-10 space-y-4">
