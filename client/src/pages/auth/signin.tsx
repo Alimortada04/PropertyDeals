@@ -284,21 +284,21 @@ export default function SignInPage() {
 
       {/* No brand header as requested */}
       
-      {/* Floating feature cards in circular layout */}
+      {/* Floating feature cards in circular layout - responsive */}
       <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
         {/* Circular layout of feature cards */}
         {animateCards && [
-          // Evenly distributed cards - top row
-          { card: roleCards.buyer[0], position: "absolute top-[15%] left-[15%]", role: "buyer", rotate: "-rotate-1" },
-          { card: roleCards.buyer[1], position: "absolute top-[15%] right-[15%]", role: "buyer", rotate: "rotate-1" },
+          // Evenly distributed cards - top row (only shown on larger screens)
+          { card: roleCards.buyer[0], position: "absolute top-[15%] left-[15%]", role: "buyer", rotate: "-rotate-1", showOn: "lg" },
+          { card: roleCards.buyer[1], position: "absolute top-[15%] right-[15%]", role: "buyer", rotate: "rotate-1", showOn: "lg" },
           
-          // Middle row - left and right sides
-          { card: roleCards.seller[0], position: "absolute top-[45%] left-[8%]", role: "seller", rotate: "-rotate-1.5" },
-          { card: roleCards.seller[1], position: "absolute top-[45%] right-[8%]", role: "seller", rotate: "rotate-1.5" },
+          // Middle row - left and right sides (shown on medium screens and up)
+          { card: roleCards.seller[0], position: "absolute top-[45%] left-[8%]", role: "seller", rotate: "-rotate-1.5", showOn: "md" },
+          { card: roleCards.seller[1], position: "absolute top-[45%] right-[8%]", role: "seller", rotate: "rotate-1.5", showOn: "md" },
           
-          // Bottom row
-          { card: roleCards.rep[0], position: "absolute bottom-[15%] left-[18%]", role: "rep", rotate: "rotate-1" },
-          { card: roleCards.rep[1], position: "absolute bottom-[15%] right-[18%]", role: "rep", rotate: "-rotate-1" }
+          // Bottom row (shown on medium screens and up)
+          { card: roleCards.rep[0], position: "absolute bottom-[15%] left-[18%]", role: "rep", rotate: "rotate-1", showOn: "md" },
+          { card: roleCards.rep[1], position: "absolute bottom-[15%] right-[18%]", role: "rep", rotate: "-rotate-1", showOn: "md" }
         ].map((item, index) => {
           const delay = 200 + (index * 70);
           const role = item.role;
@@ -320,15 +320,23 @@ export default function SignInPage() {
                            role === 'seller' ? 'text-[#135341]' : 
                            'text-[#803344]';
           
+          // Conditionally show cards based on screen size
+          const responsiveClass = 
+            item.showOn === 'lg' ? 'hidden lg:block' : 
+            item.showOn === 'md' ? 'hidden md:block' : '';
+            
           return (
             <div 
               key={`card-${index}`}
-              className={`${item.position} ${item.rotate} animate-in fade-in-50 duration-700 transition-all group`}
+              className={`${item.position} ${item.rotate} ${responsiveClass} animate-in fade-in-50 duration-700 transition-all group`}
               style={{animationDelay: `${delay}ms`}}
             >
-              <div className="bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative 
+              <div className={`bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md w-[160px] md:w-[180px] text-sm border border-gray-100 relative 
                 transition-all duration-300 group-hover:shadow-xl group-hover:-translate-y-2 group-hover:scale-110 hover:cursor-pointer
-                group-hover:border-white/50 group-hover:bg-white/95 transform origin-bottom">
+                group-hover:bg-white/95 transform origin-bottom group-hover:z-[100]
+                ${role === 'buyer' ? 'group-hover:border-[#135341] group-hover:border-2' : 
+                  role === 'seller' ? 'group-hover:border-[#135341] group-hover:border-2' : 
+                  'group-hover:border-[#803344] group-hover:border-2'}`}>
                 {/* Role badge */}
                 <div className="absolute top-2 right-2">
                   <span className={`text-[9px] uppercase font-semibold ${roleBadgeBg} px-1.5 py-0.5 rounded-full ${roleBadgeText}`}>
@@ -357,9 +365,9 @@ export default function SignInPage() {
         })}
       </div>
       
-      {/* Light gray circle shape behind the login card with parallax effect */}
+      {/* Light gray circle shape behind the login card with parallax effect - increased opacity */}
       <div 
-        className="absolute left-1/2 top-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-gray-200/30 -z-0 transition-transform duration-200"
+        className="absolute left-1/2 top-1/2 w-[120%] max-w-[600px] aspect-square rounded-full bg-gray-200/50 -z-0 transition-transform duration-200"
         style={{
           transform: `translate(calc(-50% + ${mousePosition.x * -25}px), calc(-50% + ${mousePosition.y * -25}px))`
         }}
