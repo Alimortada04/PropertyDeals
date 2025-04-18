@@ -766,12 +766,50 @@ export default function RegisterFlowPage() {
                         <FormControl>
                           <div className="space-y-4">
                             <div className="mb-3">
-                              <p className="text-sm text-gray-600 mb-4 text-center">
+                              <p className="text-sm text-gray-600 mb-2 text-center">
                                 Please enter the verification code sent to your email address
-                                <span className="font-semibold block mt-1">{emailForm.getValues("email")}</span>
+                                <span className="flex items-center justify-center gap-2 font-semibold mt-1">
+                                  {emailForm.getValues("email")}
+                                  <button 
+                                    type="button" 
+                                    className="text-xs text-[#135341] font-normal hover:underline ml-2" 
+                                    onClick={() => {
+                                      // Clear the OTP fields on resend
+                                      field.onChange("");
+                                      sendVerificationCode();
+                                    }}
+                                    disabled={isSendingCode}
+                                  >
+                                    {isSendingCode ? 'Sending...' : 'Resend'}
+                                  </button>
+                                </span>
                               </p>
                               
-                              <div className="flex items-center gap-2">
+                              {/* Gmail and Outlook quick links */}
+                              <div className="flex justify-center gap-4 mb-4">
+                                <a 
+                                  href="https://mail.google.com" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
+                                >
+                                  <SiGmail className="h-5 w-5 text-[#EA4335]" />
+                                  Open Gmail
+                                </a>
+                                <a 
+                                  href="https://outlook.live.com/mail" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
+                                >
+                                  <svg className="h-5 w-5 text-[#0078D4]" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M22.8 8.6c0-1-.9-1.9-1.9-1.9H15v7.6h6c1 0 1.9-.9 1.9-1.9V8.6zm-8.4 5.7c0 .3-.3.6-.6.6H3c-.3 0-.6-.3-.6-.6V7.6c0-.3.3-.6.6-.6h10.7c.3 0 .6.3.6.6v6.7z" />
+                                  </svg>
+                                  Open Outlook
+                                </a>
+                              </div>
+                              
+                              <div className="flex justify-center">
                                 <OTPInput
                                   maxLength={6}
                                   containerClassName="flex items-center gap-1"
@@ -800,64 +838,6 @@ export default function RegisterFlowPage() {
                                     </>
                                   )}
                                 />
-                                
-                                <Button 
-                                  type="button" 
-                                  variant="outline"
-                                  onClick={verifyEmailCode}
-                                  disabled={isVerifyingCode || !field.value || field.value.length < 6}
-                                  className="h-12 px-3"
-                                >
-                                  {isVerifyingCode ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                  ) : (
-                                    'Verify'
-                                  )}
-                                </Button>
-                              </div>
-                            </div>
-                            
-                            <div className="flex flex-col space-y-4">
-                              <div className="flex items-center">
-                                <p className="text-xs text-gray-500">
-                                  Can't find the email? {" "}
-                                  <button 
-                                    type="button" 
-                                    className="text-[#135341] hover:underline" 
-                                    onClick={() => {
-                                      // Clear the OTP fields on resend
-                                      field.onChange("");
-                                      sendVerificationCode();
-                                    }}
-                                    disabled={isSendingCode}
-                                  >
-                                    {isSendingCode ? 'Sending...' : 'Resend'}
-                                  </button>
-                                </p>
-                              </div>
-                              
-                              {/* Gmail and Outlook quick links */}
-                              <div className="flex justify-center gap-4 pt-2 pb-2">
-                                <a 
-                                  href="https://mail.google.com" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
-                                >
-                                  <SiGmail className="h-5 w-5 text-[#EA4335]" />
-                                  Open Gmail
-                                </a>
-                                <a 
-                                  href="https://outlook.live.com/mail" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="px-4 py-2 bg-gray-100 rounded-md flex items-center gap-2 text-sm font-medium hover:bg-gray-200 transition-colors text-gray-700"
-                                >
-                                  <svg className="h-5 w-5 text-[#0078D4]" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M22.8 8.6c0-1-.9-1.9-1.9-1.9H15v7.6h6c1 0 1.9-.9 1.9-1.9V8.6zm-8.4 5.7c0 .3-.3.6-.6.6H3c-.3 0-.6-.3-.6-.6V7.6c0-.3.3-.6.6-.6h10.7c.3 0 .6.3.6.6v6.7z" />
-                                  </svg>
-                                  Open Outlook
-                                </a>
                               </div>
                             </div>
                           </div>
@@ -1165,10 +1145,24 @@ export default function RegisterFlowPage() {
                             <div className="mb-3">
                               <p className="text-sm text-gray-600 mb-4 text-center">
                                 Please enter the verification code sent to your phone number
-                                <span className="font-semibold block mt-1">{phoneForm.getValues("phone")}</span>
+                                <span className="flex items-center justify-center font-semibold mt-1">
+                                  {phoneForm.getValues("phone")}
+                                  <button 
+                                    type="button" 
+                                    className="text-xs text-[#135341] font-normal hover:underline ml-2" 
+                                    onClick={() => {
+                                      // Clear the OTP fields on resend
+                                      field.onChange("");
+                                      sendSmsCode();
+                                    }}
+                                    disabled={isSendingSms}
+                                  >
+                                    {isSendingSms ? 'Sending...' : 'Resend'}
+                                  </button>
+                                </span>
                               </p>
                               
-                              <div className="flex items-center gap-2">
+                              <div className="flex justify-center">
                                 <OTPInput
                                   maxLength={6}
                                   containerClassName="flex items-center gap-1"
@@ -1197,39 +1191,7 @@ export default function RegisterFlowPage() {
                                     </>
                                   )}
                                 />
-                                
-                                <Button 
-                                  type="button" 
-                                  variant="outline"
-                                  onClick={verifySmsCode}
-                                  disabled={isVerifyingSms || !field.value || field.value.length < 6}
-                                  className="h-12 px-3"
-                                >
-                                  {isVerifyingSms ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                  ) : (
-                                    'Verify'
-                                  )}
-                                </Button>
                               </div>
-                            </div>
-                            
-                            <div className="flex items-center">
-                              <p className="text-xs text-gray-500">
-                                Didn't receive the code? {" "}
-                                <button 
-                                  type="button" 
-                                  className="text-[#135341] hover:underline" 
-                                  onClick={() => {
-                                    // Clear the OTP fields on resend
-                                    field.onChange("");
-                                    sendSmsCode();
-                                  }}
-                                  disabled={isSendingSms}
-                                >
-                                  {isSendingSms ? 'Sending...' : 'Resend'}
-                                </button>
-                              </p>
                             </div>
                           </div>
                         </FormControl>
