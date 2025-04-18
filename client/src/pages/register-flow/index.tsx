@@ -991,7 +991,11 @@ export default function RegisterFlowPage() {
                           <Input 
                             type={showPassword ? "text" : "password"} 
                             placeholder="" 
-                            {...field} 
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
                             className="bg-white/90 h-10 pr-10"
                           />
                           <button 
@@ -1023,7 +1027,11 @@ export default function RegisterFlowPage() {
                           <Input 
                             type={showConfirmPassword ? "text" : "password"} 
                             placeholder="" 
-                            {...field} 
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            name={field.name}
+                            ref={field.ref}
                             className="bg-white/90 h-10 pr-10"
                           />
                           <button 
