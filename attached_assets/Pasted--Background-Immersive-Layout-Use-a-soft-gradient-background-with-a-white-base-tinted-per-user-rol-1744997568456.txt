@@ -1,0 +1,124 @@
+ Background & Immersive Layout
+Use a soft gradient background with a white base, tinted per user role:
+
+Buyers: from-[#F5F5F5] to-[#eaf4f0]
+
+Sellers: from-[#F5F5F5] to-[#e9f5ec]
+
+REPs: from-[#F5F5F5] to-[#f5ebed]
+
+Animate background hue transitions when the selected role changes
+
+Auto-rotate between roles every 6–7 seconds unless manually selected
+
+✅ 2. Main Auth Card Container
+Wrap the entire form in a floating panel similar to /signin:
+
+tailwind
+Copy
+Edit
+bg-white/80 backdrop-blur-lg rounded-xl shadow-2xl max-w-2xl w-full p-8 sm:p-10 mx-auto space-y-4
+Center the card and ensure proper vertical spacing, especially on mobile.
+
+✅ 3. Role Selection
+Replace card-style buttons with pill-style toggle tabs
+tailwind
+Copy
+Edit
+flex justify-center items-center gap-2 mb-4
+Each tab:
+
+Shows role: Buyer | Seller | REP
+
+Includes a small subtitle or tooltip for clarification
+
+Active tab styling:
+
+tailwind
+Copy
+Edit
+bg-[#09261E] text-white px-4 py-1 rounded-full
+Inactive tab styling:
+
+tailwind
+Copy
+Edit
+bg-white/60 text-[#09261E] border border-gray-300
+Auto-rotate through roles every 6–7 seconds (pause on manual selection)
+
+✅ 4. Social Sign-In
+Place these at the top of the card, with consistent styling:
+
+Full-width buttons
+
+Icons + text:
+
+“Continue with Google”
+
+“Continue with Apple”
+
+Style:
+
+tailwind
+Copy
+Edit
+w-full flex items-center justify-center gap-2 py-2 rounded-md border border-gray-300 hover:bg-gray-50 transition
+Divider below:
+
+html
+Copy
+Edit
+<hr class="my-6" />
+<p class="text-center text-sm text-gray-400">OR register with email</p>
+✅ 5. Email Registration Form
+Split into two-column layout on desktop, stack vertically on mobile.
+
+Fields:
+
+Left Column	Right Column
+Full Name	Email
+Username	City
+Password	Confirm Password
+(Optional: Role field)	(Optional: REP Type / Goals)
+Use this input style:
+
+tailwind
+Copy
+Edit
+border rounded-md px-3 py-2 text-sm w-full
+Autofill:
+autocomplete="name", email, new-password
+
+✅ 6. Call to Action & Footer
+CTA Button:
+
+tailwind
+Copy
+Edit
+w-full bg-[#09261E] text-white py-2 rounded-md hover:bg-[#135341] transition
+Legal text:
+
+html
+Copy
+Edit
+<p class="text-xs text-gray-400 mt-3 text-center">
+  By registering, you agree to PropertyDeals' 
+  <a href="/privacy" class="underline">Privacy Policy</a> and 
+  <a href="/terms" class="underline">Terms of Use</a>.
+</p>
+🧠 Additional Notes
+If the user came from a specific CTA (like “List Your Property”), default the selected role to Seller.
+
+Store the selected role in the user’s metadata or session context.
+
+Defer extended onboarding fields (bio, photo, specialties) to a separate onboarding page post-signup.
+
+✅ TL;DR: Deliverables Checklist
+
+Section	Description
+Gradient background	White-based hue matching role: buyers, sellers, reps
+Centered card	Floating panel with consistent spacing and shadow
+Role selector	Pill-style tabs, auto-rotating, visually light
+Social login	Google + Apple at top, full-width with icons
+Email form	2-column layout on desktop, stacked mobile, role-sensitive fields
+CTA & legal	Proper sign-up button and light footer with links

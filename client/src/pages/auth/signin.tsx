@@ -596,39 +596,7 @@ export default function SignInPage() {
         </div>
       </div>
 
-      {/* Mobile-only stacked feature cards - Visible only on smaller screens */}
-      <div className="mt-12 sm:hidden space-y-4 max-w-sm mx-auto">
-        <h3 className={`text-center text-sm font-medium ${
-          selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'
-        }`}>
-          {selectedRole === 'buyer' ? 'Buyer Features' : 
-           selectedRole === 'seller' ? 'Seller Features' : 
-           'REP Features'}
-        </h3>
-        
-        {animateCards && roleCards[selectedRole].map((card, index) => (
-          <div 
-            key={`${selectedRole}-${index}-mobile`}
-            className="animate-in fade-in duration-500 delay-300 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md border border-gray-100 w-full"
-          >
-            <div className="flex items-start space-x-3">
-              <div className={`p-2 rounded-lg shrink-0 ${
-                selectedRole === 'rep' ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
-              }`}>
-                {card.icon}
-              </div>
-              <div>
-                <h3 className={`font-heading font-bold text-base ${
-                  selectedRole === 'rep' ? 'text-[#803344]' : 'text-[#09261E]'
-                }`}>
-                  {card.title}
-                </h3>
-                <p className="text-gray-600 text-sm">{card.description}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* No mobile feature cards as requested */}
     </div>
   );
 }
