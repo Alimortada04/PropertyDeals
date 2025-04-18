@@ -9,6 +9,9 @@ import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
 import AuthPage from "@/pages/auth-page";
+import SignInPage from "@/pages/auth/signin";
+import RegisterPage from "@/pages/auth/register";
+import OnboardingPage from "@/pages/onboarding";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
 import RepsPage from "@/pages/reps-page";
@@ -134,11 +137,18 @@ function Router() {
         </MainLayout>
       )} />
       <Route path="/signin">
-        <MainLayout>
-          <AuthPage />
-        </MainLayout>
+        <SignInPage />
       </Route>
       <Route path="/register">
+        <RegisterPage />
+      </Route>
+      <Route path="/onboarding">
+        <ProtectedRoute path="/onboarding" component={() => (
+          <OnboardingPage />
+        )} />
+      </Route>
+      {/* Legacy auth routes */}
+      <Route path="/auth">
         <MainLayout>
           <AuthPage />
         </MainLayout>
