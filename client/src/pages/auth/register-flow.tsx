@@ -122,7 +122,12 @@ const roleCards = {
 const roleBackgrounds = {
   buyer: "from-[#F5F5F5] to-[#d6ebe2]",
   seller: "from-[#F5F5F5] to-[#d5f0e0]",
-  rep: "from-[#F5F5F5] to-[#f2dfe1]"
+  rep: "from-[#F5F5F5] to-[#f2dfe1]",
+  // Multi-role combinations
+  "buyer-seller": "bg-gradient-to-br from-[#09261E] to-[#135341]",
+  "buyer-rep": "bg-gradient-to-br from-[#09261E] to-[#803344]",
+  "seller-rep": "bg-gradient-to-br from-[#135341] to-[#803344]",
+  "buyer-seller-rep": "bg-gradient-to-br from-[#09261E] via-[#135341] to-[#803344]"
 };
 
 // Registration schemas for each step
@@ -242,9 +247,7 @@ export default function RegisterFlowPage() {
     setSelectedRoles(prev => {
       // Check if role is already selected
       if (prev.includes(role)) {
-        // Don't remove if it's the only role
-        if (prev.length === 1) return prev;
-        // Otherwise remove it
+        // Allow removing all roles
         return prev.filter(r => r !== role);
       } else {
         // Add the role
@@ -257,6 +260,24 @@ export default function RegisterFlowPage() {
       setPrimaryRole(role);
       // Stop auto rotation
       setAutoRotate(false);
+    }
+  };
+  
+  // Get background gradient based on selected roles
+  const getBackgroundGradient = () => {
+    if (selectedRoles.length === 0) {
+      // Default background when no roles selected
+      return "from-[#F5F5F5] to-[#e9e9e9]";
+    } else if (selectedRoles.length === 1) {
+      // Single role background
+      return roleBackgrounds[selectedRoles[0]];
+    } else {
+      // Multiple roles - sort them alphabetically for consistent key lookup
+      const sortedRoles = [...selectedRoles].sort().join("-");
+      
+      // Return mapped gradient or fallback to a default one
+      return roleBackgrounds[sortedRoles as keyof typeof roleBackgrounds] || 
+             "bg-gradient-to-br from-[#09261E] via-[#135341] to-[#803344]";
     }
   };
 
@@ -511,63 +532,17 @@ export default function RegisterFlowPage() {
                 <Button 
                   type="submit" 
                   className={`w-full ${
-                    primaryRole === 'rep' ? 'bg-[#803344] hover:bg-[#a34d5e]' : 'bg-[#09261E] hover:bg-[#0f3e2a]'
-                  } text-white flex items-center justify-center gap-2`}
+                    selectedRoles.length === 0 
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : primaryRole === 'rep' 
+                        ? 'bg-[#803344] hover:bg-[#a34d5e] text-white' 
+                        : 'bg-[#09261E] hover:bg-[#0f3e2a] text-white'
+                  } flex items-center justify-center gap-2 transition-colors`}
                   disabled={selectedRoles.length === 0}
                 >
-                  <span>Continue</span>
+                  <span>{selectedRoles.length === 0 ? 'Select a Role to Continue' : 'Continue'}</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
-                
-                {/* Social registration options */}
-                <div className="relative my-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <Separator className="w-full" />
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="bg-white px-2 text-xs text-gray-400">
-                      OR SIGN UP WITH
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="flex justify-center gap-4">
-                  <Button 
-                    type="button"
-                    variant="outline" 
-                    size="icon"
-                    className="w-12 h-12 rounded-full border text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
-                    onClick={() => handleSocialRegistration('Google')}
-                    disabled={selectedRoles.length === 0}
-                  >
-                    <SiGoogle className="h-5 w-5" />
-                    <span className="sr-only">Sign up with Google</span>
-                  </Button>
-                  
-                  <Button 
-                    type="button"
-                    variant="outline" 
-                    size="icon"
-                    className="w-12 h-12 rounded-full border text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
-                    onClick={() => handleSocialRegistration('Apple')}
-                    disabled={selectedRoles.length === 0}
-                  >
-                    <SiApple className="h-5 w-5" />
-                    <span className="sr-only">Sign up with Apple</span>
-                  </Button>
-                  
-                  <Button 
-                    type="button"
-                    variant="outline" 
-                    size="icon"
-                    className="w-12 h-12 rounded-full border text-xl flex items-center justify-center hover:bg-gray-50 transition-all"
-                    onClick={() => handleSocialRegistration('Facebook')}
-                    disabled={selectedRoles.length === 0}
-                  >
-                    <SiFacebook className="h-5 w-5 text-[#1877F2]" />
-                    <span className="sr-only">Sign up with Facebook</span>
-                  </Button>
-                </div>
               </form>
             </Form>
           </div>
@@ -944,16 +919,18 @@ export default function RegisterFlowPage() {
   };
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${roleBackgrounds[primaryRole]} relative overflow-hidden flex items-center justify-center py-10 sm:py-16`}>
+    <div className={`min-h-screen bg-gradient-to-br ${getBackgroundGradient()} relative overflow-hidden flex items-center justify-center py-10 sm:py-16`}>
       {/* Rotating role-specific tagline */}
       <div className="absolute top-8 sm:top-12 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 shadow-sm mb-4">
+        <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 shadow-sm">
           <span className="text-xs font-semibold tracking-wide animate-in fade-in duration-500">
             <span className={`${
               primaryRole === 'rep' ? 'text-[#803344]' : 'text-[#135341]'  
             }`}>• </span>
             <span className="text-[#09261E]">
-              {primaryRole === 'buyer' ? 'MADE FOR BUYERS' : 
+              {selectedRoles.length === 0 ? 'CHOOSE YOUR ROLE' :
+               selectedRoles.length > 1 ? 'MULTIPLE ROLES SELECTED' :
+               primaryRole === 'buyer' ? 'MADE FOR BUYERS' : 
                primaryRole === 'seller' ? 'MADE FOR SELLERS' : 
                'MADE FOR REPS'}
             </span>
@@ -966,14 +943,22 @@ export default function RegisterFlowPage() {
       
       {/* Progress bar */}
       {currentStep !== "success" && (
-        <div className="absolute top-20 sm:top-24 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-md px-6">
+        <div className="absolute top-20 sm:top-24 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-md px-6 mt-6">
           <div className="bg-white/80 backdrop-blur-sm rounded-full p-3 shadow-sm">
             <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
               <span>Step {currentStep === "role" ? "1" : currentStep === "email" ? "2" : currentStep === "password" ? "3" : "4"} of 4</span>
               <span>{stepProgress[currentStep]}%</span>
             </div>
-            <Progress value={stepProgress[currentStep]} className="h-1.5" 
-              indicatorColor={primaryRole === 'rep' ? 'bg-[#803344]' : 'bg-[#135341]'}
+            <Progress 
+              value={stepProgress[currentStep]} 
+              className="h-1.5" 
+              indicatorColor={
+                selectedRoles.includes('rep') 
+                  ? 'bg-[#803344]' 
+                  : (selectedRoles.includes('buyer') || selectedRoles.includes('seller'))
+                    ? 'bg-[#135341]'
+                    : 'bg-gray-400'
+              }
             />
           </div>
         </div>
