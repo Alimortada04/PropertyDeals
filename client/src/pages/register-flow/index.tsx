@@ -207,6 +207,10 @@ export default function RegisterFlowPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
+  // Password fields independent state
+  const [passwordValue, setPasswordValue] = useState("");
+  const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
+  
   // Animation state
   const [animateCards, setAnimateCards] = useState(true);
   const [autoRotate, setAutoRotate] = useState(true);
@@ -267,15 +271,13 @@ export default function RegisterFlowPage() {
     };
   }, [autoRotate, currentStep]);
 
-  // Reset password form when entering password step
+  // Reset password fields when entering password step
   useEffect(() => {
     if (currentStep === "password") {
-      passwordForm.reset({
-        password: "",
-        confirmPassword: ""
-      });
+      setPasswordValue("");
+      setConfirmPasswordValue("");
     }
-  }, [currentStep, passwordForm]);
+  }, [currentStep]);
 
   // When user selects a role
   const toggleRole = (role: Role) => {
@@ -462,11 +464,33 @@ export default function RegisterFlowPage() {
     setCurrentStep("password");
   };
 
-  // Handle password submission
-  const onPasswordSubmit = (data: z.infer<typeof passwordSchema>) => {
+  // Handle password submission with the independent state approach
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validation
+    if (passwordValue !== confirmPasswordValue) {
+      toast({
+        title: "Passwords don't match",
+        description: "Please make sure your passwords match",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (passwordValue.length < 8) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 8 characters long",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Update registration data and proceed
     setRegistrationData(prev => ({
       ...prev,
-      password: data.password
+      password: passwordValue
     }));
     setCurrentStep("phone");
   };
@@ -981,40 +1005,6 @@ export default function RegisterFlowPage() {
         );
         
       case "password":
-        // Create local password state variables for this step
-        const [passwordValue, setPasswordValue] = useState("");
-        const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
-        
-        // Submit handler for password form using local state
-        const handlePasswordSubmit = (e: React.FormEvent) => {
-          e.preventDefault();
-          
-          // Validation
-          if (passwordValue !== confirmPasswordValue) {
-            toast({
-              title: "Passwords don't match",
-              description: "Please make sure your passwords match",
-              variant: "destructive"
-            });
-            return;
-          }
-          
-          if (passwordValue.length < 8) {
-            toast({
-              title: "Password too short",
-              description: "Password must be at least 8 characters long",
-              variant: "destructive"
-            });
-            return;
-          }
-          
-          // Update registration data and proceed
-          setRegistrationData(prev => ({
-            ...prev,
-            password: passwordValue
-          }));
-          setCurrentStep("phone");
-        };
         
         return (
           <div className="animate-in fade-in-50 zoom-in-95 duration-500 bg-white/90 backdrop-blur-lg rounded-xl shadow-xl border border-white/20 max-w-md w-full p-6 sm:p-8 mx-auto relative z-10">
