@@ -468,40 +468,38 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           {/* Main Navigation */}
           <div className="py-4">
             <div className="mb-6">
-              {isExpanded && (
-                <h3 className="text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2">
-                  Navigation
-                </h3>
-              )}
+              <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 mb-0 overflow-hidden'}`}>
+                Navigation
+              </h3>
               <ul>
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
                     <Home className="w-5 h-5 flex-shrink-0" />
-                    {isExpanded && <span className="ml-3">Home</span>}
+                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Home</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/properties" className={getNavItemClasses("/properties")}>
                     <Building className="w-5 h-5 flex-shrink-0" />
-                    {isExpanded && <span className="ml-3">Properties</span>}
+                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Properties</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/reps" className={getNavItemClasses("/reps")}>
                     <Users className="w-5 h-5 flex-shrink-0" />
-                    {isExpanded && <span className="ml-3">The REP Room</span>}
+                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>The REP Room</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/discussions" className={getNavItemClasses("/discussions")}>
                     <MessageCircle className="w-5 h-5 flex-shrink-0" />
-                    {isExpanded && <span className="ml-3">Discussions</span>}
+                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Discussions</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/dashboard" className={getNavItemClasses("/dashboard")}>
                     <LayoutDashboard className="w-5 h-5 flex-shrink-0" />
-                    {isExpanded && <span className="ml-3">Dashboard</span>}
+                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Dashboard</span>
                   </Link>
                 </li>
               </ul>
@@ -509,28 +507,26 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
 
             {/* Resources Section */}
             <div className="mb-6">
-              {isExpanded && (
-                <h3 className="text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2">
-                  Resources
-                </h3>
-              )}
+              <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 mb-0 overflow-hidden'}`}>
+                Resources
+              </h3>
               <ul>
                 <li>
                   <Link href="/playbook" className={getNavItemClasses("/playbook")}>
                     <Book className="w-5 h-5 flex-shrink-0" />
-                    {isExpanded && <span className="ml-3">PropertyPlaybook</span>}
+                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>PropertyPlaybook</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/tools" className={getNavItemClasses("/tools")}>
                     <Calculator className="w-5 h-5 flex-shrink-0" />
-                    {isExpanded && <span className="ml-3">Tools</span>}
+                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Tools</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/help" className={getNavItemClasses("/help")}>
                     <HelpCircle className="w-5 h-5 flex-shrink-0" />
-                    {isExpanded && <span className="ml-3">Help</span>}
+                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Help</span>
                   </Link>
                 </li>
               </ul>
@@ -542,22 +538,20 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           
           {/* Profile & Settings */}
           <div className="mt-auto border-t border-gray-200 py-4">
-            {isExpanded && (
-              <h3 className="text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2">
-                Account
-              </h3>
-            )}
+            <h3 className={`text-xs uppercase text-gray-500 font-medium tracking-wider px-4 mb-2 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 h-0 mb-0 overflow-hidden'}`}>
+              Account
+            </h3>
             <ul>
               <li>
                 <Link href="/profile" className={getNavItemClasses("/profile")}>
                   <UserCircle className="w-5 h-5 flex-shrink-0" />
-                  {isExpanded && <span className="ml-3">Profile</span>}
+                  <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Profile</span>
                 </Link>
               </li>
               <li>
                 <Link href="/settings" className={getNavItemClasses("/settings")}>
                   <Settings className="w-5 h-5 flex-shrink-0" />
-                  {isExpanded && <span className="ml-3">Settings</span>}
+                  <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Settings</span>
                 </Link>
               </li>
             </ul>

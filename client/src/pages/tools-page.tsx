@@ -44,7 +44,7 @@ export default function ToolsPage() {
       icon: <BarChart3 size={18} strokeWidth={1.5} />,
       path: "/tools/investment",
       tags: ["Buy & Hold"],
-      coverImage: "https://images.unsplash.com/photo-1630937045487-5a50afbb2273?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHJlbnRhbCUyMHByb3BlcnR5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+      coverImage: "https://images.unsplash.com/photo-1582281298055-e25b84a30b0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cmVhbCUyMGVzdGF0ZSUyMGludmVzdG1lbnR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60",
       inputs: ["Purchase Price", "Monthly Rent", "Expenses"],
       outputs: ["Cash Flow", "Cap Rate", "ROI"],
       functionType: "calculator"
