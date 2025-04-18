@@ -1,0 +1,103 @@
+We are finalizing Step 1 of 4 of the /register process, where users choose their role(s). The functionality and visuals are close but need to be refined for both UX clarity and visual integrity.
+
+✅ Required Fixes
+🔧 1. Fix Continue Button Logic
+✅ Must only enable “Continue” when at least one role is selected
+
+❌ Currently not working even when valid selection is made
+
+Logic:
+
+ts
+Copy
+Edit
+if (selectedRoles.length === 0) {
+  disable Continue
+} else {
+  enable Continue
+}
+Style “Continue” button disabled state:
+
+tailwind
+Copy
+Edit
+bg-gray-200 text-gray-400 cursor-not-allowed
+🎨 2. Fix Background Color Logic for Multiple Roles
+When only ONE role is selected:
+✅ Keep existing soft white + tinted hue background
+
+
+Role	Gradient Tint
+Buyer	White → #09261E (dark green) soft wash
+Seller	White → #135341 (light green) soft wash
+REP	White → #803344 (wine) soft wash
+When MULTIPLE roles are selected:
+🔁 Instead of using full dark fills or overlays, add colored washes in sections of the background — like how the homepage handles visual segmentation.
+
+🧠 Design Direction:
+
+Think of it like adding colored spotlight washes from the sides:
+
+2 roles selected → split 50/50
+
+3 roles selected → soft zones blended across left/center/right
+
+Recommended Implementation:
+
+Use multiple radial-gradient or linear-gradient backgrounds with color stop percentages
+
+Keep main background light, but introduce gentle tinted overlays
+
+css
+Copy
+Edit
+background: radial-gradient(at 25% 50%, #09261E10 30%, transparent 60%),
+            radial-gradient(at 75% 50%, #80334410 30%, transparent 60%),
+            #F5F5F5;
+Maintain a clean, breathable look — not harsh or overwhelming
+
+🃏 3. Floating Cards Should Match Role Selection
+Rules:
+If 1 role selected, show 4 floating feature cards for that role
+
+If 2 roles selected, show 8 cards (4 per role)
+
+If 3 roles selected, show 12 total cards (4 per role)
+
+Behavior:
+Each card floats as it does now — subtle hover motion
+
+Ensure cards do not overlap — arrange in a 2x2, 3x4, or grid layout with:
+
+tailwind
+Copy
+Edit
+gap-6 flex-wrap justify-center
+Use staggered animation or transition on role toggle
+
+Example: REP + Buyer = show 4 REP cards + 4 Buyer cards, spread evenly across both sides of the main panel.
+
+✅ 4. Top Tag Update
+Change the label at the top to reflect multiple selections:
+
+text
+Copy
+Edit
+• Made for Buyers •
+• Made for Sellers •
+• Made for REPs •
+If 2 or 3 are selected:
+
+text
+Copy
+Edit
+• Multiple Roles Selected •
+Add animation or cycle through selected tags (like the signin page does).
+
+📦 Deliverables Summary
+
+Element	Requirement
+Continue Button	Only enabled if ≥1 role is selected, otherwise disabled and styled properly
+Background Color	Light base, soft gradient hues based on selected roles (1, 2, or 3)
+Floating Cards	Dynamically show 4 cards per selected role, spaced evenly
+Tag Label	Reflect current role or show “Multiple Roles Selected”

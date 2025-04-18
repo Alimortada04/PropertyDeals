@@ -118,16 +118,16 @@ const roleCards = {
   ]
 };
 
-// Background gradients for different roles
+// Background gradients for different roles - with light washes 
 const roleBackgrounds = {
   buyer: "from-[#F5F5F5] to-[#d6ebe2]",
   seller: "from-[#F5F5F5] to-[#d5f0e0]",
   rep: "from-[#F5F5F5] to-[#f2dfe1]",
-  // Multi-role combinations
-  "buyer-seller": "bg-gradient-to-br from-[#09261E] to-[#135341]",
-  "buyer-rep": "bg-gradient-to-br from-[#09261E] to-[#803344]",
-  "seller-rep": "bg-gradient-to-br from-[#135341] to-[#803344]",
-  "buyer-seller-rep": "bg-gradient-to-br from-[#09261E] via-[#135341] to-[#803344]"
+  // Multi-role combinations with soft spotlight gradients
+  "buyer-seller": "bg-[#F5F5F5] bg-[radial-gradient(at_25%_50%,#09261E10_30%,transparent_70%),radial-gradient(at_75%_50%,#13534110_30%,transparent_70%)]",
+  "buyer-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_25%_50%,#09261E10_30%,transparent_70%),radial-gradient(at_75%_50%,#80334410_30%,transparent_70%)]",
+  "seller-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_25%_50%,#13534110_30%,transparent_70%),radial-gradient(at_75%_50%,#80334410_30%,transparent_70%)]",
+  "buyer-seller-rep": "bg-[#F5F5F5] bg-[radial-gradient(at_15%_50%,#09261E10_25%,transparent_60%),radial-gradient(at_50%_50%,#13534110_25%,transparent_60%),radial-gradient(at_85%_50%,#80334410_25%,transparent_60%)]"
 };
 
 // Registration schemas for each step
@@ -543,6 +543,26 @@ export default function RegisterFlowPage() {
                   <span>{selectedRoles.length === 0 ? 'Select a Role to Continue' : 'Continue'}</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
+                
+                {/* Progress bar at bottom of card */}
+                <div className="mt-6 pt-2">
+                  <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
+                    <span>Step 1 of 4</span>
+                    <span>25%</span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-300 ${
+                        selectedRoles.includes('rep') 
+                          ? 'bg-[#803344]' 
+                          : (selectedRoles.includes('buyer') || selectedRoles.includes('seller'))
+                            ? 'bg-[#135341]'
+                            : 'bg-gray-400'
+                      }`} 
+                      style={{ width: '25%' }}
+                    ></div>
+                  </div>
+                </div>
               </form>
             </Form>
           </div>
@@ -646,6 +666,24 @@ export default function RegisterFlowPage() {
                       )
                     }
                   </Button>
+                </div>
+                
+                {/* Progress bar at bottom of card */}
+                <div className="mt-6 pt-2">
+                  <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
+                    <span>Step 2 of 4</span>
+                    <span>50%</span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-300 ${
+                        selectedRoles.includes('rep') 
+                          ? 'bg-[#803344]' 
+                          : 'bg-[#135341]'
+                      }`} 
+                      style={{ width: '50%' }}
+                    ></div>
+                  </div>
                 </div>
                 
                 {/* Social registration options */}
@@ -765,6 +803,24 @@ export default function RegisterFlowPage() {
                     <span>Secure My Account</span>
                     <Key className="h-4 w-4" />
                   </Button>
+                </div>
+                
+                {/* Progress bar at bottom of card */}
+                <div className="mt-6 pt-2">
+                  <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
+                    <span>Step 3 of 4</span>
+                    <span>75%</span>
+                  </div>
+                  <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+                    <div 
+                      className={`h-full transition-all duration-300 ${
+                        selectedRoles.includes('rep') 
+                          ? 'bg-[#803344]' 
+                          : 'bg-[#135341]'
+                      }`} 
+                      style={{ width: '75%' }}
+                    ></div>
+                  </div>
                 </div>
               </form>
             </Form>
@@ -941,28 +997,7 @@ export default function RegisterFlowPage() {
         </div>
       </div>
       
-      {/* Progress bar */}
-      {currentStep !== "success" && (
-        <div className="absolute top-20 sm:top-24 left-1/2 transform -translate-x-1/2 z-20 w-full max-w-md px-6 mt-6">
-          <div className="bg-white/80 backdrop-blur-sm rounded-full p-3 shadow-sm">
-            <div className="flex justify-between text-xs text-gray-500 mb-2 px-1">
-              <span>Step {currentStep === "role" ? "1" : currentStep === "email" ? "2" : currentStep === "password" ? "3" : "4"} of 4</span>
-              <span>{stepProgress[currentStep]}%</span>
-            </div>
-            <Progress 
-              value={stepProgress[currentStep]} 
-              className="h-1.5" 
-              indicatorColor={
-                selectedRoles.includes('rep') 
-                  ? 'bg-[#803344]' 
-                  : (selectedRoles.includes('buyer') || selectedRoles.includes('seller'))
-                    ? 'bg-[#135341]'
-                    : 'bg-gray-400'
-              }
-            />
-          </div>
-        </div>
-      )}
+      {/* Removed the progress bar from here - it will be at bottom of each card instead */}
       
       {/* Radial glow behind the card */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -975,57 +1010,84 @@ export default function RegisterFlowPage() {
       
       {/* Background feature cards on larger screens */}
       <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Generate cards based on selected role (for desktop/tablet only) */}
-        {animateCards && roleCards[primaryRole].map((card, index) => {
-          // Define positions based on card.position and screen size
-          let positionClasses = "";
-          let animationClasses = "";
+        {/* Show cards based on all selected roles (for desktop/tablet only) */}
+        {animateCards && (selectedRoles.length > 0 ? selectedRoles : [primaryRole]).flatMap((role, roleIndex) => {
+          // Get cards for this role
+          const cards = roleCards[role];
           
-          // Responsive positioning for different screen sizes
-          if (card.position === "top-left") {
-            positionClasses = "top-24 left-4 md:top-20 md:-left-4 lg:left-16 rotate-[1.5deg]";
-            animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[200ms]";
-          } else if (card.position === "bottom-right") {
-            positionClasses = "bottom-24 right-4 md:bottom-16 md:-right-8 lg:right-20 rotate-[-2deg]";
-            animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[300ms]";
-          } else if (card.position === "middle-left") {
-            positionClasses = "top-1/2 -translate-y-1/2 -left-16 md:-left-8 lg:left-4 rotate-[-1.5deg] hidden md:block";
-            animationClasses = "animate-in fade-in-50 slide-in-from-left-10 duration-700 delay-[400ms]";
-          } else if (card.position === "top-right") {
-            positionClasses = "top-32 right-4 md:top-28 md:right-0 lg:right-12 rotate-[2deg]";
-            animationClasses = "animate-in fade-in-50 slide-in-from-right-10 duration-700 delay-[500ms]";
-          }
+          // Calculate offset based on total number of selected roles
+          const totalRoles = selectedRoles.length || 1;
+          const offsetFactor = roleIndex / Math.max(1, totalRoles - 1); // 0 for first, 1 for last
           
-          // Optionally add blur to one card for depth effect
-          const blurClass = card.position === "middle-left" ? "blur-[1px]" : "";
-          
-          // Scale down cards on smaller screens
-          const sizeClasses = "w-[200px] md:w-[215px] lg:w-[230px]";
-          
-          return (
-            <div 
-              key={`${primaryRole}-${index}-desktop`}
-              className={`absolute ${positionClasses} transform ${animationClasses} hover:-translate-y-1 hover:shadow-lg transition-all`}
-            >
-              <div className={`bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md ${sizeClasses} text-sm border border-gray-100 ${blurClass}`}>
-                <div className="flex items-start space-x-3">
-                  <div className={`p-2 rounded-lg shrink-0 ${
-                    primaryRole === 'rep' ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
-                  }`}>
-                    {card.icon}
-                  </div>
-                  <div>
-                    <h3 className={`font-heading font-bold text-base ${
-                      primaryRole === 'rep' ? 'text-[#803344]' : 'text-[#09261E]'
+          return cards.map((card, cardIndex) => {
+            // Define positions based on card position, number of roles, and role index
+            let positionClasses = "";
+            let animationClasses = "";
+            let animationDelay = 200 + (cardIndex * 100) + (roleIndex * 50); // Staggered animations
+            
+            // Position cards based on role index and total roles
+            if (totalRoles === 1) {
+              // Single role - use original positioning
+              if (card.position === "top-left") {
+                positionClasses = "top-24 left-4 md:top-20 md:-left-4 lg:left-16 rotate-[1.5deg]";
+              } else if (card.position === "bottom-right") {
+                positionClasses = "bottom-24 right-4 md:bottom-16 md:-right-8 lg:right-20 rotate-[-2deg]";
+              } else if (card.position === "middle-left") {
+                positionClasses = "top-1/2 -translate-y-1/2 -left-16 md:-left-8 lg:left-4 rotate-[-1.5deg] hidden md:block";
+              } else if (card.position === "top-right") {
+                positionClasses = "top-32 right-4 md:top-28 md:right-0 lg:right-12 rotate-[2deg]";
+              }
+            } else {
+              // Multiple roles - distribute cards evenly
+              // Left to right distribution based on role index
+              const horizontalOffset = `${20 + (offsetFactor * 60)}%`; // 20% to 80% of screen width
+              
+              // Vertical distribution based on card index
+              const verticalPositions = ["top-24", "top-1/2 -translate-y-1/2", "bottom-24", "top-40"];
+              const rotation = [(1.5 - offsetFactor), (-1.5 + offsetFactor), (1 - offsetFactor), (-1 + offsetFactor)];
+            
+              positionClasses = `${verticalPositions[cardIndex]} left-[${horizontalOffset}] rotate-[${rotation[cardIndex]}deg]`;
+            }
+            
+            // Animation classes
+            animationClasses = `animate-in fade-in-50 duration-700 delay-[${animationDelay}ms]`;
+            if (offsetFactor < 0.5) {
+              animationClasses += " slide-in-from-left-10";
+            } else {
+              animationClasses += " slide-in-from-right-10";
+            }
+            
+            // Optionally add blur to some cards for depth effect
+            const blurClass = cardIndex % 3 === 1 ? "blur-[1px]" : "";
+            
+            // Scale down cards on smaller screens
+            const sizeClasses = "w-[180px] md:w-[200px] lg:w-[220px]";
+            
+            return (
+              <div 
+                key={`${role}-${cardIndex}-desktop`}
+                className={`absolute ${positionClasses} transform ${animationClasses} hover:-translate-y-1 hover:shadow-lg transition-all`}
+              >
+                <div className={`bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md ${sizeClasses} text-sm border border-gray-100 ${blurClass}`}>
+                  <div className="flex items-start space-x-3">
+                    <div className={`p-2 rounded-lg shrink-0 ${
+                      role === 'rep' ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
                     }`}>
-                      {card.title}
-                    </h3>
-                    <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
+                      {card.icon}
+                    </div>
+                    <div>
+                      <h3 className={`font-heading font-bold text-base ${
+                        role === 'rep' ? 'text-[#803344]' : 'text-[#09261E]'
+                      }`}>
+                        {card.title}
+                      </h3>
+                      <p className="text-gray-600 text-xs md:text-sm">{card.description}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
+            );
+          });
         })}
       </div>
       
