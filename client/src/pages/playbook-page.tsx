@@ -16,7 +16,7 @@ import PlaybookCard, { PlaybookResource } from "@/components/playbook/playbook-c
 import TabNav from "@/components/playbook/tab-nav";
 
 export default function PlaybookPage() {
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("general");
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredResources, setFilteredResources] = useState<PlaybookResource[]>([]);
 
@@ -28,7 +28,7 @@ export default function PlaybookPage() {
       title: "PropertyDictionary",
       description: "Comprehensive glossary of real estate terms and definitions for investors and professionals.",
       path: "/playbook/property-dictionary",
-      audience: ["all"],
+      audience: ["general"],
       updatedAt: "2 days ago",
       isTrending: true
     },
@@ -37,64 +37,63 @@ export default function PlaybookPage() {
       icon: <FileCheck size={32} strokeWidth={1.5} />,
       title: "Due Diligence Checklist",
       description: "Complete step-by-step checklist for thorough property research and evaluation.",
-      path: "/playbook/due-diligence",
-      audience: ["all"],
-      updatedAt: "1 week ago"
+      audience: ["general"],
+      isComingSoon: true
     },
     {
       id: "investment-strategies",
       icon: <BarChart3 size={32} strokeWidth={1.5} />,
       title: "Investment Strategies",
       description: "Overview of popular real estate investment strategies with pros and cons of each approach.",
-      path: "/playbook/investment-strategies",
-      audience: ["all"]
+      audience: ["general"],
+      isComingSoon: true
     },
     {
       id: "video-tutorials",
       icon: <Video size={32} strokeWidth={1.5} />,
       title: "Video Tutorials",
       description: "Watch step-by-step video tutorials on various aspects of real estate investing.",
-      path: "/playbook/video-tutorials",
-      audience: ["all"]
+      audience: ["general"],
+      isComingSoon: true
     },
     {
       id: "creative-financing",
       icon: <Book size={32} strokeWidth={1.5} />,
       title: "Creative Financing Guide",
       description: "Explore alternative financing methods beyond traditional mortgages for your real estate investments.",
-      path: "/playbook/creative-financing",
-      audience: ["buyers", "reps"]
+      audience: ["buyers", "reps"],
+      isComingSoon: true
     },
     {
       id: "disposition-guide",
       icon: <Briefcase size={32} strokeWidth={1.5} />,
       title: "Disposition & Buyer Building Playbook",
       description: "Strategies for sellers to maximize property value and build a reliable buyer network.",
-      path: "/playbook/disposition-guide",
-      audience: ["sellers", "reps"]
+      audience: ["sellers", "reps"],
+      isComingSoon: true
     },
     {
       id: "property-walkthrough",
       icon: <FileText size={32} strokeWidth={1.5} />,
       title: "How to Walk a Property Guide",
       description: "Learn how to effectively evaluate properties during inspections and identify potential issues.",
-      path: "/playbook/property-walkthrough",
-      audience: ["sellers", "reps"]
+      audience: ["sellers", "reps"],
+      isComingSoon: true
     },
     {
       id: "ethics-compliance",
       icon: <HelpCircle size={32} strokeWidth={1.5} />,
       title: "Ethics & Compliance Center",
       description: "Resources on real estate ethics, legal requirements, and maintaining compliance.",
-      path: "/playbook/ethics-compliance",
-      audience: ["sellers", "reps"]
+      audience: ["sellers", "reps"],
+      isComingSoon: true
     },
     {
       id: "deal-anatomy",
       icon: <BarChart3 size={32} strokeWidth={1.5} />,
       title: "Live Deal Anatomy / Case Studies",
       description: "Detailed analysis of successful real estate deals with lessons learned and key takeaways.",
-      audience: ["all"],
+      audience: ["general"],
       isComingSoon: true
     }
   ];
@@ -103,12 +102,8 @@ export default function PlaybookPage() {
   useEffect(() => {
     let results = [...playBookResources];
     
-    // Filter by audience tab
-    if (activeTab !== "all") {
-      results = results.filter(resource => 
-        resource.audience.includes("all") || resource.audience.includes(activeTab)
-      );
-    }
+    // Filter by audience tab - only showing resources specifically for that audience
+    results = results.filter(resource => resource.audience.includes(activeTab));
     
     // Filter by search term
     if (searchTerm.trim() !== "") {
@@ -133,7 +128,7 @@ export default function PlaybookPage() {
   // Initialize from URL hash if present
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
-    if (["all", "buyers", "sellers", "reps"].includes(hash)) {
+    if (["general", "buyers", "sellers", "reps"].includes(hash)) {
       setActiveTab(hash);
     }
   }, []);
