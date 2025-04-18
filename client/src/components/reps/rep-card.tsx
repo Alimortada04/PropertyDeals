@@ -183,13 +183,12 @@ export default function RepCard({ rep }: RepCardProps) {
         )}
       </CardContent>
 
-      {/* Bottom CTA Section - All screen sizes */}
-      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 flex gap-2">
+      {/* Bottom CTA Section - Only Message button */}
+      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 flex justify-center">
         {/* Message button */}
         <Button 
-          variant="outline"
           size="sm"
-          className="flex-1 text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white transition-colors"
+          className="w-full bg-[#09261E] hover:bg-[#135341] text-white transition-colors"
           onClick={(e) => {
             e.stopPropagation();
             // Open message dialog
@@ -197,22 +196,6 @@ export default function RepCard({ rep }: RepCardProps) {
         >
           <MessageCircle size={16} className="mr-1" />
           Message
-        </Button>
-        
-        <Button 
-          size="sm"
-          className="flex-1 bg-[#09261E] hover:bg-[#135341] text-white transition-colors"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (isBusiness) {
-              setLocation(`/business/${rep.slug}`);
-            } else {
-              // Navigate to the individual REP profile page
-              setLocation(`/reps/${rep.id}`);
-            }
-          }}
-        >
-          View Profile
         </Button>
       </CardFooter>
     </Card>
