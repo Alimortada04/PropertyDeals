@@ -1049,14 +1049,10 @@ export default function RegisterFlowPage() {
       
       {/* Background feature cards - positioned exactly like /signin */}
       <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Top left - Buyer cards */}
         {animateCards && (
           <>
-            {/* Top left - Buyer card 1 */}
-            <div
-              className="hidden md:block absolute top-[120px] left-[100px] rotate-[1deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#09261E]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all"
-              style={{animationDelay: '100ms'}}
-            >
+            {/* Buyer cards - top row */}
+            <div className="hidden md:block absolute top-[120px] left-[100px] rotate-[1deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#09261E]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all">
               <div className="flex items-start space-x-3">
                 <div className="p-2 rounded-lg shrink-0 bg-[#F0F7F2]">
                   {roleCards.buyer[0].icon}
@@ -1070,11 +1066,7 @@ export default function RegisterFlowPage() {
               </div>
             </div>
 
-            {/* Top right - Buyer card 2 */}
-            <div
-              className="hidden md:block absolute top-[120px] right-[100px] rotate-[-1deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#09261E]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all"
-              style={{animationDelay: '220ms'}}
-            >
+            <div className="hidden md:block absolute top-[120px] right-[100px] rotate-[-1deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#09261E]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all">
               <div className="flex items-start space-x-3">
                 <div className="p-2 rounded-lg shrink-0 bg-[#F0F7F2]">
                   {roleCards.buyer[1].icon}
@@ -1088,11 +1080,8 @@ export default function RegisterFlowPage() {
               </div>
             </div>
 
-            {/* Bottom left - Seller card 1 */}
-            <div
-              className="hidden md:block absolute bottom-[140px] left-[100px] rotate-[-1.5deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#135341]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all"
-              style={{animationDelay: '300ms'}}
-            >
+            {/* Seller cards - bottom row */}
+            <div className="hidden md:block absolute bottom-[140px] left-[100px] rotate-[-1.5deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#135341]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all">
               <div className="flex items-start space-x-3">
                 <div className="p-2 rounded-lg shrink-0 bg-[#F0F7F2]">
                   {roleCards.seller[0].icon}
@@ -1106,11 +1095,7 @@ export default function RegisterFlowPage() {
               </div>
             </div>
 
-            {/* Bottom right - Seller card 2 */}
-            <div
-              className="hidden md:block absolute bottom-[140px] right-[100px] rotate-[0.5deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#135341]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all"
-              style={{animationDelay: '380ms'}}
-            >
+            <div className="hidden md:block absolute bottom-[140px] right-[100px] rotate-[0.5deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#135341]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all">
               <div className="flex items-start space-x-3">
                 <div className="p-2 rounded-lg shrink-0 bg-[#F0F7F2]">
                   {roleCards.seller[1].icon}
@@ -1124,11 +1109,8 @@ export default function RegisterFlowPage() {
               </div>
             </div>
 
-            {/* Middle left - REP card 1 */}
-            <div
-              className="hidden lg:block absolute top-[50%] left-[50px] -translate-y-1/2 rotate-[2deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#803344]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all"
-              style={{animationDelay: '450ms'}}
-            >
+            {/* REP cards - middle row, only visible on large screens */}
+            <div className="hidden lg:block absolute top-[50%] left-[50px] -translate-y-1/2 rotate-[2deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#803344]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all">
               <div className="flex items-start space-x-3">
                 <div className="p-2 rounded-lg shrink-0 bg-[#FFF0F3]">
                   {roleCards.rep[0].icon}
@@ -1142,11 +1124,7 @@ export default function RegisterFlowPage() {
               </div>
             </div>
 
-            {/* Middle right - REP card 2 */}
-            <div
-              className="hidden lg:block absolute top-[50%] right-[50px] -translate-y-1/2 rotate-[-2deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#803344]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all"
-              style={{animationDelay: '520ms'}}
-            >
+            <div className="hidden lg:block absolute top-[50%] right-[50px] -translate-y-1/2 rotate-[-2deg] shadow-md bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border border-transparent hover:border-[#803344]/30 w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all">
               <div className="flex items-start space-x-3">
                 <div className="p-2 rounded-lg shrink-0 bg-[#FFF0F3]">
                   {roleCards.rep[1].icon}
