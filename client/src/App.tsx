@@ -11,6 +11,7 @@ import SellerDashboard from "@/pages/seller-dashboard";
 import AuthPage from "@/pages/auth-page";
 import SignInPage from "@/pages/auth/signin";
 import RegisterPage from "@/pages/auth/register";
+import RegisterFlowPage from "@/pages/auth/register-flow";
 import ForgotPasswordPage from "@/pages/auth/forgot-password";
 import OnboardingPage from "@/pages/onboarding";
 import AboutPage from "@/pages/about-page";
@@ -141,6 +142,9 @@ function Router() {
         <SignInPage />
       </Route>
       <Route path="/register">
+        <RegisterFlowPage />
+      </Route>
+      <Route path="/register-old">
         <RegisterPage />
       </Route>
       <Route path="/auth/forgot-password">
