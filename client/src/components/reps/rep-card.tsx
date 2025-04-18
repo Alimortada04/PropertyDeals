@@ -121,27 +121,15 @@ export default function RepCard({ rep }: RepCardProps) {
               {rep.role}
             </Badge>
           
-            {/* Rating and location section - simplified */}
-            <div className="flex flex-col w-full mb-3 text-sm">
-              <div className="flex items-center justify-center text-gray-700 w-full mb-2">
-                <Star size={16} className="mr-1 text-amber-500 flex-shrink-0 fill-amber-500" />
-                <span className="truncate font-medium">{rep.rating} ({rep.reviewCount})</span>
-                
-                {rep.dealsCompleted && (
-                  <div className="flex items-center text-gray-700 ml-2">
-                    <Home size={14} className="mr-1 text-gray-500 flex-shrink-0" />
-                    <span className="truncate font-medium">{rep.dealsCompleted}+ Deals</span>
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex items-center justify-center text-gray-600 w-full mb-2">
+            {/* Location section only - simplified */}
+            <div className="flex flex-col w-full mb-3 text-sm">              
+              <div className="flex items-center justify-center text-gray-600 w-full">
                 <MapPin size={14} className="mr-1 text-gray-400 flex-shrink-0" />
                 <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
               </div>
               
               {rep.responseTime && (
-                <div className="flex items-center justify-center text-gray-600 w-full mb-2">
+                <div className="flex items-center justify-center text-gray-600 w-full mt-1">
                   <Clock size={14} className="mr-1 text-gray-400 flex-shrink-0" />
                   <span className="truncate">{rep.responseTime}</span>
                 </div>
