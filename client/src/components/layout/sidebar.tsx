@@ -466,18 +466,13 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           </div>
 
           {/* Main Navigation */}
-          <div className="py-4">
-            <div className="mb-6">
-              <div className="h-6">
-                <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 overflow-hidden'}`}>
-                  Navigation
-                </h3>
-              </div>
+          <div className="pt-2">
+            <div className="mb-2">
               <ul>
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
                     <Home className="w-5 h-5 flex-shrink-0" />
-                    <span className={`ml-3 transition-all duration-200 ${isExpanded ? 'opacity-100 inline-block' : 'opacity-0 w-0 absolute overflow-hidden'}`}>Home</span>
+                    <span className={`ml-3 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>Home</span>
                   </Link>
                 </li>
                 <li>
@@ -510,7 +505,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
             {/* Resources Section */}
             <div className="mb-6">
               <div className="h-6">
-                <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 overflow-hidden'}`}>
+                <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>
                   Resources
                 </h3>
               </div>
@@ -543,7 +538,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
           {/* Profile & Settings */}
           <div className="mt-auto border-t border-gray-200 py-4">
             <div className="h-6">
-              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-all duration-200 ${isExpanded ? 'opacity-100' : 'opacity-0 overflow-hidden'}`}>
+              <h3 className={`text-xs uppercase text-[#803344] font-medium tracking-wider px-4 transition-opacity duration-300 ${isExpanded ? 'opacity-100 visible' : 'opacity-0 invisible absolute'}`}>
                 Account
               </h3>
             </div>

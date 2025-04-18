@@ -99,7 +99,7 @@ export default function ToolCard({ tool }: ToolCardProps) {
       onClick={() => cardUrl && (window.location.href = cardUrl)}
     >
       {/* Cover Image with Gradient Overlay */}
-      <div className="relative w-full h-48">
+      <div className="relative w-full h-40">
         {/* Tool Type Badge */}
         <div className="absolute top-2 right-2 z-10">
           <Badge className="bg-[#135341]/90 text-white border-none px-2 py-1 flex items-center gap-1.5">
