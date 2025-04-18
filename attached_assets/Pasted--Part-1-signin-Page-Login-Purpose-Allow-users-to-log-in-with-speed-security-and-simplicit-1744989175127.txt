@@ -1,0 +1,131 @@
+✅ Part 1: /signin Page (Login)
+🔹 Purpose:
+Allow users to log in with speed, security, and simplicity using modern methods.
+
+🔧 Features to Implement:
+Google Sign In
+
+Apple Sign In
+
+Biometric Login (Face ID / Touch ID if supported via WebAuthn)
+
+Show biometric login option only if the browser and device support it
+
+Use navigator.credentials.get() with WebAuthn to auto-login trusted devices
+
+Divider: OR continue with email
+
+Email + Password fields
+
+“Remember Me” toggle (default ON)
+
+Forgot password link
+
+Submit button: Sign In
+
+Tiny footer:
+
+“Don’t have an account? [Create one]”
+
+💡 Design Notes:
+Split layout:
+
+Left = logo + tagline or rotating benefits
+
+Right = login form
+
+Clean, minimalistic — match PropertyDeals branding
+
+✅ Part 2: /register Page (Sign Up)
+🔹 Purpose:
+Allow users to register quickly while selecting their user type (Buyer, Seller, REP), and defer full profile setup to a guided onboarding experience.
+
+🔧 Step 1: Role Selection
+Create a role selector at the top of the page with 3 clickable cards:
+
+Roles:
+Buyer
+
+"Buy properties from trusted local sellers"
+
+Seller
+
+"Sell your property to verified investors"
+
+REP
+
+"List, market, and close deals faster"
+
+Selected role determines the registration form below.
+
+🔧 Step 2: Role-Based Registration Form
+Google Sign Up
+
+Apple Sign Up
+
+Optional: Enable Biometric Login toggle
+
+Email + Password (confirm password)
+
+Dynamic fields by role:
+
+Buyer: Name, City, Investment Goals (optional)
+
+Seller: Name, Property Location, Preferred Sale Method
+
+REP: Name, REP Type (Agent, Contractor, Lender, etc.), Company, Years Experience
+
+Save selected role to user metadata during registration.
+
+🔁 After Successful Registration:
+Redirect to /onboarding (or /profile/setup) for guided profile setup.
+
+✅ Part 3: Optional /onboarding Page (Post-Signup Profile Builder)
+After signing up, users are taken to a separate guided flow to complete their profile.
+
+Sections to build:
+Upload avatar + banner
+
+Add bio, location, specialties
+
+Add social links (LinkedIn, Facebook, Instagram)
+
+Toggle visibility settings (public profile, contact methods)
+
+Notification preferences
+
+Confirm role and add extra details
+
+⚙️ Technical Notes
+Use modern session handling:
+
+Store long-lived refresh tokens
+
+Trust devices to prevent repeated logins
+
+Use WebAuthn for biometric login:
+
+Setup: navigator.credentials.create()
+
+Auth: navigator.credentials.get()
+
+Use Supabase or other auth platform’s metadata field to store user role
+
+🧭 File Structure
+bash
+Copy
+Edit
+/pages
+  /auth
+    signin.tsx         # Login page
+    register.tsx       # Role selection + sign-up
+  /onboarding
+    index.tsx          # Post-registration flow
+✨ Bonus Enhancements (Optional but Suggested)
+Progress bar on onboarding page
+
+Allow social sign-in to trigger role selection AFTER auth (if needed)
+
+Add Sign in with Face ID on mobile Safari when available
+
+Store preferred login method for faster future entry
