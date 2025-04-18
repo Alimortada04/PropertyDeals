@@ -263,7 +263,7 @@ export default function RegisterFlowPage() {
     }
   };
   
-  // Get background gradient based on selected roles
+  // Get background gradient based on selected roles - using soft radial gradients
   const getBackgroundGradient = () => {
     if (selectedRoles.length === 0) {
       // Default background when no roles selected
@@ -271,13 +271,24 @@ export default function RegisterFlowPage() {
     } else if (selectedRoles.length === 1) {
       // Single role background
       return roleBackgrounds[selectedRoles[0]];
-    } else {
-      // Multiple roles - sort them alphabetically for consistent key lookup
-      const sortedRoles = [...selectedRoles].sort().join("-");
+    } else if (selectedRoles.length === 2) {
+      // Two roles - use two radial gradients
+      const gradients = [];
       
-      // Return mapped gradient or fallback to a default one
-      return roleBackgrounds[sortedRoles as keyof typeof roleBackgrounds] || 
-             "bg-gradient-to-br from-[#09261E] via-[#135341] to-[#803344]";
+      if (selectedRoles.includes("buyer")) {
+        gradients.push("radial-gradient(at 20% 40%, #09261E10, transparent 60%)");
+      }
+      if (selectedRoles.includes("seller")) {
+        gradients.push("radial-gradient(at 80% 60%, #13534110, transparent 60%)");
+      }
+      if (selectedRoles.includes("rep")) {
+        gradients.push("radial-gradient(at 50% 80%, #80334410, transparent 60%)");
+      }
+      
+      return `bg-[#F5F5F5] bg-[${gradients.join(',')}]`;
+    } else {
+      // All three roles - use a three-point radial gradient
+      return "bg-[#F5F5F5] bg-[radial-gradient(at 20% 40%, #09261E10, transparent 60%),radial-gradient(at 80% 60%, #80334410, transparent 60%),radial-gradient(at 50% 80%, #13534110, transparent 60%)]";
     }
   };
 
@@ -1036,74 +1047,52 @@ export default function RegisterFlowPage() {
         } opacity-70 transition-all duration-700`}></div>
       </div>
       
-      {/* Background feature cards on larger screens */}
+      {/* Background feature cards - display all 6 cards (2 per role) */}
       <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Show cards based on all selected roles (for desktop/tablet only) */}
-        {animateCards && (selectedRoles.length > 0 ? selectedRoles : [primaryRole]).flatMap((role, roleIndex) => {
-          // Get 2 cards per selected role (limited to prevent overcrowding)
-          const cards = roleCards[role].slice(0, 2);
-          
-          // Calculate total cards to display (2 per role)
-          const totalRoles = selectedRoles.length || 1;
-          const totalCards = totalRoles * 2;
-          
-          // Calculate the distribution factor for spacing
-          const offsetFactor = (roleIndex * 2) / Math.max(1, totalCards - 1); // 0 for first role, 1 for last
-          
-          return cards.map((card, cardIndex) => {
-            // Define positions based on role index and card index
-            let positionClasses = "";
-            let animationClasses = "";
-            let animationDelay = 200 + (cardIndex * 100) + (roleIndex * 150); // Staggered animations
+        <div className="flex flex-wrap justify-center items-start gap-6 max-w-[90vw] mx-auto mt-6">
+          {animateCards && ["buyer", "seller", "rep"].flatMap((role) => {
+            // Get 2 cards for each role
+            const cards = roleCards[role as Role].slice(0, 2);
             
-            // Calculate card position index (0 to totalCards-1)
-            const cardPosition = (roleIndex * 2) + cardIndex;
-            
-            // Calculate horizontal position for even distribution
-            // We want cards to be evenly spaced horizontally
-            const horizontalPercent = totalCards <= 1 ? 50 : (cardPosition * (80 / (totalCards - 1)) + 10);
-            
-            // Vertical staggering to prevent overlap
-            let verticalPosition;
-            if (cardPosition % 4 === 0) verticalPosition = "top-24";
-            else if (cardPosition % 4 === 1) verticalPosition = "top-[40%]";
-            else if (cardPosition % 4 === 2) verticalPosition = "bottom-24";
-            else verticalPosition = "top-[20%]";
-            
-            // Slight rotation for visual interest
-            const rotation = (cardPosition % 2 === 0) ? "rotate-[1deg]" : "rotate-[-1deg]";
-            
-            positionClasses = `${verticalPosition} left-[${horizontalPercent}%] ${rotation}`;
-            
-            // For single role, use original positioning but limit to 2 cards
-            if (totalRoles === 1 && cardIndex < 2) {
-              if (cardIndex === 0) {
-                positionClasses = "top-24 left-[20%] rotate-[1.5deg]";
+            return cards.map((card, cardIndex) => {
+              // Define animation timing
+              const animationDelay = 100 + (cardIndex * 120) + (role === "buyer" ? 0 : role === "seller" ? 150 : 300);
+              
+              // Responsive visibility
+              let visibilityClass = "";
+              if (role === "buyer") {
+                // Always show buyer cards on md+
+                visibilityClass = "hidden md:block";
+              } else if (role === "seller") {
+                // Show seller cards on md+
+                visibilityClass = "hidden md:block";
               } else {
-                positionClasses = "bottom-24 right-[20%] rotate-[-1.5deg]";
+                // Show REP cards only on lg+
+                visibilityClass = "hidden lg:block";
               }
-            }
-            
-            // Animation classes
-            animationClasses = `animate-in fade-in-50 duration-700 delay-[${animationDelay}ms]`;
-            if (offsetFactor < 0.5) {
-              animationClasses += " slide-in-from-left-10";
-            } else {
-              animationClasses += " slide-in-from-right-10";
-            }
-            
-            // Optionally add blur to some cards for depth effect
-            const blurClass = cardIndex % 3 === 1 ? "blur-[1px]" : "";
-            
-            // Scale down cards on smaller screens
-            const sizeClasses = "w-[180px] md:w-[200px] lg:w-[220px]";
-            
-            return (
-              <div 
-                key={`${role}-${cardIndex}-desktop`}
-                className={`absolute ${positionClasses} transform ${animationClasses} hover:-translate-y-1 hover:shadow-lg transition-all`}
-              >
-                <div className={`bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg shadow-md ${sizeClasses} text-sm border border-gray-100 ${blurClass}`}>
+              
+              // Subtle rotation for visual interest
+              const rotation = role === "buyer" ? "rotate-[1deg]" : 
+                                role === "seller" ? "rotate-[-1.5deg]" : 
+                                "rotate-[2deg]";
+              
+              // Highlight selected roles with border color
+              const borderHighlight = selectedRoles.includes(role as Role) ?
+                (role === "buyer" ? "border-[#09261E]/30" :
+                role === "seller" ? "border-[#135341]/30" :
+                "border-[#803344]/30")
+                : "border-transparent";
+                
+              // Enhanced shadow for selected roles
+              const shadowEffect = selectedRoles.includes(role as Role) ?
+                "shadow-lg" : "shadow-md";
+
+              return (
+                <div 
+                  key={`${role}-${cardIndex}-card`}
+                  className={`${visibilityClass} ${rotation} ${shadowEffect} bg-white/90 backdrop-blur-sm p-3 md:p-4 rounded-lg border ${borderHighlight} w-[180px] md:w-[200px] lg:w-[220px] animate-in fade-in-50 duration-700 hover:-translate-y-1 hover:shadow-lg transition-all`}
+                  style={{animationDelay: `${animationDelay}ms`}}
+                >
                   <div className="flex items-start space-x-3">
                     <div className={`p-2 rounded-lg shrink-0 ${
                       role === 'rep' ? 'bg-[#FFF0F3]' : 'bg-[#F0F7F2]'
@@ -1120,10 +1109,10 @@ export default function RegisterFlowPage() {
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          });
-        })}
+              );
+            });
+          })}
+        </div>
       </div>
       
       {/* Current step content */}
