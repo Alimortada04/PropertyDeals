@@ -1058,23 +1058,27 @@ export default function RegisterFlowPage() {
               // Define animation timing
               const animationDelay = 100 + (cardIndex * 120) + (role === "buyer" ? 0 : role === "seller" ? 150 : 300);
               
-              // Responsive visibility
+              // Responsive visibility - exactly matching /signin behavior
               let visibilityClass = "";
-              if (role === "buyer") {
-                // Always show buyer cards on md+
+              
+              // Large screens: Show all 6
+              // Medium screens: Show 4 (hide some REP cards)
+              // Small screens: Hide all floating cards
+              if (role === "buyer" || role === "seller") {
+                // Show buyer and seller cards on md+ screens
                 visibilityClass = "hidden md:block";
-              } else if (role === "seller") {
-                // Show seller cards on md+
-                visibilityClass = "hidden md:block";
-              } else {
-                // Show REP cards only on lg+
+              } else if (role === "rep") {
+                // Show REP cards only on lg+ screens
                 visibilityClass = "hidden lg:block";
               }
               
               // Subtle rotation for visual interest
-              const rotation = role === "buyer" ? "rotate-[1deg]" : 
-                                role === "seller" ? "rotate-[-1.5deg]" : 
-                                "rotate-[2deg]";
+              const rotation = (role === "buyer" && cardIndex === 0) ? "rotate-[1deg]" : 
+                              (role === "buyer" && cardIndex === 1) ? "rotate-[-1deg]" :
+                              (role === "seller" && cardIndex === 0) ? "rotate-[-1.5deg]" : 
+                              (role === "seller" && cardIndex === 1) ? "rotate-[0.5deg]" :
+                              (role === "rep" && cardIndex === 0) ? "rotate-[2deg]" :
+                              "rotate-[-2deg]";
               
               // Highlight selected roles with border color
               const borderHighlight = selectedRoles.includes(role as Role) ?
