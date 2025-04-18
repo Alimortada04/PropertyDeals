@@ -9,9 +9,9 @@ import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
 import AuthPage from "@/pages/auth-page";
-import SignInPage from "@/pages/auth/signin";
-import RegisterPage from "@/pages/auth/register";
-import RegisterFlowPage from "@/pages/auth/register-flow";
+import SignInPage from "@/pages/signin/index";
+import RegisterPage from "@/pages/register/index";
+import RegisterFlowPage from "@/pages/register-flow/index";
 import ForgotPasswordPage from "@/pages/auth/forgot-password";
 import OnboardingPage from "@/pages/onboarding";
 import AboutPage from "@/pages/about-page";
@@ -155,7 +155,16 @@ function Router() {
           <OnboardingPage />
         )} />
       </Route>
-      {/* Legacy auth routes */}
+      {/* Legacy auth routes with redirects */}
+      <Route path="/auth/signin">
+        <Redirect to="/signin" />
+      </Route>
+      <Route path="/auth/register">
+        <Redirect to="/register" />
+      </Route>
+      <Route path="/auth/register-flow">
+        <Redirect to="/register" />
+      </Route>
       <Route path="/auth">
         <MainLayout>
           <AuthPage />
