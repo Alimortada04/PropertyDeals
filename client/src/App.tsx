@@ -89,11 +89,11 @@ function Router() {
       <Route path="/connect">
         <Redirect to="/discussions" />
       </Route>
-      <ProtectedRoute path="/dashboard" component={() => (
+      <Route path="/dashboard">
         <MainLayout>
           <DashboardNewPage />
         </MainLayout>
-      )} />
+      </Route>
       <Route path="/tools">
         <MainLayout>
           <ToolsPage />
