@@ -5,11 +5,12 @@ import { CalendarDays, Search, Heart, Calculator, Settings } from 'lucide-react'
 export default function BuyerDashboard() {
   return (
     <div className="space-y-6">
+      <h1 className="text-3xl font-bold tracking-tight mb-6 text-[#09261E]">Welcome to your Buyer Dashboard</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <Card className="border-l-4 border-l-[#09261E]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Saved Properties</CardTitle>
-            <Heart className="h-4 w-4 text-muted-foreground" />
+            <Heart className="h-4 w-4 text-[#09261E]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">5</div>
@@ -18,10 +19,10 @@ export default function BuyerDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-l-4 border-l-[#09261E]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Recent Searches</CardTitle>
-            <Search className="h-4 w-4 text-muted-foreground" />
+            <Search className="h-4 w-4 text-[#09261E]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
@@ -30,10 +31,10 @@ export default function BuyerDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-l-4 border-l-[#09261E]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Viewings</CardTitle>
-            <CalendarDays className="h-4 w-4 text-muted-foreground" />
+            <CalendarDays className="h-4 w-4 text-[#09261E]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">2</div>
@@ -45,16 +46,16 @@ export default function BuyerDashboard() {
       </div>
       
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Recommended Properties</CardTitle>
+        <Card className="md:col-span-1 shadow-md">
+          <CardHeader className="bg-[#09261E]/5">
+            <CardTitle className="text-[#09261E]">Recommended Properties</CardTitle>
             <CardDescription>
               Properties that match your preferences
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="mt-4">
             <div className="space-y-4">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors">
                 <div className="w-12 h-12 rounded bg-gray-200"></div>
                 <div>
                   <p className="text-sm font-medium">Modern Townhouse</p>
@@ -62,7 +63,7 @@ export default function BuyerDashboard() {
                 </div>
                 <div className="ml-auto font-medium">$350,000</div>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors">
                 <div className="w-12 h-12 rounded bg-gray-200"></div>
                 <div>
                   <p className="text-sm font-medium">Riverfront Condo</p>
@@ -70,7 +71,7 @@ export default function BuyerDashboard() {
                 </div>
                 <div className="ml-auto font-medium">$225,000</div>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors">
                 <div className="w-12 h-12 rounded bg-gray-200"></div>
                 <div>
                   <p className="text-sm font-medium">Ranch Home</p>
@@ -82,31 +83,31 @@ export default function BuyerDashboard() {
           </CardContent>
         </Card>
         
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Tools</CardTitle>
+        <Card className="md:col-span-1 shadow-md">
+          <CardHeader className="bg-[#09261E]/5">
+            <CardTitle className="text-[#09261E]">Tools</CardTitle>
             <CardDescription>
               Calculate and plan your property purchase
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="mt-4">
             <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <Calculator className="h-5 w-5 text-muted-foreground" />
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
+                <Calculator className="h-5 w-5 text-[#09261E]" />
                 <div>
                   <p className="text-sm font-medium">Mortgage Calculator</p>
                   <p className="text-xs text-muted-foreground">Estimate your monthly payments</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <Calculator className="h-5 w-5 text-muted-foreground" />
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
+                <Calculator className="h-5 w-5 text-[#09261E]" />
                 <div>
                   <p className="text-sm font-medium">Flip Calculator</p>
                   <p className="text-xs text-muted-foreground">Analyze potential flip profits</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <Settings className="h-5 w-5 text-muted-foreground" />
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
+                <Settings className="h-5 w-5 text-[#09261E]" />
                 <div>
                   <p className="text-sm font-medium">Preferences</p>
                   <p className="text-xs text-muted-foreground">Update your property criteria</p>

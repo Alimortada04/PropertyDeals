@@ -5,11 +5,12 @@ import { CalendarDays, BarChart, Building, DollarSign, MessageSquare } from 'luc
 export default function SellerDashboard() {
   return (
     <div className="space-y-6">
+      <h1 className="text-3xl font-bold tracking-tight mb-6 text-[#135341]">Welcome to your Seller Dashboard</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <Card className="border-l-4 border-l-[#135341]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Listed Properties</CardTitle>
-            <Building className="h-4 w-4 text-muted-foreground" />
+            <Building className="h-4 w-4 text-[#135341]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3</div>
@@ -18,10 +19,10 @@ export default function SellerDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-l-4 border-l-[#135341]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Inquiries</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            <MessageSquare className="h-4 w-4 text-[#135341]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">8</div>
@@ -30,10 +31,10 @@ export default function SellerDashboard() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="border-l-4 border-l-[#135341]">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Average Views</CardTitle>
-            <BarChart className="h-4 w-4 text-muted-foreground" />
+            <BarChart className="h-4 w-4 text-[#135341]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">24</div>
@@ -45,16 +46,16 @@ export default function SellerDashboard() {
       </div>
       
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Your Properties</CardTitle>
+        <Card className="md:col-span-1 shadow-md">
+          <CardHeader className="bg-[#135341]/5">
+            <CardTitle className="text-[#135341]">Your Properties</CardTitle>
             <CardDescription>
               Manage your current listings
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="mt-4">
             <div className="space-y-4">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors">
                 <div className="w-12 h-12 rounded bg-gray-200"></div>
                 <div>
                   <p className="text-sm font-medium">Colonial Revival</p>
@@ -62,7 +63,7 @@ export default function SellerDashboard() {
                 </div>
                 <div className="ml-auto font-medium">$625,000</div>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors">
                 <div className="w-12 h-12 rounded bg-gray-200"></div>
                 <div>
                   <p className="text-sm font-medium">Modern Condo</p>
@@ -70,7 +71,7 @@ export default function SellerDashboard() {
                 </div>
                 <div className="ml-auto font-medium">$339,900</div>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors">
                 <div className="w-12 h-12 rounded bg-gray-200"></div>
                 <div>
                   <p className="text-sm font-medium">Modern Farmhouse</p>
@@ -82,31 +83,31 @@ export default function SellerDashboard() {
           </CardContent>
         </Card>
         
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <CardTitle>Upcoming Appointments</CardTitle>
+        <Card className="md:col-span-1 shadow-md">
+          <CardHeader className="bg-[#135341]/5">
+            <CardTitle className="text-[#135341]">Upcoming Appointments</CardTitle>
             <CardDescription>
               Scheduled property viewings
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="mt-4">
             <div className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <CalendarDays className="h-5 w-5 text-muted-foreground" />
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
+                <CalendarDays className="h-5 w-5 text-[#135341]" />
                 <div>
                   <p className="text-sm font-medium">Modern Condo Viewing</p>
                   <p className="text-xs text-muted-foreground">Apr 22, 2025 • 10:00 AM</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <CalendarDays className="h-5 w-5 text-muted-foreground" />
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
+                <CalendarDays className="h-5 w-5 text-[#135341]" />
                 <div>
                   <p className="text-sm font-medium">Colonial Revival Viewing</p>
                   <p className="text-xs text-muted-foreground">Apr 23, 2025 • 2:00 PM</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <DollarSign className="h-5 w-5 text-muted-foreground" />
+              <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer">
+                <DollarSign className="h-5 w-5 text-[#135341]" />
                 <div>
                   <p className="text-sm font-medium">Offer Discussion</p>
                   <p className="text-xs text-muted-foreground">Apr 25, 2025 • 11:30 AM</p>
