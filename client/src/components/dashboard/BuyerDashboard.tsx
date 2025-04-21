@@ -25,43 +25,43 @@ export default function BuyerDashboard() {
   
   return (
     <div className="p-8 md:p-12 space-y-8">
-      {/* Custom styled dashboard tabs */}
+      {/* Flat curved tabs design similar to REP search bar filters */}
       <Tabs defaultValue="deals" className="mb-6">
-        <div className="mb-6">
-          <TabsList className="p-1 bg-gray-100 rounded-lg flex space-x-1 w-full">
+        <div className="mb-8">
+          <TabsList className="border border-gray-200 bg-white rounded-lg flex w-full overflow-hidden">
             <TabsTrigger 
               value="deals" 
-              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+              className="px-6 py-3 flex-1 font-display font-semibold text-gray-700 data-[state=active]:bg-[#09261E]/10 data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-none border-b-2 border-transparent data-[state=active]:border-[#09261E]"
             >
               My Deals
             </TabsTrigger>
             <TabsTrigger 
               value="explore" 
-              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+              className="px-6 py-3 flex-1 font-display font-semibold text-gray-700 data-[state=active]:bg-[#09261E]/10 data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-none border-b-2 border-transparent data-[state=active]:border-[#09261E]"
             >
               Explore
             </TabsTrigger>
             <TabsTrigger 
               value="messages" 
-              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+              className="px-6 py-3 flex-1 font-display font-semibold text-gray-700 data-[state=active]:bg-[#09261E]/10 data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-none border-b-2 border-transparent data-[state=active]:border-[#09261E]"
             >
               Messages
             </TabsTrigger>
             <TabsTrigger 
               value="tools" 
-              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+              className="px-6 py-3 flex-1 font-display font-semibold text-gray-700 data-[state=active]:bg-[#09261E]/10 data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-none border-b-2 border-transparent data-[state=active]:border-[#09261E]"
             >
               Tools
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
-              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+              className="px-6 py-3 flex-1 font-display font-semibold text-gray-700 data-[state=active]:bg-[#09261E]/10 data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-none border-b-2 border-transparent data-[state=active]:border-[#09261E]"
             >
               Analytics
             </TabsTrigger>
             <TabsTrigger 
               value="priority" 
-              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+              className="px-6 py-3 flex-1 font-display font-semibold text-gray-700 data-[state=active]:bg-[#09261E]/10 data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-none border-b-2 border-transparent data-[state=active]:border-[#09261E]"
             >
               Priority Buyer
             </TabsTrigger>
@@ -78,10 +78,55 @@ export default function BuyerDashboard() {
                   
                   <div className="mb-3">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-gray-600">You're 60% of the way to closing your first deal</span>
-                      <span className="text-sm font-medium">60%</span>
+                      <div className="flex items-center">
+                        <span className="text-sm text-gray-700 font-medium">Account Setup Completion</span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm" className="h-7 w-7 p-0 ml-1">
+                              <AlertCircle className="h-4 w-4 text-[#09261E]" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="w-80">
+                            <div className="p-3">
+                              <h3 className="font-medium mb-2">Next steps to complete your profile:</h3>
+                              <ul className="space-y-2 text-sm">
+                                <li className="flex items-center">
+                                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                                  <span className="text-gray-500">Complete basic information</span>
+                                </li>
+                                <li className="flex items-center">
+                                  <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                                  <span className="text-gray-500">Set investment preferences</span>
+                                </li>
+                                <li className="flex items-center">
+                                  <div className="h-4 w-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center">
+                                    <span className="text-[9px] font-medium">3</span>
+                                  </div>
+                                  <span>Connect with your lender</span>
+                                </li>
+                                <li className="flex items-center">
+                                  <div className="h-4 w-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center">
+                                    <span className="text-[9px] font-medium">4</span>
+                                  </div>
+                                  <span>Set your annual investment goals</span>
+                                </li>
+                                <li className="flex items-center">
+                                  <div className="h-4 w-4 border border-gray-300 rounded-full mr-2 flex items-center justify-center">
+                                    <span className="text-[9px] font-medium">5</span>
+                                  </div>
+                                  <span>Upload verification documents</span>
+                                </li>
+                              </ul>
+                              <div className="mt-3">
+                                <Button size="sm" className="w-full bg-[#09261E]">Complete Setup</Button>
+                              </div>
+                            </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <span className="text-sm font-medium">40%</span>
                     </div>
-                    <Progress value={60} className="h-2 bg-gray-100" indicatorColor="bg-[#09261E]" />
+                    <Progress value={40} className="h-2 bg-gray-100" indicatorColor="bg-[#09261E]" />
                   </div>
                 </div>
                 
@@ -238,12 +283,26 @@ export default function BuyerDashboard() {
             
             <div className="overflow-x-auto pb-2">
               <div className="flex space-x-4 min-w-max">
-                <Card className="w-72 flex-shrink-0 overflow-hidden hover:shadow-md transition-shadow">
+                <Card className="w-72 flex-shrink-0 overflow-hidden hover:shadow-md transition-all group relative">
                   <div className="relative">
-                    <div className="w-full h-40 bg-gray-200"></div>
-                    <span className="absolute top-2 right-2 bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-medium">
-                      ⭐ Top Match
-                    </span>
+                    <div className="w-full h-40 bg-gray-200 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
+                        <Button size="sm" variant="outline" className="bg-white/90 hover:bg-white">
+                          <Eye className="mr-1 h-3 w-3" /> Quick View
+                        </Button>
+                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0 bg-white/90 hover:bg-white rounded-full">
+                          <Heart className="h-4 w-4 text-[#09261E]" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="absolute top-3 right-3 flex flex-col gap-1 items-end">
+                      <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                        ⭐ Top Match
+                      </span>
+                      <span className="bg-green-100 text-green-800 px-2 py-1 rounded-md text-xs font-medium shadow-sm">
+                        💰 Cash Flow
+                      </span>
+                    </div>
                   </div>
                   <CardContent className="p-4">
                     <div className="flex justify-between items-start mb-2">
@@ -251,12 +310,15 @@ export default function BuyerDashboard() {
                       <p className="font-bold">$350,000</p>
                     </div>
                     <p className="text-sm text-gray-500 mb-2">3 bed • 2 bath • Chicago</p>
-                    <div className="bg-[#09261E]/10 px-2 py-1 rounded-full text-xs text-[#09261E] inline-block mb-3">
-                      Matches 85% of your criteria
+                    <div className="flex items-center mb-3">
+                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="bg-green-500 h-full rounded-full" style={{ width: '85%' }}></div>
+                      </div>
+                      <span className="text-xs font-medium ml-2 min-w-[40px] text-right">85% Match</span>
                     </div>
-                    <div className="flex justify-end gap-2">
-                      <Button size="sm" variant="outline">Quick View</Button>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">Details</Button>
+                    <div className="flex justify-between items-center">
+                      <span className="text-xs text-gray-500">Est. ROI: 7.3%</span>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">View Details</Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -335,14 +397,31 @@ export default function BuyerDashboard() {
         </TabsContent>
         
         <TabsContent value="explore" className="space-y-6">
-          {/* Tab navigation for explore section */}
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+          {/* Tab navigation for explore section - REP Room style */}
+          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
             <Tabs defaultValue="recommended" className="w-full">
-              <TabsList className="w-full grid grid-cols-3 mb-4">
-                <TabsTrigger value="recommended" className="font-display">Recommended</TabsTrigger>
-                <TabsTrigger value="saved-searches" className="font-display">Saved Searches</TabsTrigger>
-                <TabsTrigger value="deal-alerts" className="font-display">Deal Alerts</TabsTrigger>
-              </TabsList>
+              <div className="border-b border-gray-200 mb-6">
+                <TabsList className="flex -mb-px space-x-6 bg-transparent">
+                  <TabsTrigger 
+                    value="recommended" 
+                    className="font-display font-semibold text-gray-600 border-b-2 border-transparent px-1 pb-4 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] rounded-none"
+                  >
+                    Recommended
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="saved-searches" 
+                    className="font-display font-semibold text-gray-600 border-b-2 border-transparent px-1 pb-4 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] rounded-none"
+                  >
+                    Saved Searches
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="deal-alerts" 
+                    className="font-display font-semibold text-gray-600 border-b-2 border-transparent px-1 pb-4 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] rounded-none"
+                  >
+                    Deal Alerts
+                  </TabsTrigger>
+                </TabsList>
+              </div>
               
               <TabsContent value="recommended" className="pt-2">
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -710,57 +789,106 @@ export default function BuyerDashboard() {
             </Card>
           </div>
           
-          {/* Ownership Tracker */}
+          {/* Property Roadmap */}
           <Card className="shadow-md">
             <CardHeader className="bg-[#09261E]/5">
-              <CardTitle className="text-[#09261E] flex items-center">
-                <Briefcase className="mr-2 h-5 w-5" /> Your Buying Roadmap
-              </CardTitle>
+              <div className="flex justify-between items-center">
+                <CardTitle className="text-[#09261E] flex items-center">
+                  <Briefcase className="mr-2 h-5 w-5" /> Property Roadmap
+                </CardTitle>
+                <select className="text-sm border border-gray-200 rounded-md px-3 py-1 bg-white">
+                  <option>Modern Townhouse</option>
+                  <option>Ranch Home</option>
+                  <option>+ Add New Property</option>
+                </select>
+              </div>
               <CardDescription>
-                You're 3 steps away from your first offer
+                Track your progress with Modern Townhouse
               </CardDescription>
             </CardHeader>
             <CardContent className="mt-2">
-              <div className="space-y-4">
-                <div className="flex items-center p-3 bg-green-50 rounded-md">
+              <div className="space-y-3">
+                <div className="flex items-center p-3 bg-green-50 rounded-md cursor-pointer hover:bg-green-100 transition-colors">
                   <div className="h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
                     <CheckCircle className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center">
-                      <p className="text-sm font-medium">Step 1: Schedule Viewing</p>
-                      <p className="text-xs text-green-600 ml-2">(Done Apr 18)</p>
+                      <p className="text-sm font-medium">Viewing Scheduled</p>
+                      <p className="text-xs text-green-600 ml-2">(Completed Apr 18)</p>
                     </div>
-                    <p className="text-xs text-gray-600">You've scheduled a viewing for Modern Townhouse</p>
+                    <p className="text-xs text-gray-600">You've scheduled a viewing with John Davis</p>
                   </div>
+                  <Button size="sm" variant="ghost" className="text-[#09261E]">
+                    <Eye className="h-4 w-4" />
+                  </Button>
                 </div>
                 
-                <div className="flex items-center p-3 bg-gray-50 rounded-md">
-                  <div className="h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mr-3">
-                    <span className="text-sm">2</span>
+                <div className="flex items-center p-3 bg-amber-50 rounded-md cursor-pointer hover:bg-amber-100 transition-colors">
+                  <div className="h-8 w-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mr-3">
+                    <Clock className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Step 2: Get Pre-approved</p>
-                    <p className="text-xs text-gray-600">Connect with a lender to secure financing</p>
+                    <div className="flex items-center">
+                      <p className="text-sm font-medium">Pre-approval Status</p>
+                      <p className="text-xs text-amber-600 ml-2">(In Progress)</p>
+                    </div>
+                    <p className="text-xs text-gray-600">Lender is reviewing your application</p>
                   </div>
-                  <Button size="sm" variant="outline">Connect with Lender</Button>
+                  <Button size="sm" variant="ghost" className="text-[#09261E]">
+                    <Eye className="h-4 w-4" />
+                  </Button>
                 </div>
                 
-                <div className="flex items-center p-3 bg-gray-50 rounded-md">
+                <div className="flex items-center p-3 bg-gray-50 border border-dashed border-gray-200 rounded-md cursor-pointer hover:bg-gray-100 transition-colors">
                   <div className="h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mr-3">
-                    <span className="text-sm">3</span>
+                    <DollarSign className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Step 3: Submit Offer</p>
-                    <p className="text-xs text-gray-600">Select a property to begin the offer process</p>
+                    <div className="flex items-center">
+                      <p className="text-sm font-medium">Offer Flow</p>
+                      <p className="text-xs text-gray-500 ml-2">(Not Started)</p>
+                    </div>
+                    <p className="text-xs text-gray-600">Prepare and submit offer documents</p>
                   </div>
-                  <Button size="sm" variant="outline" disabled>Select Property</Button>
+                  <Button size="sm" variant="outline">Start</Button>
+                </div>
+                
+                <div className="flex items-center p-3 bg-gray-50 border border-dashed border-gray-200 rounded-md cursor-pointer hover:bg-gray-100 transition-colors">
+                  <div className="h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mr-3">
+                    <Search className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center">
+                      <p className="text-sm font-medium">Due Diligence</p>
+                      <p className="text-xs text-gray-500 ml-2">(Not Started)</p>
+                    </div>
+                    <p className="text-xs text-gray-600">Inspections, title review, and final evaluations</p>
+                  </div>
+                  <Button size="sm" variant="outline" disabled>Locked</Button>
+                </div>
+                
+                <div className="flex items-center p-3 bg-gray-50 border border-dashed border-gray-200 rounded-md cursor-pointer hover:bg-gray-100 transition-colors">
+                  <div className="h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mr-3">
+                    <CheckCircle className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center">
+                      <p className="text-sm font-medium">Closing Preparation</p>
+                      <p className="text-xs text-gray-500 ml-2">(Not Started)</p>
+                    </div>
+                    <p className="text-xs text-gray-600">Final walkthrough and closing documents</p>
+                  </div>
+                  <Button size="sm" variant="outline" disabled>Locked</Button>
                 </div>
               </div>
               
-              <div className="mt-6">
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <Button variant="outline" className="w-full">
+                  <MessageSquare className="mr-2 h-4 w-4" /> Contact Owner
+                </Button>
                 <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90">
-                  Continue Your Journey
+                  <ArrowRight className="mr-2 h-4 w-4" /> Continue Process
                 </Button>
               </div>
             </CardContent>
