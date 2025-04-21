@@ -8,6 +8,7 @@ import HomePage from "@/pages/home-page";
 import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
+import DashboardPage from "@/pages/dashboard";
 import AuthPage from "@/pages/auth-page";
 import SignInPage from "@/pages/signin/index";
 import RegisterPage from "@/pages/register/index";
@@ -88,11 +89,11 @@ function Router() {
       <Route path="/connect">
         <Redirect to="/discussions" />
       </Route>
-      <Route path="/dashboard">
+      <ProtectedRoute path="/dashboard" component={() => (
         <MainLayout>
-          <SellerDashboard />
+          <DashboardPage />
         </MainLayout>
-      </Route>
+      )} />
       <Route path="/tools">
         <MainLayout>
           <ToolsPage />
