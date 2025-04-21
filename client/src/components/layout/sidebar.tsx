@@ -120,7 +120,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
   // Helper for icons in mobile menu
   const getMobileIconClasses = (path: string) => {
     const isActive = location === path;
-    return `w-5 h-5 mr-3 ${isActive ? 'text-white' : 'text-gray-700'}`;
+    return `w-5 h-5 mr-2 ${isActive ? 'text-white' : 'text-gray-700'}`;
   };
 
   return (
