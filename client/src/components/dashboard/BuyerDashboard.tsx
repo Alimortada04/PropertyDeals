@@ -27,43 +27,43 @@ export default function BuyerDashboard() {
   
   return (
     <div className="p-8 md:p-12 space-y-8">
-      {/* Flat curved tabs design matching PropertyPlaybook navigation */}
+      {/* Main tabs design with green active state and grey hover */}
       <Tabs defaultValue="deals" className="mb-6">
         <div className="mb-8">
-          <TabsList className="bg-gray-100 rounded-xl p-1.5 flex w-full overflow-hidden">
+          <TabsList className="bg-white rounded-xl p-1.5 flex w-full overflow-hidden border border-gray-200 shadow-sm">
             <TabsTrigger 
               value="deals" 
-              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
             >
               My Deals
             </TabsTrigger>
             <TabsTrigger 
               value="explore" 
-              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
             >
               Explore
             </TabsTrigger>
             <TabsTrigger 
               value="messages" 
-              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
             >
               Messages
             </TabsTrigger>
             <TabsTrigger 
               value="tools" 
-              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
             >
               Tools
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
-              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
             >
               Analytics
             </TabsTrigger>
             <TabsTrigger 
               value="priority" 
-              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+              className="px-5 py-2.5 flex-1 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
             >
               Priority Buyer
             </TabsTrigger>
@@ -399,26 +399,26 @@ export default function BuyerDashboard() {
         </TabsContent>
         
         <TabsContent value="explore" className="space-y-6">
-          {/* Tab navigation for explore section - PropertyPlaybook style */}
+          {/* Tab navigation for explore section - green active tabs style */}
           <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
             <Tabs defaultValue="recommended" className="w-full">
               <div className="mb-6">
-                <TabsList className="bg-gray-100 rounded-xl p-1.5 flex w-full sm:w-auto overflow-hidden">
+                <TabsList className="bg-white rounded-xl p-1.5 flex w-full sm:w-auto overflow-hidden border border-gray-200 shadow-sm">
                   <TabsTrigger 
                     value="recommended" 
-                    className="px-5 py-2 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+                    className="px-5 py-2 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
                   >
                     Recommended
                   </TabsTrigger>
                   <TabsTrigger 
                     value="saved-searches" 
-                    className="px-5 py-2 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+                    className="px-5 py-2 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
                   >
                     Saved Searches
                   </TabsTrigger>
                   <TabsTrigger 
                     value="deal-alerts" 
-                    className="px-5 py-2 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
+                    className="px-5 py-2 font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg"
                   >
                     Deal Alerts
                   </TabsTrigger>
