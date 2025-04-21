@@ -4,7 +4,7 @@ import { Users, Briefcase, Award, Star, DollarSign, BarChart3 } from 'lucide-rea
 
 export default function RepDashboard() {
   return (
-    <div className="space-y-6">
+    <div className="p-8 md:p-12 space-y-8">
       <h1 className="text-3xl font-bold tracking-tight mb-6 text-[#803344]">Welcome to your REP Dashboard</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="border-l-4 border-l-[#803344]">

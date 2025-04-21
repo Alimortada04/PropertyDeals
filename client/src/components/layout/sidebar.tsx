@@ -473,31 +473,31 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <li>
                   <Link href="/" className={getNavItemClasses("/")}>
                     <Home className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Home</span>
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Home</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/properties" className={getNavItemClasses("/properties")}>
                     <Building className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Properties</span>
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Properties</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/reps" className={getNavItemClasses("/reps")}>
                     <Users className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>The REP Room</span>
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>The REP Room</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/discussions" className={getNavItemClasses("/discussions")}>
                     <MessageCircle className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Discussions</span>
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Discussions</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/dashboard" className={getNavItemClasses("/dashboard")}>
                     <LayoutDashboard className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Dashboard</span>
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Dashboard</span>
                   </Link>
                 </li>
               </ul>
@@ -514,19 +514,19 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 <li>
                   <Link href="/playbook" className={getNavItemClasses("/playbook")}>
                     <Book className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>PropertyPlaybook</span>
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>PropertyPlaybook</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/tools" className={getNavItemClasses("/tools")}>
                     <Calculator className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Tools</span>
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Tools</span>
                   </Link>
                 </li>
                 <li>
                   <Link href="/help" className={getNavItemClasses("/help")}>
                     <HelpCircle className="w-6 h-6 flex-shrink-0" />
-                    <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Help</span>
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Help</span>
                   </Link>
                 </li>
               </ul>
@@ -547,13 +547,13 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
               <li>
                 <Link href="/profile" className={getNavItemClasses("/profile")}>
                   <UserCircle className="w-6 h-6 flex-shrink-0" />
-                  <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Profile</span>
+                  <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Profile</span>
                 </Link>
               </li>
               <li>
                 <Link href="/settings" className={getNavItemClasses("/settings")}>
                   <Settings className="w-6 h-6 flex-shrink-0" />
-                  <span className={`ml-3 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Settings</span>
+                  <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Settings</span>
                 </Link>
               </li>
             </ul>
