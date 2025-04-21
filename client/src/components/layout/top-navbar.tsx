@@ -61,8 +61,8 @@ export default function TopNavbar({ specialBehavior = false }: TopNavbarProps) {
     logoutMutation.mutate();
   };
   
-  // Don't render on mobile
-  if (isMobile) {
+  // Don't render on mobile or dashboard pages
+  if (isMobile || location.includes("/dashboard")) {
     return null;
   }
   
