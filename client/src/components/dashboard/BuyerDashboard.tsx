@@ -1,249 +1,609 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   CalendarDays, Search, Heart, Calculator, Settings, 
-  Star, ArrowRight, Plus, LineChart, PlusCircle, MessageSquare
+  Star, ArrowRight, Plus, LineChart, PlusCircle, MessageSquare,
+  Bell, ChevronRight, AlertCircle, Clock, BellRing, BarChart3, DollarSign,
+  PieChart, Target, CheckCircle, X, Eye, Home, Briefcase
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { 
+  DropdownMenu,
+  DropdownMenuContent, 
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function BuyerDashboard() {
+  // State for notifications dropdown
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  
   return (
     <div className="p-8 md:p-12 space-y-8">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-[#09261E]/10 to-transparent p-6 rounded-lg mb-8">
-        <h1 className="text-3xl font-bold tracking-tight mb-2 text-[#09261E]">Welcome back, Ali</h1>
-        <p className="text-gray-600 mb-4">Ready to find your next deal?</p>
-        <div className="flex items-center text-sm text-[#09261E]">
-          <p>You've saved 5 properties. Want us to recommend more like them?</p>
-          <Button variant="link" className="text-[#09261E] p-0 ml-2 font-medium">
-            View recommendations <ArrowRight className="ml-1 h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="border-l-4 border-l-[#09261E] hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Saved Properties</CardTitle>
-            <Heart className="h-4 w-4 text-[#09261E]" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-xs text-muted-foreground">
-              Properties you've bookmarked
-            </p>
-          </CardContent>
-        </Card>
+      {/* Main Dashboard Navigation Tabs */}
+      <Tabs defaultValue="deals" className="mb-8">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="deals">My Deals</TabsTrigger>
+          <TabsTrigger value="explore">Explore</TabsTrigger>
+          <TabsTrigger value="messages">Messages</TabsTrigger>
+          <TabsTrigger value="tools">Tools</TabsTrigger>
+        </TabsList>
         
-        <Card className="border-l-4 border-l-[#09261E] hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Recent Searches</CardTitle>
-            <Search className="h-4 w-4 text-[#09261E]" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <div className="mt-2">
-              <span className="inline-block bg-gray-100 rounded-full px-3 py-1 text-xs font-medium text-gray-700 mr-2 mb-2">
-                Milwaukee, 3+ beds, &lt;$300K
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-l-4 border-l-[#09261E] hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Viewings</CardTitle>
-            <CalendarDays className="h-4 w-4 text-[#09261E]" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2</div>
-            <p className="text-xs text-muted-foreground">
-              Upcoming property viewings
-            </p>
-            <Button variant="outline" size="sm" className="mt-3 text-xs">
-              <Plus className="mr-1 h-3 w-3" /> Add Viewing
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="grid gap-6 md:grid-cols-2">
-        {/* Recommended Properties */}
-        <Card className="md:col-span-1 shadow-md">
-          <CardHeader className="bg-[#09261E]/5">
-            <CardTitle className="text-[#09261E] flex items-center">
-              <Star className="mr-2 h-5 w-5 text-[#09261E]" /> Recommended Properties
-            </CardTitle>
-            <CardDescription>
-              Properties that match your preferences
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="mt-4">
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-gray-200">
-                <div className="w-16 h-16 rounded bg-gray-200 flex-shrink-0"></div>
+        <TabsContent value="deals" className="mt-6">
+          {/* Command Center Header */}
+          <div className="bg-white shadow-md rounded-lg mb-8 overflow-hidden border border-gray-100">
+            <div className="bg-gradient-to-r from-[#09261E]/10 to-transparent p-6">
+              <div className="flex justify-between items-start">
                 <div>
-                  <p className="text-sm font-medium">Modern Townhouse</p>
-                  <p className="text-xs text-muted-foreground">3 bed • 2 bath • Chicago</p>
-                  <p className="text-xs text-[#09261E] mt-1">Matches 85% of your criteria</p>
+                  <h1 className="text-3xl font-bold tracking-tight mb-3 text-[#09261E]">Welcome back, Ali</h1>
+                  
+                  <div className="mb-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm text-gray-600">You're 60% of the way to closing your first deal</span>
+                      <span className="text-sm font-medium">60%</span>
+                    </div>
+                    <Progress value={60} className="h-2 bg-gray-100" indicatorClassName="bg-[#09261E]" />
+                  </div>
                 </div>
-                <div className="ml-auto font-medium">$350,000</div>
-              </div>
-              
-              <div className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-gray-200">
-                <div className="w-16 h-16 rounded bg-gray-200 flex-shrink-0"></div>
-                <div>
-                  <p className="text-sm font-medium">Riverfront Condo</p>
-                  <p className="text-xs text-muted-foreground">2 bed • 2 bath • Detroit</p>
-                  <p className="text-xs text-[#09261E] mt-1">New this week</p>
+                
+                {/* Notifications Center */}
+                <div className="flex items-center space-x-4">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon" className="relative">
+                        <Bell className="h-5 w-5" />
+                        <span className="absolute top-0 right-0 h-3 w-3 rounded-full bg-red-500"></span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-80">
+                      <div className="flex items-center justify-between p-2">
+                        <span className="text-sm font-medium">Notifications</span>
+                        <span className="text-xs text-[#09261E] cursor-pointer hover:underline">Mark all as read</span>
+                      </div>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem className="p-3 cursor-pointer">
+                          <div className="flex items-start gap-2">
+                            <BellRing className="h-5 w-5 text-[#09261E] mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="text-sm font-medium">New message from Sarah Miller</p>
+                              <p className="text-xs text-gray-500">5 minutes ago</p>
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="p-3 cursor-pointer">
+                          <div className="flex items-start gap-2">
+                            <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="text-sm font-medium">Price reduced: Ranch Home</p>
+                              <p className="text-xs text-gray-500">2 hours ago</p>
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="p-3 cursor-pointer">
+                          <div className="flex items-start gap-2">
+                            <Clock className="h-5 w-5 text-[#09261E] mt-0.5 flex-shrink-0" />
+                            <div>
+                              <p className="text-sm font-medium">Viewing reminder: Modern Townhouse</p>
+                              <p className="text-xs text-gray-500">Tomorrow, 10:00 AM</p>
+                            </div>
+                          </div>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <div className="p-2 text-center">
+                        <Button variant="ghost" size="sm" className="w-full text-xs">View all notifications</Button>
+                      </div>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
-                <div className="ml-auto font-medium">$225,000</div>
-              </div>
-              
-              <div className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-gray-200">
-                <div className="w-16 h-16 rounded bg-gray-200 flex-shrink-0"></div>
-                <div>
-                  <p className="text-sm font-medium">Ranch Home</p>
-                  <p className="text-xs text-muted-foreground">4 bed • 3 bath • Milwaukee</p>
-                  <p className="text-xs text-[#09261E] mt-1">Price reduced by $15,000</p>
-                </div>
-                <div className="ml-auto font-medium">$410,000</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-        
-        {/* Right Column Cards */}
-        <div className="space-y-6">
-          {/* Tools */}
-          <Card className="shadow-md">
-            <CardHeader className="bg-[#09261E]/5">
-              <CardTitle className="text-[#09261E]">Tools</CardTitle>
-              <CardDescription>
-                Calculate and plan your property purchase
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="mt-2">
-              <div className="space-y-3">
-                <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-gray-200">
-                  <Calculator className="h-5 w-5 text-[#09261E]" />
-                  <div>
-                    <p className="text-sm font-medium">Mortgage Calculator</p>
-                    <p className="text-xs text-muted-foreground">Estimate your monthly payments</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-gray-200">
-                  <LineChart className="h-5 w-5 text-[#09261E]" />
-                  <div>
-                    <p className="text-sm font-medium">Flip Calculator</p>
-                    <p className="text-xs text-muted-foreground">Analyze potential flip profits</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4 p-2 hover:bg-gray-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-gray-200">
-                  <Settings className="h-5 w-5 text-[#09261E]" />
-                  <div>
-                    <p className="text-sm font-medium">Preferences</p>
-                    <p className="text-xs text-muted-foreground">Update your property criteria</p>
-                  </div>
-                </div>
+            
+            {/* Deal Alerts Banner */}
+            <div className="bg-amber-50 p-4 flex items-center justify-between border-t border-amber-100">
+              <div className="flex items-center">
+                <AlertCircle className="h-5 w-5 text-amber-500 mr-2" />
+                <p className="text-sm font-medium text-amber-800">5 New Off-Market Listings Match Your Preferences</p>
               </div>
-            </CardContent>
-          </Card>
+              <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-white">
+                View Now
+              </Button>
+            </div>
+          </div>
           
-          {/* Buyer Journey Tracker */}
+          {/* Saved Properties (Preview Cards) */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-[#09261E] flex items-center">
+                <Heart className="mr-2 h-5 w-5 text-[#09261E]" /> Saved Properties
+              </h2>
+              <Button variant="ghost" size="sm" className="text-[#09261E]">
+                View All <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                <div className="flex">
+                  <div className="w-1/3 bg-gray-200 h-32"></div>
+                  <div className="w-2/3 p-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium">Modern Townhouse</h3>
+                        <p className="text-sm text-gray-500">3 bed • 2 bath • Chicago</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          <span className="inline-flex items-center px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">
+                            🔥 Hot
+                          </span>
+                          <span className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">
+                            📍 Chicago
+                          </span>
+                        </div>
+                      </div>
+                      <p className="font-bold">$350,000</p>
+                    </div>
+                    <div className="flex justify-end mt-3">
+                      <Button size="sm" variant="outline" className="mr-2">
+                        <Eye className="mr-1 h-3 w-3" /> View
+                      </Button>
+                      <Button size="sm" className="bg-[#09261E]">Make Offer</Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                <div className="flex">
+                  <div className="w-1/3 bg-gray-200 h-32"></div>
+                  <div className="w-2/3 p-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium">Ranch Home</h3>
+                        <p className="text-sm text-gray-500">4 bed • 3 bath • Milwaukee</p>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                            💬 Offer Made
+                          </span>
+                          <span className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded-full">
+                            📍 Milwaukee
+                          </span>
+                        </div>
+                      </div>
+                      <p className="font-bold">$410,000</p>
+                    </div>
+                    <div className="flex justify-end mt-3">
+                      <Button size="sm" variant="outline" className="mr-2">
+                        <Eye className="mr-1 h-3 w-3" /> View
+                      </Button>
+                      <Button size="sm" variant="outline" className="bg-gray-100 text-gray-700 hover:bg-gray-200" disabled>
+                        Offer Pending
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+          
+          {/* Recommended Properties */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-[#09261E] flex items-center">
+                <Star className="mr-2 h-5 w-5 text-[#09261E]" /> Recommended For You
+              </h2>
+              <Button variant="ghost" size="sm" className="text-[#09261E]">
+                View All <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </div>
+            
+            <div className="overflow-x-auto pb-2">
+              <div className="flex space-x-4 min-w-max">
+                <Card className="w-72 flex-shrink-0 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="relative">
+                    <div className="w-full h-40 bg-gray-200"></div>
+                    <span className="absolute top-2 right-2 bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-medium">
+                      ⭐ Top Match
+                    </span>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium">Modern Townhouse</h3>
+                      <p className="font-bold">$350,000</p>
+                    </div>
+                    <p className="text-sm text-gray-500 mb-2">3 bed • 2 bath • Chicago</p>
+                    <div className="bg-[#09261E]/10 px-2 py-1 rounded-full text-xs text-[#09261E] inline-block mb-3">
+                      Matches 85% of your criteria
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button size="sm" variant="outline">Quick View</Button>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">Details</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="w-72 flex-shrink-0 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="relative">
+                    <div className="w-full h-40 bg-gray-200"></div>
+                    <span className="absolute top-2 right-2 bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                      🆕 New Listing
+                    </span>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium">Riverfront Condo</h3>
+                      <p className="font-bold">$225,000</p>
+                    </div>
+                    <p className="text-sm text-gray-500 mb-2">2 bed • 2 bath • Detroit</p>
+                    <div className="bg-[#09261E]/10 px-2 py-1 rounded-full text-xs text-[#09261E] inline-block mb-3">
+                      Matches 70% of your criteria
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button size="sm" variant="outline">Quick View</Button>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">Details</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="w-72 flex-shrink-0 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="relative">
+                    <div className="w-full h-40 bg-gray-200"></div>
+                    <span className="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                      💰 Price Reduced
+                    </span>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium">Ranch Home</h3>
+                      <p className="font-bold">$395,000</p>
+                    </div>
+                    <p className="text-sm text-gray-500 mb-2">4 bed • 3 bath • Milwaukee</p>
+                    <div className="text-xs text-green-700 mb-3">
+                      <span className="line-through">$410,000</span> (-$15,000)
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button size="sm" variant="outline">Quick View</Button>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">Details</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="w-72 flex-shrink-0 overflow-hidden hover:shadow-md transition-shadow">
+                  <div className="relative">
+                    <div className="w-full h-40 bg-gray-200"></div>
+                    <span className="absolute top-2 right-2 bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">
+                      ⏰ Offer Deadline
+                    </span>
+                  </div>
+                  <CardContent className="p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-medium">Victorian House</h3>
+                      <p className="font-bold">$475,000</p>
+                    </div>
+                    <p className="text-sm text-gray-500 mb-2">5 bed • 3 bath • Chicago</p>
+                    <div className="text-xs text-red-700 mb-3">
+                      Deadline: Apr 24, 2025 (3 days)
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button size="sm" variant="outline">Quick View</Button>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">Details</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="explore">
+          <div className="text-center p-20 bg-gray-50 rounded-lg">
+            <h3 className="text-xl font-medium mb-2">Explore Deals Tab</h3>
+            <p className="text-gray-500">This section would contain property discovery features.</p>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="messages" className="space-y-4">
+          {/* Messaging Interface */}
+          <div className="bg-white rounded-lg shadow-md border overflow-hidden">
+            <div className="flex h-[600px]">
+              {/* Left sidebar with conversations */}
+              <div className="w-1/3 border-r overflow-y-auto">
+                <div className="p-3 border-b">
+                  <h3 className="font-medium">Messages</h3>
+                </div>
+                
+                <div className="divide-y">
+                  <div className="p-3 hover:bg-gray-50 cursor-pointer bg-[#09261E]/5">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-10 w-10 rounded-full bg-[#09261E]/20 flex items-center justify-center text-[#09261E] font-medium">
+                        JD
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between">
+                          <p className="text-sm font-medium truncate">John Davis (Seller)</p>
+                          <p className="text-xs text-gray-500">2h</p>
+                        </div>
+                        <p className="text-xs text-gray-600 truncate">Thanks for your interest in my property.</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 hover:bg-gray-50 cursor-pointer">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-10 w-10 rounded-full bg-[#803344]/20 flex items-center justify-center text-[#803344] font-medium">
+                        SM
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between">
+                          <p className="text-sm font-medium truncate">Sarah Miller (REP)</p>
+                          <p className="text-xs text-gray-500">1d</p>
+                        </div>
+                        <p className="text-xs text-gray-600 truncate">I found a property that matches your requirements</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-3 hover:bg-gray-50 cursor-pointer">
+                    <div className="flex items-center space-x-3">
+                      <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-800 font-medium">
+                        PD
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between">
+                          <p className="text-sm font-medium truncate">PropertyDeals Support</p>
+                          <p className="text-xs text-gray-500">3d</p>
+                        </div>
+                        <p className="text-xs text-gray-600 truncate">Welcome to PropertyDeals! We're here to help...</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-3">
+                  <Button variant="outline" size="sm" className="w-full">
+                    <PlusCircle className="mr-2 h-4 w-4" /> New Message
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Main chat area */}
+              <div className="w-2/3 flex flex-col">
+                <div className="p-3 border-b flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="h-8 w-8 rounded-full bg-[#09261E]/20 flex items-center justify-center text-[#09261E] font-medium mr-2">
+                      JD
+                    </div>
+                    <div>
+                      <p className="font-medium">John Davis</p>
+                      <p className="text-xs text-gray-500">Seller • Colonial Revival</p>
+                    </div>
+                  </div>
+                  <div>
+                    <Button variant="ghost" size="sm">
+                      <Eye className="h-4 w-4 mr-1" /> View Property
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                  <div className="flex justify-start">
+                    <div className="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
+                      <p className="text-sm">Hello! Thanks for your interest in my Colonial Revival property. Do you have any specific questions about it?</p>
+                      <p className="text-xs text-gray-500 mt-1">10:30 AM</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <div className="bg-[#09261E] text-white rounded-lg p-3 shadow-sm max-w-[80%]">
+                      <p className="text-sm">Hi John, I'm interested in scheduling a viewing. Is the property still available this weekend?</p>
+                      <p className="text-xs text-white/70 mt-1">10:45 AM</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-start">
+                    <div className="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
+                      <p className="text-sm">Yes, it's available! Would Saturday at 2pm work for you? I can give you a tour and answer any questions.</p>
+                      <p className="text-xs text-gray-500 mt-1">11:02 AM</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-3 border-t">
+                  <div className="flex space-x-2">
+                    <input 
+                      type="text" 
+                      placeholder="Type a message..." 
+                      className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#09261E]/30"
+                    />
+                    <Button className="bg-[#09261E]">Send</Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="tools" className="space-y-6">
+          {/* Tools Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Card className="hover:shadow-md transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
+                    <Calculator className="h-6 w-6 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Mortgage Calculator</h3>
+                    <p className="text-sm text-gray-500">Estimate monthly payments</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover:shadow-md transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
+                    <LineChart className="h-6 w-6 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Flip/ROI Calculator</h3>
+                    <p className="text-sm text-gray-500">Analyze potential profits</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover:shadow-md transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
+                    <DollarSign className="h-6 w-6 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Budget Planner</h3>
+                    <p className="text-sm text-gray-500">Track expenses & financing</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover:shadow-md transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
+                    <Target className="h-6 w-6 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">ROI Target Tracker</h3>
+                    <p className="text-sm text-gray-500">Set & monitor investment goals</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover:shadow-md transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
+                    <Settings className="h-6 w-6 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Update Preferences</h3>
+                    <p className="text-sm text-gray-500">Refine your search criteria</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover:shadow-md transition-all cursor-pointer group">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
+                    <Home className="h-6 w-6 text-[#09261E]" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Deal Flow Timeline</h3>
+                    <p className="text-sm text-gray-500">Track your buyer journey</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Ownership Tracker */}
           <Card className="shadow-md">
             <CardHeader className="bg-[#09261E]/5">
-              <CardTitle className="text-[#09261E]">Buyer Journey</CardTitle>
+              <CardTitle className="text-[#09261E] flex items-center">
+                <Briefcase className="mr-2 h-5 w-5" /> Your Buying Roadmap
+              </CardTitle>
               <CardDescription>
                 You're 3 steps away from your first offer
               </CardDescription>
             </CardHeader>
             <CardContent className="mt-2">
-              <div className="space-y-3">
-                <div className="flex items-center p-2">
-                  <div className="h-6 w-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
-                    <span className="text-xs">✓</span>
+              <div className="space-y-4">
+                <div className="flex items-center p-3 bg-green-50 rounded-md">
+                  <div className="h-8 w-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
+                    <CheckCircle className="h-5 w-5" />
                   </div>
-                  <p className="text-sm">Schedule viewing</p>
+                  <div className="flex-1">
+                    <div className="flex items-center">
+                      <p className="text-sm font-medium">Step 1: Schedule Viewing</p>
+                      <p className="text-xs text-green-600 ml-2">(Done Apr 18)</p>
+                    </div>
+                    <p className="text-xs text-gray-600">You've scheduled a viewing for Modern Townhouse</p>
+                  </div>
                 </div>
-                <div className="flex items-center p-2">
-                  <div className="h-6 w-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center mr-3">
-                    <span className="text-xs">2</span>
+                
+                <div className="flex items-center p-3 bg-gray-50 rounded-md">
+                  <div className="h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mr-3">
+                    <span className="text-sm">2</span>
                   </div>
-                  <p className="text-sm">Get pre-approved</p>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Step 2: Get Pre-approved</p>
+                    <p className="text-xs text-gray-600">Connect with a lender to secure financing</p>
+                  </div>
+                  <Button size="sm" variant="outline">Connect with Lender</Button>
                 </div>
-                <div className="flex items-center p-2">
-                  <div className="h-6 w-6 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center mr-3">
-                    <span className="text-xs">3</span>
+                
+                <div className="flex items-center p-3 bg-gray-50 rounded-md">
+                  <div className="h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mr-3">
+                    <span className="text-sm">3</span>
                   </div>
-                  <p className="text-sm">Submit offer</p>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Step 3: Submit Offer</p>
+                    <p className="text-xs text-gray-600">Select a property to begin the offer process</p>
+                  </div>
+                  <Button size="sm" variant="outline" disabled>Select Property</Button>
                 </div>
               </div>
-              <div className="mt-4 text-center">
-                <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">
-                  Continue Journey
+              
+              <div className="mt-6">
+                <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90">
+                  Continue Your Journey
                 </Button>
               </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
-      
-      {/* Inbox Row */}
-      <Card className="shadow-md">
-        <CardHeader className="bg-[#09261E]/5">
-          <CardTitle className="text-[#09261E] flex items-center">
-            <MessageSquare className="mr-2 h-5 w-5" /> Messages
-          </CardTitle>
-          <CardDescription>
-            Your recent communications
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="mt-2">
-          <div className="space-y-3">
-            <div className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-gray-200">
-              <div className="h-10 w-10 rounded-full bg-[#09261E]/20 flex items-center justify-center text-[#09261E] font-medium">JD</div>
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <p className="text-sm font-medium">John Davis (Seller)</p>
-                  <p className="text-xs text-gray-500">2 hours ago</p>
-                </div>
-                <p className="text-xs text-gray-600 truncate">Thanks for your interest in my property. I'm available...</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-md transition-colors cursor-pointer border border-transparent hover:border-gray-200">
-              <div className="h-10 w-10 rounded-full bg-[#803344]/20 flex items-center justify-center text-[#803344] font-medium">SM</div>
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <p className="text-sm font-medium">Sarah Miller (REP)</p>
-                  <p className="text-xs text-gray-500">Yesterday</p>
-                </div>
-                <p className="text-xs text-gray-600 truncate">I found a property that matches your requirements, would you like to...</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-4">
-            <Button variant="outline" size="sm" className="w-full">
-              <PlusCircle className="mr-2 h-4 w-4" /> New Message
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        </TabsContent>
+      </Tabs>
       
       {/* Priority Buyer CTA */}
-      <Card className="bg-gradient-to-r from-[#09261E] to-[#135341] text-white shadow-lg">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-bold mb-2">Want early access to deals?</h3>
-              <p className="text-sm text-white/80">Apply for Priority Buyer status and get first dibs on new properties.</p>
+      <Card className="bg-gradient-to-r from-[#09261E] to-[#135341] text-white shadow-lg overflow-hidden">
+        <CardContent className="p-0">
+          <div className="grid md:grid-cols-4">
+            <div className="p-6 md:col-span-3">
+              <h3 className="text-xl font-bold mb-4">Get Priority Access to Deals</h3>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-white mr-2 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm">Badge on profile</p>
+                </div>
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-white mr-2 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm">Early listing visibility</p>
+                </div>
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-white mr-2 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm">Exclusive deals</p>
+                </div>
+                <div className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-white mr-2 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm">AI-matched properties</p>
+                </div>
+              </div>
+              <p className="text-sm text-white/80">Apply now to unlock these benefits and more.</p>
             </div>
-            <Button className="bg-white text-[#09261E] hover:bg-white/90 hover:text-[#09261E]">
-              Apply Now
-            </Button>
+            <div className="flex items-center justify-center p-6 bg-black/10">
+              <Button className="bg-white text-[#09261E] hover:bg-white/90 hover:text-[#09261E] font-bold px-10">
+                Get Priority Access
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
