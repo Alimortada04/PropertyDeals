@@ -8,7 +8,7 @@ import HomePage from "@/pages/home-page";
 import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
-import DashboardPage from "@/pages/dashboard";
+import DashboardNewPage from "@/pages/dashboard-page";
 import AuthPage from "@/pages/auth-page";
 import SignInPage from "@/pages/signin/index";
 import RegisterPage from "@/pages/register/index";
@@ -91,7 +91,7 @@ function Router() {
       </Route>
       <ProtectedRoute path="/dashboard" component={() => (
         <MainLayout>
-          <DashboardPage />
+          <DashboardNewPage />
         </MainLayout>
       )} />
       <Route path="/tools">

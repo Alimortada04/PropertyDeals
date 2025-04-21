@@ -9,8 +9,30 @@ import BuyerDashboard from '@/components/dashboard/BuyerDashboard';
 import SellerDashboard from '@/components/dashboard/SellerDashboard';
 import RepDashboard from '@/components/dashboard/RepDashboard';
 
+// Add React import for missing dependency
+import * as ReactDOM from 'react-dom';
+
+// Define types for our user data
+type RoleStatus = "approved" | "pending" | "not_applied" | "denied";
+
+interface UserRole {
+  status: RoleStatus;
+}
+
+interface UserRoles {
+  buyer: UserRole;
+  seller: UserRole;
+  rep: UserRole;
+}
+
+interface User {
+  name: string;
+  activeRole: "buyer" | "seller" | "rep";
+  roles: UserRoles;
+}
+
 // Mock user data
-const mockUser = {
+const mockUser: User = {
   name: "Ali",
   activeRole: "buyer", // can be 'buyer', 'seller', or 'rep'
   roles: {
@@ -21,32 +43,40 @@ const mockUser = {
 };
 
 // Status badge colors
-const statusColors = {
+const statusColors: Record<RoleStatus, string> = {
   approved: "bg-green-100 text-green-800 border-green-200",
   pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  not_applied: "bg-gray-100 text-gray-800 border-gray-200"
+  not_applied: "bg-gray-100 text-gray-800 border-gray-200",
+  denied: "bg-red-100 text-red-800 border-red-200"
 };
 
 // Role specific colors
-const roleColors = {
+const roleColors: Record<string, string> = {
   buyer: "bg-[#09261E] hover:bg-[#09261E]/90 text-white",
   seller: "bg-[#135341] hover:bg-[#135341]/90 text-white", 
   rep: "bg-[#803344] hover:bg-[#803344]/90 text-white"
 };
 
 // Role icons
-const roleIcons = {
+const roleIcons: Record<string, React.ReactNode> = {
   buyer: <Home className="h-4 w-4 mr-2" />,
   seller: <Building className="h-4 w-4 mr-2" />,
   rep: <Users className="h-4 w-4 mr-2" />
 };
 
 export default function DashboardPage() {
-  const [user, setUser] = useState(mockUser);
+  const [user, setUser] = useState<User>(mockUser);
   const [activeTab, setActiveTab] = useState<string>(user.activeRole);
+
+  // Type guard to validate role
+  const isValidRole = (role: string): role is "buyer" | "seller" | "rep" => {
+    return ["buyer", "seller", "rep"].includes(role);
+  };
 
   // Function to switch roles
   const handleRoleSwitch = (role: string) => {
+    if (!isValidRole(role)) return;
+    
     // Only allow switching to approved roles
     if (user.roles[role]?.status === "approved") {
       setUser({
@@ -59,14 +89,16 @@ export default function DashboardPage() {
 
   // Function to apply for a role
   const handleApplyForRole = (role: string) => {
+    if (!isValidRole(role)) return;
+    
     // In a real app, this would make an API call
     alert(`Applied for ${role} role. Status is now pending.`);
     
     // Update the local state to show pending status
     const updatedRoles = {
       ...user.roles,
-      [role]: { status: "pending" }
-    };
+      [role]: { status: "pending" as const }
+    } as UserRoles;
     
     setUser({
       ...user,
@@ -103,48 +135,52 @@ export default function DashboardPage() {
               <CardDescription>Switch between your available roles</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {Object.entries(user.roles).map(([role, { status }]) => (
-                <div key={role} className="flex items-center justify-between pb-4 last:pb-0 last:mb-0 last:border-0">
-                  <div className="flex items-center">
-                    {roleIcons[role]}
-                    <div className="ml-2">
-                      <p className="text-sm font-medium capitalize">{role}</p>
-                      <Badge variant="outline" className={statusColors[status]}>
-                        {status.replace('_', ' ')}
-                      </Badge>
+              {Object.entries(user.roles).map(([roleKey, { status }]) => {
+                // Type assertion for roleKey
+                const role = roleKey as "buyer" | "seller" | "rep";
+                return (
+                  <div key={role} className="flex items-center justify-between pb-4 last:pb-0 last:mb-0 last:border-0">
+                    <div className="flex items-center">
+                      {roleIcons[role]}
+                      <div className="ml-2">
+                        <p className="text-sm font-medium capitalize">{role}</p>
+                        <Badge variant="outline" className={statusColors[status as RoleStatus]}>
+                          {status.replace('_', ' ')}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div>
+                      {status === "approved" ? (
+                        <Button 
+                          size="sm" 
+                          variant={user.activeRole === role ? "default" : "outline"}
+                          className={user.activeRole === role ? roleColors[role] : ""}
+                          onClick={() => handleRoleSwitch(role)}
+                          disabled={user.activeRole === role}
+                        >
+                          {user.activeRole === role ? "Active" : "Switch"}
+                        </Button>
+                      ) : status === "not_applied" ? (
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleApplyForRole(role)}
+                        >
+                          Apply
+                        </Button>
+                      ) : (
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          disabled
+                        >
+                          {status}
+                        </Button>
+                      )}
                     </div>
                   </div>
-                  <div>
-                    {status === "approved" ? (
-                      <Button 
-                        size="sm" 
-                        variant={user.activeRole === role ? "default" : "outline"}
-                        className={user.activeRole === role ? roleColors[role] : ""}
-                        onClick={() => handleRoleSwitch(role)}
-                        disabled={user.activeRole === role}
-                      >
-                        {user.activeRole === role ? "Active" : "Switch"}
-                      </Button>
-                    ) : status === "not_applied" ? (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleApplyForRole(role)}
-                      >
-                        Apply
-                      </Button>
-                    ) : (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        disabled
-                      >
-                        {status}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </CardContent>
           </Card>
 
