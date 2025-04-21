@@ -8,7 +8,7 @@ import HomePage from "@/pages/home-page";
 import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
-import DashboardNewPage from "@/pages/dashboard-page";
+import DashboardNewPage from "@/pages/dashboard";
 import AuthPage from "@/pages/auth-page";
 import SignInPage from "@/pages/signin/index";
 import RegisterPage from "@/pages/register/index";
