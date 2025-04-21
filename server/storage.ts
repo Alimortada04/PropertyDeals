@@ -61,6 +61,15 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return user;
   }
+  
+  async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {
+    const [updatedUser] = await db
+      .update(users)
+      .set(userData)
+      .where(eq(users.id, id))
+      .returning();
+    return updatedUser || undefined;
+  }
 
   // Property operations
   async getProperties(): Promise<Property[]> {
@@ -163,7 +172,12 @@ export class MemStorage implements IStorage {
       password: "$2b$10$7O7BgKCexvkgIXR.OJNyEOQgwmRNzWw1Z1zXx3Zd2YEZjg1UhGnkK", // "password"
       fullName: "John Seller",
       email: "seller@propertydeals.com",
-      userType: "seller"
+      activeRole: "seller",
+      roles: {
+        buyer: { status: "approved", approvedAt: new Date().toISOString() },
+        seller: { status: "approved", approvedAt: new Date().toISOString() },
+        rep: { status: "not_applied" }
+      }
     };
     this.users.set(sellerId, seller);
     
@@ -175,7 +189,12 @@ export class MemStorage implements IStorage {
       password: "$2b$10$7O7BgKCexvkgIXR.OJNyEOQgwmRNzWw1Z1zXx3Zd2YEZjg1UhGnkK", // "password"
       fullName: "Sarah Investor",
       email: "sarah@propertydeals.com",
-      userType: "seller"
+      activeRole: "seller",
+      roles: {
+        buyer: { status: "approved", approvedAt: new Date().toISOString() },
+        seller: { status: "approved", approvedAt: new Date().toISOString() },
+        rep: { status: "pending", appliedAt: new Date().toISOString() }
+      }
     };
     this.users.set(seller2Id, seller2);
     
@@ -417,6 +436,15 @@ export class MemStorage implements IStorage {
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
     return user;
+  }
+  
+  async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {
+    const existingUser = this.users.get(id);
+    if (!existingUser) return undefined;
+    
+    const updatedUser = { ...existingUser, ...userData };
+    this.users.set(id, updatedUser);
+    return updatedUser;
   }
 
   // Property operations

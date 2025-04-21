@@ -15,6 +15,8 @@ type AuthContextType = {
   loginMutation: UseMutationResult<SelectUser, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
   registerMutation: UseMutationResult<SelectUser, Error, InsertUser>;
+  switchRoleMutation: UseMutationResult<SelectUser, Error, { role: string }>;
+  applyForRoleMutation: UseMutationResult<SelectUser, Error, { role: string, applicationData?: Record<string, any> }>;
 };
 
 type LoginData = Pick<InsertUser, "username" | "password">;
@@ -93,6 +95,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  const switchRoleMutation = useMutation({
+    mutationFn: async ({ role }: { role: string }) => {
+      const res = await apiRequest("POST", "/api/user/active-role", { role });
+      return await res.json();
+    },
+    onSuccess: (user: SelectUser) => {
+      queryClient.setQueryData(["/api/user"], user);
+      toast({
+        title: "Role switched",
+        description: `You are now in ${user.activeRole} mode.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Role switch failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const applyForRoleMutation = useMutation({
+    mutationFn: async ({ role, applicationData }: { role: string, applicationData?: Record<string, any> }) => {
+      const res = await apiRequest("POST", "/api/user/apply-role", { role, applicationData });
+      return await res.json();
+    },
+    onSuccess: (user: SelectUser) => {
+      queryClient.setQueryData(["/api/user"], user);
+      toast({
+        title: "Application submitted",
+        description: "Your role application has been submitted for review.",
+      });
+    },
+    onError: (error: any) => {
+      let description = error.message;
+      // Handle specific error responses from the server
+      if (error.response && error.response.status === 400) {
+        description = "You've already applied for this role.";
+      }
+      
+      toast({
+        title: "Application failed",
+        description,
+        variant: "destructive",
+      });
+    },
+  });
+
   return (
     <AuthContext.Provider
       value={{
@@ -102,6 +152,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loginMutation,
         logoutMutation,
         registerMutation,
+        switchRoleMutation,
+        applyForRoleMutation,
       }}
     >
       {children}
