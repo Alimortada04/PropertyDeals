@@ -766,6 +766,385 @@ export default function BuyerDashboard() {
             </CardContent>
           </Card>
         </TabsContent>
+        
+        <TabsContent value="analytics" className="space-y-6">
+          {/* Buyer Goals Section */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-bold text-[#09261E]">Your Investment Goals</h3>
+                <p className="text-sm text-gray-500">Track your progress towards your real estate portfolio</p>
+              </div>
+              <Button variant="outline" size="sm">
+                <Settings className="mr-2 h-4 w-4" /> Update Goals
+              </Button>
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
+              <Card className="border-t-4 border-t-[#09261E]">
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center">
+                      <Trophy className="h-5 w-5 text-[#09261E] mr-2" />
+                      <h3 className="font-medium">Annual Goal</h3>
+                    </div>
+                    <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">In Progress</span>
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2">1 / 4 Properties</h2>
+                  <p className="text-sm text-gray-500 mb-3">Acquired in 2025</p>
+                  <Progress value={25} className="h-2 bg-gray-100" indicatorColor="bg-[#09261E]" />
+                  <p className="text-xs text-gray-500 mt-2">25% completed • You're behind pace by 1 property</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-t-4 border-t-[#09261E]">
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center">
+                      <Building2 className="h-5 w-5 text-[#09261E] mr-2" />
+                      <h3 className="font-medium">Market Focus</h3>
+                    </div>
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2">75% Milwaukee</h2>
+                  <p className="text-sm text-gray-500 mb-3">15% Chicago • 10% Other</p>
+                  <div className="flex gap-1 items-center h-2 mb-3">
+                    <div className="h-full bg-[#09261E] rounded-l-full w-[75%]"></div>
+                    <div className="h-full bg-[#09261E]/60 w-[15%]"></div>
+                    <div className="h-full bg-gray-300 rounded-r-full w-[10%]"></div>
+                  </div>
+                  <p className="text-xs text-gray-500">Most saved properties are in Milwaukee</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-t-4 border-t-[#09261E]">
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <div className="flex items-center">
+                      <PieChart className="h-5 w-5 text-[#09261E] mr-2" />
+                      <h3 className="font-medium">Investment Type</h3>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 mt-4">
+                    <div className="text-center">
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E] text-white text-lg font-semibold">60%</div>
+                      <p className="text-xs mt-1">Fix & Flip</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#09261E]/30 text-[#09261E] text-lg font-semibold">40%</div>
+                      <p className="text-xs mt-1">Buy & Hold</p>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-4">Based on properties viewed and saved</p>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="text-center">
+              <Button className="bg-[#09261E]">
+                <Search className="mr-2 h-4 w-4" /> Source More Deals
+              </Button>
+            </div>
+          </div>
+          
+          {/* ROI Analytics Section */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-[#09261E]">Deal Performance</h3>
+                <p className="text-sm text-gray-500">Tracking your real estate portfolio metrics</p>
+              </div>
+              <div className="space-x-2">
+                <Button variant="outline" size="sm" className="bg-[#09261E]/5 border-[#09261E]">
+                  Last 12 Months
+                </Button>
+                <Button variant="outline" size="sm">
+                  All Time
+                </Button>
+              </div>
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-4 mb-6">
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <CircleDollarSign className="h-8 w-8 mx-auto mb-2 text-[#09261E]" />
+                  <h3 className="text-2xl font-bold">$410,000</h3>
+                  <p className="text-sm text-gray-500">Avg. Purchase Price</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <BarChart className="h-8 w-8 mx-auto mb-2 text-[#09261E]" />
+                  <h3 className="text-2xl font-bold">8.3%</h3>
+                  <p className="text-sm text-gray-500">Avg. Annual ROI</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <Clock className="h-8 w-8 mx-auto mb-2 text-[#09261E]" />
+                  <h3 className="text-2xl font-bold">68 days</h3>
+                  <p className="text-sm text-gray-500">Avg. Time to Close</p>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="pt-6 text-center">
+                  <Users className="h-8 w-8 mx-auto mb-2 text-[#09261E]" />
+                  <h3 className="text-2xl font-bold">4</h3>
+                  <p className="text-sm text-gray-500">Team Members Used</p>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
+              <h4 className="font-medium mb-3 flex items-center text-[#09261E]">
+                <TrendingUp className="h-4 w-4 mr-2" /> Performance Breakdown
+              </h4>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-sm">Colonial Revival</p>
+                    <p className="text-sm font-medium">9.7% ROI</p>
+                  </div>
+                  <div className="h-2 bg-gray-200 rounded-full">
+                    <div className="h-full bg-green-500 rounded-full" style={{ width: '97%' }}></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-sm">Duplex Unit</p>
+                    <p className="text-sm font-medium">8.2% ROI</p>
+                  </div>
+                  <div className="h-2 bg-gray-200 rounded-full">
+                    <div className="h-full bg-green-500 rounded-full" style={{ width: '82%' }}></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-sm">Townhouse Flip</p>
+                    <p className="text-sm font-medium">7.1% ROI</p>
+                  </div>
+                  <div className="h-2 bg-gray-200 rounded-full">
+                    <div className="h-full bg-green-500 rounded-full" style={{ width: '71%' }}></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4">
+                <Button variant="outline" size="sm" className="w-full">
+                  View Full Performance Report
+                </Button>
+              </div>
+            </div>
+          </div>
+          
+          {/* AI Insights Placeholder */}
+          <Card className="bg-gradient-to-r from-[#09261E]/10 to-transparent overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-4">
+                <div className="bg-[#09261E]/10 p-3 rounded-full">
+                  <BadgePercent className="h-6 w-6 text-[#09261E]" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold mb-1">Powered by PD AI (Coming Soon)</h3>
+                  <p className="text-sm text-gray-600 mb-3">Advanced insights to help you make smarter investment decisions</p>
+                  <div className="space-y-1">
+                    <p className="text-sm text-gray-500 flex items-center">
+                      <CheckCircle className="h-4 w-4 mr-2 text-green-500" /> "Show me cash-flowing duplexes in my price range"
+                    </p>
+                    <p className="text-sm text-gray-500 flex items-center">
+                      <CheckCircle className="h-4 w-4 mr-2 text-green-500" /> "Estimate holding costs if I buy this property"
+                    </p>
+                    <p className="text-sm text-gray-500 flex items-center">
+                      <CheckCircle className="h-4 w-4 mr-2 text-green-500" /> "Predict top-performing zip codes based on my criteria"
+                    </p>
+                  </div>
+                </div>
+                <Button className="bg-[#09261E]">Join Waitlist</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="priority" className="space-y-6">
+          {/* Priority Buyer Application */}
+          <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
+            <div className="bg-gradient-to-r from-[#09261E] to-[#135341] p-6 text-white">
+              <h2 className="text-2xl font-bold mb-2">Priority Buyer Program</h2>
+              <p className="text-white/80">Get exclusive early access to off-market deals and premium features</p>
+            </div>
+            
+            <div className="p-6">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-lg font-bold mb-4">Membership Benefits</h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-medium">Early Access to Listings</p>
+                        <p className="text-sm text-gray-500">Get 24-hour exclusive access to new deals before they go public</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-medium">Priority Badge</p>
+                        <p className="text-sm text-gray-500">Stand out to sellers and REPs with a verified buyer badge</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-medium">Off-Market Deal Network</p>
+                        <p className="text-sm text-gray-500">Access to exclusive deals not available to the general public</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-medium">Premium Analytics</p>
+                        <p className="text-sm text-gray-500">Advanced ROI calculations and market insights</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-medium">Dedicated REP Matching</p>
+                        <p className="text-sm text-gray-500">Get matched with top-performing real estate pros in your target areas</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="bg-gray-50 p-6 rounded-lg">
+                  <h3 className="text-lg font-bold mb-4">Apply for Priority Status</h3>
+                  <p className="text-sm text-gray-500 mb-4">Complete a simple qualification process to gain access to our most exclusive deals and features.</p>
+                  
+                  <div className="space-y-4 mb-6">
+                    <div>
+                      <p className="text-sm font-medium mb-1">What's your investment budget?</p>
+                      <div className="relative">
+                        <DollarSign className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                        <input 
+                          type="text" 
+                          placeholder="Investment budget" 
+                          className="w-full pl-10 pr-4 py-2 border rounded-md" 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm font-medium mb-1">How many properties do you plan to buy this year?</p>
+                      <select className="w-full p-2 border rounded-md">
+                        <option>1-2 properties</option>
+                        <option>3-5 properties</option>
+                        <option>6+ properties</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm font-medium mb-1">Do you have financing pre-approval?</p>
+                      <div className="flex gap-4">
+                        <label className="flex items-center">
+                          <input type="radio" name="financing" className="mr-2" />
+                          <span>Yes</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="radio" name="financing" className="mr-2" />
+                          <span>No</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input type="radio" name="financing" className="mr-2" />
+                          <span>Cash buyer</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Button className="w-full bg-[#09261E]">
+                    Submit Application
+                  </Button>
+                  
+                  <p className="text-xs text-gray-500 mt-4 text-center">
+                    Applications are typically reviewed within 24-48 hours
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Priority Listings Preview */}
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <h3 className="text-xl font-bold text-[#09261E] mb-4">Preview: Priority-Only Listings</h3>
+            <p className="text-sm text-gray-500 mb-6">These deals are currently only available to Priority Buyers</p>
+            
+            <div className="grid gap-4 md:grid-cols-3">
+              <Card className="overflow-hidden hover:shadow-md transition-shadow opacity-70 hover:opacity-100">
+                <div className="relative">
+                  <div className="w-full h-40 bg-gray-200"></div>
+                  <div className="absolute top-0 left-0 w-full h-full bg-black/30 flex items-center justify-center">
+                    <div className="bg-white/90 px-3 py-2 rounded-md">
+                      <span className="text-[#09261E] font-semibold">Priority Access Only</span>
+                    </div>
+                  </div>
+                </div>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-medium">Off-Market Duplex</h3>
+                    <p className="font-bold">$385,000</p>
+                  </div>
+                  <p className="text-sm text-gray-500 mb-3">4 bed • 2 bath • Milwaukee</p>
+                  <p className="text-xs text-green-700 mb-1">Pre-market opportunity • 12% Est. ROI</p>
+                  <Button size="sm" className="w-full bg-gray-300" disabled>Join Priority to View</Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden hover:shadow-md transition-shadow opacity-70 hover:opacity-100">
+                <div className="relative">
+                  <div className="w-full h-40 bg-gray-200"></div>
+                  <div className="absolute top-0 left-0 w-full h-full bg-black/30 flex items-center justify-center">
+                    <div className="bg-white/90 px-3 py-2 rounded-md">
+                      <span className="text-[#09261E] font-semibold">Priority Access Only</span>
+                    </div>
+                  </div>
+                </div>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-medium">Pocket Listing - Ranch</h3>
+                    <p className="font-bold">$295,000</p>
+                  </div>
+                  <p className="text-sm text-gray-500 mb-3">3 bed • 2 bath • Chicago</p>
+                  <p className="text-xs text-green-700 mb-1">Exclusive • Motivated seller</p>
+                  <Button size="sm" className="w-full bg-gray-300" disabled>Join Priority to View</Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden hover:shadow-md transition-shadow opacity-70 hover:opacity-100">
+                <div className="relative">
+                  <div className="w-full h-40 bg-gray-200"></div>
+                  <div className="absolute top-0 left-0 w-full h-full bg-black/30 flex items-center justify-center">
+                    <div className="bg-white/90 px-3 py-2 rounded-md">
+                      <span className="text-[#09261E] font-semibold">Priority Access Only</span>
+                    </div>
+                  </div>
+                </div>
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-medium">Multi-Unit Pre-Market</h3>
+                    <p className="font-bold">$522,000</p>
+                  </div>
+                  <p className="text-sm text-gray-500 mb-3">6 units • Detroit</p>
+                  <p className="text-xs text-green-700 mb-1">Cash flow positive • 10.5% cap rate</p>
+                  <Button size="sm" className="w-full bg-gray-300" disabled>Join Priority to View</Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
       </Tabs>
       
       {/* Priority Buyer CTA */}
