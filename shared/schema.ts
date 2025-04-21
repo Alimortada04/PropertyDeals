@@ -8,7 +8,12 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   fullName: text("fullName"),
   email: text("email"),
-  userType: text("userType").default("buyer"), // buyer or seller
+  activeRole: text("activeRole").default("buyer"), // Current active role
+  roles: jsonb("roles").default({ 
+    buyer: { status: "approved" }, 
+    seller: { status: "not_applied" }, 
+    rep: { status: "not_applied" } 
+  }).notNull(), // Roles with statuses
 });
 
 export const properties = pgTable("properties", {
@@ -89,13 +94,56 @@ export const reps = pgTable("reps", {
   teamSize: integer("teamSize")
 });
 
+// Define role types
+export type RoleStatus = "approved" | "pending" | "denied" | "not_applied";
+export type UserRole = "buyer" | "seller" | "rep";
+
+export interface RoleData {
+  status: RoleStatus;
+  appliedAt?: string;
+  approvedAt?: string;
+  deniedAt?: string;
+  notes?: string;
+}
+
+export interface UserRoles {
+  buyer: RoleData;
+  seller: RoleData;
+  rep: RoleData;
+}
+
 // Schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
   fullName: true,
   email: true,
-  userType: true,
+  activeRole: true,
+  roles: true,
+}).omit({ roles: true }).extend({
+  roles: z.object({
+    buyer: z.object({
+      status: z.enum(["approved", "pending", "denied", "not_applied"]),
+      appliedAt: z.string().optional(),
+      approvedAt: z.string().optional(),
+      deniedAt: z.string().optional(),
+      notes: z.string().optional(),
+    }),
+    seller: z.object({
+      status: z.enum(["approved", "pending", "denied", "not_applied"]),
+      appliedAt: z.string().optional(),
+      approvedAt: z.string().optional(),
+      deniedAt: z.string().optional(),
+      notes: z.string().optional(),
+    }),
+    rep: z.object({
+      status: z.enum(["approved", "pending", "denied", "not_applied"]),
+      appliedAt: z.string().optional(),
+      approvedAt: z.string().optional(),
+      deniedAt: z.string().optional(),
+      notes: z.string().optional(),
+    }),
+  }).optional(),
 });
 
 export const insertPropertySchema = createInsertSchema(properties).omit({

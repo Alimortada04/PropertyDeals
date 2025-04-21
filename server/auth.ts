@@ -90,4 +90,92 @@ export function setupAuth(app: Express) {
     if (!req.isAuthenticated()) return res.sendStatus(401);
     res.json(req.user);
   });
+  
+  // Update active role
+  app.post("/api/user/active-role", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    const { role } = req.body;
+    if (!role || !["buyer", "seller", "rep"].includes(role)) {
+      return res.status(400).json({ error: "Invalid role" });
+    }
+    
+    const userRoles = req.user.roles || {
+      buyer: { status: "approved" },
+      seller: { status: "not_applied" },
+      rep: { status: "not_applied" }
+    };
+    
+    // Check if the role is approved
+    if (userRoles[role].status !== "approved") {
+      return res.status(403).json({ 
+        error: "Role not approved",
+        status: userRoles[role].status 
+      });
+    }
+    
+    // Update the user's active role
+    const updatedUser = await storage.updateUser(req.user.id, { 
+      activeRole: role
+    });
+    
+    if (!updatedUser) {
+      return res.status(500).json({ error: "Failed to update user" });
+    }
+    
+    // Update the user in the session
+    req.login(updatedUser, (err) => {
+      if (err) return res.status(500).json({ error: "Session update error" });
+      res.status(200).json(updatedUser);
+    });
+  });
+  
+  // Apply for a new role
+  app.post("/api/user/apply-role", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    const { role, applicationData } = req.body;
+    if (!role || !["buyer", "seller", "rep"].includes(role)) {
+      return res.status(400).json({ error: "Invalid role" });
+    }
+    
+    const userRoles = req.user.roles || {
+      buyer: { status: "approved" },
+      seller: { status: "not_applied" },
+      rep: { status: "not_applied" }
+    };
+    
+    // Check if already approved or pending for this role
+    if (["approved", "pending"].includes(userRoles[role].status)) {
+      return res.status(400).json({ 
+        error: "Already applied or approved for this role",
+        status: userRoles[role].status
+      });
+    }
+    
+    // Update the role status to pending
+    const updatedRoles = {
+      ...userRoles,
+      [role]: {
+        status: "pending",
+        appliedAt: new Date().toISOString(),
+        ...applicationData
+      }
+    };
+    
+    // Update the user's roles
+    const updatedUser = await storage.updateUser(req.user.id, { 
+      roles: updatedRoles
+    });
+    
+    if (!updatedUser) {
+      return res.status(500).json({ error: "Failed to update user" });
+    }
+    
+    // Update the user in the session
+    req.login(updatedUser, (err) => {
+      if (err) return res.status(500).json({ error: "Session update error" });
+      res.status(200).json(updatedUser);
+    });
+  });
 }

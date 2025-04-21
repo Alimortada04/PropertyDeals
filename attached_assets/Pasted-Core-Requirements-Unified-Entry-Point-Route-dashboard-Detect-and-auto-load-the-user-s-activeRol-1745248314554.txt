@@ -1,0 +1,95 @@
+Core Requirements:
+Unified Entry Point
+
+Route: /dashboard
+
+Detect and auto-load the user’s activeRole (stored in user object).
+
+Supported roles: 'buyer', 'seller', 'rep'
+
+Role Switcher UI
+
+A dropdown or tab element allowing the user to:
+
+Switch between approved roles.
+
+See verification status (Approved ✅, Pending ⚠️, Not Applied ❌).
+
+Add new roles (if not already active).
+
+Displayed in top-right corner or sidebar.
+
+Role Status Handling
+
+Each role has a status: approved, pending, denied, or not_applied
+
+The dashboard switcher should reflect these statuses visually (icons, text, or badges).
+
+Dynamic Dashboard Content
+
+Based on the user’s activeRole, dynamically load one of:
+
+Buyer Dashboard
+
+Seller Dashboard
+
+REP Dashboard
+
+All dashboards should live under the /dashboard layout and share the same wrapper.
+
+Onboarding Flow for New Roles
+
+If a user clicks “Add Seller” or “Add REP,” show a modal or redirect to onboarding flow:
+
+Seller: Basic info form → optional deal sample → team review
+
+REP: Services offered → coverage area → license or portfolio → review
+
+After submission, the role status = pending until manually approved.
+
+🖥️ Dashboard Page Structure (Layout)
+plaintext
+Copy
+Edit
+/dashboard
+├── Header
+│   ├── Logo
+│   └── Role Switcher [Dropdown]
+├── Sidebar (optional)
+│   └── Sections: Properties, Inbox, Tools, etc. (based on role)
+├── Main Panel
+│   └── Conditionally Render:
+│       ├── BuyerDashboard
+│       ├── SellerDashboard
+│       └── REP Dashboard
+🧠 User Object Example
+json
+Copy
+Edit
+{
+  "id": "user_123",
+  "name": "Ali",
+  "roles": {
+    "buyer": { "status": "approved" },
+    "seller": { "status": "pending" },
+    "rep": { "status": "not_applied" }
+  },
+  "activeRole": "buyer"
+}
+🔄 Switch Role Logic
+On change:
+
+Update user.activeRole
+
+Re-render the main dashboard content
+
+If selected role is not approved, show message:
+
+“This role is not yet active. Want to apply? Start onboarding here.”
+
+🎨 Bonus Enhancements
+Gamification: Progress bar or badges for completing onboarding or activating all roles
+
+Trust Indicators: “Verified Seller” or “Trusted REP” badges after manual approval
+
+Persistent Role Memory: Store lastUsedRole in localStorage for UX continuity
