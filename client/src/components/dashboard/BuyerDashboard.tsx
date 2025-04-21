@@ -399,26 +399,26 @@ export default function BuyerDashboard() {
         </TabsContent>
         
         <TabsContent value="explore" className="space-y-6">
-          {/* Tab navigation for explore section - REP Room style */}
+          {/* Tab navigation for explore section - PropertyPlaybook style */}
           <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100">
             <Tabs defaultValue="recommended" className="w-full">
-              <div className="border-b border-gray-200 mb-6">
-                <TabsList className="flex -mb-px space-x-6 bg-transparent">
+              <div className="mb-6">
+                <TabsList className="bg-gray-100 rounded-xl p-1.5 flex w-full sm:w-auto overflow-hidden">
                   <TabsTrigger 
                     value="recommended" 
-                    className="font-display font-semibold text-gray-600 border-b-2 border-transparent px-1 pb-4 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] rounded-none"
+                    className="px-5 py-2 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
                   >
                     Recommended
                   </TabsTrigger>
                   <TabsTrigger 
                     value="saved-searches" 
-                    className="font-display font-semibold text-gray-600 border-b-2 border-transparent px-1 pb-4 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] rounded-none"
+                    className="px-5 py-2 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
                   >
                     Saved Searches
                   </TabsTrigger>
                   <TabsTrigger 
                     value="deal-alerts" 
-                    className="font-display font-semibold text-gray-600 border-b-2 border-transparent px-1 pb-4 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] rounded-none"
+                    className="px-5 py-2 font-display font-semibold text-gray-600 data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:font-bold transition-all rounded-lg shadow-none data-[state=active]:shadow-sm"
                   >
                     Deal Alerts
                   </TabsTrigger>
