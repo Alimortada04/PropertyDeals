@@ -4,7 +4,8 @@ import {
   CalendarDays, Search, Heart, Calculator, Settings, 
   Star, ArrowRight, Plus, LineChart, PlusCircle, MessageSquare,
   Bell, ChevronRight, AlertCircle, Clock, BellRing, BarChart3, DollarSign,
-  PieChart, Target, CheckCircle, X, Eye, Home, Briefcase
+  PieChart, Target, CheckCircle, X, Eye, Home, Briefcase, TrendingUp, Award,
+  Users, Calendar, BadgePercent, LucideIcon, Trophy, Building2, BarChart, CircleDollarSign
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -24,14 +25,48 @@ export default function BuyerDashboard() {
   
   return (
     <div className="p-8 md:p-12 space-y-8">
-      {/* Main Dashboard Navigation Tabs */}
-      <Tabs defaultValue="deals" className="mb-8">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="deals">My Deals</TabsTrigger>
-          <TabsTrigger value="explore">Explore</TabsTrigger>
-          <TabsTrigger value="messages">Messages</TabsTrigger>
-          <TabsTrigger value="tools">Tools</TabsTrigger>
-        </TabsList>
+      {/* Custom styled dashboard tabs */}
+      <Tabs defaultValue="deals" className="mb-6">
+        <div className="mb-6">
+          <TabsList className="p-1 bg-gray-100 rounded-lg flex space-x-1 w-full">
+            <TabsTrigger 
+              value="deals" 
+              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+            >
+              My Deals
+            </TabsTrigger>
+            <TabsTrigger 
+              value="explore" 
+              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+            >
+              Explore
+            </TabsTrigger>
+            <TabsTrigger 
+              value="messages" 
+              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+            >
+              Messages
+            </TabsTrigger>
+            <TabsTrigger 
+              value="tools" 
+              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+            >
+              Tools
+            </TabsTrigger>
+            <TabsTrigger 
+              value="analytics" 
+              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+            >
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger 
+              value="priority" 
+              className="rounded-md px-6 py-3 flex-1 font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all hover:bg-white/50 font-display"
+            >
+              Priority Buyer
+            </TabsTrigger>
+          </TabsList>
+        </div>
         
         <TabsContent value="deals" className="mt-6">
           {/* Command Center Header */}
@@ -46,7 +81,7 @@ export default function BuyerDashboard() {
                       <span className="text-sm text-gray-600">You're 60% of the way to closing your first deal</span>
                       <span className="text-sm font-medium">60%</span>
                     </div>
-                    <Progress value={60} className="h-2 bg-gray-100" indicatorClassName="bg-[#09261E]" />
+                    <Progress value={60} className="h-2 bg-gray-100" indicatorColor="bg-[#09261E]" />
                   </div>
                 </div>
                 
@@ -299,10 +334,170 @@ export default function BuyerDashboard() {
           </div>
         </TabsContent>
         
-        <TabsContent value="explore">
-          <div className="text-center p-20 bg-gray-50 rounded-lg">
-            <h3 className="text-xl font-medium mb-2">Explore Deals Tab</h3>
-            <p className="text-gray-500">This section would contain property discovery features.</p>
+        <TabsContent value="explore" className="space-y-6">
+          {/* Tab navigation for explore section */}
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+            <Tabs defaultValue="recommended" className="w-full">
+              <TabsList className="w-full grid grid-cols-3 mb-4">
+                <TabsTrigger value="recommended" className="font-display">Recommended</TabsTrigger>
+                <TabsTrigger value="saved-searches" className="font-display">Saved Searches</TabsTrigger>
+                <TabsTrigger value="deal-alerts" className="font-display">Deal Alerts</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="recommended" className="pt-2">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {/* Recommended property cards */}
+                  <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                    <div className="relative">
+                      <div className="w-full h-40 bg-gray-200"></div>
+                      <span className="absolute top-2 right-2 bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-medium">
+                        ⭐ Top Match
+                      </span>
+                      <Button size="sm" variant="ghost" className="absolute top-2 left-2 bg-white/80 rounded-full w-8 h-8 p-0">
+                        <Heart className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-medium">Lakefront Cottage</h3>
+                        <p className="font-bold">$275,000</p>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-2">2 bed • 1 bath • Madison</p>
+                      <div className="bg-[#09261E]/10 px-2 py-1 rounded-full text-xs text-[#09261E] inline-block mb-3">
+                        Matches 92% of your criteria
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-amber-600">Exclusive Off-Market Deal</span>
+                        <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">View Details</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                    <div className="relative">
+                      <div className="w-full h-40 bg-gray-200"></div>
+                      <span className="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium">
+                        💰 Cash Flowing
+                      </span>
+                      <Button size="sm" variant="ghost" className="absolute top-2 left-2 bg-white/80 rounded-full w-8 h-8 p-0">
+                        <Heart className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-medium">Duplex Unit</h3>
+                        <p className="font-bold">$320,000</p>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-2">4 bed • 2 bath • Milwaukee</p>
+                      <div className="bg-[#09261E]/10 px-2 py-1 rounded-full text-xs text-[#09261E] inline-block mb-3">
+                        Est. ROI: 9.2% annually
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500">Listed 2 days ago</span>
+                        <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">View Details</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="overflow-hidden hover:shadow-md transition-shadow">
+                    <div className="relative">
+                      <div className="w-full h-40 bg-gray-200"></div>
+                      <span className="absolute top-2 right-2 bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium">
+                        🔨 Flip Potential
+                      </span>
+                      <Button size="sm" variant="ghost" className="absolute top-2 left-2 bg-white/80 rounded-full w-8 h-8 p-0">
+                        <Heart className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-medium">Fixer Upper</h3>
+                        <p className="font-bold">$175,000</p>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-2">3 bed • 2 bath • Chicago</p>
+                      <div className="bg-[#09261E]/10 px-2 py-1 rounded-full text-xs text-[#09261E] inline-block mb-3">
+                        Est. ARV: $265,000
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-500">Great neighborhood</span>
+                        <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90">View Details</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="mt-6 text-center">
+                  <Button className="bg-[#09261E] hover:bg-[#09261E]/90">
+                    <Search className="mr-2 h-4 w-4" /> Find More Properties
+                  </Button>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="saved-searches" className="pt-2">
+                <div className="grid gap-4">
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-medium flex items-center">
+                          <Search className="mr-2 h-4 w-4 text-[#09261E]" />
+                          Milwaukee Duplexes
+                        </h3>
+                        <span className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
+                          5 new matches
+                        </span>
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">Milwaukee</span>
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">Duplex</span>
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">$200k-$400k</span>
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">Multi-family</span>
+                      </div>
+                      <div className="flex justify-end mt-4">
+                        <Button size="sm" variant="outline" className="mr-2">Edit</Button>
+                        <Button size="sm" className="bg-[#09261E]">View Results</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-medium flex items-center">
+                          <Search className="mr-2 h-4 w-4 text-[#09261E]" />
+                          Chicago Condos
+                        </h3>
+                        <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+                          Last updated 2 days ago
+                        </span>
+                      </div>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">Chicago</span>
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">Condo</span>
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">$150k-$300k</span>
+                        <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">2+ beds</span>
+                      </div>
+                      <div className="flex justify-end mt-4">
+                        <Button size="sm" variant="outline" className="mr-2">Edit</Button>
+                        <Button size="sm" className="bg-[#09261E]">View Results</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="deal-alerts" className="pt-2">
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="text-center p-6">
+                      <AlertCircle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
+                      <h3 className="text-xl font-bold mb-2">Deal Alerts</h3>
+                      <p className="text-gray-500 mb-6">Get notified when properties that match your criteria hit the market or have price reductions.</p>
+                      <Button className="bg-[#09261E]">Set Up Deal Alerts</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
         </TabsContent>
         

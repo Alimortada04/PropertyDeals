@@ -8,3 +8,14 @@ h1, h2, h3, h4, h5, h6 {
 body, p, button, div, span {
   font-family: 'Lato', sans-serif;
 }
+
+/* Custom font classes for specific elements */
+.font-display {
+  font-family: 'League Spartan', sans-serif !important;
+}
+
+/* Apply League Spartan to tabs */
+[role="tablist"] button {
+  font-family: 'League Spartan', sans-serif;
+  font-weight: 600;
+}

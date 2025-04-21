@@ -1,0 +1,89 @@
+Fix Tabs – Visual Consistency
+Right now, the tabs feel too static/generic. Let’s match the style of REP filters you’ve used elsewhere (pill-style buttons with status-aware highlights).
+
+New Design Spec:
+
+Use rounded pill tabs
+
+Background color change or underline on active
+
+Font: League Spartan bold
+
+Hover: subtle shadow or color shift
+
+Suggested Tabs (Final Set):
+
+🔍 Explore Deals
+
+📂 My Deals
+
+💬 Messages
+
+🧰 Tools
+
+📈 Analytics
+
+🧠 Priority Buyer
+
+🎮 2. Gamify Buyer Goals
+Turn submitted criteria into motivation and movement:
+
+Use Buyer’s Initial Setup Data:
+
+“How many properties do you plan to buy this year?”
+
+“What’s your monthly budget range?”
+
+“What markets are you buying in?”
+
+Display & Track:
+
+🎯 “Goal: 4 properties in 2025” → 1/4 Acquired ✅
+
+🧭 Market focus progress: “75% of saved deals in Milwaukee”
+
+🔄 Investment type breakdown: Fix & Flip vs Buy & Hold
+
+💡 Add dynamic nudges: “You’re behind pace — want help sourcing deals?”
+
+📈 3. Analytics Tab
+Let’s go beyond fluff — show real ROI data tied to their account:
+
+Analytics Section Should Include:
+
+📊 Deals Closed (Count, Location, Timeline)
+
+💵 Average Purchase Price
+
+💸 Projected vs Actual ROI
+
+🤝 Team Members Used
+
+Sellers, REPs, Contractors, TCs (clickable if they’re on PD platform)
+
+⏱ Avg Deal Time from Interest → Close
+
+This becomes an investor dashboard + memory bank over time.
+
+🔧 4. More Utility
+Every buyer should feel like the platform is working for them.
+
+Ideas:
+🔔 "Property Suggestions" button — generates listings based on activity
+
+💬 “Need a REP in [city]?” quick-connect
+
+✅ Save deal analysis notes per property
+
+💰 ROI simulator overlay on each property card
+
+🧪 5. Future AI Ideas (Plan for Integration)
+Even if not implemented yet, design for this now:
+
+“Show me cash-flowing duplexes in my price range”
+
+“Estimate holding costs if I buy this property”
+
+“Predict top-performing zip codes based on my criteria”
+
+You can label these as “Powered by PD AI (Coming Soon)” — builds hype and keeps users hungry.
