@@ -5,7 +5,8 @@ import {
   Star, ArrowRight, Plus, LineChart, PlusCircle, MessageSquare,
   Bell, ChevronRight, AlertCircle, Clock, BellRing, BarChart3, DollarSign,
   PieChart, Target, CheckCircle, X, Eye, Home, Briefcase, TrendingUp, Award,
-  Users, Calendar, BadgePercent, LucideIcon, Trophy, Building2, BarChart, CircleDollarSign
+  Users, Calendar, BadgePercent, LucideIcon, Trophy, Building2, BarChart, CircleDollarSign,
+  Sliders, Building, FileText, MapPin, ClipboardCheck
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -18,6 +19,7 @@ import {
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function BuyerDashboard() {
   // State for notifications dropdown
@@ -702,91 +704,261 @@ export default function BuyerDashboard() {
         </TabsContent>
         
         <TabsContent value="tools" className="space-y-6">
-          {/* Tools Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Card className="hover:shadow-md transition-all cursor-pointer group">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
-                    <Calculator className="h-6 w-6 text-[#09261E]" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Mortgage Calculator</h3>
-                    <p className="text-sm text-gray-500">Estimate monthly payments</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-[#09261E]">Investment Tools</h3>
+                <p className="text-sm text-gray-500">Interactive calculators and tools to strengthen your investment strategy</p>
+              </div>
+              <Button variant="outline" size="sm">
+                <Settings className="mr-2 h-4 w-4" /> Reorder Tools
+              </Button>
+            </div>
             
-            <Card className="hover:shadow-md transition-all cursor-pointer group">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
-                    <LineChart className="h-6 w-6 text-[#09261E]" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="overflow-hidden hover:shadow-md transition-shadow group">
+                <div className="bg-gradient-to-br from-[#09261E]/20 to-[#09261E]/5 h-2 w-full"></div>
+                <CardContent className="pt-6">
+                  <div className="flex items-start mb-4">
+                    <div className="h-12 w-12 rounded-lg bg-[#09261E]/10 flex items-center justify-center text-[#09261E] mr-4">
+                      <Calculator className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">Mortgage Calculator</h3>
+                      <p className="text-sm text-gray-500">Estimate monthly payments</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-medium">Flip/ROI Calculator</h3>
-                    <p className="text-sm text-gray-500">Analyze potential profits</p>
+                  
+                  <div className="space-y-3 mb-4">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">Loan Amount</span>
+                      <span className="font-medium">$350,000</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">Interest Rate</span>
+                      <span className="font-medium">5.25%</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-500">Loan Term</span>
+                      <span className="font-medium">30 years</span>
+                    </div>
+                    <div className="flex justify-between text-sm font-bold">
+                      <span>Est. Monthly Payment</span>
+                      <span>$1,932</span>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                  
+                  <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90 group-hover:shadow-md transition-shadow">
+                    Open Calculator
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden hover:shadow-md transition-shadow group">
+                <div className="bg-gradient-to-br from-[#09261E]/20 to-[#09261E]/5 h-2 w-full"></div>
+                <CardContent className="pt-6">
+                  <div className="flex items-start mb-4">
+                    <div className="h-12 w-12 rounded-lg bg-[#09261E]/10 flex items-center justify-center text-[#09261E] mr-4">
+                      <LineChart className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">ROI Calculator</h3>
+                      <p className="text-sm text-gray-500">Analyze investment returns</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-16 w-16 rounded-lg bg-[#09261E]/10 flex items-center justify-center">
+                        <span className="text-xl font-bold text-[#09261E]">8.2%</span>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium">Avg. ROI</span>
+                        <p className="text-xs text-gray-500">Rental Property</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-16 w-16 rounded-lg bg-[#09261E]/10 flex items-center justify-center">
+                        <span className="text-xl font-bold text-[#09261E]">12%</span>
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium">Avg. ROI</span>
+                        <p className="text-xs text-gray-500">Fix & Flip</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90 group-hover:shadow-md transition-shadow">
+                    Open Calculator
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden hover:shadow-md transition-shadow group">
+                <div className="bg-gradient-to-br from-[#09261E]/20 to-[#09261E]/5 h-2 w-full"></div>
+                <CardContent className="pt-6">
+                  <div className="flex items-start mb-4">
+                    <div className="h-12 w-12 rounded-lg bg-[#09261E]/10 flex items-center justify-center text-[#09261E] mr-4">
+                      <Building className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">Property Comparison</h3>
+                      <p className="text-sm text-gray-500">Compare multiple properties</p>
+                    </div>
+                  </div>
+                  
+                  <div className="h-16 bg-[#09261E]/5 rounded-lg flex items-center justify-center mb-4">
+                    <p className="text-sm text-[#09261E]">Compare up to 5 properties at once</p>
+                  </div>
+                  
+                  <div className="flex items-center mb-4">
+                    <Avatar className="h-6 w-6 border-2 border-white">
+                      <AvatarFallback className="bg-[#09261E] text-white text-xs">P1</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="h-6 w-6 border-2 border-white -ml-2">
+                      <AvatarFallback className="bg-[#09261E]/70 text-white text-xs">P2</AvatarFallback>
+                    </Avatar>
+                    <span className="ml-2 text-xs text-gray-500">2 properties queued for comparison</span>
+                  </div>
+                  
+                  <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90 group-hover:shadow-md transition-shadow">
+                    Open Comparison
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden hover:shadow-md transition-shadow group">
+                <div className="bg-gradient-to-br from-[#09261E]/20 to-[#09261E]/5 h-2 w-full"></div>
+                <CardContent className="pt-6">
+                  <div className="flex items-start mb-4">
+                    <div className="h-12 w-12 rounded-lg bg-[#09261E]/10 flex items-center justify-center text-[#09261E] mr-4">
+                      <DollarSign className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">Budget Planner</h3>
+                      <p className="text-sm text-gray-500">Plan your investment budget</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3 mb-4">
+                    <div>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span>Purchase Budget</span>
+                        <span>$1.2M / $2M</span>
+                      </div>
+                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="bg-green-500 h-full rounded-full" style={{ width: '60%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span>Rehab Budget</span>
+                        <span>$120K / $300K</span>
+                      </div>
+                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="bg-green-500 h-full rounded-full" style={{ width: '40%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span>Reserve Funds</span>
+                        <span>$50K / $100K</span>
+                      </div>
+                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="bg-green-500 h-full rounded-full" style={{ width: '50%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90 group-hover:shadow-md transition-shadow">
+                    Open Budget Planner
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden hover:shadow-md transition-shadow group">
+                <div className="bg-gradient-to-br from-[#09261E]/20 to-[#09261E]/5 h-2 w-full"></div>
+                <CardContent className="pt-6">
+                  <div className="flex items-start mb-4">
+                    <div className="h-12 w-12 rounded-lg bg-[#09261E]/10 flex items-center justify-center text-[#09261E] mr-4">
+                      <Target className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">ROI Target Tracker</h3>
+                      <p className="text-sm text-gray-500">Track investment goals</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-4">
+                    <div className="flex items-center justify-center relative mb-2">
+                      <div className="h-24 w-24 rounded-full border-4 border-[#09261E]/10 flex items-center justify-center">
+                        <div className="h-16 w-16 rounded-full bg-[#09261E]/10 flex items-center justify-center">
+                          <span className="text-2xl font-bold text-[#09261E]">7.5%</span>
+                        </div>
+                      </div>
+                      <div className="absolute -right-2 -top-2 bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                        On Target
+                      </div>
+                    </div>
+                    <p className="text-center text-sm text-gray-500">
+                      Current ROI vs Annual Target (7%)
+                    </p>
+                  </div>
+                  
+                  <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90 group-hover:shadow-md transition-shadow">
+                    View Targets
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              <Card className="overflow-hidden hover:shadow-md transition-shadow group">
+                <div className="bg-gradient-to-br from-[#09261E]/20 to-[#09261E]/5 h-2 w-full"></div>
+                <CardContent className="pt-6">
+                  <div className="flex items-start mb-4">
+                    <div className="h-12 w-12 rounded-lg bg-[#09261E]/10 flex items-center justify-center text-[#09261E] mr-4">
+                      <Calendar className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">Deal Flow Timeline</h3>
+                      <p className="text-sm text-gray-500">Track property timelines</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-4 space-y-2">
+                    <div className="flex items-center">
+                      <div className="h-3 w-3 rounded-full bg-green-500 mr-2"></div>
+                      <span className="text-xs text-gray-600 flex-1">Viewing scheduled for Modern Townhouse</span>
+                      <span className="text-xs">Apr 25</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="h-3 w-3 rounded-full bg-amber-500 mr-2"></div>
+                      <span className="text-xs text-gray-600 flex-1">Offer deadline for Victorian House</span>
+                      <span className="text-xs">Apr 24</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="h-3 w-3 rounded-full bg-blue-500 mr-2"></div>
+                      <span className="text-xs text-gray-600 flex-1">Pre-approval expiration</span>
+                      <span className="text-xs">May 15</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="h-3 w-3 rounded-full bg-[#09261E] mr-2"></div>
+                      <span className="text-xs text-gray-600 flex-1">Property tax due for Ranch Home</span>
+                      <span className="text-xs">Jun 01</span>
+                    </div>
+                  </div>
+                  
+                  <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90 group-hover:shadow-md transition-shadow">
+                    View Timeline
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
             
-            <Card className="hover:shadow-md transition-all cursor-pointer group">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
-                    <DollarSign className="h-6 w-6 text-[#09261E]" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Budget Planner</h3>
-                    <p className="text-sm text-gray-500">Track expenses & financing</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="hover:shadow-md transition-all cursor-pointer group">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
-                    <Target className="h-6 w-6 text-[#09261E]" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">ROI Target Tracker</h3>
-                    <p className="text-sm text-gray-500">Set & monitor investment goals</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="hover:shadow-md transition-all cursor-pointer group">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
-                    <Settings className="h-6 w-6 text-[#09261E]" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Update Preferences</h3>
-                    <p className="text-sm text-gray-500">Refine your search criteria</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="hover:shadow-md transition-all cursor-pointer group">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center group-hover:bg-[#09261E]/20 transition-colors">
-                    <Home className="h-6 w-6 text-[#09261E]" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Deal Flow Timeline</h3>
-                    <p className="text-sm text-gray-500">Track your buyer journey</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="mt-6 text-center">
+              <Button variant="outline" className="bg-white">
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Custom Tool
+              </Button>
+            </div>
           </div>
           
           {/* Property Roadmap */}
