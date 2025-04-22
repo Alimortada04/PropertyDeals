@@ -26,11 +26,11 @@ export default function BuyerDashboard() {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   
   return (
-    <div className="pt-16 p-4 sm:p-6 md:p-12 space-y-8">
-      {/* Main tabs design with green active state and grey hover - mobile responsive */}
+    <div className="pt-20 sm:pt-24 md:pt-20 p-4 sm:p-6 md:p-12 space-y-8">
+      {/* Main tabs design with green active state and grey hover - mobile responsive with sticky positioning */}
       <Tabs defaultValue="deals" className="mb-6">
-        <div className="mb-6 md:mb-8">
-          <div className="overflow-x-auto pb-1 -mx-2 px-2">
+        <div className="mb-6 md:mb-8 sticky top-0 z-30 bg-white/95 backdrop-blur-sm pt-2 pb-3 -mt-2 -mx-4 px-4 sm:-mx-6 sm:px-6 md:-mx-12 md:px-12">
+          <div className="overflow-x-auto pb-1">
             <TabsList className="bg-white rounded-xl p-1.5 flex w-full md:w-full border border-gray-200 shadow-sm min-w-max">
               <TabsTrigger 
                 value="deals" 
@@ -587,11 +587,11 @@ export default function BuyerDashboard() {
         </TabsContent>
         
         <TabsContent value="messages" className="space-y-4">
-          {/* Messaging Interface */}
+          {/* Messaging Interface - Mobile Optimized (iMessage/Facebook style) */}
           <div className="bg-white rounded-lg shadow-md border overflow-hidden">
-            <div className="flex h-[600px]">
-              {/* Left sidebar with conversations */}
-              <div className="w-1/3 border-r overflow-y-auto">
+            <div className="md:flex h-[600px]">
+              {/* Left sidebar with conversations - full width on mobile, hidden when viewing a conversation */}
+              <div id="conversationList" className="w-full md:w-1/3 md:border-r overflow-y-auto h-full block md:block">
                 <div className="p-3 border-b">
                   <h3 className="font-medium">Messages</h3>
                 </div>
@@ -650,11 +650,14 @@ export default function BuyerDashboard() {
                 </div>
               </div>
               
-              {/* Main chat area */}
-              <div className="w-2/3 flex flex-col">
-                <div className="p-3 border-b flex items-center justify-between">
+              {/* Main chat area - hidden on mobile by default until a conversation is selected */}
+              <div id="conversationDetail" className="hidden md:flex w-full md:w-2/3 flex-col h-full">
+                <div className="p-3 border-b flex items-center justify-between sticky top-0 bg-white z-20">
                   <div className="flex items-center">
-                    <div className="h-8 w-8 rounded-full bg-[#09261E]/20 flex items-center justify-center text-[#09261E] font-medium mr-2">
+                    <button id="backButton" className="h-8 w-8 flex items-center justify-center mr-2 text-gray-600 md:hidden">
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <div className="h-10 w-10 rounded-full bg-[#09261E]/20 flex items-center justify-center text-[#09261E] font-medium mr-2">
                       JD
                     </div>
                     <div>
@@ -662,44 +665,75 @@ export default function BuyerDashboard() {
                       <p className="text-xs text-gray-500">Seller • Colonial Revival</p>
                     </div>
                   </div>
-                  <div>
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4 mr-1" /> View Property
+                  <div className="flex items-center space-x-1">
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hidden sm:flex">
+                      <Phone className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                      <Eye className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
                 
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-                  <div className="flex justify-start">
-                    <div className="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
-                      <p className="text-sm">Hello! Thanks for your interest in my Colonial Revival property. Do you have any specific questions about it?</p>
-                      <p className="text-xs text-gray-500 mt-1">10:30 AM</p>
+                <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 bg-gray-50">
+                  {/* Conversation date divider */}
+                  <div className="flex justify-center">
+                    <div className="bg-gray-200 text-gray-500 text-xs px-3 py-1 rounded-full">
+                      Today
                     </div>
                   </div>
                   
-                  <div className="flex justify-end">
-                    <div className="bg-[#09261E] text-white rounded-lg p-3 shadow-sm max-w-[80%]">
-                      <p className="text-sm">Hi John, I'm interested in scheduling a viewing. Is the property still available this weekend?</p>
-                      <p className="text-xs text-white/70 mt-1">10:45 AM</p>
+                  <div className="flex justify-start mb-3">
+                    <div className="flex items-end gap-1">
+                      <div className="h-8 w-8 rounded-full bg-[#09261E]/20 flex-shrink-0 flex items-center justify-center text-[#09261E] font-medium mr-1 mb-1 hidden sm:flex">
+                        JD
+                      </div>
+                      <div>
+                        <div className="bg-white rounded-2xl rounded-bl-sm p-3 shadow-sm max-w-[85%] sm:max-w-[80%]">
+                          <p className="text-sm">Hello! Thanks for your interest in my Colonial Revival property. Do you have any specific questions about it?</p>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1 ml-1">10:30 AM</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end mb-3">
+                    <div>
+                      <div className="bg-[#09261E] text-white rounded-2xl rounded-br-sm p-3 shadow-sm max-w-[85%] sm:max-w-[80%]">
+                        <p className="text-sm">Hi John, I'm interested in scheduling a viewing. Is the property still available this weekend?</p>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 mr-1 text-right">10:45 AM</p>
                     </div>
                   </div>
                   
                   <div className="flex justify-start">
-                    <div className="bg-white rounded-lg p-3 shadow-sm max-w-[80%]">
-                      <p className="text-sm">Yes, it's available! Would Saturday at 2pm work for you? I can give you a tour and answer any questions.</p>
-                      <p className="text-xs text-gray-500 mt-1">11:02 AM</p>
+                    <div className="flex items-end gap-1">
+                      <div className="h-8 w-8 rounded-full bg-[#09261E]/20 flex-shrink-0 flex items-center justify-center text-[#09261E] font-medium mr-1 mb-1 hidden sm:flex">
+                        JD
+                      </div>
+                      <div>
+                        <div className="bg-white rounded-2xl rounded-bl-sm p-3 shadow-sm max-w-[85%] sm:max-w-[80%]">
+                          <p className="text-sm">Yes, it's available! Would Saturday at 2pm work for you? I can give you a tour and answer any questions.</p>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1 ml-1">11:02 AM</p>
+                      </div>
                     </div>
                   </div>
                 </div>
                 
-                <div className="p-3 border-t">
-                  <div className="flex space-x-2">
+                <div className="p-2 sm:p-3 border-t sticky bottom-0 bg-white">
+                  <div className="flex items-center space-x-2">
+                    <Button variant="ghost" size="icon" className="h-9 w-9 p-0 rounded-full flex-shrink-0">
+                      <Plus className="h-5 w-5 text-gray-500" />
+                    </Button>
                     <input 
                       type="text" 
-                      placeholder="Type a message..." 
-                      className="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#09261E]/30"
+                      placeholder="Message..." 
+                      className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-[#09261E]/30 text-sm"
                     />
-                    <Button className="bg-[#09261E]">Send</Button>
+                    <Button size="icon" className="h-9 w-9 p-0 bg-[#09261E] rounded-full flex-shrink-0">
+                      <SendHorizontal className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </div>
