@@ -402,6 +402,7 @@ export default function SellerDashboard() {
   const [showDetailView, setShowDetailView] = useState(false);
   const [activePropertyDetail, setActivePropertyDetail] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [activeRole, setActiveRole] = useState<'buyer' | 'seller' | 'rep'>('seller');
   
   // Handle conversation click
   const handleOpenConversation = (messageId: string) => {
@@ -1047,6 +1048,12 @@ export default function SellerDashboard() {
                 className="px-3 py-2 sm:px-5 sm:py-2.5 flex-none md:flex-1 whitespace-nowrap font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#135341] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg min-w-[100px]"
               >
                 Resources
+              </TabsTrigger>
+              <TabsTrigger 
+                value="marketing" 
+                className="px-3 py-2 sm:px-5 sm:py-2.5 flex-none md:flex-1 whitespace-nowrap font-display font-semibold text-gray-600 hover:bg-gray-100 data-[state=active]:bg-[#135341] data-[state=active]:text-white data-[state=active]:font-bold transition-all rounded-lg min-w-[100px]"
+              >
+                Marketing
               </TabsTrigger>
               <TabsTrigger 
                 value="tools" 
