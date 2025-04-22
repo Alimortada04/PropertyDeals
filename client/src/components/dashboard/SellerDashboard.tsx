@@ -4,7 +4,7 @@ import { CalendarDays, BarChart, Building, DollarSign, MessageSquare } from 'luc
 
 export default function SellerDashboard() {
   return (
-    <div className="p-8 md:p-12 space-y-8">
+    <div className="pt-16 p-4 sm:p-6 md:p-12 space-y-8">
       <h1 className="text-3xl font-bold tracking-tight mb-6 text-[#135341]">Welcome to your Seller Dashboard</h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="border-l-4 border-l-[#135341]">

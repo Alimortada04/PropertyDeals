@@ -26,7 +26,7 @@ export default function BuyerDashboard() {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   
   return (
-    <div className="p-8 md:p-12 space-y-8">
+    <div className="pt-16 p-4 sm:p-6 md:p-12 space-y-8">
       {/* Main tabs design with green active state and grey hover - mobile responsive */}
       <Tabs defaultValue="deals" className="mb-6">
         <div className="mb-6 md:mb-8">
