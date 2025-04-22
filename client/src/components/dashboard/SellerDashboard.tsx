@@ -990,8 +990,55 @@ export default function SellerDashboard() {
     );
   };
   
+  // Event handlers for FloatingActionMenu
+  const handleAddDeal = () => {
+    setWizardOpen(true);
+  };
+  
+  const handleShareProperty = () => {
+    // Open share dialog or navigate to marketing tab
+    const marketingTab = document.querySelector('[value="marketing"]') as HTMLElement;
+    if (marketingTab) {
+      marketingTab.click();
+    }
+  };
+  
+  const handleOpenMessages = () => {
+    // Navigate to messages tab
+    const messagesTab = document.querySelector('[value="messages"]') as HTMLElement;
+    if (messagesTab) {
+      messagesTab.click();
+    }
+  };
+  
+  const handleOpenResources = () => {
+    // Navigate to resources tab
+    const resourcesTab = document.querySelector('[value="resources"]') as HTMLElement;
+    if (resourcesTab) {
+      resourcesTab.click();
+    }
+  };
+  
+  // Handle role change
+  const handleRoleChange = (role: 'buyer' | 'seller' | 'rep') => {
+    setActiveRole(role);
+    // In a real app, this would likely trigger navigation to a different dashboard
+    console.log(`Switched to ${role} role`);
+  };
+
   return (
     <div className="pt-20 sm:pt-24 md:pt-20 p-4 sm:p-6 md:p-12 space-y-8">
+      {/* Role Switcher */}
+      <RoleSwitcher currentRole={activeRole} onRoleChange={handleRoleChange} />
+      
+      {/* Floating Action Menu - Mobile Optimized */}
+      <FloatingActionMenu 
+        onAddDeal={handleAddDeal}
+        onShare={handleShareProperty}
+        onMessages={handleOpenMessages}
+        onResources={handleOpenResources}
+      />
+      
       {/* Floating toolbar for quick actions */}
       <div className="fixed top-[80px] md:top-[70px] right-4 z-20 hidden md:flex items-center gap-2 bg-white px-2 py-1 rounded-full shadow-md border">
         <Button variant="ghost" size="sm" className="h-8 rounded-full" onClick={() => setWizardOpen(true)}>
