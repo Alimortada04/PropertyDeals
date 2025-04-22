@@ -6,7 +6,7 @@ import {
   Bell, ChevronRight, AlertCircle, Clock, BellRing, BarChart3, DollarSign,
   PieChart, Target, CheckCircle, X, Eye, Home, Briefcase, TrendingUp, Award,
   Users, Calendar, BadgePercent, LucideIcon, Trophy, Building2, BarChart, CircleDollarSign,
-  Sliders, Building, FileText, MapPin, ClipboardCheck
+  Sliders, Building, FileText, MapPin, ClipboardCheck, ChevronLeft, Phone, SendHorizontal
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -22,8 +22,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function BuyerDashboard() {
-  // State for notifications dropdown
+  // State for notifications dropdown and conversation view
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [showConversationDetail, setShowConversationDetail] = useState(false);
   
   return (
     <div className="pt-20 sm:pt-24 md:pt-20 p-4 sm:p-6 md:p-12 space-y-8">
@@ -591,13 +592,18 @@ export default function BuyerDashboard() {
           <div className="bg-white rounded-lg shadow-md border overflow-hidden">
             <div className="md:flex h-[600px]">
               {/* Left sidebar with conversations - full width on mobile, hidden when viewing a conversation */}
-              <div id="conversationList" className="w-full md:w-1/3 md:border-r overflow-y-auto h-full block md:block">
+              <div 
+                className={`w-full md:w-1/3 md:border-r overflow-y-auto h-full ${showConversationDetail ? 'hidden' : 'block'} md:block`}
+              >
                 <div className="p-3 border-b">
                   <h3 className="font-medium">Messages</h3>
                 </div>
                 
                 <div className="divide-y">
-                  <div className="p-3 hover:bg-gray-50 cursor-pointer bg-[#09261E]/5">
+                  <div 
+                    className="p-3 hover:bg-gray-50 cursor-pointer bg-[#09261E]/5"
+                    onClick={() => setShowConversationDetail(true)}
+                  >
                     <div className="flex items-center space-x-3">
                       <div className="h-10 w-10 rounded-full bg-[#09261E]/20 flex items-center justify-center text-[#09261E] font-medium">
                         JD
@@ -650,11 +656,14 @@ export default function BuyerDashboard() {
                 </div>
               </div>
               
-              {/* Main chat area - hidden on mobile by default until a conversation is selected */}
-              <div id="conversationDetail" className="hidden md:flex w-full md:w-2/3 flex-col h-full">
+              {/* Main chat area - conditionally shown/hidden based on mobile state */}
+              <div className={`${showConversationDetail ? 'flex' : 'hidden'} md:flex w-full md:w-2/3 flex-col h-full`}>
                 <div className="p-3 border-b flex items-center justify-between sticky top-0 bg-white z-20">
                   <div className="flex items-center">
-                    <button id="backButton" className="h-8 w-8 flex items-center justify-center mr-2 text-gray-600 md:hidden">
+                    <button 
+                      className="h-8 w-8 flex items-center justify-center mr-2 text-gray-600 md:hidden"
+                      onClick={() => setShowConversationDetail(false)}
+                    >
                       <ChevronLeft className="h-5 w-5" />
                     </button>
                     <div className="h-10 w-10 rounded-full bg-[#09261E]/20 flex items-center justify-center text-[#09261E] font-medium mr-2">
