@@ -2169,6 +2169,17 @@ export default function SellerDashboard() {
           </div>
         </TabsContent>
         
+        {/* Marketing Tab Content */}
+        <TabsContent value="marketing" className="space-y-6">
+          <div className="bg-white rounded-lg shadow-md border overflow-hidden">
+            <div className="p-6">
+              <h2 className="text-xl font-bold mb-1">Marketing Center</h2>
+              <p className="text-gray-500 mb-4">Promote your off-market deals across multiple channels</p>
+              <MarketingTab />
+            </div>
+          </div>
+        </TabsContent>
+        
         {/* Tools Tab Content */}
         <TabsContent value="tools" className="space-y-6">
           <div className="bg-white rounded-lg shadow-md border overflow-hidden">
