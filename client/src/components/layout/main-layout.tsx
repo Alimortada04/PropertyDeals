@@ -4,6 +4,7 @@ import Sidebar from "./sidebar";
 import Footer from "./footer";
 import TopNavbar from "./top-navbar";
 import Breadcrumbs from "../common/breadcrumbs";
+import { NotificationButton } from "../notifications/notification-button";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -72,6 +73,9 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </div>
         </main>
       </div>
+      
+      {/* Floating notification button */}
+      <NotificationButton />
       
       <Footer />
     </div>
