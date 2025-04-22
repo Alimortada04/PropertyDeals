@@ -74,8 +74,10 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </main>
       </div>
       
-      {/* Floating notification button */}
-      <NotificationButton />
+      {/* Floating notification button - positioned to account for sidebar expanded/collapsed states */}
+      <div className={`transition-all duration-200 ${!isMobile ? (!isExpanded ? 'ml-16' : 'ml-64') : 'ml-0'}`}>
+        <NotificationButton />
+      </div>
       
       <Footer />
     </div>
