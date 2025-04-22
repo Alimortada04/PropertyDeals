@@ -54,8 +54,13 @@ import {
   Bell, Share2, ArrowRight, X, MoreHorizontal, History, Calendar, FileCheck, 
   HelpCircle, ArrowUp, ArrowDown, TrendingUp, ChevronDown, Upload as UploadIcon, 
   Paperclip, Map, AlarmCheck, User, ListChecks, Folders, Text, ChevronUp,
-  Zap, PanelLeft, ScreenShare
+  Zap, PanelLeft, ScreenShare, Info, Megaphone
 } from 'lucide-react';
+
+// Import custom components
+import RoleSwitcher from './RoleSwitcher';
+import FloatingActionMenu from './FloatingActionMenu';
+import MarketingTab from './MarketingTab';
 
 // Property listing wizard steps
 const WIZARD_STEPS = [

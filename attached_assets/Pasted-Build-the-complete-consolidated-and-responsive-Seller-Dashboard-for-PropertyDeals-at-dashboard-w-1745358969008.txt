@@ -1,0 +1,205 @@
+Build the complete, consolidated, and responsive Seller Dashboard for PropertyDeals at /dashboard (when user.activeRole === "seller"). This version is optimized for real estate wholesalers and includes smart tools, clean UI, automated marketing workflows, and seamless mobile usability.
+
+Layout and styling should match Buyer Dashboard (fonts, spacing, tabs, color palette)
+
+Curved rectangular tabs (not pill-shaped)
+
+Fully responsive for all screen sizes (desktop, tablet, mobile)
+
+Add bottom-right corner toggle for role switching: “Mode: Seller ▼”
+
+Remove login banner — use mock user.activeRole = "seller"
+
+Use TailwindCSS and modern component structure
+
+Sticky top navbar for metrics or action buttons (like Stripe/ClickUp)
+
+Add bottom-left floating icon/bubble next to notifications icon on all screen sizes:
+
+Click opens a circular or vertical action menu with:
+
+➕ List a Deal → opens Deal Wizard
+
+📤 Share a Deal → opens Marketing tab
+
+💬 Inbox → go to Messages tab
+
+🧠 Get Help / Resources
+
+Use icons, not emojis
+
+Deals (My Deals + Pipeline)
+🔧 Deals Dashboard:
+Card view with:
+
+Image thumbnail
+
+Property Address
+
+Contract Price, Listing Price, Profit (auto-calculated)
+
+Tags: Live, Assigned, Closed, Draft
+
+Stats: Views, Saves, Offers
+
+Buttons: Edit, Pipeline, Inbox, Share
+
+Toggle: Show/hide deal from public catalog (soft-gate listings)
+
+Smart filters: Active, Draft, Assigned, Closed, Needs Attention
+
+Make sure deal upload wizard remains visible in the page and the content doesnt cause the pop up to be bigger than the page, instead if the content is long, user should be able to scroll (Give it a max height) with ability to scroll
+
+Deal Pipeline View
+Optional Kanban toggle: Submitted → Live → Offers → Assigned → Closed
+
+Click card to open Deal Control Panel:
+
+Tabs: Listing Details, Offers, Title Checklist, Analytics, Notes
+
+Deal timeline and smart checklists
+
+Status tracker: “You’re 2 days behind your average close time.”
+
+Pipeline should be integrated into Deals Tab
+
+Inbox (Messages + Offers)
+🔧 Inbox Overview:
+Conversation grouped by Property
+
+Filters: All, Offers, Inquiries, Assigned
+
+Message previews, timestamps, unread indicators
+
+📥 Message Panel:
+Left = Threads | Right = Message view | Sidebar = Property quick info
+
+Action buttons: Send template, Upload doc, Open deal
+
+Smart suggestions:
+
+“This buyer hasn’t replied in 3 days — remind?”
+
+“Mark buyer as priority?”
+
+💸 Offer Center:
+Inside thread or standalone offers view:
+
+Buyer info: Name, Status (PD Verified, POF uploaded)
+
+Offer: Price, Close Date, Terms
+
+AI Offer Score (1–10)
+
+CTA: Accept, Decline, Counter, Mark Negotiating
+
+Analytics
+📊 Seller Performance Dashboard:
+Deals Submitted / Assigned / Closed
+
+Views per deal, time on market
+
+Average assignment profit
+
+Offer-to-close ratio
+
+Heatmap: Top performing zip codes
+
+Conversion Rate Graph: Views → Offers → Closes
+
+Export as PDF
+
+Resources + Tools
+🔧 Smart Tool Cards:
+AI Offer Predictor (“What can I assign this for?”)
+
+Seller Net Sheet
+
+Assignment Contract Generator
+
+Title Checklist Generator
+
+Property Packet Builder (PDF creator w/ cover sheet, images, financials)
+
+📚 Curated Guides (Playbook-Style Cards):
+Structuring a JV
+
+Photos that Sell
+
+How to Work with Title Companies
+
+Assignments & Compliance
+
+Negotiating with Buyers
+
+Closing Day Prep
+
+Marketing (NEW Tab)
+🎯 Purpose: Empower wholesalers to promote deals off-platform
+🧰 Features:
+Share Generator:
+
+Choose property → auto-generate:
+
+Email template
+
+Instagram/Facebook caption + image
+
+SMS message + Bitly link
+
+Smart Templates:
+
+“🔥 Just listed: 123 Main – 3BR, $125K, needs work. DM for access!”
+
+“Closing soon! 💥 Cash buyers only – 2 units, $85K assignment”
+
+Track Metrics:
+
+Clicks, shares, opens per property
+
+Which template performed best
+
+Team Distribution:
+
+“Send to Buyer List” → select tags → blast email or post
+
+Schedule Send Option (Future Phase)
+
+Pick time to auto-post/share via webhook/integration
+
+Additional Global Improvements
+🎨 Design Enhancements:
+Add sticky top toolbar for key actions or deal stats
+
+Add hover/focus states across all interactive elements
+
+Add visual tags (e.g., "🔥 High ROI", "🚧 Repairs Needed", "🚀 Just Listed")
+
+🧠 Smart UX/AI Additions:
+Smart Prompt Engine:
+
+“0 views in 3 days — promote?”
+
+“No walkthroughs yet — assign a REP?”
+
+Auto-suggest title companies or REPs based on zip code
+
+Tooltips: “Deals with photos get 3x more offers” → near photo upload
+
+📱 Mobile Optimization:
+Tabs collapse into horizontal scroll
+
+Property cards stack vertically with swipe support
+
+Floating “+” icon opens quick action menu (like Facebook Messenger + Canva combined)
+
+✅ Final Notes
+This Seller Dashboard should:
+
+Combine ease of use with power-user features
+
+Feel faster and more intuitive than spreadsheets or CRMs
+
+Equip wholesalers to close faster and promote smarter
+
+Use design psychology and micro-interactions for better retention
