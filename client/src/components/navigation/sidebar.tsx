@@ -104,7 +104,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-center h-16 pt-4">
         <Link href="/">
           <div className="flex items-center justify-center w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:scale-110 transition-all">
-            <img src="/assets/pdLogoTransparent.png" alt="PropertyDeals" className="w-9 h-9" />
+            <img src="/pdLogoTransparent.png" alt="PropertyDeals" className="w-9 h-9" />
           </div>
         </Link>
       </div>
@@ -225,36 +225,27 @@ export default function Sidebar() {
           label="Settings"
           active={location.startsWith('/settings')} 
         />
-        
-        {/* User Profile */}
-        <NavItem 
-          href="/profile" 
-          icon={
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
-              <AvatarFallback className="bg-primary/10 text-primary text-sm">
-                {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
-              </AvatarFallback>
-            </Avatar>
-          } 
-          label="Your Profile"
-          active={location.startsWith('/profile')} 
-        />
       </div>
       
       {/* Bottom Dock Bar */}
       <div className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t flex items-center z-30 shadow-sm">
-        <div className="container mx-auto px-4 flex items-center justify-between w-full">
-          <div className="flex items-center space-x-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 rounded-full" 
-              onClick={() => setShowSearch(true)}
-            >
-              <Search className="h-4 w-4 text-[#09261E]" />
-            </Button>
-            <span className="text-xs text-gray-500 hidden sm:inline-block ml-1">⌘K</span>
+        <div className="w-full px-4 flex items-center justify-between">
+          <div>
+            {/* Profile in bottom left corner */}
+            <Link href="/profile">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 rounded-full"
+              >
+                <Avatar className="h-6 w-6">
+                  <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
+                  <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                    {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </Link>
           </div>
           
           <div className="flex items-center space-x-6">
@@ -285,86 +276,90 @@ export default function Sidebar() {
         </div>
       </div>
       
-      {/* Command K Search Dialog */}
+      {/* Command K Search Dialog - Full Viewport */}
       {showSearch && (
         <div 
-          className="fixed inset-0 bg-black/70 z-50 flex flex-col items-start p-0"
+          className="fixed inset-0 bg-black/80 z-50 flex items-start justify-center p-0 overflow-hidden"
           onClick={() => setShowSearch(false)}
         >
-          <div className="w-full bg-white/95 backdrop-blur-sm py-8">
-            <div className="container mx-auto max-w-3xl px-4" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center mb-6">
-                <Search className="w-6 h-6 text-gray-400 mr-3" />
-                <input 
-                  type="text" 
-                  className="flex-1 outline-none text-2xl bg-transparent"
-                  placeholder="Where would you like to go?" 
-                  autoFocus
-                />
-                <kbd className="ml-2 pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded border bg-slate-100 px-2 font-mono text-[12px] font-medium">
-                  ESC
-                </kbd>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wide">Navigation</h3>
-                  <div className="space-y-2">
-                    <Link href="/" onClick={() => setShowSearch(false)}>
-                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                        <Home className="h-5 w-5 text-gray-500 mr-3" />
-                        <div>
-                          <p className="font-medium">Home</p>
-                          <p className="text-xs text-gray-500">Back to the main page</p>
-                        </div>
-                      </div>
-                    </Link>
-                    <Link href="/properties" onClick={() => setShowSearch(false)}>
-                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                        <Building className="h-5 w-5 text-gray-500 mr-3" />
-                        <div>
-                          <p className="font-medium">Properties</p>
-                          <p className="text-xs text-gray-500">Browse available properties</p>
-                        </div>
-                        <span className="ml-auto text-xs text-gray-400">⌘1</span>
-                      </div>
-                    </Link>
-                    <Link href="/reps" onClick={() => setShowSearch(false)}>
-                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                        <Users className="h-5 w-5 text-gray-500 mr-3" />
-                        <div>
-                          <p className="font-medium">REPs</p>
-                          <p className="text-xs text-gray-500">Find real estate professionals</p>
-                        </div>
-                        <span className="ml-auto text-xs text-gray-400">⌘2</span>
-                      </div>
-                    </Link>
+          <div className="w-full h-full flex flex-col items-center">
+            <div className="w-full max-w-3xl px-6 pt-[15vh] pb-8" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
+                <div className="p-6 border-b">
+                  <div className="flex items-center">
+                    <Search className="w-5 h-5 text-gray-400 mr-3" />
+                    <input 
+                      type="text" 
+                      className="flex-1 outline-none text-xl bg-transparent"
+                      placeholder="Where would you like to go?" 
+                      autoFocus
+                    />
+                    <kbd className="ml-2 pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded border bg-slate-100 px-2 font-mono text-[12px] font-medium">
+                      ESC
+                    </kbd>
                   </div>
                 </div>
                 
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wide">Resources</h3>
-                  <div className="space-y-2">
-                    <Link href="/playbook" onClick={() => setShowSearch(false)}>
-                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                        <Book className="h-5 w-5 text-gray-500 mr-3" />
-                        <div>
-                          <p className="font-medium">Playbook</p>
-                          <p className="text-xs text-gray-500">Educational resources and guides</p>
+                <div className="p-1 max-h-[60vh] overflow-y-auto">
+                  <div className="p-2">
+                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 uppercase tracking-wide">Navigation</h3>
+                    <div className="space-y-1">
+                      <Link href="/" onClick={() => setShowSearch(false)}>
+                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                          <Home className="h-5 w-5 text-gray-500 mr-3" />
+                          <div>
+                            <p className="font-medium">Home</p>
+                            <p className="text-xs text-gray-500">Back to the main page</p>
+                          </div>
                         </div>
-                        <span className="ml-auto text-xs text-gray-400">⌘3</span>
-                      </div>
-                    </Link>
-                    <Link href="/inbox" onClick={() => setShowSearch(false)}>
-                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                        <Inbox className="h-5 w-5 text-gray-500 mr-3" />
-                        <div>
-                          <p className="font-medium">Inbox</p>
-                          <p className="text-xs text-gray-500">Messages and notifications</p>
+                      </Link>
+                      <Link href="/properties" onClick={() => setShowSearch(false)}>
+                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                          <Building className="h-5 w-5 text-gray-500 mr-3" />
+                          <div>
+                            <p className="font-medium">Properties</p>
+                            <p className="text-xs text-gray-500">Browse available properties</p>
+                          </div>
+                          <span className="ml-auto text-xs text-gray-400">⌘1</span>
                         </div>
-                        <span className="ml-auto text-xs text-gray-400">⌘4</span>
-                      </div>
-                    </Link>
+                      </Link>
+                      <Link href="/reps" onClick={() => setShowSearch(false)}>
+                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                          <Users className="h-5 w-5 text-gray-500 mr-3" />
+                          <div>
+                            <p className="font-medium">REPs</p>
+                            <p className="text-xs text-gray-500">Find real estate professionals</p>
+                          </div>
+                          <span className="ml-auto text-xs text-gray-400">⌘2</span>
+                        </div>
+                      </Link>
+                    </div>
+                  </div>
+                  
+                  <div className="p-2">
+                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 uppercase tracking-wide">Resources</h3>
+                    <div className="space-y-1">
+                      <Link href="/playbook" onClick={() => setShowSearch(false)}>
+                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                          <Book className="h-5 w-5 text-gray-500 mr-3" />
+                          <div>
+                            <p className="font-medium">Playbook</p>
+                            <p className="text-xs text-gray-500">Educational resources and guides</p>
+                          </div>
+                          <span className="ml-auto text-xs text-gray-400">⌘3</span>
+                        </div>
+                      </Link>
+                      <Link href="/inbox" onClick={() => setShowSearch(false)}>
+                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                          <Inbox className="h-5 w-5 text-gray-500 mr-3" />
+                          <div>
+                            <p className="font-medium">Inbox</p>
+                            <p className="text-xs text-gray-500">Messages and notifications</p>
+                          </div>
+                          <span className="ml-auto text-xs text-gray-400">⌘4</span>
+                        </div>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
