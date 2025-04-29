@@ -125,6 +125,9 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
+  // Custom input style with enhanced hover effects
+  const inputStyles = "h-12 rounded-md border-gray-200 bg-white/70 hover:border-gray-300 focus:border-[#09261E] focus:ring-[#09261E] shadow-sm hover:shadow transition-all";
+  
   const { 
     user, 
     supabaseUser, 
@@ -221,7 +224,7 @@ export default function AuthPage() {
                           <Input 
                             placeholder="Email" 
                             type="email"
-                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
+                            className={inputStyles}
                             {...field} 
                           />
                         </FormControl>
@@ -285,7 +288,7 @@ export default function AuthPage() {
 
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow focus:ring-2 focus:ring-[#09261E]/30"
                     disabled={loginMutation.isPending}
                   >
                     {loginMutation.isPending ? (
@@ -358,7 +361,7 @@ export default function AuthPage() {
                           <Input 
                             type="email" 
                             placeholder="Email"
-                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
+                            className={inputStyles}
                             {...field} 
                           />
                         </FormControl>
@@ -425,7 +428,7 @@ export default function AuthPage() {
 
                   <Button 
                     type="submit" 
-                    className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow focus:ring-2 focus:ring-[#09261E]/30"
                     disabled={registerMutation.isPending}
                   >
                     {registerMutation.isPending ? (
