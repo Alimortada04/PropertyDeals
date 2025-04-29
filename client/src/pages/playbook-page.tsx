@@ -141,7 +141,8 @@ export default function PlaybookPage() {
   );
 
   // Get unique tool categories
-  const categories = [...new Set(tools.map(tool => tool.category))];
+  const categoriesSet = new Set(tools.map(tool => tool.category));
+  const categories = Array.from(categoriesSet);
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-gray-50 pb-24">

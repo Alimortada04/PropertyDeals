@@ -100,11 +100,11 @@ export default function Sidebar() {
 
   return (
     <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-sm border-r">
-      {/* Logo at top */}
+      {/* Logo at top - Just "pd" text */}
       <div className="flex items-center justify-center h-16 pt-4">
         <Link href="/">
           <div className="flex items-center justify-center w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:scale-110 transition-all">
-            <img src="/pdLogoTransparent.png" alt="PropertyDeals" className="w-9 h-9" />
+            <span className="font-bold text-xl">pd</span>
           </div>
         </Link>
       </div>
@@ -195,14 +195,14 @@ export default function Sidebar() {
       
       {/* Bottom Navigation (Fixed) */}
       <div className="p-2 flex flex-col items-center space-y-2 border-t">
-        {/* Search Trigger */}
+        {/* Search Trigger - with consistent light grey hover circle */}
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:scale-110 transition-all"
+                className="w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:bg-gray-100 transition-all"
                 onClick={() => setShowSearch(true)}
               >
                 <Search size={20} />
@@ -217,6 +217,21 @@ export default function Sidebar() {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
+        {/* Profile icon - moved to sidebar from bottom dock with consistent hover style */}
+        <NavItem 
+          href="/profile" 
+          icon={
+            <Avatar className="h-5 w-5">
+              <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
+              <AvatarFallback className="bg-primary/10 text-primary text-xs">
+                {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+          } 
+          label="Profile"
+          active={location.startsWith('/profile')} 
+        />
         
         {/* Settings */}
         <NavItem 
@@ -227,28 +242,22 @@ export default function Sidebar() {
         />
       </div>
       
-      {/* Bottom Dock Bar */}
+      {/* Bottom Dock Bar - White Background with Menu Selector on Left */}
       <div className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t flex items-center z-30 shadow-sm">
         <div className="w-full px-4 flex items-center justify-between">
           <div>
-            {/* Profile in bottom left corner */}
-            <Link href="/profile">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-8 w-8 rounded-full"
-              >
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
-                  <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                    {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </Link>
+            {/* Menu selector on far left (as shown in screenshot) */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-gray-700 flex items-center h-8 px-3 rounded-md"
+            >
+              <Menu className="h-4 w-4 mr-2" />
+              <span className="text-sm font-medium">Menu</span>
+            </Button>
           </div>
           
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3">
             {/* Notification Button */}
             <div className="relative">
               <Button 
