@@ -29,17 +29,32 @@ const registerSchema = z.object({
   path: ["confirmPassword"],
 });
 
-// Animation components for background orbs
+// Tie-dye background wash effect with brand colors
 const BackgroundOrbs = () => (
   <>
-    <div className="absolute w-[500px] h-[500px] bg-[#09261E]/5 rounded-full blur-3xl -bottom-64 -right-20 animate-pulse" 
-         style={{animationDuration: '6s'}}></div>
-    <div className="absolute w-[300px] h-[300px] bg-[#803344]/10 rounded-full blur-3xl bottom-10 right-10 animate-pulse" 
-         style={{animationDelay: '1s', animationDuration: '4s'}}></div>
-    <div className="absolute w-[200px] h-[200px] bg-[#09261E]/5 rounded-full blur-3xl top-20 left-20 animate-pulse" 
-         style={{animationDelay: '2s', animationDuration: '7s'}}></div>
-    <div className="absolute w-[250px] h-[250px] bg-[#09261E]/3 rounded-full blur-3xl top-40 right-40 animate-pulse" 
-         style={{animationDelay: '3s', animationDuration: '8s'}}></div>
+    {/* Large forest green blob - bottom right */}
+    <div className="absolute w-[800px] h-[800px] bg-[#09261E]/15 rounded-full blur-[120px] -bottom-80 -right-40 animate-pulse" 
+         style={{animationDuration: '15s'}}></div>
+    
+    {/* Large wine accent blob - bottom left */}
+    <div className="absolute w-[700px] h-[700px] bg-[#803344]/15 rounded-full blur-[120px] -bottom-60 -left-60 animate-pulse" 
+         style={{animationDelay: '2s', animationDuration: '17s'}}></div>
+    
+    {/* Medium forest green blob - top right */}
+    <div className="absolute w-[600px] h-[600px] bg-[#09261E]/10 rounded-full blur-[100px] -top-80 right-0 animate-pulse" 
+         style={{animationDelay: '4s', animationDuration: '19s'}}></div>
+         
+    {/* Medium wine accent blob - top left */}
+    <div className="absolute w-[500px] h-[500px] bg-[#803344]/10 rounded-full blur-[100px] -top-60 -left-20 animate-pulse" 
+         style={{animationDelay: '1s', animationDuration: '14s'}}></div>
+    
+    {/* Small forest green blob - middle left */}
+    <div className="absolute w-[400px] h-[400px] bg-[#09261E]/10 rounded-full blur-[80px] left-20 top-1/3 animate-pulse" 
+         style={{animationDelay: '3s', animationDuration: '13s'}}></div>
+         
+    {/* Small wine accent blob - middle right */}
+    <div className="absolute w-[350px] h-[350px] bg-[#803344]/10 rounded-full blur-[80px] right-10 top-1/4 animate-pulse" 
+         style={{animationDelay: '5s', animationDuration: '16s'}}></div>
   </>
 );
 
@@ -112,46 +127,8 @@ export default function AuthPage() {
     return <Redirect to="/dashboard" />;
   }
 
-  // Feature cards for the login/register page
-  const FeatureCards = () => (
-    <div className="hidden lg:block absolute">
-      <div className="absolute top-[-260px] right-[-180px] w-72 h-32 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md border border-white/30 rotate-[15deg] z-10">
-        <div className="flex items-start space-x-3">
-          <div className="bg-[#09261E]/10 p-2 rounded-full mt-1">
-            <KeyRound className="h-5 w-5 text-[#09261E]" />
-          </div>
-          <div>
-            <h3 className="font-medium text-[#09261E]">Secure Access</h3>
-            <p className="text-sm text-gray-600">Bank-level security for your account and property data.</p>
-          </div>
-        </div>
-      </div>
-      
-      <div className="absolute top-[80px] right-[-220px] w-72 h-32 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md border border-white/30 rotate-[8deg] z-20">
-        <div className="flex items-start space-x-3">
-          <div className="bg-[#09261E]/10 p-2 rounded-full mt-1">
-            <UserPlus className="h-5 w-5 text-[#09261E]" />
-          </div>
-          <div>
-            <h3 className="font-medium text-[#09261E]">Multiple Roles</h3>
-            <p className="text-sm text-gray-600">Seamlessly switch between buyer, seller, and REP roles.</p>
-          </div>
-        </div>
-      </div>
-      
-      <div className="absolute top-[220px] right-[-160px] w-72 h-32 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md border border-white/30 rotate-[-5deg] z-30">
-        <div className="flex items-start space-x-3">
-          <div className="bg-[#09261E]/10 p-2 rounded-full mt-1">
-            <Mail className="h-5 w-5 text-[#09261E]" />
-          </div>
-          <div>
-            <h3 className="font-medium text-[#09261E]">Direct Communication</h3>
-            <p className="text-sm text-gray-600">Connect directly with real estate professionals and property owners.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  // Empty component - feature cards removed per user request
+  const FeatureCards = () => null;
 
   return (
     <div className="relative min-h-screen flex justify-center items-center bg-gradient-to-br from-white to-[#e9f0ec] overflow-hidden">
