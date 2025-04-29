@@ -73,7 +73,9 @@ export default function AuthPage() {
 
   // Toggle between login and register based on URL
   useEffect(() => {
-    setIsLogin(location !== "/register");
+    // Check if path is /register or contains register in it
+    const isRegisterPage = location === "/register" || location.includes("register");
+    setIsLogin(!isRegisterPage);
   }, [location]);
 
   // Login form
@@ -380,7 +382,7 @@ export default function AuthPage() {
 
               <div className="mt-8 text-center text-sm">
                 Already have an account?{' '}
-                <Link href="/auth" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors">
+                <Link href="/signin" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors">
                   Sign In
                 </Link>
               </div>

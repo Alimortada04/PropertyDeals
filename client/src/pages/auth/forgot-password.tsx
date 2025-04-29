@@ -129,7 +129,7 @@ export default function ForgotPasswordPage() {
               </Form>
               
               <div className="mt-8 text-center">
-                <Link href="/auth" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors inline-flex items-center">
+                <Link href="/signin" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors inline-flex items-center">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to sign in
                 </Link>
@@ -162,7 +162,7 @@ export default function ForgotPasswordPage() {
                   asChild
                   className="flex-1 h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <Link href="/auth">
+                  <Link href="/signin">
                     Return to sign in
                   </Link>
                 </Button>

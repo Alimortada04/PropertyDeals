@@ -173,24 +173,24 @@ function Router() {
         <AuthPage />
       </Route>
       
-      {/* Legacy auth routes with redirects */}
+      {/* Auth routes */}
       <Route path="/signin">
-        <Redirect to="/auth" />
+        <AuthPage />
       </Route>
       <Route path="/register">
-        <Redirect to="/auth" />
+        <AuthPage />
       </Route>
       <Route path="/register-old">
-        <Redirect to="/auth" />
+        <Redirect to="/register" />
       </Route>
       <Route path="/auth/signin">
         <Redirect to="/auth" />
       </Route>
       <Route path="/auth/register">
-        <Redirect to="/auth" />
+        <Redirect to="/register" />
       </Route>
       <Route path="/auth/register-flow">
-        <Redirect to="/auth" />
+        <Redirect to="/register" />
       </Route>
       <Route path="/about">
         <MainLayout>
