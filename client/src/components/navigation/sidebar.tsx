@@ -193,7 +193,7 @@ export default function Sidebar() {
       </ScrollArea>
       
       {/* Bottom Navigation (Fixed) */}
-      <div className="p-2 flex flex-col items-center space-y-2 border-t">
+      <div className="p-2 pb-16 flex flex-col items-center space-y-2 border-t">
         {/* Search Trigger - with consistent light grey hover circle */}
         <TooltipProvider delayDuration={100}>
           <Tooltip>
@@ -236,7 +236,7 @@ export default function Sidebar() {
       </div>
       
       {/* Bottom Dock Bar - White Background with Menu Selector on Left */}
-      <div className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t flex items-center z-50 shadow-sm">
+      <div className="fixed bottom-0 left-0 w-full h-12 bg-white border-t flex items-center z-50 shadow-sm">
         <div className="w-full px-4 flex items-center justify-between">
           <div>
             {/* Menu selector on far left (as shown in screenshot) */}
