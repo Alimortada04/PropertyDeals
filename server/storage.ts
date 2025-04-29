@@ -1,8 +1,15 @@
-import { users, type User, type InsertUser, properties, type Property, type InsertProperty, propertyInquiries, type PropertyInquiry, type InsertPropertyInquiry, reps, type Rep, type InsertRep } from "@shared/schema";
+import { 
+  users, type User, type InsertUser, 
+  properties, type Property, type InsertProperty, 
+  propertyInquiries, type PropertyInquiry, type InsertPropertyInquiry, 
+  reps, type Rep, type InsertRep,
+  systemLogs, type SystemLog, type InsertSystemLog,
+  userReports, type UserReport, type InsertUserReport
+} from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { db } from "./db";
-import { eq, like } from "drizzle-orm";
+import { eq, like, desc, and, or, sql } from "drizzle-orm";
 // import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 
@@ -28,6 +35,40 @@ export interface IStorage {
   getPropertyInquiries(propertyId: number): Promise<PropertyInquiry[]>;
   getSellerInquiries(sellerId: number): Promise<PropertyInquiry[]>;
   createPropertyInquiry(inquiry: InsertPropertyInquiry): Promise<PropertyInquiry>;
+  
+  // Admin operations
+  getAllUsers(options?: {
+    search?: string;
+    sortBy?: string;
+    sortDirection?: 'asc' | 'desc';
+    limit?: number;
+    offset?: number;
+  }): Promise<{ users: User[]; total: number }>;
+  
+  getPendingApprovals(): Promise<User[]>;
+  approveUserRole(userId: number, role: string): Promise<User | undefined>;
+  denyUserRole(userId: number, role: string, notes?: string): Promise<User | undefined>;
+  
+  // System logging
+  createSystemLog(log: InsertSystemLog): Promise<SystemLog>;
+  getSystemLogs(options?: {
+    userId?: number;
+    action?: string;
+    fromDate?: string;
+    toDate?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ logs: SystemLog[]; total: number }>;
+  
+  // User reports
+  createUserReport(report: InsertUserReport): Promise<UserReport>;
+  getUserReports(options?: {
+    status?: string;
+    contentType?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ reports: UserReport[]; total: number }>;
+  updateReportStatus(id: number, status: string, adminId: number, notes?: string): Promise<UserReport | undefined>;
   
   // Session store
   sessionStore: any; // Temporarily using any type to resolve typings
@@ -136,6 +177,268 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return newInquiry;
+  }
+
+  // Admin operations
+  async getAllUsers(options?: {
+    search?: string;
+    sortBy?: string;
+    sortDirection?: 'asc' | 'desc';
+    limit?: number;
+    offset?: number;
+  }): Promise<{ users: User[]; total: number }> {
+    const { search, sortBy = 'id', sortDirection = 'asc', limit = 10, offset = 0 } = options || {};
+    
+    // Base query
+    let query = db.select().from(users);
+    
+    // Apply search filter if provided
+    if (search) {
+      query = query.where(
+        or(
+          like(users.username, `%${search}%`),
+          like(users.fullName, `%${search}%`),
+          like(users.email, `%${search}%`)
+        )
+      );
+    }
+    
+    // Count total before pagination
+    const [{ count }] = await db
+      .select({ count: sql`count(*)`.mapWith(Number) })
+      .from(users)
+      .where(search ? 
+        or(
+          like(users.username, `%${search}%`),
+          like(users.fullName, `%${search}%`),
+          like(users.email, `%${search}%`)
+        ) : 
+        sql`1=1`
+      );
+    
+    // Apply sorting
+    const orderColumn = users[sortBy as keyof typeof users] || users.id;
+    query = sortDirection === 'desc' 
+      ? query.orderBy(desc(orderColumn)) 
+      : query.orderBy(orderColumn);
+    
+    // Apply pagination
+    query = query.limit(limit).offset(offset);
+    
+    // Execute query
+    const resultUsers = await query;
+    
+    return {
+      users: resultUsers,
+      total: count
+    };
+  }
+  
+  async getPendingApprovals(): Promise<User[]> {
+    // This query is a simplification as we'd need to query JSON fields properly
+    // In a real implementation, we'd need a more complex query to check role status in the JSON
+    // For now, we'll get all users and filter in JS
+    const allUsers = await db.select().from(users);
+    
+    return allUsers.filter(user => {
+      const roles = user.roles as any;
+      return (
+        (roles?.buyer?.status === 'pending') ||
+        (roles?.seller?.status === 'pending') ||
+        (roles?.rep?.status === 'pending')
+      );
+    });
+  }
+  
+  async approveUserRole(userId: number, role: string): Promise<User | undefined> {
+    // Get the user first
+    const user = await this.getUser(userId);
+    if (!user) return undefined;
+    
+    // Clone the roles object
+    const roles = JSON.parse(JSON.stringify(user.roles));
+    
+    // Update the specified role
+    if (roles[role]) {
+      roles[role] = {
+        ...roles[role],
+        status: 'approved',
+        approvedAt: new Date().toISOString()
+      };
+    }
+    
+    // Update the user with the new roles
+    return this.updateUser(userId, { roles });
+  }
+  
+  async denyUserRole(userId: number, role: string, notes?: string): Promise<User | undefined> {
+    // Get the user first
+    const user = await this.getUser(userId);
+    if (!user) return undefined;
+    
+    // Clone the roles object
+    const roles = JSON.parse(JSON.stringify(user.roles));
+    
+    // Update the specified role
+    if (roles[role]) {
+      roles[role] = {
+        ...roles[role],
+        status: 'denied',
+        deniedAt: new Date().toISOString(),
+        ...(notes ? { notes } : {})
+      };
+    }
+    
+    // Update the user with the new roles
+    return this.updateUser(userId, { roles });
+  }
+  
+  // System logging
+  async createSystemLog(log: InsertSystemLog): Promise<SystemLog> {
+    const [newLog] = await db
+      .insert(systemLogs)
+      .values({
+        ...log,
+        timestamp: new Date().toISOString()
+      })
+      .returning();
+    return newLog;
+  }
+  
+  async getSystemLogs(options?: {
+    userId?: number;
+    action?: string;
+    fromDate?: string;
+    toDate?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ logs: SystemLog[]; total: number }> {
+    const { userId, action, fromDate, toDate, limit = 20, offset = 0 } = options || {};
+    
+    // Build conditions array
+    const conditions = [];
+    if (userId) conditions.push(eq(systemLogs.userId, userId));
+    if (action) conditions.push(eq(systemLogs.action, action));
+    if (fromDate) conditions.push(sql`${systemLogs.timestamp} >= ${fromDate}`);
+    if (toDate) conditions.push(sql`${systemLogs.timestamp} <= ${toDate}`);
+    
+    // Combine conditions with AND
+    const whereClause = conditions.length > 0
+      ? and(...conditions)
+      : undefined;
+    
+    // Count total before pagination
+    const countQuery = db
+      .select({ count: sql`count(*)`.mapWith(Number) })
+      .from(systemLogs);
+    
+    if (whereClause) {
+      countQuery.where(whereClause);
+    }
+    
+    const [{ count }] = await countQuery;
+    
+    // Base query for logs
+    let query = db
+      .select()
+      .from(systemLogs)
+      .orderBy(desc(systemLogs.timestamp))
+      .limit(limit)
+      .offset(offset);
+    
+    // Apply whereClause if exists
+    if (whereClause) {
+      query = query.where(whereClause);
+    }
+    
+    const logs = await query;
+    
+    return {
+      logs,
+      total: count
+    };
+  }
+  
+  // User reports
+  async createUserReport(report: InsertUserReport): Promise<UserReport> {
+    const [newReport] = await db
+      .insert(userReports)
+      .values({
+        ...report,
+        timestamp: new Date().toISOString()
+      })
+      .returning();
+    return newReport;
+  }
+  
+  async getUserReports(options?: {
+    status?: string;
+    contentType?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ reports: UserReport[]; total: number }> {
+    const { status, contentType, limit = 20, offset = 0 } = options || {};
+    
+    // Build conditions array
+    const conditions = [];
+    if (status) conditions.push(eq(userReports.status, status));
+    if (contentType) conditions.push(eq(userReports.contentType, contentType));
+    
+    // Combine conditions with AND
+    const whereClause = conditions.length > 0
+      ? and(...conditions)
+      : undefined;
+    
+    // Count total before pagination
+    const countQuery = db
+      .select({ count: sql`count(*)`.mapWith(Number) })
+      .from(userReports);
+    
+    if (whereClause) {
+      countQuery.where(whereClause);
+    }
+    
+    const [{ count }] = await countQuery;
+    
+    // Base query for reports
+    let query = db
+      .select()
+      .from(userReports)
+      .orderBy(desc(userReports.timestamp))
+      .limit(limit)
+      .offset(offset);
+    
+    // Apply whereClause if exists
+    if (whereClause) {
+      query = query.where(whereClause);
+    }
+    
+    const reports = await query;
+    
+    return {
+      reports,
+      total: count
+    };
+  }
+  
+  async updateReportStatus(id: number, status: string, adminId: number, notes?: string): Promise<UserReport | undefined> {
+    const updateData: any = {
+      status,
+      resolvedBy: adminId,
+      resolvedAt: new Date().toISOString()
+    };
+    
+    if (notes) {
+      updateData.adminNotes = notes;
+    }
+    
+    const [updatedReport] = await db
+      .update(userReports)
+      .set(updateData)
+      .where(eq(userReports.id, id))
+      .returning();
+    
+    return updatedReport || undefined;
   }
 }
 
@@ -511,6 +814,230 @@ export class MemStorage implements IStorage {
     };
     this.propertyInquiries.set(id, newInquiry);
     return newInquiry;
+  }
+  
+  // Admin operations
+  private systemLogs: Map<number, SystemLog> = new Map();
+  private userReports: Map<number, UserReport> = new Map();
+  private currentLogId = 1;
+  private currentReportId = 1;
+  
+  async getAllUsers(options?: {
+    search?: string;
+    sortBy?: string;
+    sortDirection?: 'asc' | 'desc';
+    limit?: number;
+    offset?: number;
+  }): Promise<{ users: User[]; total: number }> {
+    const { search, sortBy = 'id', sortDirection = 'asc', limit = 10, offset = 0 } = options || {};
+    
+    let filteredUsers = Array.from(this.users.values());
+    
+    // Apply search filter if provided
+    if (search) {
+      const lowerSearch = search.toLowerCase();
+      filteredUsers = filteredUsers.filter(user => 
+        user.username.toLowerCase().includes(lowerSearch) || 
+        (user.fullName && user.fullName.toLowerCase().includes(lowerSearch)) || 
+        (user.email && user.email.toLowerCase().includes(lowerSearch))
+      );
+    }
+    
+    // Sort users
+    filteredUsers.sort((a, b) => {
+      const aValue = a[sortBy as keyof User];
+      const bValue = b[sortBy as keyof User];
+      
+      if (aValue === undefined || bValue === undefined) return 0;
+      
+      // Basic comparison that handles strings and numbers
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortDirection === 'desc' 
+          ? bValue.localeCompare(aValue)
+          : aValue.localeCompare(bValue);
+      }
+      
+      // For numbers
+      if (typeof aValue === 'number' && typeof bValue === 'number') {
+        return sortDirection === 'desc' 
+          ? bValue - aValue
+          : aValue - bValue;
+      }
+      
+      return 0;
+    });
+    
+    const total = filteredUsers.length;
+    
+    // Apply pagination
+    const paginatedUsers = filteredUsers.slice(offset, offset + limit);
+    
+    return {
+      users: paginatedUsers,
+      total
+    };
+  }
+  
+  async getPendingApprovals(): Promise<User[]> {
+    return Array.from(this.users.values()).filter(user => {
+      const roles = user.roles as any;
+      return (
+        (roles?.buyer?.status === 'pending') ||
+        (roles?.seller?.status === 'pending') ||
+        (roles?.rep?.status === 'pending')
+      );
+    });
+  }
+  
+  async approveUserRole(userId: number, role: string): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    
+    // Clone the roles object
+    const roles = JSON.parse(JSON.stringify(user.roles));
+    
+    // Update the specified role
+    if (roles[role]) {
+      roles[role] = {
+        ...roles[role],
+        status: 'approved',
+        approvedAt: new Date().toISOString()
+      };
+    }
+    
+    // Update the user with new roles
+    const updatedUser = { ...user, roles };
+    this.users.set(userId, updatedUser);
+    
+    return updatedUser;
+  }
+  
+  async denyUserRole(userId: number, role: string, notes?: string): Promise<User | undefined> {
+    const user = this.users.get(userId);
+    if (!user) return undefined;
+    
+    // Clone the roles object
+    const roles = JSON.parse(JSON.stringify(user.roles));
+    
+    // Update the specified role
+    if (roles[role]) {
+      roles[role] = {
+        ...roles[role],
+        status: 'denied',
+        deniedAt: new Date().toISOString(),
+        ...(notes ? { notes } : {})
+      };
+    }
+    
+    // Update the user with new roles
+    const updatedUser = { ...user, roles };
+    this.users.set(userId, updatedUser);
+    
+    return updatedUser;
+  }
+  
+  // System logging
+  async createSystemLog(log: InsertSystemLog): Promise<SystemLog> {
+    const id = this.currentLogId++;
+    const newLog: SystemLog = {
+      ...log,
+      id,
+      timestamp: new Date().toISOString()
+    };
+    this.systemLogs.set(id, newLog);
+    return newLog;
+  }
+  
+  async getSystemLogs(options?: {
+    userId?: number;
+    action?: string;
+    fromDate?: string;
+    toDate?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ logs: SystemLog[]; total: number }> {
+    const { userId, action, fromDate, toDate, limit = 20, offset = 0 } = options || {};
+    
+    let filteredLogs = Array.from(this.systemLogs.values());
+    
+    // Apply filters
+    if (userId) filteredLogs = filteredLogs.filter(log => log.userId === userId);
+    if (action) filteredLogs = filteredLogs.filter(log => log.action === action);
+    if (fromDate) filteredLogs = filteredLogs.filter(log => log.timestamp >= fromDate);
+    if (toDate) filteredLogs = filteredLogs.filter(log => log.timestamp <= toDate);
+    
+    // Sort by timestamp descending
+    filteredLogs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    
+    const total = filteredLogs.length;
+    
+    // Apply pagination
+    const paginatedLogs = filteredLogs.slice(offset, offset + limit);
+    
+    return {
+      logs: paginatedLogs,
+      total
+    };
+  }
+  
+  // User reports
+  async createUserReport(report: InsertUserReport): Promise<UserReport> {
+    const id = this.currentReportId++;
+    const newReport: UserReport = {
+      ...report,
+      id,
+      status: 'pending',
+      timestamp: new Date().toISOString(),
+      adminNotes: null,
+      resolvedBy: null,
+      resolvedAt: null
+    };
+    this.userReports.set(id, newReport);
+    return newReport;
+  }
+  
+  async getUserReports(options?: {
+    status?: string;
+    contentType?: string;
+    limit?: number;
+    offset?: number;
+  }): Promise<{ reports: UserReport[]; total: number }> {
+    const { status, contentType, limit = 20, offset = 0 } = options || {};
+    
+    let filteredReports = Array.from(this.userReports.values());
+    
+    // Apply filters
+    if (status) filteredReports = filteredReports.filter(report => report.status === status);
+    if (contentType) filteredReports = filteredReports.filter(report => report.contentType === contentType);
+    
+    // Sort by timestamp descending
+    filteredReports.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    
+    const total = filteredReports.length;
+    
+    // Apply pagination
+    const paginatedReports = filteredReports.slice(offset, offset + limit);
+    
+    return {
+      reports: paginatedReports,
+      total
+    };
+  }
+  
+  async updateReportStatus(id: number, status: string, adminId: number, notes?: string): Promise<UserReport | undefined> {
+    const report = this.userReports.get(id);
+    if (!report) return undefined;
+    
+    const updatedReport: UserReport = {
+      ...report,
+      status,
+      resolvedBy: adminId,
+      resolvedAt: new Date().toISOString(),
+      ...(notes ? { adminNotes: notes } : {})
+    };
+    
+    this.userReports.set(id, updatedReport);
+    return updatedReport;
   }
 }
 
