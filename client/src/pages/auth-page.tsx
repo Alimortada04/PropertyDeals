@@ -402,11 +402,11 @@ export default function AuthPage() {
                           <Input 
                             placeholder="Full Name"
                             className={inputStyles}
-                            onChange={field.onChange}
+                            onChange={(e) => {
+                              console.log("fullName input changed:", e.target.value);
+                              field.onChange(e);
+                            }}
                             value={field.value || ""}
-                            name={field.name}
-                            onBlur={field.onBlur}
-                            ref={field.ref}
                           />
                         </FormControl>
                         <FormMessage className="text-[#803344]" />

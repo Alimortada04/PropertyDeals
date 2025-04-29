@@ -17,9 +17,15 @@ export default function AuthCallbackPage() {
         
         console.log("Auth callback successful:", data);
         setIsLoading(false);
-      } catch (err) {
-        console.error("Auth callback error:", err);
-        setError(err.message || "Authentication failed");
+      } catch (error: unknown) {
+        console.error("Auth callback error:", error);
+        let errorMessage = "Authentication failed";
+        
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        
+        setError(errorMessage);
         setIsLoading(false);
       }
     };

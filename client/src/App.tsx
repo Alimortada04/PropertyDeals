@@ -10,6 +10,7 @@ import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
 import DashboardNewPage from "@/pages/dashboard";
 import AuthPage from "@/pages/auth-page";
+import AuthCallbackPage from "@/pages/auth/callback";
 import ForgotPasswordPage from "@/pages/auth/forgot-password";
 import OnboardingPage from "@/pages/onboarding";
 import AboutPage from "@/pages/about-page";
@@ -191,6 +192,11 @@ function Router() {
       </Route>
       <Route path="/auth/register-flow">
         <Redirect to="/register" />
+      </Route>
+      
+      {/* Auth callback route for social auth */}
+      <Route path="/auth/callback">
+        <AuthCallbackPage />
       </Route>
       <Route path="/about">
         <MainLayout>

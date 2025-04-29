@@ -49,7 +49,7 @@ export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/dashboard`,
+      redirectTo: `${window.location.origin}/auth/callback`,
       queryParams: {
         prompt: 'select_account'  // Show the account selector even if user is already logged in
       }
@@ -66,14 +66,21 @@ export async function signInWithGoogle() {
 }
 
 export async function signInWithFacebook() {
+  console.log("Initiating Facebook OAuth login");
+  
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'facebook',
     options: {
-      redirectTo: `${window.location.origin}/dashboard`,
+      redirectTo: `${window.location.origin}/auth/callback`,
     },
   });
   
-  if (error) throw error;
+  if (error) {
+    console.error("Facebook OAuth error:", error);
+    throw error;
+  }
+  
+  console.log("Facebook OAuth initiated:", data);
   return data;
 }
 
