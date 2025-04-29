@@ -61,7 +61,7 @@ export function logAdminAction(action: string) {
               statusCode: this.statusCode
             },
             ipAddress: typeof ipAddress === 'string' ? ipAddress : Array.isArray(ipAddress) ? ipAddress[0] : undefined
-          }).catch(err => console.error('Error logging admin action:', err));
+          }).catch((err: any) => console.error('Error logging admin action:', err));
         } catch (error) {
           console.error('Error creating system log:', error);
         }

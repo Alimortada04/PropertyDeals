@@ -2,11 +2,12 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertPropertyInquirySchema, insertPropertySchema, insertRepSchema } from "@shared/schema";
+import { insertPropertyInquirySchema, insertPropertySchema, insertRepSchema, insertSystemLogSchema, insertUserReportSchema } from "@shared/schema";
 import { RecommendationEngine } from "./recommendation";
 import { db } from "./db";
 import { reps } from "@shared/schema";
 import { eq, like } from "drizzle-orm";
+import { requireAdmin, logAdminAction } from "./middleware/adminAuth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
@@ -27,7 +28,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/properties", async (req, res) => {
-    if (!req.isAuthenticated() || req.user.userType !== "seller") {
+    if (!req.isAuthenticated() || req.user.activeRole !== "seller") {
       return res.status(403).json({ message: "Not authorized to create properties" });
     }
 
@@ -93,7 +94,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Seller properties
   app.get("/api/seller/properties", async (req, res) => {
-    if (!req.isAuthenticated() || req.user.userType !== "seller") {
+    if (!req.isAuthenticated() || req.user.activeRole !== "seller") {
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -125,7 +126,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/api/seller/inquiries", async (req, res) => {
-    if (!req.isAuthenticated() || req.user.userType !== "seller") {
+    if (!req.isAuthenticated() || req.user.activeRole !== "seller") {
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -272,6 +273,221 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error deleting REP:', error);
       res.status(500).json({ message: "Failed to delete REP" });
+    }
+  });
+
+  // Admin routes - all protected by requireAdmin middleware
+  // User Management
+  app.get("/api/admin/users", requireAdmin, logAdminAction("view_users"), async (req, res) => {
+    try {
+      const search = req.query.search as string | undefined;
+      const sortBy = req.query.sortBy as string | undefined;
+      const sortDirection = req.query.sortDirection as 'asc' | 'desc' | undefined;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
+      
+      const result = await storage.getAllUsers({
+        search,
+        sortBy,
+        sortDirection,
+        limit,
+        offset
+      });
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+  
+  app.get("/api/admin/users/:id", requireAdmin, logAdminAction("view_user_details"), async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(user);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+  
+  app.put("/api/admin/users/:id", requireAdmin, logAdminAction("update_user"), async (req, res) => {
+    try {
+      const userId = parseInt(req.params.id);
+      const userData = req.body;
+      
+      // Prevent changing own admin status for security
+      if (req.user && userId === req.user.id && userData.isAdmin === false) {
+        return res.status(403).json({ message: "Cannot remove your own admin privileges" });
+      }
+      
+      const updatedUser = await storage.updateUser(userId, userData);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('Error updating user:', error);
+      res.status(400).json({ message: "Invalid user data", error });
+    }
+  });
+  
+  // Role Approvals
+  app.get("/api/admin/approvals", requireAdmin, logAdminAction("view_pending_approvals"), async (_req, res) => {
+    try {
+      const pendingUsers = await storage.getPendingApprovals();
+      res.json(pendingUsers);
+    } catch (error) {
+      console.error('Error fetching pending approvals:', error);
+      res.status(500).json({ message: "Failed to fetch pending approvals" });
+    }
+  });
+  
+  app.post("/api/admin/approvals/:userId/approve/:role", requireAdmin, logAdminAction("approve_role"), async (req, res) => {
+    try {
+      const userId = parseInt(req.params.userId);
+      const role = req.params.role;
+      
+      if (!['buyer', 'seller', 'rep'].includes(role)) {
+        return res.status(400).json({ message: "Invalid role" });
+      }
+      
+      const updatedUser = await storage.approveUserRole(userId, role);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('Error approving role:', error);
+      res.status(500).json({ message: "Failed to approve role" });
+    }
+  });
+  
+  app.post("/api/admin/approvals/:userId/deny/:role", requireAdmin, logAdminAction("deny_role"), async (req, res) => {
+    try {
+      const userId = parseInt(req.params.userId);
+      const role = req.params.role;
+      const { notes } = req.body;
+      
+      if (!['buyer', 'seller', 'rep'].includes(role)) {
+        return res.status(400).json({ message: "Invalid role" });
+      }
+      
+      const updatedUser = await storage.denyUserRole(userId, role, notes);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(updatedUser);
+    } catch (error) {
+      console.error('Error denying role:', error);
+      res.status(500).json({ message: "Failed to deny role" });
+    }
+  });
+  
+  // System Logs
+  app.get("/api/admin/logs", requireAdmin, logAdminAction("view_system_logs"), async (req, res) => {
+    try {
+      const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+      const action = req.query.action as string | undefined;
+      const fromDate = req.query.fromDate as string | undefined;
+      const toDate = req.query.toDate as string | undefined;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
+      
+      const result = await storage.getSystemLogs({
+        userId,
+        action,
+        fromDate,
+        toDate,
+        limit,
+        offset
+      });
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error fetching system logs:', error);
+      res.status(500).json({ message: "Failed to fetch system logs" });
+    }
+  });
+  
+  // User Reports
+  app.get("/api/admin/reports", requireAdmin, logAdminAction("view_user_reports"), async (req, res) => {
+    try {
+      const status = req.query.status as string | undefined;
+      const contentType = req.query.contentType as string | undefined;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+      const offset = req.query.offset ? parseInt(req.query.offset as string) : undefined;
+      
+      const result = await storage.getUserReports({
+        status,
+        contentType,
+        limit,
+        offset
+      });
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error fetching user reports:', error);
+      res.status(500).json({ message: "Failed to fetch user reports" });
+    }
+  });
+  
+  app.post("/api/reports", async (req, res) => {
+    try {
+      const reporterId = req.isAuthenticated() ? req.user.id : null;
+      
+      if (!reporterId) {
+        return res.status(401).json({ message: "Authentication required to submit a report" });
+      }
+      
+      const reportData = insertUserReportSchema.parse({
+        ...req.body,
+        reporterId
+      });
+      
+      const report = await storage.createUserReport(reportData);
+      res.status(201).json(report);
+    } catch (error) {
+      console.error('Error creating report:', error);
+      res.status(400).json({ message: "Invalid report data", error });
+    }
+  });
+  
+  app.put("/api/admin/reports/:id", requireAdmin, logAdminAction("update_report_status"), async (req, res) => {
+    try {
+      const reportId = parseInt(req.params.id);
+      const { status, notes } = req.body;
+      
+      if (!['pending', 'reviewed', 'resolved', 'dismissed'].includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+      
+      if (!req.user) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const updatedReport = await storage.updateReportStatus(reportId, status, req.user.id, notes);
+      
+      if (!updatedReport) {
+        return res.status(404).json({ message: "Report not found" });
+      }
+      
+      res.json(updatedReport);
+    } catch (error) {
+      console.error('Error updating report:', error);
+      res.status(500).json({ message: "Failed to update report" });
     }
   });
 
