@@ -52,16 +52,30 @@ export default function StickySearchBar({
       const rect = searchBarRef.current.getBoundingClientRect();
       initialPositionRef.current = rect.top + window.scrollY;
     }
+    
+    // Initial check on component mount
+    const currentScrollY = window.scrollY;
+    const position = initialPositionRef.current || 0;
+    if (currentScrollY > position) {
+      setIsSticky(true);
+    }
   }, []);
 
   // Smart sticky behavior based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      
+      // Ensure we have the position (it might not be set on first render)
+      if (searchBarRef.current && initialPositionRef.current === null) {
+        const rect = searchBarRef.current.getBoundingClientRect();
+        initialPositionRef.current = rect.top + window.scrollY;
+      }
+      
       const initialPosition = initialPositionRef.current || 0;
       
-      // Make sticky only when scrolled past the original position
-      if (currentScrollY > initialPosition) {
+      // Always make sticky when scrolled beyond 100px
+      if (currentScrollY > 100) {
         setIsSticky(true);
         
         // Hide bottom section when scrolling down, show when scrolling up
@@ -90,7 +104,7 @@ export default function StickySearchBar({
     <div 
       ref={searchBarRef}
       className={cn(
-        "transition-all duration-300 z-20 w-full",
+        "transition-all duration-300 z-30 w-full",
         isSticky ? 
           "sticky top-0 left-0 right-0 shadow-md" : 
           "relative"
