@@ -7,6 +7,7 @@ import { Redirect, useLocation } from "wouter";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, ArrowRight } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Separator } from "@/components/ui/separator";
@@ -15,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  rememberMe: z.boolean().optional(),
 });
 
 // Registration form schema
@@ -51,6 +53,7 @@ export default function AuthPage() {
     defaultValues: {
       email: "",
       password: "",
+      rememberMe: false,
     },
   });
 
@@ -66,7 +69,10 @@ export default function AuthPage() {
 
   // Handle login submission
   function onLoginSubmit(values: z.infer<typeof loginSchema>) {
-    loginMutation.mutate(values);
+    loginMutation.mutate({
+      email: values.email,
+      password: values.password,
+    });
   }
 
   // Handle registration submission
@@ -93,231 +99,258 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen justify-center items-center bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        {isLogin ? (
-          <>
-            <h1 className="text-2xl font-bold text-center mb-2">Welcome back</h1>
-            <p className="text-center text-gray-500 mb-6">Please sign in to continue</p>
+    <div className="relative min-h-screen flex justify-center items-center bg-gradient-to-br from-white to-[#e9f0ec] overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute w-[500px] h-[500px] bg-[#09261E]/5 rounded-full blur-3xl -bottom-64 -right-20 animate-pulse"></div>
+      <div className="absolute w-[300px] h-[300px] bg-[#803344]/10 rounded-full blur-3xl bottom-10 right-10 animate-pulse" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
+      <div className="absolute w-[200px] h-[200px] bg-[#09261E]/5 rounded-full blur-3xl top-20 left-20 animate-pulse" style={{animationDelay: '2s', animationDuration: '7s'}}></div>
+      
+      {/* Main Content Container */}
+      <div className="relative z-10 w-full max-w-md px-4">
+        <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-white/30">
+          {isLogin ? (
+            <>
+              <h1 className="text-2xl font-bold text-center text-[#09261E] mb-2">Welcome back</h1>
+              <p className="text-center text-gray-500 mb-8">Please sign in to continue</p>
 
-            <Form {...loginForm}>
-              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                <FormField
-                  control={loginForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input 
-                          placeholder="Email" 
-                          type="email"
-                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={loginForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input 
-                          type="password" 
-                          placeholder="Password"
-                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <Form {...loginForm}>
+                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-5">
+                  <FormField
+                    control={loginForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input 
+                            placeholder="Email" 
+                            type="email"
+                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[#803344]" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={loginForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input 
+                            type="password" 
+                            placeholder="Password"
+                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[#803344]" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={loginForm.control}
+                    name="rememberMe"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                          />
+                        </FormControl>
+                        <div className="text-sm font-medium leading-none text-gray-600">
+                          Stay signed in
+                        </div>
+                      </FormItem>
+                    )}
+                  />
 
+                  <Button 
+                    type="submit" 
+                    className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    disabled={loginMutation.isPending}
+                  >
+                    {loginMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <span>Signing In...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Sign In</span>
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </Form>
+
+              <div className="my-8 relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-gray-400">Or continue with</span>
+                </div>
+              </div>
+
+              <div className="flex gap-4 justify-center">
                 <Button 
-                  type="submit" 
-                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center transition-colors"
-                  disabled={loginMutation.isPending}
+                  type="button" 
+                  variant="outline" 
+                  className="w-1/2 h-12 border-gray-200 hover:bg-gray-50 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  onClick={handleGoogleAuth}
+                  disabled={loginWithGoogleMutation.isPending}
                 >
-                  {loginMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      <span>Signing In...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Sign In</span>
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
+                  <SiGoogle className="mr-2 h-4 w-4" />
+                  <span>Google</span>
                 </Button>
-              </form>
-            </Form>
-
-            <div className="my-6 relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-400">Or continue with</span>
-              </div>
-            </div>
-
-            <div className="flex gap-4 justify-center">
-              <Button 
-                type="button" 
-                variant="outline" 
-                className="w-1/2 border-gray-300 hover:bg-gray-50"
-                onClick={handleGoogleAuth}
-                disabled={loginWithGoogleMutation.isPending}
-              >
-                <SiGoogle className="mr-2 h-4 w-4" />
-                <span>Google</span>
-              </Button>
-              <Button 
-                type="button" 
-                variant="outline" 
-                className="w-1/2 border-gray-300 hover:bg-gray-50" 
-                onClick={handleFacebookAuth}
-                disabled={loginWithFacebookMutation.isPending}
-              >
-                <SiFacebook className="mr-2 h-4 w-4 text-[#1877F2]" />
-                <span>Facebook</span>
-              </Button>
-            </div>
-
-            <div className="mt-6 text-center text-sm">
-              Don't have an account?{' '}
-              <a href="/register" className="text-green-700 font-bold">
-                Create one
-              </a>
-            </div>
-          </>
-        ) : (
-          <>
-            <h1 className="text-2xl font-bold text-center mb-2">Create your account</h1>
-            <p className="text-center text-gray-500 mb-6">Start finding your perfect deal</p>
-
-            <Form {...registerForm}>
-              <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
-                <FormField
-                  control={registerForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input 
-                          type="email" 
-                          placeholder="Email"
-                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={registerForm.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input 
-                          type="password" 
-                          placeholder="Password"
-                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={registerForm.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input 
-                          type="password" 
-                          placeholder="Confirm Password"
-                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <Button 
-                  type="submit" 
-                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center transition-colors"
-                  disabled={registerMutation.isPending}
+                  type="button" 
+                  variant="outline" 
+                  className="w-1/2 h-12 border-gray-200 hover:bg-gray-50 transition-all hover:scale-[1.02] active:scale-[0.98]" 
+                  onClick={handleFacebookAuth}
+                  disabled={loginWithFacebookMutation.isPending}
                 >
-                  {registerMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      <span>Creating Account...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Sign Up</span>
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </>
-                  )}
+                  <SiFacebook className="mr-2 h-4 w-4 text-[#1877F2]" />
+                  <span>Facebook</span>
                 </Button>
-              </form>
-            </Form>
-
-            <div className="my-6 relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-400">Or sign up with</span>
+
+              <div className="mt-8 text-center text-sm">
+                Don't have an account?{' '}
+                <a href="/register" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors">
+                  Create one
+                </a>
               </div>
-            </div>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold text-center text-[#09261E] mb-2">Create your account</h1>
+              <p className="text-center text-gray-500 mb-8">Start finding your perfect deal</p>
 
-            <div className="flex gap-4 justify-center">
-              <Button 
-                type="button" 
-                variant="outline" 
-                className="w-1/2 border-gray-300 hover:bg-gray-50"
-                onClick={handleGoogleAuth}
-                disabled={loginWithGoogleMutation.isPending}
-              >
-                <SiGoogle className="mr-2 h-4 w-4" />
-                <span>Google</span>
-              </Button>
-              <Button 
-                type="button" 
-                variant="outline" 
-                className="w-1/2 border-gray-300 hover:bg-gray-50" 
-                onClick={handleFacebookAuth}
-                disabled={loginWithFacebookMutation.isPending}
-              >
-                <SiFacebook className="mr-2 h-4 w-4 text-[#1877F2]" />
-                <span>Facebook</span>
-              </Button>
-            </div>
+              <Form {...registerForm}>
+                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-5">
+                  <FormField
+                    control={registerForm.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input 
+                            type="email" 
+                            placeholder="Email"
+                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[#803344]" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={registerForm.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input 
+                            type="password" 
+                            placeholder="Password"
+                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[#803344]" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={registerForm.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input 
+                            type="password" 
+                            placeholder="Confirm Password"
+                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[#803344]" />
+                      </FormItem>
+                    )}
+                  />
 
-            <div className="mt-6 text-center text-sm">
-              Already have an account?{' '}
-              <a href="/auth" className="text-green-700 font-bold">
-                Sign In
-              </a>
-            </div>
-          </>
-        )}
+                  <Button 
+                    type="submit" 
+                    className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    disabled={registerMutation.isPending}
+                  >
+                    {registerMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <span>Creating Account...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Sign Up</span>
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </Form>
+
+              <div className="my-8 relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-gray-400">Or sign up with</span>
+                </div>
+              </div>
+
+              <div className="flex gap-4 justify-center">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-1/2 h-12 border-gray-200 hover:bg-gray-50 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  onClick={handleGoogleAuth}
+                  disabled={loginWithGoogleMutation.isPending}
+                >
+                  <SiGoogle className="mr-2 h-4 w-4" />
+                  <span>Google</span>
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-1/2 h-12 border-gray-200 hover:bg-gray-50 transition-all hover:scale-[1.02] active:scale-[0.98]" 
+                  onClick={handleFacebookAuth}
+                  disabled={loginWithFacebookMutation.isPending}
+                >
+                  <SiFacebook className="mr-2 h-4 w-4 text-[#1877F2]" />
+                  <span>Facebook</span>
+                </Button>
+              </div>
+
+              <div className="mt-8 text-center text-sm">
+                Already have an account?{' '}
+                <a href="/auth" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors">
+                  Sign In
+                </a>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

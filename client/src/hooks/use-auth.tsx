@@ -152,10 +152,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       return authData;
     },
-    onSuccess: (data) => {
-      setSupabaseUser(data.supabaseUser);
-      if (data.dbUser) {
-        queryClient.setQueryData(["/api/user"], data.dbUser);
+    onSuccess: (data: any) => {
+      if (data && typeof data === 'object') {
+        if (data.supabaseUser) {
+          setSupabaseUser(data.supabaseUser);
+        }
+        if (data.dbUser) {
+          queryClient.setQueryData(["/api/user"], data.dbUser);
+        }
       }
       toast({
         title: "Registration successful",
