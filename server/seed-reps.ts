@@ -1,11 +1,12 @@
 import { db } from './db';
 import { reps } from '@shared/schema';
+import { sql } from 'drizzle-orm';
 
 // Convert from our client-side rep data format to the database schema format
 const seedReps = async () => {
   try {
     // First get the count of existing reps to avoid duplicate inserts
-    const existingReps = await db.select({ count: { expr: reps.id, fn: 'count' } }).from(reps);
+    const existingReps = await db.select({ count: sql`count(*)` }).from(reps);
     const count = Number(existingReps[0]?.count || 0);
     
     if (count > 0) {
@@ -265,14 +266,7 @@ const seedReps = async () => {
   }
 };
 
-// Only run this script directly (not when imported)
-if (require.main === module) {
-  seedReps()
-    .then(() => process.exit(0))
-    .catch(error => {
-      console.error('Failed to seed database:', error);
-      process.exit(1);
-    });
-}
+// This function is only called when imported
+// No need for direct execution logic in ES modules
 
 export { seedReps };
