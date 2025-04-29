@@ -281,11 +281,12 @@ export default function Sidebar() {
       {/* Command K Search Dialog - Full Viewport */}
       {showSearch && (
         <div 
-          className="fixed inset-0 bg-black/80 z-50 flex items-start justify-center p-0 overflow-hidden"
+          className="fixed inset-0 bg-black/80 z-[100] flex items-start justify-center p-0 overflow-hidden"
           onClick={() => setShowSearch(false)}
+          style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }} 
         >
           <div className="w-full h-full flex flex-col items-center">
-            <div className="w-full max-w-3xl px-6 pt-[15vh] pb-8" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full max-w-4xl px-6 pt-[15vh] pb-8" onClick={(e) => e.stopPropagation()}>
               <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
                 <div className="p-6 border-b">
                   <div className="flex items-center">
