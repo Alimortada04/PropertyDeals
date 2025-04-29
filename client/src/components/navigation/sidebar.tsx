@@ -10,7 +10,6 @@ import {
   Book,
   PlusCircle,
   User,
-  Settings,
   Search,
   Bell,
   LogOut,
@@ -101,7 +100,7 @@ export default function Sidebar() {
   return (
     <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-sm border-r">
       {/* Logo at top - Just "pd" text */}
-      <div className="flex items-center justify-center h-16 pt-4">
+      <div className="flex items-center justify-center h-16">
         <Link href="/">
           <div className="flex items-center justify-center w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:scale-110 transition-all">
             <span className="font-bold text-xl">pd</span>
@@ -110,8 +109,8 @@ export default function Sidebar() {
       </div>
       
       {/* Main Navigation (Scrollable) */}
-      <ScrollArea className="flex-1 py-4">
-        <div className="space-y-2 px-2 flex flex-col items-center">
+      <ScrollArea className="flex-1 pb-12">
+        <div className="space-y-2 flex flex-col items-center">
           <NavItem 
             href="/" 
             icon={<Home size={20} />} 
@@ -222,9 +221,9 @@ export default function Sidebar() {
         <NavItem 
           href="/profile" 
           icon={
-            <Avatar className="h-5 w-5">
+            <Avatar className="h-6 w-6">
               <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
-              <AvatarFallback className="bg-primary/10 text-primary text-xs">
+              <AvatarFallback className="bg-primary/10 text-primary text-sm">
                 {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
@@ -233,17 +232,11 @@ export default function Sidebar() {
           active={location.startsWith('/profile')} 
         />
         
-        {/* Settings */}
-        <NavItem 
-          href="/settings" 
-          icon={<Settings size={20} />} 
-          label="Settings"
-          active={location.startsWith('/settings')} 
-        />
+
       </div>
       
       {/* Bottom Dock Bar - White Background with Menu Selector on Left */}
-      <div className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t flex items-center z-30 shadow-sm">
+      <div className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t flex items-center z-50 shadow-sm">
         <div className="w-full px-4 flex items-center justify-between">
           <div>
             {/* Menu selector on far left (as shown in screenshot) */}
