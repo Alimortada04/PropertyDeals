@@ -12,6 +12,8 @@ import { Switch } from "@/components/ui/switch";
 import { Loader2, Eye, EyeOff, ArrowRight, Fingerprint } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { signInWithGoogle } from "@/supabase"; 
+ import { signInWithFacebook } from "@/supabase"; 
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -45,13 +47,24 @@ export default function SignInPage() {
     setShowPassword(!showPassword);
   }
 
-  function handleGoogleLogin() {
-    window.alert("Google Login Triggered"); // Replace with real OAuth call
+  async function handleGoogleLogin() {
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error("❌ Google login failed:", error.message);
+      alert("Google login failed. Check console for details.");
+    }
   }
 
-  function handleFacebookLogin() {
-    window.alert("Facebook Login Triggered"); // Replace with real OAuth call
+  async function handleFacebookLogin() {
+    try {
+      await signInWithFacebook();
+    } catch (error) {
+      console.error("❌ Facebook login failed:", error.message);
+      alert("Facebook login failed. Check console for details.");
+    }
   }
+
 
   function handleBiometricLogin() {
     alert("Biometric login triggered (Face ID / Touch ID)");

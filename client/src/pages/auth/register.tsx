@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, ArrowRight, UserPlus, Building, Users } from "lucide-react";
+import { signInWithGoogle, signInWithFacebook } from "@/supabase";
 import { SiGoogle, SiApple, SiFacebook } from "react-icons/si";
 
 // User types
@@ -260,9 +261,19 @@ export default function RegisterPage() {
   }
 
   // Handle social registration
-  const handleSocialRegistration = (provider: string) => {
-    // This would handle OAuth flow with the selected provider
-    alert(`${provider} registration would be triggered here, for role: ${selectedRole}`);
+  const handleSocialRegistration = async (provider: string) => {
+    try {
+      if (provider === "Google") {
+        await signInWithGoogle();
+      } else if (provider === "Facebook") {
+        await signInWithFacebook();
+      } else {
+        alert(`${provider} login is not implemented`);
+      }
+    } catch (error) {
+      console.error(`${provider} login failed:`, error);
+      alert(`${provider} login failed. Check console for details.`);
+    }
   };
 
   // If user is already logged in, redirect to home
@@ -371,28 +382,19 @@ export default function RegisterPage() {
             
             {/* Social registration buttons */}
             <div className="space-y-3 mb-6">
-              <Button 
-                variant="outline" 
-                className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50" 
-                onClick={() => handleSocialRegistration('Google')}
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50"
+                onClick={() => handleSocialRegistration("Google")}
               >
                 <SiGoogle className="h-4 w-4" />
                 <span>Continue with Google</span>
               </Button>
-              
-              <Button 
-                variant="outline" 
-                className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50" 
-                onClick={() => handleSocialRegistration('Apple')}
-              >
-                <SiApple className="h-4 w-4" />
-                <span>Continue with Apple</span>
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50" 
-                onClick={() => handleSocialRegistration('Facebook')}
+
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2 border-gray-300 hover:bg-gray-50"
+                onClick={() => handleSocialRegistration("Facebook")}
               >
                 <SiFacebook className="h-4 w-4 text-[#1877F2]" />
                 <span>Continue with Facebook</span>
