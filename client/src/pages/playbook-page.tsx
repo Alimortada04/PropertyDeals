@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Book, Calculator, Search, Tag, Filter } from "lucide-react";
+import { Book, Calculator, Search, Briefcase, Home, Users, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -75,7 +75,8 @@ export default function PlaybookPage() {
       description: "Calculate your monthly mortgage payments based on loan amount, interest rate, and term.",
       coverImage: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       tags: ["Financing", "Calculator"],
-      category: "Financing"
+      category: "Financing",
+      icon: <Home className="h-10 w-10 text-green-600" />
     },
     {
       id: "2",
@@ -83,7 +84,8 @@ export default function PlaybookPage() {
       description: "Calculate the return on investment for rental properties.",
       coverImage: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       tags: ["Investment", "Calculator", "Rental"],
-      category: "Investment"
+      category: "Investment",
+      icon: <Calculator className="h-10 w-10 text-blue-600" />
     },
     {
       id: "3",
@@ -91,7 +93,8 @@ export default function PlaybookPage() {
       description: "Analyze potential flip properties to estimate costs, timeline, and profit.",
       coverImage: "https://images.unsplash.com/photo-1608303588026-884930af2559?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       tags: ["Flips", "Calculator", "Investment"],
-      category: "Investment"
+      category: "Investment",
+      icon: <Briefcase className="h-10 w-10 text-purple-600" />
     },
     {
       id: "4",
@@ -99,7 +102,8 @@ export default function PlaybookPage() {
       description: "Estimate all the closing costs for your property purchase.",
       coverImage: "https://images.unsplash.com/photo-1568234928966-359c35dd8aba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       tags: ["Closing", "Calculator", "Buying"],
-      category: "Buying"
+      category: "Buying",
+      icon: <Users className="h-10 w-10 text-orange-600" />
     },
     {
       id: "5",
@@ -107,7 +111,8 @@ export default function PlaybookPage() {
       description: "Project your short-term rental income based on location, seasonality, and property type.",
       coverImage: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       tags: ["STR", "Calculator", "Revenue"],
-      category: "Investment"
+      category: "Investment",
+      icon: <Calculator className="h-10 w-10 text-teal-600" />
     },
     {
       id: "6",
@@ -115,7 +120,8 @@ export default function PlaybookPage() {
       description: "Get an accurate estimate of renovation costs for your project.",
       coverImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
       tags: ["Renovation", "Calculator", "Costs"],
-      category: "Renovation"
+      category: "Renovation",
+      icon: <Home className="h-10 w-10 text-red-600" />
     },
   ];
 
@@ -130,166 +136,191 @@ export default function PlaybookPage() {
   const filteredTools = tools.filter(tool =>
     tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    tool.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Get unique tool categories
   const categories = [...new Set(tools.map(tool => tool.category))];
 
   return (
-    <div className="container max-w-7xl py-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-3xl font-bold">PropertyDeals Playbook</h1>
-          <p className="text-muted-foreground mt-1">Resources and tools to help you succeed in real estate</p>
-        </div>
-        
-        <div className="relative min-w-[280px]">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input 
-            placeholder="Search resources and tools..." 
-            className="pl-8" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </div>
-
-      <Tabs defaultValue="resources" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="flex items-center justify-between mb-8">
-          <TabsList className="grid w-[400px] grid-cols-2">
-            <TabsTrigger value="resources" className="flex items-center gap-2">
-              <Book className="h-4 w-4" />
-              <span>Resources</span>
-            </TabsTrigger>
-            <TabsTrigger value="tools" className="flex items-center gap-2">
-              <Calculator className="h-4 w-4" />
-              <span>Tools</span>
-            </TabsTrigger>
-          </TabsList>
-          
+    <div className="min-h-[calc(100vh-64px)] bg-gray-50 pb-24">
+      <TabsList className="fixed left-16 top-0 h-16 w-[250px] rounded-none border-r bg-background z-10">
+        <TabsTrigger 
+          value="resources" 
+          onClick={() => setActiveTab("resources")}
+          className={`flex-1 rounded-none data-[state=active]:bg-transparent ${activeTab === "resources" ? "border-b-2 border-primary" : ""}`}
+        >
           <div className="flex items-center">
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
-              <Filter className="h-4 w-4" />
-              <span className="hidden sm:inline-block">Filter</span>
-            </Button>
+            <Book className="h-4 w-4 mr-2" />
+            <span>Resources</span>
           </div>
-        </div>
+        </TabsTrigger>
+        <TabsTrigger 
+          value="tools" 
+          onClick={() => setActiveTab("tools")}
+          className={`flex-1 rounded-none data-[state=active]:bg-transparent ${activeTab === "tools" ? "border-b-2 border-primary" : ""}`}
+        >
+          <div className="flex items-center">
+            <Calculator className="h-4 w-4 mr-2" />
+            <span>Tools</span>
+          </div>
+        </TabsTrigger>
+      </TabsList>
+
+      <div className="container py-8 pt-20 max-w-7xl">
+        {activeTab === "resources" && (
+          <>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+              <div>
+                <h1 className="text-4xl font-bold font-heading text-[#09261E]">PropertyDeals Playbook</h1>
+                <p className="text-gray-600 mt-2">Educational resources to help you succeed in real estate</p>
+              </div>
+              
+              <div className="relative min-w-[280px]">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input 
+                  placeholder="Search resources..." 
+                  className="pl-10 h-12 rounded-md border-gray-300" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredResources.length > 0 ? (
+                filteredResources.map((resource) => (
+                  <Card key={resource.id} className="overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow">
+                    <div 
+                      className="h-48 bg-cover bg-center" 
+                      style={{ backgroundImage: `url(${resource.coverImage})` }}
+                    />
+                    <CardHeader className="pb-2">
+                      <CardTitle className="line-clamp-2 text-[#09261E]">{resource.title}</CardTitle>
+                      <div className="flex items-center text-sm text-gray-500 mt-1">
+                        <span>{resource.timeToRead}</span>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pb-2 flex-1">
+                      <p className="text-gray-600 text-sm line-clamp-3">{resource.description}</p>
+                      <div className="flex flex-wrap gap-2 mt-4">
+                        {resource.tags.map(tag => (
+                          <Badge key={tag} variant="secondary" className="font-normal bg-gray-100 text-gray-700 hover:bg-gray-200">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </CardContent>
+                    <CardFooter className="border-t pt-4 pb-4 mt-auto">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={resource.authorAvatar} alt={resource.authorName} />
+                          <AvatarFallback className="bg-[#09261E]/10 text-[#09261E]">
+                            {resource.authorName?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-medium">{resource.authorName}</p>
+                          <p className="text-xs text-gray-500">{resource.authorTitle}</p>
+                        </div>
+                      </div>
+                    </CardFooter>
+                  </Card>
+                ))
+              ) : (
+                <div className="col-span-full flex items-center justify-center py-12">
+                  <div className="text-center">
+                    <Book className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium">No resources found</h3>
+                    <p className="text-gray-500">Try adjusting your search</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
+        )}
         
-        <TabsContent value="resources" className="mt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredResources.length > 0 ? (
-              filteredResources.map((resource) => (
-                <Card key={resource.id} className="overflow-hidden flex flex-col h-full">
-                  <div 
-                    className="h-48 bg-cover bg-center" 
-                    style={{ backgroundImage: `url(${resource.coverImage})` }}
-                  />
-                  <CardHeader className="pb-2">
-                    <CardTitle className="line-clamp-2">{resource.title}</CardTitle>
-                    <div className="flex items-center text-sm text-muted-foreground mt-1">
-                      <span>{resource.timeToRead}</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pb-2 flex-1">
-                    <p className="text-muted-foreground text-sm line-clamp-3">{resource.description}</p>
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {resource.tags.map(tag => (
-                        <Badge key={tag} variant="secondary" className="font-normal">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                  <CardFooter className="border-t pt-4 pb-4 mt-auto">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={resource.authorAvatar} alt={resource.authorName} />
-                        <AvatarFallback className="bg-primary/10 text-primary">
-                          {resource.authorName?.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
+        {activeTab === "tools" && (
+          <>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+              <div>
+                <h1 className="text-4xl font-bold font-heading text-[#09261E]">Property Investment Tools</h1>
+                <p className="text-gray-600 mt-2">Interactive calculators and tools to help with your real estate decisions</p>
+              </div>
+              
+              <div className="relative min-w-[280px]">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input 
+                  placeholder="Search tools..." 
+                  className="pl-10 h-12 rounded-md border-gray-300" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="mb-8">
+              <h2 className="text-lg font-medium text-gray-700 mb-4">Filter by Category</h2>
+              <div className="flex flex-wrap gap-2">
+                <Button 
+                  variant={!searchQuery ? "default" : "outline"} 
+                  size="sm"
+                  onClick={() => setSearchQuery("")}
+                  className="rounded-full"
+                >
+                  All Tools
+                </Button>
+                {categories.map(category => (
+                  <Button 
+                    key={category} 
+                    variant={searchQuery === category ? "default" : "outline"} 
+                    size="sm"
+                    onClick={() => setSearchQuery(category)}
+                    className="rounded-full"
+                  >
+                    {category}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredTools.length > 0 ? (
+                filteredTools.map((tool) => (
+                  <Card key={tool.id} className="overflow-hidden border border-gray-200 rounded-xl shadow hover:shadow-md transition-all">
+                    <div className="flex items-start p-6">
+                      <div className="mr-4 mt-1">
+                        {tool.icon}
+                      </div>
                       <div>
-                        <p className="text-sm font-medium">{resource.authorName}</p>
-                        <p className="text-xs text-muted-foreground">{resource.authorTitle}</p>
+                        <CardTitle className="text-xl mb-2 text-[#09261E]">{tool.title}</CardTitle>
+                        <p className="text-gray-600 text-sm mb-4">{tool.description}</p>
+                        <div className="flex flex-wrap gap-2 mt-2 mb-4">
+                          {tool.tags.map(tag => (
+                            <Badge key={tag} variant="outline" className="bg-gray-50">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        <Button className="w-full">Open Calculator</Button>
                       </div>
                     </div>
-                  </CardFooter>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-full flex items-center justify-center py-12">
-                <div className="text-center">
-                  <Book className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium">No resources found</h3>
-                  <p className="text-muted-foreground">Try adjusting your search or filters</p>
+                  </Card>
+                ))
+              ) : (
+                <div className="col-span-full flex items-center justify-center py-12">
+                  <div className="text-center">
+                    <Calculator className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium">No tools found</h3>
+                    <p className="text-gray-500">Try adjusting your search</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="tools" className="mt-0">
-          <ScrollArea className="w-full whitespace-nowrap mb-6 py-1">
-            <div className="flex items-center space-x-2 w-max">
-              <Button variant="ghost" size="sm" className={!searchQuery ? "bg-muted" : ""} onClick={() => setSearchQuery("")}>All Tools</Button>
-              {categories.map(category => (
-                <Button 
-                  key={category} 
-                  variant="ghost" 
-                  size="sm" 
-                  className={searchQuery === category ? "bg-muted" : ""}
-                  onClick={() => setSearchQuery(category)}
-                >
-                  {category}
-                </Button>
-              ))}
+              )}
             </div>
-          </ScrollArea>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTools.length > 0 ? (
-              filteredTools.map((tool) => (
-                <Card key={tool.id} className="overflow-hidden flex flex-col h-full cursor-pointer hover:border-primary/50 transition-colors">
-                  <div 
-                    className="h-48 bg-cover bg-center" 
-                    style={{ backgroundImage: `url(${tool.coverImage})` }}
-                  />
-                  <CardHeader className="pb-2">
-                    <CardTitle className="line-clamp-2">{tool.title}</CardTitle>
-                    <Badge variant="outline" className="w-fit mt-1">
-                      {tool.category}
-                    </Badge>
-                  </CardHeader>
-                  <CardContent className="pb-2 flex-1">
-                    <p className="text-muted-foreground text-sm line-clamp-3">{tool.description}</p>
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {tool.tags.map(tag => (
-                        <Badge key={tag} variant="secondary" className="font-normal">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                  <CardFooter className="pt-2 pb-4">
-                    <Button className="w-full">
-                      Open Calculator
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-full flex items-center justify-center py-12">
-                <div className="text-center">
-                  <Calculator className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium">No tools found</h3>
-                  <p className="text-muted-foreground">Try adjusting your search or filters</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+          </>
+        )}
+      </div>
     </div>
   );
 }

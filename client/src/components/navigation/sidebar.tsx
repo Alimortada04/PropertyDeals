@@ -46,8 +46,8 @@ const NavItem: FC<NavItemProps> = ({ href, icon, label, active, onClick, classNa
                 className={cn(
                   "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all",
                   active
-                    ? "text-[#803344] scale-110" 
-                    : "text-[#09261E] hover:text-[#803344] hover:scale-110",
+                    ? "text-[#803344] bg-gray-100 scale-105" 
+                    : "text-[#09261E] hover:text-[#803344] hover:bg-gray-100 hover:scale-105",
                   className
                 )}
                 onClick={onClick}
@@ -104,7 +104,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-center h-16 pt-4">
         <Link href="/">
           <div className="flex items-center justify-center w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:scale-110 transition-all">
-            <img src="/assets/pdLogoTransparent.png" alt="PropertyDeals" className="w-8 h-8" />
+            <img src="/assets/pdLogoTransparent.png" alt="PropertyDeals" className="w-9 h-9" />
           </div>
         </Link>
       </div>
@@ -243,42 +243,44 @@ export default function Sidebar() {
       </div>
       
       {/* Bottom Dock Bar */}
-      <div className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t flex items-center justify-between px-4 z-30 shadow-sm">
-        <div className="flex items-center space-x-2">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="h-8 w-8 rounded-full" 
-            onClick={() => setShowSearch(true)}
-          >
-            <Search className="h-4 w-4 text-[#09261E]" />
-          </Button>
-          <span className="text-xs text-gray-500 hidden sm:inline-block ml-1">⌘K</span>
-        </div>
-        
-        <div className="flex items-center space-x-6">
-          {/* Notification Button */}
-          <div className="relative">
+      <div className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t flex items-center z-30 shadow-sm">
+        <div className="container mx-auto px-4 flex items-center justify-between w-full">
+          <div className="flex items-center space-x-2">
             <Button 
               variant="ghost" 
               size="icon" 
-              className="h-8 w-8 rounded-full"
+              className="h-8 w-8 rounded-full" 
+              onClick={() => setShowSearch(true)}
             >
-              <Bell className="h-4 w-4 text-[#09261E]" />
-              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500"></span>
+              <Search className="h-4 w-4 text-[#09261E]" />
             </Button>
+            <span className="text-xs text-gray-500 hidden sm:inline-block ml-1">⌘K</span>
           </div>
           
-          {/* Chat Button */}
-          <div className="relative">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="h-8 w-8 rounded-full"
-            >
-              <MessagesSquare className="h-4 w-4 text-[#09261E]" />
-              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-500"></span>
-            </Button>
+          <div className="flex items-center space-x-6">
+            {/* Notification Button */}
+            <div className="relative">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 rounded-full"
+              >
+                <Bell className="h-4 w-4 text-[#09261E]" />
+                <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500"></span>
+              </Button>
+            </div>
+            
+            {/* Chat Button */}
+            <div className="relative">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-8 w-8 rounded-full"
+              >
+                <MessagesSquare className="h-4 w-4 text-[#09261E]" />
+                <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-500"></span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -286,50 +288,84 @@ export default function Sidebar() {
       {/* Command K Search Dialog */}
       {showSearch && (
         <div 
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/70 z-50 flex flex-col items-start p-0"
           onClick={() => setShowSearch(false)}
         >
-          <div 
-            className="bg-white rounded-lg w-full max-w-2xl shadow-2xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center border-b p-4">
-              <Search className="w-5 h-5 text-gray-400 mr-2" />
-              <input 
-                type="text" 
-                className="flex-1 outline-none text-lg"
-                placeholder="Where would you like to go?" 
-                autoFocus
-              />
-              <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-slate-100 px-1.5 font-mono text-[10px] font-medium">
-                ESC
-              </kbd>
-            </div>
-            
-            <div className="p-4">
-              <div className="mb-4">
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Quick Links</h3>
-                <div className="grid grid-cols-1 gap-2">
-                  <Link href="/properties">
-                    <div className="flex items-center p-2 rounded hover:bg-gray-100">
-                      <Building className="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <p className="font-medium">Properties</p>
-                        <p className="text-xs text-gray-500">Browse available properties</p>
+          <div className="w-full bg-white/95 backdrop-blur-sm py-8">
+            <div className="container mx-auto max-w-3xl px-4" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center mb-6">
+                <Search className="w-6 h-6 text-gray-400 mr-3" />
+                <input 
+                  type="text" 
+                  className="flex-1 outline-none text-2xl bg-transparent"
+                  placeholder="Where would you like to go?" 
+                  autoFocus
+                />
+                <kbd className="ml-2 pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded border bg-slate-100 px-2 font-mono text-[12px] font-medium">
+                  ESC
+                </kbd>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wide">Navigation</h3>
+                  <div className="space-y-2">
+                    <Link href="/" onClick={() => setShowSearch(false)}>
+                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <Home className="h-5 w-5 text-gray-500 mr-3" />
+                        <div>
+                          <p className="font-medium">Home</p>
+                          <p className="text-xs text-gray-500">Back to the main page</p>
+                        </div>
                       </div>
-                      <span className="ml-auto text-xs text-gray-400">⌘1</span>
-                    </div>
-                  </Link>
-                  <Link href="/reps">
-                    <div className="flex items-center p-2 rounded hover:bg-gray-100">
-                      <Users className="h-5 w-5 text-gray-400 mr-3" />
-                      <div>
-                        <p className="font-medium">REPs</p>
-                        <p className="text-xs text-gray-500">Find real estate professionals</p>
+                    </Link>
+                    <Link href="/properties" onClick={() => setShowSearch(false)}>
+                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <Building className="h-5 w-5 text-gray-500 mr-3" />
+                        <div>
+                          <p className="font-medium">Properties</p>
+                          <p className="text-xs text-gray-500">Browse available properties</p>
+                        </div>
+                        <span className="ml-auto text-xs text-gray-400">⌘1</span>
                       </div>
-                      <span className="ml-auto text-xs text-gray-400">⌘2</span>
-                    </div>
-                  </Link>
+                    </Link>
+                    <Link href="/reps" onClick={() => setShowSearch(false)}>
+                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <Users className="h-5 w-5 text-gray-500 mr-3" />
+                        <div>
+                          <p className="font-medium">REPs</p>
+                          <p className="text-xs text-gray-500">Find real estate professionals</p>
+                        </div>
+                        <span className="ml-auto text-xs text-gray-400">⌘2</span>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wide">Resources</h3>
+                  <div className="space-y-2">
+                    <Link href="/playbook" onClick={() => setShowSearch(false)}>
+                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <Book className="h-5 w-5 text-gray-500 mr-3" />
+                        <div>
+                          <p className="font-medium">Playbook</p>
+                          <p className="text-xs text-gray-500">Educational resources and guides</p>
+                        </div>
+                        <span className="ml-auto text-xs text-gray-400">⌘3</span>
+                      </div>
+                    </Link>
+                    <Link href="/inbox" onClick={() => setShowSearch(false)}>
+                      <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
+                        <Inbox className="h-5 w-5 text-gray-500 mr-3" />
+                        <div>
+                          <p className="font-medium">Inbox</p>
+                          <p className="text-xs text-gray-500">Messages and notifications</p>
+                        </div>
+                        <span className="ml-auto text-xs text-gray-400">⌘4</span>
+                      </div>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
