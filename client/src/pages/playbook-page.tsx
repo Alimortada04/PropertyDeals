@@ -150,16 +150,16 @@ export default function PlaybookPage() {
   const getBreadcrumbs = () => {
     return (
       <div className="text-sm text-gray-500 mb-6">
-        <Link href="/">
-          <a className="hover:text-[#09261E]">Home</a>
+        <Link href="/" className="hover:text-[#09261E]">
+          Home
         </Link>
         {' > '}
         {activeTab === "resources" ? (
           <span className="text-[#09261E] font-medium">Playbook</span>
         ) : (
           <>
-            <Link href="/playbook">
-              <a className="hover:text-[#09261E]">Playbook</a>
+            <Link href="/playbook" className="hover:text-[#09261E]">
+              Playbook
             </Link>
             {' > '}
             <span className="text-[#09261E] font-medium">Tools</span>
