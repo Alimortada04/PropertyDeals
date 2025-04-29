@@ -45,11 +45,11 @@ export function logAdminAction(action: string) {
     res.end = function(chunk?: any, encoding?: any) {
       // Create a log entry if the request was successful (status < 400)
       if (this.statusCode < 400 && req.user) {
-        const storage = req.app.get('storage');
-        
         // Log the admin action asynchronously (don't wait for it)
         try {
           const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+          const { storage } = require('../storage');
+          
           storage.createSystemLog({
             userId: req.user.id,
             action: req.adminAction,

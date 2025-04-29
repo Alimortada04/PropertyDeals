@@ -30,6 +30,16 @@ import ReportPage from "@/pages/help/report-page";
 import TermsPage from "@/pages/legal/terms-page";
 import CookiesPage from "@/pages/legal/cookies-page";
 import FHACompliancePage from "@/pages/legal/fha-compliance-page";
+
+// Admin pages
+import AdminLayout from "@/components/admin/admin-layout";
+import AdminDashboard from "@/pages/admin/dashboard";
+import AdminUsers from "@/pages/admin/users"; 
+import AdminUserDetails from "@/pages/admin/user-details";
+import AdminApprovals from "@/pages/admin/approvals";
+import AdminLogs from "@/pages/admin/logs";
+import AdminReports from "@/pages/admin/reports";
+import AdminSettings from "@/pages/admin/settings";
 import MainLayout from "@/components/layout/main-layout";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -243,6 +253,56 @@ function Router() {
           <FHACompliancePage />
         </MainLayout>
       </Route>
+      
+      {/* Admin Routes - All protected and using AdminLayout */}
+      <ProtectedRoute path="/admin" component={() => (
+        <AdminLayout>
+          <AdminDashboard />
+        </AdminLayout>
+      )} />
+      
+      <ProtectedRoute path="/admin/dashboard" component={() => (
+        <AdminLayout>
+          <AdminDashboard />
+        </AdminLayout>
+      )} />
+      
+      <ProtectedRoute path="/admin/users" component={() => (
+        <AdminLayout>
+          <AdminUsers />
+        </AdminLayout>
+      )} />
+      
+      <ProtectedRoute path="/admin/users/:id" component={({ params }) => (
+        <AdminLayout>
+          <AdminUserDetails id={params.id} />
+        </AdminLayout>
+      )} />
+      
+      <ProtectedRoute path="/admin/approvals" component={() => (
+        <AdminLayout>
+          <AdminApprovals />
+        </AdminLayout>
+      )} />
+      
+      <ProtectedRoute path="/admin/logs" component={() => (
+        <AdminLayout>
+          <AdminLogs />
+        </AdminLayout>
+      )} />
+      
+      <ProtectedRoute path="/admin/reports" component={() => (
+        <AdminLayout>
+          <AdminReports />
+        </AdminLayout>
+      )} />
+      
+      <ProtectedRoute path="/admin/settings" component={() => (
+        <AdminLayout>
+          <AdminSettings />
+        </AdminLayout>
+      )} />
+      
       {/* Fallback to 404 */}
       <Route>
         <MainLayout>
