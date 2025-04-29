@@ -177,33 +177,38 @@ export default function PlaybookPage() {
         {getBreadcrumbs()}
         
         <div className="flex flex-col space-y-6">
-          <div className="flex space-x-2">
-            <Button 
-              variant={activeTab === "resources" ? "default" : "outline"} 
-              className={cn(
-                "px-6 py-2 h-10",
-                activeTab === "resources" 
-                  ? "bg-[#09261E] text-white hover:bg-[#09261E]/90" 
-                  : "border-gray-300 hover:bg-gray-50"
-              )}
-              onClick={() => setActiveTab("resources")}
-            >
-              <Book className="h-4 w-4 mr-2" />
-              Resources
-            </Button>
-            <Button 
-              variant={activeTab === "tools" ? "default" : "outline"} 
-              className={cn(
-                "px-6 py-2 h-10",
-                activeTab === "tools" 
-                  ? "bg-[#09261E] text-white hover:bg-[#09261E]/90" 
-                  : "border-gray-300 hover:bg-gray-50"
-              )}
-              onClick={() => setActiveTab("tools")}
-            >
-              <Calculator className="h-4 w-4 mr-2" />
-              Tools
-            </Button>
+          {/* Toggle between Resources and Tools - Centered toggle */}
+          <div className="flex justify-center">
+            <div className="flex items-center bg-gray-200 p-1 rounded-full shadow-sm relative h-10 w-[240px]">
+              <div 
+                className={`absolute inset-y-1 w-[118px] ${
+                  activeTab === 'tools' ? 'right-1 translate-x-0' : 'left-1 translate-x-0'
+                } bg-white rounded-full shadow transition-all duration-300 ease-in-out`}
+              ></div>
+              <button
+                className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
+                  activeTab === 'resources' 
+                    ? 'text-[#09261E] font-medium' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+                onClick={() => setActiveTab("resources")}
+              >
+                <Book size={14} className="mr-1.5" />
+                <span className="text-sm">Resources</span>
+              </button>
+              
+              <button
+                className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
+                  activeTab === 'tools' 
+                    ? 'text-[#09261E] font-medium' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+                onClick={() => setActiveTab("tools")}
+              >
+                <Calculator size={14} className="mr-1.5" />
+                <span className="text-sm">Tools</span>
+              </button>
+            </div>
           </div>
 
           {activeTab === "resources" && (

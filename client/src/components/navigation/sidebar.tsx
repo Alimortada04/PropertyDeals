@@ -224,7 +224,7 @@ export default function Sidebar() {
           href="/profile" 
           icon={
             <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
+              <AvatarImage src="" alt={user?.fullName || "User"} />
               <AvatarFallback className="bg-primary/10 text-primary text-sm">
                 {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
               </AvatarFallback>
