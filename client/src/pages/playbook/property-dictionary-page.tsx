@@ -259,12 +259,12 @@ export default function PropertyDictionaryPage() {
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Breadcrumb navigation */}
         <div className="text-sm text-gray-500 mb-6 flex items-center">
-          <Link href="/">
-            <a className="hover:text-[#09261E]">Home</a>
+          <Link href="/" className="hover:text-[#09261E]">
+            Home
           </Link>
           {' > '}
-          <Link href="/playbook">
-            <a className="hover:text-[#09261E]">Playbook</a>
+          <Link href="/playbook" className="hover:text-[#09261E]">
+            Playbook
           </Link>
           {' > '}
           <span className="text-[#09261E] font-medium">Property Dictionary</span>

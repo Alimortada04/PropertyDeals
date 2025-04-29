@@ -25,7 +25,8 @@ export default function PlaybookPage() {
     { id: "general", label: "General", icon: <FileText className="h-4 w-4" /> },
     { id: "buyers", label: "Buyers", icon: <Users className="h-4 w-4" /> },
     { id: "sellers", label: "Sellers", icon: <Home className="h-4 w-4" /> },
-    { id: "reps", label: "REPs", icon: <Briefcase className="h-4 w-4" /> },
+    { id: "agents", label: "Agents", icon: <Briefcase className="h-4 w-4" /> },
+    { id: "contractors", label: "Contractors", icon: <Briefcase className="h-4 w-4" /> },
   ];
 
   // Tool categories
@@ -207,7 +208,7 @@ export default function PlaybookPage() {
 
           {activeTab === "resources" && (
             <>
-              <div>
+              <div className="text-center">
                 <h1 className="text-4xl font-bold text-[#09261E]">PropertyPlaybook: Real Estate Resources</h1>
                 <p className="text-gray-600 mt-2">Educational resources to help you navigate the real estate market with confidence.</p>
               </div>
@@ -231,8 +232,8 @@ export default function PlaybookPage() {
                       className={cn(
                         "rounded-md px-4 h-10 flex items-center gap-2",
                         activeCategory === category.label
-                          ? "bg-[#09261E] text-white"
-                          : "bg-transparent text-gray-700 hover:bg-[#09261E]/10"
+                          ? "bg-[#09261E] text-white hover:bg-[#09261E]" // Remove pink hover on selected
+                          : "bg-transparent text-gray-700 hover:bg-gray-200" // Gray hover instead of pink
                       )}
                       onClick={() => setActiveCategory(category.label)}
                     >
@@ -273,7 +274,9 @@ export default function PlaybookPage() {
                     </CardContent>
                     <CardFooter className="p-4 pt-0">
                       {resource.status === "Published" ? (
-                        <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90">View Resource</Button>
+                        <Link href={resource.id === "1" ? "/playbook/property-dictionary" : "#"}>
+                          <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90">View Resource</Button>
+                        </Link>
                       ) : (
                         <Button variant="outline" className="w-full text-gray-500" disabled>Coming Soon</Button>
                       )}
@@ -286,7 +289,7 @@ export default function PlaybookPage() {
 
           {activeTab === "tools" && (
             <>
-              <div>
+              <div className="text-center">
                 <h1 className="text-4xl font-bold text-[#09261E]">Real Estate Investment Tools</h1>
                 <p className="text-gray-600 mt-2">Free calculators and analysis tools to help you make data-driven real estate investment decisions.</p>
               </div>
@@ -310,8 +313,8 @@ export default function PlaybookPage() {
                       className={cn(
                         "rounded-md px-4 h-10 flex items-center gap-2",
                         activeToolCategory === category.label
-                          ? "bg-[#09261E] text-white"
-                          : "bg-transparent text-gray-700 hover:bg-[#09261E]/10"
+                          ? "bg-[#09261E] text-white hover:bg-[#09261E]" // Remove pink hover on selected
+                          : "bg-transparent text-gray-700 hover:bg-gray-200" // Gray hover instead of pink
                       )}
                       onClick={() => setActiveToolCategory(category.label)}
                     >

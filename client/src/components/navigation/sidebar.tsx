@@ -103,7 +103,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-center h-16">
         <Link href="/">
           <div className="flex items-center justify-center w-14 h-14 hover:scale-110 transition-all">
-            <img src="/assets/pd-logo-new.svg" alt="PropertyDeals" className="w-full h-full object-contain" />
+            <img src="/assets/pdLogoTransparent.png" alt="PropertyDeals" className="w-full h-full object-contain" />
           </div>
         </Link>
       </div>
