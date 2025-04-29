@@ -30,33 +30,94 @@ const registerSchema = z.object({
 });
 
 // Tie-dye background wash effect with brand colors - higher saturation
-const BackgroundOrbs = () => (
-  <>
-    {/* Large forest green blob - bottom right */}
-    <div className="absolute w-[800px] h-[800px] bg-[#0D3C2F]/35 rounded-full blur-[120px] -bottom-80 -right-40 animate-pulse" 
-         style={{animationDuration: '15s'}}></div>
+const BackgroundOrbs = () => {
+  // Mouse parallax effect - add motion on mousemove
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Calculate mouse position as percentage of viewport
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
+      setMousePosition({ x, y });
+    };
     
-    {/* Large wine accent blob - bottom left */}
-    <div className="absolute w-[700px] h-[700px] bg-[#803344]/35 rounded-full blur-[120px] -bottom-60 -left-60 animate-pulse" 
-         style={{animationDelay: '2s', animationDuration: '17s'}}></div>
-    
-    {/* Medium forest green blob - top right */}
-    <div className="absolute w-[600px] h-[600px] bg-[#0D3C2F]/30 rounded-full blur-[100px] -top-80 right-0 animate-pulse" 
-         style={{animationDelay: '4s', animationDuration: '19s'}}></div>
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+  
+  return (
+    <>
+      {/* Large forest green blob - bottom right */}
+      <div 
+        className="absolute w-[800px] h-[800px] bg-[#0D3C2F]/20 rounded-full blur-[150px] -bottom-80 -right-40 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        style={{
+          animationDuration: '20s',
+          transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * -15}px)` 
+        }}
+      />
+      
+      {/* Large wine accent blob - bottom left */}
+      <div 
+        className="absolute w-[700px] h-[700px] bg-[#803344]/20 rounded-full blur-[150px] -bottom-60 -left-60 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        style={{
+          animationDelay: '3s', 
+          animationDuration: '23s',
+          transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * -20}px)`
+        }}
+      />
+      
+      {/* Medium forest green blob - top right */}
+      <div 
+        className="absolute w-[600px] h-[600px] bg-[#0D3C2F]/15 rounded-full blur-[130px] -top-80 right-0 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        style={{
+          animationDelay: '6s', 
+          animationDuration: '26s',
+          transform: `translate(${mousePosition.x * -25}px, ${mousePosition.y * 25}px)`
+        }}
+      />
          
-    {/* Medium wine accent blob - top left */}
-    <div className="absolute w-[500px] h-[500px] bg-[#963D52]/30 rounded-full blur-[100px] -top-60 -left-20 animate-pulse" 
-         style={{animationDelay: '1s', animationDuration: '14s'}}></div>
-    
-    {/* Small forest green blob - middle left */}
-    <div className="absolute w-[400px] h-[400px] bg-[#0D3C2F]/30 rounded-full blur-[80px] left-20 top-1/3 animate-pulse" 
-         style={{animationDelay: '3s', animationDuration: '13s'}}></div>
+      {/* Medium wine accent blob - top left */}
+      <div 
+        className="absolute w-[500px] h-[500px] bg-[#963D52]/15 rounded-full blur-[130px] -top-60 -left-20 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        style={{
+          animationDelay: '2s', 
+          animationDuration: '19s',
+          transform: `translate(${mousePosition.x * 15}px, ${mousePosition.y * 15}px)`
+        }}
+      />
+      
+      {/* Small forest green blob - middle left */}
+      <div 
+        className="absolute w-[450px] h-[450px] bg-[#135341]/15 rounded-full blur-[120px] left-10 top-1/3 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        style={{
+          animationDelay: '5s', 
+          animationDuration: '18s',
+          transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * -10}px)`
+        }}
+      />
          
-    {/* Small wine accent blob - middle right */}
-    <div className="absolute w-[350px] h-[350px] bg-[#963D52]/30 rounded-full blur-[80px] right-10 top-1/4 animate-pulse" 
-         style={{animationDelay: '5s', animationDuration: '16s'}}></div>
-  </>
-);
+      {/* Small wine accent blob - middle right */}
+      <div 
+        className="absolute w-[400px] h-[400px] bg-[#963D52]/15 rounded-full blur-[120px] right-10 top-1/4 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        style={{
+          animationDelay: '8s', 
+          animationDuration: '22s',
+          transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -25}px)`
+        }}
+      />
+      
+      {/* Extra light blob for subtle highlights */}
+      <div 
+        className="absolute w-[300px] h-[300px] bg-white/40 rounded-full blur-[80px] right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-transform duration-500 ease-out" 
+        style={{
+          animationDuration: '15s',
+          transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * 10}px)`
+        }}
+      />
+    </>
+  );
+};
 
 export default function AuthPage() {
   const [location] = useLocation();
@@ -133,20 +194,22 @@ export default function AuthPage() {
   const FeatureCards = () => null;
 
   return (
-    <div className="relative min-h-screen flex justify-center items-center bg-gradient-to-br from-white to-[#d0e8dd] overflow-hidden">
-      {/* Animated Background Elements */}
-      <BackgroundOrbs />
+    <div className="relative min-h-screen flex justify-center items-center overflow-hidden">
+      {/* Animated Background Elements with enhanced styling */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-[#e9f2ee] to-[#fce9ed] animate-gradient-slow">
+        <BackgroundOrbs />
+      </div>
       
       {/* Main Content Container */}
-      <div className="relative z-10 w-full max-w-md px-4">
-        <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-white/30">
+      <div className="relative z-10 w-full max-w-md px-4 my-8">
+        <div className="bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-md border border-white/40 transition-all hover:shadow-lg">
           {isLogin ? (
             <>
               <h1 className="text-2xl font-bold text-center text-[#09261E] mb-2">Welcome back</h1>
               <p className="text-center text-gray-500 mb-8">Please sign in to continue</p>
 
               <Form {...loginForm}>
-                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-5">
+                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                   <FormField
                     control={loginForm.control}
                     name="email"
@@ -273,7 +336,7 @@ export default function AuthPage() {
               <p className="text-center text-gray-500 mb-8">Start finding your perfect deal</p>
 
               <Form {...registerForm}>
-                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-5">
+                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
                   <FormField
                     control={registerForm.control}
                     name="email"
