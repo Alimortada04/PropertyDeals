@@ -3,17 +3,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Link } from "wouter";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, ArrowLeft, Check } from "lucide-react";
+import { Loader2, ArrowLeft, Check, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 // Forgot password form schema
 const forgotPasswordSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
 });
+
+// Animation components for background orbs - match auth-page.tsx
+const BackgroundOrbs = () => (
+  <>
+    <div className="absolute w-[500px] h-[500px] bg-[#09261E]/5 rounded-full blur-3xl -bottom-64 -right-20 animate-pulse" 
+         style={{animationDuration: '6s'}}></div>
+    <div className="absolute w-[300px] h-[300px] bg-[#803344]/10 rounded-full blur-3xl bottom-10 right-10 animate-pulse" 
+         style={{animationDelay: '1s', animationDuration: '4s'}}></div>
+    <div className="absolute w-[200px] h-[200px] bg-[#09261E]/5 rounded-full blur-3xl top-20 left-20 animate-pulse" 
+         style={{animationDelay: '2s', animationDuration: '7s'}}></div>
+    <div className="absolute w-[250px] h-[250px] bg-[#09261E]/3 rounded-full blur-3xl top-40 right-40 animate-pulse" 
+         style={{animationDelay: '3s', animationDuration: '8s'}}></div>
+  </>
+);
 
 export default function ForgotPasswordPage() {
   const { toast } = useToast();
@@ -44,47 +57,54 @@ export default function ForgotPasswordPage() {
   }
   
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardContent className="pt-8">
+    <div className="relative min-h-screen flex justify-center items-center bg-gradient-to-br from-white to-[#e9f0ec] overflow-hidden">
+      {/* Animated Background Elements */}
+      <BackgroundOrbs />
+      
+      {/* Main Content Container */}
+      <div className="relative z-10 w-full max-w-md px-4">
+        <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-white/30">
           {!submitted ? (
             <>
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-heading font-bold text-[#09261E]">Reset your password</h2>
-                <p className="text-gray-500 mt-2">
+                <div className="mx-auto w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mb-4">
+                  <Mail className="h-6 w-6 text-[#09261E]" />
+                </div>
+                <h2 className="text-2xl font-bold text-[#09261E] mb-2">Reset your password</h2>
+                <p className="text-gray-500">
                   Enter your email address and we'll send you a link to reset your password
                 </p>
               </div>
               
               <Form {...forgotPasswordForm}>
-                <form onSubmit={forgotPasswordForm.handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={forgotPasswordForm.handleSubmit(onSubmit)} className="space-y-5">
                   <FormField
                     control={forgotPasswordForm.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
                         <FormControl>
                           <Input 
-                            placeholder="Enter your email address" 
-                            type="email" 
+                            placeholder="Email address" 
+                            type="email"
+                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
                             {...field} 
                           />
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-[#803344]" />
                       </FormItem>
                     )}
                   />
                   
                   <Button 
                     type="submit" 
-                    className="w-full bg-[#09261E] hover:bg-[#135341] text-white mt-2"
+                    className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98]"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Sending Link...
+                        <span>Sending Link...</span>
                       </>
                     ) : (
                       "Send Reset Link"
@@ -92,36 +112,50 @@ export default function ForgotPasswordPage() {
                   </Button>
                 </form>
               </Form>
+              
+              <div className="mt-8 text-center">
+                <Link href="/auth" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors inline-flex items-center">
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to sign in
+                </Link>
+              </div>
             </>
           ) : (
-            <div className="text-center py-8">
+            <div className="text-center py-6">
               <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
                 <Check className="h-8 w-8 text-green-600" />
               </div>
               
-              <h2 className="text-2xl font-heading font-bold text-[#09261E] mb-2">Check your email</h2>
-              <p className="text-gray-500 mb-6">
-                We've sent a password reset link to your email address. Please check your inbox.
+              <h2 className="text-2xl font-bold text-[#09261E] mb-4">Check your email</h2>
+              <p className="text-gray-600 mb-4">
+                We've sent a password reset link to your email address.
+              </p>
+              <p className="text-gray-500 text-sm mb-6">
+                If you don't see it in your inbox, please check your spam folder.
               </p>
               
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={() => setSubmitted(false)}
-              >
-                Try another email
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button 
+                  variant="outline" 
+                  className="flex-1 h-12 transition-all hover:scale-[1.02] active:scale-[0.98] border-gray-200 hover:bg-gray-50"
+                  onClick={() => setSubmitted(false)}
+                >
+                  Try another email
+                </Button>
+                
+                <Button 
+                  asChild
+                  className="flex-1 h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <Link href="/auth">
+                    Return to sign in
+                  </Link>
+                </Button>
+              </div>
             </div>
           )}
-          
-          <div className="text-center mt-6">
-            <Link href="/signin" className="inline-flex items-center text-sm text-primary hover:underline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to sign in
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

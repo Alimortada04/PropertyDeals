@@ -3,12 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useAuth } from "@/hooks/use-auth";
-import { Redirect, useLocation } from "wouter";
+import { Redirect, useLocation, Link } from "wouter";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, ArrowRight } from "lucide-react";
+import { Loader2, ArrowRight, KeyRound, UserPlus, Mail } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Separator } from "@/components/ui/separator";
 
@@ -28,6 +28,20 @@ const registerSchema = z.object({
   message: "Passwords do not match",
   path: ["confirmPassword"],
 });
+
+// Animation components for background orbs
+const BackgroundOrbs = () => (
+  <>
+    <div className="absolute w-[500px] h-[500px] bg-[#09261E]/5 rounded-full blur-3xl -bottom-64 -right-20 animate-pulse" 
+         style={{animationDuration: '6s'}}></div>
+    <div className="absolute w-[300px] h-[300px] bg-[#803344]/10 rounded-full blur-3xl bottom-10 right-10 animate-pulse" 
+         style={{animationDelay: '1s', animationDuration: '4s'}}></div>
+    <div className="absolute w-[200px] h-[200px] bg-[#09261E]/5 rounded-full blur-3xl top-20 left-20 animate-pulse" 
+         style={{animationDelay: '2s', animationDuration: '7s'}}></div>
+    <div className="absolute w-[250px] h-[250px] bg-[#09261E]/3 rounded-full blur-3xl top-40 right-40 animate-pulse" 
+         style={{animationDelay: '3s', animationDuration: '8s'}}></div>
+  </>
+);
 
 export default function AuthPage() {
   const [location] = useLocation();
@@ -98,12 +112,51 @@ export default function AuthPage() {
     return <Redirect to="/dashboard" />;
   }
 
+  // Feature cards for the login/register page
+  const FeatureCards = () => (
+    <div className="hidden lg:block absolute">
+      <div className="absolute top-[-260px] right-[-180px] w-72 h-32 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md border border-white/30 rotate-[15deg] z-10">
+        <div className="flex items-start space-x-3">
+          <div className="bg-[#09261E]/10 p-2 rounded-full mt-1">
+            <KeyRound className="h-5 w-5 text-[#09261E]" />
+          </div>
+          <div>
+            <h3 className="font-medium text-[#09261E]">Secure Access</h3>
+            <p className="text-sm text-gray-600">Bank-level security for your account and property data.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="absolute top-[80px] right-[-220px] w-72 h-32 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md border border-white/30 rotate-[8deg] z-20">
+        <div className="flex items-start space-x-3">
+          <div className="bg-[#09261E]/10 p-2 rounded-full mt-1">
+            <UserPlus className="h-5 w-5 text-[#09261E]" />
+          </div>
+          <div>
+            <h3 className="font-medium text-[#09261E]">Multiple Roles</h3>
+            <p className="text-sm text-gray-600">Seamlessly switch between buyer, seller, and REP roles.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="absolute top-[220px] right-[-160px] w-72 h-32 bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-md border border-white/30 rotate-[-5deg] z-30">
+        <div className="flex items-start space-x-3">
+          <div className="bg-[#09261E]/10 p-2 rounded-full mt-1">
+            <Mail className="h-5 w-5 text-[#09261E]" />
+          </div>
+          <div>
+            <h3 className="font-medium text-[#09261E]">Direct Communication</h3>
+            <p className="text-sm text-gray-600">Connect directly with real estate professionals and property owners.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="relative min-h-screen flex justify-center items-center bg-gradient-to-br from-white to-[#e9f0ec] overflow-hidden">
       {/* Animated Background Elements */}
-      <div className="absolute w-[500px] h-[500px] bg-[#09261E]/5 rounded-full blur-3xl -bottom-64 -right-20 animate-pulse"></div>
-      <div className="absolute w-[300px] h-[300px] bg-[#803344]/10 rounded-full blur-3xl bottom-10 right-10 animate-pulse" style={{animationDelay: '1s', animationDuration: '4s'}}></div>
-      <div className="absolute w-[200px] h-[200px] bg-[#09261E]/5 rounded-full blur-3xl top-20 left-20 animate-pulse" style={{animationDelay: '2s', animationDuration: '7s'}}></div>
+      <BackgroundOrbs />
       
       {/* Main Content Container */}
       <div className="relative z-10 w-full max-w-md px-4">
@@ -151,24 +204,30 @@ export default function AuthPage() {
                     )}
                   />
                   
-                  <FormField
-                    control={loginForm.control}
-                    name="rememberMe"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center space-x-2 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
-                          />
-                        </FormControl>
-                        <div className="text-sm font-medium leading-none text-gray-600">
-                          Stay signed in
-                        </div>
-                      </FormItem>
-                    )}
-                  />
+                  <div className="flex justify-between items-center">
+                    <FormField
+                      control={loginForm.control}
+                      name="rememberMe"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                              className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                            />
+                          </FormControl>
+                          <div className="text-sm font-medium leading-none text-gray-600">
+                            Stay signed in
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <Link href="/forgot-password" className="text-sm text-[#09261E] hover:text-[#135341] transition-colors">
+                      Forgot password?
+                    </Link>
+                  </div>
 
                   <Button 
                     type="submit" 
@@ -224,9 +283,9 @@ export default function AuthPage() {
 
               <div className="mt-8 text-center text-sm">
                 Don't have an account?{' '}
-                <a href="/register" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors">
+                <Link href="/register" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors">
                   Create one
-                </a>
+                </Link>
               </div>
             </>
           ) : (
@@ -344,13 +403,16 @@ export default function AuthPage() {
 
               <div className="mt-8 text-center text-sm">
                 Already have an account?{' '}
-                <a href="/auth" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors">
+                <Link href="/auth" className="text-[#09261E] font-semibold hover:text-[#135341] transition-colors">
                   Sign In
-                </a>
+                </Link>
               </div>
             </>
           )}
         </div>
+        
+        {/* Feature Cards - only visible on desktop */}
+        <FeatureCards />
       </div>
     </div>
   );
