@@ -32,7 +32,7 @@ import FHACompliancePage from "@/pages/legal/fha-compliance-page";
 import MainLayout from "@/components/layout/main-layout";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
-import { ScrollToTop as ScrollToTopHOC } from "@/components/common/scroll-to-top";
+import { ScrollToTop } from "@/components/common/scroll-to-top";
 
 // Check if Supabase environment variables are set
 const checkEnvironmentVariables = () => {
@@ -48,7 +48,7 @@ const checkEnvironmentVariables = () => {
 checkEnvironmentVariables();
 
 // Keep track of scroll position
-function ScrollToTop() {
+function ScrollToTopComponent() {
   const [location] = useLocation();
   
   React.useEffect(() => {
@@ -251,7 +251,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ScrollToTop />
+        <ScrollToTopComponent />
         <Router />
         <Toaster />
       </AuthProvider>
