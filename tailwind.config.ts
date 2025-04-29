@@ -104,13 +104,21 @@ export default {
           },
         },
         "breathe": {
-          "0%, 100%": {
-            transform: "scale(1)",
+          "0%": {
+            transform: "scale(1) translate(0px, 0px)",
             opacity: "0.5",
           },
-          "50%": {
-            transform: "scale(1.05)",
+          "33%": {
+            transform: "scale(1.02) translate(5px, -5px)",
             opacity: "0.7",
+          },
+          "66%": {
+            transform: "scale(1.01) translate(-5px, 5px)",
+            opacity: "0.6",
+          },
+          "100%": {
+            transform: "scale(1) translate(0px, 0px)",
+            opacity: "0.5",
           },
         },
         "pulse-slow": {
@@ -157,6 +165,16 @@ export default {
             transform: "rotate(360deg)",
           },
         },
+        "fade-in-up": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(20px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -169,6 +187,7 @@ export default {
         "gradient-x": "gradient-x 15s ease infinite",
         "gradient-slow": "gradient-slow 20s ease infinite",
         "spin-slow": "spin-slow 12s linear infinite",
+        "fade-in-up": "fade-in-up 0.6s ease-out forwards",
       },
       backgroundSize: {
         "size-200": "200% 200%",

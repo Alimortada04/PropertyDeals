@@ -48,18 +48,18 @@ const BackgroundOrbs = () => {
   
   return (
     <>
-      {/* Large forest green blob - bottom right */}
+      {/* Large forest green blob - bottom right - BRIGHTER */}
       <div 
-        className="absolute w-[800px] h-[800px] bg-[#0D3C2F]/20 rounded-full blur-[150px] -bottom-80 -right-40 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        className="absolute w-[800px] h-[800px] bg-[#15A37A]/30 rounded-full blur-[150px] -bottom-80 -right-40 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
         style={{
           animationDuration: '20s',
           transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * -15}px)` 
         }}
       />
       
-      {/* Large wine accent blob - bottom left */}
+      {/* Large wine accent blob - bottom left - BRIGHTER */}
       <div 
-        className="absolute w-[700px] h-[700px] bg-[#803344]/20 rounded-full blur-[150px] -bottom-60 -left-60 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        className="absolute w-[700px] h-[700px] bg-[#AB436A]/30 rounded-full blur-[150px] -bottom-60 -left-60 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
         style={{
           animationDelay: '3s', 
           animationDuration: '23s',
@@ -67,9 +67,9 @@ const BackgroundOrbs = () => {
         }}
       />
       
-      {/* Medium forest green blob - top right */}
+      {/* Medium forest green blob - top right - BRIGHTER */}
       <div 
-        className="absolute w-[600px] h-[600px] bg-[#0D3C2F]/15 rounded-full blur-[130px] -top-80 right-0 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        className="absolute w-[600px] h-[600px] bg-[#15A37A]/25 rounded-full blur-[130px] -top-80 right-0 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-60" 
         style={{
           animationDelay: '6s', 
           animationDuration: '26s',
@@ -77,9 +77,9 @@ const BackgroundOrbs = () => {
         }}
       />
          
-      {/* Medium wine accent blob - top left */}
+      {/* Medium wine accent blob - top left - BRIGHTER */}
       <div 
-        className="absolute w-[500px] h-[500px] bg-[#963D52]/15 rounded-full blur-[130px] -top-60 -left-20 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        className="absolute w-[500px] h-[500px] bg-[#BE5A7A]/25 rounded-full blur-[130px] -top-60 -left-20 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-60" 
         style={{
           animationDelay: '2s', 
           animationDuration: '19s',
@@ -87,9 +87,9 @@ const BackgroundOrbs = () => {
         }}
       />
       
-      {/* Small forest green blob - middle left */}
+      {/* Small forest green blob - middle left - BRIGHTER */}
       <div 
-        className="absolute w-[450px] h-[450px] bg-[#135341]/15 rounded-full blur-[120px] left-10 top-1/3 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        className="absolute w-[450px] h-[450px] bg-[#20B88D]/25 rounded-full blur-[120px] left-10 top-1/3 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
         style={{
           animationDelay: '5s', 
           animationDuration: '18s',
@@ -97,9 +97,9 @@ const BackgroundOrbs = () => {
         }}
       />
          
-      {/* Small wine accent blob - middle right */}
+      {/* Small wine accent blob - middle right - BRIGHTER */}
       <div 
-        className="absolute w-[400px] h-[400px] bg-[#963D52]/15 rounded-full blur-[120px] right-10 top-1/4 animate-breathe mix-blend-multiply transition-transform duration-500 ease-out" 
+        className="absolute w-[400px] h-[400px] bg-[#BE5A7A]/25 rounded-full blur-[120px] right-10 top-1/4 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-60" 
         style={{
           animationDelay: '8s', 
           animationDuration: '22s',
@@ -109,7 +109,7 @@ const BackgroundOrbs = () => {
       
       {/* Extra light blob for subtle highlights */}
       <div 
-        className="absolute w-[300px] h-[300px] bg-white/40 rounded-full blur-[80px] right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-transform duration-500 ease-out" 
+        className="absolute w-[300px] h-[300px] bg-white/50 rounded-full blur-[80px] right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-all duration-500 ease-out" 
         style={{
           animationDuration: '15s',
           transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * 10}px)`
@@ -210,14 +210,14 @@ export default function AuthPage() {
       
       {/* Main Content Container */}
       <div className="relative z-10 w-full max-w-md px-4 my-8">
-        <div className="bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-md border border-white/40 transition-all hover:shadow-lg">
+        <div className="bg-white/90 backdrop-blur-md p-8 rounded-xl shadow-md border border-white/40 transition-all hover:shadow-lg animate-fade-in-up">
           {isLogin ? (
             <>
               <h1 className="text-2xl font-bold text-center text-[#09261E] mb-2">Welcome back</h1>
               <p className="text-center text-gray-500 mb-8">Please sign in to continue</p>
 
               <Form {...loginForm}>
-                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-3">
                   <FormField
                     control={loginForm.control}
                     name="email"
@@ -354,7 +354,7 @@ export default function AuthPage() {
               <p className="text-center text-gray-500 mb-8">Create your account</p>
 
               <Form {...registerForm}>
-                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-3">
                   <FormField
                     control={registerForm.control}
                     name="email"
