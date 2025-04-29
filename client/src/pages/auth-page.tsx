@@ -48,9 +48,9 @@ const BackgroundOrbs = () => {
   
   return (
     <>
-      {/* Large forest green blob - bottom right - HIGHLY SATURATED */}
+      {/* Large forest green blob - bottom right - ULTRA SATURATED */}
       <div 
-        className="absolute w-[800px] h-[800px] bg-[#00D499]/70 rounded-full -bottom-80 -right-40 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-90" 
+        className="absolute w-[800px] h-[800px] bg-[#00FF9D] rounded-full -bottom-80 -right-40 animate-breathe mix-blend-multiply transition-all duration-500 ease-out opacity-95" 
         style={{
           animationDuration: '25s',
           transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * -15}px)`,
@@ -58,9 +58,9 @@ const BackgroundOrbs = () => {
         } as React.CSSProperties}
       />
       
-      {/* Large wine accent blob - bottom left - HIGHLY SATURATED */}
+      {/* Large wine accent blob - bottom left - ULTRA SATURATED */}
       <div 
-        className="absolute w-[700px] h-[700px] bg-[#D14B81]/65 rounded-full -bottom-60 -left-60 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-85" 
+        className="absolute w-[700px] h-[700px] bg-[#FF4081] rounded-full -bottom-60 -left-60 animate-breathe mix-blend-multiply transition-all duration-500 ease-out opacity-90" 
         style={{
           animationDelay: '3s', 
           animationDuration: '28s',
@@ -69,9 +69,9 @@ const BackgroundOrbs = () => {
         } as React.CSSProperties}
       />
       
-      {/* Medium forest green blob - top right - HIGHLY SATURATED */}
+      {/* Medium forest green blob - top right - ULTRA SATURATED */}
       <div 
-        className="absolute w-[600px] h-[600px] bg-[#00E19F]/60 rounded-full -top-80 right-0 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-80" 
+        className="absolute w-[600px] h-[600px] bg-[#00FF8A] rounded-full -top-80 right-0 animate-breathe mix-blend-multiply transition-all duration-500 ease-out opacity-90" 
         style={{
           animationDelay: '6s', 
           animationDuration: '32s',
@@ -80,9 +80,9 @@ const BackgroundOrbs = () => {
         } as React.CSSProperties}
       />
          
-      {/* Medium wine accent blob - top left - HIGHLY SATURATED */}
+      {/* Medium wine accent blob - top left - ULTRA SATURATED */}
       <div 
-        className="absolute w-[500px] h-[500px] bg-[#E56A96]/55 rounded-full -top-60 -left-20 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-85" 
+        className="absolute w-[500px] h-[500px] bg-[#FF5296] rounded-full -top-60 -left-20 animate-breathe mix-blend-multiply transition-all duration-500 ease-out opacity-90" 
         style={{
           animationDelay: '2s', 
           animationDuration: '24s',
@@ -91,9 +91,9 @@ const BackgroundOrbs = () => {
         } as React.CSSProperties}
       />
       
-      {/* Small forest green blob - middle left - HIGHLY SATURATED */}
+      {/* Small forest green blob - middle left - ULTRA SATURATED */}
       <div 
-        className="absolute w-[450px] h-[450px] bg-[#00F8B1]/65 rounded-full left-10 top-1/3 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-90" 
+        className="absolute w-[450px] h-[450px] bg-[#00FFB1] rounded-full left-10 top-1/3 animate-breathe mix-blend-multiply transition-all duration-500 ease-out opacity-95" 
         style={{
           animationDelay: '5s', 
           animationDuration: '22s',
@@ -102,9 +102,9 @@ const BackgroundOrbs = () => {
         } as React.CSSProperties}
       />
          
-      {/* Small wine accent blob - middle right - HIGHLY SATURATED */}
+      {/* Small wine accent blob - middle right - ULTRA SATURATED */}
       <div 
-        className="absolute w-[400px] h-[400px] bg-[#F56E9B]/60 rounded-full right-10 top-1/4 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-85" 
+        className="absolute w-[400px] h-[400px] bg-[#FF5E9B] rounded-full right-10 top-1/4 animate-breathe mix-blend-multiply transition-all duration-500 ease-out opacity-90" 
         style={{
           animationDelay: '8s', 
           animationDuration: '27s',
@@ -115,7 +115,7 @@ const BackgroundOrbs = () => {
       
       {/* Additional magical accent blob - middle center */}
       <div 
-        className="absolute w-[350px] h-[350px] bg-[#C4B0FF]/60 rounded-full left-1/3 top-2/5 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-80" 
+        className="absolute w-[350px] h-[350px] bg-[#9F7FFF] rounded-full left-1/3 top-2/5 animate-breathe mix-blend-multiply transition-all duration-500 ease-out opacity-90" 
         style={{
           animationDelay: '10s', 
           animationDuration: '29s',
@@ -126,7 +126,7 @@ const BackgroundOrbs = () => {
       
       {/* Extra light blob for subtle highlights */}
       <div 
-        className="absolute w-[300px] h-[300px] bg-white/75 rounded-full right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-all duration-500 ease-out" 
+        className="absolute w-[300px] h-[300px] bg-[#FFFCFF] rounded-full right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-all duration-500 ease-out opacity-80" 
         style={{
           animationDuration: '15s',
           transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * 10}px)`,
@@ -222,7 +222,7 @@ export default function AuthPage() {
   return (
     <div className="relative min-h-screen flex justify-center items-center overflow-hidden">
       {/* Animated Background Elements with enhanced styling */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-[#e9f2ee] to-[#fce9ed] animate-gradient-slow">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#f0f8f5] via-[#daeee6] to-[#f8e0e5] animate-gradient-slow">
         <BackgroundOrbs />
       </div>
       
