@@ -10,12 +10,32 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Get the URL hash and handle the authentication
+        // Parse any OAuth redirected hash fragments
+        if (window.location.hash) {
+          console.log("Hash fragment detected, processing OAuth callback");
+        }
+        
+        // Get the current session
         const { data, error } = await supabase.auth.getSession();
         
         if (error) throw error;
         
+        if (!data.session) {
+          throw new Error("No valid session found");
+        }
+        
         console.log("Auth callback successful:", data);
+        
+        // Try to sync the user with our database
+        try {
+          const response = await fetch('/api/user');
+          if (!response.ok) {
+            console.warn("Could not verify user session with backend:", response.statusText);
+          }
+        } catch (err) {
+          console.warn("Backend sync error:", err);
+        }
+        
         setIsLoading(false);
       } catch (error: unknown) {
         console.error("Auth callback error:", error);

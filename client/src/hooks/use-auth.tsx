@@ -128,16 +128,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterData) => {
       console.log("Registering with data:", data);  // Debug logging
-      const authData = await signUpWithEmail(data.email, data.password);
-      console.log("Supabase auth response:", authData);  // Debug logging
       
-      // If we successfully create the user in Supabase, also create a user in our database
-      if (authData.user) {
+      // Validate fullName is not empty
+      if (!data.fullName || data.fullName.trim() === '') {
+        throw new Error("Full name is required");
+      }
+      
+      try {
+        const authData = await signUpWithEmail(data.email, data.password);
+        console.log("Supabase auth response:", authData);  // Debug logging
+        
+        if (!authData.user) {
+          throw new Error("Failed to create account in authentication service");
+        }
+        
+        // If we successfully create the user in Supabase, also create a user in our database
         // Create a user in our database with default roles
         const userData: InsertUser = {
           username: data.email, // Use email as username
           password: "", // We don't store the password, it's managed by Supabase
-          fullName: data.fullName || "PropertyDeals User", // Fallback if fullName is empty
+          fullName: data.fullName.trim(), // Use trimmed fullName to avoid whitespace issues
           email: data.email,
           activeRole: "buyer",
           roles: {
@@ -149,6 +159,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         try {
           const res = await apiRequest("POST", "/api/register", userData);
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Failed to register user in database");
+          }
           const dbUser = await res.json();
           console.log("DB user created:", dbUser);  // Debug logging
           return { supabaseUser: authData.user, dbUser };
@@ -157,9 +171,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Still return the Supabase user to ensure login works
           return { supabaseUser: authData.user };
         }
+      } catch (error) {
+        console.error("Registration error:", error);
+        throw error; // Re-throw to trigger onError handler
       }
-      
-      return authData;
     },
     onSuccess: (data: any) => {
       if (data && typeof data === 'object') {
