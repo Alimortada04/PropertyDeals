@@ -22,6 +22,7 @@ import DiscussionsPage from "@/pages/discussions-page";
 import ToolsPage from "@/pages/tools-page";
 import FlipPage from "@/pages/tools/flip";
 import PlaybookPage from "@/pages/playbook-page";
+import InboxPage from "@/pages/inbox-page";
 import PropertyDictionaryPage from "@/pages/playbook/property-dictionary-page";
 import HelpPage from "@/pages/help-page";
 import FAQPage from "@/pages/help/faq-page";
@@ -111,15 +112,25 @@ function Router() {
           </AppLayout>
         )}
       </Route>
-      <Route path="/discussions">
+      <Route path="/inbox">
         <AppLayout>
-          <DiscussionsPage />
+          <InboxPage />
         </AppLayout>
+      </Route>
+      
+      {/* Redirect discussions to inbox */}
+      <Route path="/discussions">
+        <Redirect to="/inbox" />
       </Route>
       
       {/* Redirect from old path to new path */}
       <Route path="/connect">
-        <Redirect to="/discussions" />
+        <Redirect to="/inbox" />
+      </Route>
+      
+      {/* Redirect from /messages to /inbox */}
+      <Route path="/messages">
+        <Redirect to="/inbox" />
       </Route>
       <Route path="/dashboard">
         <AppLayout>

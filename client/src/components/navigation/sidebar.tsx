@@ -16,12 +16,15 @@ import {
   LogOut,
   ChevronRight,
   Menu,
-  Briefcase
+  Briefcase,
+  Inbox,
+  MessagesSquare
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface NavItemProps {
   href: string;
@@ -34,17 +37,17 @@ interface NavItemProps {
 
 const NavItem: FC<NavItemProps> = ({ href, icon, label, active, onClick, className }) => {
   return (
-    <TooltipProvider delayDuration={300}>
+    <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex justify-center">
             <Link href={href}>
               <div
                 className={cn(
-                  "relative group flex items-center justify-center w-12 h-12 rounded-full transition-colors",
+                  "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all",
                   active
-                    ? "bg-primary/10 text-primary"
-                    : "text-gray-500 hover:bg-gray-100",
+                    ? "text-[#803344] scale-110" 
+                    : "text-[#09261E] hover:text-[#803344] hover:scale-110",
                   className
                 )}
                 onClick={onClick}
@@ -55,7 +58,12 @@ const NavItem: FC<NavItemProps> = ({ href, icon, label, active, onClick, classNa
             </Link>
           </div>
         </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={8} className="font-medium">
+        <TooltipContent 
+          side="right" 
+          sideOffset={4} 
+          align="center" 
+          className="font-medium text-sm py-1 px-2"
+        >
           {label}
         </TooltipContent>
       </Tooltip>
@@ -95,23 +103,8 @@ export default function Sidebar() {
       {/* Logo at top */}
       <div className="flex items-center justify-center h-16 pt-4">
         <Link href="/">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full text-primary hover:bg-primary/10">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path 
-                d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              />
-              <path 
-                d="M9 22V12H15V22" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              />
-            </svg>
+          <div className="flex items-center justify-center w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:scale-110 transition-all">
+            <img src="/assets/pdLogoTransparent.png" alt="PropertyDeals" className="w-8 h-8" />
           </div>
         </Link>
       </div>
@@ -134,17 +127,17 @@ export default function Sidebar() {
           />
           
           <NavItem 
-            href="/professionals" 
+            href="/reps" 
             icon={<Users size={20} />} 
             label="Professionals"
-            active={location.startsWith('/professionals')} 
+            active={location.startsWith('/reps')} 
           />
           
           <NavItem 
-            href="/messages" 
-            icon={<MessageSquare size={20} />} 
-            label="Messages"
-            active={location.startsWith('/messages')} 
+            href="/inbox" 
+            icon={<Inbox size={20} />} 
+            label="Inbox"
+            active={location.startsWith('/inbox')} 
           />
           
           <NavItem 
@@ -194,7 +187,7 @@ export default function Sidebar() {
               icon={<Briefcase size={20} />} 
               label="Admin Dashboard"
               active={location.startsWith('/admin')} 
-              className="mt-2 bg-slate-100"
+              className="mt-2"
             />
           )}
         </div>
@@ -202,29 +195,21 @@ export default function Sidebar() {
       
       {/* Bottom Navigation (Fixed) */}
       <div className="p-2 flex flex-col items-center space-y-2 border-t">
-        {/* Settings */}
-        <NavItem 
-          href="/settings" 
-          icon={<Settings size={20} />} 
-          label="Settings"
-          active={location.startsWith('/settings')} 
-        />
-        
         {/* Search Trigger */}
-        <TooltipProvider delayDuration={300}>
+        <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="w-12 h-12 rounded-full text-gray-500 hover:bg-gray-100"
+                className="w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:scale-110 transition-all"
                 onClick={() => setShowSearch(true)}
               >
                 <Search size={20} />
                 <span className="sr-only">Search (⌘K)</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={8} className="font-medium flex items-center">
+            <TooltipContent side="right" sideOffset={4} align="center" className="font-medium text-sm py-1 px-2 flex items-center">
               <span>Search</span>
               <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-slate-100 px-1.5 font-mono text-[10px] font-medium">
                 ⌘K
@@ -233,74 +218,72 @@ export default function Sidebar() {
           </Tooltip>
         </TooltipProvider>
         
-        {/* Notifications */}
-        <TooltipProvider delayDuration={300}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="w-12 h-12 rounded-full text-gray-500 hover:bg-gray-100 relative"
-              >
-                <Bell size={20} />
-                {/* Notification indicator */}
-                <span className="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full"></span>
-                <span className="sr-only">Notifications</span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={8} className="font-medium">
-              Notifications
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        {/* Settings */}
+        <NavItem 
+          href="/settings" 
+          icon={<Settings size={20} />} 
+          label="Settings"
+          active={location.startsWith('/settings')} 
+        />
         
         {/* User Profile */}
-        <TooltipProvider delayDuration={300}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex justify-center">
-                <Link href="/profile">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-100">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                </Link>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={8} className="font-medium">
-              Your Profile
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        {/* Logout */}
-        {user && (
-          <TooltipProvider delayDuration={300}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="w-12 h-12 rounded-full text-gray-500 hover:bg-red-50 hover:text-red-500"
-                  onClick={handleLogout}
-                >
-                  <LogOut size={20} />
-                  <span className="sr-only">Logout</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right" sideOffset={8} className="font-medium">
-                Logout
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
+        <NavItem 
+          href="/profile" 
+          icon={
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
+              <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+          } 
+          label="Your Profile"
+          active={location.startsWith('/profile')} 
+        />
       </div>
       
-      {/* Command K Search Dialog (Placeholder) */}
+      {/* Bottom Dock Bar */}
+      <div className="fixed bottom-0 left-0 right-0 h-12 bg-white border-t flex items-center justify-between px-4 z-30 shadow-sm">
+        <div className="flex items-center space-x-2">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-8 w-8 rounded-full" 
+            onClick={() => setShowSearch(true)}
+          >
+            <Search className="h-4 w-4 text-[#09261E]" />
+          </Button>
+          <span className="text-xs text-gray-500 hidden sm:inline-block ml-1">⌘K</span>
+        </div>
+        
+        <div className="flex items-center space-x-6">
+          {/* Notification Button */}
+          <div className="relative">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 rounded-full"
+            >
+              <Bell className="h-4 w-4 text-[#09261E]" />
+              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500"></span>
+            </Button>
+          </div>
+          
+          {/* Chat Button */}
+          <div className="relative">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-8 w-8 rounded-full"
+            >
+              <MessagesSquare className="h-4 w-4 text-[#09261E]" />
+              <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-500"></span>
+            </Button>
+          </div>
+        </div>
+      </div>
+      
+      {/* Command K Search Dialog */}
       {showSearch && (
         <div 
           className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
@@ -315,17 +298,40 @@ export default function Sidebar() {
               <input 
                 type="text" 
                 className="flex-1 outline-none text-lg"
-                placeholder="Search everything..." 
+                placeholder="Where would you like to go?" 
                 autoFocus
               />
               <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-slate-100 px-1.5 font-mono text-[10px] font-medium">
                 ESC
               </kbd>
             </div>
-            <div className="p-4 h-64 overflow-auto">
-              <p className="text-gray-500 text-center py-8">
-                Start typing to search properties, professionals, resources...
-              </p>
+            
+            <div className="p-4">
+              <div className="mb-4">
+                <h3 className="text-sm font-medium text-gray-500 mb-2">Quick Links</h3>
+                <div className="grid grid-cols-1 gap-2">
+                  <Link href="/properties">
+                    <div className="flex items-center p-2 rounded hover:bg-gray-100">
+                      <Building className="h-5 w-5 text-gray-400 mr-3" />
+                      <div>
+                        <p className="font-medium">Properties</p>
+                        <p className="text-xs text-gray-500">Browse available properties</p>
+                      </div>
+                      <span className="ml-auto text-xs text-gray-400">⌘1</span>
+                    </div>
+                  </Link>
+                  <Link href="/reps">
+                    <div className="flex items-center p-2 rounded hover:bg-gray-100">
+                      <Users className="h-5 w-5 text-gray-400 mr-3" />
+                      <div>
+                        <p className="font-medium">REPs</p>
+                        <p className="text-xs text-gray-500">Find real estate professionals</p>
+                      </div>
+                      <span className="ml-auto text-xs text-gray-400">⌘2</span>
+                    </div>
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <Sidebar />
       
       {/* Main Content Area */}
-      <div className="pl-16">
+      <div className="pl-16 pb-16">  {/* Added bottom padding for the dock */}
         {children}
       </div>
     </div>
