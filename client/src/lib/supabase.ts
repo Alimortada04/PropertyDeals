@@ -11,12 +11,25 @@ if (!supabaseUrl || !supabaseKey) {
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
 export async function signUpWithEmail(email: string, password: string) {
+  console.log("Signing up with Supabase:", { email, passwordLength: password?.length });
+  
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      data: {
+        confirmed_at: new Date().toISOString(), // Pre-confirm the user for testing
+      }
+    }
   });
   
-  if (error) throw error;
+  if (error) {
+    console.error("Supabase signup error:", error);
+    throw error;
+  }
+  
+  console.log("Supabase signup successful:", data);
   return data;
 }
 
@@ -31,14 +44,24 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 export async function signInWithGoogle() {
+  console.log("Initiating Google OAuth login");
+  
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
       redirectTo: `${window.location.origin}/dashboard`,
+      queryParams: {
+        prompt: 'select_account'  // Show the account selector even if user is already logged in
+      }
     },
   });
   
-  if (error) throw error;
+  if (error) {
+    console.error("Google OAuth error:", error);
+    throw error;
+  }
+  
+  console.log("Google OAuth initiated:", data);
   return data;
 }
 

@@ -127,7 +127,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterData) => {
+      console.log("Registering with data:", data);  // Debug logging
       const authData = await signUpWithEmail(data.email, data.password);
+      console.log("Supabase auth response:", authData);  // Debug logging
       
       // If we successfully create the user in Supabase, also create a user in our database
       if (authData.user) {
@@ -135,7 +137,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const userData: InsertUser = {
           username: data.email, // Use email as username
           password: "", // We don't store the password, it's managed by Supabase
-          fullName: data.fullName,
+          fullName: data.fullName || "PropertyDeals User", // Fallback if fullName is empty
           email: data.email,
           activeRole: "buyer",
           roles: {
@@ -145,9 +147,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         };
         
-        const res = await apiRequest("POST", "/api/register", userData);
-        const dbUser = await res.json();
-        return { supabaseUser: authData.user, dbUser };
+        try {
+          const res = await apiRequest("POST", "/api/register", userData);
+          const dbUser = await res.json();
+          console.log("DB user created:", dbUser);  // Debug logging
+          return { supabaseUser: authData.user, dbUser };
+        } catch (error) {
+          console.error("Error creating user in database:", error);
+          // Still return the Supabase user to ensure login works
+          return { supabaseUser: authData.user };
+        }
       }
       
       return authData;

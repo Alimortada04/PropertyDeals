@@ -402,7 +402,11 @@ export default function AuthPage() {
                           <Input 
                             placeholder="Full Name"
                             className={inputStyles}
-                            {...field} 
+                            onChange={field.onChange}
+                            value={field.value || ""}
+                            name={field.name}
+                            onBlur={field.onBlur}
+                            ref={field.ref}
                           />
                         </FormControl>
                         <FormMessage className="text-[#803344]" />
