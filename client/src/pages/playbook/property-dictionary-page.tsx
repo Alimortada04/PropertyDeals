@@ -305,14 +305,14 @@ export default function PropertyDictionaryPage() {
             <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 h-12">
               <TabsTrigger 
                 value="dictionary" 
-                className={`data-[state=active]:bg-[#09261E] data-[state=active]:text-white font-medium`}
+                className={`data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:hover:bg-[#09261E] font-medium`}
               >
                 <Book className="h-4 w-4 mr-2" />
                 Dictionary
               </TabsTrigger>
               <TabsTrigger 
                 value="acronyms" 
-                className={`data-[state=active]:bg-[#09261E] data-[state=active]:text-white font-medium`}
+                className={`data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:hover:bg-[#09261E] font-medium`}
               >
                 <Globe className="h-4 w-4 mr-2" />
                 Acronyms
@@ -334,7 +334,7 @@ export default function PropertyDictionaryPage() {
                         variant="ghost"
                         className={`w-8 h-8 p-0 rounded-full font-medium text-sm ${
                           !hasTerms ? "text-gray-300 cursor-not-allowed" :
-                          isActive ? "bg-[#09261E] text-white hover:bg-[#09261E] hover:text-white" :
+                          isActive ? "bg-[#09261E] text-white hover:bg-[#09261E]" :
                           !isFilteredVisible && searchQuery ? "text-gray-300 cursor-not-allowed" :
                           "text-gray-700 hover:bg-gray-100"
                         }`}
