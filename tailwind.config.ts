@@ -107,18 +107,32 @@ export default {
           "0%": {
             transform: "scale(1) translate(0px, 0px)",
             opacity: "0.5",
+            filter: "blur(calc(var(--blur-amount, 120px) + 5px))",
           },
-          "33%": {
-            transform: "scale(1.02) translate(5px, -5px)",
+          "20%": {
+            transform: "scale(1.015) translate(8px, -3px)",
+            opacity: "0.65",
+            filter: "blur(calc(var(--blur-amount, 120px) - 5px))",
+          },
+          "40%": {
+            transform: "scale(1.02) translate(4px, -8px)",
+            opacity: "0.75",
+            filter: "blur(calc(var(--blur-amount, 120px) + 0px))",
+          },
+          "60%": {
+            transform: "scale(1.015) translate(-6px, -2px)",
             opacity: "0.7",
+            filter: "blur(calc(var(--blur-amount, 120px) + 8px))",
           },
-          "66%": {
-            transform: "scale(1.01) translate(-5px, 5px)",
+          "80%": {
+            transform: "scale(1.01) translate(-4px, 5px)",
             opacity: "0.6",
+            filter: "blur(calc(var(--blur-amount, 120px) - 3px))",
           },
           "100%": {
             transform: "scale(1) translate(0px, 0px)",
             opacity: "0.5",
+            filter: "blur(calc(var(--blur-amount, 120px) + 5px))",
           },
         },
         "pulse-slow": {

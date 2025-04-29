@@ -48,71 +48,89 @@ const BackgroundOrbs = () => {
   
   return (
     <>
-      {/* Large forest green blob - bottom right - BRIGHTER */}
+      {/* Large forest green blob - bottom right - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[800px] h-[800px] bg-[#15A37A]/30 rounded-full blur-[150px] -bottom-80 -right-40 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
+        className="absolute w-[800px] h-[800px] bg-[#00D499]/50 rounded-full -bottom-80 -right-40 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-80" 
         style={{
-          animationDuration: '20s',
-          transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * -15}px)` 
-        }}
+          animationDuration: '25s',
+          transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * -15}px)`,
+          '--blur-amount': '150px'
+        } as React.CSSProperties}
       />
       
-      {/* Large wine accent blob - bottom left - BRIGHTER */}
+      {/* Large wine accent blob - bottom left - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[700px] h-[700px] bg-[#AB436A]/30 rounded-full blur-[150px] -bottom-60 -left-60 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
+        className="absolute w-[700px] h-[700px] bg-[#D14B81]/45 rounded-full -bottom-60 -left-60 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-75" 
         style={{
           animationDelay: '3s', 
-          animationDuration: '23s',
-          transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * -20}px)`
-        }}
+          animationDuration: '28s',
+          transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * -20}px)`,
+          '--blur-amount': '150px'
+        } as React.CSSProperties}
       />
       
-      {/* Medium forest green blob - top right - BRIGHTER */}
+      {/* Medium forest green blob - top right - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[600px] h-[600px] bg-[#15A37A]/25 rounded-full blur-[130px] -top-80 right-0 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-60" 
+        className="absolute w-[600px] h-[600px] bg-[#00E19F]/40 rounded-full -top-80 right-0 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-65" 
         style={{
           animationDelay: '6s', 
-          animationDuration: '26s',
-          transform: `translate(${mousePosition.x * -25}px, ${mousePosition.y * 25}px)`
-        }}
+          animationDuration: '32s',
+          transform: `translate(${mousePosition.x * -25}px, ${mousePosition.y * 25}px)`,
+          '--blur-amount': '130px'
+        } as React.CSSProperties}
       />
          
-      {/* Medium wine accent blob - top left - BRIGHTER */}
+      {/* Medium wine accent blob - top left - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[500px] h-[500px] bg-[#BE5A7A]/25 rounded-full blur-[130px] -top-60 -left-20 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-60" 
+        className="absolute w-[500px] h-[500px] bg-[#E56A96]/35 rounded-full -top-60 -left-20 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
         style={{
           animationDelay: '2s', 
-          animationDuration: '19s',
-          transform: `translate(${mousePosition.x * 15}px, ${mousePosition.y * 15}px)`
-        }}
+          animationDuration: '24s',
+          transform: `translate(${mousePosition.x * 15}px, ${mousePosition.y * 15}px)`,
+          '--blur-amount': '130px'
+        } as React.CSSProperties}
       />
       
-      {/* Small forest green blob - middle left - BRIGHTER */}
+      {/* Small forest green blob - middle left - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[450px] h-[450px] bg-[#20B88D]/25 rounded-full blur-[120px] left-10 top-1/3 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
+        className="absolute w-[450px] h-[450px] bg-[#00F8B1]/45 rounded-full left-10 top-1/3 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-75" 
         style={{
           animationDelay: '5s', 
-          animationDuration: '18s',
-          transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * -10}px)`
-        }}
+          animationDuration: '22s',
+          transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * -10}px)`,
+          '--blur-amount': '120px'
+        } as React.CSSProperties}
       />
          
-      {/* Small wine accent blob - middle right - BRIGHTER */}
+      {/* Small wine accent blob - middle right - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[400px] h-[400px] bg-[#BE5A7A]/25 rounded-full blur-[120px] right-10 top-1/4 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-60" 
+        className="absolute w-[400px] h-[400px] bg-[#F56E9B]/40 rounded-full right-10 top-1/4 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
         style={{
           animationDelay: '8s', 
-          animationDuration: '22s',
-          transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -25}px)`
-        }}
+          animationDuration: '27s',
+          transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -25}px)`,
+          '--blur-amount': '120px'
+        } as React.CSSProperties}
+      />
+      
+      {/* Additional magical accent blob - middle center */}
+      <div 
+        className="absolute w-[350px] h-[350px] bg-[#C4B0FF]/40 rounded-full left-1/3 top-2/5 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-60" 
+        style={{
+          animationDelay: '10s', 
+          animationDuration: '29s',
+          transform: `translate(${mousePosition.x * 15}px, ${mousePosition.y * 15}px)`,
+          '--blur-amount': '110px'
+        } as React.CSSProperties}
       />
       
       {/* Extra light blob for subtle highlights */}
       <div 
-        className="absolute w-[300px] h-[300px] bg-white/50 rounded-full blur-[80px] right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-all duration-500 ease-out" 
+        className="absolute w-[300px] h-[300px] bg-white/60 rounded-full right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-all duration-500 ease-out" 
         style={{
           animationDuration: '15s',
-          transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * 10}px)`
+          transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * 10}px)`,
+          filter: 'blur(80px)'
         }}
       />
     </>
