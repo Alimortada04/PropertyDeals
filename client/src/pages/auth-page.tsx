@@ -128,6 +128,9 @@ export default function AuthPage() {
   // Custom input style with enhanced hover effects
   const inputStyles = "h-12 rounded-md border-gray-200 bg-white/70 hover:border-gray-300 focus:border-[#09261E] focus:ring-[#09261E] shadow-sm hover:shadow transition-all";
   
+  // Custom social button styles
+  const socialButtonStyles = "w-1/2 h-12 border-gray-200 hover:bg-gray-50 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow";
+  
   const { 
     user, 
     supabaseUser, 
