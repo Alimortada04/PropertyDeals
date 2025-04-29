@@ -8,6 +8,7 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   fullName: text("fullName"),
   email: text("email"),
+  isAdmin: boolean("isAdmin").default(false).notNull(),
   activeRole: text("activeRole").default("buyer"), // Current active role
   roles: jsonb("roles").default({ 
     buyer: { status: "approved" }, 
@@ -118,6 +119,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
   password: true,
   fullName: true,
   email: true,
+  isAdmin: true,
   activeRole: true,
   roles: true,
 }).omit({ roles: true }).extend({
@@ -172,3 +174,48 @@ export type PropertyInquiry = typeof propertyInquiries.$inferSelect;
 
 export type InsertRep = z.infer<typeof insertRepSchema>;
 export type Rep = typeof reps.$inferSelect;
+
+// System logs for admin activity tracking
+export const systemLogs = pgTable("systemLogs", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId").notNull(),
+  action: text("action").notNull(), // login, create_user, update_property, etc.
+  details: jsonb("details"), // additional contextual information
+  ipAddress: text("ipAddress"),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+});
+
+export const insertSystemLogSchema = createInsertSchema(systemLogs).omit({
+  id: true,
+  timestamp: true,
+});
+
+export type InsertSystemLog = z.infer<typeof insertSystemLogSchema>;
+export type SystemLog = typeof systemLogs.$inferSelect;
+
+// User reports for handling flagged content
+export const userReports = pgTable("userReports", {
+  id: serial("id").primaryKey(),
+  reporterId: integer("reporterId").notNull(), // User who made the report
+  contentType: text("contentType").notNull(), // property, user, message, etc.
+  contentId: integer("contentId").notNull(), // ID of the reported content
+  reason: text("reason").notNull(), // spam, inappropriate, fraud, etc.
+  details: text("details"), // Additional description from reporter
+  status: text("status").default("pending").notNull(), // pending, reviewed, resolved, dismissed
+  adminNotes: text("adminNotes"), // Notes from admin review
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+  resolvedBy: integer("resolvedBy"), // Admin who resolved the report
+  resolvedAt: timestamp("resolvedAt"),
+});
+
+export const insertUserReportSchema = createInsertSchema(userReports).omit({
+  id: true,
+  timestamp: true,
+  status: true,
+  adminNotes: true,
+  resolvedBy: true,
+  resolvedAt: true,
+});
+
+export type InsertUserReport = z.infer<typeof insertUserReportSchema>;
+export type UserReport = typeof userReports.$inferSelect;
