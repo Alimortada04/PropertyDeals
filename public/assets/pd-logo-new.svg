@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+  <style>
+    .logo-text {
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      font-size: 48px;
+    }
+    .pd-logo {
+      fill: #09261E;
+    }
+  </style>
+  <g class="pd-logo">
+    <!-- Left 'p' circular part -->
+    <path d="M250,200 C250,250 200,300 150,300 C100,300 50,250 50,200 C50,150 100,100 150,100 C200,100 250,150 250,200 Z" />
+    <!-- Right 'd' circular part -->
+    <path d="M450,200 C450,150 500,100 550,100 C600,100 650,150 650,200 C650,250 600,300 550,300 C500,300 450,250 450,200 Z" />
+    <!-- Vertical line of 'p' -->
+    <rect x="50" y="100" width="40" height="300" />
+    <!-- Vertical line of 'd' -->
+    <rect x="650" y="100" width="40" height="300" />
+    <!-- PROPERTYDEALS text -->
+    <text x="350" y="210" text-anchor="middle" class="logo-text">PROPERTYDEALS</text>
+  </g>
+</svg>

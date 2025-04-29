@@ -1,265 +1,420 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { Link } from "wouter";
+import { Search, Book, ArrowLeft, Globe } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Link } from "wouter";
-import { 
-  Pagination, 
-  PaginationContent, 
-  PaginationItem, 
-  PaginationLink, 
-  PaginationNext, 
-  PaginationPrevious 
-} from "@/components/ui/pagination";
-import { Search, BookOpen, ChevronLeft } from "lucide-react";
-import { dictionaryTerms, DictionaryTerm } from "@/lib/dictionary-data";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
+
+// Alphabet for letter navigation
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+// Sample real estate dictionary terms
+const glossaryTerms = [
+  {
+    letter: "A",
+    terms: [
+      {
+        term: "Adjustable-Rate Mortgage (ARM)",
+        definition: "A mortgage with an interest rate that changes periodically based on an index. ARMs typically offer a lower initial interest rate than fixed-rate loans."
+      },
+      {
+        term: "Amortization",
+        definition: "The gradual reduction of a debt through regular payments of principal and interest over a set period."
+      },
+      {
+        term: "Appraisal",
+        definition: "A professional assessment of a property's market value, typically required by lenders before approving a mortgage loan."
+      },
+      {
+        term: "As-Is Condition",
+        definition: "The purchase or sale of a property in its current state, with no repairs or improvements to be made by the seller."
+      }
+    ]
+  },
+  {
+    letter: "B",
+    terms: [
+      {
+        term: "Balloon Mortgage",
+        definition: "A mortgage with monthly payments based on a 30-year amortization but requires full payoff after a shorter term, typically 5-7 years."
+      },
+      {
+        term: "Bridge Loan",
+        definition: "Short-term financing that allows a buyer to purchase a new property before selling their existing home."
+      },
+      {
+        term: "BRRRR",
+        definition: "An investment strategy (Buy, Rehab, Rent, Refinance, Repeat) for building a real estate portfolio."
+      }
+    ]
+  },
+  {
+    letter: "C",
+    terms: [
+      {
+        term: "Cap Rate",
+        definition: "Capitalization Rate - The ratio between the net operating income of a property and its current market value or acquisition cost."
+      },
+      {
+        term: "Cash-on-Cash Return",
+        definition: "The ratio of annual cash flow to the total cash invested, expressed as a percentage."
+      },
+      {
+        term: "Closing Costs",
+        definition: "Fees and expenses beyond the property's price paid by both buyer and seller to complete a real estate transaction."
+      },
+      {
+        term: "Comparative Market Analysis (CMA)",
+        definition: "An evaluation of similar, recently sold properties to help determine a home's fair market value."
+      }
+    ]
+  },
+  {
+    letter: "D",
+    terms: [
+      {
+        term: "Due Diligence",
+        definition: "The investigation or exercise of care that a reasonable business or person is expected to take before entering into an agreement or contract."
+      },
+      {
+        term: "Debt-to-Income Ratio",
+        definition: "The percentage of a consumer's monthly gross income that goes toward paying debts."
+      },
+      {
+        term: "Deed",
+        definition: "A legal document that transfers property ownership from one party to another."
+      }
+    ]
+  },
+  {
+    letter: "E",
+    terms: [
+      {
+        term: "Earnest Money",
+        definition: "A deposit made by a buyer to show their good faith and intention to complete the purchase of a property."
+      },
+      {
+        term: "Equity",
+        definition: "The difference between a property's market value and the outstanding balance of all liens on the property."
+      },
+      {
+        term: "Escrow",
+        definition: "A legal arrangement where a third party temporarily holds money or property until specific conditions are met."
+      }
+    ]
+  },
+  {
+    letter: "F",
+    terms: [
+      {
+        term: "FHA Loan",
+        definition: "A mortgage insured by the Federal Housing Administration that typically requires a lower down payment than conventional loans."
+      },
+      {
+        term: "Foreclosure",
+        definition: "The legal process where a lender attempts to recover the balance of a loan from a borrower who has stopped making payments by forcing the sale of the asset used as collateral."
+      },
+      {
+        term: "Fair Market Value",
+        definition: "The price a property would sell for on the open market under normal conditions."
+      }
+    ]
+  },
+  {
+    letter: "H",
+    terms: [
+      {
+        term: "Hard Money Loan",
+        definition: "A short-term, high-interest loan primarily based on property value rather than borrower creditworthiness."
+      },
+      {
+        term: "HOA (Homeowners Association)",
+        definition: "An organization that creates and enforces rules for properties and common areas within a subdivision, planned community, or condominium."
+      }
+    ]
+  },
+  {
+    letter: "L",
+    terms: [
+      {
+        term: "Lien",
+        definition: "A legal claim against a property that must be paid when the property is sold."
+      },
+      {
+        term: "Loan-to-Value Ratio (LTV)",
+        definition: "The ratio of a loan amount to the value of the property securing the loan, expressed as a percentage."
+      }
+    ]
+  },
+  {
+    letter: "M",
+    terms: [
+      {
+        term: "MLS (Multiple Listing Service)",
+        definition: "A database established by cooperating real estate brokers to provide data about properties for sale."
+      },
+      {
+        term: "Mortgage",
+        definition: "A loan used to purchase or maintain a home, land, or other types of real estate with property serving as collateral."
+      }
+    ]
+  },
+  {
+    letter: "P",
+    terms: [
+      {
+        term: "PITI",
+        definition: "Principal, Interest, Taxes, and Insurance - the four components of a mortgage payment."
+      },
+      {
+        term: "Private Mortgage Insurance (PMI)",
+        definition: "Insurance that protects the lender if the borrower defaults. Usually required for loans with less than 20% down payment."
+      }
+    ]
+  },
+  {
+    letter: "R",
+    terms: [
+      {
+        term: "REO (Real Estate Owned)",
+        definition: "Property owned by a lender, typically a bank, after an unsuccessful foreclosure sale."
+      },
+      {
+        term: "Refinance",
+        definition: "The process of replacing an existing mortgage with a new loan, typically to secure better terms or access equity."
+      }
+    ]
+  },
+  {
+    letter: "S",
+    terms: [
+      {
+        term: "Short Sale",
+        definition: "The sale of a property for less than the amount the owner owes on the mortgage, requiring lender approval."
+      },
+      {
+        term: "Seller Financing",
+        definition: "An arrangement where the seller acts as the lender, providing a loan to the buyer to purchase their property."
+      }
+    ]
+  },
+  {
+    letter: "U",
+    terms: [
+      {
+        term: "Under Contract",
+        definition: "A property that has an accepted offer but hasn't closed yet."
+      },
+      {
+        term: "Underwriting",
+        definition: "The process a lender uses to determine if the risk of lending to a particular borrower is acceptable."
+      }
+    ]
+  },
+  {
+    letter: "Z",
+    terms: [
+      {
+        term: "Zoning",
+        definition: "Local laws that determine how property in specific geographic zones can be used."
+      }
+    ]
+  }
+];
 
 export default function PropertyDictionaryPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  const [letterFilter, setLetterFilter] = useState<string>("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [filteredTerms, setFilteredTerms] = useState<DictionaryTerm[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("dictionary");
+  const [activeLetter, setActiveLetter] = useState("A");
   
-  const itemsPerPage = 25;
-  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  
-  // Get unique categories from the dictionary terms
-  const categoryMap: Record<string, boolean> = { "all": true };
-  dictionaryTerms.forEach(term => {
-    const category = term.category || "Uncategorized";
-    categoryMap[category] = true;
-  });
-  const categories = Object.keys(categoryMap).sort();
-  
-  // Filter terms based on search, category, and letter filters
-  useEffect(() => {
-    let results = [...dictionaryTerms];
-    
-    // Apply search filter
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      results = results.filter(
-        item => 
-          item.term.toLowerCase().includes(term) ||
-          item.definition.toLowerCase().includes(term)
-      );
-    }
-    
-    // Apply category filter
-    if (categoryFilter !== "all") {
-      results = results.filter(item => item.category === categoryFilter);
-    }
-    
-    // Apply letter filter
-    if (letterFilter !== "all") {
-      results = results.filter(item => item.term.charAt(0).toUpperCase() === letterFilter);
-    }
-    
-    // Sort alphabetically
-    results = results.sort((a, b) => a.term.localeCompare(b.term));
-    
-    setFilteredTerms(results);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [searchTerm, categoryFilter, letterFilter]);
-  
-  // Calculate pagination values
-  const totalPages = Math.ceil(filteredTerms.length / itemsPerPage);
-  const currentTerms = filteredTerms.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  // Filter terms based on search query
+  const filteredTerms = glossaryTerms.flatMap(letterGroup => 
+    letterGroup.terms.filter(term => 
+      term.term.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      term.definition.toLowerCase().includes(searchQuery.toLowerCase())
+    ).map(term => ({ ...term, letter: letterGroup.letter }))
   );
   
-  // Build pagination display
-  const getPaginationItems = () => {
-    const items = [];
-    const maxVisiblePages = 5;
-    
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
-    if (endPage - startPage + 1 < maxVisiblePages) {
-      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  // Group filtered terms by letter for rendering
+  const groupedFilteredTerms = filteredTerms.reduce((acc, term) => {
+    const letter = term.letter;
+    if (!acc[letter]) {
+      acc[letter] = [];
     }
-    
-    for (let i = startPage; i <= endPage; i++) {
-      items.push(
-        <PaginationItem key={i}>
-          <PaginationLink 
-            isActive={currentPage === i}
-            onClick={() => setCurrentPage(i)}
-          >
-            {i}
-          </PaginationLink>
-        </PaginationItem>
-      );
-    }
-    
-    return items;
-  };
+    acc[letter].push(term);
+    return acc;
+  }, {} as Record<string, typeof filteredTerms>);
+
+  // Get visible letters based on filter
+  const visibleLetters = Object.keys(groupedFilteredTerms).sort();
   
+  // Determine which letter section to show if active letter is filtered out
+  const effectiveActiveLetter = visibleLetters.includes(activeLetter) 
+    ? activeLetter 
+    : (visibleLetters.length > 0 ? visibleLetters[0] : "A");
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-5xl mx-auto">
-        {/* Back to Playbook link */}
-        <div className="mb-4">
-          <Link href="/playbook" className="inline-flex items-center text-[#09261E] hover:underline">
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Back to PropertyPlaybook
+    <div className="min-h-[calc(100vh-64px)] bg-white pb-24">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Breadcrumb navigation */}
+        <div className="text-sm text-gray-500 mb-6 flex items-center">
+          <Link href="/">
+            <a className="hover:text-[#09261E]">Home</a>
           </Link>
+          {' > '}
+          <Link href="/playbook">
+            <a className="hover:text-[#09261E]">Playbook</a>
+          </Link>
+          {' > '}
+          <span className="text-[#09261E] font-medium">Property Dictionary</span>
         </div>
         
-        <div className="flex items-center mb-2">
-          <BookOpen className="mr-2 h-6 w-6 text-[#09261E]" />
-          <h1 className="text-3xl font-bold text-[#09261E]">
-            Real Estate Terminology Dictionary
-          </h1>
-        </div>
-        <p className="text-gray-600 mb-8">
-          Browse our comprehensive collection of real estate terms and definitions to help you navigate the property market with confidence.
-        </p>
-
-        {/* Search and Filter Controls */}
-        <div className="mb-8 space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-            <Input
-              type="text"
-              placeholder="Search terms and definitions..."
-              className="pl-10 py-2"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+        <div className="flex flex-col space-y-6">
+          {/* Back button */}
+          <div>
+            <Link href="/playbook">
+              <Button variant="ghost" className="pl-0 text-gray-500 hover:text-[#09261E] hover:bg-transparent">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Playbook
+              </Button>
+            </Link>
+          </div>
+          
+          {/* Header */}
+          <div className="text-center mb-2">
+            <h1 className="text-4xl font-bold text-[#09261E]">PropertyDictionary</h1>
+            <p className="text-gray-600 mt-2 max-w-3xl mx-auto">
+              A comprehensive glossary of real estate terms and definitions for investors and professionals.
+            </p>
+          </div>
+          
+          {/* Search Box - Centered */}
+          <div className="relative w-full max-w-md mx-auto mb-6">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input 
+              placeholder="Search terms..." 
+              className="pl-10 h-12 rounded-md border-gray-300" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4">
-            {/* Category Filter */}
-            <div className="sm:w-1/2">
-              <label htmlFor="category-filter" className="block text-sm font-medium text-gray-700 mb-1">
-                Filter by Category
-              </label>
-              <select
-                id="category-filter"
-                className="w-full px-3 py-2 border rounded-md"
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
+          {/* Tabs */}
+          <Tabs defaultValue="dictionary" value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 h-12">
+              <TabsTrigger 
+                value="dictionary" 
+                className={`data-[state=active]:bg-[#09261E] data-[state=active]:text-white font-medium`}
               >
-                <option value="all">All Categories</option>
-                {categories.filter(c => c !== "all").map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <Book className="h-4 w-4 mr-2" />
+                Dictionary
+              </TabsTrigger>
+              <TabsTrigger 
+                value="acronyms" 
+                className={`data-[state=active]:bg-[#09261E] data-[state=active]:text-white font-medium`}
+              >
+                <Globe className="h-4 w-4 mr-2" />
+                Acronyms
+              </TabsTrigger>
+            </TabsList>
             
-            {/* Letter Filter Dropdown (Mobile) */}
-            <div className="sm:hidden w-full">
-              <label htmlFor="letter-filter-mobile" className="block text-sm font-medium text-gray-700 mb-1">
-                Filter by Letter
-              </label>
-              <select
-                id="letter-filter-mobile"
-                className="w-full px-3 py-2 border rounded-md"
-                value={letterFilter}
-                onChange={(e) => setLetterFilter(e.target.value)}
-              >
-                <option value="all">All Letters</option>
-                {alphabet.map((letter) => (
-                  <option key={letter} value={letter}>
-                    {letter}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          
-          {/* Letter Filter Pills (Desktop) */}
-          <div className="hidden sm:flex flex-wrap gap-1 mt-2">
-            <Button
-              variant={letterFilter === "all" ? "default" : "outline"}
-              size="sm"
-              className={letterFilter === "all" ? "bg-[#09261E]" : ""}
-              onClick={() => setLetterFilter("all")}
-            >
-              All
-            </Button>
-            {alphabet.map((letter) => (
-              <Button
-                key={letter}
-                variant={letterFilter === letter ? "default" : "outline"}
-                size="sm"
-                className={letterFilter === letter ? "bg-[#09261E]" : ""}
-                onClick={() => setLetterFilter(letter)}
-              >
-                {letter}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Results Stats */}
-        <div className="text-sm text-gray-500 mb-4">
-          Showing {currentTerms.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0}-
-          {Math.min(currentPage * itemsPerPage, filteredTerms.length)} of {filteredTerms.length} terms
-        </div>
-
-        {/* Dictionary Terms */}
-        {currentTerms.length > 0 ? (
-          <div className="space-y-8 mb-8">
-            {currentTerms.map((term, index) => (
-              <div key={index} className="pb-6 border-b border-gray-200 last:border-0">
-                <h2 className="text-xl font-bold text-[#09261E] mb-1">{term.term}</h2>
-                {term.category && (
-                  <div className="mb-2">
-                    <span className="inline-block bg-[#EAF2EF] text-[#09261E] px-2 py-0.5 rounded text-xs font-medium">
-                      {term.category}
-                    </span>
-                  </div>
-                )}
-                <p className="text-gray-700">{term.definition}</p>
+            <TabsContent value="dictionary" className="mt-8">
+              <div className="flex flex-col md:flex-row gap-8">
+                {/* Alphabet Navigation */}
+                <div className="md:w-24 flex md:flex-col flex-wrap justify-center gap-2 md:gap-0">
+                  {alphabet.map(letter => {
+                    const hasTerms = glossaryTerms.some(group => group.letter === letter && group.terms.length > 0);
+                    const isFilteredVisible = visibleLetters.includes(letter);
+                    const isActive = effectiveActiveLetter === letter;
+                    
+                    return (
+                      <Button
+                        key={letter}
+                        variant="ghost"
+                        className={`w-8 h-8 p-0 rounded-full font-medium text-sm ${
+                          !hasTerms ? "text-gray-300 cursor-not-allowed" :
+                          isActive ? "bg-[#09261E] text-white hover:bg-[#09261E] hover:text-white" :
+                          !isFilteredVisible && searchQuery ? "text-gray-300 cursor-not-allowed" :
+                          "text-gray-700 hover:bg-gray-100"
+                        }`}
+                        onClick={() => hasTerms && isFilteredVisible && setActiveLetter(letter)}
+                        disabled={!hasTerms || (!isFilteredVisible && searchQuery)}
+                      >
+                        {letter}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                {/* Dictionary Content */}
+                <div className="flex-1">
+                  <ScrollArea className="h-[calc(100vh-320px)] pr-4">
+                    {searchQuery ? (
+                      // Show search results
+                      filteredTerms.length > 0 ? (
+                        <div className="space-y-8">
+                          {Object.entries(groupedFilteredTerms)
+                            .sort(([a], [b]) => a.localeCompare(b))
+                            .map(([letter, terms]) => (
+                              <div key={letter} id={`letter-${letter}`} className="mb-6">
+                                <h3 className="text-xl font-bold text-[#09261E] border-b border-gray-200 pb-2 mb-4">
+                                  {letter}
+                                </h3>
+                                <div className="space-y-4">
+                                  {terms.map((term, idx) => (
+                                    <div key={idx} className="pb-4">
+                                      <h4 className="text-lg font-semibold text-gray-800">{term.term}</h4>
+                                      <p className="text-gray-600 mt-1">{term.definition}</p>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-12">
+                          <p className="text-gray-500">No terms found matching "{searchQuery}"</p>
+                        </div>
+                      )
+                    ) : (
+                      // Show regular alphabetical listing
+                      <div>
+                        {glossaryTerms
+                          .filter(group => group.letter === effectiveActiveLetter)
+                          .map(group => (
+                            <div key={group.letter} id={`letter-${group.letter}`}>
+                              <h3 className="text-xl font-bold text-[#09261E] border-b border-gray-200 pb-2 mb-4">
+                                {group.letter}
+                              </h3>
+                              <div className="space-y-4">
+                                {group.terms.map((term, idx) => (
+                                  <div key={idx} className="pb-4">
+                                    <h4 className="text-lg font-semibold text-gray-800">{term.term}</h4>
+                                    <p className="text-gray-600 mt-1">{term.definition}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    )}
+                  </ScrollArea>
+                </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-            <h3 className="text-lg font-medium mb-2">No terms found</h3>
-            <p className="text-gray-600 mb-4">
-              Try adjusting your search criteria or filters.
-            </p>
-            <Button 
-              onClick={() => {
-                setSearchTerm("");
-                setCategoryFilter("all");
-                setLetterFilter("all");
-              }}
-            >
-              Reset Filters
-            </Button>
-          </div>
-        )}
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <Pagination className="mt-8">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-              
-              {getPaginationItems()}
-              
-              <PaginationItem>
-                <PaginationNext 
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
+            </TabsContent>
+            
+            <TabsContent value="acronyms" className="mt-8">
+              <div className="text-center py-12">
+                <p className="text-gray-500 mb-4">Acronyms section coming soon</p>
+                <p className="text-gray-600">
+                  We're currently compiling a comprehensive list of real estate acronyms.
+                  Please check back soon!
+                </p>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );
