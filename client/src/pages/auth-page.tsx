@@ -24,6 +24,7 @@ const registerSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+  fullName: z.string().min(2, "Full name is required"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
@@ -182,6 +183,7 @@ export default function AuthPage() {
       email: "",
       password: "",
       confirmPassword: "",
+      fullName: "",
     },
   });
 
@@ -198,7 +200,7 @@ export default function AuthPage() {
     registerMutation.mutate({
       email: values.email,
       password: values.password,
-      fullName: "", // This can be collected later in the onboarding process
+      fullName: values.fullName,
     });
   }
   
@@ -382,6 +384,23 @@ export default function AuthPage() {
                           <Input 
                             type="email" 
                             placeholder="Email"
+                            className={inputStyles}
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage className="text-[#803344]" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={registerForm.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input 
+                            placeholder="Full Name"
                             className={inputStyles}
                             {...field} 
                           />
