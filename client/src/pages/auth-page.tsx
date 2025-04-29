@@ -50,7 +50,7 @@ const BackgroundOrbs = () => {
     <>
       {/* Large forest green blob - bottom right - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[800px] h-[800px] bg-[#00D499]/50 rounded-full -bottom-80 -right-40 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-80" 
+        className="absolute w-[800px] h-[800px] bg-[#00D499]/70 rounded-full -bottom-80 -right-40 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-90" 
         style={{
           animationDuration: '25s',
           transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * -15}px)`,
@@ -60,7 +60,7 @@ const BackgroundOrbs = () => {
       
       {/* Large wine accent blob - bottom left - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[700px] h-[700px] bg-[#D14B81]/45 rounded-full -bottom-60 -left-60 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-75" 
+        className="absolute w-[700px] h-[700px] bg-[#D14B81]/65 rounded-full -bottom-60 -left-60 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-85" 
         style={{
           animationDelay: '3s', 
           animationDuration: '28s',
@@ -71,7 +71,7 @@ const BackgroundOrbs = () => {
       
       {/* Medium forest green blob - top right - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[600px] h-[600px] bg-[#00E19F]/40 rounded-full -top-80 right-0 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-65" 
+        className="absolute w-[600px] h-[600px] bg-[#00E19F]/60 rounded-full -top-80 right-0 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-80" 
         style={{
           animationDelay: '6s', 
           animationDuration: '32s',
@@ -82,7 +82,7 @@ const BackgroundOrbs = () => {
          
       {/* Medium wine accent blob - top left - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[500px] h-[500px] bg-[#E56A96]/35 rounded-full -top-60 -left-20 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
+        className="absolute w-[500px] h-[500px] bg-[#E56A96]/55 rounded-full -top-60 -left-20 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-85" 
         style={{
           animationDelay: '2s', 
           animationDuration: '24s',
@@ -93,7 +93,7 @@ const BackgroundOrbs = () => {
       
       {/* Small forest green blob - middle left - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[450px] h-[450px] bg-[#00F8B1]/45 rounded-full left-10 top-1/3 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-75" 
+        className="absolute w-[450px] h-[450px] bg-[#00F8B1]/65 rounded-full left-10 top-1/3 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-90" 
         style={{
           animationDelay: '5s', 
           animationDuration: '22s',
@@ -104,7 +104,7 @@ const BackgroundOrbs = () => {
          
       {/* Small wine accent blob - middle right - HIGHLY SATURATED */}
       <div 
-        className="absolute w-[400px] h-[400px] bg-[#F56E9B]/40 rounded-full right-10 top-1/4 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-70" 
+        className="absolute w-[400px] h-[400px] bg-[#F56E9B]/60 rounded-full right-10 top-1/4 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-85" 
         style={{
           animationDelay: '8s', 
           animationDuration: '27s',
@@ -115,7 +115,7 @@ const BackgroundOrbs = () => {
       
       {/* Additional magical accent blob - middle center */}
       <div 
-        className="absolute w-[350px] h-[350px] bg-[#C4B0FF]/40 rounded-full left-1/3 top-2/5 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-60" 
+        className="absolute w-[350px] h-[350px] bg-[#C4B0FF]/60 rounded-full left-1/3 top-2/5 animate-breathe mix-blend-screen transition-all duration-500 ease-out opacity-80" 
         style={{
           animationDelay: '10s', 
           animationDuration: '29s',
@@ -126,7 +126,7 @@ const BackgroundOrbs = () => {
       
       {/* Extra light blob for subtle highlights */}
       <div 
-        className="absolute w-[300px] h-[300px] bg-white/60 rounded-full right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-all duration-500 ease-out" 
+        className="absolute w-[300px] h-[300px] bg-white/75 rounded-full right-1/4 bottom-1/3 animate-pulse mix-blend-overlay transition-all duration-500 ease-out" 
         style={{
           animationDuration: '15s',
           transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * 10}px)`,
