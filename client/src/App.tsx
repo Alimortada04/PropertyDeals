@@ -41,6 +41,7 @@ import AdminLogs from "@/pages/admin/logs";
 import AdminReports from "@/pages/admin/reports";
 import AdminSettings from "@/pages/admin/settings";
 import MainLayout from "@/components/layout/main-layout";
+import AppLayout from "@/components/layout/app-layout";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { ScrollToTop as ScrollToTopHOC } from "@/components/common/scroll-to-top";
@@ -73,47 +74,47 @@ function Router() {
   return (
     <Switch>
       <Route path="/">
-        <MainLayout>
+        <AppLayout>
           <HomePage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/properties">
-        <MainLayout>
+        <AppLayout>
           <PropertiesPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/p/:id">
         {params => (
-          <MainLayout>
+          <AppLayout>
             <PropertyDetailPage id={params.id} />
-          </MainLayout>
+          </AppLayout>
         )}
       </Route>
       <Route path="/reps">
-        <MainLayout>
+        <AppLayout>
           <RepsPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       
       <Route path="/reps/:id">
         {params => (
-          <MainLayout>
+          <AppLayout>
             <RepProfilePage />
-          </MainLayout>
+          </AppLayout>
         )}
       </Route>
 
       <Route path="/business/:slug">
         {params => (
-          <MainLayout>
+          <AppLayout>
             <BusinessDetailPage slug={params.slug} />
-          </MainLayout>
+          </AppLayout>
         )}
       </Route>
       <Route path="/discussions">
-        <MainLayout>
+        <AppLayout>
           <DiscussionsPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       
       {/* Redirect from old path to new path */}
@@ -121,54 +122,54 @@ function Router() {
         <Redirect to="/discussions" />
       </Route>
       <Route path="/dashboard">
-        <MainLayout>
+        <AppLayout>
           <DashboardNewPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/tools">
-        <MainLayout>
+        <AppLayout>
           <ToolsPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/tools/flip">
-        <MainLayout>
+        <AppLayout>
           <FlipPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/playbook">
-        <MainLayout>
+        <AppLayout>
           <PlaybookPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/playbook/property-dictionary">
-        <MainLayout>
+        <AppLayout>
           <PropertyDictionaryPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/profile">
-        <MainLayout>
+        <AppLayout>
           <div className="container mx-auto px-4 py-12 pt-20">
             <h1 className="text-4xl font-heading font-bold text-[#09261E] mb-6">Profile</h1>
             <p className="text-lg text-gray-600">
               User profile page will be available in future updates.
             </p>
           </div>
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/settings">
-        <MainLayout>
+        <AppLayout>
           <div className="container mx-auto px-4 py-12 pt-20">
             <h1 className="text-4xl font-heading font-bold text-[#09261E] mb-6">Settings</h1>
             <p className="text-lg text-gray-600">
               Account settings and preferences will be available in future updates.
             </p>
           </div>
-        </MainLayout>
+        </AppLayout>
       </Route>
       <ProtectedRoute path="/seller-dashboard" component={() => (
-        <MainLayout>
+        <AppLayout>
           <SellerDashboard />
-        </MainLayout>
+        </AppLayout>
       )} />
       <Route path="/forgot-password">
         <ForgotPasswordPage />
@@ -209,49 +210,49 @@ function Router() {
         <AuthCallbackPage />
       </Route>
       <Route path="/about">
-        <MainLayout>
+        <AppLayout>
           <AboutPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/contact">
-        <MainLayout>
+        <AppLayout>
           <ContactPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/help">
-        <MainLayout>
+        <AppLayout>
           <HelpPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/help/faq">
-        <MainLayout>
+        <AppLayout>
           <FAQPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/help/suggestions">
-        <MainLayout>
+        <AppLayout>
           <SuggestionsPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/help/report">
-        <MainLayout>
+        <AppLayout>
           <ReportPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/legal/terms">
-        <MainLayout>
+        <AppLayout>
           <TermsPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/legal/cookies">
-        <MainLayout>
+        <AppLayout>
           <CookiesPage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       <Route path="/legal/fha-compliance">
-        <MainLayout>
+        <AppLayout>
           <FHACompliancePage />
-        </MainLayout>
+        </AppLayout>
       </Route>
       
       {/* Admin Routes - All protected and using AdminLayout */}
@@ -305,9 +306,9 @@ function Router() {
       
       {/* Fallback to 404 */}
       <Route>
-        <MainLayout>
+        <AppLayout>
           <NotFound />
-        </MainLayout>
+        </AppLayout>
       </Route>
     </Switch>
   );

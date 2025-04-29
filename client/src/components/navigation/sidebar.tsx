@@ -37,21 +37,23 @@ const NavItem: FC<NavItemProps> = ({ href, icon, label, active, onClick, classNa
     <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Link href={href}>
-            <a
-              className={cn(
-                "relative group flex items-center justify-center w-12 h-12 rounded-full transition-colors",
-                active
-                  ? "bg-primary/10 text-primary"
-                  : "text-gray-500 hover:bg-gray-100",
-                className
-              )}
-              onClick={onClick}
-            >
-              {icon}
-              <span className="sr-only">{label}</span>
-            </a>
-          </Link>
+          <div className="flex justify-center">
+            <Link href={href}>
+              <div
+                className={cn(
+                  "relative group flex items-center justify-center w-12 h-12 rounded-full transition-colors",
+                  active
+                    ? "bg-primary/10 text-primary"
+                    : "text-gray-500 hover:bg-gray-100",
+                  className
+                )}
+                onClick={onClick}
+              >
+                {icon}
+                <span className="sr-only">{label}</span>
+              </div>
+            </Link>
+          </div>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={8} className="font-medium">
           {label}
@@ -93,7 +95,7 @@ export default function Sidebar() {
       {/* Logo at top */}
       <div className="flex items-center justify-center h-16 pt-4">
         <Link href="/">
-          <a className="flex items-center justify-center w-12 h-12 rounded-full text-primary hover:bg-primary/10">
+          <div className="flex items-center justify-center w-12 h-12 rounded-full text-primary hover:bg-primary/10">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path 
                 d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" 
@@ -110,7 +112,7 @@ export default function Sidebar() {
                 strokeLinejoin="round"
               />
             </svg>
-          </a>
+          </div>
         </Link>
       </div>
       
@@ -256,16 +258,18 @@ export default function Sidebar() {
         <TooltipProvider delayDuration={300}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href="/profile">
-                <a className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-100">
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </a>
-              </Link>
+              <div className="flex justify-center">
+                <Link href="/profile">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-100">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
+                      <AvatarFallback className="bg-primary/10 text-primary">
+                        {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                </Link>
+              </div>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={8} className="font-medium">
               Your Profile
