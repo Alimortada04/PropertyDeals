@@ -82,20 +82,20 @@ export default function RepCard({ rep }: RepCardProps) {
 
   return (
     <Card 
-      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 hover:translate-y-[-4px] group"
+      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 hover:translate-y-[-4px] group h-full"
       onClick={handleCardClick}
     >
       {/* No badges at top, moved to inside card */}
         
-      <CardContent className="p-3 sm:p-6">
+      <CardContent className="p-3">
         {/* Unified layout for all screen sizes */}
         <div className="flex flex-col items-center">
           {/* Profile Image - centered */}
-          <div className="mb-3">
+          <div className="mb-2">
             <img 
               src={isBusiness ? (rep.logoUrl || rep.avatar) : rep.avatar} 
               alt={rep.name}
-              className={`${isBusiness ? 'w-20 h-20 rounded-lg' : 'w-24 h-24 rounded-full'} object-cover border-2 border-white shadow-md transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg`}
+              className={`${isBusiness ? 'w-16 h-16 rounded-lg' : 'w-16 h-16 rounded-full'} object-cover border-2 border-white shadow-md transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg`}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.src = isBusiness 
@@ -107,58 +107,48 @@ export default function RepCard({ rep }: RepCardProps) {
           
           {/* Content area - centered */}
           <div className="text-center">
-            <h3 className="font-heading text-xl font-semibold text-gray-800 mb-1 line-clamp-1 flex items-center justify-center">
+            <h3 className="font-heading text-lg font-semibold text-gray-800 mb-1 line-clamp-1 flex items-center justify-center">
               {rep.name}
               {rep.isVerified && (
-                <CheckCircle2 size={18} className="ml-1 text-[#803344]" />
+                <CheckCircle2 size={16} className="ml-1 text-[#803344]" />
               )}
             </h3>
             
             <Badge 
               variant="outline" 
-              className="mb-2 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium"
+              className="mb-1 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs"
             >
               {rep.role}
             </Badge>
           
             {/* Location section only - simplified */}
-            <div className="flex flex-col w-full mb-3 text-sm">              
+            <div className="flex flex-col w-full mb-2 text-xs">              
               <div className="flex items-center justify-center text-gray-600 w-full">
-                <MapPin size={14} className="mr-1 text-gray-400 flex-shrink-0" />
+                <MapPin size={12} className="mr-1 text-gray-400 flex-shrink-0" />
                 <span className="truncate">{rep.locationCity}, {rep.locationState}</span>
               </div>
               
               {rep.responseTime && (
                 <div className="flex items-center justify-center text-gray-600 w-full mt-1">
-                  <Clock size={14} className="mr-1 text-gray-400 flex-shrink-0" />
+                  <Clock size={12} className="mr-1 text-gray-400 flex-shrink-0" />
                   <span className="truncate">{rep.responseTime}</span>
                 </div>
               )}
             </div>
             
-            {/* Mutual connections */}
-            <div className="flex items-center justify-center pt-0.5 pb-2">
-              <div className="flex -space-x-2">
-                {/* Display mutual connections avatars */}
-                <Avatar className="h-6 w-6 border-2 border-white">
+            {/* Simplified Mutual connections - just show the count */}
+            <div className="flex items-center justify-center text-xs text-gray-500 pt-0.5 pb-1">
+              <div className="flex -space-x-2 mr-1">
+                <Avatar className="h-5 w-5 border-2 border-white">
                   <AvatarImage src="https://randomuser.me/api/portraits/men/1.jpg" />
-                  <AvatarFallback>MC</AvatarFallback>
+                  <AvatarFallback>M</AvatarFallback>
                 </Avatar>
-                <Avatar className="h-6 w-6 border-2 border-white">
+                <Avatar className="h-5 w-5 border-2 border-white">
                   <AvatarImage src="https://randomuser.me/api/portraits/women/2.jpg" />
-                  <AvatarFallback>MC</AvatarFallback>
+                  <AvatarFallback>M</AvatarFallback>
                 </Avatar>
-                <Avatar className="h-6 w-6 border-2 border-white">
-                  <AvatarImage src="https://randomuser.me/api/portraits/men/3.jpg" />
-                  <AvatarFallback>MC</AvatarFallback>
-                </Avatar>
-                
-                {/* More indicator if needed */}
-                <div className="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center text-xs font-medium text-gray-600 border-2 border-white">
-                  +2
-                </div>
               </div>
-              <span className="text-xs text-gray-500 ml-2">5 mutuals</span>
+              <span>5 mutuals</span>
             </div>
           </div>
         </div>
@@ -172,17 +162,17 @@ export default function RepCard({ rep }: RepCardProps) {
       </CardContent>
 
       {/* Bottom CTA Section - Only Message button */}
-      <CardFooter className="px-3 sm:px-4 pb-3 sm:pb-4 pt-0 flex justify-center">
+      <CardFooter className="px-2 pb-2 pt-0 flex justify-center">
         {/* Message button */}
         <Button 
           size="sm"
-          className="w-full bg-[#09261E] hover:bg-[#135341] text-white transition-colors"
+          className="w-full bg-[#09261E] hover:bg-[#135341] text-white transition-colors text-xs py-1.5"
           onClick={(e) => {
             e.stopPropagation();
             // Open message dialog
           }}
         >
-          <MessageCircle size={16} className="mr-1" />
+          <MessageCircle size={14} className="mr-1" />
           Message
         </Button>
       </CardFooter>
