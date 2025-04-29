@@ -63,6 +63,15 @@ export default function RepsPage() {
       results = results.filter(rep => rep.entityType === entityType);
     }
     
+    // Filter by rep type/role
+    if (repType !== 'all') {
+      // Convert role to lowercase for case-insensitive comparison
+      results = results.filter(rep => {
+        const role = rep.role?.toLowerCase() || '';
+        return role.includes(repType.toLowerCase());
+      });
+    }
+    
     // Filter by search term
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
