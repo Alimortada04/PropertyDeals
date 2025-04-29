@@ -99,11 +99,11 @@ export default function Sidebar() {
 
   return (
     <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-sm border-r">
-      {/* Logo at top - Just "pd" text */}
+      {/* Logo at top - PropertyDeals Logo */}
       <div className="flex items-center justify-center h-16">
         <Link href="/">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:scale-110 transition-all">
-            <span className="font-bold text-xl">pd</span>
+          <div className="flex items-center justify-center w-14 h-14 hover:scale-110 transition-all">
+            <img src="/assets/pdLogoTransparent.png" alt="PropertyDeals" className="w-full h-full object-contain" />
           </div>
         </Link>
       </div>
@@ -113,42 +113,42 @@ export default function Sidebar() {
         <div className="space-y-2 flex flex-col items-center">
           <NavItem 
             href="/" 
-            icon={<Home size={20} />} 
+            icon={<Home size={24} />} 
             label="Home"
             active={location === '/'} 
           />
           
           <NavItem 
             href="/properties" 
-            icon={<Building size={20} />} 
+            icon={<Building size={24} />} 
             label="Properties"
             active={location.startsWith('/properties')} 
           />
           
           <NavItem 
             href="/reps" 
-            icon={<Users size={20} />} 
+            icon={<Users size={24} />} 
             label="Professionals"
             active={location.startsWith('/reps')} 
           />
           
           <NavItem 
             href="/inbox" 
-            icon={<Inbox size={20} />} 
+            icon={<Inbox size={24} />} 
             label="Inbox"
             active={location.startsWith('/inbox')} 
           />
           
           <NavItem 
             href="/playbook" 
-            icon={<Book size={20} />} 
+            icon={<Book size={24} />} 
             label="Playbook"
             active={location.startsWith('/playbook')} 
           />
           
           <NavItem 
             href="/list-property" 
-            icon={<PlusCircle size={20} />} 
+            icon={<PlusCircle size={24} />} 
             label="List a Property"
             active={location.startsWith('/list-property')} 
           />
@@ -156,7 +156,7 @@ export default function Sidebar() {
           {activeRole === 'seller' && (
             <NavItem 
               href="/seller/dashboard" 
-              icon={<Briefcase size={20} />} 
+              icon={<Briefcase size={24} />} 
               label="Seller Dashboard"
               active={location.startsWith('/seller/dashboard')} 
             />
@@ -165,7 +165,7 @@ export default function Sidebar() {
           {activeRole === 'agent' && (
             <NavItem 
               href="/agent/dashboard" 
-              icon={<Briefcase size={20} />} 
+              icon={<Briefcase size={24} />} 
               label="Agent Dashboard"
               active={location.startsWith('/agent/dashboard')} 
             />
@@ -174,7 +174,7 @@ export default function Sidebar() {
           {activeRole === 'contractor' && (
             <NavItem 
               href="/contractor/dashboard" 
-              icon={<Briefcase size={20} />} 
+              icon={<Briefcase size={24} />} 
               label="Contractor Dashboard"
               active={location.startsWith('/contractor/dashboard')} 
             />
@@ -183,7 +183,7 @@ export default function Sidebar() {
           {user?.isAdmin && (
             <NavItem 
               href="/admin/dashboard" 
-              icon={<Briefcase size={20} />} 
+              icon={<Briefcase size={24} />} 
               label="Admin Dashboard"
               active={location.startsWith('/admin')} 
               className="mt-2"
@@ -204,7 +204,7 @@ export default function Sidebar() {
                 className="w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:bg-gray-100 transition-all"
                 onClick={() => setShowSearch(true)}
               >
-                <Search size={20} />
+                <Search size={24} />
                 <span className="sr-only">Search (⌘K)</span>
               </Button>
             </TooltipTrigger>
@@ -221,7 +221,7 @@ export default function Sidebar() {
         <NavItem 
           href="/profile" 
           icon={
-            <Avatar className="h-6 w-6">
+            <Avatar className="h-8 w-8">
               <AvatarImage src={user?.profileImage || ""} alt={user?.fullName || "User"} />
               <AvatarFallback className="bg-primary/10 text-primary text-sm">
                 {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
