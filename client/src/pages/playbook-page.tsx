@@ -65,7 +65,7 @@ export default function PlaybookPage() {
       icon: <Book size={18} strokeWidth={1.5} />,
       title: "Creative Financing Guide",
       description: "Explore alternative financing methods beyond traditional mortgages for your real estate investments.",
-      audience: ["buyers", "reps"],
+      audience: ["buyers", "agents"],
       isComingSoon: true,
       coverImage: "https://images.unsplash.com/photo-1607863680198-23d4b2565df0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y3JlYXRpdmUlMjBmaW5hbmNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
     },
@@ -74,7 +74,7 @@ export default function PlaybookPage() {
       icon: <Briefcase size={18} strokeWidth={1.5} />,
       title: "Disposition & Buyer Building Playbook",
       description: "Strategies for sellers to maximize property value and build a reliable buyer network.",
-      audience: ["sellers", "reps"],
+      audience: ["sellers", "agents"],
       isComingSoon: true,
       coverImage: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjJ8fHJlYWwlMjBlc3RhdGV8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
     },
@@ -83,7 +83,7 @@ export default function PlaybookPage() {
       icon: <FileText size={18} strokeWidth={1.5} />,
       title: "How to Walk a Property Guide",
       description: "Learn how to effectively evaluate properties during inspections and identify potential issues.",
-      audience: ["sellers", "reps"],
+      audience: ["sellers", "agents", "contractors"],
       isComingSoon: true,
       coverImage: "https://images.unsplash.com/photo-1606676539940-12768ce0e762?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG9tZSUyMGluc3BlY3Rpb258ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
     },
@@ -92,7 +92,7 @@ export default function PlaybookPage() {
       icon: <HelpCircle size={18} strokeWidth={1.5} />,
       title: "Ethics & Compliance Center",
       description: "Resources on real estate ethics, legal requirements, and maintaining compliance.",
-      audience: ["sellers", "reps"],
+      audience: ["sellers", "agents"],
       isComingSoon: true,
       coverImage: "https://images.unsplash.com/photo-1589391886645-d51941baf7fb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGxhd3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
     },
@@ -104,6 +104,24 @@ export default function PlaybookPage() {
       audience: ["general"],
       isComingSoon: true,
       coverImage: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cmVhbCUyMGVzdGF0ZSUyMGFuYWx5c2lzfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+    },
+    {
+      id: "agent-marketing",
+      icon: <FileText size={18} strokeWidth={1.5} />,
+      title: "Agent Marketing Toolkit",
+      description: "Marketing strategies, templates, and tools specifically designed for real estate agents.",
+      audience: ["agents"],
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cmVhbCUyMGVzdGF0ZSUyMGFnZW50fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+    },
+    {
+      id: "contractor-directory",
+      icon: <Briefcase size={18} strokeWidth={1.5} />,
+      title: "Contractor Directory & Resources",
+      description: "Network with verified contractors and access resources for managing renovation projects.",
+      audience: ["contractors"],
+      isComingSoon: true,
+      coverImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y29udHJhY3RvcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
     }
   ];
 
@@ -137,7 +155,7 @@ export default function PlaybookPage() {
   // Initialize from URL hash if present
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
-    if (["general", "buyers", "sellers", "reps"].includes(hash)) {
+    if (["general", "buyers", "sellers", "agents", "contractors"].includes(hash)) {
       setActiveTab(hash);
     }
   }, []);

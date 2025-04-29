@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { BookOpen, Home, DollarSign, Users } from "lucide-react";
+import { BookOpen, Home, DollarSign, Users, Briefcase } from "lucide-react";
 
 interface TabNavProps {
   activeTab: string;
@@ -12,7 +12,8 @@ export default function TabNav({ activeTab, onTabChange }: TabNavProps) {
     { id: "general", label: "General", icon: <BookOpen size={16} /> },
     { id: "buyers", label: "Buyers", icon: <Home size={16} /> },
     { id: "sellers", label: "Sellers", icon: <DollarSign size={16} /> },
-    { id: "reps", label: "REPs", icon: <Users size={16} /> }
+    { id: "agents", label: "Agents", icon: <Users size={16} /> },
+    { id: "contractors", label: "Contractors", icon: <Briefcase size={16} /> }
   ];
 
   return (
