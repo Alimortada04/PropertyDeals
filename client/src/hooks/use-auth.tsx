@@ -81,7 +81,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      return await signInWithEmail(credentials.email, credentials.password);
+      try {
+        console.log("Attempting email login for:", credentials.email);
+        const authData = await signInWithEmail(credentials.email, credentials.password);
+        
+        if (!authData.user) {
+          throw new Error("Invalid credentials");
+        }
+        
+        console.log("Email login successful");
+        return authData;
+      } catch (error) {
+        console.error("Email login error:", error);
+        throw error; // Re-throw to trigger onError
+      }
     },
     onSuccess: (data) => {
       setSupabaseUser(data.user);
@@ -93,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onError: (error: Error) => {
       toast({
         title: "Login failed",
-        description: error.message,
+        description: error.message || "Please check your email and password and try again",
         variant: "destructive",
       });
     },
@@ -101,12 +114,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   
   const loginWithGoogleMutation = useMutation({
     mutationFn: async () => {
-      return await signInWithGoogle();
+      try {
+        console.log("Initiating Google login flow...");
+        const result = await signInWithGoogle();
+        console.log("Google login flow initiated successfully");
+        return result;
+      } catch (error) {
+        console.error("Google login initiation error:", error);
+        throw error;
+      }
     },
     onError: (error: Error) => {
       toast({
         title: "Google login failed",
-        description: error.message,
+        description: error.message || "Could not initiate Google login. Please try again.",
         variant: "destructive",
       });
     },
@@ -114,12 +135,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   
   const loginWithFacebookMutation = useMutation({
     mutationFn: async () => {
-      return await signInWithFacebook();
+      try {
+        console.log("Initiating Facebook login flow...");
+        const result = await signInWithFacebook();
+        console.log("Facebook login flow initiated successfully");
+        return result;
+      } catch (error) {
+        console.error("Facebook login initiation error:", error);
+        throw error;
+      }
     },
     onError: (error: Error) => {
       toast({
         title: "Facebook login failed",
-        description: error.message,
+        description: error.message || "Could not initiate Facebook login. Please try again.",
         variant: "destructive",
       });
     },
@@ -135,7 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       
       try {
-        const authData = await signUpWithEmail(data.email, data.password);
+        const authData = await signUpWithEmail(data.email, data.password, data.fullName);
         console.log("Supabase auth response:", authData);  // Debug logging
         
         if (!authData.user) {

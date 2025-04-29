@@ -10,8 +10,8 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function signUpWithEmail(email: string, password: string) {
-  console.log("Signing up with Supabase:", { email, passwordLength: password?.length });
+export async function signUpWithEmail(email: string, password: string, fullName?: string) {
+  console.log("Signing up with Supabase:", { email, passwordLength: password?.length, fullName });
   
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -20,6 +20,7 @@ export async function signUpWithEmail(email: string, password: string) {
       emailRedirectTo: `${window.location.origin}/auth/callback`,
       data: {
         confirmed_at: new Date().toISOString(), // Pre-confirm the user for testing
+        full_name: fullName || email.split('@')[0], // Use fullName if provided or fallback to part of email
       }
     }
   });
