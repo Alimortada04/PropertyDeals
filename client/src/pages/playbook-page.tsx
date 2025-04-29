@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Book, Calculator, Search, Briefcase, Home, Users, Filter } from "lucide-react";
+import { Link } from "wouter";
+import { Book, Calculator, Search, Briefcase, Home, Users, Filter, FileText, Layers } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -13,57 +12,73 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 export default function PlaybookPage() {
-  const [activeTab, setActiveTab] = useState("resources");
+  const [activeTab, setActiveTab] = useState<"resources" | "tools">("resources");
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("General");
+  const [activeToolCategory, setActiveToolCategory] = useState("All Tools");
+
+  // Resource categories
+  const resourceCategories = [
+    { id: "general", label: "General", icon: <FileText className="h-4 w-4" /> },
+    { id: "buyers", label: "Buyers", icon: <Users className="h-4 w-4" /> },
+    { id: "sellers", label: "Sellers", icon: <Home className="h-4 w-4" /> },
+    { id: "reps", label: "REPs", icon: <Briefcase className="h-4 w-4" /> },
+  ];
+
+  // Tool categories
+  const toolCategories = [
+    { id: "all", label: "All Tools", icon: <Layers className="h-4 w-4" /> },
+    { id: "flips", label: "Flips", icon: <Home className="h-4 w-4" /> },
+    { id: "buy_hold", label: "Buy & Hold", icon: <Briefcase className="h-4 w-4" /> },
+    { id: "creative_finance", label: "Creative Finance", icon: <Calculator className="h-4 w-4" /> },
+    { id: "wholesale", label: "Wholesale", icon: <Users className="h-4 w-4" /> },
+    { id: "str", label: "STR", icon: <Home className="h-4 w-4" /> },
+  ];
   
-  // Sample resource data
+  // Sample resource data - PropertyPlaybook resources
   const resources = [
     {
       id: "1",
-      title: "First-Time Home Buyer's Guide",
-      description: "Everything you need to know as a first-time buyer in today's market.",
-      coverImage: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Buying", "Financing", "First-Time"],
-      timeToRead: "15 min read",
-      authorName: "Jessica Miller",
-      authorTitle: "Senior Real Estate Agent",
-      authorAvatar: ""
+      title: "PropertyDictionary",
+      description: "Comprehensive glossary of real estate terms and definitions for investors and professionals.",
+      coverImage: "https://images.unsplash.com/photo-1554475901-4538ddfbccc2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      tags: ["Glossary", "Reference"],
+      category: "General",
+      status: "Published",
+      badge: "Trending"
     },
     {
       id: "2",
-      title: "Real Estate Investment Strategies for 2025",
-      description: "Learn the top investment strategies that will maximize your returns in the current market.",
-      coverImage: "https://images.unsplash.com/photo-1460317442991-0ec209397118?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Investment", "Strategy", "Market Analysis"],
-      timeToRead: "20 min read",
-      authorName: "Robert Chen",
-      authorTitle: "Investment Specialist",
-      authorAvatar: ""
+      title: "Due Diligence Checklist",
+      description: "Complete step-by-step checklist for thorough property research and evaluation.",
+      coverImage: "https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      tags: ["Checklist", "Due Diligence"],
+      category: "Buyers",
+      status: "Coming Soon",
+      badge: "Coming Soon"
     },
     {
       id: "3",
-      title: "The Ultimate Guide to Home Renovation",
-      description: "Step-by-step process to renovate your home for maximum value and comfort.",
-      coverImage: "https://images.unsplash.com/photo-1556912998-c57cc6b63cd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Renovation", "Home Improvement", "DIY"],
-      timeToRead: "25 min read",
-      authorName: "Sarah Johnson",
-      authorTitle: "Interior Designer",
-      authorAvatar: ""
+      title: "Investment Strategies",
+      description: "Overview of popular real estate investment strategies with pros and cons.",
+      coverImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      tags: ["Investment", "Strategy"],
+      category: "General",
+      status: "Coming Soon",
+      badge: "Coming Soon"
     },
     {
       id: "4",
-      title: "How to Negotiate in Real Estate Deals",
-      description: "Master the art of negotiation to get the best deals on properties.",
-      coverImage: "https://images.unsplash.com/photo-1553524913-efba3f0b533e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Negotiation", "Sales", "Strategy"],
-      timeToRead: "12 min read",
-      authorName: "Michael Brown",
-      authorTitle: "Real Estate Broker",
-      authorAvatar: ""
+      title: "Video Tutorials",
+      description: "Watch step-by-step video tutorials on various aspects of real estate investing.",
+      coverImage: "https://images.unsplash.com/photo-1505236858219-8359eb29e329?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      tags: ["Video", "Tutorials"],
+      category: "General",
+      status: "Coming Soon",
+      badge: "Coming Soon"
     },
   ];
 
@@ -71,251 +86,294 @@ export default function PlaybookPage() {
   const tools = [
     {
       id: "1",
-      title: "Mortgage Calculator",
-      description: "Calculate your monthly mortgage payments based on loan amount, interest rate, and term.",
-      coverImage: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Financing", "Calculator"],
-      category: "Financing",
-      icon: <Home className="h-10 w-10 text-green-600" />
+      title: "Flip Calculator",
+      description: "Estimate profit potential for fix-and-flips with detailed cost breakdown.",
+      coverImage: "https://images.unsplash.com/photo-1582059566105-c55de4da6127?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      tags: ["Flips"],
+      categories: ["Flips"],
+      type: "Calculator",
+      status: "Published",
+      badge: "Popular"
     },
     {
       id: "2",
-      title: "Rental Yield Calculator",
-      description: "Calculate the return on investment for rental properties.",
-      coverImage: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Investment", "Calculator", "Rental"],
-      category: "Investment",
-      icon: <Calculator className="h-10 w-10 text-blue-600" />
+      title: "Repair Cost Estimator",
+      description: "Estimate repair costs by item with regional benchmarks and totals.",
+      coverImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      tags: ["Flips", "Wholesale"],
+      categories: ["Flips", "Wholesale"],
+      type: "Estimator",
+      status: "Published",
+      badge: "New"
     },
     {
       id: "3",
-      title: "Flip Property Analyzer",
-      description: "Analyze potential flip properties to estimate costs, timeline, and profit.",
-      coverImage: "https://images.unsplash.com/photo-1608303588026-884930af2559?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Flips", "Calculator", "Investment"],
-      category: "Investment",
-      icon: <Briefcase className="h-10 w-10 text-purple-600" />
+      title: "Offer Price Calculator",
+      description: "MAO calculator based on ARV, repairs, profit, and wholesale fee.",
+      coverImage: "https://images.unsplash.com/photo-1582137825635-a2b2cc3a2faa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      tags: ["Wholesale", "Flips"],
+      categories: ["Wholesale", "Flips"],
+      type: "Calculator",
+      status: "Published",
+      badge: ""
     },
     {
       id: "4",
-      title: "Closing Cost Estimator",
-      description: "Estimate all the closing costs for your property purchase.",
-      coverImage: "https://images.unsplash.com/photo-1568234928966-359c35dd8aba?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Closing", "Calculator", "Buying"],
-      category: "Buying",
-      icon: <Users className="h-10 w-10 text-orange-600" />
-    },
-    {
-      id: "5",
-      title: "STR Revenue Calculator",
-      description: "Project your short-term rental income based on location, seasonality, and property type.",
-      coverImage: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["STR", "Calculator", "Revenue"],
-      category: "Investment",
-      icon: <Calculator className="h-10 w-10 text-teal-600" />
-    },
-    {
-      id: "6",
-      title: "Rehab Cost Estimator",
-      description: "Get an accurate estimate of renovation costs for your project.",
-      coverImage: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
-      tags: ["Renovation", "Calculator", "Costs"],
-      category: "Renovation",
-      icon: <Home className="h-10 w-10 text-red-600" />
+      title: "BRRRR Deal Analyzer",
+      description: "Analyze Buy, Rehab, Rent, Refinance, Repeat strategy with cash-out options.",
+      coverImage: "https://images.unsplash.com/photo-1592928302636-c83cf1e1c887?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
+      tags: ["Buy & Hold", "Flips"],
+      categories: ["Buy & Hold", "Flips"],
+      type: "Analyzer",
+      status: "Published",
+      badge: "Coming Soon"
     },
   ];
 
-  // Filter resources based on search query
+  // Filter resources based on category and search query
   const filteredResources = resources.filter(resource =>
-    resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    resource.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    (activeCategory === "General" || resource.category === activeCategory) &&
+    (resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+     resource.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+     resource.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
   );
   
-  // Filter tools based on search query
+  // Filter tools based on category and search query
   const filteredTools = tools.filter(tool =>
-    tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    tool.category.toLowerCase().includes(searchQuery.toLowerCase())
+    (activeToolCategory === "All Tools" || tool.categories.includes(activeToolCategory)) &&
+    (tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+     tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+     tool.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
   );
 
-  // Get unique tool categories
-  const categoriesSet = new Set(tools.map(tool => tool.category));
-  const categories = Array.from(categoriesSet);
+  // Breadcrumb navigation
+  const getBreadcrumbs = () => {
+    return (
+      <div className="text-sm text-gray-500 mb-6">
+        <Link href="/">
+          <a className="hover:text-[#09261E]">Home</a>
+        </Link>
+        {' > '}
+        {activeTab === "resources" ? (
+          <span className="text-[#09261E] font-medium">Playbook</span>
+        ) : (
+          <>
+            <Link href="/playbook">
+              <a className="hover:text-[#09261E]">Playbook</a>
+            </Link>
+            {' > '}
+            <span className="text-[#09261E] font-medium">Tools</span>
+          </>
+        )}
+      </div>
+    );
+  };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-gray-50 pb-24">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="fixed left-16 top-0 h-16 w-[250px] rounded-none border-r bg-background z-10">
-          <TabsTrigger 
-            value="resources" 
-            className={`flex-1 rounded-none data-[state=active]:bg-transparent ${activeTab === "resources" ? "border-b-2 border-primary" : ""}`}
-          >
-            <div className="flex items-center">
+    <div className="min-h-[calc(100vh-64px)] bg-white pb-24">
+      {/* Toggle between Resources and Tools */}
+      <div className="container mx-auto max-w-7xl px-4 pt-8">
+        {getBreadcrumbs()}
+        
+        <div className="flex flex-col space-y-6">
+          <div className="flex space-x-2">
+            <Button 
+              variant={activeTab === "resources" ? "default" : "outline"} 
+              className={cn(
+                "px-6 py-2 h-10",
+                activeTab === "resources" 
+                  ? "bg-[#09261E] text-white hover:bg-[#09261E]/90" 
+                  : "border-gray-300 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTab("resources")}
+            >
               <Book className="h-4 w-4 mr-2" />
-              <span>Resources</span>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="tools" 
-            className={`flex-1 rounded-none data-[state=active]:bg-transparent ${activeTab === "tools" ? "border-b-2 border-primary" : ""}`}
-          >
-            <div className="flex items-center">
+              Resources
+            </Button>
+            <Button 
+              variant={activeTab === "tools" ? "default" : "outline"} 
+              className={cn(
+                "px-6 py-2 h-10",
+                activeTab === "tools" 
+                  ? "bg-[#09261E] text-white hover:bg-[#09261E]/90" 
+                  : "border-gray-300 hover:bg-gray-50"
+              )}
+              onClick={() => setActiveTab("tools")}
+            >
               <Calculator className="h-4 w-4 mr-2" />
-              <span>Tools</span>
-            </div>
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="resources" className="container py-8 pt-20 max-w-7xl">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-            <div>
-              <h1 className="text-4xl font-bold font-heading text-[#09261E]">PropertyDeals Playbook</h1>
-              <p className="text-gray-600 mt-2">Educational resources to help you succeed in real estate</p>
-            </div>
-            
-            <div className="relative min-w-[280px]">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <Input 
-                placeholder="Search resources..." 
-                className="pl-10 h-12 rounded-md border-gray-300" 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+              Tools
+            </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredResources.length > 0 ? (
-              filteredResources.map((resource) => (
-                <Card key={resource.id} className="overflow-hidden flex flex-col h-full shadow-md hover:shadow-lg transition-shadow">
-                  <div 
-                    className="h-48 bg-cover bg-center" 
-                    style={{ backgroundImage: `url(${resource.coverImage})` }}
-                  />
-                  <CardHeader className="pb-2">
-                    <CardTitle className="line-clamp-2 text-[#09261E]">{resource.title}</CardTitle>
-                    <div className="flex items-center text-sm text-gray-500 mt-1">
-                      <span>{resource.timeToRead}</span>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pb-2 flex-1">
-                    <p className="text-gray-600 text-sm line-clamp-3">{resource.description}</p>
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {resource.tags.map(tag => (
-                        <Badge key={tag} variant="secondary" className="font-normal bg-gray-100 text-gray-700 hover:bg-gray-200">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                  <CardFooter className="border-t pt-4 pb-4 mt-auto">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={resource.authorAvatar} alt={resource.authorName} />
-                        <AvatarFallback className="bg-[#09261E]/10 text-[#09261E]">
-                          {resource.authorName?.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-medium">{resource.authorName}</p>
-                        <p className="text-xs text-gray-500">{resource.authorTitle}</p>
-                      </div>
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-full flex items-center justify-center py-12">
-                <div className="text-center">
-                  <Book className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium">No resources found</h3>
-                  <p className="text-gray-500">Try adjusting your search</p>
+          {activeTab === "resources" && (
+            <>
+              <div>
+                <h1 className="text-4xl font-bold text-[#09261E]">PropertyPlaybook: Real Estate Resources</h1>
+                <p className="text-gray-600 mt-2">Educational resources to help you navigate the real estate market with confidence.</p>
+              </div>
+              
+              <div className="relative w-full max-w-md mx-auto">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input 
+                  placeholder="Search resources..." 
+                  className="pl-10 h-12 rounded-md border-gray-300 w-full" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
+              <div className="flex justify-center">
+                <div className="inline-flex bg-[#09261E]/5 p-1 rounded-lg">
+                  {resourceCategories.map(category => (
+                    <Button
+                      key={category.id}
+                      variant="ghost"
+                      className={cn(
+                        "rounded-md px-4 h-10 flex items-center gap-2",
+                        activeCategory === category.label
+                          ? "bg-[#09261E] text-white"
+                          : "bg-transparent text-gray-700 hover:bg-[#09261E]/10"
+                      )}
+                      onClick={() => setActiveCategory(category.label)}
+                    >
+                      {category.icon}
+                      <span>{category.label}</span>
+                    </Button>
+                  ))}
                 </div>
               </div>
-            )}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="tools" className="container py-8 pt-20 max-w-7xl">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-            <div>
-              <h1 className="text-4xl font-bold font-heading text-[#09261E]">Property Investment Tools</h1>
-              <p className="text-gray-600 mt-2">Interactive calculators and tools to help with your real estate decisions</p>
-            </div>
-            
-            <div className="relative min-w-[280px]">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <Input 
-                placeholder="Search tools..." 
-                className="pl-10 h-12 rounded-md border-gray-300" 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-          </div>
 
-          <div className="mb-8">
-            <h2 className="text-lg font-medium text-gray-700 mb-4">Filter by Category</h2>
-            <div className="flex flex-wrap gap-2">
-              <Button 
-                variant={!searchQuery ? "default" : "outline"} 
-                size="sm"
-                onClick={() => setSearchQuery("")}
-                className="rounded-full"
-              >
-                All Tools
-              </Button>
-              {categories.map(category => (
-                <Button 
-                  key={category} 
-                  variant={searchQuery === category ? "default" : "outline"} 
-                  size="sm"
-                  onClick={() => setSearchQuery(category)}
-                  className="rounded-full"
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTools.length > 0 ? (
-              filteredTools.map((tool) => (
-                <Card key={tool.id} className="overflow-hidden border border-gray-200 rounded-xl shadow hover:shadow-md transition-all">
-                  <div className="flex items-start p-6">
-                    <div className="mr-4 mt-1">
-                      {tool.icon}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
+                {filteredResources.map((resource) => (
+                  <Card key={resource.id} className="overflow-hidden flex flex-col h-full rounded-lg shadow-sm border">
+                    <div className="relative">
+                      <div 
+                        className="h-44 bg-cover bg-center rounded-t-lg" 
+                        style={{ backgroundImage: `url(${resource.coverImage})` }}
+                      />
+                      {resource.badge && (
+                        <Badge 
+                          className={cn(
+                            "absolute top-3 left-3 px-2 py-1 text-xs font-medium text-white",
+                            resource.badge === "Trending" ? "bg-red-500" : "bg-orange-500"
+                          )}
+                        >
+                          {resource.badge}
+                        </Badge>
+                      )}
+                      <div className="absolute bottom-3 right-3 bg-white rounded-md p-1">
+                        <FileText className="h-5 w-5 text-[#09261E]" />
+                      </div>
                     </div>
-                    <div>
-                      <CardTitle className="text-xl mb-2 text-[#09261E]">{tool.title}</CardTitle>
-                      <p className="text-gray-600 text-sm mb-4">{tool.description}</p>
-                      <div className="flex flex-wrap gap-2 mt-2 mb-4">
+                    <CardHeader className="p-4 pb-2">
+                      <CardTitle className="text-lg font-semibold">{resource.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0 pb-3 flex-1">
+                      <p className="text-sm text-gray-600 line-clamp-2">{resource.description}</p>
+                    </CardContent>
+                    <CardFooter className="p-4 pt-0">
+                      {resource.status === "Published" ? (
+                        <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90">View Resource</Button>
+                      ) : (
+                        <Button variant="outline" className="w-full text-gray-500" disabled>Coming Soon</Button>
+                      )}
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            </>
+          )}
+
+          {activeTab === "tools" && (
+            <>
+              <div>
+                <h1 className="text-4xl font-bold text-[#09261E]">Real Estate Investment Tools</h1>
+                <p className="text-gray-600 mt-2">Free calculators and analysis tools to help you make data-driven real estate investment decisions.</p>
+              </div>
+              
+              <div className="relative w-full max-w-md mx-auto">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input 
+                  placeholder="Search tools..." 
+                  className="pl-10 h-12 rounded-md border-gray-300 w-full" 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+
+              <div className="flex justify-center">
+                <div className="inline-flex bg-[#09261E]/5 p-1 rounded-lg">
+                  {toolCategories.map(category => (
+                    <Button
+                      key={category.id}
+                      variant="ghost"
+                      className={cn(
+                        "rounded-md px-4 h-10 flex items-center gap-2",
+                        activeToolCategory === category.label
+                          ? "bg-[#09261E] text-white"
+                          : "bg-transparent text-gray-700 hover:bg-[#09261E]/10"
+                      )}
+                      onClick={() => setActiveToolCategory(category.label)}
+                    >
+                      {category.icon}
+                      <span>{category.label}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
+                {filteredTools.map((tool) => (
+                  <Card key={tool.id} className="overflow-hidden flex flex-col h-full rounded-lg shadow-sm border">
+                    <div className="relative">
+                      <div 
+                        className="h-44 bg-cover bg-center rounded-t-lg" 
+                        style={{ backgroundImage: `url(${tool.coverImage})` }}
+                      />
+                      {tool.badge && (
+                        <Badge 
+                          className={cn(
+                            "absolute top-3 left-3 px-2 py-1 text-xs font-medium text-white",
+                            tool.badge === "Popular" ? "bg-red-500" : 
+                            tool.badge === "New" ? "bg-blue-500" : "bg-orange-500"
+                          )}
+                        >
+                          {tool.badge}
+                        </Badge>
+                      )}
+                      <div className="absolute bottom-3 right-3 bg-white rounded-md p-1">
+                        <Calculator className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                    </div>
+                    <CardHeader className="p-4 pb-2">
+                      <CardTitle className="text-lg font-semibold">{tool.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0 pb-3 flex-1">
+                      <p className="text-sm text-gray-600 line-clamp-2">{tool.description}</p>
+                    </CardContent>
+                    <CardFooter className="p-4 pt-0">
+                      <div className="w-full flex flex-wrap gap-2">
                         {tool.tags.map(tag => (
                           <Badge key={tag} variant="outline" className="bg-gray-50">
                             {tag}
                           </Badge>
                         ))}
                       </div>
-                      <Button className="w-full">Open Calculator</Button>
-                    </div>
-                  </div>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-full flex items-center justify-center py-12">
-                <div className="text-center">
-                  <Calculator className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium">No tools found</h3>
-                  <p className="text-gray-500">Try adjusting your search</p>
-                </div>
+                    </CardFooter>
+                    <CardFooter className="p-4 pt-0">
+                      {tool.status === "Published" && tool.badge !== "Coming Soon" ? (
+                        <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90">Open {tool.type}</Button>
+                      ) : (
+                        <Button variant="outline" className="w-full text-gray-500" disabled>Coming Soon</Button>
+                      )}
+                    </CardFooter>
+                  </Card>
+                ))}
               </div>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
