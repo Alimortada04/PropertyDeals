@@ -8,7 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, ArrowRight, KeyRound, UserPlus, Mail } from "lucide-react";
+import { Loader2, ArrowRight, KeyRound, UserPlus, Mail, Eye, EyeOff } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Separator } from "@/components/ui/separator";
 
@@ -122,6 +122,8 @@ const BackgroundOrbs = () => {
 export default function AuthPage() {
   const [location] = useLocation();
   const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
   const { 
     user, 
@@ -234,12 +236,22 @@ export default function AuthPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input 
-                            type="password" 
-                            placeholder="Password"
-                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
-                            {...field} 
-                          />
+                          <div className="relative">
+                            <Input 
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Password"
+                              className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all pr-10"
+                              {...field} 
+                            />
+                            <button 
+                              type="button" 
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                              onClick={() => setShowPassword(!showPassword)}
+                              tabIndex={-1}
+                            >
+                              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage className="text-[#803344]" />
                       </FormItem>
@@ -332,8 +344,8 @@ export default function AuthPage() {
             </>
           ) : (
             <>
-              <h1 className="text-2xl font-bold text-center text-[#09261E] mb-2">Create your account</h1>
-              <p className="text-center text-gray-500 mb-8">Start finding your perfect deal</p>
+              <h1 className="text-2xl font-bold text-center text-[#09261E] mb-2">Welcome to PropertyDeals</h1>
+              <p className="text-center text-gray-500 mb-8">Create your account</p>
 
               <Form {...registerForm}>
                 <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
@@ -361,12 +373,22 @@ export default function AuthPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input 
-                            type="password" 
-                            placeholder="Password"
-                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
-                            {...field} 
-                          />
+                          <div className="relative">
+                            <Input 
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Password"
+                              className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all pr-10"
+                              {...field} 
+                            />
+                            <button 
+                              type="button" 
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                              onClick={() => setShowPassword(!showPassword)}
+                              tabIndex={-1}
+                            >
+                              {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage className="text-[#803344]" />
                       </FormItem>
@@ -379,12 +401,22 @@ export default function AuthPage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
-                          <Input 
-                            type="password" 
-                            placeholder="Confirm Password"
-                            className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all"
-                            {...field} 
-                          />
+                          <div className="relative">
+                            <Input 
+                              type={showConfirmPassword ? "text" : "password"}
+                              placeholder="Confirm Password"
+                              className="h-12 rounded-md border-gray-200 bg-white/70 focus:border-[#09261E] focus:ring-[#09261E] transition-all pr-10"
+                              {...field} 
+                            />
+                            <button 
+                              type="button" 
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              tabIndex={-1}
+                            >
+                              {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage className="text-[#803344]" />
                       </FormItem>
