@@ -1,0 +1,77 @@
+// LoginPage.tsx
+import { supabase } from '../supabase'; // Adjust import path based on your project
+
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault();
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      alert(error.message);
+    } else {
+      navigate('/dashboard');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    await supabase.auth.signInWithOAuth({ provider: 'google' });
+  };
+
+  const handleFacebookLogin = async () => {
+    await supabase.auth.signInWithOAuth({ provider: 'facebook' });
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen justify-center items-center bg-gray-50">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 className="text-2xl font-bold text-center mb-2">Welcome back</h1>
+        <p className="text-center text-gray-500 mb-6">Please sign in to continue</p>
+
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            className="input-field"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="input-field"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit" className="btn-primary w-full">
+            Sign In →
+          </button>
+        </form>
+
+        <div className="my-6 text-center text-gray-400">Or continue with</div>
+
+        <div className="flex gap-4 justify-center">
+          <button onClick={handleGoogleLogin} className="btn-outline">Google</button>
+          <button onClick={handleFacebookLogin} className="btn-outline">Facebook</button>
+        </div>
+
+        <div className="mt-6 text-center text-sm">
+          Don't have an account?{' '}
+          <a href="/register" className="text-green-700 font-bold">
+            Create one
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}

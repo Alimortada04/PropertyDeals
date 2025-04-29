@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useAuth } from "@/hooks/use-auth";
 import { Redirect, useLocation } from "wouter";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Separator } from "@/components/ui/separator";
 
@@ -21,16 +19,17 @@ const loginSchema = z.object({
 
 // Registration form schema
 const registerSchema = z.object({
-  fullName: z.string().min(2, "Full name is required"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  confirmPassword: z.string().min(6, "Password must be at least 6 characters"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 export default function AuthPage() {
   const [location] = useLocation();
-  const [activeTab, setActiveTab] = useState(() => {
-    return location === "/register" ? "register" : "login";
-  });
+  const [isLogin, setIsLogin] = useState(true);
   
   const { 
     user, 
@@ -41,9 +40,9 @@ export default function AuthPage() {
     loginWithFacebookMutation 
   } = useAuth();
 
-  // Update tab if the URL changes
+  // Toggle between login and register based on URL
   useEffect(() => {
-    setActiveTab(location === "/register" ? "register" : "login");
+    setIsLogin(location !== "/register");
   }, [location]);
 
   // Login form
@@ -59,9 +58,9 @@ export default function AuthPage() {
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      fullName: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
@@ -72,15 +71,19 @@ export default function AuthPage() {
 
   // Handle registration submission
   function onRegisterSubmit(values: z.infer<typeof registerSchema>) {
-    registerMutation.mutate(values);
+    registerMutation.mutate({
+      email: values.email,
+      password: values.password,
+      fullName: "", // This can be collected later in the onboarding process
+    });
   }
   
-  // Handle social login
-  function handleGoogleLogin() {
+  // Handle social login/signup
+  function handleGoogleAuth() {
     loginWithGoogleMutation.mutate();
   }
   
-  function handleFacebookLogin() {
+  function handleFacebookAuth() {
     loginWithFacebookMutation.mutate();
   }
 
@@ -90,255 +93,231 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center">
-      <div className="container mx-auto px-4 py-10">
-        <div className="grid lg:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
-          <div>
-            <Card className="bg-white/80 backdrop-blur-lg shadow-lg border border-gray-100">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl font-heading text-[#09261E]">
-                  {activeTab === "login" ? "Sign In to PropertyDeals" : "Create Your Account"}
-                </CardTitle>
-                <CardDescription>
-                  {activeTab === "login" 
-                    ? "Access your account to manage properties and deals" 
-                    : "Join our community of property buyers, sellers, and REPs"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Tabs 
-                  value={activeTab} 
-                  onValueChange={setActiveTab} 
-                  className="w-full"
+    <div className="flex flex-col min-h-screen justify-center items-center bg-gray-50">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        {isLogin ? (
+          <>
+            <h1 className="text-2xl font-bold text-center mb-2">Welcome back</h1>
+            <p className="text-center text-gray-500 mb-6">Please sign in to continue</p>
+
+            <Form {...loginForm}>
+              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                <FormField
+                  control={loginForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input 
+                          placeholder="Email" 
+                          type="email"
+                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={loginForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input 
+                          type="password" 
+                          placeholder="Password"
+                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button 
+                  type="submit" 
+                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center transition-colors"
+                  disabled={loginMutation.isPending}
                 >
-                  <TabsList className="grid grid-cols-2 mb-6">
-                    <TabsTrigger value="login">Sign In</TabsTrigger>
-                    <TabsTrigger value="register">Register</TabsTrigger>
-                  </TabsList>
+                  {loginMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span>Signing In...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Sign In</span>
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </Form>
 
-                  <TabsContent value="login">
-                    <Form {...loginForm}>
-                      <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-                        <FormField
-                          control={loginForm.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Email</FormLabel>
-                              <FormControl>
-                                <Input type="email" placeholder="Enter your email" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={loginForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Password</FormLabel>
-                              <FormControl>
-                                <Input type="password" placeholder="Enter your password" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button 
-                          type="submit" 
-                          className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
-                          disabled={loginMutation.isPending}
-                        >
-                          {loginMutation.isPending ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Signing In...
-                            </>
-                          ) : (
-                            "Sign In"
-                          )}
-                        </Button>
-                        
-                        <div className="relative my-4">
-                          <div className="absolute inset-0 flex items-center">
-                            <Separator className="w-full" />
-                          </div>
-                          <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-white px-2 text-gray-500">or continue with</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-2">
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            className="w-1/2"
-                            onClick={handleGoogleLogin}
-                            disabled={loginWithGoogleMutation.isPending}
-                          >
-                            <SiGoogle className="mr-2 h-4 w-4" />
-                            Google
-                          </Button>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            className="w-1/2" 
-                            onClick={handleFacebookLogin}
-                            disabled={loginWithFacebookMutation.isPending}
-                          >
-                            <SiFacebook className="mr-2 h-4 w-4 text-[#1877F2]" />
-                            Facebook
-                          </Button>
-                        </div>
-                      </form>
-                    </Form>
-                  </TabsContent>
-
-                  <TabsContent value="register">
-                    <Form {...registerForm}>
-                      <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
-                        <FormField
-                          control={registerForm.control}
-                          name="fullName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Full Name</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Enter your full name" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={registerForm.control}
-                          name="email"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Email</FormLabel>
-                              <FormControl>
-                                <Input type="email" placeholder="Enter your email" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={registerForm.control}
-                          name="password"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Password</FormLabel>
-                              <FormControl>
-                                <Input type="password" placeholder="Create a password" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button 
-                          type="submit" 
-                          className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
-                          disabled={registerMutation.isPending}
-                        >
-                          {registerMutation.isPending ? (
-                            <>
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Creating Account...
-                            </>
-                          ) : (
-                            "Create Account"
-                          )}
-                        </Button>
-                        
-                        <div className="relative my-4">
-                          <div className="absolute inset-0 flex items-center">
-                            <Separator className="w-full" />
-                          </div>
-                          <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-white px-2 text-gray-500">or continue with</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-2">
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            className="w-1/2"
-                            onClick={handleGoogleLogin}
-                            disabled={loginWithGoogleMutation.isPending}
-                          >
-                            <SiGoogle className="mr-2 h-4 w-4" />
-                            Google
-                          </Button>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            className="w-1/2" 
-                            onClick={handleFacebookLogin}
-                            disabled={loginWithFacebookMutation.isPending}
-                          >
-                            <SiFacebook className="mr-2 h-4 w-4 text-[#1877F2]" />
-                            Facebook
-                          </Button>
-                        </div>
-                      </form>
-                    </Form>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="hidden lg:block">
-            <div className="bg-[#09261E] text-white p-10 rounded-lg">
-              <h2 className="text-3xl font-heading font-bold mb-6">Find Your Perfect Property Deal</h2>
-              <p className="mb-6 text-white/90">
-                PropertyDeals connects you with exclusive off-market real estate opportunities you won't find anywhere else.
-              </p>
-              <div className="space-y-4 mb-8">
-                <div className="flex items-start">
-                  <div className="bg-white/10 p-2 rounded-full mr-4">
-                    <i className="fas fa-search text-[#E59F9F]"></i>
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-lg mb-1">Discover Off-Market Properties</h3>
-                    <p className="text-white/80 text-sm">Access exclusive listings not available on traditional platforms</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="bg-white/10 p-2 rounded-full mr-4">
-                    <i className="fas fa-dollar-sign text-[#E59F9F]"></i>
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-lg mb-1">Save on Transaction Costs</h3>
-                    <p className="text-white/80 text-sm">Connect directly with property owners and save on fees</p>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="bg-white/10 p-2 rounded-full mr-4">
-                    <i className="fas fa-home text-[#E59F9F]"></i>
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-bold text-lg mb-1">Sell Your Property Faster</h3>
-                    <p className="text-white/80 text-sm">List your property and reach motivated buyers directly</p>
-                  </div>
-                </div>
+            <div className="my-6 relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator className="w-full" />
               </div>
-              <div className="flex items-center mt-6 p-4 bg-white/5 rounded-lg">
-                <div className="flex -space-x-2 mr-4">
-                  <img src="https://randomuser.me/api/portraits/women/79.jpg" alt="User" className="w-10 h-10 rounded-full border-2 border-[#09261E]" />
-                  <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" className="w-10 h-10 rounded-full border-2 border-[#09261E]" />
-                  <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" className="w-10 h-10 rounded-full border-2 border-[#09261E]" />
-                </div>
-                <div>
-                  <p className="text-sm text-white/90">Join over 10,000 satisfied users finding and selling properties with ease.</p>
-                </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-gray-400">Or continue with</span>
               </div>
             </div>
-          </div>
-        </div>
+
+            <div className="flex gap-4 justify-center">
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-1/2 border-gray-300 hover:bg-gray-50"
+                onClick={handleGoogleAuth}
+                disabled={loginWithGoogleMutation.isPending}
+              >
+                <SiGoogle className="mr-2 h-4 w-4" />
+                <span>Google</span>
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-1/2 border-gray-300 hover:bg-gray-50" 
+                onClick={handleFacebookAuth}
+                disabled={loginWithFacebookMutation.isPending}
+              >
+                <SiFacebook className="mr-2 h-4 w-4 text-[#1877F2]" />
+                <span>Facebook</span>
+              </Button>
+            </div>
+
+            <div className="mt-6 text-center text-sm">
+              Don't have an account?{' '}
+              <a href="/register" className="text-green-700 font-bold">
+                Create one
+              </a>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold text-center mb-2">Create your account</h1>
+            <p className="text-center text-gray-500 mb-6">Start finding your perfect deal</p>
+
+            <Form {...registerForm}>
+              <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+                <FormField
+                  control={registerForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input 
+                          type="email" 
+                          placeholder="Email"
+                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={registerForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input 
+                          type="password" 
+                          placeholder="Password"
+                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={registerForm.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input 
+                          type="password" 
+                          placeholder="Confirm Password"
+                          className="rounded-md border-gray-300 focus:border-green-700 focus:ring-green-700"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button 
+                  type="submit" 
+                  className="w-full bg-[#09261E] hover:bg-[#135341] text-white flex items-center justify-center transition-colors"
+                  disabled={registerMutation.isPending}
+                >
+                  {registerMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <span>Creating Account...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Sign Up</span>
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </Form>
+
+            <div className="my-6 relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator className="w-full" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-gray-400">Or sign up with</span>
+              </div>
+            </div>
+
+            <div className="flex gap-4 justify-center">
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-1/2 border-gray-300 hover:bg-gray-50"
+                onClick={handleGoogleAuth}
+                disabled={loginWithGoogleMutation.isPending}
+              >
+                <SiGoogle className="mr-2 h-4 w-4" />
+                <span>Google</span>
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-1/2 border-gray-300 hover:bg-gray-50" 
+                onClick={handleFacebookAuth}
+                disabled={loginWithFacebookMutation.isPending}
+              >
+                <SiFacebook className="mr-2 h-4 w-4 text-[#1877F2]" />
+                <span>Facebook</span>
+              </Button>
+            </div>
+
+            <div className="mt-6 text-center text-sm">
+              Already have an account?{' '}
+              <a href="/auth" className="text-green-700 font-bold">
+                Sign In
+              </a>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
