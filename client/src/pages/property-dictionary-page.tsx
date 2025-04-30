@@ -699,19 +699,21 @@ export default function PropertyDictionaryPage() {
         <div className="space-y-8">
           {Object.keys(groupedTerms).sort().map((letter) => (
             <div key={letter} id={`letter-${letter}`} className="scroll-mt-20">
-              <h2 className="text-3xl font-bold text-[#09261E] mb-4 text-center">{letter}</h2>
+              <h2 className="text-3xl font-bold text-[#09261E] mb-4">{letter}</h2>
               <div className="grid gap-6">
                 {groupedTerms[letter].map((term) => (
-                  <div key={term.id} className="border-b pb-6 text-center">
-                    <div className="flex flex-col items-center justify-center">
-                      <h3 className="text-xl font-semibold text-[#09261E]">{term.term}</h3>
-                      <div className="inline-flex items-center mt-1">
-                        <span className="text-sm bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">
-                          {term.category}
-                        </span>
+                  <div key={term.id} className="border-b pb-6">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-xl font-semibold text-[#09261E]">{term.term}</h3>
+                        <div className="inline-flex items-center mt-1">
+                          <span className="text-sm bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">
+                            {term.category}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <p className="mt-2 text-gray-700 leading-relaxed mx-auto max-w-3xl">{term.definition}</p>
+                    <p className="mt-2 text-gray-700 leading-relaxed">{term.definition}</p>
                   </div>
                 ))}
               </div>
