@@ -121,7 +121,7 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
                     value={filters.beds}
                     onValueChange={(value) => handleFilterChange('beds', value)}
                   >
-                    <SelectTrigger className="bg-white border border-[#D8D8D8] rounded-md h-9">
+                    <SelectTrigger className="bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 focus:ring-2 focus:ring-[#135341]/20 rounded-md h-9">
                       <SelectValue placeholder="Any" />
                     </SelectTrigger>
                     <SelectContent>
