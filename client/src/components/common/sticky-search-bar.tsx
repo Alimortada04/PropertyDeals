@@ -61,7 +61,7 @@ export default function StickySearchBar({
     }
   }, []);
 
-  // Smart sticky behavior based on scroll position
+  // Always sticky behavior
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
@@ -72,33 +72,23 @@ export default function StickySearchBar({
         initialPositionRef.current = rect.top + window.scrollY;
       }
       
-      const initialPosition = initialPositionRef.current || 0;
+      // Always make sticky
+      setIsSticky(true);
       
-      // Always make sticky when scrolled beyond 100px
-      if (currentScrollY > 100) {
-        setIsSticky(true);
-        
-        // Hide bottom section when scrolling down, show when scrolling up
-        if (currentScrollY > lastScrollY + 5) {
-          // Scrolling down
-          setShowBottomSection(false);
-        } else if (currentScrollY < lastScrollY - 5) {
-          // Scrolling up
-          setShowBottomSection(true);
-        }
-      } else {
-        // Return to original position when scrolled back up
-        setIsSticky(false);
-        setShowBottomSection(true);
-      }
+      // Always show bottom section
+      setShowBottomSection(true);
       
       // Save current scroll position
       setLastScrollY(currentScrollY);
     };
     
+    // Set initially to sticky
+    setIsSticky(true);
+    setShowBottomSection(true);
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
   
   return (
     <div 

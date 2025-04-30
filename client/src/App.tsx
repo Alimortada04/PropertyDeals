@@ -79,10 +79,18 @@ function ScrollToTop() {
 function Router() {
   return (
     <Switch>
-      <Route path="/">
+      <Route path="/landingpage">
         <AppLayout>
           <HomePage />
         </AppLayout>
+      </Route>
+      
+      <Route path="/">
+        <Redirect to="/landingpage" />
+      </Route>
+      
+      <Route path="/home">
+        <Redirect to="/landingpage" />
       </Route>
       <Route path="/properties">
         <AppLayout>

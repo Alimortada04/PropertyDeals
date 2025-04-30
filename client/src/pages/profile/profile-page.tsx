@@ -122,9 +122,9 @@ export default function ProfilePage() {
   return (
     <div className="flex bg-white">
       {/* Left sidebar */}
-      <div className="w-[230px] border-r h-[calc(100vh-64px)] pt-6 flex flex-col bg-white shadow-sm">
+      <div className="w-[230px] border-r h-screen sticky top-0 flex flex-col bg-white shadow-sm overflow-y-auto">
         {/* Profile info */}
-        <div className="px-6 pb-6 mb-4 border-b flex flex-col items-center">
+        <div className="px-6 py-6 mb-4 border-b flex flex-col items-center">
           <Avatar className="h-20 w-20 mb-4">
             <AvatarImage src="" alt={user?.fullName || "User"} />
             <AvatarFallback className="bg-gray-200 text-gray-700 text-xl font-medium">
@@ -136,7 +136,7 @@ export default function ProfilePage() {
         </div>
         
         {/* Menu */}
-        <div className="px-3 flex-1">
+        <div className="px-3 flex-1 overflow-y-auto">
           <ProfileMenuItem
             icon={<UserCircle size={18} />}
             label="General"

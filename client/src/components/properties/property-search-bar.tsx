@@ -49,37 +49,28 @@ export default function PropertySearchBar({
     }
   }, []);
   
-  // Handle sticky behavior
+  // Always sticky behavior with visible bottom section
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const initialPosition = initialPositionRef.current || 0;
       
-      // Make sticky only when scrolled past the original position
-      if (currentScrollY > initialPosition) {
-        setIsSticky(true);
-        
-        // Hide bottom section when scrolling down, show when scrolling up
-        if (currentScrollY > lastScrollY + 5) {
-          // Scrolling down
-          setShowBottomSection(false);
-        } else if (currentScrollY < lastScrollY - 5) {
-          // Scrolling up
-          setShowBottomSection(true);
-        }
-      } else {
-        // Return to original position when scrolled back up
-        setIsSticky(false);
-        setShowBottomSection(true);
-      }
+      // Always make sticky
+      setIsSticky(true);
       
-      // Save current scroll position
+      // Always show bottom section
+      setShowBottomSection(true);
+      
+      // Save current scroll position for future use if needed
       setLastScrollY(currentScrollY);
     };
     
+    // Set initially to sticky
+    setIsSticky(true);
+    setShowBottomSection(true);
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
   
   // Handle search input change with address suggestions
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
