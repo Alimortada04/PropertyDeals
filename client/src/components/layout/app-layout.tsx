@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import Sidebar from "@/components/navigation/sidebar";
 import { Button } from "@/components/ui/button";
 import { 
-  Menu,
+  Settings,
   Bell, 
-  MessagesSquare,
+  MessageCircle,
   ChevronRight
 } from "lucide-react";
+import { MessagePopup } from "@/components/popups/MessagePopup";
+import { NotificationPopup } from "@/components/popups/NotificationPopup";
 import { Link } from "wouter";
 
 interface AppLayoutProps {
@@ -14,8 +16,27 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  // Bottom bar menu popup state
+  // States for popups
   const [showMenu, setShowMenu] = useState(false);
+  const [showMessagePopup, setShowMessagePopup] = useState(false);
+  const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+  
+  // Toggle popup functions
+  const toggleMessagePopup = () => {
+    // Close other popups first
+    if (showNotificationPopup) setShowNotificationPopup(false);
+    if (showMenu) setShowMenu(false);
+    // Toggle message popup
+    setShowMessagePopup(!showMessagePopup);
+  };
+  
+  const toggleNotificationPopup = () => {
+    // Close other popups first
+    if (showMessagePopup) setShowMessagePopup(false);
+    if (showMenu) setShowMenu(false);
+    // Toggle notification popup
+    setShowNotificationPopup(!showNotificationPopup);
+  };
   
   return (
     <div className="min-h-screen bg-gray-50">
@@ -41,7 +62,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 className="text-gray-700 flex items-center h-8 px-3 rounded-md hover:bg-gray-100 hover:text-gray-700"
                 onClick={() => setShowMenu(!showMenu)}
               >
-                <Menu className="h-4 w-4 mr-2" />
+                <Settings className="h-4 w-4 mr-2" />
                 <span className="text-sm font-medium">Menu</span>
               </Button>
               
@@ -132,6 +153,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 variant="ghost" 
                 size="icon" 
                 className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-gray-700"
+                onClick={toggleNotificationPopup}
               >
                 <Bell className="h-4 w-4 text-[#09261E]" />
                 <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500"></span>
@@ -144,14 +166,27 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 variant="ghost" 
                 size="icon" 
                 className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-gray-700"
+                onClick={toggleMessagePopup}
               >
-                <MessagesSquare className="h-4 w-4 text-[#09261E]" />
+                <MessageCircle className="h-4 w-4 text-[#09261E]" />
                 <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-500"></span>
               </Button>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Message Popup */}
+      <MessagePopup 
+        isOpen={showMessagePopup} 
+        onClose={() => setShowMessagePopup(false)} 
+      />
+      
+      {/* Notification Popup */}
+      <NotificationPopup 
+        isOpen={showNotificationPopup}
+        onClose={() => setShowNotificationPopup(false)}
+      />
     </div>
   );
 }
