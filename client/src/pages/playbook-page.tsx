@@ -237,7 +237,7 @@ export default function PlaybookPage() {
                       className={cn(
                         "rounded-md px-4 h-10 flex items-center gap-2",
                         activeCategory === category.label
-                          ? "bg-[#09261E] text-white hover:bg-[#09261E]" // Remove pink hover on selected
+                          ? "bg-[#09261E] text-white hover:bg-[#09261E] hover:text-white" // Keep text white on hover
                           : "bg-transparent text-gray-700 hover:bg-gray-200" // Gray hover instead of pink
                       )}
                       onClick={() => setActiveCategory(category.label)}
@@ -318,7 +318,7 @@ export default function PlaybookPage() {
                       className={cn(
                         "rounded-md px-4 h-10 flex items-center gap-2",
                         activeToolCategory === category.label
-                          ? "bg-[#09261E] text-white hover:bg-[#09261E]" // Remove pink hover on selected
+                          ? "bg-[#09261E] text-white hover:bg-[#09261E] hover:text-white" // Keep text white on hover
                           : "bg-transparent text-gray-700 hover:bg-gray-200" // Gray hover instead of pink
                       )}
                       onClick={() => setActiveToolCategory(category.label)}

@@ -23,7 +23,7 @@ import ToolsPage from "@/pages/tools-page";
 import FlipPage from "@/pages/tools/flip";
 import PlaybookPage from "@/pages/playbook-page";
 import InboxPage from "@/pages/inbox-page";
-import PropertyDictionaryPage from "@/pages/playbook/property-dictionary-page";
+import PropertyDictionaryPage from "@/pages/property-dictionary-page";
 import HelpPage from "@/pages/help-page";
 import FAQPage from "@/pages/help/faq-page";
 import SuggestionsPage from "@/pages/help/suggestions-page";
