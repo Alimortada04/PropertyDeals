@@ -10,6 +10,8 @@ import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
 import DashboardNewPage from "@/pages/dashboard";
+import ProfilePage from "@/pages/profile/profile-page";
+import ProfileSettingsPage from "@/pages/profile/settings-page";
 import AuthPage from "@/pages/auth-page";
 import AuthCallbackPage from "@/pages/auth/callback";
 import ForgotPasswordPage from "@/pages/auth/forgot-password";
@@ -158,16 +160,21 @@ function Router() {
           <PropertyDictionaryPage />
         </AppLayout>
       </Route>
-      <Route path="/profile">
+      <ProtectedRoute path="/profile" component={() => (
         <AppLayout>
-          <div className="container mx-auto px-4 py-12 pt-20">
-            <h1 className="text-4xl font-heading font-bold text-[#09261E] mb-6">Profile</h1>
-            <p className="text-lg text-gray-600">
-              User profile page will be available in future updates.
-            </p>
+          <div className="pt-20">
+            <ProfilePage />
           </div>
         </AppLayout>
-      </Route>
+      )} />
+      
+      <ProtectedRoute path="/profile/settings" component={() => (
+        <AppLayout>
+          <div className="pt-20">
+            <ProfileSettingsPage />
+          </div>
+        </AppLayout>
+      )} />
       <Route path="/settings">
         <AppLayout>
           <div className="container mx-auto px-4 py-12 pt-20">
