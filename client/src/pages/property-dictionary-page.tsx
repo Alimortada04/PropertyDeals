@@ -376,6 +376,48 @@ const glossaryTerms = [
     term: "Home Inspection",
     definition: "A thorough examination of a home's condition, typically performed before purchase, that assesses structural integrity and major systems.",
     category: "Buying"
+  },
+  {
+    id: "61",
+    term: "Underwriting",
+    definition: "The process used to determine loan approval. It involves evaluating the property and the borrower's credit and ability to pay the mortgage.",
+    category: "Financing"
+  },
+  {
+    id: "62",
+    term: "Uniform Residential Loan Application",
+    definition: "A standard mortgage application you will have to complete. The form requests your income, assets, liabilities, and a description of the property you plan to buy, among other things.",
+    category: "Financing"
+  },
+  {
+    id: "63",
+    term: "Unsecured Loan",
+    definition: "A loan that is not backed by collateral.",
+    category: "Financing"
+  },
+  {
+    id: "64",
+    term: "Veterans Affairs (U.S. Department of Veterans Affairs)",
+    definition: "A federal government agency that provides benefits to veterans and their dependents, including health care, educational assistance, financial assistance, and guaranteed home loans.",
+    category: "Financing"
+  },
+  {
+    id: "65",
+    term: "VA Guaranteed Loan",
+    definition: "A mortgage loan that is guaranteed by the U.S. Department of Veterans Affairs (VA).",
+    category: "Financing"
+  },
+  {
+    id: "66",
+    term: "Walk-Through",
+    definition: "A common clause in a sales contract that allows the buyer to examine the property being purchased at a specified time immediately before the closing, for example, within the 24 hours before closing.",
+    category: "Buying"
+  },
+  {
+    id: "67",
+    term: "Warranties",
+    definition: "Written guarantees of the quality of a product and the promise to repair or replace defective parts free of charge.",
+    category: "General"
   }
 ];
 
@@ -548,7 +590,7 @@ export default function PropertyDictionaryPage() {
         {/* Breadcrumb navigation */}
         <div className="text-sm text-gray-500 mb-6">
           {breadcrumbs.map((crumb, index) => (
-            <React.Fragment key={crumb.path}>
+            <span key={crumb.path} className="inline-block">
               {index > 0 && <span className="mx-2">/</span>}
               {index === breadcrumbs.length - 1 ? (
                 <span className="font-medium text-gray-800">{crumb.label}</span>
@@ -557,17 +599,17 @@ export default function PropertyDictionaryPage() {
                   {crumb.label}
                 </Link>
               )}
-            </React.Fragment>
+            </span>
           ))}
         </div>
         
         {/* Page header */}
-        <div className="mb-10">
-          <div className="flex items-center gap-3 mb-2">
+        <div className="mb-10 text-center">
+          <div className="flex items-center justify-center gap-3 mb-2">
             <Book className="h-6 w-6 text-[#09261E]" />
             <h1 className="text-3xl font-bold text-[#09261E]">Property Dictionary</h1>
           </div>
-          <p className="text-gray-600 max-w-3xl">
+          <p className="text-gray-600 max-w-3xl mx-auto">
             A comprehensive glossary of real estate terms to help you navigate the property market with confidence. Browse by category or search for specific terms.
           </p>
         </div>
@@ -657,21 +699,19 @@ export default function PropertyDictionaryPage() {
         <div className="space-y-8">
           {Object.keys(groupedTerms).sort().map((letter) => (
             <div key={letter} id={`letter-${letter}`} className="scroll-mt-20">
-              <h2 className="text-3xl font-bold text-[#09261E] mb-4">{letter}</h2>
+              <h2 className="text-3xl font-bold text-[#09261E] mb-4 text-center">{letter}</h2>
               <div className="grid gap-6">
                 {groupedTerms[letter].map((term) => (
-                  <div key={term.id} className="border-b pb-6">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="text-xl font-semibold text-[#09261E]">{term.term}</h3>
-                        <div className="inline-flex items-center mt-1">
-                          <span className="text-sm bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">
-                            {term.category}
-                          </span>
-                        </div>
+                  <div key={term.id} className="border-b pb-6 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <h3 className="text-xl font-semibold text-[#09261E]">{term.term}</h3>
+                      <div className="inline-flex items-center mt-1">
+                        <span className="text-sm bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">
+                          {term.category}
+                        </span>
                       </div>
                     </div>
-                    <p className="mt-2 text-gray-700 leading-relaxed">{term.definition}</p>
+                    <p className="mt-2 text-gray-700 leading-relaxed mx-auto max-w-3xl">{term.definition}</p>
                   </div>
                 ))}
               </div>
@@ -701,7 +741,7 @@ export default function PropertyDictionaryPage() {
 
           {/* Pagination */}
           {filteredTerms.length > termsPerPage && (
-            <div className="mt-10">
+            <div className="mt-10 flex justify-center">
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
