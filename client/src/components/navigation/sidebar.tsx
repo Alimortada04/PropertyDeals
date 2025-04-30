@@ -14,10 +14,9 @@ import {
   Bell,
   LogOut,
   ChevronRight,
-  Menu,
+  Settings,
   Briefcase,
-  Inbox,
-  MessagesSquare
+  MessageCircle
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -106,7 +105,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-center h-16">
         <Link href="/">
           <div className="flex items-center justify-center hover:scale-110 transition-all">
-            <img src="/images/pdLogo.png" alt="PropertyDeals" className="h-8 w-auto" />
+            <img src="/images/pdLogo.png" alt="PropertyDeals" className="h-10 w-auto" />
           </div>
         </Link>
       </div>
@@ -137,8 +136,8 @@ export default function Sidebar() {
           
           <NavItem 
             href="/inbox" 
-            icon={<Inbox size={24} />} 
-            label="Inbox"
+            icon={<MessageCircle size={24} />} 
+            label="Messages"
             active={location.startsWith('/inbox')} 
           />
           
@@ -195,8 +194,8 @@ export default function Sidebar() {
         </div>
       </ScrollArea>
       
-      {/* Bottom Navigation (Fixed) */}
-      <div className="p-2 pb-16 flex flex-col items-center space-y-2 border-t">
+      {/* Bottom Navigation (Fixed) - No border, centered icons */}
+      <div className="p-2 pb-16 flex flex-col items-center justify-center space-y-2">
         {/* Search Trigger - with consistent light grey hover circle */}
         <TooltipProvider delayDuration={100}>
           <Tooltip>
