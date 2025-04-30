@@ -221,7 +221,7 @@ export default function PropertySearchBar({
                 <Input
                   type="text"
                   placeholder="Search properties by location, type, or keyword..."
-                  className="pl-10 py-2 w-full border-gray-200 focus:border-[#09261E] focus:ring-[#09261E]"
+                  className="pl-10 py-2 w-full bg-white border border-gray-300 focus:border-[#135341] focus:ring-1 focus:ring-[#135341]/20 rounded-md shadow-sm focus:shadow-md transition-all duration-200"
                   value={searchQuery}
                   onChange={handleSearchChange}
                 />
@@ -248,7 +248,10 @@ export default function PropertySearchBar({
             {/* Filters Button with Popover */}
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-1">
+                <Button 
+                  variant="outline" 
+                  className="h-10 flex items-center gap-1.5 border border-gray-300 rounded-md bg-white shadow-sm hover:bg-[#EAF2EF] hover:border-[#135341]/30 transition-all duration-200"
+                >
                   <Sliders className="h-4 w-4 mr-1" />
                   Filters
                 </Button>
