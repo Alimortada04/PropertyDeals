@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Tag, Map, Building, User, Book, FileText } from 'lucide-react';
+import { Search, Tag, Map, Building, User, Book, FileText, MessageCircle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Link } from 'wouter';
 
