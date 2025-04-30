@@ -16,7 +16,8 @@ import {
   ChevronRight,
   Settings,
   Briefcase,
-  MessageCircle
+  MessageCircle,
+  Calendar
 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
@@ -139,6 +140,13 @@ export default function Sidebar() {
             icon={<MessageCircle size={24} />} 
             label="Messages"
             active={location.startsWith('/inbox')} 
+          />
+          
+          <NavItem 
+            href="/community" 
+            icon={<Calendar size={24} />} 
+            label="Community"
+            active={location.startsWith('/community')} 
           />
           
           <NavItem 

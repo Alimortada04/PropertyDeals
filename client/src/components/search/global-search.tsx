@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Tag, Map, Building, User, Book, FileText, MessageCircle } from 'lucide-react';
+import { Search, Tag, Map, Building, User, Book, FileText, MessageCircle, Calendar } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Link } from 'wouter';
 
@@ -91,6 +91,33 @@ const mockSearchData: SearchResult[] = [
     path: '/playbook/guides/first-time-homebuyer',
     location: 'Playbook',
     type: 'article'
+  },
+  {
+    id: '9',
+    title: 'Morning Coffee & Real Estate Networking',
+    description: 'Start your day networking with local real estate professionals',
+    icon: <Calendar className="h-5 w-5 text-gray-500" />,
+    path: '/community/morning-coffee-real-estate-networking',
+    location: 'Community',
+    type: 'page'
+  },
+  {
+    id: '10',
+    title: 'Commercial Real Estate Masterclass',
+    description: 'Learn commercial real estate strategies from industry leaders',
+    icon: <Calendar className="h-5 w-5 text-gray-500" />,
+    path: '/community/commercial-real-estate-masterclass',
+    location: 'Community',
+    type: 'page'
+  },
+  {
+    id: '11',
+    title: 'Property Tech Happy Hour',
+    description: 'Network with proptech innovators over drinks and appetizers',
+    icon: <Calendar className="h-5 w-5 text-gray-500" />,
+    path: '/community/property-tech-happy-hour',
+    location: 'Community',
+    type: 'page'
   }
 ];
 
@@ -176,7 +203,7 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
   return (
     <div className="fixed inset-0 bg-black/80 z-[100] flex items-start justify-center p-0 overflow-hidden backdrop-blur-sm">
       <div className="w-full h-full flex flex-col items-center">
-        <div className="w-full max-w-5xl px-4 pt-[15vh] pb-8" onClick={(e) => e.stopPropagation()}>
+        <div className="w-full max-w-6xl px-4 pt-[15vh] pb-8 ml-0" onClick={(e) => e.stopPropagation()}>
           <div className="bg-white/95 rounded-xl shadow-2xl overflow-hidden border border-gray-200">
             <div className="p-6 border-b">
               <div className="flex items-center">
@@ -218,7 +245,7 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
                   // Default navigation options if no recent searches
                   <div className="p-2">
                     <h3 className="text-sm font-semibold text-primary/80 px-3 py-2 uppercase tracking-wide">Quick Navigation</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-2">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-2">
                       <Link href="/properties" onClick={() => onClose()}>
                         <div className="flex items-center p-4 rounded-lg border border-gray-100 hover:bg-gray-50 hover:border-gray-200 hover:shadow-sm transition-all">
                           <Building className="h-6 w-6 text-[#09261E] mr-4" />
@@ -234,6 +261,15 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
                           <div>
                             <p className="font-medium text-[#09261E]">Professionals</p>
                             <p className="text-sm text-gray-500">Find real estate professionals</p>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link href="/community" onClick={() => onClose()}>
+                        <div className="flex items-center p-4 rounded-lg border border-gray-100 hover:bg-gray-50 hover:border-gray-200 hover:shadow-sm transition-all">
+                          <Calendar className="h-6 w-6 text-[#803344] mr-4" />
+                          <div>
+                            <p className="font-medium text-[#09261E]">Community</p>
+                            <p className="text-sm text-gray-500">Discover events and networking</p>
                           </div>
                         </div>
                       </Link>
