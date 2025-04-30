@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { GlobalSearchInput } from "@/components/search/global-search";
 
 interface NavItemProps {
   href: string;
@@ -363,98 +364,8 @@ export default function Sidebar() {
         </div>
       </div>
       
-      {/* Command K Search Dialog - Full Viewport */}
-      {showSearch && (
-        <div 
-          className="fixed inset-0 bg-black/80 z-[100] flex items-start justify-center p-0 overflow-hidden"
-          onClick={() => setShowSearch(false)}
-          style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }} 
-        >
-          <div className="w-full h-full flex flex-col items-center">
-            <div className="w-full max-w-4xl px-6 pt-[15vh] pb-8" onClick={(e) => e.stopPropagation()}>
-              <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
-                <div className="p-6 border-b">
-                  <div className="flex items-center">
-                    <Search className="w-5 h-5 text-gray-400 mr-3" />
-                    <input 
-                      type="text" 
-                      className="flex-1 outline-none text-xl bg-transparent"
-                      placeholder="Where would you like to go?" 
-                      autoFocus
-                    />
-                    <kbd className="ml-2 pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded border bg-slate-100 px-2 font-mono text-[12px] font-medium">
-                      ESC
-                    </kbd>
-                  </div>
-                </div>
-                
-                <div className="p-1 max-h-[60vh] overflow-y-auto">
-                  <div className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 uppercase tracking-wide">Navigation</h3>
-                    <div className="space-y-1">
-                      <Link href="/" onClick={() => setShowSearch(false)}>
-                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                          <Home className="h-5 w-5 text-gray-500 mr-3" />
-                          <div>
-                            <p className="font-medium">Home</p>
-                            <p className="text-xs text-gray-500">Back to the main page</p>
-                          </div>
-                        </div>
-                      </Link>
-                      <Link href="/properties" onClick={() => setShowSearch(false)}>
-                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                          <Building className="h-5 w-5 text-gray-500 mr-3" />
-                          <div>
-                            <p className="font-medium">Properties</p>
-                            <p className="text-xs text-gray-500">Browse available properties</p>
-                          </div>
-                          <span className="ml-auto text-xs text-gray-400">⌘1</span>
-                        </div>
-                      </Link>
-                      <Link href="/reps" onClick={() => setShowSearch(false)}>
-                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                          <Users className="h-5 w-5 text-gray-500 mr-3" />
-                          <div>
-                            <p className="font-medium">REPs</p>
-                            <p className="text-xs text-gray-500">Find real estate professionals</p>
-                          </div>
-                          <span className="ml-auto text-xs text-gray-400">⌘2</span>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                  
-                  <div className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 uppercase tracking-wide">Resources</h3>
-                    <div className="space-y-1">
-                      <Link href="/playbook" onClick={() => setShowSearch(false)}>
-                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                          <Book className="h-5 w-5 text-gray-500 mr-3" />
-                          <div>
-                            <p className="font-medium">Playbook</p>
-                            <p className="text-xs text-gray-500">Educational resources and guides</p>
-                          </div>
-                          <span className="ml-auto text-xs text-gray-400">⌘3</span>
-                        </div>
-                      </Link>
-                      <Link href="/inbox" onClick={() => setShowSearch(false)}>
-                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                          <Inbox className="h-5 w-5 text-gray-500 mr-3" />
-                          <div>
-                            <p className="font-medium">Inbox</p>
-                            <p className="text-xs text-gray-500">Messages and notifications</p>
-                          </div>
-                          <span className="ml-auto text-xs text-gray-400">⌘4</span>
-                        </div>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Global Search - Enhanced with location tags */}
+      {showSearch && <GlobalSearchInput onClose={() => setShowSearch(false)} />}
     </div>
   );
 }
