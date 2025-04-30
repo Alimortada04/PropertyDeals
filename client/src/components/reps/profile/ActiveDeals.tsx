@@ -63,13 +63,12 @@ export default function ActiveDeals({ properties }: ActiveDealsProps) {
         </h2>
         
         {properties.length > 3 && (
-          <Button 
-            variant="outline" 
-            className="text-[#09261E] border-[#09261E] hover:bg-gray-50 h-9 text-sm"
+          <button 
+            className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
             onClick={() => setShowAllPropertiesDialog(true)}
           >
             View All <ArrowRight size={14} className="ml-1.5" />
-          </Button>
+          </button>
         )}
       </div>
       
@@ -116,12 +115,12 @@ export default function ActiveDeals({ properties }: ActiveDealsProps) {
           )}
           
           <DialogFooter className="mt-4">
-            <Button 
-              variant="outline" 
+            <button 
+              className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
               onClick={() => setShowAllPropertiesDialog(false)}
             >
               Close
-            </Button>
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -213,13 +212,13 @@ function PropertyCard({ property }: { property: Property }) {
         </div>
         
         {/* Action Button */}
-        <Button 
-          className="w-full mt-1 bg-[#09261E] hover:bg-[#135341] h-9 text-sm"
+        <button 
+          className="w-full mt-1 px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-[#EAF2EF] text-[#135341] shadow-sm border border-gray-200 flex items-center justify-center"
           onClick={() => window.location.href = `/properties/${property.id}`}
         >
           <span>View Property</span>
           <ArrowRight size={14} className="ml-2" />
-        </Button>
+        </button>
       </CardContent>
     </Card>
   );

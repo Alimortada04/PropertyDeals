@@ -92,14 +92,13 @@ export default function ConnectionsList({ connections }: ConnectionsListProps) {
             Connections <span className="text-base font-normal text-gray-500">({connections.length})</span>
           </h2>
           
-          <Button 
-            variant="link" 
-            className="text-[#09261E] font-medium"
+          <button
+            className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
             onClick={() => setIsModalOpen(true)}
           >
             View All
             <ChevronRight size={16} className="ml-1" />
-          </Button>
+          </button>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -111,14 +110,13 @@ export default function ConnectionsList({ connections }: ConnectionsListProps) {
           ))}
         </div>
         
-        <Button 
-          variant="outline" 
-          className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+        <button 
+          className="w-full mt-4 px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center justify-center"
           onClick={() => setIsModalOpen(true)}
         >
           <Users size={16} className="mr-2" />
           <span>View all {connections.length} connections</span>
-        </Button>
+        </button>
       </div>
       
       {/* All Connections Modal */}
@@ -154,22 +152,24 @@ export default function ConnectionsList({ connections }: ConnectionsListProps) {
                 <div className="col-span-2 py-8 text-center text-gray-500">
                   <Users size={40} className="mx-auto mb-2 opacity-30" />
                   <p>No connections found matching "{searchQuery}"</p>
-                  <Button 
-                    variant="link" 
-                    className="mt-1 text-[#09261E]"
+                  <button 
+                    className="mt-1 px-3 py-1 rounded-md text-xs whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
                     onClick={() => setSearchQuery("")}
                   >
                     Clear search
-                  </Button>
+                  </button>
                 </div>
               )}
             </div>
           </div>
           
           <DialogFooter className="pt-2 border-t">
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+            <button 
+              className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
+              onClick={() => setIsModalOpen(false)}
+            >
               Close
-            </Button>
+            </button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
