@@ -464,32 +464,32 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3">
-            <Button
-              variant="outline"
-              className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+            <button
+              className="px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
               onClick={() => setContactModalOpen(true)}
             >
               Contact Seller
-            </Button>
-            <Button
-              variant="outline"
-              className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+            </button>
+            <button
+              className="px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
               onClick={() => setOfferModalOpen(true)}
             >
               Make an Offer
-            </Button>
-            <Button
-              variant="outline"
-              className={isInWatchlist ? "border-[#803344] text-[#803344] hover:bg-[#803344] hover:text-white" : "border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"}
+            </button>
+            <button
+              className={`px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 border border-gray-200 flex items-center ${
+                isInWatchlist 
+                  ? "bg-[#EAF2EF] text-[#135341] shadow-sm" 
+                  : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+              }`}
               onClick={handleWatchlistToggle}
             >
-              <Heart className={`h-4 w-4 mr-2 ${isInWatchlist ? 'fill-[#803344]' : ''}`} />
+              <Heart className={`h-4 w-4 mr-2 ${isInWatchlist ? 'fill-[#135341]' : ''}`} />
               {isInWatchlist ? 'Saved' : 'Save'}
-            </Button>
+            </button>
 
-            <Button
-              variant="outline"
-              className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+            <button
+              className="px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
               onClick={() => {
                 generateShareableUrl();
                 setShareModalOpen(true);
@@ -497,7 +497,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             >
               <Share2 className="h-4 w-4 mr-2" />
               Share
-            </Button>
+            </button>
           </div>
         </div>
       </section>
@@ -505,24 +505,24 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       {/* Sticky Navigation Menu */}
       <div className="sticky top-0 z-40 py-2 bg-white shadow-sm border-b border-gray-200" style={{ position: "sticky" }}>
         <div className="container mx-auto px-4">
-          <div className="hidden md:flex items-center justify-center gap-8 py-2 max-w-fit mx-auto">
-            <a href="#numbers" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+          <div className="hidden md:flex items-center justify-center gap-3 py-2 max-w-fit mx-auto">
+            <a href="#numbers" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
               <Calculator className="h-4 w-4 mr-1.5" />
               Numbers
             </a>
-            <a href="#calculators" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+            <a href="#calculators" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
               <PercentSquare className="h-4 w-4 mr-1.5" />
               Calculators
             </a>
-            <a href="#location" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+            <a href="#location" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
               <MapPin className="h-4 w-4 mr-1.5" />
               Location
             </a>
-            <a href="#reps" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+            <a href="#reps" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
               <Wrench className="h-4 w-4 mr-1.5" />
               REPs
             </a>
-            <a href="#history" className="flex items-center text-sm font-medium text-[#09261E] hover:text-[#803344] transition-colors">
+            <a href="#history" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
               <FileText className="h-4 w-4 mr-1.5" />
               History
             </a>

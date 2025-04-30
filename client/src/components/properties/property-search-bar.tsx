@@ -320,40 +320,40 @@ export default function PropertySearchBar({
             </div>
             
             {/* Right Side - View Toggle Buttons */}
-            <div className="flex items-center border border-gray-200 rounded-md divide-x">
-              <Button 
-                variant="ghost" 
-                size="sm" 
+            <div className="flex items-center gap-2">
+              <button 
                 className={cn(
-                  "px-3 py-1 rounded-none rounded-l-md",
-                  viewMode === "list" ? "bg-gray-100" : "bg-white"
+                  "px-3 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20",
+                  viewMode === "list" 
+                    ? "bg-[#EAF2EF] text-[#135341] shadow-sm" 
+                    : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
                 )}
                 onClick={() => onViewModeChange && onViewModeChange("list")}
               >
                 <List className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              </button>
+              <button
                 className={cn(
-                  "px-3 py-1 rounded-none",
-                  viewMode === "grid" ? "bg-gray-100" : "bg-white"
+                  "px-3 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20",
+                  viewMode === "grid" 
+                    ? "bg-[#EAF2EF] text-[#135341] shadow-sm" 
+                    : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
                 )}
                 onClick={() => onViewModeChange && onViewModeChange("grid")}
               >
                 <LayoutGrid className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              </button>
+              <button
                 className={cn(
-                  "px-3 py-1 rounded-none rounded-r-md",
-                  viewMode === "map" ? "bg-gray-100" : "bg-white"
+                  "px-3 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20",
+                  viewMode === "map" 
+                    ? "bg-[#EAF2EF] text-[#135341] shadow-sm" 
+                    : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
                 )}
                 onClick={() => onViewModeChange && onViewModeChange("map")}
               >
                 <MapIcon className="h-4 w-4" />
-              </Button>
+              </button>
             </div>
           </div>
         </div>
