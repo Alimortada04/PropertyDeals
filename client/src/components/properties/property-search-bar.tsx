@@ -279,7 +279,7 @@ export default function PropertySearchBar({
             <div className="flex items-center gap-3 overflow-x-auto px-1 py-2 flex-1">
               {/* Sort Dropdown */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-[110px] h-9 text-sm">
+                <SelectTrigger className="w-[110px] h-9 text-sm bg-white border border-gray-300 shadow-sm hover:border-[#135341]/30">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>
                 <SelectContent>
@@ -291,7 +291,7 @@ export default function PropertySearchBar({
               
               {/* Location Dropdown */}
               <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger className="w-[110px] h-9 text-sm">
+                <SelectTrigger className="w-[110px] h-9 text-sm bg-white border border-gray-300 shadow-sm hover:border-[#135341]/30">
                   <SelectValue placeholder="Location" />
                 </SelectTrigger>
                 <SelectContent>
@@ -303,7 +303,7 @@ export default function PropertySearchBar({
               
               {/* Property Type Dropdown */}
               <Select value={propertyType} onValueChange={setPropertyType}>
-                <SelectTrigger className="w-[110px] h-9 text-sm">
+                <SelectTrigger className="w-[110px] h-9 text-sm bg-white border border-gray-300 shadow-sm hover:border-[#135341]/30">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -315,7 +315,7 @@ export default function PropertySearchBar({
               
               {/* Price Dropdown */}
               <Select defaultValue="">
-                <SelectTrigger className="w-[110px] h-9 text-sm">
+                <SelectTrigger className="w-[110px] h-9 text-sm bg-white border border-gray-300 shadow-sm hover:border-[#135341]/30">
                   <SelectValue placeholder="Price" />
                 </SelectTrigger>
                 <SelectContent>
