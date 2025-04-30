@@ -75,21 +75,21 @@ export default function Sidebar() {
   const { user, logoutMutation } = useAuth();
   const activeRole = user?.activeRole || "visitor";
   
-  // Command K search handler
-  const [showSearch, setShowSearch] = useState(false);
   // Menu popup state
   const [showMenu, setShowMenu] = useState(false);
   
-  const handleKeyDown = (e: KeyboardEvent) => {
-    // Check for Command+K or Ctrl+K
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      setShowSearch(!showSearch);
-    }
-  };
+  // Command K search handler
+  const [showSearch, setShowSearch] = useState(false);
   
-  // Add event listener for Command+K
+  // Handle keyboard shortcut for search
   React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearch(!showSearch);
+      }
+    };
+    
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [showSearch]);
@@ -239,7 +239,7 @@ export default function Sidebar() {
       
       {/* Bottom bar removed from here - now in app-layout.tsx */}
       
-      {/* Global Search - Enhanced with location tags */}
+      {/* Full-screen search overlay */}
       {showSearch && <GlobalSearchInput onClose={() => setShowSearch(false)} />}
     </div>
   );

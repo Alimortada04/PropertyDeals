@@ -174,16 +174,16 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 bg-black/80 z-[100] flex items-start justify-center p-0 overflow-hidden">
+    <div className="fixed inset-0 bg-black/80 z-[100] flex items-start justify-center p-0 overflow-hidden backdrop-blur-sm">
       <div className="w-full h-full flex flex-col items-center">
-        <div className="w-full max-w-4xl px-6 pt-[15vh] pb-8" onClick={(e) => e.stopPropagation()}>
-          <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
+        <div className="w-full max-w-5xl px-4 pt-[15vh] pb-8" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white/95 rounded-xl shadow-2xl overflow-hidden border border-gray-200">
             <div className="p-6 border-b">
               <div className="flex items-center">
-                <Search className="w-5 h-5 text-gray-400 mr-3" />
+                <Search className="w-6 h-6 text-gray-400 mr-3" />
                 <input 
                   type="text" 
-                  className="flex-1 outline-none text-xl bg-transparent"
+                  className="flex-1 outline-none text-2xl bg-transparent placeholder-gray-400"
                   placeholder="Search across PropertyDeals..." 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -195,20 +195,20 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
               </div>
             </div>
             
-            <div className="p-1 max-h-[60vh] overflow-y-auto">
+            <div className="p-2 max-h-[65vh] overflow-y-auto">
               {searchTerm.trim() === '' ? (
                 // Show recent searches if no search term
                 recentSearches.length > 0 ? (
                   <div className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 uppercase tracking-wide">Recent Searches</h3>
-                    <div className="space-y-1">
+                    <h3 className="text-sm font-semibold text-primary/80 px-3 py-2 uppercase tracking-wide">Recent Searches</h3>
+                    <div className="space-y-2">
                       {recentSearches.map((term, idx) => (
                         <div 
                           key={idx} 
-                          className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
+                          className="flex items-center p-3 rounded-lg hover:bg-gray-100/80 transition-colors cursor-pointer"
                           onClick={() => setSearchTerm(term)}
                         >
-                          <Search className="h-5 w-5 text-gray-500 mr-3" />
+                          <Search className="h-5 w-5 text-[#803344] mr-3" />
                           <p className="font-medium">{term}</p>
                         </div>
                       ))}
@@ -217,33 +217,41 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
                 ) : (
                   // Default navigation options if no recent searches
                   <div className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 uppercase tracking-wide">Quick Navigation</h3>
-                    <div className="space-y-1">
+                    <h3 className="text-sm font-semibold text-primary/80 px-3 py-2 uppercase tracking-wide">Quick Navigation</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-2">
                       <Link href="/properties" onClick={() => onClose()}>
-                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                          <Building className="h-5 w-5 text-gray-500 mr-3" />
+                        <div className="flex items-center p-4 rounded-lg border border-gray-100 hover:bg-gray-50 hover:border-gray-200 hover:shadow-sm transition-all">
+                          <Building className="h-6 w-6 text-[#09261E] mr-4" />
                           <div>
-                            <p className="font-medium">Properties</p>
-                            <p className="text-xs text-gray-500">Browse available properties</p>
+                            <p className="font-medium text-[#09261E]">Properties</p>
+                            <p className="text-sm text-gray-500">Browse available properties</p>
                           </div>
-                          <span className="ml-auto text-xs text-gray-400">⌘1</span>
                         </div>
                       </Link>
                       <Link href="/reps" onClick={() => onClose()}>
-                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                          <User className="h-5 w-5 text-gray-500 mr-3" />
+                        <div className="flex items-center p-4 rounded-lg border border-gray-100 hover:bg-gray-50 hover:border-gray-200 hover:shadow-sm transition-all">
+                          <User className="h-6 w-6 text-[#803344] mr-4" />
                           <div>
-                            <p className="font-medium">Professionals</p>
-                            <p className="text-xs text-gray-500">Find real estate professionals</p>
+                            <p className="font-medium text-[#09261E]">Professionals</p>
+                            <p className="text-sm text-gray-500">Find real estate professionals</p>
                           </div>
                         </div>
                       </Link>
                       <Link href="/playbook" onClick={() => onClose()}>
-                        <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                          <Book className="h-5 w-5 text-gray-500 mr-3" />
+                        <div className="flex items-center p-4 rounded-lg border border-gray-100 hover:bg-gray-50 hover:border-gray-200 hover:shadow-sm transition-all">
+                          <Book className="h-6 w-6 text-[#135341] mr-4" />
                           <div>
-                            <p className="font-medium">Playbook</p>
-                            <p className="text-xs text-gray-500">Educational resources and guides</p>
+                            <p className="font-medium text-[#09261E]">Playbook</p>
+                            <p className="text-sm text-gray-500">Educational resources and guides</p>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link href="/inbox" onClick={() => onClose()}>
+                        <div className="flex items-center p-4 rounded-lg border border-gray-100 hover:bg-gray-50 hover:border-gray-200 hover:shadow-sm transition-all">
+                          <MessageCircle className="h-6 w-6 text-[#E59F9F] mr-4" />
+                          <div>
+                            <p className="font-medium text-[#09261E]">Messages</p>
+                            <p className="text-sm text-gray-500">View your conversations</p>
                           </div>
                         </div>
                       </Link>
@@ -254,11 +262,11 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
                 // Show search results
                 results.map((section, idx) => (
                   <div key={idx} className="p-2">
-                    <h3 className="text-sm font-semibold text-gray-500 px-3 py-2 uppercase tracking-wide flex items-center">
+                    <h3 className="text-sm font-semibold text-primary/80 px-3 py-2 uppercase tracking-wide flex items-center">
                       {section.title}
                       <Tag className="h-3 w-3 ml-2" />
                     </h3>
-                    <div className="space-y-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {section.results.map((result) => (
                         <Link 
                           key={result.id} 
@@ -268,13 +276,15 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
                             onClose();
                           }}
                         >
-                          <div className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors">
-                            {result.icon}
-                            <div className="ml-3">
-                              <p className="font-medium">{result.title}</p>
-                              <p className="text-xs text-gray-500">{result.description}</p>
+                          <div className="flex items-center p-4 rounded-lg border border-transparent hover:border-gray-200 hover:bg-gray-50 hover:shadow-sm transition-all">
+                            <div className="rounded-full bg-gray-100 p-2 mr-3">
+                              {result.icon}
                             </div>
-                            <span className="ml-auto text-xs text-gray-400">{result.location}</span>
+                            <div>
+                              <p className="font-medium text-[#09261E]">{result.title}</p>
+                              <p className="text-sm text-gray-500">{result.description}</p>
+                            </div>
+                            <span className="ml-auto text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full">{result.location}</span>
                           </div>
                         </Link>
                       ))}
@@ -283,9 +293,12 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
                 ))
               ) : (
                 // No results found
-                <div className="p-8 text-center">
-                  <p className="text-gray-500">No results found for "{searchTerm}"</p>
-                  <p className="text-sm text-gray-400 mt-1">Try a different search term or browse the categories below</p>
+                <div className="py-12 text-center">
+                  <div className="bg-gray-50 inline-block p-4 rounded-full mb-4">
+                    <Search className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <p className="text-lg text-gray-500">No results found for "{searchTerm}"</p>
+                  <p className="text-sm text-gray-400 mt-2">Try a different search term or browse the categories</p>
                 </div>
               )}
             </div>

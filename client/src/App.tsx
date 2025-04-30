@@ -3,6 +3,7 @@ import { Switch, Route, Redirect, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
+import { SearchProvider } from "@/contexts/SearchContext";
 import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home-page";
 import PropertiesPage from "@/pages/properties-page";
