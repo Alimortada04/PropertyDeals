@@ -23,14 +23,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <Sidebar />
       
       {/* Main Content Area */}
-      <div className="pl-16 pb-10">  {/* Reduced bottom padding for thinner dock */}
-        <div className="min-h-[calc(100vh-64px)] pb-10">
+      <div className="pl-16 pb-12">  {/* Adjusted padding for slightly thicker dock */}
+        <div className="min-h-[calc(100vh-64px)] pb-12">
           {children}
         </div>
       </div>
       
-      {/* Bottom Dock Bar - Thinner, white background with flush corners */}
-      <div className="fixed bottom-0 left-0 w-full h-10 bg-white border-t flex items-center z-50 shadow-sm">
+      {/* Bottom Dock Bar - Slightly thicker, white background with flush corners */}
+      <div className="fixed bottom-0 left-0 w-full h-12 bg-white border-t flex items-center z-50 shadow-sm">
         <div className="w-full px-4 flex items-center justify-between">
           <div>
             {/* Menu selector on far left with popup menu (like whop.com) */}
@@ -38,7 +38,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-gray-700 flex items-center h-7 px-3 rounded-md hover:bg-gray-100 hover:text-gray-700"
+                className="text-gray-700 flex items-center h-8 px-3 rounded-md hover:bg-gray-100 hover:text-gray-700"
                 onClick={() => setShowMenu(!showMenu)}
               >
                 <Menu className="h-4 w-4 mr-2" />
@@ -55,7 +55,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   />
                   
                   {/* The actual menu */}
-                  <div className="absolute bottom-10 left-0 z-50 bg-white rounded-tr-lg rounded-tl-lg rounded-br-lg shadow-lg border w-72 overflow-hidden">
+                  <div className="absolute bottom-12 left-0 z-50 bg-white rounded-tr-lg rounded-tl-lg rounded-br-lg shadow-lg border w-72 overflow-hidden">
                     {/* Theme toggle section */}
                     <div className="p-4 border-b">
                       <div className="flex justify-between items-center bg-gray-100 rounded-md p-2">
@@ -131,10 +131,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-7 w-7 rounded-full hover:bg-gray-100 hover:text-gray-700"
+                className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-gray-700"
               >
                 <Bell className="h-4 w-4 text-[#09261E]" />
-                <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500"></span>
               </Button>
             </div>
             
@@ -143,10 +143,10 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-7 w-7 rounded-full hover:bg-gray-100 hover:text-gray-700"
+                className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-gray-700"
               >
                 <MessagesSquare className="h-4 w-4 text-[#09261E]" />
-                <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-blue-500"></span>
+                <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-blue-500"></span>
               </Button>
             </div>
           </div>

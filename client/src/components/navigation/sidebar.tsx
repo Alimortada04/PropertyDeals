@@ -101,14 +101,12 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-sm border-r">
-      {/* Logo at top - PD text in Eastman Alt Pack font */}
+    <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-inner border-r">
+      {/* Logo at top - Using pdLogo.png image */}
       <div className="flex items-center justify-center h-16">
         <Link href="/">
           <div className="flex items-center justify-center hover:scale-110 transition-all">
-            <h1 className="text-4xl font-black tracking-tight text-[#09261E]" style={{ fontFamily: 'Eastman Alt Pack, sans-serif' }}>
-              pd
-            </h1>
+            <img src="/images/pdLogo.png" alt="PropertyDeals" className="h-8 w-auto" />
           </div>
         </Link>
       </div>
