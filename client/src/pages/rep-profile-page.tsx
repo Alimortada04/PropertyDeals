@@ -320,14 +320,13 @@ export default function RepProfilePage() {
       <div className="min-h-screen bg-white">
         <div className="h-48 overflow-hidden relative bg-gradient-to-r from-[#09261E] to-[#124B39]">
           <div className="absolute top-4 left-4 z-10">
-            <Button 
-              variant="ghost" 
+            <button 
               onClick={() => window.history.back()}
-              className="bg-white/80 hover:bg-white/90 text-gray-800"
+              className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
             >
               <ArrowLeft size={16} className="mr-2" />
               Back to REPs
-            </Button>
+            </button>
           </div>
         </div>
         
@@ -342,12 +341,12 @@ export default function RepProfilePage() {
               The REP profile you're looking for doesn't exist or has been removed.
             </p>
             
-            <Button 
-              className="bg-[#09261E] hover:bg-[#135341]"
+            <button
+              className="px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
               onClick={() => window.location.href = '/reps'}
             >
               Browse All REPs
-            </Button>
+            </button>
           </div>
         </div>
       </div>

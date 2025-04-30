@@ -114,24 +114,20 @@ export default function SimilarReps({ currentRep, maxReps = 10 }: SimilarRepsPro
         
         {/* Desktop navigation arrows */}
         <div className="flex items-center gap-2">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="h-8 w-8 rounded-full border-gray-300"
+          <button 
+            className="flex items-center justify-center h-8 w-8 rounded-full border border-gray-200 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20"
             onClick={() => scroll('left')}
             aria-label="Scroll left"
           >
             <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="h-8 w-8 rounded-full border-gray-300"
+          </button>
+          <button 
+            className="flex items-center justify-center h-8 w-8 rounded-full border border-gray-200 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20"
             onClick={() => scroll('right')}
             aria-label="Scroll right"
           >
             <ChevronRight className="h-4 w-4" />
-          </Button>
+          </button>
         </div>
       </div>
       
@@ -152,14 +148,13 @@ export default function SimilarReps({ currentRep, maxReps = 10 }: SimilarRepsPro
       </div>
       
       {/* Link to view all REPs */}
-      <Button 
-        variant="outline" 
-        className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+      <button 
+        className="w-full mt-4 px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center justify-center"
         onClick={() => window.location.href = '/reps'}
       >
         <Users size={16} className="mr-2" />
         <span>Explore all REPs</span>
-      </Button>
+      </button>
       
       {/* Custom styles applied with inline style and class */}
     </section>
