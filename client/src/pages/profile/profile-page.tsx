@@ -55,7 +55,7 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({
     <Link href={href}>
       <div
         className={cn(
-          "flex items-center px-4 py-2.5 text-sm rounded-md transition-colors cursor-pointer",
+          "flex items-center px-3 py-2 text-sm transition-colors cursor-pointer my-0.5 rounded-md",
           active
             ? "bg-gray-100 text-[#09261E] font-medium"
             : "text-gray-700 hover:bg-gray-50",
@@ -64,7 +64,7 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({
         )}
         onClick={onClick}
       >
-        <div className="mr-3">{icon}</div>
+        <div className="mr-2.5 text-gray-500">{icon}</div>
         <span>{label}</span>
       </div>
     </Link>
@@ -120,14 +120,14 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="container mx-auto px-0 py-0 flex">
+    <div className="flex bg-white">
       {/* Left sidebar */}
-      <div className="w-64 border-r min-h-[calc(100vh-80px)] pt-6 flex flex-col">
+      <div className="w-[230px] border-r h-[calc(100vh-64px)] pt-6 flex flex-col bg-white shadow-sm">
         {/* Profile info */}
         <div className="px-6 pb-6 mb-4 border-b flex flex-col items-center">
           <Avatar className="h-20 w-20 mb-4">
             <AvatarImage src="" alt={user?.fullName || "User"} />
-            <AvatarFallback className="bg-gray-200 text-gray-700 text-xl">
+            <AvatarFallback className="bg-gray-200 text-gray-700 text-xl font-medium">
               {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
             </AvatarFallback>
           </Avatar>
@@ -195,67 +195,67 @@ export default function ProfilePage() {
         </div>
         
         {/* Logout */}
-        <div className="mt-auto px-3 pb-6">
+        <div className="mt-auto px-3 pb-5">
           <button
-            className="flex items-center px-4 py-2.5 text-sm rounded-md transition-colors text-red-500 hover:bg-gray-50 hover:text-red-700 w-full"
+            className="flex items-center px-3 py-2 text-sm rounded-md transition-colors text-red-500 hover:bg-gray-50 hover:text-red-700 w-full"
             onClick={handleLogout}
           >
-            <LogOut size={18} className="mr-3" />
-            <span>Logout</span>
+            <LogOut size={18} className="mr-2.5 text-red-500/70" />
+            <span>Log out</span>
           </button>
         </div>
       </div>
       
       {/* Right content */}
-      <div className="flex-1 p-6">
-        <div className="max-w-3xl">
-          <h1 className="text-2xl font-bold mb-6">Account settings</h1>
+      <div className="flex-1 bg-gray-50/60 p-10">
+        <div className="max-w-3xl bg-white rounded-xl shadow-sm p-8 border border-gray-100">
+          <h1 className="text-xl font-bold mb-6 text-gray-900">Account settings</h1>
           
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Name</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Name</label>
               <Input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="max-w-md"
+                className="max-w-md border border-gray-300 focus-visible:ring-[#09261E]/30"
                 placeholder="Your name"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-2">Bio</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Bio</label>
               <Textarea
                 name="bio"
                 value={formData.bio}
                 onChange={handleChange}
-                className="max-w-md h-24"
+                className="max-w-md h-24 border border-gray-300 focus-visible:ring-[#09261E]/30"
                 placeholder="No bio"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-2">Username</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Username</label>
               <Input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                className="max-w-md"
+                className="max-w-md border border-gray-300 focus-visible:ring-[#09261E]/30"
                 placeholder="Username"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-2">Email</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Email</label>
               <div className="flex max-w-md items-center">
                 <Input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="flex-1"
+                  className="flex-1 border border-gray-300 focus-visible:ring-[#09261E]/30"
                   placeholder="Your email address"
                   readOnly
                 />
@@ -277,10 +277,10 @@ export default function ProfilePage() {
             </div>
             
             <div>
-              <label className="block text-sm font-medium mb-2">Phone number</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Phone number</label>
               <div className="flex max-w-md items-center">
-                <div className="flex flex-1 items-center border rounded-md overflow-hidden">
-                  <div className="flex items-center px-3 py-2 bg-gray-50 border-r">
+                <div className="flex flex-1 items-center border border-gray-300 rounded-md overflow-hidden">
+                  <div className="flex items-center px-3 py-2 bg-gray-50 border-r border-gray-300">
                     <span className="text-sm mr-1">🇺🇸</span>
                     <span className="text-xs text-gray-500">+1</span>
                   </div>
@@ -308,28 +308,30 @@ export default function ProfilePage() {
                   <LinkIcon className="h-4 w-4" />
                 </Button>
               </div>
+              <p className="text-xs text-gray-500 mt-1.5">We'll use this for important account updates and notifications.</p>
             </div>
             
-            <div className="pt-4 border-t">
-              <h3 className="font-medium mb-2">What can people see in your profile?</h3>
+            <div className="pt-6 mt-2 border-t">
+              <h3 className="font-medium mb-2 text-gray-800">What can people see in your profile?</h3>
               <p className="text-sm text-gray-500 mb-4">Anything you hide here won't be visible to others—and you won't see it on their profiles either.</p>
               
               <div className="flex items-center justify-between py-2">
-                <div className="text-sm">Joined PropertyDeals</div>
+                <div className="text-sm text-gray-700">Joined PropertyDeals</div>
                 <Switch
                   checked={formData.showProfile}
                   onCheckedChange={handleSwitchChange}
+                  className="data-[state=checked]:bg-[#09261E]"
                 />
               </div>
             </div>
             
-            <div className="pt-4">
+            <div className="pt-6 mt-2">
               <Button
                 disabled={!isEditing}
                 onClick={handleSave}
-                className="bg-[#09261E] hover:bg-[#09261E]/90"
+                className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
               >
-                Save
+                Save changes
               </Button>
             </div>
           </div>
