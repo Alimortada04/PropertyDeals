@@ -177,20 +177,58 @@ function Router() {
           <PropertyDictionaryPage />
         </AppLayout>
       </Route>
-      {/* Temporarily allow access to profile without authentication */}
+      {/* Profile routes - temporarily allow access without authentication */}
       <Route path="/profile">
         <AppLayout>
-          <div className="pt-20">
-            <ProfilePage />
-          </div>
+          <ProfilePage />
         </AppLayout>
       </Route>
       
-      <Route path="/profile/settings">
+      <Route path="/profile/connected-accounts">
         <AppLayout>
-          <div className="pt-20">
-            <ProfileSettingsPage />
-          </div>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
+      
+      <Route path="/profile/security">
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
+      
+      <Route path="/profile/payment">
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
+      
+      <Route path="/profile/balance">
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
+      
+      <Route path="/profile/billing">
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
+      
+      <Route path="/profile/memberships">
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
+      
+      <Route path="/profile/resolution">
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
+      
+      <Route path="/profile/danger">
+        <AppLayout>
+          <ProfilePage />
         </AppLayout>
       </Route>
       <Route path="/settings">
