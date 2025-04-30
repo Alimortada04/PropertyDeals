@@ -198,16 +198,25 @@ export default function InboxPage() {
           <div className="w-full md:w-3/12">
             <div className="bg-white rounded-lg shadow p-4 mb-6">
               <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="messages" className="flex items-center gap-2">
+                <TabsList className="grid w-full grid-cols-3 bg-white p-1">
+                  <TabsTrigger 
+                    value="messages" 
+                    className="flex items-center gap-2 data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#135341] px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
+                  >
                     <MessageSquare className="h-4 w-4" />
                     <span>Messages</span>
                   </TabsTrigger>
-                  <TabsTrigger value="notifications" className="flex items-center gap-2">
+                  <TabsTrigger 
+                    value="notifications" 
+                    className="flex items-center gap-2 data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#135341] px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
+                  >
                     <Bell className="h-4 w-4" />
                     <span>Alerts</span>
                   </TabsTrigger>
-                  <TabsTrigger value="discussions" className="flex items-center gap-2">
+                  <TabsTrigger 
+                    value="discussions" 
+                    className="flex items-center gap-2 data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#135341] px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
+                  >
                     <Users className="h-4 w-4" />
                     <span>Discussions</span>
                   </TabsTrigger>

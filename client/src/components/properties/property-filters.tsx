@@ -140,7 +140,7 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
                     value={filters.baths}
                     onValueChange={(value) => handleFilterChange('baths', value)}
                   >
-                    <SelectTrigger className="bg-white border border-[#D8D8D8] rounded-md h-9">
+                    <SelectTrigger className="bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 focus:ring-2 focus:ring-[#135341]/20 rounded-md h-9">
                       <SelectValue placeholder="Any" />
                     </SelectTrigger>
                     <SelectContent>
@@ -266,9 +266,8 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
           
           {/* Buttons */}
           <div className="flex justify-between pt-2">
-            <Button 
-              variant="outline"
-              size="sm"
+            <button 
+              className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
               onClick={() => {
                 const resetFilters = { 
                   priceRange: "any", 
@@ -282,16 +281,14 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
                 setPriceRange([0, 1000000]);
                 onFilter(resetFilters);
               }}
-              className="text-sm"
             >
               <X className="h-4 w-4 mr-1" /> Clear All
-            </Button>
-            <Button 
-              className="bg-[#09261E] hover:bg-[#135341] text-sm"
-              size="sm"
+            </button>
+            <button 
+              className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-[#EAF2EF] text-[#135341] shadow-sm border border-gray-200 flex items-center"
             >
               <CheckCircle2 className="h-4 w-4 mr-1" /> Apply Filters
-            </Button>
+            </button>
           </div>
         </TabsContent>
         
