@@ -273,11 +273,15 @@ export default function PlaybookPage() {
                     </CardContent>
                     <CardFooter className="p-4 pt-0">
                       {resource.status === "Published" ? (
-                        <Link href={resource.id === "1" ? "/playbook/property-dictionary" : "#"}>
-                          <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90">View Resource</Button>
+                        <Link href={resource.id === "1" ? "/playbook/property-dictionary" : "#"} className="w-full">
+                          <button className="w-full px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-[#EAF2EF] text-[#135341] shadow-sm border border-gray-200 flex items-center justify-center">
+                            View Resource
+                          </button>
                         </Link>
                       ) : (
-                        <Button variant="outline" className="w-full text-gray-500" disabled>Coming Soon</Button>
+                        <button className="w-full px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium bg-white/70 text-gray-400 border border-gray-200 cursor-not-allowed" disabled>
+                          Coming Soon
+                        </button>
                       )}
                     </CardFooter>
                   </Card>
@@ -304,22 +308,21 @@ export default function PlaybookPage() {
               </div>
 
               <div className="flex justify-center">
-                <div className="inline-flex bg-[#09261E]/5 p-1 rounded-lg">
+                <div className="inline-flex bg-gray-100 p-1 rounded-lg border border-gray-200">
                   {toolCategories.map(category => (
-                    <Button
+                    <button
                       key={category.id}
-                      variant="ghost"
                       className={cn(
-                        "rounded-md px-4 h-10 flex items-center gap-2",
+                        "px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2",
                         activeToolCategory === category.label
-                          ? "bg-[#09261E] text-white hover:bg-[#09261E] hover:text-white" // Keep text white on hover
-                          : "bg-transparent text-gray-700 hover:bg-gray-200" // Gray hover instead of pink
+                          ? "bg-[#EAF2EF] text-[#135341] shadow-sm"
+                          : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                       )}
                       onClick={() => setActiveToolCategory(category.label)}
                     >
                       {category.icon}
                       <span>{category.label}</span>
-                    </Button>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -364,9 +367,13 @@ export default function PlaybookPage() {
                     </CardFooter>
                     <CardFooter className="p-4 pt-0">
                       {tool.status === "Published" && tool.badge !== "Coming Soon" ? (
-                        <Button className="w-full bg-[#09261E] hover:bg-[#09261E]/90">Open {tool.type}</Button>
+                        <button className="w-full px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-[#EAF2EF] text-[#135341] shadow-sm border border-gray-200 flex items-center justify-center">
+                          Open {tool.type}
+                        </button>
                       ) : (
-                        <Button variant="outline" className="w-full text-gray-500" disabled>Coming Soon</Button>
+                        <button className="w-full px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium bg-white/70 text-gray-400 border border-gray-200 cursor-not-allowed" disabled>
+                          Coming Soon
+                        </button>
                       )}
                     </CardFooter>
                   </Card>

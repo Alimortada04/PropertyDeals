@@ -69,10 +69,25 @@ export const MessagePopup: React.FC<MessagePopupProps> = ({ isOpen, onClose }) =
         
         {/* Tabs */}
         <Tabs defaultValue="unread" className="w-full">
-          <TabsList className="w-full grid grid-cols-3 p-1 bg-gray-50">
-            <TabsTrigger value="unread" className="text-sm">Unread</TabsTrigger>
-            <TabsTrigger value="groups" className="text-sm">Groups</TabsTrigger>
-            <TabsTrigger value="requests" className="text-sm">Requests</TabsTrigger>
+          <TabsList className="w-full grid grid-cols-3 p-1 bg-white">
+            <TabsTrigger 
+              value="unread" 
+              className="data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#135341] px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
+            >
+              Unread
+            </TabsTrigger>
+            <TabsTrigger 
+              value="groups" 
+              className="data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#135341] px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
+            >
+              Groups
+            </TabsTrigger>
+            <TabsTrigger 
+              value="requests" 
+              className="data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#135341] px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200"
+            >
+              Requests
+            </TabsTrigger>
           </TabsList>
           
           {/* Unread Content */}
