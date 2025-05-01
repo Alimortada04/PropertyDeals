@@ -229,15 +229,15 @@ export default function PlaybookPage() {
               </div>
 
               <div className="flex justify-center">
-                <div className="inline-flex bg-gray-100 p-1 rounded-lg border border-gray-200">
+                <div className="inline-flex gap-2">
                   {resourceCategories.map(category => (
                     <button
                       key={category.id}
                       className={cn(
-                        "px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2",
+                        "px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2 border border-gray-200",
                         activeCategory === category.label
-                          ? "bg-[#EAF2EF] text-[#135341] shadow-sm"
-                          : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                          ? "bg-[#EAF2EF] text-[#135341] shadow-sm border-[#135341]/30"
+                          : "bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                       )}
                       onClick={() => setActiveCategory(category.label)}
                     >
@@ -313,15 +313,15 @@ export default function PlaybookPage() {
               </div>
 
               <div className="flex justify-center">
-                <div className="inline-flex bg-gray-100 p-1 rounded-lg border border-gray-200">
+                <div className="inline-flex gap-2">
                   {toolCategories.map(category => (
                     <button
                       key={category.id}
                       className={cn(
-                        "px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2",
+                        "px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2 border border-gray-200",
                         activeToolCategory === category.label
-                          ? "bg-[#EAF2EF] text-[#135341] shadow-sm"
-                          : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                          ? "bg-[#EAF2EF] text-[#135341] shadow-sm border-[#135341]/30"
+                          : "bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-800"
                       )}
                       onClick={() => setActiveToolCategory(category.label)}
                     >
