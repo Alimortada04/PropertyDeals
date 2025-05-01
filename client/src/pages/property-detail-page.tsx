@@ -687,14 +687,22 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       {/* Estimated Repair Costs with Clickable Contractor Avatar */}
                       <div className="flex justify-between items-center border-b border-gray-100 pb-3">
                         <span className="text-gray-600 font-medium">Estimated Repair Costs</span>
-                        <div className="flex items-center">
-                          <span className="font-semibold text-[#09261E] mr-2">${(property.price * 0.05).toFixed(0)}</span>
+                        <div className="flex flex-col">
+                          <div className="flex items-center">
+                            <span className="font-semibold text-[#09261E] mr-2">${(property.price * 0.05).toFixed(0)}</span>
+                          </div>
                           <Dialog>
                             <DialogTrigger asChild>
-                              <Avatar className="h-6 w-6 cursor-pointer hover:ring-2 hover:ring-offset-1 hover:ring-[#09261E]/50 transition-all">
-                                <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=120&h=120&auto=format&fit=crop" alt="Contractor" />
-                                <AvatarFallback className="text-xs bg-gray-200">MJ</AvatarFallback>
-                              </Avatar>
+                              <div className="flex items-center mt-1 cursor-pointer group">
+                                <Avatar className="h-6 w-6 mr-2 hover:ring-2 hover:ring-offset-1 hover:ring-[#09261E]/50 transition-all">
+                                  <AvatarImage src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=120&h=120&auto=format&fit=crop" alt="Contractor" />
+                                  <AvatarFallback className="text-xs bg-gray-200">MJ</AvatarFallback>
+                                </Avatar>
+                                <div className="flex flex-col">
+                                  <span className="text-xs font-medium text-[#803344] group-hover:underline">Real Job Quote</span>
+                                  <span className="text-xs text-gray-500">by Mike Johnson</span>
+                                </div>
+                              </div>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                               <DialogHeader>
