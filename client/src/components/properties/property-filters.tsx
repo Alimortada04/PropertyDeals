@@ -59,9 +59,9 @@ export default function PropertyFilters({ onFilter }: PropertyFiltersProps) {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="filters" className="w-full">
-        <TabsList className="w-full mb-4">
-          <TabsTrigger value="filters" className="flex-1">Filters</TabsTrigger>
-          <TabsTrigger value="saved" className="flex-1">Saved Searches</TabsTrigger>
+        <TabsList className="w-full mb-4 grid grid-cols-2 gap-2 p-1 bg-gray-200 rounded-md">
+          <TabsTrigger value="filters" className="data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#135341] data-[state=active]:shadow-sm text-gray-600 rounded-md">Filters</TabsTrigger>
+          <TabsTrigger value="saved" className="data-[state=active]:bg-[#EAF2EF] data-[state=active]:text-[#135341] data-[state=active]:shadow-sm text-gray-600 rounded-md">Saved Searches</TabsTrigger>
         </TabsList>
         
         <TabsContent value="filters" className="space-y-6">
