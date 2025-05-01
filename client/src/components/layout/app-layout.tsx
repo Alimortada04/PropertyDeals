@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/navigation/sidebar";
 import { Button } from "@/components/ui/button";
 import { 
   Settings,
   Bell, 
   MessageCircle,
-  ChevronRight
+  ChevronRight,
+  Search
 } from "lucide-react";
 import { MessagePopup } from "@/components/popups/MessagePopup";
 import { NotificationPopup } from "@/components/popups/NotificationPopup";
 import { Link } from "wouter";
+import { GlobalSearchInput } from "@/components/search/global-search";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -20,6 +22,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  
+  // Handle keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearch(!showSearch);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showSearch]);
   
   // Toggle popup functions
   const toggleMessagePopup = () => {
@@ -141,6 +157,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
             
             <div className="flex items-center space-x-3">
+              {/* Search Button */}
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-gray-700"
+                  onClick={() => setShowSearch(true)}
+                >
+                  <Search className="h-4 w-4 text-[#09261E]" />
+                </Button>
+              </div>
+              
               {/* Notification Button */}
               <div className="relative">
                 <Button 
@@ -189,6 +217,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
         isOpen={showNotificationPopup}
         onClose={() => setShowNotificationPopup(false)}
       />
+
+      {/* Global Search */}
+      {showSearch && <GlobalSearchInput onClose={() => setShowSearch(false)} />}
     </div>
   );
 }
