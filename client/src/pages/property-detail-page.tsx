@@ -1456,11 +1456,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                       ))}
                     </div>
-                    <div className="text-center pb-2">
-                      <Link to="/properties" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
-                        View All Comparable Properties <i className="fas fa-arrow-right ml-2"></i>
-                      </Link>
-                    </div>
+
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
