@@ -266,14 +266,13 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
               Leave a Review
             </Button>
             
-            <Button 
-              variant="link" 
-              className="text-[#09261E] font-medium"
+            <button
+              className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
               onClick={() => setIsModalOpen(true)}
             >
               View All
               <ChevronRight size={16} className="ml-1" />
-            </Button>
+            </button>
           </div>
         </div>
         

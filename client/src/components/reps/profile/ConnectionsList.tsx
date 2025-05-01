@@ -93,7 +93,7 @@ export default function ConnectionsList({ connections }: ConnectionsListProps) {
           </h2>
           
           <button
-            className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+            className="text-[#09261E] text-sm font-medium hover:underline focus:outline-none flex items-center"
             onClick={() => setIsModalOpen(true)}
           >
             View All
