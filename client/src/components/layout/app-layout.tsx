@@ -173,7 +173,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       
       {/* Main Content Area */}
       <div className="pl-16 pb-12">  {/* Adjusted padding for slightly thicker dock */}
-        <div className="min-h-[calc(100vh-64px)]">
+        <div className="min-h-screen">
           {children}
         </div>
       </div>
