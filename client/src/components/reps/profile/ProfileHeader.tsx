@@ -223,7 +223,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                         <Share2 className="h-4 w-4" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-80 p-0" align="end" side="bottom" sideOffset={5}>
+                    <PopoverContent className="w-80 p-0 z-50" align="center" side="bottom" alignOffset={0} sideOffset={5}>
                       <div className="p-4">
                         <h3 className="text-xl font-semibold">Share Profile</h3>
                         <p className="text-sm text-gray-500 mt-1">Choose how you'd like to share this profile with others.</p>
