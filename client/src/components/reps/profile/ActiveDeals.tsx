@@ -12,12 +12,13 @@ import {
   SquareCode, 
   MapPin,
   Building,
-  Eye
+  Eye,
+  ChevronRight,
+  Search
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 
 interface ActiveDealsProps {
   properties: Property[];
@@ -64,10 +65,10 @@ export default function ActiveDeals({ properties }: ActiveDealsProps) {
         
         {properties.length > 3 && (
           <button 
-            className="px-5 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+            className="text-[#09261E] text-sm font-medium hover:underline focus:outline-none flex items-center"
             onClick={() => setShowAllPropertiesDialog(true)}
           >
-            View All <ArrowRight size={14} className="ml-1.5" />
+            View All <ChevronRight size={16} className="ml-1" />
           </button>
         )}
       </div>
