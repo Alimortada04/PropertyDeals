@@ -179,29 +179,34 @@ export default function PlaybookPage() {
         <div className="flex flex-col space-y-6">
           {/* Toggle between Resources and Tools - Centered toggle */}
           <div className="flex justify-center">
-            <div className="flex items-center bg-gray-100 p-1 rounded-lg border border-gray-200 shadow-sm">
+            <div className="flex items-center bg-gray-200 p-1 rounded-full shadow-sm relative h-10 w-[240px]">
+              <div 
+                className={`absolute inset-y-1 w-[118px] ${
+                  activeTab === 'tools' ? 'right-1 translate-x-0' : 'left-1 translate-x-0'
+                } bg-white rounded-full shadow transition-all duration-300 ease-in-out`}
+              ></div>
               <button
-                className={`flex items-center justify-center px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 ${
+                className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
                   activeTab === 'resources' 
-                    ? 'bg-[#EAF2EF] text-[#135341] shadow-sm' 
-                    : 'bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800'
+                    ? 'text-[#09261E] font-medium' 
+                    : 'text-gray-500 hover:text-gray-700'
                 }`}
                 onClick={() => setActiveTab("resources")}
               >
                 <Book size={14} className="mr-1.5" />
-                <span>Resources</span>
+                <span className="text-sm">Resources</span>
               </button>
               
               <button
-                className={`flex items-center justify-center px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 ${
+                className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
                   activeTab === 'tools' 
-                    ? 'bg-[#EAF2EF] text-[#135341] shadow-sm' 
-                    : 'bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800'
+                    ? 'text-[#09261E] font-medium' 
+                    : 'text-gray-500 hover:text-gray-700'
                 }`}
                 onClick={() => setActiveTab("tools")}
               >
                 <Calculator size={14} className="mr-1.5" />
-                <span>Tools</span>
+                <span className="text-sm">Tools</span>
               </button>
             </div>
           </div>

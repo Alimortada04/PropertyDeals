@@ -253,9 +253,9 @@ export default function RepsPage() {
             </div>
           </div>
           
-          {/* Results Grid - Responsive column layout */}
+          {/* Results Grid - Responsive column layout with uniform heights */}
           {filteredReps.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 lg:gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 lg:gap-5 auto-rows-fr">
               {filteredReps.map((rep) => (
                 <RepCard key={rep.id} rep={rep} />
               ))}

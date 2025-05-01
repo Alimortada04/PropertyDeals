@@ -264,10 +264,10 @@ export default function PropertySearchBar({
             "max-h-20"
         )}
       >
-        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-1.5">
           <div className="flex justify-between items-center">
             {/* Left Side - Quick Filters */}
-            <div className="flex items-center gap-3 overflow-x-auto px-1 py-2 flex-1">
+            <div className="flex items-center gap-3 overflow-x-auto px-1 py-1 flex-1">
               {/* Sort Dropdown */}
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-[110px] h-9 text-sm bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 focus:ring-2 focus:ring-[#135341]/20">

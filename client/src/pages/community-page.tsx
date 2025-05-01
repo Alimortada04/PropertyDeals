@@ -331,25 +331,35 @@ export default function CommunityPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Page Tabs */}
-      <div className="mb-8">
-        <Tabs defaultValue="discover" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
-            <TabsTrigger 
-              value="discover" 
-              onClick={() => setActiveTab("discover")}
-              className="text-base py-3"
-            >
-              Discover Events
-            </TabsTrigger>
-            <TabsTrigger 
-              value="my-events" 
-              onClick={() => setActiveTab("my-events")}
-              className="text-base py-3"
-            >
-              My Events
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+      <div className="mb-8 flex justify-center">
+        <div className="flex items-center bg-gray-200 p-1 rounded-full shadow-sm relative h-10 w-[240px]">
+          <div 
+            className={`absolute inset-y-1 w-[118px] ${
+              activeTab === 'my-events' ? 'right-1 translate-x-0' : 'left-1 translate-x-0'
+            } bg-white rounded-full shadow transition-all duration-300 ease-in-out`}
+          ></div>
+          <button
+            className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
+              activeTab === 'discover' 
+                ? 'text-[#09261E] font-medium' 
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+            onClick={() => setActiveTab("discover")}
+          >
+            <span className="text-sm">Discover</span>
+          </button>
+          
+          <button
+            className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
+              activeTab === 'my-events' 
+                ? 'text-[#09261E] font-medium' 
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+            onClick={() => setActiveTab("my-events")}
+          >
+            <span className="text-sm">My Events</span>
+          </button>
+        </div>
       </div>
       
       {activeTab === "discover" ? (
@@ -577,8 +587,8 @@ export default function CommunityPage() {
   );
 }
 
-// Missing icon components
-const Filter: LucideIcon = (props) => (
+// Custom Filter icon component
+const Filter = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

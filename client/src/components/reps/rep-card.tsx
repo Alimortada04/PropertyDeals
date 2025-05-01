@@ -177,7 +177,6 @@ export default function RepCard({ rep }: RepCardProps) {
             }
           }}
         >
-          <ChevronRight size={14} className="mr-1" />
           View Profile
         </Button>
       </CardFooter>
