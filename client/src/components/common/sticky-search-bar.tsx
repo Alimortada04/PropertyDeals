@@ -63,28 +63,17 @@ export default function StickySearchBar({
 
   // Always sticky behavior
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Ensure we have the position (it might not be set on first render)
-      if (searchBarRef.current && initialPositionRef.current === null) {
-        const rect = searchBarRef.current.getBoundingClientRect();
-        initialPositionRef.current = rect.top + window.scrollY;
-      }
-      
-      // Always make sticky
-      setIsSticky(true);
-      
-      // Always show bottom section
-      setShowBottomSection(true);
-      
-      // Save current scroll position
-      setLastScrollY(currentScrollY);
-    };
-    
-    // Set initially to sticky
+    // Set as sticky by default, don't wait for scroll
     setIsSticky(true);
     setShowBottomSection(true);
+    initialPositionRef.current = 0; // Start at the top
+    
+    const handleScroll = () => {
+      // Always keep sticky and show filters
+      setIsSticky(true);
+      setShowBottomSection(true);
+      setLastScrollY(window.scrollY);
+    };
     
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -108,11 +97,11 @@ export default function StickySearchBar({
         <div className="flex flex-row items-center gap-2 max-w-7xl mx-auto">
           {/* Search Input */}
           <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-5 w-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <Input
               type="text"
               placeholder={searchPlaceholder}
-              className="pl-10 pr-4 py-2 w-full bg-white/80 backdrop-blur-sm border border-gray-300 focus:border-[#135341] focus:ring-1 focus:ring-[#135341]/20 rounded-full shadow-sm focus:shadow-md transition-all duration-200"
+              className="pl-10 pr-4 py-2 w-full bg-white border border-gray-300 focus:border-[#135341] focus:ring-1 focus:ring-[#135341]/20 rounded-lg shadow-sm focus:shadow-md transition-all duration-200"
               value={searchTerm}
               onChange={handleSearch}
               aria-label="Search professionals"

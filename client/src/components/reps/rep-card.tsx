@@ -87,9 +87,9 @@ export default function RepCard({ rep }: RepCardProps) {
     >
       {/* No badges at top, moved to inside card */}
         
-      <CardContent className="p-3">
+      <CardContent className="p-3 flex flex-col h-[200px]">
         {/* Unified layout for all screen sizes */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center flex-grow">
           {/* Profile Image - centered */}
           <div className="mb-2">
             <img 
@@ -106,7 +106,7 @@ export default function RepCard({ rep }: RepCardProps) {
           </div>
           
           {/* Content area - centered */}
-          <div className="text-center">
+          <div className="text-center flex-grow flex flex-col">
             <h3 className="font-heading text-lg font-semibold text-gray-800 mb-1 line-clamp-1 flex items-center justify-center">
               {rep.name}
               {rep.isVerified && (
@@ -137,7 +137,7 @@ export default function RepCard({ rep }: RepCardProps) {
             </div>
             
             {/* Simplified Mutual connections - just show the count */}
-            <div className="flex items-center justify-center text-xs text-gray-500 pt-0.5 pb-1">
+            <div className="flex items-center justify-center text-xs text-gray-500 pt-0.5 pb-1 mt-auto">
               <div className="flex -space-x-2 mr-1">
                 <Avatar className="h-5 w-5 border-2 border-white">
                   <AvatarImage src="https://randomuser.me/api/portraits/men/1.jpg" />
@@ -161,19 +161,24 @@ export default function RepCard({ rep }: RepCardProps) {
         )}
       </CardContent>
 
-      {/* Bottom CTA Section - Only Message button */}
-      <CardFooter className="px-2 pb-2 pt-0 flex justify-center">
-        {/* Message button */}
+      {/* Bottom CTA Section - View Profile button */}
+      <CardFooter className="px-2 pb-2 pt-0 flex justify-center mt-auto">
+        {/* View Profile button */}
         <Button 
           size="sm"
           className="w-full bg-[#09261E] hover:bg-[#135341] text-white transition-colors text-xs py-1.5"
           onClick={(e) => {
             e.stopPropagation();
-            // Open message dialog
+            // Navigate to profile
+            if (isBusiness) {
+              setLocation(`/business/${rep.slug}`);
+            } else {
+              setLocation(`/reps/${rep.id}`);
+            }
           }}
         >
-          <MessageCircle size={14} className="mr-1" />
-          Message
+          <ChevronRight size={14} className="mr-1" />
+          View Profile
         </Button>
       </CardFooter>
     </Card>
