@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import PropertySearchBar from "@/components/properties/property-search-bar";
 import Breadcrumbs from "@/components/common/breadcrumbs";
 import { allProperties } from "@/lib/data";
-import { MapPin, List, LayoutGrid, ChevronDown, Grid, Save, ChevronRight } from "lucide-react";
+import { MapPin, List, LayoutGrid, ChevronDown, Grid, Save, ChevronRight, BedDouble, Bath, Square as SquareFootIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useLocation, Link } from 'wouter';
@@ -93,6 +93,9 @@ export default function PropertiesPage() {
   const { data: properties, isLoading, error } = useQuery<Property[]>({
     queryKey: ["/api/properties"],
   });
+
+  // Default property image for fallback
+  const defaultPropertyImage = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
 
   // Fallback data if API fails
   const displayProperties = properties || allProperties;
@@ -636,88 +639,144 @@ export default function PropertiesPage() {
             )}
           </div>
         ) : (
-          // Map View - Split Screen Layout
-          <div className="flex flex-col md:flex-row h-[calc(100vh-200px)] md:min-h-[600px]">
-            {/* Left Column - Scrollable Property List */}
-            <div className="w-full md:w-1/2 h-1/2 md:h-full overflow-y-auto border-r border-gray-200">
-              <div className="h-full">
-                {/* Property Count and Page Navigation */}
-                <div className="sticky top-0 z-10 bg-white px-4 py-3 border-b border-gray-200 flex justify-between items-center">
-                  <div className="text-sm font-medium">
-                    {filteredProperties.length} homes · Page {currentPage} of {totalPages}
-                  </div>
-                  {totalPages > 1 && (
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        disabled={currentPage === 1}
-                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                      >
-                        Previous
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        disabled={currentPage === totalPages}
-                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                      >
-                        Next
-                      </Button>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Property List */}
-                <div className="divide-y divide-gray-200">
+          // Map View - Properties grid + Map side by side
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Left Column - Properties in Grid Format */}
+              <div className="w-full md:w-1/2">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {currentProperties.map((property) => (
                     <div 
                       key={property.id} 
                       className={cn(
-                        "p-4 hover:bg-gray-100 transition-colors",
-                        hoveredPropertyId === property.id ? "bg-[#EAF2EF]" : ""
+                        "relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300",
+                        hoveredPropertyId === property.id ? "ring-2 ring-[#135341]" : ""
                       )}
                       onMouseEnter={() => handlePropertyHover(property.id)}
-                      onMouseLeave={() => setHoveredPropertyId(null)}
+                      onMouseLeave={() => handlePropertyHover(null)}
                     >
-                      <div className="flex gap-4">
-                        <div className="w-1/3">
+                      <Link href={`/properties/${property.id}`} className="block">
+                        <div className="relative aspect-[4/3] overflow-hidden rounded-t-lg">
                           <img 
-                            src={property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"} 
-                            alt={property.title || "Property"} 
-                            className="w-full h-24 object-cover rounded"
+                            src={property.imageUrl || defaultPropertyImage}
+                            alt={property.title}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-in-out"
                           />
-                        </div>
-                        <div className="w-2/3">
-                          <h3 className="font-bold text-[#135341]">${property.price?.toLocaleString()}</h3>
-                          <p className="text-sm text-gray-700 mb-1 truncate">{property.address}</p>
-                          <div className="flex text-xs text-gray-600 mb-2">
-                            <span className="mr-2">{property.bedrooms} beds</span>
-                            <span className="mr-2">{property.bathrooms} baths</span>
-                            <span>{property.squareFeet?.toLocaleString()} sqft</span>
+                          {/* Property Status Badge */}
+                          <div className="absolute top-3 left-3 z-10">
+                            <span 
+                              className={cn(
+                                "inline-block rounded-md text-xs font-medium px-2 py-1 text-white",
+                                property.status === 'active' && "bg-emerald-500",
+                                property.status === 'pending' && "bg-amber-500",
+                                property.status === 'sold' && "bg-rose-500",
+                                property.status === 'off-market' && "bg-gray-500",
+                              )}
+                            >
+                              {property.status === 'active' ? 'Active' : 
+                               property.status === 'pending' ? 'Pending' : 
+                               property.status === 'sold' ? 'Sold' : 'Off Market'}
+                            </span>
                           </div>
-                          <Button 
-                            size="sm" 
-                            className="w-full bg-[#135341] hover:bg-[#09261E] text-white text-xs"
-                            onClick={() => setLocation(`/p/${property.id}`)}
-                          >
-                            View Details
-                          </Button>
+                          
+                          {/* Tier Badge - General or Exclusive */}
+                          {property.tier && (
+                            <div className="absolute top-3 right-3 z-10">
+                              <span 
+                                className={cn(
+                                  "inline-block rounded-md text-xs font-medium px-2 py-1 text-white",
+                                  property.tier === 'general' ? "bg-gray-500" : "bg-[#803344]"
+                                )}
+                              >
+                                {property.tier.charAt(0).toUpperCase() + property.tier.slice(1)}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                      </div>
+                        
+                        <div className="p-4 bg-white">
+                          <h3 className="text-lg font-semibold text-[#09261E] mb-2 truncate">{property.title}</h3>
+                          <p className="text-gray-600 text-sm mb-2">{property.address}</p>
+                          
+                          <p className="text-xl font-bold text-[#09261E] mb-3">
+                            ${property.price?.toLocaleString()}
+                          </p>
+                          
+                          <div className="grid grid-cols-3 gap-2 text-sm mb-3">
+                            <div className="flex items-center">
+                              <BedDouble className="h-4 w-4 mr-1 text-gray-400" />
+                              <span>{property.bedrooms} Beds</span>
+                            </div>
+                            <div className="flex items-center">
+                              <Bath className="h-4 w-4 mr-1 text-gray-400" />
+                              <span>{property.bathrooms} Baths</span>
+                            </div>
+                            <div className="flex items-center">
+                              <SquareFootIcon className="h-4 w-4 mr-1 text-gray-400" />
+                              <span>{property.squareFootage?.toLocaleString()} ft²</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
                     </div>
                   ))}
                 </div>
+                
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                  <div className="mt-6 flex justify-center">
+                    <Pagination>
+                      <PaginationContent>
+                        <PaginationItem>
+                          <PaginationPrevious 
+                            href="#" 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (currentPage > 1) setCurrentPage(currentPage - 1);
+                            }} 
+                            className={cn(currentPage === 1 && "pointer-events-none opacity-50")}
+                          />
+                        </PaginationItem>
+                        
+                        {[...Array(totalPages)].map((_, i) => (
+                          <PaginationItem key={i}>
+                            <PaginationLink 
+                              href="#" 
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setCurrentPage(i + 1);
+                              }}
+                              isActive={currentPage === i + 1}
+                            >
+                              {i + 1}
+                            </PaginationLink>
+                          </PaginationItem>
+                        ))}
+                        
+                        <PaginationItem>
+                          <PaginationNext 
+                            href="#" 
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                            }}
+                            className={cn(currentPage === totalPages && "pointer-events-none opacity-50")}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
+                )}
               </div>
-            </div>
-            
-            {/* Right Column - Map */}
-            <div className="w-full md:w-1/2 h-1/2 md:h-full">
-              <PropertyMap 
-                properties={filteredProperties} 
-                onPropertyHover={handlePropertyHover}
-                hoveredPropertyId={hoveredPropertyId}
-              />
+              
+              {/* Right Column - Map */}
+              <div className="w-full md:w-1/2 h-[500px] md:h-[600px] rounded-lg overflow-hidden border border-gray-200 sticky top-24">
+                <PropertyMap 
+                  properties={filteredProperties} 
+                  onPropertyHover={handlePropertyHover}
+                  hoveredPropertyId={hoveredPropertyId}
+                />
+              </div>
             </div>
           </div>
         )}
