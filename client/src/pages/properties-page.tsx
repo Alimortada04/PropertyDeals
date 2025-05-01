@@ -391,7 +391,7 @@ export default function PropertiesPage() {
       </div>
       
       {/* Property Search Bar */}
-      <div className="sticky top-0 lg:top-0 md:top-16 z-30 bg-white pb-0 px-0 w-full left-0 right-0">
+      <div className="sticky top-0 z-30 bg-white pb-0 px-0 w-full left-0 right-0">
         <PropertySearchBar
           onSearch={setSearchTerm}
           onFilterChange={(filters) => {
@@ -548,77 +548,14 @@ export default function PropertiesPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {currentProperties.map((property) => (
                     <div 
-                      key={property.id} 
-                      className={cn(
-                        "relative overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300",
-                        hoveredPropertyId === property.id ? "ring-2 ring-[#135341]" : ""
-                      )}
+                      key={property.id}
                       onMouseEnter={() => handlePropertyHover(property.id)}
                       onMouseLeave={() => handlePropertyHover(null)}
+                      className={cn(
+                        hoveredPropertyId === property.id ? "ring-2 ring-[#135341] rounded-lg" : ""
+                      )}
                     >
-                      <Link href={`/properties/${property.id}`} className="block">
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-t-lg">
-                          <img 
-                            src={property.imageUrl || defaultPropertyImage}
-                            alt={property.title}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-in-out"
-                          />
-                          {/* Property Status Badge */}
-                          <div className="absolute top-3 left-3 z-10">
-                            <span 
-                              className={cn(
-                                "inline-block rounded-md text-xs font-medium px-2 py-1 text-white",
-                                property.status === 'active' && "bg-emerald-500",
-                                property.status === 'pending' && "bg-amber-500",
-                                property.status === 'sold' && "bg-rose-500",
-                                property.status === 'off-market' && "bg-gray-500",
-                              )}
-                            >
-                              {property.status === 'active' ? 'Active' : 
-                               property.status === 'pending' ? 'Pending' : 
-                               property.status === 'sold' ? 'Sold' : 'Off Market'}
-                            </span>
-                          </div>
-                          
-                          {/* Tier Badge - General or Exclusive */}
-                          {property.tier && (
-                            <div className="absolute top-3 right-3 z-10">
-                              <span 
-                                className={cn(
-                                  "inline-block rounded-md text-xs font-medium px-2 py-1 text-white",
-                                  property.tier === 'general' ? "bg-gray-500" : "bg-[#803344]"
-                                )}
-                              >
-                                {property.tier.charAt(0).toUpperCase() + property.tier.slice(1)}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                        
-                        <div className="p-4 bg-white">
-                          <h3 className="text-lg font-semibold text-[#09261E] mb-2 truncate">{property.title}</h3>
-                          <p className="text-gray-600 text-sm mb-2">{property.address}</p>
-                          
-                          <p className="text-xl font-bold text-[#09261E] mb-3">
-                            ${property.price?.toLocaleString()}
-                          </p>
-                          
-                          <div className="grid grid-cols-3 gap-2 text-sm mb-3">
-                            <div className="flex items-center">
-                              <BedDouble className="h-4 w-4 mr-1 text-gray-400" />
-                              <span>{property.bedrooms} Beds</span>
-                            </div>
-                            <div className="flex items-center">
-                              <Bath className="h-4 w-4 mr-1 text-gray-400" />
-                              <span>{property.bathrooms} Baths</span>
-                            </div>
-                            <div className="flex items-center">
-                              <SquareFootIcon className="h-4 w-4 mr-1 text-gray-400" />
-                              <span>{property.squareFootage?.toLocaleString()} ft²</span>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
+                      <PropertyCard property={property} />
                     </div>
                   ))}
                 </div>
