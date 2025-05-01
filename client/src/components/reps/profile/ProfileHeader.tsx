@@ -23,6 +23,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { formatRelativeTime } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Rep } from "@/lib/rep-data";
@@ -217,21 +218,17 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                     <span>Connect</span>
                   </Button>
                   
-                  <Popover open={shareOpen} onOpenChange={setShareOpen}>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" size="icon" className="h-10 w-10 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300">
-                        <Share2 className="h-4 w-4" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent 
-                      className="w-80 p-0 z-50" 
-                      align="center" 
-                      side="bottom" 
-                      alignOffset={-30} 
-                      sideOffset={5}
-                      avoidCollisions={true}
-                      collisionPadding={20}
-                    >
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    className="h-10 w-10 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
+                    onClick={() => setShareOpen(true)}
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </Button>
+                  
+                  <Dialog open={shareOpen} onOpenChange={setShareOpen}>
+                    <DialogContent className="w-[420px] p-0 z-50 max-w-full">
                       <div className="p-4">
                         <h3 className="text-xl font-semibold">Share Profile</h3>
                         <p className="text-sm text-gray-500 mt-1">Choose how you'd like to share this profile with others.</p>
@@ -347,8 +344,8 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                           Done
                         </Button>
                       </div>
-                    </PopoverContent>
-                  </Popover>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </div>
