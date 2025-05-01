@@ -1164,7 +1164,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         <div className="rounded-lg overflow-hidden bg-gray-100 h-[300px] flex items-center justify-center">
                           <div className="text-center">
                             <MapPinned className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-                            <Button variant="outline" className="bg-white">View on Map</Button>
+                            <Button variant="outline" className="bg-white hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300">View on Map</Button>
                           </div>
                         </div>
                       </div>
@@ -1885,7 +1885,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               
             <Button 
               onClick={() => setOfferModalOpen(false)}
-              className="w-full mt-4"
+              className="w-full mt-4 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
               variant="outline"
             >
               Close

@@ -45,7 +45,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <Sidebar />
         
         {/* Bottom Dock Bar - Slightly thicker, white background with flush corners */}
-        <div className="fixed bottom-0 left-0 w-full h-12 bg-white border-t flex items-center z-45 shadow-md">
+        <div className="fixed bottom-0 left-0 w-full h-12 bg-white border-t flex items-center z-50 shadow-md">
           <div className="w-full px-4 flex items-center justify-between">
             <div>
               {/* Menu selector on far left with popup menu (like whop.com) */}
@@ -173,7 +173,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       
       {/* Main Content Area */}
       <div className="pl-16 pb-12">  {/* Adjusted padding for slightly thicker dock */}
-        <div className="min-h-[calc(100vh-64px)] pb-12">
+        <div className="min-h-[calc(100vh-64px)] pb-[48px]">
           {children}
         </div>
       </div>
