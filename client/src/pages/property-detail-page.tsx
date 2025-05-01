@@ -376,6 +376,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             
             <div className="mt-4 md:mt-0 flex flex-col items-end">
               <div className="text-3xl md:text-4xl font-bold text-[#09261E]">${property.price.toLocaleString()}</div>
+              {/* PD Rating - Color coded by rating value */}
+              <div className={`font-medium ${
+                // Color coding based on rating value
+                propertyId % 10 <= 3 ? 'text-[#803344]' : 
+                propertyId % 10 <= 6 ? 'text-gray-600' : 
+                'text-[#135341]'
+              }`}>
+                PD Rating: {propertyId % 10}/10
+              </div>
               <div className="text-gray-600">
                 ${property.squareFeet ? Math.round(property.price / property.squareFeet) : '0'}/sqft
               </div>

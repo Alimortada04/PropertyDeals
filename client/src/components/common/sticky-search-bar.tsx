@@ -137,7 +137,7 @@ export default function StickySearchBar({
           )}
         >
           <div className="overflow-x-auto py-3 max-w-7xl mx-auto px-4">
-            <div className="flex space-x-2 overflow-x-auto scrollbar-hide px-1">
+            <div className="flex space-x-2 overflow-x-auto scrollbar-hide mx-1">
               {tabs.map((tab) => (
                 <button
                   key={tab.value}
