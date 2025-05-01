@@ -155,7 +155,7 @@ export default function ActivityFeed({ activities }: ActivityFeedProps) {
                   {hasMoreActivities && (
                     <Button 
                       variant="outline" 
-                      className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+                      className="w-full mt-4 border-dashed border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
                       onClick={() => setShowAllActivitiesDialog(true)}
                     >
                       <ActivityIcon size={16} className="mr-2" />

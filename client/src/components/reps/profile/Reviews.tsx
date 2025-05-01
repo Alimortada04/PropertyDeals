@@ -336,7 +336,7 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
         
         <Button 
           variant="outline" 
-          className="w-full mt-4 mb-2 border-dashed border-gray-300 text-gray-500 hover:text-[#09261E] hover:border-[#09261E]"
+          className="w-full mt-4 mb-2 border-dashed border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
           onClick={() => setIsModalOpen(true)}
         >
           <MessageSquare size={16} className="mr-2" />
@@ -345,7 +345,7 @@ export default function Reviews({ reviews: initialReviews }: ReviewsProps) {
         
         <Button 
           variant="outline" 
-          className="w-full bg-[#f8f9fa] border-gray-300 text-gray-700 hover:bg-[#eff1f3] hover:text-[#09261E] hover:border-[#09261E]"
+          className="w-full bg-[#f8f9fa] border-gray-300 text-gray-700 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
           onClick={() => {
             if (!isLoggedIn) {
               setLoginModalOpen(true);
