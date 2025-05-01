@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageSquare, Bell, Users, Search, Filter } from "lucide-react";
+import { MessageSquare, Bell, Users, Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -374,7 +374,7 @@ export default function InboxPage() {
                 <div className="p-4 border-b flex items-center justify-between">
                   <h2 className="text-lg font-semibold">Discussions</h2>
                   <Button size="sm" variant="outline" className="gap-1">
-                    <Filter className="h-3 w-3" />
+                    <SlidersHorizontal className="h-3 w-3" />
                     <span>Filter</span>
                   </Button>
                 </div>
