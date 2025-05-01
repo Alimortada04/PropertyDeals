@@ -136,7 +136,7 @@ export default function StickySearchBar({
             showBottomSection ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
           )}
         >
-          <div className="overflow-x-auto py-3 max-w-7xl mx-auto">
+          <div className="overflow-x-auto py-3 max-w-7xl mx-auto px-5">
             <div className="flex space-x-2 overflow-x-auto scrollbar-hide p-1">
               {tabs.map((tab) => (
                 <button
