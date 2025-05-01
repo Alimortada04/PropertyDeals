@@ -512,7 +512,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
 
       {/* Sticky Navigation Menu */}
-      <div className="sticky top-0 z-40 py-2 bg-white shadow-sm border-b border-gray-200" style={{ position: "sticky" }}>
+      <div className="sticky top-0 z-50 py-2 bg-white shadow-sm border-b border-gray-200" style={{ position: "sticky" }}>
         <div className="container mx-auto px-4">
           <div className="hidden md:flex items-center justify-center gap-3 py-2 max-w-fit mx-auto">
             <a href="#numbers" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
@@ -751,7 +751,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                     <Info className="mr-2 h-4 w-4" />
                                     View Profile
                                   </Button>
-                                  <Button variant="outline" className="flex-1">
+                                  <Button variant="outline" className="flex-1 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300">
                                     <MessageSquare className="mr-2 h-4 w-4" />
                                     Message
                                   </Button>
@@ -1656,11 +1656,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             ))}
           </div>
           
-          <div className="text-center mt-8">
-            <Button className="bg-[#09261E] hover:bg-[#135341] px-8">
-              View All Similar Properties
-            </Button>
-          </div>
+          {/* Removed "View All Similar Properties" button */}
         </div>
       </section>
       
@@ -1912,7 +1908,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               <h2 className="text-2xl font-bold text-[#09261E]">{property.address}, {property.city}, {property.state}</h2>
               <Button 
                 variant="ghost" 
-                className="p-1 h-auto" 
+                className="p-1 h-auto hover:bg-gray-100 hover:text-gray-800" 
                 onClick={() => setViewingMap(false)}
               >
                 <X className="h-5 w-5" />
