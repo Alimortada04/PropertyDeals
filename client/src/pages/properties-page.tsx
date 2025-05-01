@@ -43,7 +43,7 @@ export default function PropertiesPage() {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState<"grid" | "map" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
   const [location, setLocation] = useLocation();
   const [hoveredPropertyId, setHoveredPropertyId] = useState<number | null>(null);
   const propertiesPerPage = viewMode === 'map' ? 12 : 6;
@@ -63,8 +63,8 @@ export default function PropertiesPage() {
   useEffect(() => {
     const url = new URL(window.location.href);
     const viewParam = url.searchParams.get('view');
-    if (viewParam && (viewParam === 'grid' || viewParam === 'map' || viewParam === 'list')) {
-      setViewMode(viewParam as "grid" | "map" | "list");
+    if (viewParam && (viewParam === 'grid' || viewParam === 'map')) {
+      setViewMode(viewParam as "grid" | "map");
     }
   }, []);
   

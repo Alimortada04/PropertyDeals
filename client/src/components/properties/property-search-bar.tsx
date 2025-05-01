@@ -13,8 +13,8 @@ import "./property-search-bar.css";
 interface PropertySearchBarProps {
   onSearch?: (query: string) => void;
   onFilterChange?: (filters: any) => void;
-  onViewModeChange?: (mode: "list" | "grid" | "map") => void;
-  viewMode?: "list" | "grid" | "map";
+  onViewModeChange?: (mode: "grid" | "map") => void;
+  viewMode?: "grid" | "map";
 }
 
 export default function PropertySearchBar({
@@ -321,17 +321,6 @@ export default function PropertySearchBar({
             
             {/* Right Side - View Toggle Buttons */}
             <div className="flex items-center gap-2">
-              <button 
-                className={cn(
-                  "px-3 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20",
-                  viewMode === "list" 
-                    ? "bg-[#EAF2EF] text-[#135341] shadow-sm" 
-                    : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
-                )}
-                onClick={() => onViewModeChange && onViewModeChange("list")}
-              >
-                <List className="h-4 w-4" />
-              </button>
               <button
                 className={cn(
                   "px-3 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20",
