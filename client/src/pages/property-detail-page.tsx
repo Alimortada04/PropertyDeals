@@ -338,7 +338,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   ) : (
     <TooltipProvider>
       {/* Property Hero Section with Photo Gallery */}
-      <section className="relative bg-white">
+      <section className="relative bg-white pt-6">
         <div className="container mx-auto px-4 pt-2 pb-8">
           {/* Breadcrumb Navigation */}
           <nav className="flex text-sm text-gray-500 mb-4 items-center">
