@@ -180,10 +180,10 @@ export default function RepsPage() {
   return (
     <div className="flex flex-col min-h-screen pb-12 bg-white">
       {/* Breadcrumb and Header Section - White background */}
-      <div className="w-full bg-white">
-        <div className="container mx-auto px-4 pt-20 pb-6 md:pt-6">
+      <div className="w-full bg-white pt-6">
+        <div className="container mx-auto px-4 py-4">
           {/* Breadcrumbs */}
-          <div className="mb-3">
+          <div className="mb-2">
             <Breadcrumbs />
           </div>
           
