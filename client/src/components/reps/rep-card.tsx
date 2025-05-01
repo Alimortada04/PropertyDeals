@@ -82,12 +82,12 @@ export default function RepCard({ rep }: RepCardProps) {
 
   return (
     <Card 
-      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 hover:translate-y-[-4px] group h-full"
+      className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 hover:translate-y-[-4px] group h-full flex flex-col"
       onClick={handleCardClick}
     >
       {/* No badges at top, moved to inside card */}
         
-      <CardContent className="p-3 flex flex-col">
+      <CardContent className="p-3 flex flex-col flex-grow">
         {/* Unified layout for all screen sizes */}
         <div className="flex flex-col items-center flex-grow">
           {/* Profile Image - centered */}

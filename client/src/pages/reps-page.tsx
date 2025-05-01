@@ -43,6 +43,7 @@ export default function RepsPage() {
   const repTabs = [
     { value: "all", label: "All" },
     { value: "seller", label: "Sellers" },
+    { value: "buyer", label: "Buyers" },
     { value: "agent", label: "Agents" },
     { value: "contractor", label: "Contractors" },
     { value: "lender", label: "Lenders" },
@@ -126,6 +127,7 @@ export default function RepsPage() {
         <div className="grid grid-cols-2 gap-2">
           {[
             { id: 'seller', label: 'Sellers' },
+            { id: 'buyer', label: 'Buyers' },
             { id: 'agent', label: 'Agents' },
             { id: 'contractor', label: 'Contractors' },
             { id: 'lender', label: 'Lenders' },

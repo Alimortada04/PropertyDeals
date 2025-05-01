@@ -96,7 +96,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
           
           {/* Verified badge - top right */}
           {((rep as any).isVerified || rep.isFeatured) && (
-            <div className="absolute right-4 top-4 z-10 bg-white/80 hover:bg-white backdrop-blur-sm p-2 rounded-full shadow-md transition-colors">
+            <div className="absolute right-4 top-4 z-10 bg-white/80 p-2 rounded-full shadow-md">
               <BadgeCheck className="h-5 w-5 text-[#09261E] fill-[#09261E]" />
             </div>
           )}
