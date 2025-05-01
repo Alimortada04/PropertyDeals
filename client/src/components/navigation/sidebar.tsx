@@ -19,7 +19,7 @@ import {
   MessageCircle,
   Calendar
 } from "lucide-react";
-import { GlobalSearchInput } from "@/components/search/global-search";
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -79,8 +79,7 @@ export default function Sidebar() {
   
   // Menu popup state
   const [showMenu, setShowMenu] = useState(false);
-  // Search state
-  const [showSearch, setShowSearch] = useState(false);
+  // We don't need any search state here as we're using the app-wide search
   
   // Handle logout
   const handleLogout = () => {
@@ -191,7 +190,7 @@ export default function Sidebar() {
       
       {/* Bottom Navigation (Fixed) - No border, centered icons */}
       <div className="p-2 pb-16 flex flex-col items-center justify-center space-y-2">
-        {/* Search button */}
+        {/* Search button - Uses app-wide keyboard shortcut */}
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -199,7 +198,15 @@ export default function Sidebar() {
                 variant="ghost" 
                 size="icon" 
                 className="w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:bg-gray-100 transition-all"
-                onClick={() => setShowSearch(true)}
+                onClick={() => {
+                  // Dispatch the keyboard shortcut event to trigger global search
+                  const event = new KeyboardEvent('keydown', {
+                    key: 'k',
+                    metaKey: true,
+                    bubbles: true
+                  });
+                  document.dispatchEvent(event);
+                }}
               >
                 <Search size={24} />
                 <span className="sr-only">Search (⌘K)</span>
@@ -231,9 +238,6 @@ export default function Sidebar() {
       </div>
       
       {/* Bottom bar removed from here - now in app-layout.tsx */}
-      
-      {/* Global Search */}
-      {showSearch && <GlobalSearchInput onClose={() => setShowSearch(false)} />}
     </div>
   );
 }

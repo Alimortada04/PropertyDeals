@@ -43,7 +43,7 @@ export default function PropertiesPage() {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("newest");
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "map">("grid"); // Only grid and map views now
   const [location, setLocation] = useLocation();
   const [hoveredPropertyId, setHoveredPropertyId] = useState<number | null>(null);
   const propertiesPerPage = viewMode === 'map' ? 12 : 6;
@@ -484,105 +484,6 @@ export default function PropertiesPage() {
                   onMouseLeave={() => setHoveredPropertyId(null)}
                 >
                   <PropertyCard property={property} />
-                </div>
-              ))}
-            </div>
-            
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="mt-12 flex justify-center">
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious 
-                        href="#" 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage > 1) setCurrentPage(currentPage - 1);
-                        }}
-                        className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                      />
-                    </PaginationItem>
-                    
-                    {Array.from({ length: Math.min(totalPages, 5) }).map((_, index) => {
-                      let pageNumber = currentPage - 2 + index;
-                      if (pageNumber <= 0) pageNumber = index + 1;
-                      if (pageNumber > totalPages) pageNumber = totalPages - (4 - index);
-                      return (
-                        <PaginationItem key={index}>
-                          <PaginationLink 
-                            href="#" 
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setCurrentPage(pageNumber);
-                            }}
-                            isActive={currentPage === pageNumber}
-                          >
-                            {pageNumber}
-                          </PaginationLink>
-                        </PaginationItem>
-                      );
-                    })}
-                    
-                    <PaginationItem>
-                      <PaginationNext 
-                        href="#" 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-                        }}
-                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            )}
-          </div>
-        ) : viewMode === 'list' ? (
-          // List View - Horizontal Cards
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col gap-4">
-              {currentProperties.map((property) => (
-                <div 
-                  key={property.id} 
-                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-                  onMouseEnter={() => handlePropertyHover(property.id)}
-                  onMouseLeave={() => setHoveredPropertyId(null)}
-                >
-                  <div className="flex flex-col md:flex-row">
-                    <div className="md:w-1/3 lg:w-1/4">
-                      <img 
-                        src={property.imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"} 
-                        alt={property.title || "Property"} 
-                        className="w-full h-48 md:h-full object-cover"
-                      />
-                    </div>
-                    <div className="p-5 md:w-2/3 lg:w-3/4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-xl font-heading font-bold text-[#135341] mb-2">
-                            ${property.price?.toLocaleString()}
-                          </h3>
-                          <p className="text-gray-700 mb-3">{property.address}, {property.city}, {property.state}</p>
-                          <div className="flex text-sm text-gray-600 mb-4 gap-4">
-                            <span>{property.bedrooms} beds</span>
-                            <span>{property.bathrooms} baths</span>
-                            <span>{property.squareFeet?.toLocaleString()} sqft</span>
-                          </div>
-                          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                            {property.description || "Beautiful property in a prime location, perfect for your next investment."}
-                          </p>
-                        </div>
-                        <Button 
-                          className="bg-[#135341] hover:bg-[#09261E] text-white"
-                          onClick={() => setLocation(`/p/${property.id}`)}
-                        >
-                          View Details
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               ))}
             </div>
