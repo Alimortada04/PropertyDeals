@@ -83,7 +83,7 @@ export default function ContactCard({ rep, className = "" }: ContactCardProps) {
             
             <Button 
               variant="outline" 
-              className="w-full flex justify-center items-center h-9"
+              className="w-full flex justify-center items-center h-9 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
               onClick={() => {
                 // Create a vCard for the contact
                 if (rep.contact) {
