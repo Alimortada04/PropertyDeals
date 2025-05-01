@@ -512,9 +512,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       </section>
 
       {/* Sticky Navigation Menu */}
-      <div className="sticky top-0 z-50 py-2 bg-white shadow-sm border-b border-gray-200" style={{ position: "sticky" }}>
+      <div className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200" style={{ position: "sticky" }}>
         <div className="container mx-auto px-4">
-          <div className="hidden md:flex items-center justify-center gap-3 py-2 max-w-fit mx-auto">
+          <div className="hidden md:flex items-center h-14 overflow-x-auto hide-scrollbar gap-x-1.5">
             <a href="#numbers" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
               <Calculator className="h-4 w-4 mr-1.5" />
               Numbers

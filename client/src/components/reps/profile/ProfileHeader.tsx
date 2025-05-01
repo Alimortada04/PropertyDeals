@@ -219,7 +219,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                   
                   <Popover open={shareOpen} onOpenChange={setShareOpen}>
                     <PopoverTrigger asChild>
-                      <Button variant="outline" size="icon" className="h-10 w-10">
+                      <Button variant="outline" size="icon" className="h-10 w-10 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300">
                         <Share2 className="h-4 w-4" />
                       </Button>
                     </PopoverTrigger>
@@ -334,7 +334,7 @@ export default function ProfileHeader({ rep }: ProfileHeaderProps) {
                         <Button 
                           variant="outline" 
                           onClick={() => setShareOpen(false)}
-                          className="w-20"
+                          className="w-20 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
                         >
                           Done
                         </Button>
