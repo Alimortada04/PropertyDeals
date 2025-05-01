@@ -87,7 +87,7 @@ export default function RepCard({ rep }: RepCardProps) {
     >
       {/* No badges at top, moved to inside card */}
         
-      <CardContent className="p-3 flex flex-col h-[200px]">
+      <CardContent className="p-3 flex flex-col">
         {/* Unified layout for all screen sizes */}
         <div className="flex flex-col items-center flex-grow">
           {/* Profile Image - centered */}
@@ -107,10 +107,10 @@ export default function RepCard({ rep }: RepCardProps) {
           
           {/* Content area - centered */}
           <div className="text-center flex-grow flex flex-col">
-            <h3 className="font-heading text-lg font-semibold text-gray-800 mb-1 line-clamp-1 flex items-center justify-center">
-              {rep.name}
+            <h3 className="font-heading text-lg font-semibold text-gray-800 mb-1 line-clamp-2 flex items-center justify-center">
+              <span className="text-center">{rep.name}</span>
               {rep.isVerified && (
-                <CheckCircle2 size={16} className="ml-1 text-[#803344]" />
+                <CheckCircle2 size={16} className="ml-1 mt-1 text-[#803344] flex-shrink-0" />
               )}
             </h3>
             
