@@ -19,6 +19,7 @@ import {
   MessageCircle,
   Calendar
 } from "lucide-react";
+import { GlobalSearchInput } from "@/components/search/global-search";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -78,6 +79,8 @@ export default function Sidebar() {
   
   // Menu popup state
   const [showMenu, setShowMenu] = useState(false);
+  // Search state
+  const [showSearch, setShowSearch] = useState(false);
   
   // Handle logout
   const handleLogout = () => {
@@ -188,6 +191,29 @@ export default function Sidebar() {
       
       {/* Bottom Navigation (Fixed) - No border, centered icons */}
       <div className="p-2 pb-16 flex flex-col items-center justify-center space-y-2">
+        {/* Search button */}
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="w-12 h-12 rounded-full text-[#09261E] hover:text-[#803344] hover:bg-gray-100 transition-all"
+                onClick={() => setShowSearch(true)}
+              >
+                <Search size={24} />
+                <span className="sr-only">Search (⌘K)</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={4} align="center" className="font-medium text-sm py-1 px-2 flex items-center">
+              <span>Search</span>
+              <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-slate-100 px-1.5 font-mono text-[10px] font-medium">
+                ⌘K
+              </kbd>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        
         {/* Profile icon - moved to sidebar from bottom dock with consistent hover style */}
         <NavItem 
           href="/profile" 
@@ -202,11 +228,12 @@ export default function Sidebar() {
           label="Profile"
           active={location.startsWith('/profile')} 
         />
-        
-
       </div>
       
       {/* Bottom bar removed from here - now in app-layout.tsx */}
+      
+      {/* Global Search */}
+      {showSearch && <GlobalSearchInput onClose={() => setShowSearch(false)} />}
     </div>
   );
 }
