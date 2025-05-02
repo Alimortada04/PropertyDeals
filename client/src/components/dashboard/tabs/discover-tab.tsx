@@ -164,16 +164,16 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="text-[#09261E] border-[#09261E]"
-                  onClick={() => setLocation("/profile")}
+                  className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+                  onClick={() => setLocation("/reps/1")}
                 >
                   <ExternalLink className="h-4 w-4 mr-1" /> View Profile
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm"
-                  className="text-[#09261E] border-[#09261E]"
-                  onClick={() => setLocation("/profile/settings")}
+                  className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+                  onClick={() => setLocation("/profile")}
                 >
                   <Settings className="h-4 w-4 mr-1" /> Edit
                 </Button>
@@ -530,10 +530,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 </div>
               </CardContent>
               <CardFooter className="pt-0 pb-4 px-5">
-                <Button variant="outline" size="sm" className="text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white mr-2">
+                <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white mr-2">
                   Register
                 </Button>
-                <Button variant="ghost" size="sm" className="text-gray-500">
+                <Button variant="ghost" size="sm" className="hover:bg-gray-100 hover:text-[#09261E]">
                   Add to Calendar
                 </Button>
               </CardFooter>
@@ -555,10 +555,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 </div>
               </CardContent>
               <CardFooter className="pt-0 pb-4 px-5">
-                <Button variant="outline" size="sm" className="text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white mr-2">
+                <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white mr-2">
                   RSVP
                 </Button>
-                <Button variant="ghost" size="sm" className="text-gray-500">
+                <Button variant="ghost" size="sm" className="hover:bg-gray-100 hover:text-[#09261E]">
                   Add to Calendar
                 </Button>
               </CardFooter>
@@ -584,7 +584,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 </div>
               </CardContent>
               <CardFooter className="pt-0 pb-4 px-5">
-                <Button variant="outline" size="sm" className="text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white">
+                <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
                   Learn More
                 </Button>
               </CardFooter>
@@ -607,7 +607,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 </div>
               </CardContent>
               <CardFooter className="pt-0 pb-4 px-5">
-                <Button variant="outline" size="sm" className="text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white">
+                <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
                   Try It Now
                 </Button>
               </CardFooter>
@@ -633,7 +633,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 </div>
               </CardContent>
               <CardFooter className="pt-0 pb-4 px-5">
-                <Button variant="outline" size="sm" className="text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white">
+                <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
                   Read More
                 </Button>
               </CardFooter>
@@ -656,7 +656,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 </div>
               </CardContent>
               <CardFooter className="pt-0 pb-4 px-5">
-                <Button variant="outline" size="sm" className="text-[#09261E] border-[#09261E] hover:bg-[#09261E] hover:text-white">
+                <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
                   Read More
                 </Button>
               </CardFooter>

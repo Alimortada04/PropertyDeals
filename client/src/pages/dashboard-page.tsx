@@ -33,33 +33,39 @@ export default function DashboardPage() {
   }, []);
   
   return (
-    <div className="container mx-auto px-4 py-6 pt-4 max-w-7xl bg-[#F5F5F5]">
-      <div className="sticky top-0 z-20">
+    <div className="bg-[#F8F9FA]">
+      <div className="sticky top-0 z-20 bg-[#F8F9FA] pt-4 pb-2 px-4 shadow-sm">
+        <div className="max-w-7xl mx-auto">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+            <TabsList className="w-full bg-white rounded-lg h-auto p-1 mb-1">
+              <TabsTrigger 
+                value="discover" 
+                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
+              >
+                <Compass className="w-4 h-4 mr-2" />
+                <span>Discover</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="manage" 
+                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
+              >
+                <FileClock className="w-4 h-4 mr-2" />
+                <span>Manage</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="analytics" 
+                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                <span>Analytics</span>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      </div>
+      
+      <div className="container mx-auto px-4 py-4 max-w-7xl">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="w-full bg-white rounded-lg h-auto p-1 mb-4 shadow-sm">
-            <TabsTrigger 
-              value="discover" 
-              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
-            >
-              <Compass className="w-4 h-4 mr-2" />
-              <span>Discover</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="manage" 
-              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
-            >
-              <FileClock className="w-4 h-4 mr-2" />
-              <span>Manage</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="analytics" 
-              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
-            >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              <span>Analytics</span>
-            </TabsTrigger>
-          </TabsList>
-          
           <TabsContent value="discover" className="p-0 border-none">
             <DashboardDiscoverTab user={mockUser} />
           </TabsContent>
