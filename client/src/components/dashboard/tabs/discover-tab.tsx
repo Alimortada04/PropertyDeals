@@ -31,7 +31,9 @@ import {
   Sparkles,
   PlusCircle,
   ChevronDown,
-  Info
+  Info,
+  CheckSquare,
+  ListTodo
 } from "lucide-react";
 import { useLocation } from "wouter";
 
@@ -109,7 +111,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
     <div>
       {/* Welcome section */}
       <div className="mb-8">
-        <Card className="bg-gradient-to-r from-[#09261E]/20 to-[#135341]/10 border-0 shadow-sm">
+        <Card className="bg-gradient-to-r from-[#EAF2EF] via-[#135341]/5 to-[#09261E]/10 border-0 shadow-sm">
           <CardContent className="pt-6 pb-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 shadow-sm">
@@ -121,7 +123,8 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               </div>
               <div className="flex-1">
                 <h2 className="text-2xl font-bold text-[#09261E]">Welcome back, {user.name || "Buyer"}</h2>
-                <div className="flex items-center mt-1">
+                <p className="text-sm text-gray-600">Your last saved property: 123 Maple St • You connected with 3 new professionals last week</p>
+                <div className="flex items-center mt-2">
                   <div className="w-[180px] mr-3">
                     <Progress value={user.profileCompletion} className="h-2 bg-gray-200">
                       <div className="h-full bg-green-500 rounded-full" style={{ width: `${user.profileCompletion}%` }} />
@@ -360,6 +363,40 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
           </Dialog>
         </div>
         
+        <div className="flex gap-2 mb-4 overflow-x-auto pb-2 hide-scrollbar">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="rounded-full text-sm bg-white hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+          >
+            All Activity
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="rounded-full text-sm bg-white hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+          >
+            <Home className="h-3.5 w-3.5 mr-1" />
+            Only Properties
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="rounded-full text-sm bg-white hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+          >
+            <MessageSquare className="h-3.5 w-3.5 mr-1" />
+            Only Messages
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="rounded-full text-sm bg-white hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+          >
+            <ListTodo className="h-3.5 w-3.5 mr-1" />
+            Only Tasks
+          </Button>
+        </div>
+        
         <div className="overflow-x-auto pb-4 hide-scrollbar">
           <div className="flex space-x-4">
             <Card 
@@ -554,9 +591,34 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white mr-2">
                   Register
                 </Button>
-                <Button variant="ghost" size="sm" className="hover:bg-gray-100 hover:text-[#09261E]">
-                  Add to Calendar
+                <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] mr-2">
+                  <Bell className="h-3.5 w-3.5 mr-1" />
+                  Remind Me
                 </Button>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="sm" className="hover:bg-gray-100 hover:text-[#09261E]">
+                      <Calendar className="h-3.5 w-3.5 mr-1" />
+                      Add to Calendar
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-40 p-0">
+                    <div className="py-1">
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-left">
+                        Google Calendar
+                      </Button>
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-left">
+                        Apple Calendar
+                      </Button>
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-left">
+                        Outlook
+                      </Button>
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-left">
+                        Download .ics
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </CardFooter>
             </Card>
             
@@ -579,9 +641,34 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                 <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white mr-2">
                   RSVP
                 </Button>
-                <Button variant="ghost" size="sm" className="hover:bg-gray-100 hover:text-[#09261E]">
-                  Add to Calendar
+                <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] mr-2">
+                  <Bell className="h-3.5 w-3.5 mr-1" />
+                  Remind Me
                 </Button>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="sm" className="hover:bg-gray-100 hover:text-[#09261E]">
+                      <Calendar className="h-3.5 w-3.5 mr-1" />
+                      Add to Calendar
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-40 p-0">
+                    <div className="py-1">
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-left">
+                        Google Calendar
+                      </Button>
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-left">
+                        Apple Calendar
+                      </Button>
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-left">
+                        Outlook
+                      </Button>
+                      <Button variant="ghost" size="sm" className="w-full justify-start text-left">
+                        Download .ics
+                      </Button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </CardFooter>
             </Card>
           </TabsContent>
