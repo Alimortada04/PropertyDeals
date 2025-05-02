@@ -242,47 +242,64 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         {/* Secondary action cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Card 
-            className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            className="hover:shadow-md transition-all duration-200 cursor-pointer"
             onClick={() => setLocation("/inbox")}
           >
-            <CardContent className="p-4 flex flex-col items-center text-center">
-              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
-                <MessageSquare className="h-5 w-5 text-[#09261E]" />
+            <CardContent className="p-5">
+              <div className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center flex-shrink-0">
+                  <MessageSquare className="h-5 w-5 text-[#09261E]" />
+                </div>
+                <div>
+                  <h4 className="font-medium text-sm text-[#09261E]">Check Messages</h4>
+                  <p className="text-gray-500 text-xs mt-0.5">View your inbox and conversations</p>
+                </div>
+                <div className="ml-auto self-start">
+                  <Badge className="bg-red-500">3 New</Badge>
+                </div>
               </div>
-              <h4 className="font-medium text-sm text-[#09261E]">Check Messages</h4>
-              <Badge className="mt-2 bg-red-500">3 New</Badge>
             </CardContent>
           </Card>
           
           <Card 
-            className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            className="hover:shadow-md transition-all duration-200 cursor-pointer"
             onClick={() => {
               setLocation("/dashboard?tab=manage");
               window.scrollTo(0, 0);
             }}
           >
-            <CardContent className="p-4 flex flex-col items-center text-center">
-              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
-                <ActivitySquare className="h-5 w-5 text-[#09261E]" />
+            <CardContent className="p-5">
+              <div className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center flex-shrink-0">
+                  <ActivitySquare className="h-5 w-5 text-[#09261E]" />
+                </div>
+                <div>
+                  <h4 className="font-medium text-sm text-[#09261E]">Manage My Activity</h4>
+                  <p className="text-gray-500 text-xs mt-0.5">Track tasks and property views</p>
+                </div>
               </div>
-              <h4 className="font-medium text-sm text-[#09261E]">Manage My Activity</h4>
             </CardContent>
           </Card>
           
           <Card 
-            className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            className="hover:shadow-md transition-all duration-200 cursor-pointer"
             onClick={() => setLocation("/playbook")}
           >
-            <CardContent className="p-4 flex flex-col items-center text-center">
-              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
-                <Calculator className="h-5 w-5 text-[#09261E]" />
+            <CardContent className="p-5">
+              <div className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center flex-shrink-0">
+                  <Calculator className="h-5 w-5 text-[#09261E]" />
+                </div>
+                <div>
+                  <h4 className="font-medium text-sm text-[#09261E]">Run Numbers</h4>
+                  <p className="text-gray-500 text-xs mt-0.5">Use investment calculators</p>
+                </div>
               </div>
-              <h4 className="font-medium text-sm text-[#09261E]">Run Numbers</h4>
             </CardContent>
           </Card>
           
           <Card 
-            className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            className="hover:shadow-md transition-all duration-200 cursor-pointer"
             onClick={() => {
               // Scroll to What's New section
               const whatsNewSection = document.getElementById("whats-new-section");
@@ -291,12 +308,19 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               }
             }}
           >
-            <CardContent className="p-4 flex flex-col items-center text-center">
-              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
-                <Sparkles className="h-5 w-5 text-[#09261E]" />
+            <CardContent className="p-5">
+              <div className="flex gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="h-5 w-5 text-[#09261E]" />
+                </div>
+                <div>
+                  <h4 className="font-medium text-sm text-[#09261E]">New Updates</h4>
+                  <p className="text-gray-500 text-xs mt-0.5">See platform and market news</p>
+                </div>
+                <div className="ml-auto self-start">
+                  <Badge className="bg-green-500">2 New</Badge>
+                </div>
               </div>
-              <h4 className="font-medium text-sm text-[#09261E]">New Updates</h4>
-              <Badge className="mt-2 bg-green-500">2 New</Badge>
             </CardContent>
           </Card>
         </div>
@@ -448,61 +472,88 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         <h3 className="text-lg font-semibold text-[#09261E] mb-4">What's New</h3>
         
         <Tabs defaultValue="deals" className="w-full">
-          <TabsList className="w-full bg-white rounded-lg h-auto p-1 mb-4">
-            <TabsTrigger 
-              value="deals" 
-              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
-            >
-              New Deals For You
-            </TabsTrigger>
-            <TabsTrigger 
-              value="events" 
-              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
-            >
-              Upcoming Events
-            </TabsTrigger>
-            <TabsTrigger 
-              value="updates" 
-              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
-            >
-              Platform Updates
-            </TabsTrigger>
-            <TabsTrigger 
-              value="market" 
-              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
-            >
-              Market Updates
-            </TabsTrigger>
-          </TabsList>
+          <div className="border-b border-gray-200 mb-6">
+            <TabsList className="flex -mb-px space-x-8 overflow-x-auto bg-transparent">
+              <TabsTrigger 
+                value="deals" 
+                className="border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+              >
+                New Deals For You
+              </TabsTrigger>
+              <TabsTrigger 
+                value="events" 
+                className="border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+              >
+                Upcoming Events
+              </TabsTrigger>
+              <TabsTrigger 
+                value="updates"
+                className="border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+              >
+                Platform Updates
+              </TabsTrigger>
+              <TabsTrigger 
+                value="market" 
+                className="border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+              >
+                Market Updates
+              </TabsTrigger>
+            </TabsList>
+          </div>
           
           {/* New Deals Tab */}
           <TabsContent value="deals" className="mt-0">
             <div className="overflow-x-auto pb-4 hide-scrollbar">
               <div className="flex space-x-4">
                 {recentProperties.map((property) => (
-                  <Card key={property.id} className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200">
-                    <div className="h-36 relative">
+                  <Card 
+                    key={property.id} 
+                    className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden"
+                    onClick={() => setLocation(`/properties/${property.id}`)}
+                  >
+                    <div className="h-40 relative">
                       <img 
                         src={property.image} 
                         alt={property.title}
-                        className="w-full h-full object-cover rounded-t-lg"
+                        className="w-full h-full object-cover"
                       />
                       <Badge className="absolute top-2 right-2 bg-[#09261E]">New</Badge>
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+                        <p className="font-bold text-lg">{property.price}</p>
+                      </div>
                     </div>
                     <CardContent className="p-4">
-                      <h4 className="font-medium text-[#09261E]">{property.title}</h4>
-                      <p className="text-lg font-bold text-[#09261E]">{property.price}</p>
-                      <div className="flex text-sm text-gray-500 mt-1">
-                        <span className="mr-2">{property.beds} bd</span>
-                        <span className="mr-2">{property.baths} ba</span>
-                        <span>{property.sqft} sqft</span>
+                      <h4 className="font-medium text-[#09261E] truncate">{property.title}</h4>
+                      <div className="flex items-center mt-1">
+                        <div className="flex-1 flex text-sm text-gray-500">
+                          <span className="flex items-center mr-3">
+                            <Home className="h-3.5 w-3.5 mr-1 opacity-70" />
+                            {property.beds} bd
+                          </span>
+                          <span className="flex items-center mr-3">
+                            <BarChart2 className="h-3.5 w-3.5 mr-1 opacity-70" />
+                            {property.baths} ba
+                          </span>
+                          <span className="flex items-center">
+                            <ArrowRightLeft className="h-3.5 w-3.5 mr-1 opacity-70" />
+                            {property.sqft}
+                          </span>
+                        </div>
                       </div>
                       <div className="mt-3 flex justify-between items-center">
                         <Badge variant="outline" className="bg-gray-50 text-gray-600 font-normal">
                           {property.type}
                         </Badge>
-                        <Button variant="ghost" size="sm" className="h-8 text-[#09261E]">
-                          View <ChevronRight className="h-4 w-4" />
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="h-7 hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLocation(`/properties/${property.id}`);
+                          }}
+                        >
+                          View <ChevronRight className="h-4 w-4 ml-1" />
                         </Button>
                       </div>
                     </CardContent>
