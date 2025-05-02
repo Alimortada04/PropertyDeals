@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 export default function PlaybookPage() {
-  const [activeTab, setActiveTab] = useState<"resources" | "tools">("resources");
+  const [activeTab, setActiveTab] = useState<"resources" | "tools">("tools");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("General");
   const [activeToolCategory, setActiveToolCategory] = useState("All Tools");
