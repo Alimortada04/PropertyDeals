@@ -109,7 +109,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
     <div>
       {/* Welcome section */}
       <div className="mb-8">
-        <Card className="bg-gradient-to-br from-[#EAF2EF] to-white border-0 shadow-sm">
+        <Card className="bg-gradient-to-br from-[#09261E]/15 via-[#135341]/10 to-[#EAF2EF] border-0 shadow-sm">
           <CardContent className="pt-6 pb-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 shadow-sm">
@@ -194,7 +194,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           {/* Primary action card - Find a Deal */}
           <Card 
-            className="hover:shadow-md transition-all duration-200 cursor-pointer bg-gradient-to-br from-[#09261E] to-[#135341] text-white"
+            className="hover:shadow-lg transition-all duration-300 cursor-pointer bg-gradient-to-br from-[#09261E] to-[#135341] hover:from-[#803344] hover:to-[#803344]/90 text-white overflow-hidden transform hover:scale-[1.01]"
             onClick={() => setLocation("/properties")}
           >
             <CardContent className="p-6 flex items-center">
@@ -442,7 +442,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         <h3 className="text-lg font-semibold text-[#09261E] mb-4">What's New</h3>
         
         <Tabs defaultValue="deals" className="w-full">
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-start mb-6">
             <TabsList className="inline-flex gap-2 bg-transparent">
               <TabsTrigger 
                 value="deals" 
@@ -550,7 +550,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="pt-0 pb-4 px-5">
+              <CardFooter className="pt-0 pb-4 px-5 flex justify-end">
                 <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white mr-2">
                   Register
                 </Button>
