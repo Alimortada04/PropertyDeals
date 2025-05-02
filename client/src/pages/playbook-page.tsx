@@ -93,8 +93,8 @@ export default function PlaybookPage() {
       tags: ["Flips"],
       categories: ["Flips"],
       type: "Calculator",
-      status: "Published",
-      badge: "Popular"
+      status: "Coming Soon",
+      badge: "Coming Soon"
     },
     {
       id: "2",
@@ -104,8 +104,8 @@ export default function PlaybookPage() {
       tags: ["Flips", "Wholesale"],
       categories: ["Flips", "Wholesale"],
       type: "Estimator",
-      status: "Published",
-      badge: "New"
+      status: "Coming Soon",
+      badge: "Coming Soon"
     },
     {
       id: "3",
@@ -115,8 +115,8 @@ export default function PlaybookPage() {
       tags: ["Wholesale", "Flips"],
       categories: ["Wholesale", "Flips"],
       type: "Calculator",
-      status: "Published",
-      badge: ""
+      status: "Coming Soon",
+      badge: "Coming Soon"
     },
     {
       id: "4",
@@ -126,7 +126,7 @@ export default function PlaybookPage() {
       tags: ["Buy & Hold", "Flips"],
       categories: ["Buy & Hold", "Flips"],
       type: "Analyzer",
-      status: "Published",
+      status: "Coming Soon",
       badge: "Coming Soon"
     },
   ];
