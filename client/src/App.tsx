@@ -82,13 +82,13 @@ function Router() {
     <Switch>
       <Route path="/">
         <AppLayout>
-          <HomePage />
+          <DashboardPage />
         </AppLayout>
       </Route>
       
       <Route path="/home">
         <AppLayout>
-          <HomePage />
+          <DashboardPage />
         </AppLayout>
       </Route>
       

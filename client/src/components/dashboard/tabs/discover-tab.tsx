@@ -127,37 +127,43 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                       <div className="h-full bg-green-500 rounded-full" style={{ width: `${user.profileCompletion}%` }} />
                     </Progress>
                   </div>
-                  <p className="text-sm text-gray-600">Profile {user.profileCompletion}% complete</p>
-                  
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-6 w-6 ml-1 text-gray-400">
-                        <Info className="h-4 w-4" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-80 p-0">
-                      <div className="p-4 border-b">
-                        <h3 className="font-medium text-[#09261E]">Complete Your Profile</h3>
-                        <p className="text-sm text-gray-500">Finish these items to reach 100%</p>
-                      </div>
-                      <div className="p-2">
-                        {profileTasks.map((task) => (
-                          <div key={task.id} className="flex items-center p-2">
-                            <div className="w-5 h-5 mr-3 flex-shrink-0">
-                              {task.completed ? (
-                                <Check className="h-5 w-5 text-green-500" />
-                              ) : (
-                                <PlusCircle className="h-5 w-5 text-gray-400" />
-                              )}
+                  <div className="flex items-center flex-wrap">
+                    <p className="text-sm text-gray-600 mr-2">Profile {user.profileCompletion}% complete</p>
+                    
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="h-7 text-xs font-medium ml-1 border-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+                        >
+                          <PlusCircle className="h-3.5 w-3.5 mr-1" /> Complete Profile
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-80 p-0">
+                        <div className="p-4 border-b">
+                          <h3 className="font-medium text-[#09261E]">Complete Your Profile</h3>
+                          <p className="text-sm text-gray-500">Finish these items to reach 100%</p>
+                        </div>
+                        <div className="p-2">
+                          {profileTasks.map((task) => (
+                            <div key={task.id} className="flex items-center p-2">
+                              <div className="w-5 h-5 mr-3 flex-shrink-0">
+                                {task.completed ? (
+                                  <Check className="h-5 w-5 text-green-500" />
+                                ) : (
+                                  <PlusCircle className="h-5 w-5 text-gray-400" />
+                                )}
+                              </div>
+                              <span className={`text-sm ${task.completed ? 'line-through text-gray-500' : 'text-[#09261E]'}`}>
+                                {task.task}
+                              </span>
                             </div>
-                            <span className={`text-sm ${task.completed ? 'line-through text-gray-500' : 'text-[#09261E]'}`}>
-                              {task.task}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </div>
                 </div>
               </div>
               <div className="flex space-x-2">
@@ -242,22 +248,19 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         {/* Secondary action cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Card 
-            className="hover:shadow-md transition-all duration-200 cursor-pointer"
+            className="hover:shadow-md transition-all duration-200 cursor-pointer relative"
             onClick={() => setLocation("/inbox")}
           >
-            <CardContent className="p-5">
-              <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center flex-shrink-0">
-                  <MessageSquare className="h-5 w-5 text-[#09261E]" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm text-[#09261E]">Check Messages</h4>
-                  <p className="text-gray-500 text-xs mt-0.5">View your inbox and conversations</p>
-                </div>
-                <div className="ml-auto self-start">
-                  <Badge className="bg-red-500">3 New</Badge>
-                </div>
+            <div className="absolute top-3 right-3">
+              <div className="w-5 h-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+                3
               </div>
+            </div>
+            <CardContent className="p-4 flex flex-col items-center text-center">
+              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
+                <MessageSquare className="h-5 w-5 text-[#09261E]" />
+              </div>
+              <h4 className="font-medium text-sm text-[#09261E]">Check Messages</h4>
             </CardContent>
           </Card>
           
@@ -268,16 +271,11 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               window.scrollTo(0, 0);
             }}
           >
-            <CardContent className="p-5">
-              <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center flex-shrink-0">
-                  <ActivitySquare className="h-5 w-5 text-[#09261E]" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm text-[#09261E]">Manage My Activity</h4>
-                  <p className="text-gray-500 text-xs mt-0.5">Track tasks and property views</p>
-                </div>
+            <CardContent className="p-4 flex flex-col items-center text-center">
+              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
+                <ActivitySquare className="h-5 w-5 text-[#09261E]" />
               </div>
+              <h4 className="font-medium text-sm text-[#09261E]">Manage My Activity</h4>
             </CardContent>
           </Card>
           
@@ -285,21 +283,16 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
             className="hover:shadow-md transition-all duration-200 cursor-pointer"
             onClick={() => setLocation("/playbook")}
           >
-            <CardContent className="p-5">
-              <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center flex-shrink-0">
-                  <Calculator className="h-5 w-5 text-[#09261E]" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm text-[#09261E]">Run Numbers</h4>
-                  <p className="text-gray-500 text-xs mt-0.5">Use investment calculators</p>
-                </div>
+            <CardContent className="p-4 flex flex-col items-center text-center">
+              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
+                <Calculator className="h-5 w-5 text-[#09261E]" />
               </div>
+              <h4 className="font-medium text-sm text-[#09261E]">Run Numbers</h4>
             </CardContent>
           </Card>
           
           <Card 
-            className="hover:shadow-md transition-all duration-200 cursor-pointer"
+            className="hover:shadow-md transition-all duration-200 cursor-pointer relative"
             onClick={() => {
               // Scroll to What's New section
               const whatsNewSection = document.getElementById("whats-new-section");
@@ -308,19 +301,16 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               }
             }}
           >
-            <CardContent className="p-5">
-              <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center flex-shrink-0">
-                  <Sparkles className="h-5 w-5 text-[#09261E]" />
-                </div>
-                <div>
-                  <h4 className="font-medium text-sm text-[#09261E]">New Updates</h4>
-                  <p className="text-gray-500 text-xs mt-0.5">See platform and market news</p>
-                </div>
-                <div className="ml-auto self-start">
-                  <Badge className="bg-green-500">2 New</Badge>
-                </div>
+            <div className="absolute top-3 right-3">
+              <div className="w-5 h-5 rounded-full bg-green-500 text-white text-xs flex items-center justify-center">
+                2
               </div>
+            </div>
+            <CardContent className="p-4 flex flex-col items-center text-center">
+              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
+                <Sparkles className="h-5 w-5 text-[#09261E]" />
+              </div>
+              <h4 className="font-medium text-sm text-[#09261E]">New Updates</h4>
             </CardContent>
           </Card>
         </div>
@@ -473,28 +463,28 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         
         <Tabs defaultValue="deals" className="w-full">
           <div className="border-b border-gray-200 mb-6">
-            <TabsList className="flex -mb-px space-x-8 overflow-x-auto bg-transparent">
+            <TabsList className="flex justify-start -mb-px overflow-x-auto bg-transparent">
               <TabsTrigger 
                 value="deals" 
-                className="border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+                className="mr-6 border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
               >
                 New Deals For You
               </TabsTrigger>
               <TabsTrigger 
                 value="events" 
-                className="border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+                className="mr-6 border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
               >
                 Upcoming Events
               </TabsTrigger>
               <TabsTrigger 
                 value="updates"
-                className="border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+                className="mr-6 border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
               >
                 Platform Updates
               </TabsTrigger>
               <TabsTrigger 
                 value="market" 
-                className="border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+                className="mr-6 border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
               >
                 Market Updates
               </TabsTrigger>

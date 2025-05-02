@@ -90,7 +90,7 @@ export default function Sidebar() {
     <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-inner border-r">
       {/* Logo at top - Using pdLogo.png image */}
       <div className="flex items-center justify-center h-16">
-        <Link href="/">
+        <Link href="/dashboard">
           <div className="flex items-center justify-center hover:scale-110 transition-all">
             <img src="/images/pdLogo.png" alt="PropertyDeals" className="h-10 w-auto" />
           </div>
