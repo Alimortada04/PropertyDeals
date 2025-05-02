@@ -115,7 +115,7 @@ const KanbanPropertyCard = ({ property, onClickProperty, onClickManage, onRemove
             className="w-full h-full object-cover"
           />
           <Badge className={`absolute top-2 right-2 ${getPriorityColor(property.priority)}`}>
-            {property.priority || 'Medium'} Priority
+            {property.priority === 'Medium' ? 'Med' : property.priority || 'Med'}
           </Badge>
         </div>
       </div>
@@ -310,7 +310,7 @@ const PropertyGrid = ({ properties, onClickProperty, onClickManage, onRemove }: 
                   </td>
                   <td className="py-3 px-4">
                     <Badge className={`${getPriorityColor(property.priority)}`}>
-                      {property.priority || 'Medium'}
+                      {property.priority === 'Medium' ? 'Med' : property.priority || 'Med'}
                     </Badge>
                   </td>
                   <td className="py-3 px-4 text-gray-600">
@@ -578,45 +578,41 @@ export default function DashboardManageTab() {
       <div className="flex flex-col space-y-6 mb-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden p-1">
-              <div className="flex">
-                <button 
-                  className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${activeView === "pipeline" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                  onClick={() => setActiveView("pipeline")}
-                >
-                  <Building className="h-4 w-4 mr-2" />
-                  Property Pipeline
-                </button>
-                <button 
-                  className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${activeView === "projects" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                  onClick={() => setActiveView("projects")}
-                >
-                  <BriefcaseBusiness className="h-4 w-4 mr-2" />
-                  Project Management
-                </button>
-              </div>
+            <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden flex">
+              <button 
+                className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${activeView === "pipeline" ? "bg-white shadow-sm" : ""}`}
+                onClick={() => setActiveView("pipeline")}
+              >
+                <Building className="h-4 w-4 mr-2" />
+                Property Pipeline
+              </button>
+              <button 
+                className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${activeView === "projects" ? "bg-white shadow-sm" : "text-gray-500"}`}
+                onClick={() => setActiveView("projects")}
+              >
+                <BriefcaseBusiness className="h-4 w-4 mr-2" />
+                Project Management
+              </button>
             </div>
           </div>
           
           {activeView === "pipeline" && (
             <div className="flex items-center gap-2">
-              <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden p-1 mr-2">
-                <div className="flex">
-                  <button 
-                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "kanban" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                    onClick={() => setPipelineView("kanban")}
-                  >
-                    <LayoutGrid className="h-3.5 w-3.5 mr-1.5" />
-                    Kanban
-                  </button>
-                  <button 
-                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "grid" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                    onClick={() => setPipelineView("grid")}
-                  >
-                    <Table className="h-3.5 w-3.5 mr-1.5" />
-                    Sheet
-                  </button>
-                </div>
+              <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden flex mr-2">
+                <button 
+                  className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "kanban" ? "bg-white shadow-sm" : ""}`}
+                  onClick={() => setPipelineView("kanban")}
+                >
+                  <LayoutGrid className="h-3.5 w-3.5 mr-1.5" />
+                  Kanban
+                </button>
+                <button 
+                  className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "grid" ? "bg-white shadow-sm" : "text-gray-500"}`}
+                  onClick={() => setPipelineView("grid")}
+                >
+                  <Table className="h-3.5 w-3.5 mr-1.5" />
+                  Sheet
+                </button>
               </div>
               <Button
                 variant="outline"
