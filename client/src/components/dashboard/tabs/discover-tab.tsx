@@ -187,7 +187,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
       <div className="mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           {/* Primary action card - Find a Deal */}
-          <Card className="hover:shadow-md transition-all duration-200 cursor-pointer bg-gradient-to-br from-[#09261E] to-[#135341] text-white">
+          <Card 
+            className="hover:shadow-md transition-all duration-200 cursor-pointer bg-gradient-to-br from-[#09261E] to-[#135341] text-white"
+            onClick={() => setLocation("/properties")}
+          >
             <CardContent className="p-6 flex items-center">
               <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center mr-4 flex-shrink-0">
                 <Search className="h-8 w-8 text-white" />
@@ -195,7 +198,14 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               <div className="flex-1">
                 <h4 className="font-bold text-xl text-white mb-1">Find a Deal</h4>
                 <p className="text-white/80 text-sm mb-3">Browse our exclusive off-market properties</p>
-                <Button size="sm" className="bg-white text-[#09261E] hover:bg-gray-100">
+                <Button 
+                  size="sm" 
+                  className="bg-white text-[#09261E] hover:bg-gray-100"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLocation("/properties");
+                  }}
+                >
                   Browse Properties
                 </Button>
               </div>
@@ -203,7 +213,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
           </Card>
           
           {/* Primary action card - Connect with Professional */}
-          <Card className="hover:shadow-md transition-all duration-200 cursor-pointer">
+          <Card 
+            className="hover:shadow-md transition-all duration-200 cursor-pointer"
+            onClick={() => setLocation("/reps")}
+          >
             <CardContent className="p-6 flex items-center">
               <div className="w-14 h-14 rounded-full bg-[#EAF2EF] flex items-center justify-center mr-4 flex-shrink-0">
                 <UserSearch className="h-8 w-8 text-[#09261E]" />
@@ -211,7 +224,14 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               <div className="flex-1">
                 <h4 className="font-bold text-xl text-[#09261E] mb-1">Connect with a Professional</h4>
                 <p className="text-gray-600 text-sm mb-3">Find real estate pros that match your needs</p>
-                <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
+                <Button 
+                  size="sm" 
+                  className="bg-[#09261E] hover:bg-[#135341]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLocation("/reps");
+                  }}
+                >
                   Browse REPs
                 </Button>
               </div>
@@ -221,7 +241,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         
         {/* Secondary action cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Card className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer">
+          <Card 
+            className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            onClick={() => setLocation("/inbox")}
+          >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
                 <MessageSquare className="h-5 w-5 text-[#09261E]" />
@@ -231,7 +254,13 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
             </CardContent>
           </Card>
           
-          <Card className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer">
+          <Card 
+            className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            onClick={() => {
+              setLocation("/dashboard?tab=manage");
+              window.scrollTo(0, 0);
+            }}
+          >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
                 <ActivitySquare className="h-5 w-5 text-[#09261E]" />
@@ -240,7 +269,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
             </CardContent>
           </Card>
           
-          <Card className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer">
+          <Card 
+            className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            onClick={() => setLocation("/playbook")}
+          >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
                 <Calculator className="h-5 w-5 text-[#09261E]" />
@@ -249,7 +281,16 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
             </CardContent>
           </Card>
           
-          <Card className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer">
+          <Card 
+            className="hover:border-[#09261E] hover:shadow-sm transition-all duration-200 cursor-pointer"
+            onClick={() => {
+              // Scroll to What's New section
+              const whatsNewSection = document.getElementById("whats-new-section");
+              if (whatsNewSection) {
+                whatsNewSection.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
+          >
             <CardContent className="p-4 flex flex-col items-center text-center">
               <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mb-2">
                 <Sparkles className="h-5 w-5 text-[#09261E]" />
@@ -327,7 +368,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         
         <div className="overflow-x-auto pb-4 hide-scrollbar">
           <div className="flex space-x-4">
-            <Card className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200">
+            <Card 
+              className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer"
+              onClick={() => setLocation("/calendar")}
+            >
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
@@ -342,7 +386,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               </CardContent>
             </Card>
             
-            <Card className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200">
+            <Card 
+              className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer"
+              onClick={() => setLocation("/properties/recommendations")}
+            >
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
@@ -357,7 +404,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               </CardContent>
             </Card>
             
-            <Card className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200">
+            <Card 
+              className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer"
+              onClick={() => setLocation("/properties/saved")}
+            >
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
@@ -372,7 +422,10 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               </CardContent>
             </Card>
             
-            <Card className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200">
+            <Card 
+              className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer"
+              onClick={() => setLocation("/inbox")}
+            >
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
@@ -391,7 +444,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
       </div>
       
       {/* What's New Section */}
-      <div>
+      <div id="whats-new-section">
         <h3 className="text-lg font-semibold text-[#09261E] mb-4">What's New</h3>
         
         <Tabs defaultValue="deals" className="w-full">
@@ -610,6 +663,32 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
+      
+      {/* Priority Buyer CTA */}
+      <div className="mt-12 mb-6">
+        <Card className="bg-gradient-to-r from-[#09261E] to-[#135341] text-white border-0 shadow-md">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row items-center justify-between">
+              <div className="flex items-center mb-4 md:mb-0">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                  <Star className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-white">Become a Priority Buyer</h3>
+                  <p className="text-white/80">Get exclusive early access to off-market properties and priority service</p>
+                </div>
+              </div>
+              <Button 
+                size="lg" 
+                className="bg-white text-[#09261E] hover:bg-gray-100 font-medium"
+                onClick={() => setLocation("/membership/priority-buyer")}
+              >
+                Upgrade Now
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

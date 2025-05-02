@@ -33,10 +33,10 @@ export default function DashboardPage() {
   }, []);
   
   return (
-    <div className="container mx-auto px-4 py-6 pt-4 max-w-7xl">
-      <div className="sticky top-0 z-10 py-2 bg-[#F5F5F5]">
+    <div className="container mx-auto px-4 py-6 pt-4 max-w-7xl bg-[#F5F5F5]">
+      <div className="sticky top-0 z-20">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="w-full bg-white rounded-lg h-auto p-1 mb-4">
+          <TabsList className="w-full bg-white rounded-lg h-auto p-1 mb-4 shadow-sm">
             <TabsTrigger 
               value="discover" 
               className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
