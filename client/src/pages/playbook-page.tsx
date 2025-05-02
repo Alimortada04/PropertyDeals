@@ -228,7 +228,7 @@ export default function PlaybookPage() {
                 />
               </div>
 
-              <div className="flex justify-start mb-6">
+              <div className="flex justify-center mb-6">
                 <div className="inline-flex gap-2">
                   {resourceCategories.map(category => (
                     <button
@@ -312,7 +312,7 @@ export default function PlaybookPage() {
                 />
               </div>
 
-              <div className="flex justify-start mb-6">
+              <div className="flex justify-center mb-6">
                 <div className="inline-flex gap-2">
                   {toolCategories.map(category => (
                     <button

@@ -109,7 +109,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
     <div>
       {/* Welcome section */}
       <div className="mb-8">
-        <Card className="bg-gradient-to-br from-[#09261E]/15 via-[#135341]/10 to-[#EAF2EF] border-0 shadow-sm">
+        <Card className="bg-gradient-to-r from-[#EAF2EF] via-[#09261E]/10 to-white border-0 shadow-sm">
           <CardContent className="pt-6 pb-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 shadow-sm">
@@ -595,12 +595,14 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Sparkles className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-lg text-[#09261E]">New Buyer Dashboard</h4>
-                    <p className="text-gray-600 mt-1">We've launched a brand new dashboard experience designed specifically for buyers, with improved deal tracking and property matching.</p>
-                    <div className="mt-3">
-                      <Badge className="bg-blue-500">New Feature</Badge>
-                      <Badge className="ml-2 bg-green-500">Buyer Tools</Badge>
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-lg text-[#09261E]">New Buyer Dashboard</h4>
+                      <div>
+                        <Badge className="bg-blue-500">New Feature</Badge>
+                        <Badge className="ml-2 bg-green-500">Buyer Tools</Badge>
+                      </div>
                     </div>
+                    <p className="text-gray-600 mt-1">We've launched a brand new dashboard experience designed specifically for buyers, with improved deal tracking and property matching.</p>
                   </div>
                 </div>
               </CardContent>
@@ -618,12 +620,14 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Calculator className="h-6 w-6 text-indigo-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-lg text-[#09261E]">Enhanced Analysis Tools</h4>
-                    <p className="text-gray-600 mt-1">Our investment calculators now include advanced features for better cash flow analysis and ROI projections.</p>
-                    <div className="mt-3">
-                      <Badge className="bg-indigo-500">Tools Update</Badge>
-                      <Badge className="ml-2 bg-amber-500">Featured</Badge>
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-lg text-[#09261E]">Enhanced Analysis Tools</h4>
+                      <div>
+                        <Badge className="bg-indigo-500">Tools Update</Badge>
+                        <Badge className="ml-2 bg-amber-500">Featured</Badge>
+                      </div>
                     </div>
+                    <p className="text-gray-600 mt-1">Our investment calculators now include advanced features for better cash flow analysis and ROI projections.</p>
                   </div>
                 </div>
               </CardContent>
@@ -644,12 +648,14 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Building className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-lg text-[#09261E]">Market Trend: Downtown Properties</h4>
-                    <p className="text-gray-600 mt-1">Downtown properties have seen a 12% increase in value over the past quarter, making it a hot market for investors looking for appreciation.</p>
-                    <div className="mt-3">
-                      <Badge className="bg-blue-500">Market Trend</Badge>
-                      <Badge className="ml-2 bg-green-500">Appreciation</Badge>
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-lg text-[#09261E]">Market Trend: Downtown Properties</h4>
+                      <div>
+                        <Badge className="bg-blue-500">Market Trend</Badge>
+                        <Badge className="ml-2 bg-green-500">Appreciation</Badge>
+                      </div>
                     </div>
+                    <p className="text-gray-600 mt-1">Downtown properties have seen a 12% increase in value over the past quarter, making it a hot market for investors looking for appreciation.</p>
                   </div>
                 </div>
               </CardContent>
@@ -667,12 +673,14 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <CircleDollarSign className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-lg text-[#09261E]">Interest Rate Update</h4>
-                    <p className="text-gray-600 mt-1">Federal Reserve signals potential rate cut in the coming months. This could positively impact investment property financing.</p>
-                    <div className="mt-3">
-                      <Badge className="bg-green-500">Interest Rates</Badge>
-                      <Badge className="ml-2 bg-blue-500">Financing</Badge>
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-lg text-[#09261E]">Interest Rate Update</h4>
+                      <div>
+                        <Badge className="bg-green-500">Interest Rates</Badge>
+                        <Badge className="ml-2 bg-blue-500">Financing</Badge>
+                      </div>
                     </div>
+                    <p className="text-gray-600 mt-1">Federal Reserve signals potential rate cut in the coming months. This could positively impact investment property financing.</p>
                   </div>
                 </div>
               </CardContent>
