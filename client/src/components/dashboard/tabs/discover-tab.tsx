@@ -133,11 +133,11 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="h-7 text-xs font-medium ml-1 border-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-7 w-7 ml-1 rounded-full hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
                         >
-                          <PlusCircle className="h-3.5 w-3.5 mr-1" /> Complete Profile
+                          <PlusCircle className="h-4 w-4" />
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-80 p-0">
@@ -442,29 +442,29 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         <h3 className="text-lg font-semibold text-[#09261E] mb-4">What's New</h3>
         
         <Tabs defaultValue="deals" className="w-full">
-          <div className="border-b border-gray-200 mb-6">
-            <TabsList className="flex justify-start -mb-px overflow-x-auto bg-transparent">
+          <div className="flex justify-center mb-6">
+            <TabsList className="inline-flex gap-2 bg-transparent">
               <TabsTrigger 
                 value="deals" 
-                className="mr-6 border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+                className="px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2 border border-gray-200 data-[state=active]:bg-[#09261E] data-[state=active]:text-white shadow-sm data-[state=inactive]:bg-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-100 data-[state=inactive]:hover:text-[#09261E]"
               >
                 New Deals For You
               </TabsTrigger>
               <TabsTrigger 
                 value="events" 
-                className="mr-6 border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+                className="px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2 border border-gray-200 data-[state=active]:bg-[#09261E] data-[state=active]:text-white shadow-sm data-[state=inactive]:bg-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-100 data-[state=inactive]:hover:text-[#09261E]"
               >
                 Upcoming Events
               </TabsTrigger>
               <TabsTrigger 
                 value="updates"
-                className="mr-6 border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+                className="px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2 border border-gray-200 data-[state=active]:bg-[#09261E] data-[state=active]:text-white shadow-sm data-[state=inactive]:bg-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-100 data-[state=inactive]:hover:text-[#09261E]"
               >
                 Platform Updates
               </TabsTrigger>
               <TabsTrigger 
                 value="market" 
-                className="mr-6 border-b-2 border-transparent data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] px-1 pb-3 font-medium text-sm text-gray-500 hover:text-[#09261E] hover:border-gray-300 whitespace-nowrap"
+                className="px-4 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 flex items-center gap-2 border border-gray-200 data-[state=active]:bg-[#09261E] data-[state=active]:text-white shadow-sm data-[state=inactive]:bg-white data-[state=inactive]:text-gray-600 data-[state=inactive]:hover:bg-gray-100 data-[state=inactive]:hover:text-[#09261E]"
               >
                 Market Updates
               </TabsTrigger>
