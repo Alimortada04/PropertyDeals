@@ -575,7 +575,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="pt-0 pb-4 px-5">
+              <CardFooter className="pt-0 pb-4 px-5 flex justify-end">
                 <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white mr-2">
                   RSVP
                 </Button>
@@ -604,7 +604,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="pt-0 pb-4 px-5">
+              <CardFooter className="pt-0 pb-4 px-5 flex justify-end">
                 <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
                   Learn More
                 </Button>
@@ -627,7 +627,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="pt-0 pb-4 px-5">
+              <CardFooter className="pt-0 pb-4 px-5 flex justify-end">
                 <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
                   Try It Now
                 </Button>
@@ -653,7 +653,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="pt-0 pb-4 px-5">
+              <CardFooter className="pt-0 pb-4 px-5 flex justify-end">
                 <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
                   Read More
                 </Button>
@@ -676,7 +676,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter className="pt-0 pb-4 px-5">
+              <CardFooter className="pt-0 pb-4 px-5 flex justify-end">
                 <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
                   Read More
                 </Button>
