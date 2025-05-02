@@ -1,7 +1,28 @@
 // This file contains sample property data for the dashboard development
 // In a real app, this would come from the API
 
-export const properties = [
+export interface Property {
+  id: number;
+  title: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  squareFeet: number;
+  description: string;
+  status: string;
+  tier: string;
+  propertyType: string;
+  imageUrl: string;
+  stage: string;
+  priority?: string;
+  dateAdded?: string;
+}
+
+const propertiesData: Property[] = [
   {
     id: 1,
     title: "Modern Farmhouse",
@@ -19,6 +40,8 @@ export const properties = [
     propertyType: "Single Family",
     imageUrl: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     stage: "favorited",
+    priority: "high",
+    dateAdded: "2025-04-25",
   },
   {
     id: 2,
@@ -37,6 +60,8 @@ export const properties = [
     propertyType: "Condo",
     imageUrl: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     stage: "contacted",
+    priority: "medium",
+    dateAdded: "2025-04-27",
   },
   {
     id: 3,
@@ -55,6 +80,8 @@ export const properties = [
     propertyType: "Townhouse",
     imageUrl: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     stage: "offer_made",
+    priority: "high",
+    dateAdded: "2025-04-20",
   },
   {
     id: 4,
@@ -73,6 +100,8 @@ export const properties = [
     propertyType: "Single Family",
     imageUrl: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     stage: "favorited",
+    priority: "medium",
+    dateAdded: "2025-04-28",
   },
   {
     id: 5,
@@ -91,6 +120,8 @@ export const properties = [
     propertyType: "Cabin",
     imageUrl: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     stage: "contacted",
+    priority: "low",
+    dateAdded: "2025-04-30",
   },
   {
     id: 6,
@@ -109,6 +140,8 @@ export const properties = [
     propertyType: "Condo",
     imageUrl: "https://images.unsplash.com/photo-1565183997392-2f6f122e5912?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     stage: "closed",
+    priority: "medium",
+    dateAdded: "2025-04-10",
   },
   {
     id: 7,
@@ -127,6 +160,8 @@ export const properties = [
     propertyType: "Duplex",
     imageUrl: "https://images.unsplash.com/photo-1592595896616-c37162298647?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     stage: "close_pending",
+    priority: "high",
+    dateAdded: "2025-04-15",
   },
   {
     id: 8,
@@ -145,8 +180,32 @@ export const properties = [
     propertyType: "Single Family",
     imageUrl: "https://images.unsplash.com/photo-1598228723793-52759bba239c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     stage: "favorited",
-  }
+    priority: "low",
+    dateAdded: "2025-05-01",
+  },
+  {
+    id: 9,
+    title: "Fixer Upper Ranch",
+    address: "505 Valley Road",
+    city: "Madison",
+    state: "WI",
+    zipCode: "53705",
+    price: 199000,
+    bedrooms: 3,
+    bathrooms: 1,
+    squareFeet: 1350,
+    description: "Ranch-style home needing renovation but in a great location.",
+    status: "active",
+    tier: "general",
+    propertyType: "Single Family",
+    imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    stage: "dropped",
+    priority: "low",
+    dateAdded: "2025-04-05",
+  },
 ];
+
+export const properties = propertiesData;
 
 export const recentlyViewed = [
   properties[0],
@@ -170,12 +229,20 @@ export const propertiesByStage = {
   favorited: properties.filter(p => p.stage === 'favorited'),
   contacted: properties.filter(p => p.stage === 'contacted'),
   offer_made: properties.filter(p => p.stage === 'offer_made'),
+  pending: properties.filter(p => p.stage === 'pending'),
   close_pending: properties.filter(p => p.stage === 'close_pending'),
   closed: properties.filter(p => p.stage === 'closed'),
-  dropped: []
+  dropped: properties.filter(p => p.stage === 'dropped')
 };
 
-export const propertyTasks = {
+export interface Task {
+  id: number;
+  title: string;
+  status: 'completed' | 'in_progress' | 'pending';
+  date: string;
+}
+
+export const propertyTasks: Record<number, Task[]> = {
   1: [
     { id: 1, title: "Schedule viewing", status: "completed", date: "2025-04-29" },
     { id: 2, title: "Get pre-approval letter", status: "in_progress", date: "2025-05-02" },
@@ -193,3 +260,97 @@ export const propertyTasks = {
     { id: 4, title: "Home inspection", status: "in_progress", date: "2025-05-10" }
   ]
 };
+
+export interface ProjectTask {
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+export interface ProjectUpdate {
+  id: number;
+  date: string;
+  author: string;
+  text: string;
+}
+
+export interface Project {
+  id: number;
+  propertyId: number;
+  name: string;
+  address: string;
+  budget: {
+    estimated: number;
+    actual: number;
+    remaining: number;
+  };
+  timeline: {
+    startDate: string;
+    endDate: string;
+    currentProgress: number;
+  };
+  tasks: ProjectTask[];
+  updates: ProjectUpdate[];
+  team: number[];
+}
+
+export const projects: Project[] = [
+  {
+    id: 1,
+    propertyId: 6,
+    name: "Luxury Condo Renovation",
+    address: "888 Bayshore Blvd",
+    budget: {
+      estimated: 45000,
+      actual: 42300,
+      remaining: 2700
+    },
+    timeline: {
+      startDate: "2025-04-15",
+      endDate: "2025-06-15",
+      currentProgress: 35
+    },
+    tasks: [
+      { id: 1, title: "Demo existing kitchen", completed: true },
+      { id: 2, title: "Install new cabinets", completed: true },
+      { id: 3, title: "Install countertops", completed: false },
+      { id: 4, title: "Replace flooring", completed: false },
+      { id: 5, title: "Paint interior walls", completed: false }
+    ],
+    updates: [
+      { id: 1, date: "2025-04-20", author: "John Smith", text: "Kitchen demo completed ahead of schedule." },
+      { id: 2, date: "2025-04-27", author: "Maria Rodriguez", text: "Cabinets installed, waiting on countertop delivery." }
+    ],
+    team: [1, 3, 5] // User IDs
+  },
+  {
+    id: 2,
+    propertyId: 7,
+    name: "Duplex Conversion",
+    address: "444 Investment Ave",
+    budget: {
+      estimated: 85000,
+      actual: 51200,
+      remaining: 33800
+    },
+    timeline: {
+      startDate: "2025-04-10",
+      endDate: "2025-07-15",
+      currentProgress: 40
+    },
+    tasks: [
+      { id: 1, title: "Create architectural plans", completed: true },
+      { id: 2, title: "Obtain building permits", completed: true },
+      { id: 3, title: "Framing for new unit division", completed: true },
+      { id: 4, title: "Electrical work", completed: false },
+      { id: 5, title: "Plumbing installation", completed: false },
+      { id: 6, title: "Drywall and finishing", completed: false }
+    ],
+    updates: [
+      { id: 1, date: "2025-04-12", author: "Emily Johnson", text: "Permits approved after minor revisions." },
+      { id: 2, date: "2025-04-25", author: "David Wilson", text: "Framing completed for unit separation." },
+      { id: 3, date: "2025-05-01", author: "Emily Johnson", text: "Electrical inspection scheduled for next week." }
+    ],
+    team: [2, 4, 6] // User IDs
+  }
+];
