@@ -171,17 +171,17 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                   variant="outline" 
                   size="sm"
                   className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
-                  onClick={() => setLocation("/reps/1")}
+                  onClick={() => setLocation("/profile")}
                 >
-                  <ExternalLink className="h-4 w-4 mr-1" /> View Profile
+                  <Settings className="h-4 w-4 mr-1" /> Edit
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm"
                   className="hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
-                  onClick={() => setLocation("/profile")}
+                  onClick={() => setLocation("/reps/1")}
                 >
-                  <Settings className="h-4 w-4 mr-1" /> Edit
+                  <ExternalLink className="h-4 w-4 mr-1" /> View Profile
                 </Button>
               </div>
             </div>
@@ -203,17 +203,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               </div>
               <div className="flex-1">
                 <h4 className="font-bold text-xl text-white mb-1">Find a Deal</h4>
-                <p className="text-white/80 text-sm mb-3">Browse our exclusive off-market properties</p>
-                <Button 
-                  size="sm" 
-                  className="bg-white text-[#09261E] hover:bg-gray-100"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLocation("/properties");
-                  }}
-                >
-                  Browse Properties
-                </Button>
+                <p className="text-white/80 text-sm">Browse our exclusive off-market properties</p>
               </div>
             </CardContent>
           </Card>
@@ -229,17 +219,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               </div>
               <div className="flex-1">
                 <h4 className="font-bold text-xl text-[#09261E] mb-1">Connect with a Professional</h4>
-                <p className="text-gray-600 text-sm mb-3">Find real estate pros that match your needs</p>
-                <Button 
-                  size="sm" 
-                  className="bg-[#09261E] hover:bg-[#135341]"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLocation("/reps");
-                  }}
-                >
-                  Browse REPs
-                </Button>
+                <p className="text-gray-600 text-sm">Find real estate pros that match your needs</p>
               </div>
             </CardContent>
           </Card>
