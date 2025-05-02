@@ -197,23 +197,44 @@ export default function InboxPage() {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="w-full md:w-3/12">
             <div className="bg-white rounded-lg shadow p-4 mb-6">
-              <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden flex">
-                <button 
-                  className={`px-4 py-2 text-sm rounded-full flex items-center justify-center transition-colors ${activeTab === "messages" ? "bg-white shadow-sm" : ""}`}
+              <div className="flex items-center bg-gray-200 p-1 rounded-full shadow-sm relative h-10">
+                <div 
+                  className={`absolute inset-y-1 ${
+                    activeTab === 'messages' ? 'left-1 translate-x-0' : 
+                    activeTab === 'notifications' ? 'left-1/3 translate-x-[-33%]' : 
+                    'right-1 translate-x-0'
+                  } bg-white rounded-full shadow transition-all duration-300 ease-in-out w-1/3`}
+                ></div>
+                <button
+                  className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-1/3 ${
+                    activeTab === 'messages' 
+                      ? 'text-[#09261E] font-medium' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
                   onClick={() => setActiveTab("messages")}
                 >
                   <MessageSquare className="h-4 w-4 mr-1.5" />
                   <span className="text-sm">Messages</span>
                 </button>
-                <button 
-                  className={`px-4 py-2 text-sm rounded-full flex items-center justify-center transition-colors ${activeTab === "notifications" ? "bg-white shadow-sm" : "text-gray-500"}`}
+                
+                <button
+                  className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-1/3 ${
+                    activeTab === 'notifications' 
+                      ? 'text-[#09261E] font-medium' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
                   onClick={() => setActiveTab("notifications")}
                 >
                   <Bell className="h-4 w-4 mr-1.5" />
                   <span className="text-sm">Alerts</span>
                 </button>
-                <button 
-                  className={`px-4 py-2 text-sm rounded-full flex items-center justify-center transition-colors ${activeTab === "discussions" ? "bg-white shadow-sm" : "text-gray-500"}`}
+                
+                <button
+                  className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-1/3 ${
+                    activeTab === 'discussions' 
+                      ? 'text-[#09261E] font-medium' 
+                      : 'text-gray-500 hover:text-gray-700'
+                  }`}
                   onClick={() => setActiveTab("discussions")}
                 >
                   <Users className="h-4 w-4 mr-1.5" />

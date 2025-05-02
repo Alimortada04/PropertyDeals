@@ -223,16 +223,30 @@ export default function RepsPage() {
               Found {filteredReps.length} professionals
             </div>
             
-            <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden flex w-[240px]">
-              <button 
-                className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${entityType === "individual" ? "bg-white shadow-sm" : ""}`}
+            <div className="flex items-center bg-gray-200 p-1 rounded-full shadow-sm relative h-10 w-[240px]">
+              <div 
+                className={`absolute inset-y-1 w-[118px] ${
+                  entityType === 'business' ? 'right-1 translate-x-0' : 'left-1 translate-x-0'
+                } bg-white rounded-full shadow transition-all duration-300 ease-in-out`}
+              ></div>
+              <button
+                className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
+                  entityType === 'individual' 
+                    ? 'text-[#09261E] font-medium' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
                 onClick={() => setEntityType('individual')}
               >
                 <UserRound size={14} className="mr-1.5" />
                 <span className="text-sm">People</span>
               </button>
-              <button 
-                className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${entityType === "business" ? "bg-white shadow-sm" : "text-gray-500"}`}
+              
+              <button
+                className={`relative z-10 flex items-center justify-center px-4 py-1.5 rounded-full transition-all duration-200 w-[118px] ${
+                  entityType === 'business' 
+                    ? 'text-[#09261E] font-medium' 
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
                 onClick={() => setEntityType('business')}
               >
                 <Building2 size={14} className="mr-1.5" />
