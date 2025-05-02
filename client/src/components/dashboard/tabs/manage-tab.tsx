@@ -32,7 +32,13 @@ import { Link, useLocation } from "wouter";
 import { propertiesByStage, propertyTasks } from "@/data/properties";
 
 // Property card component for Kanban board
-const KanbanPropertyCard = ({ property, onClickProperty, onClickRoadmap }) => {
+interface KanbanPropertyCardProps {
+  property: any;
+  onClickProperty: (id: number) => void;
+  onClickRoadmap: (id: number) => void;
+}
+
+const KanbanPropertyCard = ({ property, onClickProperty, onClickRoadmap }: KanbanPropertyCardProps) => {
   return (
     <Card className="mb-3 shadow-sm hover:shadow-md transition-shadow">
       <div className="relative h-32 overflow-hidden">
@@ -76,15 +82,15 @@ const KanbanPropertyCard = ({ property, onClickProperty, onClickRoadmap }) => {
 // Simulate drag and drop (would be replaced with actual drag and drop implementation)
 export default function DashboardManageTab() {
   const [, setLocation] = useLocation();
-  const [activeProperty, setActiveProperty] = useState(null);
+  const [activeProperty, setActiveProperty] = useState<number | null>(null);
   const [isRoadmapOpen, setIsRoadmapOpen] = useState(false);
   
   // Handle property card clicks
-  const handleViewProperty = (propertyId) => {
+  const handleViewProperty = (propertyId: number) => {
     setLocation(`/properties/${propertyId}`);
   };
   
-  const handleViewRoadmap = (propertyId) => {
+  const handleViewRoadmap = (propertyId: number) => {
     setActiveProperty(propertyId);
     setIsRoadmapOpen(true);
   };
@@ -245,7 +251,11 @@ export default function DashboardManageTab() {
 }
 
 // Property Roadmap Progress component
-function PropertyRoadmapProgress({ propertyId }) {
+interface PropertyRoadmapProgressProps {
+  propertyId: number | null;
+}
+
+function PropertyRoadmapProgress({ propertyId }: PropertyRoadmapProgressProps) {
   const stages = [
     {
       id: "viewing",

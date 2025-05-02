@@ -10,6 +10,7 @@ import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
 import DashboardNewPage from "@/pages/dashboard";
+import DashboardPage from "@/pages/dashboard-page";
 import ProfilePage from "@/pages/profile/profile-page";
 import ProfileSettingsPage from "@/pages/profile/settings-page";
 import CommunityPage from "@/pages/community-page";
@@ -163,6 +164,13 @@ function Router() {
         )}
       </Route>
       <Route path="/dashboard">
+        <AppLayout>
+          <DashboardPage />
+        </AppLayout>
+      </Route>
+      
+      {/* Legacy dashboard route */}
+      <Route path="/dashboard-old">
         <AppLayout>
           <DashboardNewPage />
         </AppLayout>

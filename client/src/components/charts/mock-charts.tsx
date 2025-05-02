@@ -12,7 +12,7 @@ interface ChartData {
 interface ChartProps {
   data: ChartData[];
   height?: number;
-  width?: number;
+  width?: number | string;
 }
 
 // Bar Chart component

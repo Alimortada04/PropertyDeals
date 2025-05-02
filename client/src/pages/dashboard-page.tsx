@@ -1,127 +1,77 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  AlertCircle, 
-  Home, 
-  BarChart4, 
-  ClipboardList, 
-  Search, 
-  UserPlus, 
-  MessageSquare, 
-  Activity, 
-  Calculator, 
-  Bell,
-  Heart,
-  Eye,
-  ArrowRight,
-  Star,
-  ChevronRight,
-  Phone,
-  FileText,
-  Calendar,
-  CheckSquare,
-  Clock,
-  Users,
-  Wrench
-} from "lucide-react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { useQuery } from "@tanstack/react-query";
-import { Link, useLocation } from "wouter";
-import PropertyCard from "@/components/properties/property-card";
-
-// Mock data for demonstration purposes
-import { properties } from "@/data/properties";
-
-// Components
+import React, { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DashboardDiscoverTab from "@/components/dashboard/tabs/discover-tab";
 import DashboardManageTab from "@/components/dashboard/tabs/manage-tab";
 import DashboardAnalyticsTab from "@/components/dashboard/tabs/analytics-tab";
+import { Compass, FileClock, BarChart3 } from "lucide-react";
+
+// Mock user data
+const mockUser = {
+  name: "John Doe",
+  avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+  profileCompletion: 85
+};
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("discover");
-  const [, setLocation] = useLocation();
   
-  // Sample user data - This would come from auth context in a real app
-  const user = {
-    name: "Sarah Johnson",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-    profileCompletion: 85,
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    // Update URL without navigation
+    window.history.pushState({}, "", `/dashboard?tab=${value}`);
   };
   
+  // Parse query string on initial load
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get("tab");
+    if (tabParam && ["discover", "manage", "analytics"].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, []);
+  
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Page Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="container mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-[#09261E]">My Dashboard</h1>
-          <p className="text-gray-600">Track your deals, manage your properties, and analyze your investments</p>
-        </div>
-      </div>
+    <div className="container mx-auto px-4 py-6 pt-4 max-w-7xl">
+      <h1 className="text-3xl font-bold text-[#09261E] mb-6">Buyer Dashboard</h1>
       
-      {/* Tabs Navigation - Sticky at top */}
-      <div className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4">
-          <Tabs 
-            defaultValue="discover" 
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="w-full h-16 bg-transparent border-b border-gray-100 justify-start gap-8">
-              <TabsTrigger 
-                value="discover" 
-                className="text-base font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none py-4 px-1"
-              >
-                <Home className="w-5 h-5 mr-2" />
-                Discover
-              </TabsTrigger>
-              <TabsTrigger 
-                value="manage" 
-                className="text-base font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none py-4 px-1"
-              >
-                <ClipboardList className="w-5 h-5 mr-2" />
-                Manage
-              </TabsTrigger>
-              <TabsTrigger 
-                value="analytics" 
-                className="text-base font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none py-4 px-1"
-              >
-                <BarChart4 className="w-5 h-5 mr-2" />
-                Analytics
-              </TabsTrigger>
-            </TabsList>
-            
-            <div className="mt-6 pb-20">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeTab}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <TabsContent value="discover" className="mt-0">
-                    <DashboardDiscoverTab user={user} />
-                  </TabsContent>
-                  
-                  <TabsContent value="manage" className="mt-0">
-                    <DashboardManageTab />
-                  </TabsContent>
-                  
-                  <TabsContent value="analytics" className="mt-0">
-                    <DashboardAnalyticsTab />
-                  </TabsContent>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </Tabs>
-        </div>
+      <div className="sticky top-0 z-10 bg-white pt-2 pb-4 -mt-2">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+          <TabsList className="w-full justify-start mb-6 border-b border-gray-200 pb-0 bg-transparent">
+            <TabsTrigger 
+              value="discover" 
+              className="data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none border-b-2 border-transparent pb-2 pt-1 px-4 gap-2"
+            >
+              <Compass className="w-4 h-4" />
+              <span>Discover</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="manage" 
+              className="data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none border-b-2 border-transparent pb-2 pt-1 px-4 gap-2"
+            >
+              <FileClock className="w-4 h-4" />
+              <span>Manage</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="analytics" 
+              className="data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none border-b-2 border-transparent pb-2 pt-1 px-4 gap-2"
+            >
+              <BarChart3 className="w-4 h-4" />
+              <span>Analytics</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="discover" className="p-0 border-none">
+            <DashboardDiscoverTab user={mockUser} />
+          </TabsContent>
+          
+          <TabsContent value="manage" className="p-0 border-none">
+            <DashboardManageTab />
+          </TabsContent>
+          
+          <TabsContent value="analytics" className="p-0 border-none">
+            <DashboardAnalyticsTab />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
