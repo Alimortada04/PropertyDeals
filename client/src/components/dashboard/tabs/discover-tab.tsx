@@ -542,11 +542,11 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Calendar className="h-6 w-6 text-amber-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-lg text-[#09261E]">Investment Property Workshop</h4>
-                    <p className="text-gray-600 mt-1">Join us for a comprehensive workshop on evaluating and acquiring investment properties. Virtual and in-person options available.</p>
-                    <div className="mt-2">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-lg text-[#09261E]">Investment Property Workshop</h4>
                       <p className="text-sm text-amber-600 font-medium">May 15, 2025 • 6:00 PM - 8:00 PM</p>
                     </div>
+                    <p className="text-gray-600 mt-1">Join us for a comprehensive workshop on evaluating and acquiring investment properties. Virtual and in-person options available.</p>
                   </div>
                 </div>
               </CardContent>
@@ -567,11 +567,11 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Home className="h-6 w-6 text-red-600" />
                   </div>
                   <div>
-                    <h4 className="font-medium text-lg text-[#09261E]">Multi-Family Property Tour</h4>
-                    <p className="text-gray-600 mt-1">Exclusive tour of newly listed multi-family properties in high-demand neighborhoods. Limited spots available.</p>
-                    <div className="mt-2">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-lg text-[#09261E]">Multi-Family Property Tour</h4>
                       <p className="text-sm text-red-600 font-medium">May 20, 2025 • 10:00 AM - 2:00 PM</p>
                     </div>
+                    <p className="text-gray-600 mt-1">Exclusive tour of newly listed multi-family properties in high-demand neighborhoods. Limited spots available.</p>
                   </div>
                 </div>
               </CardContent>
