@@ -575,62 +575,69 @@ export default function DashboardManageTab() {
   return (
     <div>
       {/* View toggle */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <Tabs defaultValue="pipeline" onValueChange={setActiveView} className="w-full">
-            <TabsList>
-              <TabsTrigger value="pipeline">
-                <Building className="h-4 w-4 mr-2" />
-                Property Pipeline
-              </TabsTrigger>
-              <TabsTrigger value="projects">
-                <BriefcaseBusiness className="h-4 w-4 mr-2" />
-                Project Management
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-        
-        {activeView === "pipeline" && (
-          <div className="flex items-center gap-2">
-            <Button
-              variant={pipelineView === "kanban" ? "default" : "outline"}
-              size="sm"
-              className={pipelineView === "kanban" ? "bg-[#09261E]" : ""}
-              onClick={() => setPipelineView("kanban")}
-            >
-              <LayoutGrid className="h-4 w-4 mr-2" />
-              Kanban
-            </Button>
-            <Button
-              variant={pipelineView === "grid" ? "default" : "outline"}
-              size="sm"
-              className={pipelineView === "grid" ? "bg-[#09261E]" : ""}
-              onClick={() => setPipelineView("grid")}
-            >
-              <Table className="h-4 w-4 mr-2" />
-              Grid
-            </Button>
+      <div className="flex flex-col space-y-6 mb-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden p-1">
+              <div className="flex">
+                <button 
+                  className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${activeView === "pipeline" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                  onClick={() => setActiveView("pipeline")}
+                >
+                  <Building className="h-4 w-4 mr-2" />
+                  Property Pipeline
+                </button>
+                <button 
+                  className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${activeView === "projects" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                  onClick={() => setActiveView("projects")}
+                >
+                  <BriefcaseBusiness className="h-4 w-4 mr-2" />
+                  Project Management
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {activeView === "pipeline" && (
+            <div className="flex items-center gap-2">
+              <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden p-1 mr-2">
+                <div className="flex">
+                  <button 
+                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "kanban" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                    onClick={() => setPipelineView("kanban")}
+                  >
+                    <LayoutGrid className="h-3.5 w-3.5 mr-1.5" />
+                    Kanban
+                  </button>
+                  <button 
+                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "grid" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                    onClick={() => setPipelineView("grid")}
+                  >
+                    <Table className="h-3.5 w-3.5 mr-1.5" />
+                    Sheet
+                  </button>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setAddPropertyOpen(true)}
+              >
+                <PlusCircle className="h-4 w-4 mr-1" /> Add Property
+              </Button>
+            </div>
+          )}
+          
+          {activeView === "projects" && (
             <Button
               variant="outline"
               size="sm"
-              className="ml-2"
-              onClick={() => setAddPropertyOpen(true)}
+              onClick={() => setAddProjectOpen(true)}
             >
-              <PlusCircle className="h-4 w-4 mr-1" /> Add Property
+              <PlusCircle className="h-4 w-4 mr-1" /> Add Project
             </Button>
-          </div>
-        )}
-        
-        {activeView === "projects" && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setAddProjectOpen(true)}
-          >
-            <PlusCircle className="h-4 w-4 mr-1" /> Add Project
-          </Button>
-        )}
+          )}
+        </div>
       </div>
       
       {/* Property Pipeline View */}
