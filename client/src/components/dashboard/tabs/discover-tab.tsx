@@ -147,6 +147,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                         <div className="p-4 border-b">
                           <h3 className="font-medium text-[#09261E]">Complete Your Profile</h3>
                           <p className="text-sm text-gray-500">Finish these items to reach 100%</p>
+                          <p className="text-xs text-green-700 mt-2 italic">Buyers with complete profiles are 2x more likely to connect with trusted professionals and 5x more likely to get their offer accepted</p>
                         </div>
                         <div className="p-2">
                           {profileTasks.map((task) => (
