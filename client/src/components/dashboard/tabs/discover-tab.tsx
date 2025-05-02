@@ -109,7 +109,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
     <div>
       {/* Welcome section */}
       <div className="mb-8">
-        <Card className="bg-gradient-to-r from-[#EAF2EF] via-[#09261E]/10 to-white border-0 shadow-sm">
+        <Card className="bg-gradient-to-r from-[#09261E]/20 to-[#135341]/10 border-0 shadow-sm">
           <CardContent className="pt-6 pb-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 shadow-sm">
@@ -542,9 +542,9 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Calendar className="h-6 w-6 text-amber-600" />
                   </div>
                   <div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center">
                       <h4 className="font-medium text-lg text-[#09261E]">Investment Property Workshop</h4>
-                      <p className="text-sm text-amber-600 font-medium">May 15, 2025 • 6:00 PM - 8:00 PM</p>
+                      <p className="text-sm text-amber-600 font-medium ml-3">May 15, 2025 • 6:00 PM - 8:00 PM</p>
                     </div>
                     <p className="text-gray-600 mt-1">Join us for a comprehensive workshop on evaluating and acquiring investment properties. Virtual and in-person options available.</p>
                   </div>
@@ -567,9 +567,9 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Home className="h-6 w-6 text-red-600" />
                   </div>
                   <div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center">
                       <h4 className="font-medium text-lg text-[#09261E]">Multi-Family Property Tour</h4>
-                      <p className="text-sm text-red-600 font-medium">May 20, 2025 • 10:00 AM - 2:00 PM</p>
+                      <p className="text-sm text-red-600 font-medium ml-3">May 20, 2025 • 10:00 AM - 2:00 PM</p>
                     </div>
                     <p className="text-gray-600 mt-1">Exclusive tour of newly listed multi-family properties in high-demand neighborhoods. Limited spots available.</p>
                   </div>
@@ -595,9 +595,9 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Sparkles className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center">
                       <h4 className="font-medium text-lg text-[#09261E]">New Buyer Dashboard</h4>
-                      <div>
+                      <div className="ml-3">
                         <Badge className="bg-blue-500">New Feature</Badge>
                         <Badge className="ml-2 bg-green-500">Buyer Tools</Badge>
                       </div>
@@ -620,9 +620,9 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Calculator className="h-6 w-6 text-indigo-600" />
                   </div>
                   <div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center">
                       <h4 className="font-medium text-lg text-[#09261E]">Enhanced Analysis Tools</h4>
-                      <div>
+                      <div className="ml-3">
                         <Badge className="bg-indigo-500">Tools Update</Badge>
                         <Badge className="ml-2 bg-amber-500">Featured</Badge>
                       </div>
@@ -648,9 +648,9 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <Building className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center">
                       <h4 className="font-medium text-lg text-[#09261E]">Market Trend: Downtown Properties</h4>
-                      <div>
+                      <div className="ml-3">
                         <Badge className="bg-blue-500">Market Trend</Badge>
                         <Badge className="ml-2 bg-green-500">Appreciation</Badge>
                       </div>
@@ -673,9 +673,9 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
                     <CircleDollarSign className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center">
                       <h4 className="font-medium text-lg text-[#09261E]">Interest Rate Update</h4>
-                      <div>
+                      <div className="ml-3">
                         <Badge className="bg-green-500">Interest Rates</Badge>
                         <Badge className="ml-2 bg-blue-500">Financing</Badge>
                       </div>
