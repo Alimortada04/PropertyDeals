@@ -4,6 +4,7 @@ import DashboardDiscoverTab from "@/components/dashboard/tabs/discover-tab";
 import DashboardManageTab from "@/components/dashboard/tabs/manage-tab";
 import DashboardAnalyticsTab from "@/components/dashboard/tabs/analytics-tab";
 import { Compass, FileClock, BarChart3 } from "lucide-react";
+import { useLocation } from "wouter";
 
 // Mock user data
 const mockUser = {
@@ -14,6 +15,7 @@ const mockUser = {
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("discover");
+  const [, setLocation] = useLocation();
   
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -32,30 +34,28 @@ export default function DashboardPage() {
   
   return (
     <div className="container mx-auto px-4 py-6 pt-4 max-w-7xl">
-      <h1 className="text-3xl font-bold text-[#09261E] mb-6">Buyer Dashboard</h1>
-      
-      <div className="sticky top-0 z-10 bg-white pt-2 pb-4 -mt-2">
+      <div className="sticky top-0 z-10 py-2 bg-[#F5F5F5]">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="w-full justify-start mb-6 border-b border-gray-200 pb-0 bg-transparent">
+          <TabsList className="w-full bg-white rounded-lg h-auto p-1 mb-4">
             <TabsTrigger 
               value="discover" 
-              className="data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none border-b-2 border-transparent pb-2 pt-1 px-4 gap-2"
+              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
             >
-              <Compass className="w-4 h-4" />
+              <Compass className="w-4 h-4 mr-2" />
               <span>Discover</span>
             </TabsTrigger>
             <TabsTrigger 
               value="manage" 
-              className="data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none border-b-2 border-transparent pb-2 pt-1 px-4 gap-2"
+              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
             >
-              <FileClock className="w-4 h-4" />
+              <FileClock className="w-4 h-4 mr-2" />
               <span>Manage</span>
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
-              className="data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none border-b-2 border-transparent pb-2 pt-1 px-4 gap-2"
+              className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white flex-1 rounded-md py-2"
             >
-              <BarChart3 className="w-4 h-4" />
+              <BarChart3 className="w-4 h-4 mr-2" />
               <span>Analytics</span>
             </TabsTrigger>
           </TabsList>
