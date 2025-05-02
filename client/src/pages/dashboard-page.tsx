@@ -1,259 +1,126 @@
-import React, { useState } from 'react';
-import { Home, Building, Users } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  AlertCircle, 
+  Home, 
+  BarChart4, 
+  ClipboardList, 
+  Search, 
+  UserPlus, 
+  MessageSquare, 
+  Activity, 
+  Calculator, 
+  Bell,
+  Heart,
+  Eye,
+  ArrowRight,
+  Star,
+  ChevronRight,
+  Phone,
+  FileText,
+  Calendar,
+  CheckSquare,
+  Clock,
+  Users,
+  Wrench
+} from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import BuyerDashboard from '@/components/dashboard/BuyerDashboard';
-import SellerDashboard from '@/components/dashboard/SellerDashboard';
-import RepDashboard from '@/components/dashboard/RepDashboard';
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { useQuery } from "@tanstack/react-query";
+import { Link, useLocation } from "wouter";
+import PropertyCard from "@/components/properties/property-card";
 
-// Add React import for missing dependency
-import * as ReactDOM from 'react-dom';
+// Mock data for demonstration purposes
+import { properties } from "@/data/properties";
 
-// Define types for our user data
-type RoleStatus = "approved" | "pending" | "not_applied" | "denied";
-
-interface UserRole {
-  status: RoleStatus;
-}
-
-interface UserRoles {
-  buyer: UserRole;
-  seller: UserRole;
-  rep: UserRole;
-}
-
-interface User {
-  name: string;
-  activeRole: "buyer" | "seller" | "rep";
-  roles: UserRoles;
-}
-
-// Mock user data
-const mockUser: User = {
-  name: "Ali",
-  activeRole: "buyer", // can be 'buyer', 'seller', or 'rep'
-  roles: {
-    buyer: { status: "approved" },
-    seller: { status: "pending" },
-    rep: { status: "not_applied" }
-  }
-};
-
-// Status badge colors
-const statusColors: Record<RoleStatus, string> = {
-  approved: "bg-green-100 text-green-800 border-green-200",
-  pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  not_applied: "bg-gray-100 text-gray-800 border-gray-200",
-  denied: "bg-red-100 text-red-800 border-red-200"
-};
-
-// Role specific colors
-const roleColors: Record<string, string> = {
-  buyer: "bg-[#09261E] hover:bg-[#09261E]/90 text-white",
-  seller: "bg-[#135341] hover:bg-[#135341]/90 text-white", 
-  rep: "bg-[#803344] hover:bg-[#803344]/90 text-white"
-};
-
-// Role icons
-const roleIcons: Record<string, React.ReactNode> = {
-  buyer: <Home className="h-4 w-4 mr-2" />,
-  seller: <Building className="h-4 w-4 mr-2" />,
-  rep: <Users className="h-4 w-4 mr-2" />
-};
+// Components
+import DashboardDiscoverTab from "@/components/dashboard/tabs/discover-tab";
+import DashboardManageTab from "@/components/dashboard/tabs/manage-tab";
+import DashboardAnalyticsTab from "@/components/dashboard/tabs/analytics-tab";
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<User>(mockUser);
-  const [activeTab, setActiveTab] = useState<string>(user.activeRole);
-
-  // Type guard to validate role
-  const isValidRole = (role: string): role is "buyer" | "seller" | "rep" => {
-    return ["buyer", "seller", "rep"].includes(role);
+  const [activeTab, setActiveTab] = useState("discover");
+  const [, setLocation] = useLocation();
+  
+  // Sample user data - This would come from auth context in a real app
+  const user = {
+    name: "Sarah Johnson",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    profileCompletion: 85,
   };
-
-  // Function to switch roles
-  const handleRoleSwitch = (role: string) => {
-    if (!isValidRole(role)) return;
-    
-    // Only allow switching to approved roles
-    if (user.roles[role]?.status === "approved") {
-      setUser({
-        ...user,
-        activeRole: role
-      });
-      setActiveTab(role);
-    }
-  };
-
-  // Function to apply for a role
-  const handleApplyForRole = (role: string) => {
-    if (!isValidRole(role)) return;
-    
-    // In a real app, this would make an API call
-    alert(`Applied for ${role} role. Status is now pending.`);
-    
-    // Update the local state to show pending status
-    const updatedRoles = {
-      ...user.roles,
-      [role]: { status: "pending" as const }
-    } as UserRoles;
-    
-    setUser({
-      ...user,
-      roles: updatedRoles
-    });
-  };
-
+  
   return (
-    <div className="container mx-auto p-6 max-w-7xl">
-      <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-            <p className="text-muted-foreground">
-              Welcome back, {user.name}
-            </p>
-          </div>
-          <Badge 
-            className={`${
-              user.activeRole === "buyer" ? "bg-[#09261E] hover:bg-[#09261E]/90" : 
-              user.activeRole === "seller" ? "bg-[#135341] hover:bg-[#135341]/90" : 
-              "bg-[#803344] hover:bg-[#803344]/90"
-            } text-white capitalize px-3 py-1 text-sm`}
-          >
-            {user.activeRole} Mode
-          </Badge>
+    <div className="min-h-screen bg-gray-50">
+      {/* Page Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="container mx-auto px-4 py-6">
+          <h1 className="text-2xl font-bold text-[#09261E]">My Dashboard</h1>
+          <p className="text-gray-600">Track your deals, manage your properties, and analyze your investments</p>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Role Switcher */}
-          <Card className="md:col-span-3">
-            <CardHeader>
-              <CardTitle>Role Selector</CardTitle>
-              <CardDescription>Switch between your available roles</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {Object.entries(user.roles).map(([roleKey, { status }]) => {
-                // Type assertion for roleKey
-                const role = roleKey as "buyer" | "seller" | "rep";
-                return (
-                  <div key={role} className="flex items-center justify-between pb-4 last:pb-0 last:mb-0 last:border-0">
-                    <div className="flex items-center">
-                      {roleIcons[role]}
-                      <div className="ml-2">
-                        <p className="text-sm font-medium capitalize">{role}</p>
-                        <Badge variant="outline" className={statusColors[status as RoleStatus]}>
-                          {status.replace('_', ' ')}
-                        </Badge>
-                      </div>
-                    </div>
-                    <div>
-                      {status === "approved" ? (
-                        <Button 
-                          size="sm" 
-                          variant={user.activeRole === role ? "default" : "outline"}
-                          className={user.activeRole === role ? roleColors[role] : ""}
-                          onClick={() => handleRoleSwitch(role)}
-                          disabled={user.activeRole === role}
-                        >
-                          {user.activeRole === role ? "Active" : "Switch"}
-                        </Button>
-                      ) : status === "not_applied" ? (
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          onClick={() => handleApplyForRole(role)}
-                        >
-                          Apply
-                        </Button>
-                      ) : (
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          disabled
-                        >
-                          {status}
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </CardContent>
-          </Card>
-
-          {/* Dashboard Content */}
-          <div className="md:col-span-9">
-            <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid grid-cols-3 mb-8">
-                <TabsTrigger 
-                  value="buyer" 
-                  disabled={user.roles.buyer.status !== "approved"}
-                  onClick={() => handleRoleSwitch("buyer")}
+      </div>
+      
+      {/* Tabs Navigation - Sticky at top */}
+      <div className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto px-4">
+          <Tabs 
+            defaultValue="discover" 
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
+            <TabsList className="w-full h-16 bg-transparent border-b border-gray-100 justify-start gap-8">
+              <TabsTrigger 
+                value="discover" 
+                className="text-base font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none py-4 px-1"
+              >
+                <Home className="w-5 h-5 mr-2" />
+                Discover
+              </TabsTrigger>
+              <TabsTrigger 
+                value="manage" 
+                className="text-base font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none py-4 px-1"
+              >
+                <ClipboardList className="w-5 h-5 mr-2" />
+                Manage
+              </TabsTrigger>
+              <TabsTrigger 
+                value="analytics" 
+                className="text-base font-medium data-[state=active]:border-b-2 data-[state=active]:border-[#09261E] data-[state=active]:text-[#09261E] data-[state=active]:shadow-none rounded-none py-4 px-1"
+              >
+                <BarChart4 className="w-5 h-5 mr-2" />
+                Analytics
+              </TabsTrigger>
+            </TabsList>
+            
+            <div className="mt-6 pb-20">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <Home className="h-4 w-4 mr-2" />
-                  Buyer
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="seller" 
-                  disabled={user.roles.seller.status !== "approved"}
-                  onClick={() => handleRoleSwitch("seller")}
-                >
-                  <Building className="h-4 w-4 mr-2" />
-                  Seller
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="rep" 
-                  disabled={user.roles.rep.status !== "approved"}
-                  onClick={() => handleRoleSwitch("rep")}
-                >
-                  <Users className="h-4 w-4 mr-2" />
-                  REP
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="buyer">
-                {user.roles.buyer.status === "approved" ? (
-                  <BuyerDashboard />
-                ) : (
-                  <Alert>
-                    <AlertTitle>Role not active</AlertTitle>
-                    <AlertDescription>
-                      This role is {user.roles.buyer.status}. {user.roles.buyer.status === "pending" ? "Your application is being reviewed." : "Apply to activate this role."}
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </TabsContent>
-
-              <TabsContent value="seller">
-                {user.roles.seller.status === "approved" ? (
-                  <SellerDashboard />
-                ) : (
-                  <Alert>
-                    <AlertTitle>Role not active</AlertTitle>
-                    <AlertDescription>
-                      This role is {user.roles.seller.status}. {user.roles.seller.status === "pending" ? "Your application is being reviewed." : "Apply to activate this role."}
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </TabsContent>
-
-              <TabsContent value="rep">
-                {user.roles.rep.status === "approved" ? (
-                  <RepDashboard />
-                ) : (
-                  <Alert>
-                    <AlertTitle>Role not active</AlertTitle>
-                    <AlertDescription>
-                      This role is {user.roles.rep.status}. {user.roles.rep.status === "pending" ? "Your application is being reviewed." : "Apply to activate this role."}
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </TabsContent>
-            </Tabs>
-          </div>
+                  <TabsContent value="discover" className="mt-0">
+                    <DashboardDiscoverTab user={user} />
+                  </TabsContent>
+                  
+                  <TabsContent value="manage" className="mt-0">
+                    <DashboardManageTab />
+                  </TabsContent>
+                  
+                  <TabsContent value="analytics" className="mt-0">
+                    <DashboardAnalyticsTab />
+                  </TabsContent>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </Tabs>
         </div>
       </div>
     </div>
