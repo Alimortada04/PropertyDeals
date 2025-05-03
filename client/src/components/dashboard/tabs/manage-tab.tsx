@@ -46,6 +46,7 @@ import {
   MoreHorizontal,
   Paperclip,
   Phone,
+  Plus,
   PlusCircle,
   Search,
   Send,
@@ -1664,6 +1665,22 @@ export default function DashboardManageTab() {
               <TabsContent value="overview" className="mt-0">
                 {activeProject && (
                   <div className="space-y-4">
+                    {(activeProject.progress < activeProject.expectedProgress || activeProject.budget.spent > activeProject.budget.total) && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3 mb-4">
+                        <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <h4 className="font-medium text-amber-800 mb-1">Project Alert</h4>
+                          <div className="text-sm text-amber-700 space-y-1">
+                            {activeProject.progress < activeProject.expectedProgress && (
+                              <p>This project is behind schedule. Current progress: {activeProject.progress}% (Expected: {activeProject.expectedProgress}%)</p>
+                            )}
+                            {activeProject.budget.spent > activeProject.budget.total && (
+                              <p>This project is over budget by ${(activeProject.budget.spent - activeProject.budget.total).toLocaleString()}</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <Card>
                       <CardHeader className="pb-2">
                         <CardTitle className="text-lg">Project Timeline</CardTitle>
@@ -2531,7 +2548,7 @@ export default function DashboardManageTab() {
                       />
                       <div className="absolute right-1 bottom-1 flex items-center">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-gray-400 hover:text-gray-600 mr-0.5">
-                          <Plus className="h-4 w-4" />
+                          <PlusCircle className="h-4 w-4" />
                         </Button>
                         <Button
                           size="sm"
