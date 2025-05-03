@@ -322,25 +322,25 @@ const PropertyGrid = ({ properties, onClickProperty, onClickManage, onRemove }: 
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 hover:bg-gray-100"
                         onClick={() => onClickProperty(property.id)}
                       >
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4 text-gray-600" />
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0"
+                        className="h-8 w-8 p-0 hover:bg-gray-100"
                         onClick={() => onClickManage(property.id)}
                       >
-                        <ClipboardCheck className="h-4 w-4" />
+                        <ClipboardCheck className="h-4 w-4 text-gray-600" />
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
+                            className="h-8 w-8 p-0 text-gray-500 hover:bg-gray-100"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -751,7 +751,7 @@ export default function DashboardManageTab() {
       
       {/* Property Detail Modal */}
       <Dialog open={propertyDetailOpen} onOpenChange={setPropertyDetailOpen}>
-        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto min-h-[500px]">
           <DialogHeader className="pb-2">
             <DialogTitle className="text-xl text-[#09261E]">
               Property Roadmap
