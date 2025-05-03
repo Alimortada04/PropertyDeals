@@ -265,6 +265,9 @@ export interface ProjectTask {
   id: number;
   title: string;
   completed: boolean;
+  status?: string; // 'Not Started', 'In Progress', 'Completed'
+  dueDate?: string;
+  assignedTo?: string;
 }
 
 export interface ProjectUpdate {
@@ -279,6 +282,7 @@ export interface Project {
   propertyId: number;
   name: string;
   address: string;
+  status: string; // 'active', 'paused', 'completed'
   budget: {
     estimated: number;
     actual: number;
@@ -300,6 +304,7 @@ export const projects: Project[] = [
     propertyId: 6,
     name: "Luxury Condo Renovation",
     address: "888 Bayshore Blvd",
+    status: "active",
     budget: {
       estimated: 45000,
       actual: 42300,
@@ -311,11 +316,44 @@ export const projects: Project[] = [
       currentProgress: 35
     },
     tasks: [
-      { id: 1, title: "Demo existing kitchen", completed: true },
-      { id: 2, title: "Install new cabinets", completed: true },
-      { id: 3, title: "Install countertops", completed: false },
-      { id: 4, title: "Replace flooring", completed: false },
-      { id: 5, title: "Paint interior walls", completed: false }
+      { 
+        id: 1, 
+        title: "Demo existing kitchen", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-04-20", 
+        assignedTo: "John Smith" 
+      },
+      { 
+        id: 2, 
+        title: "Install new cabinets", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-04-25", 
+        assignedTo: "Maria Rodriguez" 
+      },
+      { 
+        id: 3, 
+        title: "Install countertops", 
+        completed: false, 
+        status: "In Progress", 
+        dueDate: "2025-05-10", 
+        assignedTo: "Maria Rodriguez" 
+      },
+      { 
+        id: 4, 
+        title: "Replace flooring", 
+        completed: false, 
+        status: "Not Started", 
+        dueDate: "2025-05-20" 
+      },
+      { 
+        id: 5, 
+        title: "Paint interior walls", 
+        completed: false, 
+        status: "Not Started", 
+        dueDate: "2025-05-30" 
+      }
     ],
     updates: [
       { id: 1, date: "2025-04-20", author: "John Smith", text: "Kitchen demo completed ahead of schedule." },
@@ -328,6 +366,7 @@ export const projects: Project[] = [
     propertyId: 7,
     name: "Duplex Conversion",
     address: "444 Investment Ave",
+    status: "active",
     budget: {
       estimated: 85000,
       actual: 51200,
@@ -339,12 +378,52 @@ export const projects: Project[] = [
       currentProgress: 40
     },
     tasks: [
-      { id: 1, title: "Create architectural plans", completed: true },
-      { id: 2, title: "Obtain building permits", completed: true },
-      { id: 3, title: "Framing for new unit division", completed: true },
-      { id: 4, title: "Electrical work", completed: false },
-      { id: 5, title: "Plumbing installation", completed: false },
-      { id: 6, title: "Drywall and finishing", completed: false }
+      { 
+        id: 1, 
+        title: "Create architectural plans", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-04-15", 
+        assignedTo: "Emily Johnson" 
+      },
+      { 
+        id: 2, 
+        title: "Obtain building permits", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-04-20", 
+        assignedTo: "David Wilson" 
+      },
+      { 
+        id: 3, 
+        title: "Framing for new unit division", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-04-30", 
+        assignedTo: "Thomas Brown" 
+      },
+      { 
+        id: 4, 
+        title: "Electrical work", 
+        completed: false, 
+        status: "In Progress", 
+        dueDate: "2025-05-15", 
+        assignedTo: "Sarah Carter" 
+      },
+      { 
+        id: 5, 
+        title: "Plumbing installation", 
+        completed: false, 
+        status: "Not Started", 
+        dueDate: "2025-05-30"
+      },
+      { 
+        id: 6, 
+        title: "Drywall and finishing", 
+        completed: false, 
+        status: "Not Started", 
+        dueDate: "2025-06-15"
+      }
     ],
     updates: [
       { id: 1, date: "2025-04-12", author: "Emily Johnson", text: "Permits approved after minor revisions." },
@@ -352,5 +431,134 @@ export const projects: Project[] = [
       { id: 3, date: "2025-05-01", author: "Emily Johnson", text: "Electrical inspection scheduled for next week." }
     ],
     team: [2, 4, 6] // User IDs
+  },
+  {
+    id: 3,
+    propertyId: 8,
+    name: "Backyard Remodel",
+    address: "123 Sunset Drive",
+    status: "paused",
+    budget: {
+      estimated: 25000,
+      actual: 12500,
+      remaining: 12500
+    },
+    timeline: {
+      startDate: "2025-03-20",
+      endDate: "2025-05-20",
+      currentProgress: 25
+    },
+    tasks: [
+      { 
+        id: 1, 
+        title: "Design landscape plan", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-03-25", 
+        assignedTo: "Laura Chen" 
+      },
+      { 
+        id: 2, 
+        title: "Demolish existing structures", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-04-05", 
+        assignedTo: "Robert Garcia" 
+      },
+      { 
+        id: 3, 
+        title: "Install irrigation system", 
+        completed: false, 
+        status: "In Progress", 
+        dueDate: "2025-04-20", 
+        assignedTo: "Robert Garcia" 
+      },
+      { 
+        id: 4, 
+        title: "Build deck/patio", 
+        completed: false, 
+        status: "Not Started", 
+        dueDate: "2025-05-05"
+      },
+      { 
+        id: 5, 
+        title: "Plant trees and garden", 
+        completed: false, 
+        status: "Not Started", 
+        dueDate: "2025-05-15" 
+      }
+    ],
+    updates: [
+      { id: 1, date: "2025-03-22", author: "Laura Chen", text: "Landscape design finalized and approved by client." },
+      { id: 2, date: "2025-04-10", author: "Robert Garcia", text: "Demolition completed, but irrigation installation delayed due to rain." },
+      { id: 3, date: "2025-04-18", author: "Laura Chen", text: "Project temporarily paused due to unexpected soil issues." }
+    ],
+    team: [3, 5, 7]
+  },
+  {
+    id: 4,
+    propertyId: 9,
+    name: "Victorian Home Restoration",
+    address: "555 Heritage Lane",
+    status: "completed",
+    budget: {
+      estimated: 120000,
+      actual: 127500,
+      remaining: -7500
+    },
+    timeline: {
+      startDate: "2025-01-10",
+      endDate: "2025-04-15",
+      currentProgress: 100
+    },
+    tasks: [
+      { 
+        id: 1, 
+        title: "Structural assessment", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-01-15", 
+        assignedTo: "James Wilson" 
+      },
+      { 
+        id: 2, 
+        title: "Replace damaged woodwork", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-02-10", 
+        assignedTo: "Catherine Moore" 
+      },
+      { 
+        id: 3, 
+        title: "Restore original stained glass", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-03-01", 
+        assignedTo: "Michael Peters" 
+      },
+      { 
+        id: 4, 
+        title: "Update plumbing and electrical", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-03-25", 
+        assignedTo: "James Wilson" 
+      },
+      { 
+        id: 5, 
+        title: "Final restorative painting", 
+        completed: true, 
+        status: "Completed", 
+        dueDate: "2025-04-10", 
+        assignedTo: "Catherine Moore" 
+      }
+    ],
+    updates: [
+      { id: 1, date: "2025-01-20", author: "James Wilson", text: "Hidden water damage discovered during assessment, may impact budget." },
+      { id: 2, date: "2025-02-15", author: "Catherine Moore", text: "Woodwork restoration taking longer than expected due to intricate details." },
+      { id: 3, date: "2025-03-10", author: "Michael Peters", text: "Stained glass restoration completed with period-accurate materials." },
+      { id: 4, date: "2025-04-12", author: "James Wilson", text: "Project completed. Final walkthrough scheduled with client." }
+    ],
+    team: [1, 4, 8, 9]
   }
 ];

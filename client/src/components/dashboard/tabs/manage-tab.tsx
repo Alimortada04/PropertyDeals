@@ -391,18 +391,55 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
   const endDate = new Date(project.timeline.endDate);
   const daysRemaining = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   
+  // Determine project status
+  const status = project.status || "active";
+  
+  // Color-code days remaining indicator
+  const getDaysRemainingColor = () => {
+    if (status === "completed") return "bg-green-500";
+    if (status === "paused") return "bg-gray-400";
+    
+    if (daysRemaining <= 0) return "bg-red-500"; // Behind schedule
+    if (daysRemaining <= 7) return "bg-orange-400"; // Warning
+    return "bg-blue-500"; // On track
+  };
+  
+  // Status indicator color
+  const getStatusColor = () => {
+    switch(status) {
+      case "active": return "bg-blue-500";
+      case "paused": return "bg-orange-400";
+      case "completed": return "bg-green-500";
+      default: return "bg-gray-400";
+    }
+  };
+  
   return (
-    <Card className="mb-4 hover:shadow-md transition-shadow cursor-pointer" onClick={() => onClick(project.id)}>
+    <Card 
+      className="mb-4 hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1 border border-gray-200 group" 
+      onClick={() => onClick(project.id)}
+    >
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-lg font-semibold text-[#09261E]">{project.name}</h3>
-            <p className="text-sm text-gray-600">{project.address}</p>
+          <div className="flex items-center">
+            <div className={`w-2 h-10 ${getStatusColor()} rounded-full mr-3`}></div>
+            <div>
+              <div className="flex items-center">
+                <h3 className="text-lg font-semibold text-[#09261E] group-hover:text-green-600 transition-colors">{project.name}</h3>
+                <Badge 
+                  className="ml-2 px-2 py-0 h-5 text-[10px]"
+                  variant="outline"
+                >
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </Badge>
+              </div>
+              <p className="text-sm text-gray-600">{project.address}</p>
+            </div>
           </div>
           <Badge 
-            className={`${daysRemaining <= 7 ? 'bg-green-500' : 'bg-gray-400'}`}
+            className={`${getDaysRemainingColor()} group-hover:scale-105 transition-transform`}
           >
-            {daysRemaining} days remaining
+            {daysRemaining > 0 ? `${daysRemaining} days remaining` : 'Past due date'}
           </Badge>
         </div>
         
@@ -416,7 +453,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
           </div>
           
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-100 p-3 rounded-lg">
+            <div className="bg-gray-100 p-3 rounded-lg group-hover:bg-gray-50 transition-colors">
               <span className="text-xs text-gray-600 block mb-1">Budget</span>
               <div className="flex items-baseline">
                 <span className="text-lg font-bold text-green-600">${project.budget.remaining.toLocaleString()}</span>
@@ -427,7 +464,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
               </div>
             </div>
             
-            <div className="bg-gray-50 p-3 rounded-lg">
+            <div className="bg-gray-50 p-3 rounded-lg group-hover:bg-gray-100 transition-colors">
               <span className="text-xs text-gray-600 block mb-1">Tasks</span>
               <div className="flex items-baseline">
                 <span className="text-lg font-bold text-gray-600">{completedTasks}/{totalTasks}</span>
@@ -442,7 +479,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
           <div className="mt-2">
             <span className="text-xs text-gray-600 block mb-1">Latest Update</span>
             {project.updates.length > 0 ? (
-              <div className="bg-gray-50 p-2 rounded text-sm">
+              <div className="bg-gray-50 p-2 rounded text-sm group-hover:bg-white transition-colors">
                 <p className="text-gray-800">{project.updates[project.updates.length - 1].text}</p>
                 <div className="flex justify-between mt-1 text-xs text-gray-500">
                   <span>{project.updates[project.updates.length - 1].author}</span>
@@ -471,6 +508,7 @@ export default function DashboardManageTab() {
   const [activeProperty, setActiveProperty] = useState<number | null>(null);
   const [activeProject, setActiveProject] = useState<number | null>(null);
   const [localProperties, setLocalProperties] = useState(properties);
+  const [projectStatusFilter, setProjectStatusFilter] = useState<"all" | "active" | "paused" | "completed">("all");
   
   // Handle property card clicks
   const handleViewProperty = (propertyId: number) => {
@@ -727,14 +765,39 @@ export default function DashboardManageTab() {
       {/* Project Management View */}
       {activeView === "projects" && (
         <div>
+          {/* Project Filters */}
+          <div className="mb-6 flex items-center gap-3">
+            <Label htmlFor="project-status" className="text-sm font-medium">Filter by status:</Label>
+            <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden p-1">
+              <div className="flex">
+                {["all", "active", "paused", "completed"].map((status) => (
+                  <button
+                    key={status}
+                    onClick={() => setProjectStatusFilter(status as "all" | "active" | "paused" | "completed")}
+                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors
+                      ${projectStatusFilter === status ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                  >
+                    {status === "active" && <Clock className="h-3.5 w-3.5 mr-1.5" />}
+                    {status === "paused" && <AlertCircle className="h-3.5 w-3.5 mr-1.5" />}
+                    {status === "completed" && <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />}
+                    {status === "all" && <Filter className="h-3.5 w-3.5 mr-1.5" />}
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          
           <div className="grid gap-6 md:grid-cols-2">
-            {projects.map(project => (
-              <ProjectCard 
-                key={project.id} 
-                project={project} 
-                onClick={handleViewProject} 
-              />
-            ))}
+            {projects
+              .filter(project => projectStatusFilter === "all" ? true : project.status === projectStatusFilter)
+              .map(project => (
+                <ProjectCard 
+                  key={project.id} 
+                  project={project} 
+                  onClick={handleViewProject} 
+                />
+              ))}
           </div>
           
           {projects.length === 0 && (
@@ -1483,22 +1546,61 @@ export default function DashboardManageTab() {
       <Dialog open={projectDetailOpen} onOpenChange={setProjectDetailOpen}>
         <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto h-[750px]">
           <DialogHeader className="pb-2">
-            <DialogTitle className="text-xl text-[#09261E]">
-              Project Roadmap
-            </DialogTitle>
-            <DialogDescription className="pb-0">
-              {activeProject && projects.find(p => p.id === activeProject)?.name}
-            </DialogDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <DialogTitle className="text-xl text-[#09261E]">
+                  Project Roadmap
+                </DialogTitle>
+                <DialogDescription className="pb-0">
+                  {activeProject && projects.find(p => p.id === activeProject)?.name}
+                </DialogDescription>
+              </div>
+              <Badge 
+                className={`${
+                  projects.find(p => p.id === activeProject)?.status === "active" ? "bg-blue-500" : 
+                  projects.find(p => p.id === activeProject)?.status === "paused" ? "bg-orange-400" :
+                  projects.find(p => p.id === activeProject)?.status === "completed" ? "bg-green-500" :
+                  "bg-gray-400"
+                }`}
+              >
+                {projects.find(p => p.id === activeProject)?.status || "Active"}
+              </Badge>
+            </div>
           </DialogHeader>
           
           <div className="mt-4">
             <Tabs defaultValue="overview">
               <TabsList className="w-full justify-start mb-4">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="tasks">Tasks</TabsTrigger>
-                <TabsTrigger value="budget">Budget</TabsTrigger>
-                <TabsTrigger value="updates">Updates</TabsTrigger>
-                <TabsTrigger value="team">Team</TabsTrigger>
+                <TabsTrigger value="overview">
+                  <span className="flex items-center">
+                    <ClipboardCheck className="h-4 w-4 mr-1.5" />
+                    Overview
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger value="tasks">
+                  <span className="flex items-center">
+                    <CheckSquare className="h-4 w-4 mr-1.5" />
+                    Tasks
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger value="budget">
+                  <span className="flex items-center">
+                    <DollarSign className="h-4 w-4 mr-1.5" />
+                    Budget
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger value="updates">
+                  <span className="flex items-center">
+                    <MessageSquare className="h-4 w-4 mr-1.5" />
+                    Updates
+                  </span>
+                </TabsTrigger>
+                <TabsTrigger value="team">
+                  <span className="flex items-center">
+                    <Users className="h-4 w-4 mr-1.5" />
+                    Team
+                  </span>
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="overview" className="mt-0">
@@ -1596,19 +1698,227 @@ export default function DashboardManageTab() {
               </TabsContent>
               
               <TabsContent value="tasks" className="mt-0">
-                {/* Task management content */}
+                <div className="mb-4 flex justify-between items-center">
+                  <h3 className="font-semibold text-[#09261E]">Task Management</h3>
+                  <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
+                    <PlusCircle className="h-4 w-4 mr-1.5" />
+                    Add Task
+                  </Button>
+                </div>
+                
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="divide-y divide-gray-100">
+                      {activeProject && projects.find(p => p.id === activeProject)?.tasks.map((task, index) => (
+                        <div key={task.id} className="p-4 hover:bg-gray-50">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-start gap-3">
+                              <Checkbox 
+                                id={`project-task-${task.id}`} 
+                                className="mt-1"
+                                checked={task.completed}
+                              />
+                              <div>
+                                <label 
+                                  htmlFor={`project-task-${task.id}`}
+                                  className={`block font-medium mb-1 ${task.completed ? 'line-through text-gray-500' : 'text-[#09261E]'}`}
+                                >
+                                  {task.title}
+                                </label>
+                                <div className="flex items-center gap-4 text-xs text-gray-500">
+                                  <div className="flex items-center">
+                                    <Clock className="h-3.5 w-3.5 mr-1" />
+                                    Due: {task.dueDate || 'Not set'}
+                                  </div>
+                                  {task.assignedTo && (
+                                    <div className="flex items-center">
+                                      <Users className="h-3.5 w-3.5 mr-1" />
+                                      {task.assignedTo}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <Badge 
+                              className={`${
+                                task.status === 'Not Started' ? 'bg-gray-400' :
+                                task.status === 'In Progress' ? 'bg-blue-500' :
+                                'bg-green-500'
+                              }`}
+                            >
+                              {task.status || 'Not Started'}
+                            </Badge>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
               
               <TabsContent value="budget" className="mt-0">
-                {/* Budget management content */}
+                <div className="mb-4 flex justify-between items-center">
+                  <h3 className="font-semibold text-[#09261E]">Budget Tracking</h3>
+                  <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
+                    <PlusCircle className="h-4 w-4 mr-1.5" />
+                    Add Expense
+                  </Button>
+                </div>
+                
+                <Card className="mb-4">
+                  <CardContent className="pt-6">
+                    <div className="space-y-4">
+                      <div>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium">Budget Usage</span>
+                          <span className="text-sm">
+                            {activeProject && 
+                              Math.round((projects.find(p => p.id === activeProject)?.budget.actual || 0) / 
+                              (projects.find(p => p.id === activeProject)?.budget.estimated || 1) * 100)
+                            }%
+                          </span>
+                        </div>
+                        <Progress 
+                          value={activeProject && 
+                            Math.round((projects.find(p => p.id === activeProject)?.budget.actual || 0) / 
+                            (projects.find(p => p.id === activeProject)?.budget.estimated || 1) * 100)
+                          } 
+                          className={`h-2 ${
+                            activeProject && 
+                            Math.round((projects.find(p => p.id === activeProject)?.budget.actual || 0) / 
+                            (projects.find(p => p.id === activeProject)?.budget.estimated || 1) * 100) >= 90
+                            ? 'progress-value-warning' : ''
+                          }`}
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-3 gap-4 text-center">
+                        <div className="bg-gray-100 p-4 rounded-lg">
+                          <div className="text-sm text-gray-500">Estimated</div>
+                          <div className="text-lg font-bold">
+                            ${activeProject && projects.find(p => p.id === activeProject)?.budget.estimated.toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="bg-gray-100 p-4 rounded-lg">
+                          <div className="text-sm text-gray-500">Spent</div>
+                          <div className="text-lg font-bold">
+                            ${activeProject && projects.find(p => p.id === activeProject)?.budget.actual.toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="bg-gray-100 p-4 rounded-lg">
+                          <div className="text-sm text-gray-500">Remaining</div>
+                          <div className="text-lg font-bold text-green-600">
+                            ${activeProject && projects.find(p => p.id === activeProject)?.budget.remaining.toLocaleString()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <h4 className="font-medium text-[#09261E] mb-2">Expense Line Items</h4>
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="divide-y divide-gray-100">
+                      {/* Sample expenses */}
+                      {[
+                        { id: 1, vendor: 'ABC Contracting', amount: 5800, date: '2025-03-15', category: 'Labor' },
+                        { id: 2, vendor: 'Smith Supply Co', amount: 2340, date: '2025-03-18', category: 'Materials' },
+                        { id: 3, vendor: 'City Permits', amount: 450, date: '2025-03-20', category: 'Permits' },
+                        { id: 4, vendor: 'Pro Plumbing', amount: 1250, date: '2025-04-02', category: 'Labor' },
+                      ].map(expense => (
+                        <div key={expense.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
+                          <div>
+                            <p className="font-medium">{expense.vendor}</p>
+                            <p className="text-xs text-gray-500">{expense.date} • {expense.category}</p>
+                          </div>
+                          <div className="font-medium">${expense.amount.toLocaleString()}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
               
               <TabsContent value="updates" className="mt-0">
-                {/* Updates log content */}
+                <div className="mb-4 flex justify-between items-center">
+                  <h3 className="font-semibold text-[#09261E]">Project Updates</h3>
+                  <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
+                    <PlusCircle className="h-4 w-4 mr-1.5" />
+                    Add Update
+                  </Button>
+                </div>
+                
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="divide-y divide-gray-100">
+                      {activeProject && [...(projects.find(p => p.id === activeProject)?.updates || [])].reverse().map((update, index) => (
+                        <div key={index} className="p-4 hover:bg-gray-50">
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                                <Users className="h-4 w-4 text-gray-500" />
+                              </div>
+                              <div>
+                                <p className="font-medium text-sm">{update.author}</p>
+                                <p className="text-xs text-gray-500">{update.date}</p>
+                              </div>
+                            </div>
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                              <Edit2 className="h-4 w-4 text-gray-500" />
+                            </Button>
+                          </div>
+                          <p className="text-sm text-gray-700">{update.text}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
               
               <TabsContent value="team" className="mt-0">
-                {/* Team management content */}
+                <div className="mb-4 flex justify-between items-center">
+                  <h3 className="font-semibold text-[#09261E]">Project Team</h3>
+                  <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
+                    <PlusCircle className="h-4 w-4 mr-1.5" />
+                    Invite Member
+                  </Button>
+                </div>
+                
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="divide-y divide-gray-100">
+                      {/* Sample team members */}
+                      {[
+                        { id: 1, name: 'John Smith', role: 'Project Manager', email: 'john@example.com', permissions: 'Editor' },
+                        { id: 2, name: 'Sarah Johnson', role: 'Designer', email: 'sarah@example.com', permissions: 'Editor' },
+                        { id: 3, name: 'Mike Williams', role: 'Contractor', email: 'mike@example.com', permissions: 'Viewer' },
+                        { id: 4, name: 'Lisa Brown', role: 'Client', email: 'lisa@example.com', permissions: 'Viewer' },
+                      ].map(member => (
+                        <div key={member.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
+                          <div className="flex items-center">
+                            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                              <Users className="h-5 w-5 text-gray-500" />
+                            </div>
+                            <div>
+                              <p className="font-medium">{member.name}</p>
+                              <p className="text-xs text-gray-500">{member.role} • {member.email}</p>
+                            </div>
+                          </div>
+                          <Select defaultValue={member.permissions}>
+                            <SelectTrigger className="w-28 h-8">
+                              <SelectValue placeholder="Permissions" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Editor">Editor</SelectItem>
+                              <SelectItem value="Viewer">Viewer</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
             </Tabs>
           </div>
