@@ -905,28 +905,25 @@ export default function DashboardManageTab() {
                                       
                                       return (
                                         <div key={`task-${stageIndex}-${taskIndex}`} className="my-2">
-                                          <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
+                                          <div 
+                                            className="flex items-center justify-between hover:bg-gray-100 rounded px-2 py-1 cursor-pointer transition-colors"
+                                            onClick={() => setTaskExpanded(!taskExpanded)}
+                                          >
+                                            <div className="flex items-center flex-1">
                                               <Checkbox 
                                                 id={`task-${stageIndex}-${taskIndex}`} 
                                                 className="mr-2"
                                                 defaultChecked={isChecked}
+                                                onClick={(e) => e.stopPropagation()}
                                               />
                                               <label 
                                                 htmlFor={`task-${stageIndex}-${taskIndex}`}
-                                                className={`text-sm ${isChecked ? 'line-through text-gray-500' : ''}`}
+                                                className={`text-sm ${isChecked ? 'line-through text-gray-500' : ''} hover:text-[#09261E]`}
+                                                onClick={(e) => e.stopPropagation()}
                                               >
                                                 {task}
                                               </label>
                                             </div>
-                                            <Button 
-                                              variant="ghost" 
-                                              size="sm" 
-                                              className="h-7 p-0 px-1.5"
-                                              onClick={() => setTaskExpanded(!taskExpanded)}
-                                            >
-                                              <ChevronDown className={`h-4 w-4 transition-transform ${taskExpanded ? 'transform rotate-180' : ''}`} />
-                                            </Button>
                                           </div>
                                           
                                           {taskExpanded && (
@@ -1728,11 +1725,14 @@ export default function DashboardManageTab() {
                         <CardContent>
                           <div className="space-y-3">
                             {projects.find(p => p.id === activeProject)?.tasks.map(task => (
-                              <div key={task.id} className="flex items-center">
+                              <div 
+                                key={task.id} 
+                                className="flex items-center hover:bg-gray-100 rounded px-2 py-1 cursor-pointer transition-colors"
+                              >
                                 <div className="w-5 h-5 rounded border border-gray-300 flex items-center justify-center mr-3">
                                   {task.completed && <CheckSquare className="h-4 w-4 text-green-600" />}
                                 </div>
-                                <span className={task.completed ? 'line-through text-gray-500' : ''}>
+                                <span className={`${task.completed ? 'line-through text-gray-500' : ''} hover:text-[#09261E]`}>
                                   {task.title}
                                 </span>
                               </div>
