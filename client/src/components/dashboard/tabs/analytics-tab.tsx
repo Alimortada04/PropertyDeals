@@ -194,20 +194,15 @@ const appreciationData = portfolioProperties.map(property => ({
   value: property.appreciation
 })).sort((a, b) => b.value - a.value);
 
-// Get top and bottom performers
-const getTopPerformers = (metric) => {
-  const sortedProperties = [...portfolioProperties].sort((a, b) => {
+// Get sorted properties for leaderboard
+const getSortedProperties = (metric) => {
+  return [...portfolioProperties].sort((a, b) => {
     if (metric === 'cashflow') return b.monthlyRent - a.monthlyRent;
     if (metric === 'appreciation') return b.appreciation - a.appreciation;
     if (metric === 'equity') return b.equity - a.equity;
     if (metric === 'capRate') return b.capRate - a.capRate;
     return 0;
   });
-  
-  return {
-    top: sortedProperties.slice(0, 3),
-    bottom: sortedProperties.slice(-3).reverse()
-  };
 };
 
 // COLORS
@@ -223,7 +218,7 @@ export default function AnalyticsTab() {
   const [showAllProperties, setShowAllProperties] = useState(false);
 
   // Sort properties by selected metrics for leaderboard
-  const performers = getTopPerformers(leaderboardMetric);
+  const sortedProperties = getSortedProperties(leaderboardMetric);
 
   return (
     <div className="space-y-6">
@@ -245,7 +240,7 @@ export default function AnalyticsTab() {
               </SelectContent>
             </Select>
             
-            <Button variant="outline" size="sm" className="flex items-center gap-1">
+            <Button variant="outline" size="sm" className="flex items-center gap-1 hover:bg-gray-100 hover:text-[#09261E]">
               <Download className="h-4 w-4" />
               Export
             </Button>
@@ -323,13 +318,13 @@ export default function AnalyticsTab() {
       {/* Tabs System */}
       <Tabs defaultValue="performance" className="w-full">
         <TabsList className="w-full bg-[#F8F9FA] p-1 rounded-lg">
-          <TabsTrigger value="performance" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <TabsTrigger value="performance" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm hover:bg-gray-200">
             Performance
           </TabsTrigger>
-          <TabsTrigger value="portfolio" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <TabsTrigger value="portfolio" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm hover:bg-gray-200">
             Portfolio
           </TabsTrigger>
-          <TabsTrigger value="metrics" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <TabsTrigger value="metrics" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm hover:bg-gray-200">
             Metrics
           </TabsTrigger>
         </TabsList>
@@ -355,14 +350,14 @@ export default function AnalyticsTab() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="h-80">
+                <div className="h-80 p-4">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={lineChartData}>
+                    <LineChart data={lineChartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
                       <XAxis dataKey="month" />
                       <YAxis />
                       <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
-                      <Legend />
+                      <Legend wrapperStyle={{ paddingTop: 15 }} />
                       <Line 
                         type="monotone" 
                         dataKey="totalValue" 
@@ -479,64 +474,56 @@ export default function AnalyticsTab() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
-                  <div>
-                    <h4 className="font-medium text-[#09261E] mb-2">Top 3 Properties</h4>
-                    <div className="space-y-2">
-                      {performers.top.map((property, index) => (
-                        <div key={property.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <Badge className="bg-[#09261E] hover:bg-[#09261E]">{index + 1}</Badge>
-                              <h5 className="font-medium">{property.nickname}</h5>
-                            </div>
-                            <p className="text-xs text-gray-500">{property.address}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-bold">
-                              {leaderboardMetric === 'cashflow' && `$${property.monthlyRent.toLocaleString()}`}
-                              {leaderboardMetric === 'appreciation' && `${property.appreciation}%`}
-                              {leaderboardMetric === 'equity' && `$${property.equity.toLocaleString()}`}
-                              {leaderboardMetric === 'capRate' && `${property.capRate}%`}
-                            </p>
-                            <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs">
-                              <ArrowUpRight className="h-3 w-3 mr-1" />
-                              Top Performer
+                <div className="space-y-4">
+                  <h4 className="font-medium text-[#09261E] mb-2">Top Properties by {leaderboardMetric === 'cashflow' ? 'Monthly Cashflow' : 
+                    leaderboardMetric === 'appreciation' ? 'Appreciation Rate' : 
+                    leaderboardMetric === 'equity' ? 'Equity' : 'Cap Rate'}</h4>
+                  
+                  <div className="space-y-2">
+                    {sortedProperties.slice(0, 6).map((property, index) => (
+                      <div key={property.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <Badge className={index < 3 ? "bg-[#09261E] hover:bg-[#09261E]" : "bg-gray-400 hover:bg-gray-400"}>
+                              {index + 1}
                             </Badge>
+                            <h5 className="font-medium">{property.nickname}</h5>
                           </div>
+                          <p className="text-xs text-gray-500">{property.address}</p>
                         </div>
-                      ))}
-                    </div>
+                        <div className="text-right">
+                          <p className="font-bold">
+                            {leaderboardMetric === 'cashflow' && `$${property.monthlyRent.toLocaleString()}`}
+                            {leaderboardMetric === 'appreciation' && `${property.appreciation}%`}
+                            {leaderboardMetric === 'equity' && `$${property.equity.toLocaleString()}`}
+                            {leaderboardMetric === 'capRate' && `${property.capRate}%`}
+                          </p>
+                          <Button 
+                            variant="outline"
+                            size="sm"
+                            className="mt-1 text-xs px-2 h-7 hover:bg-gray-100 hover:text-[#09261E]"
+                            onClick={() => setSelectedProperty(property)}
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                   
-                  <div>
-                    <h4 className="font-medium text-[#09261E] mb-2">Bottom 3 Properties</h4>
-                    <div className="space-y-2">
-                      {performers.bottom.map((property, index) => (
-                        <div key={property.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <Badge className="bg-gray-400 hover:bg-gray-400">{performers.top.length + index + 1}</Badge>
-                              <h5 className="font-medium">{property.nickname}</h5>
-                            </div>
-                            <p className="text-xs text-gray-500">{property.address}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-bold">
-                              {leaderboardMetric === 'cashflow' && `$${property.monthlyRent.toLocaleString()}`}
-                              {leaderboardMetric === 'appreciation' && `${property.appreciation}%`}
-                              {leaderboardMetric === 'equity' && `$${property.equity.toLocaleString()}`}
-                              {leaderboardMetric === 'capRate' && `${property.capRate}%`}
-                            </p>
-                            <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 text-xs">
-                              <ArrowDownRight className="h-3 w-3 mr-1" />
-                              Needs Attention
-                            </Badge>
-                          </div>
-                        </div>
-                      ))}
+                  {sortedProperties.length > 6 && (
+                    <div className="flex justify-center mt-4">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="hover:bg-gray-100 hover:text-[#09261E]"
+                        onClick={() => setShowAllProperties(true)}
+                      >
+                        View All Properties
+                        <ArrowRight className="h-4 w-4 ml-1" />
+                      </Button>
                     </div>
-                  </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -568,9 +555,9 @@ export default function AnalyticsTab() {
                 <div className="space-y-6">
                   <div>
                     <h4 className="font-medium text-[#09261E] mb-2">Monthly Cashflow</h4>
-                    <div className="h-64">
+                    <div className="h-64 p-4">
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={cashflowData}>
+                        <BarChart data={cashflowData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
                           <XAxis dataKey="name" />
                           <YAxis />
@@ -583,9 +570,9 @@ export default function AnalyticsTab() {
                   
                   <div>
                     <h4 className="font-medium text-[#09261E] mb-2">Appreciation (%)</h4>
-                    <div className="h-64">
+                    <div className="h-64 p-4">
                       <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={appreciationData}>
+                        <BarChart data={appreciationData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
                           <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
                           <XAxis dataKey="name" />
                           <YAxis />
