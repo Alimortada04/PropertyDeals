@@ -624,6 +624,7 @@ export default function DashboardManageTab() {
               <Button
                 variant="outline"
                 size="sm"
+                className="border-[#09261E] text-[#09261E] hover:bg-gray-100 data-[state=open]:bg-[#09261E] data-[state=open]:text-white"
                 onClick={() => setAddPropertyOpen(true)}
               >
                 <PlusCircle className="h-4 w-4 mr-1" /> Add Property
@@ -635,6 +636,7 @@ export default function DashboardManageTab() {
             <Button
               variant="outline"
               size="sm"
+              className="border-[#09261E] text-[#09261E] hover:bg-gray-100 data-[state=open]:bg-[#09261E] data-[state=open]:text-white"
               onClick={() => setAddProjectOpen(true)}
             >
               <PlusCircle className="h-4 w-4 mr-1" /> Add Project
@@ -767,9 +769,9 @@ export default function DashboardManageTab() {
             <Tabs defaultValue="progress" className="w-full">
               <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
                 <TabsTrigger value="progress" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Progress</TabsTrigger>
-                <TabsTrigger value="documents" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Documents</TabsTrigger>
                 <TabsTrigger value="contacts" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Contacts</TabsTrigger>
                 <TabsTrigger value="outreach" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Outreach</TabsTrigger>
+                <TabsTrigger value="documents" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Documents</TabsTrigger>
                 <TabsTrigger value="notes" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Notes</TabsTrigger>
               </TabsList>
               
@@ -878,7 +880,7 @@ export default function DashboardManageTab() {
                 </div>
               </TabsContent>
               
-              <TabsContent value="documents" className="mt-4">
+              <TabsContent value="documents" className="mt-4 min-h-[500px]">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-semibold text-[#09261E]">Property Documents</h3>
                   <Dialog>
@@ -1124,20 +1126,24 @@ export default function DashboardManageTab() {
                       ].map((contact) => (
                         <div key={contact.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
                           <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3">
-                              <span className="text-[#09261E] font-bold">{contact.name.charAt(0)}</span>
-                            </div>
+                            <Link href={`/reps/${contact.id}`}>
+                              <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3 cursor-pointer">
+                                <span className="text-[#09261E] font-bold">{contact.name.charAt(0)}</span>
+                              </div>
+                            </Link>
                             <div>
-                              <h4 className="font-medium text-[#09261E] text-sm">{contact.name}</h4>
+                              <Link href={`/reps/${contact.id}`}>
+                                <h4 className="font-medium text-[#09261E] text-sm hover:underline cursor-pointer">{contact.name}</h4>
+                              </Link>
                               <p className="text-xs text-gray-500">{contact.role}</p>
                               <p className="text-xs text-gray-500">{contact.email}</p>
                             </div>
                           </div>
                           <div className="flex space-x-2">
-                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-gray-600">
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-gray-600 hover:bg-gray-100">
                               <Phone className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-gray-600">
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-gray-600 hover:bg-gray-100">
                               <MessageSquare className="h-4 w-4" />
                             </Button>
                           </div>
@@ -1470,13 +1476,13 @@ export default function DashboardManageTab() {
       
       {/* Project Detail Modal */}
       <Dialog open={projectDetailOpen} onOpenChange={setProjectDetailOpen}>
-        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto h-[750px]">
+          <DialogHeader className="pb-2">
             <DialogTitle className="text-xl text-[#09261E]">
-              {activeProject && projects.find(p => p.id === activeProject)?.name}
+              Project Roadmap
             </DialogTitle>
-            <DialogDescription>
-              {activeProject && projects.find(p => p.id === activeProject)?.address}
+            <DialogDescription className="pb-0">
+              {activeProject && projects.find(p => p.id === activeProject)?.name}
             </DialogDescription>
           </DialogHeader>
           
