@@ -522,42 +522,42 @@ export default function DashboardManageTab() {
     dropped: localProperties.filter(p => p.stage === 'dropped')
   };
   
-  // Column titles and descriptions
+  // Column titles and descriptions - using green/gray color scheme
   const columns = [
     {
       id: "favorited",
       title: "Favorited",
       description: "Properties you're interested in",
       properties: propertiesByStageLocal.favorited || [],
-      color: "bg-blue-500"
+      color: "bg-gray-300"
     },
     {
       id: "contacted",
       title: "Contacted",
       description: "Seller contacted",
       properties: propertiesByStageLocal.contacted || [],
-      color: "bg-indigo-500"
+      color: "bg-gray-400"
     },
     {
       id: "offer_made",
       title: "Offer Made",
       description: "Offer sent to seller",
       properties: propertiesByStageLocal.offer_made || [],
-      color: "bg-purple-500"
+      color: "bg-gray-500"
     },
     {
       id: "pending",
       title: "Pending",
       description: "In negotiation",
       properties: propertiesByStageLocal.pending || [],
-      color: "bg-orange-500"
+      color: "bg-green-300"
     },
     {
       id: "close_pending",
       title: "Closing Soon",
       description: "In process of closing",
       properties: propertiesByStageLocal.close_pending || [],
-      color: "bg-amber-500"
+      color: "bg-green-400"
     },
     {
       id: "closed",
@@ -788,7 +788,7 @@ export default function DashboardManageTab() {
                             <span className="text-sm font-medium">Overall Progress</span>
                             <span className="text-sm">65%</span>
                           </div>
-                          <Progress value={65} className="h-2 bg-green-500 bg-opacity-30" />
+                          <Progress value={65} className="h-2" />
                         </div>
                         
                         <div className="grid gap-2">
@@ -1519,7 +1519,7 @@ export default function DashboardManageTab() {
                             </div>
                             <Progress 
                               value={projects.find(p => p.id === activeProject)?.timeline.currentProgress} 
-                              className="h-2" 
+                              className="h-2"
                             />
                           </div>
                           
