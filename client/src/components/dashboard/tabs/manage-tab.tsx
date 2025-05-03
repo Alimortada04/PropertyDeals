@@ -939,7 +939,7 @@ export default function DashboardManageTab() {
                                             </div>
                                           </div>
                                           
-                                          {expandedTaskIds[task.id] && (
+                                          {expandedTaskIds[taskIndex] && (
                                             <div className="mt-2 ml-6 text-xs text-gray-600 bg-white p-2 rounded-sm border border-gray-100">
                                               <p className="mb-1"><strong>Due:</strong> {new Date().toLocaleDateString()}</p>
                                               <p className="mb-1"><strong>Assignee:</strong> {stageIndex === 0 ? 'You' : 'Sarah Johnson'}</p>

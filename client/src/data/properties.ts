@@ -275,6 +275,7 @@ export interface ProjectUpdate {
   date: string;
   author: string;
   text: string;
+  image?: string;
 }
 
 export interface Project {
