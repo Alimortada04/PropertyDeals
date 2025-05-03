@@ -753,7 +753,7 @@ export default function DashboardManageTab() {
       
       {/* Property Detail Modal */}
       <Dialog open={propertyDetailOpen} onOpenChange={setPropertyDetailOpen}>
-        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto min-h-[500px]">
+        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto h-[750px]">
           <DialogHeader className="pb-2">
             <DialogTitle className="text-xl text-[#09261E]">
               Property Roadmap
@@ -1006,50 +1006,11 @@ export default function DashboardManageTab() {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-4">
-                        <Tabs defaultValue="manual" className="w-full">
+                        <Tabs defaultValue="search" className="w-full">
                           <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
-                            <TabsTrigger value="manual" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Add Manually</TabsTrigger>
                             <TabsTrigger value="search" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Search REPs</TabsTrigger>
                             <TabsTrigger value="invite" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Invite Contact</TabsTrigger>
                           </TabsList>
-                          
-                          <TabsContent value="manual" className="mt-4">
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="col-span-2 sm:col-span-1">
-                                <Label htmlFor="contact-name">Full Name</Label>
-                                <Input id="contact-name" placeholder="John Smith" />
-                              </div>
-                              <div className="col-span-2 sm:col-span-1">
-                                <Label htmlFor="contact-role">Role</Label>
-                                <Select>
-                                  <SelectTrigger id="contact-role">
-                                    <SelectValue placeholder="Select role" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="agent">Seller Agent</SelectItem>
-                                    <SelectItem value="buyer-agent">Buyer Agent</SelectItem>
-                                    <SelectItem value="loan">Loan Officer</SelectItem>
-                                    <SelectItem value="inspector">Inspector</SelectItem>
-                                    <SelectItem value="title">Title Company</SelectItem>
-                                    <SelectItem value="attorney">Attorney</SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              <div className="col-span-2 sm:col-span-1">
-                                <Label htmlFor="contact-phone">Phone</Label>
-                                <Input id="contact-phone" placeholder="(555) 123-4567" />
-                              </div>
-                              <div className="col-span-2 sm:col-span-1">
-                                <Label htmlFor="contact-email">Email</Label>
-                                <Input id="contact-email" placeholder="john@example.com" />
-                              </div>
-                              <div className="col-span-2">
-                                <Label htmlFor="contact-notes">Notes (Optional)</Label>
-                                <Textarea id="contact-notes" rows={3} placeholder="Add notes about this contact" />
-                              </div>
-                            </div>
-                          </TabsContent>
                           
                           <TabsContent value="search" className="mt-4">
                             <div className="space-y-4">
