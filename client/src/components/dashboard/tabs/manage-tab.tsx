@@ -39,6 +39,7 @@ import {
   Home,
   LayoutGrid,
   Mail,
+  MessageCircle,
   MessageSquare,
   MoreHorizontal,
   Phone,
@@ -1715,10 +1716,68 @@ export default function DashboardManageTab() {
               <TabsContent value="tasks" className="mt-0">
                 <div className="mb-4 flex justify-between items-center">
                   <h3 className="font-semibold text-[#09261E]">Task Management</h3>
-                  <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
-                    <PlusCircle className="h-4 w-4 mr-1.5" />
-                    Add Task
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
+                        <PlusCircle className="h-4 w-4 mr-1.5" />
+                        Add Task
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Add New Task</DialogTitle>
+                        <DialogDescription>
+                          Create a new task for this project
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="task-title">Task Name</Label>
+                          <Input id="task-title" placeholder="Enter task title" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="task-due">Due Date</Label>
+                            <Input id="task-due" type="date" />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="task-status">Status</Label>
+                            <Select defaultValue="not_started">
+                              <SelectTrigger id="task-status">
+                                <SelectValue placeholder="Select status" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="not_started">Not Started</SelectItem>
+                                <SelectItem value="in_progress">In Progress</SelectItem>
+                                <SelectItem value="completed">Completed</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="task-assigned">Assigned To</Label>
+                          <Select>
+                            <SelectTrigger id="task-assigned">
+                              <SelectValue placeholder="Select team member" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="you">You</SelectItem>
+                              <SelectItem value="john">John Smith</SelectItem>
+                              <SelectItem value="sarah">Sarah Johnson</SelectItem>
+                              <SelectItem value="mike">Mike Williams</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="task-details">Details</Label>
+                          <Textarea id="task-details" placeholder="Enter any additional notes or details" />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Add Task</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <Card>
@@ -1774,10 +1833,61 @@ export default function DashboardManageTab() {
               <TabsContent value="budget" className="mt-0">
                 <div className="mb-4 flex justify-between items-center">
                   <h3 className="font-semibold text-[#09261E]">Budget Tracking</h3>
-                  <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
-                    <PlusCircle className="h-4 w-4 mr-1.5" />
-                    Add Expense
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
+                        <PlusCircle className="h-4 w-4 mr-1.5" />
+                        Add Expense
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Add New Expense</DialogTitle>
+                        <DialogDescription>
+                          Record a new expense for this project
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="expense-vendor">Vendor/Payee Name</Label>
+                          <Input id="expense-vendor" placeholder="Enter vendor or payee name" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="expense-amount">Amount ($)</Label>
+                            <Input id="expense-amount" type="number" min="0" step="0.01" placeholder="0.00" />
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="expense-date">Date Paid</Label>
+                            <Input id="expense-date" type="date" />
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="expense-category">Category</Label>
+                          <Select>
+                            <SelectTrigger id="expense-category">
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="labor">Labor</SelectItem>
+                              <SelectItem value="materials">Materials</SelectItem>
+                              <SelectItem value="permits">Permits & Fees</SelectItem>
+                              <SelectItem value="equipment">Equipment Rental</SelectItem>
+                              <SelectItem value="supplies">Supplies</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="expense-notes">Notes</Label>
+                          <Textarea id="expense-notes" placeholder="Enter any additional notes about this expense" />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Add Expense</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <Card className="mb-4">
@@ -1858,10 +1968,60 @@ export default function DashboardManageTab() {
               <TabsContent value="updates" className="mt-0">
                 <div className="mb-4 flex justify-between items-center">
                   <h3 className="font-semibold text-[#09261E]">Project Updates</h3>
-                  <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
-                    <PlusCircle className="h-4 w-4 mr-1.5" />
-                    Add Update
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
+                        <PlusCircle className="h-4 w-4 mr-1.5" />
+                        Add Update
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Post Project Update</DialogTitle>
+                        <DialogDescription>
+                          Share progress, updates, or milestones with the project team
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label htmlFor="update-text">Update Details</Label>
+                          <Textarea id="update-text" placeholder="Describe what's new or what's been accomplished..." className="min-h-[100px]" />
+                        </div>
+                        <div className="grid gap-2">
+                          <Label className="flex items-center gap-2">
+                            <PlusCircle className="h-4 w-4" />
+                            Add Photo (Optional)
+                          </Label>
+                          <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+                            <Input id="update-image" type="file" accept="image/*" className="hidden" />
+                            <label htmlFor="update-image" className="cursor-pointer">
+                              <div className="flex flex-col items-center gap-1">
+                                <FileText className="h-6 w-6 text-gray-400" />
+                                <span className="text-sm text-gray-500">Click to upload an image</span>
+                                <span className="text-xs text-gray-400">(Maximum size: 5MB)</span>
+                              </div>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="grid gap-2">
+                          <Label htmlFor="update-visibility">Visibility</Label>
+                          <Select defaultValue="team">
+                            <SelectTrigger id="update-visibility">
+                              <SelectValue placeholder="Select visibility" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="team">Team Only</SelectItem>
+                              <SelectItem value="clients">Team & Clients</SelectItem>
+                              <SelectItem value="public">Public</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Post Update</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <Card>
@@ -1894,10 +2054,114 @@ export default function DashboardManageTab() {
               <TabsContent value="team" className="mt-0">
                 <div className="mb-4 flex justify-between items-center">
                   <h3 className="font-semibold text-[#09261E]">Project Team</h3>
-                  <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
-                    <PlusCircle className="h-4 w-4 mr-1.5" />
-                    Invite Member
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
+                        <PlusCircle className="h-4 w-4 mr-1.5" />
+                        Invite Member
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Invite Team Member</DialogTitle>
+                        <DialogDescription>
+                          Add a new person to this project and set their permissions
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                          <Label>Invite Method</Label>
+                          <div className="flex gap-4">
+                            <div className="relative">
+                              <input 
+                                type="radio"
+                                id="invite-email"
+                                name="invite-method"
+                                className="peer sr-only"
+                                defaultChecked
+                              />
+                              <label
+                                htmlFor="invite-email"
+                                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-green-600 [&:has([data-state=checked])]:border-green-600 cursor-pointer"
+                              >
+                                <Mail className="mb-2 h-5 w-5" />
+                                <span className="text-sm font-medium">Email</span>
+                              </label>
+                            </div>
+                            <div className="relative">
+                              <input 
+                                type="radio"
+                                id="invite-system"
+                                name="invite-method"
+                                className="peer sr-only"
+                              />
+                              <label
+                                htmlFor="invite-system"
+                                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-green-600 [&:has([data-state=checked])]:border-green-600 cursor-pointer"
+                              >
+                                <Users className="mb-2 h-5 w-5" />
+                                <span className="text-sm font-medium">System User</span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid gap-2">
+                          <Label htmlFor="invite-name">Name</Label>
+                          <Input id="invite-name" placeholder="Full name" />
+                        </div>
+                        
+                        <div className="grid gap-2">
+                          <Label htmlFor="invite-email">Email Address</Label>
+                          <Input id="invite-email" type="email" placeholder="name@example.com" />
+                        </div>
+                        
+                        <div className="grid gap-2">
+                          <Label htmlFor="invite-role">Role</Label>
+                          <Select>
+                            <SelectTrigger id="invite-role">
+                              <SelectValue placeholder="Select role" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="project_manager">Project Manager</SelectItem>
+                              <SelectItem value="contractor">Contractor</SelectItem>
+                              <SelectItem value="designer">Designer</SelectItem>
+                              <SelectItem value="client">Client</SelectItem>
+                              <SelectItem value="team_member">Team Member</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="grid gap-2">
+                          <Label htmlFor="invite-permission">Permissions</Label>
+                          <Select defaultValue="viewer">
+                            <SelectTrigger id="invite-permission">
+                              <SelectValue placeholder="Select permissions" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="admin">Admin (Full Access)</SelectItem>
+                              <SelectItem value="editor">Editor (Can Edit)</SelectItem>
+                              <SelectItem value="viewer">Viewer (Read Only)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="grid gap-2">
+                          <Label htmlFor="invite-message">Personal Message (Optional)</Label>
+                          <Textarea id="invite-message" placeholder="Add a note to your invitation email..." />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline" className="mr-auto">
+                          Add without sending invitation
+                        </Button>
+                        <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">
+                          Send Invitation
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <Card className="mb-4">
