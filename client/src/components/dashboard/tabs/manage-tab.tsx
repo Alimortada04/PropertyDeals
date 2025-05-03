@@ -2195,92 +2195,117 @@ export default function DashboardManageTab() {
                       <DialogHeader>
                         <DialogTitle>Invite Team Member</DialogTitle>
                         <DialogDescription>
-                          Add a new person to this project and set their permissions
+                          Add professionals involved in this project.
                         </DialogDescription>
                       </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label>Invite Method</Label>
-                          <div className="flex gap-4">
-                            <div className="relative">
-                              <input 
-                                type="radio"
-                                id="invite-email"
-                                name="invite-method"
-                                className="peer sr-only"
-                                defaultChecked
-                              />
-                              <label
-                                htmlFor="invite-email"
-                                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-green-600 [&:has([data-state=checked])]:border-green-600 cursor-pointer"
-                              >
-                                <Mail className="mb-2 h-5 w-5" />
-                                <span className="text-sm font-medium">Email</span>
-                              </label>
+                      <div className="py-4">
+                        <Tabs defaultValue="search" className="w-full">
+                          <TabsList className="grid w-full grid-cols-2 mb-6">
+                            <TabsTrigger value="search">Search Team</TabsTrigger>
+                            <TabsTrigger value="invite">Invite Member</TabsTrigger>
+                          </TabsList>
+                          
+                          <TabsContent value="search" className="mt-4">
+                            <div className="space-y-4">
+                              <div>
+                                <h4 className="font-medium text-lg mb-4">Search for team members</h4>
+                                <div className="relative mb-6">
+                                  <Input placeholder="Search by name, role, or expertise..." className="pr-10" />
+                                  <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
+                                </div>
+                              </div>
+                              
+                              <div className="border rounded-md divide-y">
+                                {[
+                                  { id: 1, name: 'Sarah Johnson', specialty: 'Project Manager', location: 'Seattle, WA', avatar: 'S' },
+                                  { id: 2, name: 'Michael Chen', specialty: 'Contractor', location: 'Portland, OR', avatar: 'M' },
+                                  { id: 3, name: 'David Rodriguez', specialty: 'Designer', location: 'San Francisco, CA', avatar: 'D' },
+                                ].map(member => (
+                                  <div key={member.id} className="p-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between">
+                                    <div className="flex items-center">
+                                      <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3">
+                                        <span className="text-[#09261E] font-bold">{member.avatar}</span>
+                                      </div>
+                                      <div>
+                                        <h4 className="font-medium text-[#09261E] text-sm">{member.name}</h4>
+                                        <p className="text-xs text-gray-500">{member.specialty} • {member.location}</p>
+                                      </div>
+                                    </div>
+                                    <Button size="sm" variant="outline">Select</Button>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                            <div className="relative">
-                              <input 
-                                type="radio"
-                                id="invite-system"
-                                name="invite-method"
-                                className="peer sr-only"
-                              />
-                              <label
-                                htmlFor="invite-system"
-                                className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-green-600 [&:has([data-state=checked])]:border-green-600 cursor-pointer"
-                              >
-                                <Users className="mb-2 h-5 w-5" />
-                                <span className="text-sm font-medium">System User</span>
-                              </label>
+                          </TabsContent>
+                          
+                          <TabsContent value="invite" className="mt-4">
+                            <div className="space-y-4">
+                              <div>
+                                <Label htmlFor="invite-method">Invite Method</Label>
+                                <Select defaultValue="email">
+                                  <SelectTrigger id="invite-method">
+                                    <SelectValue placeholder="Select invite method" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="email">Email</SelectItem>
+                                    <SelectItem value="sms">SMS/Text</SelectItem>
+                                    <SelectItem value="system">System User</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-contact">Contact Information</Label>
+                                <Input id="invite-contact" placeholder="Email address or phone number" />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-name">Contact Name</Label>
+                                <Input id="invite-name" placeholder="John Smith" />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-role">Role</Label>
+                                <Select>
+                                  <SelectTrigger id="invite-role">
+                                    <SelectValue placeholder="Select role" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="project_manager">Project Manager</SelectItem>
+                                    <SelectItem value="contractor">Contractor</SelectItem>
+                                    <SelectItem value="designer">Designer</SelectItem>
+                                    <SelectItem value="client">Client</SelectItem>
+                                    <SelectItem value="team_member">Team Member</SelectItem>
+                                    <SelectItem value="other">Other</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-permission">Permissions</Label>
+                                <Select defaultValue="viewer">
+                                  <SelectTrigger id="invite-permission">
+                                    <SelectValue placeholder="Select permission level" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="admin">Admin (Full access)</SelectItem>
+                                    <SelectItem value="editor">Editor (Can edit)</SelectItem>
+                                    <SelectItem value="viewer">Viewer (View only)</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-message">Personal Message (Optional)</Label>
+                                <Textarea 
+                                  id="invite-message" 
+                                  rows={3} 
+                                  placeholder="I'd like to add you to my project team..."
+                                />
+                              </div>
                             </div>
-                          </div>
-                        </div>
-
-                        <div className="grid gap-2">
-                          <Label htmlFor="invite-name">Name</Label>
-                          <Input id="invite-name" placeholder="Full name" />
-                        </div>
-                        
-                        <div className="grid gap-2">
-                          <Label htmlFor="invite-email">Email Address</Label>
-                          <Input id="invite-email" type="email" placeholder="name@example.com" />
-                        </div>
-                        
-                        <div className="grid gap-2">
-                          <Label htmlFor="invite-role">Role</Label>
-                          <Select>
-                            <SelectTrigger id="invite-role">
-                              <SelectValue placeholder="Select role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="project_manager">Project Manager</SelectItem>
-                              <SelectItem value="contractor">Contractor</SelectItem>
-                              <SelectItem value="designer">Designer</SelectItem>
-                              <SelectItem value="client">Client</SelectItem>
-                              <SelectItem value="team_member">Team Member</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        
-                        <div className="grid gap-2">
-                          <Label htmlFor="invite-permission">Permissions</Label>
-                          <Select defaultValue="viewer">
-                            <SelectTrigger id="invite-permission">
-                              <SelectValue placeholder="Select permissions" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="admin">Admin (Full Access)</SelectItem>
-                              <SelectItem value="editor">Editor (Can Edit)</SelectItem>
-                              <SelectItem value="viewer">Viewer (Read Only)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        
-                        <div className="grid gap-2">
-                          <Label htmlFor="invite-message">Personal Message (Optional)</Label>
-                          <Textarea id="invite-message" placeholder="Add a note to your invitation email..." />
-                        </div>
+                          </TabsContent>
+                        </Tabs>
                       </div>
                       <DialogFooter>
                         <Button variant="outline" className="mr-auto">
@@ -2468,16 +2493,15 @@ export default function DashboardManageTab() {
                   </div>
                   
                   <div className="border rounded-lg p-2 bg-white">
-                    <div className="flex mb-2">
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
-                        <Image className="h-4 w-4 text-gray-500" />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
-                        <FileText className="h-4 w-4 text-gray-500" />
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
-                        <Paperclip className="h-4 w-4 text-gray-500" />
-                      </Button>
+                    <div className="flex justify-between mb-2">
+                      <div className="flex space-x-1">
+                        <Button variant="ghost" size="sm" className="h-8 px-3 rounded-md text-sm">
+                          📷 Photo
+                        </Button>
+                        <Button variant="ghost" size="sm" className="h-8 px-3 rounded-md text-sm">
+                          📁 File
+                        </Button>
+                      </div>
                     </div>
                     <div className="relative">
                       <Textarea 
@@ -2487,7 +2511,7 @@ export default function DashboardManageTab() {
                       />
                       <div className="absolute right-1 bottom-1 flex items-center">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-gray-400 hover:text-gray-600 mr-0.5">
-                          <Smile className="h-4 w-4" />
+                          😊
                         </Button>
                         <Button
                           size="sm"
