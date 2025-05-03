@@ -9,7 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -46,7 +46,9 @@ import {
   Building,
   BriefcaseBusiness,
   ClipboardCheck,
-  Download
+  Download,
+  Search,
+  Star
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
@@ -944,7 +946,6 @@ export default function DashboardManageTab() {
                         </div>
                       </div>
                       <DialogFooter>
-                        <Button variant="outline">Cancel</Button>
                         <Button>Upload Document</Button>
                       </DialogFooter>
                     </DialogContent>
@@ -1005,44 +1006,145 @@ export default function DashboardManageTab() {
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="col-span-2 sm:col-span-1">
-                            <Label htmlFor="contact-name">Full Name</Label>
-                            <Input id="contact-name" placeholder="John Smith" />
-                          </div>
-                          <div className="col-span-2 sm:col-span-1">
-                            <Label htmlFor="contact-role">Role</Label>
-                            <Select>
-                              <SelectTrigger id="contact-role">
-                                <SelectValue placeholder="Select role" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="agent">Seller Agent</SelectItem>
-                                <SelectItem value="buyer-agent">Buyer Agent</SelectItem>
-                                <SelectItem value="loan">Loan Officer</SelectItem>
-                                <SelectItem value="inspector">Inspector</SelectItem>
-                                <SelectItem value="title">Title Company</SelectItem>
-                                <SelectItem value="attorney">Attorney</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="col-span-2 sm:col-span-1">
-                            <Label htmlFor="contact-phone">Phone</Label>
-                            <Input id="contact-phone" placeholder="(555) 123-4567" />
-                          </div>
-                          <div className="col-span-2 sm:col-span-1">
-                            <Label htmlFor="contact-email">Email</Label>
-                            <Input id="contact-email" placeholder="john@example.com" />
-                          </div>
-                          <div className="col-span-2">
-                            <Label htmlFor="contact-notes">Notes (Optional)</Label>
-                            <Textarea id="contact-notes" rows={3} placeholder="Add notes about this contact" />
-                          </div>
-                        </div>
+                        <Tabs defaultValue="manual" className="w-full">
+                          <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
+                            <TabsTrigger value="manual" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Add Manually</TabsTrigger>
+                            <TabsTrigger value="search" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Search REPs</TabsTrigger>
+                            <TabsTrigger value="invite" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Invite Contact</TabsTrigger>
+                          </TabsList>
+                          
+                          <TabsContent value="manual" className="mt-4">
+                            <div className="grid grid-cols-2 gap-4">
+                              <div className="col-span-2 sm:col-span-1">
+                                <Label htmlFor="contact-name">Full Name</Label>
+                                <Input id="contact-name" placeholder="John Smith" />
+                              </div>
+                              <div className="col-span-2 sm:col-span-1">
+                                <Label htmlFor="contact-role">Role</Label>
+                                <Select>
+                                  <SelectTrigger id="contact-role">
+                                    <SelectValue placeholder="Select role" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="agent">Seller Agent</SelectItem>
+                                    <SelectItem value="buyer-agent">Buyer Agent</SelectItem>
+                                    <SelectItem value="loan">Loan Officer</SelectItem>
+                                    <SelectItem value="inspector">Inspector</SelectItem>
+                                    <SelectItem value="title">Title Company</SelectItem>
+                                    <SelectItem value="attorney">Attorney</SelectItem>
+                                    <SelectItem value="other">Other</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="col-span-2 sm:col-span-1">
+                                <Label htmlFor="contact-phone">Phone</Label>
+                                <Input id="contact-phone" placeholder="(555) 123-4567" />
+                              </div>
+                              <div className="col-span-2 sm:col-span-1">
+                                <Label htmlFor="contact-email">Email</Label>
+                                <Input id="contact-email" placeholder="john@example.com" />
+                              </div>
+                              <div className="col-span-2">
+                                <Label htmlFor="contact-notes">Notes (Optional)</Label>
+                                <Textarea id="contact-notes" rows={3} placeholder="Add notes about this contact" />
+                              </div>
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="search" className="mt-4">
+                            <div className="space-y-4">
+                              <div>
+                                <Label htmlFor="rep-search">Search for REPs on PropertyDeals</Label>
+                                <div className="relative">
+                                  <Input 
+                                    id="rep-search" 
+                                    placeholder="Search by name, location, or specialty..." 
+                                    className="pr-10"
+                                  />
+                                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                </div>
+                              </div>
+                              
+                              <div className="mt-4 border rounded-md divide-y">
+                                {[
+                                  { id: 1, name: 'Sarah Johnson', specialty: 'Home Inspector', location: 'Seattle, WA', avatar: 'S' },
+                                  { id: 2, name: 'Michael Chen', specialty: 'Mortgage Broker', location: 'Portland, OR', avatar: 'M' },
+                                  { id: 3, name: 'David Rodriguez', specialty: 'Real Estate Attorney', location: 'San Francisco, CA', avatar: 'D' },
+                                ].map(rep => (
+                                  <div key={rep.id} className="p-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between">
+                                    <div className="flex items-center">
+                                      <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3">
+                                        <span className="text-[#09261E] font-bold">{rep.avatar}</span>
+                                      </div>
+                                      <div>
+                                        <h4 className="font-medium text-[#09261E] text-sm">{rep.name}</h4>
+                                        <p className="text-xs text-gray-500">{rep.specialty} • {rep.location}</p>
+                                      </div>
+                                    </div>
+                                    <Button size="sm" variant="outline">Select</Button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="invite" className="mt-4">
+                            <div className="space-y-4">
+                              <div>
+                                <Label htmlFor="invite-method">Invite Method</Label>
+                                <Select defaultValue="email">
+                                  <SelectTrigger id="invite-method">
+                                    <SelectValue placeholder="Select invite method" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="email">Email</SelectItem>
+                                    <SelectItem value="sms">SMS/Text</SelectItem>
+                                    <SelectItem value="social">Social Media</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-contact">Contact Information</Label>
+                                <Input id="invite-contact" placeholder="Email address or phone number" />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-name">Contact Name</Label>
+                                <Input id="invite-name" placeholder="John Smith" />
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-role">Role</Label>
+                                <Select>
+                                  <SelectTrigger id="invite-role">
+                                    <SelectValue placeholder="Select role" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="agent">Seller Agent</SelectItem>
+                                    <SelectItem value="buyer-agent">Buyer Agent</SelectItem>
+                                    <SelectItem value="loan">Loan Officer</SelectItem>
+                                    <SelectItem value="inspector">Inspector</SelectItem>
+                                    <SelectItem value="title">Title Company</SelectItem>
+                                    <SelectItem value="attorney">Attorney</SelectItem>
+                                    <SelectItem value="other">Other</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              
+                              <div>
+                                <Label htmlFor="invite-message">Personal Message (Optional)</Label>
+                                <Textarea 
+                                  id="invite-message" 
+                                  rows={3} 
+                                  placeholder="I'd like to add you as a contact for my property at 123 Main St..."
+                                />
+                              </div>
+                            </div>
+                          </TabsContent>
+                        </Tabs>
                       </div>
                       <DialogFooter>
-                        <Button variant="outline">Cancel</Button>
                         <Button>Add Contact</Button>
                       </DialogFooter>
                     </DialogContent>
@@ -1088,12 +1190,97 @@ export default function DashboardManageTab() {
               <TabsContent value="outreach" className="mt-4">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-semibold text-[#09261E]">Professional Outreach</h3>
-                  <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
-                    Find REP
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
+                        Find REP
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Find a Real Estate Professional</DialogTitle>
+                        <DialogDescription>
+                          Connect with specialized REPs for your property needs
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div>
+                          <Label htmlFor="rep-category">Professional Category</Label>
+                          <Select defaultValue="all">
+                            <SelectTrigger id="rep-category">
+                              <SelectValue placeholder="Select category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Categories</SelectItem>
+                              <SelectItem value="agent">Real Estate Agents</SelectItem>
+                              <SelectItem value="inspector">Home Inspectors</SelectItem>
+                              <SelectItem value="lender">Mortgage Lenders</SelectItem>
+                              <SelectItem value="attorney">Real Estate Attorneys</SelectItem>
+                              <SelectItem value="appraiser">Property Appraisers</SelectItem>
+                              <SelectItem value="contractor">General Contractors</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="rep-location">Location</Label>
+                          <Input id="rep-location" placeholder="City, state, or zip code" />
+                        </div>
+                        
+                        <div className="relative">
+                          <Label htmlFor="rep-search">Search</Label>
+                          <Input 
+                            id="rep-search" 
+                            placeholder="Search by name or specialty..." 
+                            className="pr-10"
+                          />
+                          <Search className="absolute right-3 bottom-3 h-4 w-4 text-gray-400" />
+                        </div>
+                        
+                        <div className="border rounded-md divide-y max-h-60 overflow-y-auto mt-2">
+                          {[
+                            { id: 1, name: 'Sarah Johnson', specialty: 'Home Inspector', location: 'Seattle, WA', avatar: 'S', rating: 4.9, reviews: 56 },
+                            { id: 2, name: 'Michael Chen', specialty: 'Mortgage Broker', location: 'Portland, OR', avatar: 'M', rating: 4.7, reviews: 38 },
+                            { id: 3, name: 'David Rodriguez', specialty: 'Real Estate Attorney', location: 'San Francisco, CA', avatar: 'D', rating: 5.0, reviews: 27 },
+                            { id: 4, name: 'Jennifer Lee', specialty: 'Property Appraiser', location: 'Los Angeles, CA', avatar: 'J', rating: 4.8, reviews: 42 },
+                            { id: 5, name: 'Robert Taylor', specialty: 'General Contractor', location: 'San Diego, CA', avatar: 'R', rating: 4.6, reviews: 31 },
+                          ].map(rep => (
+                            <div key={rep.id} className="p-3 hover:bg-gray-50 cursor-pointer">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                  <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3">
+                                    <span className="text-[#09261E] font-bold">{rep.avatar}</span>
+                                  </div>
+                                  <div>
+                                    <h4 className="font-medium text-[#09261E] text-sm">{rep.name}</h4>
+                                    <p className="text-xs text-gray-500">{rep.specialty} • {rep.location}</p>
+                                    <div className="flex items-center mt-1">
+                                      <div className="flex">
+                                        {[...Array(5)].map((_, i) => (
+                                          <Star 
+                                            key={i} 
+                                            className={`h-3 w-3 ${i < Math.floor(rep.rating) ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`} 
+                                          />
+                                        ))}
+                                      </div>
+                                      <span className="text-xs text-gray-600 ml-1">{rep.rating} ({rep.reviews})</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <Button size="sm" variant="outline">Connect</Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button>View All REPs</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
-                <Card className="mb-4">
+                <Card className="mb-6">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-base">Send Property-Specific Outreach</CardTitle>
                     <CardDescription>
@@ -1101,6 +1288,28 @@ export default function DashboardManageTab() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
+                    <div className="mb-4">
+                      <Label htmlFor="outreach-recipient" className="text-sm mb-2 block">Recipient</Label>
+                      <Select>
+                        <SelectTrigger id="outreach-recipient">
+                          <SelectValue placeholder="Select recipient" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectOptGroup>
+                            <SelectLabel>Property Contacts</SelectLabel>
+                            <SelectItem value="sarah">Sarah Johnson (Seller Agent)</SelectItem>
+                            <SelectItem value="michael">Michael Chen (Loan Officer)</SelectItem>
+                            <SelectItem value="thomas">Thomas Wilson (Home Inspector)</SelectItem>
+                          </SelectOptGroup>
+                          <SelectOptGroup>
+                            <SelectLabel>Recommended REPs</SelectLabel>
+                            <SelectItem value="david">David Rodriguez (Attorney)</SelectItem>
+                            <SelectItem value="jennifer">Jennifer Lee (Appraiser)</SelectItem>
+                          </SelectOptGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
                     <div className="mb-4">
                       <Label htmlFor="outreach-message" className="text-sm mb-2 block">Message</Label>
                       <Textarea 
@@ -1115,7 +1324,38 @@ export default function DashboardManageTab() {
                   </CardContent>
                 </Card>
                 
-                <h3 className="text-sm font-medium text-gray-600 mb-2">Recent Outreach</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-medium text-gray-600">Outreach & Communications</h3>
+                  <div className="flex gap-2">
+                    <Select defaultValue="all">
+                      <SelectTrigger className="h-8 text-xs w-40">
+                        <SelectValue placeholder="Filter by role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Professionals</SelectItem>
+                        <SelectItem value="agent">Real Estate Agents</SelectItem>
+                        <SelectItem value="inspector">Home Inspectors</SelectItem>
+                        <SelectItem value="lender">Mortgage Lenders</SelectItem>
+                        <SelectItem value="attorney">Attorneys</SelectItem>
+                        <SelectItem value="contractor">Contractors</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    <Select defaultValue="all-status">
+                      <SelectTrigger className="h-8 text-xs w-40">
+                        <SelectValue placeholder="Filter by status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all-status">All Status</SelectItem>
+                        <SelectItem value="replied">Replied</SelectItem>
+                        <SelectItem value="sent">Sent</SelectItem>
+                        <SelectItem value="follow-up">Needs Follow-up</SelectItem>
+                        <SelectItem value="scheduled">Meeting Scheduled</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
                 <Card>
                   <CardContent className="p-0">
                     <div className="divide-y divide-gray-100">
@@ -1127,7 +1367,9 @@ export default function DashboardManageTab() {
                           role: 'Property Inspector', 
                           status: 'Sent', 
                           date: '2025-05-01', 
-                          message: 'I would like to schedule an inspection for the property at 123 Main St. Are you available next week?' 
+                          time: '10:25 AM',
+                          message: 'I would like to schedule an inspection for the property at 123 Main St. Are you available next week?',
+                          unread: true
                         },
                         { 
                           id: 2, 
@@ -1135,7 +1377,9 @@ export default function DashboardManageTab() {
                           role: 'Mortgage Specialist', 
                           status: 'Replied', 
                           date: '2025-04-28', 
-                          message: 'Hello! Interested in learning more about financing options for this property.' 
+                          time: '3:47 PM',
+                          message: 'Hello! Interested in learning more about financing options for this property.',
+                          unread: false 
                         },
                         { 
                           id: 3, 
@@ -1143,23 +1387,45 @@ export default function DashboardManageTab() {
                           role: 'Buyer Agent', 
                           status: 'Follow up', 
                           date: '2025-04-25', 
-                          message: 'Looking at making an offer on 123 Main St and would like you to represent me as a buyer agent.' 
+                          time: '9:15 AM',
+                          message: 'Looking at making an offer on 123 Main St and would like you to represent me as a buyer agent.',
+                          unread: false
                         },
+                        {
+                          id: 4,
+                          rep: 'Lisa Thompson',
+                          role: 'Real Estate Attorney',
+                          status: 'Meeting',
+                          date: '2025-04-22',
+                          time: '2:30 PM',
+                          message: 'I have reviewed the purchase agreement and have some suggestions for improvements to protect your interests.',
+                          unread: false
+                        }
                       ].map((outreach) => (
-                        <div key={outreach.id} className="p-4 hover:bg-gray-50">
+                        <div key={outreach.id} className={`p-4 hover:bg-gray-50 cursor-pointer ${outreach.unread ? 'bg-blue-50/30' : ''}`}>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center">
-                              <div className="w-8 h-8 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-2">
-                                <span className="text-[#09261E] font-bold text-xs">{outreach.rep.charAt(0)}</span>
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-2 ${
+                                outreach.unread ? 'bg-[#09261E]' : 'bg-[#09261E]/10'
+                              }`}>
+                                <span className={`font-bold text-xs ${
+                                  outreach.unread ? 'text-white' : 'text-[#09261E]'
+                                }`}>{outreach.rep.charAt(0)}</span>
                               </div>
                               <div>
-                                <h4 className="font-medium text-[#09261E] text-sm">{outreach.rep}</h4>
+                                <div className="flex items-center">
+                                  <h4 className="font-medium text-[#09261E] text-sm">{outreach.rep}</h4>
+                                  {outreach.unread && (
+                                    <div className="w-2 h-2 rounded-full bg-blue-500 ml-2"></div>
+                                  )}
+                                </div>
                                 <p className="text-xs text-gray-500">{outreach.role}</p>
                               </div>
                             </div>
                             <Badge className={
                               outreach.status === 'Replied' ? 'bg-green-500' :
                               outreach.status === 'Follow up' ? 'bg-amber-500' :
+                              outreach.status === 'Meeting' ? 'bg-purple-500' :
                               'bg-gray-400'
                             }>
                               {outreach.status}
@@ -1167,10 +1433,11 @@ export default function DashboardManageTab() {
                           </div>
                           <p className="text-sm text-gray-700 mb-2 line-clamp-2">{outreach.message}</p>
                           <div className="flex justify-between items-center">
-                            <span className="text-xs text-gray-500">{outreach.date}</span>
+                            <span className="text-xs text-gray-500">{outreach.date} at {outreach.time}</span>
                             <Button variant="outline" size="sm" className="h-7 text-xs">
                               {outreach.status === 'Replied' ? 'View Conversation' : 
                                outreach.status === 'Follow up' ? 'Send Reminder' : 
+                               outreach.status === 'Meeting' ? 'Join Meeting' :
                                'Check Status'}
                             </Button>
                           </div>
