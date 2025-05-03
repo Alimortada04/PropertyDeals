@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { Checkbox } from "@/components/ui/checkbox";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { 
@@ -115,7 +116,7 @@ const KanbanPropertyCard = ({ property, onClickProperty, onClickManage, onRemove
             className="w-full h-full object-cover"
           />
           <Badge className={`absolute top-2 right-2 ${getPriorityColor(property.priority)}`}>
-            {property.priority || 'Medium'} Priority
+            {property.priority === 'Medium' ? 'Med' : property.priority || 'Med'}
           </Badge>
         </div>
       </div>
@@ -310,7 +311,7 @@ const PropertyGrid = ({ properties, onClickProperty, onClickManage, onRemove }: 
                   </td>
                   <td className="py-3 px-4">
                     <Badge className={`${getPriorityColor(property.priority)}`}>
-                      {property.priority || 'Medium'}
+                      {property.priority === 'Medium' ? 'Med' : property.priority || 'Med'}
                     </Badge>
                   </td>
                   <td className="py-3 px-4 text-gray-600">
@@ -753,7 +754,7 @@ export default function DashboardManageTab() {
         <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl text-[#09261E]">
-              Property Management
+              Property Roadmap
             </DialogTitle>
             <DialogDescription>
               {activeProperty && localProperties.find(p => p.id === activeProperty)?.address}
@@ -761,19 +762,20 @@ export default function DashboardManageTab() {
           </DialogHeader>
           
           <div className="mt-4">
-            <Tabs defaultValue="progress">
-              <TabsList className="w-full justify-start mb-4">
-                <TabsTrigger value="progress">Progress</TabsTrigger>
-                <TabsTrigger value="documents">Documents</TabsTrigger>
-                <TabsTrigger value="contacts">Contacts</TabsTrigger>
-                <TabsTrigger value="notes">Notes</TabsTrigger>
+            <Tabs defaultValue="progress" className="w-full">
+              <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
+                <TabsTrigger value="progress" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Progress</TabsTrigger>
+                <TabsTrigger value="documents" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Documents</TabsTrigger>
+                <TabsTrigger value="contacts" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Contacts</TabsTrigger>
+                <TabsTrigger value="outreach" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Outreach</TabsTrigger>
+                <TabsTrigger value="notes" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Notes</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="progress" className="mt-0">
+              <TabsContent value="progress" className="mt-4">
                 <div className="space-y-4">
                   <Card>
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">Progress Tracking</CardTitle>
+                      <CardTitle className="text-lg">Pipeline Progress</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-4">
@@ -782,20 +784,45 @@ export default function DashboardManageTab() {
                             <span className="text-sm font-medium">Overall Progress</span>
                             <span className="text-sm">65%</span>
                           </div>
-                          <Progress value={65} className="h-2" />
+                          <Progress value={65} className="h-2 bg-gray-200" />
                         </div>
                         
                         <div className="grid gap-2">
-                          {/* Sample progress steps */}
-                          {['Viewing', 'Offer', 'Accepted', 'Inspection', 'Financing', 'Closing'].map((step, index) => (
-                            <div key={step} className="flex items-center">
-                              <Badge 
-                                className={`mr-3 ${index < 4 ? 'bg-green-500' : index === 4 ? 'bg-amber-500' : 'bg-gray-400'}`}
-                              >
-                                {index < 4 ? 'Done' : index === 4 ? 'In Progress' : 'Pending'}
-                              </Badge>
-                              <span>{step}</span>
-                              {index < 5 && <ChevronRight className="mx-2 h-4 w-4 text-gray-400" />}
+                          {/* Pipeline stages with checkable tasks */}
+                          {[
+                            { stage: 'Favorited', tasks: ['Save property details', 'Research neighborhood', 'Calculate initial numbers'] },
+                            { stage: 'Contacted', tasks: ['Schedule first call', 'Request property details', 'Prepare questions'] },
+                            { stage: 'Offer Made', tasks: ['Draft offer', 'Submit paperwork', 'Follow up with agent'] },
+                            { stage: 'Pending', tasks: ['Schedule inspection', 'Review disclosures', 'Secure financing'] },
+                            { stage: 'Closing', tasks: ['Final walkthrough', 'Verify wire details', 'Sign closing documents'] }
+                          ].map((stage, stageIndex) => (
+                            <div key={stage.stage} className="mt-2">
+                              <div className="flex items-center mb-1">
+                                <Badge 
+                                  className={`mr-3 ${stageIndex < 3 ? 'bg-green-500' : stageIndex === 3 ? 'bg-green-500' : 'bg-gray-400'}`}
+                                >
+                                  {stageIndex < 3 ? 'Completed' : stageIndex === 3 ? 'In Progress' : 'Upcoming'}
+                                </Badge>
+                                <span className="font-medium">{stage.stage}</span>
+                              </div>
+                              
+                              <div className="ml-8 mt-1">
+                                {stage.tasks.map((task, taskIndex) => (
+                                  <div key={task} className="flex items-center my-1">
+                                    <Checkbox 
+                                      id={`task-${stageIndex}-${taskIndex}`} 
+                                      className="mr-2"
+                                      defaultChecked={stageIndex < 3 || (stageIndex === 3 && taskIndex < 2)}
+                                    />
+                                    <label 
+                                      htmlFor={`task-${stageIndex}-${taskIndex}`}
+                                      className={`text-sm ${(stageIndex < 3 || (stageIndex === 3 && taskIndex < 2)) ? 'line-through text-gray-500' : ''}`}
+                                    >
+                                      {task}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           ))}
                         </div>
@@ -805,29 +832,30 @@ export default function DashboardManageTab() {
                   
                   <Card>
                     <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">Upcoming Tasks</CardTitle>
+                      <CardTitle className="text-lg">Upcoming Events</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-3">
-                        {/* Sample tasks */}
+                        {/* Sample events */}
                         {[
-                          { title: 'Final walkthrough', date: '2025-05-10', status: 'pending' },
-                          { title: 'Review closing documents', date: '2025-05-12', status: 'pending' },
-                          { title: 'Wire transfer for closing', date: '2025-05-15', status: 'pending' }
-                        ].map(task => (
-                          <div key={task.title} className="flex items-center justify-between p-2 border border-gray-100 rounded-md">
+                          { title: 'Final walkthrough', date: '2025-05-10', time: '10:00 AM', location: 'Property Address' },
+                          { title: 'Closing appointment', date: '2025-05-15', time: '2:00 PM', location: 'Title Company Office' },
+                          { title: 'Key handover', date: '2025-05-15', time: '4:30 PM', location: 'Property Address' }
+                        ].map(event => (
+                          <div key={event.title} className="flex items-center justify-between p-3 border border-gray-100 rounded-md hover:bg-gray-50">
                             <div className="flex items-center">
-                              <div className="w-8 h-8 rounded-full bg-[#EAF2EF] flex items-center justify-center mr-3">
-                                <Clock className="h-4 w-4 text-[#09261E]" />
+                              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mr-3">
+                                <Calendar className="h-4 w-4 text-[#09261E]" />
                               </div>
                               <div>
-                                <p className="font-medium text-sm">{task.title}</p>
-                                <p className="text-xs text-gray-500">Due: {task.date}</p>
+                                <p className="font-medium text-sm">{event.title}</p>
+                                <p className="text-xs text-gray-500">{event.date} • {event.time}</p>
+                                <p className="text-xs text-gray-500">{event.location}</p>
                               </div>
                             </div>
-                            <Badge variant="outline" className="text-amber-500 border-amber-500">
-                              Pending
-                            </Badge>
+                            <Button variant="outline" size="sm" className="h-8">
+                              Add to Calendar
+                            </Button>
                           </div>
                         ))}
                       </div>
@@ -836,12 +864,62 @@ export default function DashboardManageTab() {
                 </div>
               </TabsContent>
               
-              <TabsContent value="documents" className="mt-0">
+              <TabsContent value="documents" className="mt-4">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-semibold text-[#09261E]">Property Documents</h3>
-                  <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
-                    Upload Document
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
+                        Upload Document
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Upload Document</DialogTitle>
+                        <DialogDescription>
+                          Upload your property-related documents here. Supported formats: PDF, DOCX, JPG, PNG.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50">
+                          <FileText className="h-10 w-10 text-gray-400 mx-auto mb-2" />
+                          <p className="text-sm text-gray-600 mb-1">Drag and drop your file here, or click to browse</p>
+                          <p className="text-xs text-gray-500">Maximum file size: 25MB</p>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="grid grid-cols-4 gap-4">
+                            <div className="col-span-4 sm:col-span-2">
+                              <Label htmlFor="document-type">Document Type</Label>
+                              <Select>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="purchase">Purchase Agreement</SelectItem>
+                                  <SelectItem value="inspection">Inspection Report</SelectItem>
+                                  <SelectItem value="loan">Loan Documents</SelectItem>
+                                  <SelectItem value="title">Title Documents</SelectItem>
+                                  <SelectItem value="other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="col-span-4 sm:col-span-2">
+                              <Label htmlFor="document-date">Document Date</Label>
+                              <Input type="date" id="document-date" />
+                            </div>
+                          </div>
+                          <div>
+                            <Label htmlFor="document-description">Description (Optional)</Label>
+                            <Textarea id="document-description" rows={3} placeholder="Add notes about this document" />
+                          </div>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline">Cancel</Button>
+                        <Button>Upload Document</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <Card>
@@ -865,7 +943,7 @@ export default function DashboardManageTab() {
                           <div className="flex items-center">
                             <Badge className={`mr-3 ${
                               doc.status === 'Signed' || doc.status === 'Completed' ? 'bg-green-500' :
-                              doc.status === 'Pending' ? 'bg-amber-500' :
+                              doc.status === 'Pending' ? 'bg-gray-400' :
                               'bg-blue-500'
                             }`}>
                               {doc.status}
@@ -881,12 +959,65 @@ export default function DashboardManageTab() {
                 </Card>
               </TabsContent>
               
-              <TabsContent value="contacts" className="mt-0">
+              <TabsContent value="contacts" className="mt-4">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-semibold text-[#09261E]">Property Contacts</h3>
-                  <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
-                    Add Contact
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
+                        Add Contact
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                      <DialogHeader>
+                        <DialogTitle>Add Property Contact</DialogTitle>
+                        <DialogDescription>
+                          Add professionals involved in this property transaction.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="col-span-2 sm:col-span-1">
+                            <Label htmlFor="contact-name">Full Name</Label>
+                            <Input id="contact-name" placeholder="John Smith" />
+                          </div>
+                          <div className="col-span-2 sm:col-span-1">
+                            <Label htmlFor="contact-role">Role</Label>
+                            <Select>
+                              <SelectTrigger id="contact-role">
+                                <SelectValue placeholder="Select role" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="agent">Seller Agent</SelectItem>
+                                <SelectItem value="buyer-agent">Buyer Agent</SelectItem>
+                                <SelectItem value="loan">Loan Officer</SelectItem>
+                                <SelectItem value="inspector">Inspector</SelectItem>
+                                <SelectItem value="title">Title Company</SelectItem>
+                                <SelectItem value="attorney">Attorney</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="col-span-2 sm:col-span-1">
+                            <Label htmlFor="contact-phone">Phone</Label>
+                            <Input id="contact-phone" placeholder="(555) 123-4567" />
+                          </div>
+                          <div className="col-span-2 sm:col-span-1">
+                            <Label htmlFor="contact-email">Email</Label>
+                            <Input id="contact-email" placeholder="john@example.com" />
+                          </div>
+                          <div className="col-span-2">
+                            <Label htmlFor="contact-notes">Notes (Optional)</Label>
+                            <Textarea id="contact-notes" rows={3} placeholder="Add notes about this contact" />
+                          </div>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="outline">Cancel</Button>
+                        <Button>Add Contact</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
                 
                 <Card>
@@ -907,13 +1038,14 @@ export default function DashboardManageTab() {
                             <div>
                               <h4 className="font-medium text-[#09261E] text-sm">{contact.name}</h4>
                               <p className="text-xs text-gray-500">{contact.role}</p>
+                              <p className="text-xs text-gray-500">{contact.email}</p>
                             </div>
                           </div>
                           <div className="flex space-x-2">
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-600">
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-gray-600">
                               <Phone className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-gray-600">
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-gray-600">
                               <MessageSquare className="h-4 w-4" />
                             </Button>
                           </div>
@@ -924,19 +1056,155 @@ export default function DashboardManageTab() {
                 </Card>
               </TabsContent>
               
-              <TabsContent value="notes" className="mt-0">
+              <TabsContent value="outreach" className="mt-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-semibold text-[#09261E]">Professional Outreach</h3>
+                  <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
+                    Find REP
+                  </Button>
+                </div>
+                
+                <Card className="mb-4">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Send Property-Specific Outreach</CardTitle>
+                    <CardDescription>
+                      Connect with real estate professionals about this specific property
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="mb-4">
+                      <Label htmlFor="outreach-message" className="text-sm mb-2 block">Message</Label>
+                      <Textarea 
+                        id="outreach-message" 
+                        className="min-h-[120px]" 
+                        placeholder="Hi, I'm interested in this property at 123 Main St and wanted to connect about the inspection details..." 
+                      />
+                    </div>
+                    <div className="flex justify-end">
+                      <Button size="sm">Send Message</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <h3 className="text-sm font-medium text-gray-600 mb-2">Recent Outreach</h3>
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="divide-y divide-gray-100">
+                      {/* Sample outreach */}
+                      {[
+                        { 
+                          id: 1, 
+                          rep: 'James Wilson', 
+                          role: 'Property Inspector', 
+                          status: 'Sent', 
+                          date: '2025-05-01', 
+                          message: 'I would like to schedule an inspection for the property at 123 Main St. Are you available next week?' 
+                        },
+                        { 
+                          id: 2, 
+                          rep: 'Emily Rodriguez', 
+                          role: 'Mortgage Specialist', 
+                          status: 'Replied', 
+                          date: '2025-04-28', 
+                          message: 'Hello! Interested in learning more about financing options for this property.' 
+                        },
+                        { 
+                          id: 3, 
+                          rep: 'David Chang', 
+                          role: 'Buyer Agent', 
+                          status: 'Follow up', 
+                          date: '2025-04-25', 
+                          message: 'Looking at making an offer on 123 Main St and would like you to represent me as a buyer agent.' 
+                        },
+                      ].map((outreach) => (
+                        <div key={outreach.id} className="p-4 hover:bg-gray-50">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center">
+                              <div className="w-8 h-8 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-2">
+                                <span className="text-[#09261E] font-bold text-xs">{outreach.rep.charAt(0)}</span>
+                              </div>
+                              <div>
+                                <h4 className="font-medium text-[#09261E] text-sm">{outreach.rep}</h4>
+                                <p className="text-xs text-gray-500">{outreach.role}</p>
+                              </div>
+                            </div>
+                            <Badge className={
+                              outreach.status === 'Replied' ? 'bg-green-500' :
+                              outreach.status === 'Follow up' ? 'bg-amber-500' :
+                              'bg-gray-400'
+                            }>
+                              {outreach.status}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-gray-700 mb-2 line-clamp-2">{outreach.message}</p>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500">{outreach.date}</span>
+                            <Button variant="outline" size="sm" className="h-7 text-xs">
+                              {outreach.status === 'Replied' ? 'View Conversation' : 
+                               outreach.status === 'Follow up' ? 'Send Reminder' : 
+                               'Check Status'}
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              
+              <TabsContent value="notes" className="mt-4">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-semibold text-[#09261E]">Property Notes</h3>
                 </div>
                 
-                <Textarea 
-                  placeholder="Add your notes about this property..."
-                  className="mb-4 min-h-32"
-                />
+                <Card className="mb-4">
+                  <CardContent className="p-4">
+                    <Textarea 
+                      placeholder="Add your notes about this property..."
+                      className="mb-4 min-h-20"
+                    />
+                    
+                    <div className="flex justify-end">
+                      <Button className="bg-[#09261E] hover:bg-[#135341]">
+                        Add Note
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
                 
-                <Button className="bg-[#09261E] hover:bg-[#135341]">
-                  Save Notes
-                </Button>
+                <div className="space-y-3">
+                  {/* Sample notes */}
+                  {[
+                    { 
+                      id: 1, 
+                      text: 'Seller indicated they might be flexible on the closing timeline if we can guarantee a solid offer.', 
+                      date: '2025-05-01 09:30 AM', 
+                      author: 'You'
+                    },
+                    { 
+                      id: 2, 
+                      text: 'The property has a newly replaced roof (2024) and HVAC system (2023). This should reduce maintenance costs for the first few years.', 
+                      date: '2025-04-28 03:15 PM', 
+                      author: 'You'
+                    },
+                    { 
+                      id: 3, 
+                      text: 'Neighborhood has 3 comparable sales in the last 6 months, averaging $285/sqft. This property is listed at $275/sqft which seems reasonable.', 
+                      date: '2025-04-25 11:45 AM', 
+                      author: 'You'
+                    },
+                  ].map((note) => (
+                    <Card key={note.id}>
+                      <CardContent className="p-4">
+                        <p className="text-sm mb-3">{note.text}</p>
+                        <div className="flex justify-between text-xs text-gray-500">
+                          <span>{note.author}</span>
+                          <span>{note.date}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </TabsContent>
             </Tabs>
           </div>
