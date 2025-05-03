@@ -1665,22 +1665,32 @@ export default function DashboardManageTab() {
               <TabsContent value="overview" className="mt-0">
                 {activeProject && (
                   <div className="space-y-4">
-                    {(activeProject.progress < activeProject.expectedProgress || activeProject.budget.spent > activeProject.budget.total) && (
-                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3 mb-4">
-                        <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
-                        <div>
-                          <h4 className="font-medium text-amber-800 mb-1">Project Alert</h4>
-                          <div className="text-sm text-amber-700 space-y-1">
-                            {activeProject.progress < activeProject.expectedProgress && (
-                              <p>This project is behind schedule. Current progress: {activeProject.progress}% (Expected: {activeProject.expectedProgress}%)</p>
-                            )}
-                            {activeProject.budget.spent > activeProject.budget.total && (
-                              <p>This project is over budget by ${(activeProject.budget.spent - activeProject.budget.total).toLocaleString()}</p>
-                            )}
+                    {/* Project Alert for schedule or budget issues */}
+                    {(() => {
+                      const project = projects.find(p => p.id === activeProject);
+                      const isBehindSchedule = project && project.timeline.currentProgress < 50; // Example threshold
+                      const isOverBudget = project && project.budget.actual > project.budget.estimated;
+                      
+                      if (isBehindSchedule || isOverBudget) {
+                        return (
+                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3 mb-4">
+                            <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+                            <div>
+                              <h4 className="font-medium text-amber-800 mb-1">Project Alert</h4>
+                              <div className="text-sm text-amber-700 space-y-1">
+                                {isBehindSchedule && (
+                                  <p>This project is behind schedule. Current progress: {project?.timeline.currentProgress}% (Expected: 50%)</p>
+                                )}
+                                {isOverBudget && (
+                                  <p>This project is over budget by ${(project ? project.budget.actual - project.budget.estimated : 0).toLocaleString()}</p>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    )}
+                        );
+                      }
+                      return null;
+                    })()}
                     <Card>
                       <CardHeader className="pb-2">
                         <CardTitle className="text-lg">Project Timeline</CardTitle>
@@ -1777,7 +1787,23 @@ export default function DashboardManageTab() {
               
               <TabsContent value="tasks" className="mt-0">
                 <div className="mb-4 flex justify-between items-center">
-                  <h3 className="font-semibold text-[#09261E]">Task Management</h3>
+                  <div className="flex items-center gap-3">
+                    <h3 className="font-semibold text-[#09261E]">Task Management</h3>
+                    <Select defaultValue="default" onValueChange={(value) => {
+                      // Implement task sorting logic here
+                      console.log('Sorting tasks by:', value);
+                    }}>
+                      <SelectTrigger className="h-8 w-[140px]">
+                        <SelectValue placeholder="Sort by" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="default">Default Order</SelectItem>
+                        <SelectItem value="due_date">Due Date</SelectItem>
+                        <SelectItem value="priority">Priority</SelectItem>
+                        <SelectItem value="status">Status</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
@@ -2049,7 +2075,17 @@ export default function DashboardManageTab() {
                         <div key={expense.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
                           <div>
                             <p className="font-medium">{expense.vendor}</p>
-                            <p className="text-xs text-gray-500">{expense.date} • {expense.category}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs text-gray-500">{expense.date}</span>
+                              <Badge className={`text-xs px-2 py-0 h-5 ${
+                                expense.category === 'Labor' ? 'bg-blue-100 text-blue-800 hover:bg-blue-100' : 
+                                expense.category === 'Materials' ? 'bg-green-100 text-green-800 hover:bg-green-100' : 
+                                expense.category === 'Permits' ? 'bg-purple-100 text-purple-800 hover:bg-purple-100' : 
+                                'bg-gray-100 text-gray-800 hover:bg-gray-100'
+                              }`}>
+                                {expense.category}
+                              </Badge>
+                            </div>
                           </div>
                           <div className="font-medium">${expense.amount.toLocaleString()}</div>
                         </div>
@@ -2136,6 +2172,23 @@ export default function DashboardManageTab() {
                                     <span className="text-xs text-gray-500">{update.date}</span>
                                   </div>
                                   <p className="text-sm text-gray-700 mt-1">{update.text}</p>
+                                  <div className="flex gap-2 mt-2">
+                                    {update.text.toLowerCase().includes('budget') && (
+                                      <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100 text-xs">
+                                        Budget Impact
+                                      </Badge>
+                                    )}
+                                    {update.text.toLowerCase().includes('milestone') && (
+                                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs">
+                                        Milestone
+                                      </Badge>
+                                    )}
+                                    {update.text.toLowerCase().includes('delay') && (
+                                      <Badge className="bg-red-100 text-red-800 hover:bg-red-100 text-xs">
+                                        Schedule Delay
+                                      </Badge>
+                                    )}
+                                  </div>
                                   {update.image && (
                                     <img 
                                       src={update.image} 
