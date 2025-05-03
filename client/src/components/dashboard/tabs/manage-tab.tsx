@@ -15,40 +15,43 @@ import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { 
-  Home, 
-  Phone, 
-  FileText, 
-  Calendar, 
-  CheckSquare, 
-  Clock, 
-  Users, 
-  Wrench,
-  ChevronRight,
-  ArrowRight,
-  ExternalLink,
-  ClipboardList,
+import {
   AlertCircle,
-  CheckCircle2,
-  Clock3,
-  XCircle,
-  MessageSquare,
-  PlusCircle,
-  Trash2,
-  MoreHorizontal,
-  Edit2,
-  Eye,
-  Table,
-  LayoutGrid,
-  Filter,
+  ArrowRight,
   ArrowUpDown,
-  DollarSign,
-  Building,
+  Building, 
   BriefcaseBusiness,
+  Calendar,
+  CheckCircle2,
+  CheckSquare,
+  ChevronRight,
+  Clock,
+  Clock3,
   ClipboardCheck,
+  ClipboardList,
+  DollarSign,
   Download,
+  Edit2,
+  ExternalLink,
+  Eye,
+  FileText,
+  Filter,
+  Home,
+  LayoutGrid,
+  Mail,
+  MessageSquare,
+  MoreHorizontal,
+  Phone,
+  PlusCircle,
   Search,
-  Star
+  Send,
+  Star,
+  Table,
+  Trash2,
+  User,
+  Users,
+  Wrench,
+  XCircle
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
@@ -1601,6 +1604,12 @@ export default function DashboardManageTab() {
                     Team
                   </span>
                 </TabsTrigger>
+                <TabsTrigger value="chat">
+                  <span className="flex items-center">
+                    <MessageSquare className="h-4 w-4 mr-1.5" />
+                    Chat
+                  </span>
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="overview" className="mt-0">
@@ -1885,7 +1894,10 @@ export default function DashboardManageTab() {
                   </Button>
                 </div>
                 
-                <Card>
+                <Card className="mb-4">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Roles & Responsibilities</CardTitle>
+                  </CardHeader>
                   <CardContent className="p-0">
                     <div className="divide-y divide-gray-100">
                       {/* Sample team members */}
@@ -1895,7 +1907,7 @@ export default function DashboardManageTab() {
                         { id: 3, name: 'Mike Williams', role: 'Contractor', email: 'mike@example.com', permissions: 'Viewer' },
                         { id: 4, name: 'Lisa Brown', role: 'Client', email: 'lisa@example.com', permissions: 'Viewer' },
                       ].map(member => (
-                        <div key={member.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
+                        <div key={member.id} className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
                           <div className="flex items-center">
                             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
                               <Users className="h-5 w-5 text-gray-500" />
@@ -1905,15 +1917,49 @@ export default function DashboardManageTab() {
                               <p className="text-xs text-gray-500">{member.role} • {member.email}</p>
                             </div>
                           </div>
-                          <Select defaultValue={member.permissions}>
-                            <SelectTrigger className="w-28 h-8">
-                              <SelectValue placeholder="Permissions" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Editor">Editor</SelectItem>
-                              <SelectItem value="Viewer">Viewer</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <div className="flex items-center gap-2">
+                            <Select defaultValue={member.permissions}>
+                              <SelectTrigger className="w-28 h-8">
+                                <SelectValue placeholder="Permissions" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Editor">Editor</SelectItem>
+                                <SelectItem value="Viewer">Viewer</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Team Activity</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {[
+                        { name: 'John Smith', action: 'updated task', item: 'Verify wire details', time: '2 hours ago' },
+                        { name: 'Sarah Johnson', action: 'uploaded document', item: 'Final design mockups.pdf', time: 'Yesterday' },
+                        { name: 'Mike Williams', action: 'commented on', item: 'Kitchen plumbing issues', time: '2 days ago' },
+                      ].map((activity, index) => (
+                        <div key={index} className="flex items-start p-2 rounded-md hover:bg-gray-50 transition-colors">
+                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
+                            <Users className="h-4 w-4 text-gray-500" />
+                          </div>
+                          <div>
+                            <p className="text-sm">
+                              <span className="font-medium">{activity.name}</span>
+                              <span className="text-gray-600"> {activity.action} </span>
+                              <span className="text-[#09261E] font-medium">{activity.item}</span>
+                            </p>
+                            <p className="text-xs text-gray-500">{activity.time}</p>
+                          </div>
                         </div>
                       ))}
                     </div>
