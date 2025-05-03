@@ -20,6 +20,11 @@
     transition-property: height;
     transition-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
   }
+  
+  /* Progress bar variations */
+  .progress-value-warning .w-full {
+    @apply bg-[#09261E] !important; /* Use the dark green for all progress bars, even warning ones */
+  }
 }
 
 /* Custom scroll behavior */
@@ -42,11 +47,11 @@ html {
   
   /* Custom Progress Bar styles */
   .progress {
-    @apply bg-gray-200; /* Default gray background */
+    @apply bg-gray-200; /* Light gray background */
   }
   
   .progress-value {
-    @apply bg-green-500; /* Green progress indicator */
+    @apply bg-[#09261E]; /* Primary dark green indicator */
   }
 }
 
