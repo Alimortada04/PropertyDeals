@@ -458,7 +458,7 @@ export default function AnalyticsTab() {
                 <div className="flex justify-between items-center">
                   <div>
                     <CardTitle className="text-lg">Property Leaderboard</CardTitle>
-                    <CardDescription>Top and bottom performers</CardDescription>
+                    <CardDescription>Top performing properties</CardDescription>
                   </div>
                   <Select value={leaderboardMetric} onValueChange={setLeaderboardMetric}>
                     <SelectTrigger className="w-[160px] h-8">
@@ -603,7 +603,7 @@ export default function AnalyticsTab() {
                 <DialogDescription>Complete portfolio breakdown</DialogDescription>
               </DialogHeader>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                {portfolioProperties.map(property => (
+                {sortedProperties.map(property => (
                   <Card key={property.id} className="overflow-hidden">
                     <CardHeader className="p-4 pb-2">
                       <div className="flex justify-between items-start">
@@ -755,7 +755,7 @@ export default function AnalyticsTab() {
                       <ArrowRight className="h-4 w-4 ml-1" />
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[800px]">
+                  <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>{property.nickname}</DialogTitle>
                       <DialogDescription>{property.address}</DialogDescription>
