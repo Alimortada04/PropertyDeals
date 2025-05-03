@@ -344,88 +344,76 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         <div className="overflow-x-auto pb-4 hide-scrollbar">
           <div className="flex space-x-4">
             {/* Follow-up recommendation */}
-            <Card className="w-96 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => setLocation("/inbox")}>
+            <Card 
+              className="w-96 flex-shrink-0 hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer" 
+              onClick={() => setLocation("/inbox")}
+            >
               <CardContent className="p-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="flex flex-col items-center">
+                  <Badge className="self-end mb-2 bg-red-500">High Priority</Badge>
+                  <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-3">
                     <MessageSquare className="h-6 w-6 text-green-600" />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-md text-[#09261E]">Follow up with seller</h4>
-                      <Badge className="ml-2 bg-red-500">High Priority</Badge>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Sarah Johnson sent you a message about 123 Main Street property</p>
-                    <Button variant="outline" size="sm" className="h-8 hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
-                      <MessageSquare className="h-3.5 w-3.5 mr-2" />
-                      Send Message
-                    </Button>
+                  <div className="text-center">
+                    <h4 className="font-medium text-md text-[#09261E] mb-1">Follow up with seller</h4>
+                    <p className="text-sm text-gray-600">Sarah Johnson sent you a message about 123 Main Street property</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
             {/* Check recently favorited property */}
-            <Card className="w-96 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => setLocation("/properties/2")}>
+            <Card 
+              className="w-96 flex-shrink-0 hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer" 
+              onClick={() => setLocation("/properties/2")}
+            >
               <CardContent className="p-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="flex flex-col items-center">
+                  <Badge className="self-end mb-2 bg-blue-500">New</Badge>
+                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-3">
                     <Star className="h-6 w-6 text-blue-600" />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-md text-[#09261E]">View favorited property</h4>
-                      <Badge className="ml-2 bg-blue-500">New</Badge>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Check the new property at 456 Park Avenue you favorited yesterday</p>
-                    <Button variant="outline" size="sm" className="h-8 hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
-                      <ExternalLink className="h-3.5 w-3.5 mr-2" />
-                      View Property
-                    </Button>
+                  <div className="text-center">
+                    <h4 className="font-medium text-md text-[#09261E] mb-1">View favorited property</h4>
+                    <p className="text-sm text-gray-600">Check the new property at 456 Park Avenue you favorited yesterday</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
             {/* Project management updates */}
-            <Card className="w-96 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => {setLocation("/dashboard?tab=manage")}}>
+            <Card 
+              className="w-96 flex-shrink-0 hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer" 
+              onClick={() => {setLocation("/dashboard?tab=manage")}}
+            >
               <CardContent className="p-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="flex flex-col items-center">
+                  <Badge className="self-end mb-2 bg-amber-500">Due Soon</Badge>
+                  <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-3">
                     <CheckSquare className="h-6 w-6 text-purple-600" />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-md text-[#09261E]">Project updates needed</h4>
-                      <Badge className="ml-2 bg-amber-500">Due Soon</Badge>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Your Riverside Renovation project has 3 tasks due this week</p>
-                    <Button variant="outline" size="sm" className="h-8 hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
-                      <ActivitySquare className="h-3.5 w-3.5 mr-2" />
-                      Manage Project
-                    </Button>
+                  <div className="text-center">
+                    <h4 className="font-medium text-md text-[#09261E] mb-1">Project updates needed</h4>
+                    <p className="text-sm text-gray-600">Your Riverside Renovation project has 3 tasks due this week</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
             {/* Upcoming event reminder */}
-            <Card className="w-96 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => setLocation("/calendar")}>
+            <Card 
+              className="w-96 flex-shrink-0 hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer" 
+              onClick={() => setLocation("/calendar")}
+            >
               <CardContent className="p-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="flex flex-col items-center">
+                  <Badge className="self-end mb-2 bg-green-500">Tomorrow</Badge>
+                  <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mb-3">
                     <Calendar className="h-6 w-6 text-amber-600" />
                   </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-1">
-                      <h4 className="font-medium text-md text-[#09261E]">Upcoming property walkthrough</h4>
-                      <Badge className="ml-2 bg-green-500">Tomorrow</Badge>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-3">Property walkthrough at 123 Main Street scheduled for tomorrow at 10:00 AM</p>
-                    <Button variant="outline" size="sm" className="h-8 hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
-                      <Calendar className="h-3.5 w-3.5 mr-2" />
-                      Add to Calendar
-                    </Button>
+                  <div className="text-center">
+                    <h4 className="font-medium text-md text-[#09261E] mb-1">Upcoming property walkthrough</h4>
+                    <p className="text-sm text-gray-600">Property walkthrough at 123 Main Street scheduled for tomorrow at 10:00 AM</p>
                   </div>
                 </div>
               </CardContent>
