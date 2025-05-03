@@ -885,7 +885,7 @@ export default function DashboardManageTab() {
                   <h3 className="font-semibold text-[#09261E]">Property Documents</h3>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
+                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
                         Upload Document
                       </Button>
                     </DialogTrigger>
@@ -975,8 +975,7 @@ export default function DashboardManageTab() {
                           <div className="flex items-center">
                             <Badge className={`mr-3 ${
                               doc.status === 'Signed' || doc.status === 'Completed' ? 'bg-green-500' :
-                              doc.status === 'Pending' ? 'bg-gray-400' :
-                              'bg-blue-500'
+                              'bg-gray-400'
                             }`}>
                               {doc.status}
                             </Badge>
@@ -996,7 +995,7 @@ export default function DashboardManageTab() {
                   <h3 className="font-semibold text-[#09261E]">Property Contacts</h3>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
+                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
                         Add Contact
                       </Button>
                     </DialogTrigger>
@@ -1159,7 +1158,7 @@ export default function DashboardManageTab() {
                   <h3 className="font-semibold text-[#09261E]">Professional Outreach</h3>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-[#135341]">
+                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
                         Find REP
                       </Button>
                     </DialogTrigger>
@@ -1286,7 +1285,9 @@ export default function DashboardManageTab() {
                       />
                     </div>
                     <div className="flex justify-end">
-                      <Button size="sm">Send Message</Button>
+                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
+                        Send Message
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -1391,8 +1392,8 @@ export default function DashboardManageTab() {
                             </div>
                             <Badge className={
                               outreach.status === 'Replied' ? 'bg-green-500' :
-                              outreach.status === 'Follow up' ? 'bg-amber-500' :
-                              outreach.status === 'Meeting' ? 'bg-purple-500' :
+                              outreach.status === 'Follow up' ? 'bg-gray-400' :
+                              outreach.status === 'Meeting' ? 'bg-gray-400' :
                               'bg-gray-400'
                             }>
                               {outreach.status}
@@ -1401,7 +1402,11 @@ export default function DashboardManageTab() {
                           <p className="text-sm text-gray-700 mb-2 line-clamp-2">{outreach.message}</p>
                           <div className="flex justify-between items-center">
                             <span className="text-xs text-gray-500">{outreach.date} at {outreach.time}</span>
-                            <Button variant="outline" size="sm" className="h-7 text-xs">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="h-7 text-xs border-[#09261E] text-[#09261E] hover:bg-gray-100 data-[state=open]:bg-[#09261E] data-[state=open]:text-white"
+                            >
                               {outreach.status === 'Replied' ? 'View Conversation' : 
                                outreach.status === 'Follow up' ? 'Send Reminder' : 
                                outreach.status === 'Meeting' ? 'Join Meeting' :
@@ -1428,7 +1433,7 @@ export default function DashboardManageTab() {
                     />
                     
                     <div className="flex justify-end">
-                      <Button className="bg-[#09261E] hover:bg-[#135341]">
+                      <Button className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
                         Add Note
                       </Button>
                     </div>

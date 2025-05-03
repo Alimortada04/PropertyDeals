@@ -39,6 +39,15 @@ html {
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading font-semibold;
   }
+  
+  /* Custom Progress Bar styles */
+  .progress {
+    @apply bg-gray-200; /* Default gray background */
+  }
+  
+  .progress-value {
+    @apply bg-green-500; /* Green progress indicator */
+  }
 }
 
 @layer components {
