@@ -300,178 +300,135 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         </div>
       </div>
       
-      {/* Recent Activity */}
+      {/* Jump Back In Section */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-[#09261E]">Recent Activity</h3>
+          <h3 className="text-lg font-semibold text-[#09261E]">Jump Back In</h3>
           
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="ghost" className="text-[#09261E] p-0 h-auto hover:bg-transparent hover:text-[#135341]">
-                View All <ArrowRight className="ml-1 h-4 w-4" />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" size="sm" className="flex items-center gap-1">
+                All Activity <ChevronDown className="h-4 w-4 ml-1" />
               </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Recent Activity</DialogTitle>
-              </DialogHeader>
-              <div className="divide-y divide-gray-100">
-                <div className="p-4 flex items-start">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3 flex-shrink-0">
-                    <Check className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-[#09261E]">Property viewing scheduled</p>
-                    <p className="text-sm text-gray-600">123 Main Street scheduled for May 5, 2025</p>
-                    <p className="text-xs text-gray-400 mt-1">Today at 10:34 AM</p>
-                  </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-56 p-2">
+              <div className="space-y-1">
+                <Button variant="ghost" size="sm" className="w-full justify-start">
+                  All Activity
+                </Button>
+                <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <Home className="h-3.5 w-3.5 mr-2" />
+                  Properties
+                </Button>
+                <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <Calendar className="h-3.5 w-3.5 mr-2" />
+                  Events
+                </Button>
+                <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <MessageSquare className="h-3.5 w-3.5 mr-2" />
+                  Messages
+                </Button>
+                <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <BarChart2 className="h-3.5 w-3.5 mr-2" />
+                  Analytics
+                </Button>
+                <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <UserSearch className="h-3.5 w-3.5 mr-2" />
+                  Network
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          {/* Follow-up recommendation */}
+          <Card className="hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => setLocation("/inbox")}>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-1">
+                  <MessageSquare className="h-6 w-6 text-green-600" />
                 </div>
-                
-                <div className="p-4 flex items-start">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
-                    <Bell className="h-5 w-5 text-blue-600" />
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h4 className="font-medium text-md text-[#09261E]">Follow up with seller</h4>
+                    <Badge className="ml-2 bg-red-500">High Priority</Badge>
                   </div>
-                  <div>
-                    <p className="font-medium text-[#09261E]">New property match</p>
-                    <p className="text-sm text-gray-600">New listing matches your saved search criteria</p>
-                    <p className="text-xs text-gray-400 mt-1">Yesterday at 4:15 PM</p>
-                  </div>
-                </div>
-                
-                <div className="p-4 flex items-start">
-                  <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3 flex-shrink-0">
-                    <Star className="h-5 w-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-[#09261E]">Added property to favorites</p>
-                    <p className="text-sm text-gray-600">456 Oak Drive added to your favorites</p>
-                    <p className="text-xs text-gray-400 mt-1">April 28, 2025</p>
-                  </div>
-                </div>
-                
-                <div className="p-4 flex items-start">
-                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mr-3 flex-shrink-0">
-                    <Calendar className="h-5 w-5 text-amber-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-[#09261E]">Reminder created</p>
-                    <p className="text-sm text-gray-600">Follow-up with agent about financing options</p>
-                    <p className="text-xs text-gray-400 mt-1">April 26, 2025</p>
-                  </div>
+                  <p className="text-sm text-gray-600 mb-3">Sarah Johnson sent you a message about 123 Main Street property</p>
+                  <Button variant="outline" size="sm" className="h-8">
+                    <MessageSquare className="h-3.5 w-3.5 mr-2" />
+                    Send Message
+                  </Button>
                 </div>
               </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-        
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-2 hide-scrollbar">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="rounded-full text-sm bg-white hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
-          >
-            All Activity
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="rounded-full text-sm bg-white hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
-          >
-            <Home className="h-3.5 w-3.5 mr-1" />
-            Only Properties
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="rounded-full text-sm bg-white hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
-          >
-            <MessageSquare className="h-3.5 w-3.5 mr-1" />
-            Only Messages
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="rounded-full text-sm bg-white hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white"
-          >
-            <ListTodo className="h-3.5 w-3.5 mr-1" />
-            Only Tasks
-          </Button>
-        </div>
-        
-        <div className="overflow-x-auto pb-4 hide-scrollbar">
-          <div className="flex space-x-4">
-            <Card 
-              className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer"
-              onClick={() => setLocation("/calendar")}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                    <Check className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-[#09261E] text-sm">Property viewing scheduled</p>
-                    <p className="text-xs text-gray-600">123 Main Street for May 5</p>
-                    <p className="text-xs text-gray-400 mt-1">Today</p>
-                  </div>
+            </CardContent>
+          </Card>
+          
+          {/* Check recently favorited property */}
+          <Card className="hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => setLocation("/properties/2")}>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-1">
+                  <Star className="h-6 w-6 text-blue-600" />
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer"
-              onClick={() => setLocation("/properties/recommendations")}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                    <Bell className="h-5 w-5 text-blue-600" />
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h4 className="font-medium text-md text-[#09261E]">View favorited property</h4>
+                    <Badge className="ml-2 bg-blue-500">New</Badge>
                   </div>
-                  <div>
-                    <p className="font-medium text-[#09261E] text-sm">New property match</p>
-                    <p className="text-xs text-gray-600">Matches your search criteria</p>
-                    <p className="text-xs text-gray-400 mt-1">Yesterday</p>
-                  </div>
+                  <p className="text-sm text-gray-600 mb-3">Check the new property at 456 Park Avenue you favorited yesterday</p>
+                  <Button variant="outline" size="sm" className="h-8">
+                    <ExternalLink className="h-3.5 w-3.5 mr-2" />
+                    View Property
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer"
-              onClick={() => setLocation("/properties/saved")}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
-                    <Star className="h-5 w-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-[#09261E] text-sm">Added to favorites</p>
-                    <p className="text-xs text-gray-600">456 Oak Drive</p>
-                    <p className="text-xs text-gray-400 mt-1">April 28</p>
-                  </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Project management updates */}
+          <Card className="hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => {setLocation("/dashboard?tab=manage")}}>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-1">
+                  <CheckSquare className="h-6 w-6 text-purple-600" />
                 </div>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className="w-72 flex-shrink-0 hover:shadow-md transition-all duration-200 cursor-pointer"
-              onClick={() => setLocation("/inbox")}
-            >
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                    <Calendar className="h-5 w-5 text-amber-600" />
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h4 className="font-medium text-md text-[#09261E]">Project updates needed</h4>
+                    <Badge className="ml-2 bg-amber-500">Due Soon</Badge>
                   </div>
-                  <div>
-                    <p className="font-medium text-[#09261E] text-sm">Reminder created</p>
-                    <p className="text-xs text-gray-600">Follow-up with agent</p>
-                    <p className="text-xs text-gray-400 mt-1">April 26</p>
-                  </div>
+                  <p className="text-sm text-gray-600 mb-3">Your Riverside Renovation project has 3 tasks due this week</p>
+                  <Button variant="outline" size="sm" className="h-8">
+                    <ActivitySquare className="h-3.5 w-3.5 mr-2" />
+                    Manage Project
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Upcoming event reminder */}
+          <Card className="hover:shadow-md transition-all duration-200 cursor-pointer" onClick={() => setLocation("/calendar")}>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0 mt-1">
+                  <Calendar className="h-6 w-6 text-amber-600" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-1">
+                    <h4 className="font-medium text-md text-[#09261E]">Upcoming property walkthrough</h4>
+                    <Badge className="ml-2 bg-green-500">Tomorrow</Badge>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-3">Property walkthrough at 123 Main Street scheduled for tomorrow at 10:00 AM</p>
+                  <Button variant="outline" size="sm" className="h-8">
+                    <Calendar className="h-3.5 w-3.5 mr-2" />
+                    Add to Calendar
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
       
