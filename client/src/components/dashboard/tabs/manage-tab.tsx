@@ -1577,42 +1577,42 @@ export default function DashboardManageTab() {
             </div>
           </DialogHeader>
           
-          <div className="mt-4">
+          <div className="mt-2">
             <Tabs defaultValue="overview">
-              <TabsList className="w-full justify-start mb-4">
-                <TabsTrigger value="overview">
+              <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
+                <TabsTrigger value="overview" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
                   <span className="flex items-center">
                     <ClipboardCheck className="h-4 w-4 mr-1.5" />
                     Overview
                   </span>
                 </TabsTrigger>
-                <TabsTrigger value="tasks">
+                <TabsTrigger value="tasks" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
                   <span className="flex items-center">
                     <CheckSquare className="h-4 w-4 mr-1.5" />
                     Tasks
                   </span>
                 </TabsTrigger>
-                <TabsTrigger value="budget">
+                <TabsTrigger value="budget" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
                   <span className="flex items-center">
                     <DollarSign className="h-4 w-4 mr-1.5" />
                     Budget
                   </span>
                 </TabsTrigger>
-                <TabsTrigger value="updates">
+                <TabsTrigger value="updates" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
                   <span className="flex items-center">
                     <MessageSquare className="h-4 w-4 mr-1.5" />
                     Updates
                   </span>
                 </TabsTrigger>
-                <TabsTrigger value="team">
+                <TabsTrigger value="team" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
                   <span className="flex items-center">
                     <Users className="h-4 w-4 mr-1.5" />
                     Team
                   </span>
                 </TabsTrigger>
-                <TabsTrigger value="chat">
+                <TabsTrigger value="chat" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
                   <span className="flex items-center">
-                    <MessageSquare className="h-4 w-4 mr-1.5" />
+                    <MessageCircle className="h-4 w-4 mr-1.5" />
                     Chat
                   </span>
                 </TabsTrigger>
@@ -1974,26 +1974,36 @@ export default function DashboardManageTab() {
               </TabsContent>
               
               <TabsContent value="chat" className="mt-0">
-                <div className="flex flex-col h-[450px]">
-                  <div className="flex-1 overflow-y-auto mb-4 bg-gray-50 p-4 rounded-lg">
-                    <div className="space-y-4">
+                <div className="flex flex-col h-[400px]">
+                  <div className="flex-1 overflow-y-auto mb-4 bg-gray-50 p-3 rounded-lg">
+                    <div className="space-y-3">
                       {/* Chat messages */}
                       {[
-                        { sender: 'John Smith', message: 'Hey team, just wanted to update you all on the kitchen cabinet installation - we\'re on track for completion by Friday.', time: '2 days ago', isMine: false },
-                        { sender: 'Sarah Johnson', message: 'Great! The clients wanted to know if they should schedule the appliance delivery for Monday then?', time: '2 days ago', isMine: false },
-                        { sender: 'You', message: 'Yes, Monday works well. I\'ll be on site to receive the delivery and make sure everything is set up correctly.', time: '2 days ago', isMine: true },
-                        { sender: 'Mike Williams', message: 'Just a heads up, I noticed the backsplash material might be delayed. I\'m following up with the supplier today.', time: 'Yesterday', isMine: false },
-                        { sender: 'You', message: 'Thanks for flagging that Mike. Let me know what they say - we might need to adjust our timeline if there\'s a significant delay.', time: 'Yesterday', isMine: true },
-                        { sender: 'Mike Williams', message: 'Good news - supplier confirmed delivery for Thursday. We\'re still on track.', time: '5 hours ago', isMine: false },
+                        { sender: 'John Smith', avatar: 'JS', message: 'Hey team, just wanted to update you all on the kitchen cabinet installation - we\'re on track for completion by Friday.', time: '2 days ago', isMine: false },
+                        { sender: 'Sarah Johnson', avatar: 'SJ', message: 'Great! The clients wanted to know if they should schedule the appliance delivery for Monday then?', time: '2 days ago', isMine: false },
+                        { sender: 'You', avatar: 'You', message: 'Yes, Monday works well. I\'ll be on site to receive the delivery and make sure everything is set up correctly.', time: '2 days ago', isMine: true },
+                        { sender: 'Mike Williams', avatar: 'MW', message: 'Just a heads up, I noticed the backsplash material might be delayed. I\'m following up with the supplier today.', time: 'Yesterday', isMine: false },
+                        { sender: 'You', avatar: 'You', message: 'Thanks for flagging that Mike. Let me know what they say - we might need to adjust our timeline if there\'s a significant delay.', time: 'Yesterday', isMine: true },
+                        { sender: 'Mike Williams', avatar: 'MW', message: 'Good news - supplier confirmed delivery for Thursday. We\'re still on track.', time: '5 hours ago', isMine: false },
                       ].map((message, index) => (
                         <div key={index} className={`flex ${message.isMine ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[75%] rounded-lg p-3 ${message.isMine ? 'bg-[#09261E] text-white' : 'bg-white border border-gray-200'}`}>
+                          {!message.isMine && (
+                            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2 flex-shrink-0">
+                              <span className="text-xs font-semibold text-gray-600">{message.avatar}</span>
+                            </div>
+                          )}
+                          <div className={`max-w-[70%] rounded-lg p-2.5 ${message.isMine ? 'bg-[#09261E] text-white' : 'bg-white border border-gray-200'}`}>
                             {!message.isMine && (
                               <div className="font-medium text-sm mb-1">{message.sender}</div>
                             )}
                             <p className="text-sm">{message.message}</p>
                             <div className={`text-xs mt-1 ${message.isMine ? 'text-gray-300' : 'text-gray-500'}`}>{message.time}</div>
                           </div>
+                          {message.isMine && (
+                            <div className="w-8 h-8 rounded-full bg-[#09261E] flex items-center justify-center ml-2 flex-shrink-0">
+                              <span className="text-xs font-semibold text-white">You</span>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -2003,7 +2013,7 @@ export default function DashboardManageTab() {
                     <Textarea 
                       placeholder="Type your message here..." 
                       className="pr-10 resize-none"
-                      rows={3}
+                      rows={2}
                     />
                     <Button
                       size="icon"
