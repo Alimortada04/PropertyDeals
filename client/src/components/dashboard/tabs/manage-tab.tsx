@@ -38,17 +38,21 @@ import {
   FileText,
   Filter,
   Home,
+  Image as ImageIcon,
   LayoutGrid,
   Mail,
   MessageCircle,
   MessageSquare,
   MoreHorizontal,
+  Paperclip,
   Phone,
   PlusCircle,
   Search,
   Send,
+  Smile,
   Star,
   Table,
+  ThumbsUp,
   Trash2,
   User,
   Users,
@@ -2365,32 +2369,96 @@ export default function DashboardManageTab() {
               
               <TabsContent value="chat" className="mt-0">
                 <div className="flex flex-col h-[400px]">
-                  <div className="flex-1 overflow-y-auto mb-4 bg-gray-50 p-3 rounded-lg">
-                    <div className="space-y-3">
+                  <div className="flex-1 overflow-y-auto mb-4 bg-gray-50 p-3 rounded-lg" id="chat-messages">
+                    <div className="space-y-4">
                       {/* Chat messages */}
                       {[
-                        { sender: 'John Smith', avatar: 'JS', message: 'Hey team, just wanted to update you all on the kitchen cabinet installation - we\'re on track for completion by Friday.', time: '2 days ago', isMine: false },
-                        { sender: 'Sarah Johnson', avatar: 'SJ', message: 'Great! The clients wanted to know if they should schedule the appliance delivery for Monday then?', time: '2 days ago', isMine: false },
-                        { sender: 'You', avatar: 'You', message: 'Yes, Monday works well. I\'ll be on site to receive the delivery and make sure everything is set up correctly.', time: '2 days ago', isMine: true },
-                        { sender: 'Mike Williams', avatar: 'MW', message: 'Just a heads up, I noticed the backsplash material might be delayed. I\'m following up with the supplier today.', time: 'Yesterday', isMine: false },
-                        { sender: 'You', avatar: 'You', message: 'Thanks for flagging that Mike. Let me know what they say - we might need to adjust our timeline if there\'s a significant delay.', time: 'Yesterday', isMine: true },
-                        { sender: 'Mike Williams', avatar: 'MW', message: 'Good news - supplier confirmed delivery for Thursday. We\'re still on track.', time: '5 hours ago', isMine: false },
+                        { 
+                          sender: 'John Smith', 
+                          avatar: 'JS', 
+                          avatarColor: '#135341', 
+                          message: 'Hey team, just wanted to update you all on the kitchen cabinet installation - we\'re on track for completion by Friday.', 
+                          time: '2 days ago', 
+                          isMine: false 
+                        },
+                        { 
+                          sender: 'Sarah Johnson', 
+                          avatar: 'SJ', 
+                          avatarColor: '#803344', 
+                          message: 'Great! The clients wanted to know if they should schedule the appliance delivery for Monday then?', 
+                          time: '2 days ago', 
+                          isMine: false 
+                        },
+                        { 
+                          sender: 'You', 
+                          avatar: 'You', 
+                          message: 'Yes, Monday works well. I\'ll be on site to receive the delivery and make sure everything is set up correctly.', 
+                          time: '2 days ago', 
+                          isMine: true 
+                        },
+                        { 
+                          sender: 'Mike Williams', 
+                          avatar: 'MW', 
+                          avatarColor: '#0C598A', 
+                          message: 'Just a heads up, I noticed the backsplash material might be delayed. I\'m following up with the supplier today.', 
+                          time: 'Yesterday', 
+                          isMine: false 
+                        },
+                        { 
+                          sender: 'You', 
+                          avatar: 'You', 
+                          message: 'Thanks for flagging that Mike. Let me know what they say - we might need to adjust our timeline if there\'s a significant delay.', 
+                          time: 'Yesterday', 
+                          isMine: true 
+                        },
+                        { 
+                          sender: 'Mike Williams', 
+                          avatar: 'MW', 
+                          avatarColor: '#0C598A',
+                          message: 'Good news - supplier confirmed delivery for Thursday. We\'re still on track.', 
+                          time: '5 hours ago', 
+                          isMine: false,
+                          hasImage: true,
+                          imageUrl: 'https://images.unsplash.com/photo-1618282434267-84d6943a3a31?q=80&w=600&auto=format' 
+                        },
                       ].map((message, index) => (
-                        <div key={index} className={`flex ${message.isMine ? 'justify-end' : 'justify-start'}`}>
+                        <div key={index} className={`flex ${message.isMine ? 'justify-end' : 'justify-start'} group`}>
                           {!message.isMine && (
-                            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2 flex-shrink-0">
-                              <span className="text-xs font-semibold text-gray-600">{message.avatar}</span>
+                            <div 
+                              className="w-9 h-9 rounded-full flex items-center justify-center mr-2 flex-shrink-0 text-white shadow-sm" 
+                              style={{ backgroundColor: message.avatarColor || '#09261E' }}
+                            >
+                              <span className="text-xs font-semibold">{message.avatar}</span>
                             </div>
                           )}
-                          <div className={`max-w-[70%] rounded-lg p-2.5 ${message.isMine ? 'bg-[#09261E] text-white' : 'bg-white border border-gray-200'}`}>
+                          <div className={`max-w-[75%] rounded-lg p-3 ${message.isMine ? 'bg-[#09261E] text-white' : 'bg-white border border-gray-200 shadow-sm'}`}>
                             {!message.isMine && (
                               <div className="font-medium text-sm mb-1">{message.sender}</div>
                             )}
                             <p className="text-sm">{message.message}</p>
-                            <div className={`text-xs mt-1 ${message.isMine ? 'text-gray-300' : 'text-gray-500'}`}>{message.time}</div>
+                            {message.hasImage && (
+                              <div className="mt-2 rounded-md overflow-hidden">
+                                <img 
+                                  src={message.imageUrl} 
+                                  alt="Shared content" 
+                                  className="w-full max-h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                                />
+                              </div>
+                            )}
+                            <div className={`text-xs mt-1.5 flex items-center ${message.isMine ? 'text-gray-300' : 'text-gray-500'}`}>
+                              {message.time}
+                              <span className="invisible group-hover:visible ml-2 flex items-center space-x-1.5">
+                                <Button variant="ghost" size="icon" className="h-5 w-5 rounded-full">
+                                  <ThumbsUp className="h-3 w-3" />
+                                </Button>
+                                <Button variant="ghost" size="icon" className="h-5 w-5 rounded-full">
+                                  <MoreHorizontal className="h-3 w-3" />
+                                </Button>
+                              </span>
+                            </div>
                           </div>
                           {message.isMine && (
-                            <div className="w-8 h-8 rounded-full bg-[#09261E] flex items-center justify-center ml-2 flex-shrink-0">
+                            <div className="w-9 h-9 rounded-full bg-[#09261E] flex items-center justify-center ml-2 flex-shrink-0 shadow-sm">
                               <span className="text-xs font-semibold text-white">You</span>
                             </div>
                           )}
@@ -2399,20 +2467,50 @@ export default function DashboardManageTab() {
                     </div>
                   </div>
                   
-                  <div className="relative">
-                    <Textarea 
-                      placeholder="Type your message here..." 
-                      className="pr-10 resize-none"
-                      rows={2}
-                    />
-                    <Button
-                      size="icon"
-                      className="absolute right-2 bottom-2 h-8 w-8 rounded-full bg-[#09261E] hover:bg-[#135341]"
-                    >
-                      <Send className="h-4 w-4 text-white" />
-                    </Button>
+                  <div className="border rounded-lg p-2 bg-white">
+                    <div className="flex mb-2">
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
+                        <Image className="h-4 w-4 text-gray-500" />
+                      </Button>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
+                        <FileText className="h-4 w-4 text-gray-500" />
+                      </Button>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
+                        <Paperclip className="h-4 w-4 text-gray-500" />
+                      </Button>
+                    </div>
+                    <div className="relative">
+                      <Textarea 
+                        placeholder="Type your message here..." 
+                        className="pr-12 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none"
+                        rows={2}
+                      />
+                      <div className="absolute right-1 bottom-1 flex items-center">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-gray-400 hover:text-gray-600 mr-0.5">
+                          <Smile className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="h-8 w-8 rounded-full bg-[#09261E] hover:bg-[#135341]"
+                        >
+                          <Send className="h-4 w-4 text-white" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                
+                {/* Auto scroll script */}
+                <script dangerouslySetInnerHTML={{
+                  __html: `
+                    document.addEventListener('DOMContentLoaded', function() {
+                      const chatContainer = document.getElementById('chat-messages');
+                      if (chatContainer) {
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                      }
+                    });
+                  `
+                }} />
               </TabsContent>
             </Tabs>
           </div>
