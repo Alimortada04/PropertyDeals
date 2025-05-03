@@ -2531,7 +2531,7 @@ export default function DashboardManageTab() {
                       />
                       <div className="absolute right-1 bottom-1 flex items-center">
                         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-gray-400 hover:text-gray-600 mr-0.5">
-                          😊
+                          <Plus className="h-4 w-4" />
                         </Button>
                         <Button
                           size="sm"
