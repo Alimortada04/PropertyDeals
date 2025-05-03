@@ -2129,14 +2129,39 @@ export default function DashboardManageTab() {
                                 </div>
                               </div>
                               <div className="flex items-center space-x-1">
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className="text-xs text-gray-500 hover:text-[#09261E]"
-                                >
-                                  <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
-                                  Reply
-                                </Button>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm" 
+                                      className="text-xs text-gray-500 hover:bg-gray-100 hover:text-[#09261E]"
+                                    >
+                                      <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
+                                      Reply
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                      <DialogTitle>Add Comment</DialogTitle>
+                                      <DialogDescription>
+                                        Add your comment to this thread
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                      <Textarea 
+                                        placeholder="Write your comment here..." 
+                                        className="min-h-[100px]"
+                                      />
+                                      <div className="flex items-center gap-2">
+                                        <Paperclip className="h-4 w-4 text-gray-500" />
+                                        <span className="text-sm text-gray-500">Attach a file (optional)</span>
+                                      </div>
+                                    </div>
+                                    <DialogFooter>
+                                      <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Post Comment</Button>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
                               </div>
                             </div>
                             
@@ -2154,7 +2179,7 @@ export default function DashboardManageTab() {
                             </div>
                             
                             {/* Comment list - simplified version */}
-                            <div className="bg-gray-50 px-4 py-2">
+                            <div className="px-4 py-2">
                               <div className="space-y-3 ml-8">
                                 {[
                                   { author: "Sarah Johnson", text: "Great progress! When do you expect the next milestone?", date: "Just now" },
@@ -2202,9 +2227,9 @@ export default function DashboardManageTab() {
                       </DialogHeader>
                       <div className="py-4">
                         <Tabs defaultValue="search" className="w-full">
-                          <TabsList className="grid w-full grid-cols-2 mb-6">
-                            <TabsTrigger value="search">Search Team</TabsTrigger>
-                            <TabsTrigger value="invite">Invite Member</TabsTrigger>
+                          <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
+                            <TabsTrigger value="search" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Search Team</TabsTrigger>
+                            <TabsTrigger value="invite" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Invite Member</TabsTrigger>
                           </TabsList>
                           
                           <TabsContent value="search" className="mt-4">
@@ -2297,14 +2322,7 @@ export default function DashboardManageTab() {
                                 </Select>
                               </div>
                               
-                              <div>
-                                <Label htmlFor="invite-message">Personal Message (Optional)</Label>
-                                <Textarea 
-                                  id="invite-message" 
-                                  rows={3} 
-                                  placeholder="I'd like to add you to my project team..."
-                                />
-                              </div>
+
                             </div>
                           </TabsContent>
                         </Tabs>
