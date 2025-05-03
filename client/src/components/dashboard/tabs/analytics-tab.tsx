@@ -210,14 +210,16 @@ export default function AnalyticsTab() {
   const [portfolioBreakdownMetric, setPortfolioBreakdownMetric] = useState("value");
   const [leaderboardMetric, setLeaderboardMetric] = useState("cashflow");
   const [propertyMetricView, setPropertyMetricView] = useState("aggregate");
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [showAllProperties, setShowAllProperties] = useState(false);
 
   // Sort properties by selected metrics for leaderboard
   const performers = getTopPerformers(leaderboardMetric);
 
   return (
     <div className="space-y-6">
-      {/* Sticky Header Metrics */}
-      <div className="sticky top-0 z-10 bg-white pt-2 pb-4 border-b shadow-sm">
+      {/* Header Metrics */}
+      <div className="bg-white pt-3 pb-4 rounded-lg mb-6">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-[#09261E] mb-2 md:mb-0">Portfolio Analytics</h3>
           
@@ -311,7 +313,7 @@ export default function AnalyticsTab() {
       
       {/* Tabs System */}
       <Tabs defaultValue="performance" className="w-full">
-        <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
+        <TabsList className="w-full bg-[#F8F9FA] p-1 rounded-lg">
           <TabsTrigger value="performance" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
             Performance
           </TabsTrigger>
@@ -420,9 +422,9 @@ export default function AnalyticsTab() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="h-64 flex items-center justify-center">
+                <div className="h-72 flex items-center justify-center">
                   <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                    <PieChart margin={{ top: 20, right: 30, left: 30, bottom: 20 }}>
                       <Pie
                         data={portfolioByTypeData}
                         cx="50%"
@@ -433,14 +435,14 @@ export default function AnalyticsTab() {
                         paddingAngle={2}
                         dataKey="value"
                         label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                        labelLine={false}
+                        labelLine={true}
                       >
                         {portfolioByTypeData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
                       <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
-                      <Legend verticalAlign="bottom" align="center" />
+                      <Legend verticalAlign="bottom" align="center" wrapperStyle={{ paddingTop: 20 }} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -595,7 +597,68 @@ export default function AnalyticsTab() {
       <div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-bold text-[#09261E]">Property Analytics</h3>
-          <Button variant="outline" size="sm">View All Properties</Button>
+          <Dialog open={showAllProperties} onOpenChange={setShowAllProperties}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-[#09261E]">View All Properties</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[900px] max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>All Properties</DialogTitle>
+                <DialogDescription>Complete portfolio breakdown</DialogDescription>
+              </DialogHeader>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                {portfolioProperties.map(property => (
+                  <Card key={property.id} className="overflow-hidden">
+                    <CardHeader className="p-4 pb-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-base">{property.nickname}</CardTitle>
+                          <p className="text-xs text-gray-500">{property.address}</p>
+                        </div>
+                        <Badge 
+                          className={`${
+                            property.type === 'Residential' ? 'bg-blue-100 text-blue-800 hover:bg-blue-100' : 
+                            property.type === 'Commercial' ? 'bg-purple-100 text-purple-800 hover:bg-purple-100' : 
+                            'bg-green-100 text-green-800 hover:bg-green-100'
+                          }`}
+                        >
+                          {property.type}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-0">
+                      <div className="grid grid-cols-3 gap-2 mb-3">
+                        <div>
+                          <p className="text-xs text-gray-500">Purchase</p>
+                          <p className="font-bold">${(property.purchasePrice / 1000).toFixed(0)}K</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500">Current</p>
+                          <p className="font-bold">${(property.currentValue / 1000).toFixed(0)}K</p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-500">Equity</p>
+                          <p className="font-bold">${(property.equity / 1000).toFixed(0)}K</p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="w-full mt-1 hover:bg-gray-100 hover:text-[#09261E]"
+                        onClick={() => {
+                          setSelectedProperty(property);
+                          setShowAllProperties(false);
+                        }}
+                      >
+                        View Details
+                        <ArrowRight className="h-4 w-4 ml-1" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -684,10 +747,142 @@ export default function AnalyticsTab() {
                   </ResponsiveContainer>
                 </div>
                 
-                <Button variant="outline" size="sm" className="w-full mt-2">
-                  View Details
-                  <ArrowRight className="h-4 w-4 ml-1" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full mt-2 hover:bg-gray-100 hover:text-[#09261E]"
+                      onClick={() => setSelectedProperty(property)}
+                    >
+                      View Details
+                      <ArrowRight className="h-4 w-4 ml-1" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[800px]">
+                    <DialogHeader>
+                      <DialogTitle>{property.nickname}</DialogTitle>
+                      <DialogDescription>{property.address}</DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                      <div>
+                        <Card>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Financial Summary</CardTitle>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                            <div className="flex justify-between items-center pb-2 border-b">
+                              <span className="text-sm">Purchase Price</span>
+                              <span className="font-bold">${property.purchasePrice.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-2 border-b">
+                              <span className="text-sm">Current Value</span>
+                              <span className="font-bold">${property.currentValue.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-2 border-b">
+                              <span className="text-sm">Total Equity</span>
+                              <span className="font-bold">${property.equity.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between items-center pb-2 border-b">
+                              <span className="text-sm">Monthly Cashflow</span>
+                              <span className="font-bold">${property.monthlyRent.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm">Appreciation Rate</span>
+                              <span className="font-bold">{property.appreciation}%</span>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      
+                      <div>
+                        <Card>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-base">Value History</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="h-[200px]">
+                              <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={property.history}>
+                                  <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
+                                  <XAxis dataKey="month" />
+                                  <YAxis />
+                                  <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                                  <Line 
+                                    type="monotone" 
+                                    dataKey="value" 
+                                    stroke="#09261E" 
+                                    strokeWidth={2}
+                                    dot={true}
+                                  />
+                                </LineChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6">
+                      <h3 className="text-lg font-semibold mb-3">Recommendations</h3>
+                      <div className="space-y-3">
+                        <Card className="bg-[#F8F9FA]">
+                          <CardContent className="p-4">
+                            <div className="flex gap-3">
+                              <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                <TrendingUp className="h-4 w-4 text-green-600" />
+                              </div>
+                              <div>
+                                <h4 className="font-medium text-sm">Refinancing Opportunity</h4>
+                                <p className="text-sm text-gray-600 mt-1">
+                                  Based on current market rates, refinancing could save approximately $340/month.
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card className="bg-[#F8F9FA]">
+                          <CardContent className="p-4">
+                            <div className="flex gap-3">
+                              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                <Home className="h-4 w-4 text-blue-600" />
+                              </div>
+                              <div>
+                                <h4 className="font-medium text-sm">Maintenance Alert</h4>
+                                <p className="text-sm text-gray-600 mt-1">
+                                  HVAC system is due for maintenance in the next 30 days. Schedule service to avoid future costs.
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card className="bg-[#F8F9FA]">
+                          <CardContent className="p-4">
+                            <div className="flex gap-3">
+                              <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                                <DollarSign className="h-4 w-4 text-amber-600" />
+                              </div>
+                              <div>
+                                <h4 className="font-medium text-sm">Rental Price Analysis</h4>
+                                <p className="text-sm text-gray-600 mt-1">
+                                  Current rent is 8% below market rate for similar properties. Consider adjusting at next lease renewal.
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                    
+                    <DialogFooter className="mt-6">
+                      <Button variant="outline" className="hover:bg-gray-100 hover:text-[#09261E]">Schedule Maintenance</Button>
+                      <Button className="bg-[#09261E] hover:bg-[#135341]">View Full Report</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
           ))}
