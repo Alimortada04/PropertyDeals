@@ -80,13 +80,13 @@ interface KanbanPropertyCardProps {
 }
 
 const KanbanPropertyCard = ({ property, onClickProperty, onClickManage, onRemove }: KanbanPropertyCardProps) => {
-  // Priority badge color mapping - using green/gray color scheme
+  // Priority badge color mapping - using requested colors
   const getPriorityColor = (priority: string = 'medium') => {
     switch(priority.toLowerCase()) {
-      case 'high': return 'bg-green-500';
-      case 'medium': return 'bg-gray-400';
-      case 'low': return 'bg-gray-300';
-      default: return 'bg-gray-400';
+      case 'high': return 'bg-red-500 text-white';
+      case 'medium': return 'bg-yellow-400 text-black';
+      case 'low': return 'bg-blue-500 text-white';
+      default: return 'bg-yellow-400 text-black';
     }
   };
   
@@ -172,13 +172,13 @@ const PropertyGrid = ({ properties, onClickProperty, onClickManage, onRemove }: 
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [stageFilter, setStageFilter] = useState<string>('all');
   
-  // Priority badge color mapping - using green/gray color scheme
+  // Priority badge color mapping - using requested colors
   const getPriorityColor = (priority: string = 'medium') => {
     switch(priority.toLowerCase()) {
-      case 'high': return 'bg-green-500';
-      case 'medium': return 'bg-gray-400';
-      case 'low': return 'bg-gray-300';
-      default: return 'bg-gray-400';
+      case 'high': return 'bg-red-500 text-white';
+      case 'medium': return 'bg-yellow-400 text-black';
+      case 'low': return 'bg-blue-500 text-white';
+      default: return 'bg-yellow-400 text-black';
     }
   };
   
@@ -2058,16 +2058,6 @@ export default function DashboardManageTab() {
                 
                 <div className="space-y-4">
                   {activeProject && [...(projects.find(p => p.id === activeProject)?.updates || [])].reverse().map((update, index) => {
-                    // Using state per update item
-                    const [showReplies, setShowReplies] = useState(false);
-                    const [isReplying, setIsReplying] = useState(false);
-                    
-                    // Dummy comments for each update
-                    const comments = update.comments || [
-                      { author: "Sarah Johnson", text: "Great progress! When do you expect the next milestone?", date: "Just now" },
-                      { author: "Michael Chen", text: "I've added some notes to the documentation.", date: "Yesterday" }
-                    ];
-                    
                     return (
                       <Card key={index} className="overflow-hidden">
                         <CardContent className="p-0">
@@ -2084,9 +2074,9 @@ export default function DashboardManageTab() {
                                     <span className="text-xs text-gray-500">{update.date}</span>
                                   </div>
                                   <p className="text-sm text-gray-700 mt-1">{update.text}</p>
-                                  {update.imageUrl && (
+                                  {update.imgUrl && (
                                     <img 
-                                      src={update.imageUrl} 
+                                      src={update.imgUrl} 
                                       alt="Update" 
                                       className="mt-3 rounded-md max-h-48 object-cover"
                                     />
@@ -2098,7 +2088,6 @@ export default function DashboardManageTab() {
                                   variant="ghost" 
                                   size="sm" 
                                   className="text-xs text-gray-500 hover:text-[#09261E]"
-                                  onClick={() => setIsReplying(!isReplying)}
                                 >
                                   <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
                                   Reply
@@ -2109,70 +2098,38 @@ export default function DashboardManageTab() {
                             {/* Comments header */}
                             <div 
                               className="px-4 py-2 bg-gray-50 flex items-center justify-between cursor-pointer border-t border-gray-100"
-                              onClick={() => setShowReplies(!showReplies)}
                             >
                               <div className="flex items-center">
                                 <MessageSquare className="h-3.5 w-3.5 mr-1.5 text-gray-500" />
                                 <span className="text-xs text-gray-500 font-medium">
-                                  {comments.length} Comments
+                                  2 Comments
                                 </span>
                               </div>
-                              <ChevronDown className={`h-3.5 w-3.5 text-gray-500 transition-transform ${showReplies ? 'transform rotate-180' : ''}`} />
+                              <ChevronDown className="h-3.5 w-3.5 text-gray-500 transition-transform" />
                             </div>
                             
-                            {/* Comment list */}
-                            {showReplies && (
-                              <div className="bg-gray-50 px-4 py-2">
-                                <div className="space-y-3 ml-8">
-                                  {comments.map((comment, commentIdx) => (
-                                    <div key={commentIdx} className="flex items-start gap-3">
-                                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                                        <User className="h-4 w-4 text-gray-600" />
-                                      </div>
-                                      <div className="flex-1">
-                                        <div className="flex items-center gap-2">
-                                          <h5 className="text-sm font-medium">{comment.author}</h5>
-                                          <span className="text-xs text-gray-500">{comment.date}</span>
-                                        </div>
-                                        <p className="text-xs text-gray-700">{comment.text}</p>
-                                      </div>
+                            {/* Comment list - simplified version */}
+                            <div className="bg-gray-50 px-4 py-2">
+                              <div className="space-y-3 ml-8">
+                                {[
+                                  { author: "Sarah Johnson", text: "Great progress! When do you expect the next milestone?", date: "Just now" },
+                                  { author: "Michael Chen", text: "I've added some notes to the documentation.", date: "Yesterday" }
+                                ].map((comment, commentIdx) => (
+                                  <div key={commentIdx} className="flex items-start gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                                      <User className="h-4 w-4 text-gray-600" />
                                     </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            
-                            {/* Reply form */}
-                            {isReplying && (
-                              <div className="p-3 bg-gray-50 border-t border-gray-100">
-                                <div className="flex gap-3">
-                                  <div className="w-8 h-8 rounded-full bg-[#09261E]/10 flex items-center justify-center flex-shrink-0">
-                                    <User className="h-4 w-4 text-[#09261E]" />
-                                  </div>
-                                  <div className="flex-1 space-y-2">
-                                    <Textarea 
-                                      placeholder="Add your comment..." 
-                                      className="min-h-[80px] text-sm" 
-                                    />
-                                    <div className="flex justify-end gap-2">
-                                      <Button 
-                                        variant="outline" 
-                                        size="sm" 
-                                        onClick={() => setIsReplying(false)}
-                                      >
-                                        Cancel
-                                      </Button>
-                                      <Button 
-                                        size="sm" 
-                                        className="bg-[#09261E] hover:bg-[#135341]"
-                                      >
-                                        Comment
-                                      </Button>
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2">
+                                        <h5 className="text-sm font-medium">{comment.author}</h5>
+                                        <span className="text-xs text-gray-500">{comment.date}</span>
+                                      </div>
+                                      <p className="text-xs text-gray-700">{comment.text}</p>
                                     </div>
                                   </div>
-                                </div>
+                                ))}
                               </div>
-                            )}
+                            </div>
                           </div>
                         </CardContent>
                       </Card>
