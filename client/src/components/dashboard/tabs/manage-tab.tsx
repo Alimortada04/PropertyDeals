@@ -71,13 +71,13 @@ interface KanbanPropertyCardProps {
 }
 
 const KanbanPropertyCard = ({ property, onClickProperty, onClickManage, onRemove }: KanbanPropertyCardProps) => {
-  // Priority badge color mapping
+  // Priority badge color mapping - using green/gray color scheme
   const getPriorityColor = (priority: string = 'medium') => {
     switch(priority.toLowerCase()) {
-      case 'high': return 'bg-red-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case 'high': return 'bg-green-500';
+      case 'medium': return 'bg-gray-400';
+      case 'low': return 'bg-gray-300';
+      default: return 'bg-gray-400';
     }
   };
   
@@ -163,13 +163,13 @@ const PropertyGrid = ({ properties, onClickProperty, onClickManage, onRemove }: 
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [stageFilter, setStageFilter] = useState<string>('all');
   
-  // Priority badge color mapping
+  // Priority badge color mapping - using green/gray color scheme
   const getPriorityColor = (priority: string = 'medium') => {
     switch(priority.toLowerCase()) {
-      case 'high': return 'bg-red-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-blue-500';
-      default: return 'bg-gray-500';
+      case 'high': return 'bg-green-500';
+      case 'medium': return 'bg-gray-400';
+      case 'low': return 'bg-gray-300';
+      default: return 'bg-gray-400';
     }
   };
   
@@ -400,7 +400,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
             <p className="text-sm text-gray-600">{project.address}</p>
           </div>
           <Badge 
-            className={`${daysRemaining <= 7 ? 'bg-red-500' : 'bg-blue-500'}`}
+            className={`${daysRemaining <= 7 ? 'bg-green-500' : 'bg-gray-400'}`}
           >
             {daysRemaining} days remaining
           </Badge>
@@ -416,7 +416,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
           </div>
           
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-green-50 p-3 rounded-lg">
+            <div className="bg-gray-100 p-3 rounded-lg">
               <span className="text-xs text-gray-600 block mb-1">Budget</span>
               <div className="flex items-baseline">
                 <span className="text-lg font-bold text-green-600">${project.budget.remaining.toLocaleString()}</span>
@@ -427,10 +427,10 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
               </div>
             </div>
             
-            <div className="bg-blue-50 p-3 rounded-lg">
+            <div className="bg-gray-50 p-3 rounded-lg">
               <span className="text-xs text-gray-600 block mb-1">Tasks</span>
               <div className="flex items-baseline">
-                <span className="text-lg font-bold text-blue-600">{completedTasks}/{totalTasks}</span>
+                <span className="text-lg font-bold text-gray-600">{completedTasks}/{totalTasks}</span>
                 <span className="text-xs text-gray-600 ml-1">completed</span>
               </div>
               <div className="text-xs text-gray-500 mt-1">
