@@ -752,16 +752,16 @@ export default function DashboardManageTab() {
       {/* Property Detail Modal */}
       <Dialog open={propertyDetailOpen} onOpenChange={setPropertyDetailOpen}>
         <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
+          <DialogHeader className="pb-2">
             <DialogTitle className="text-xl text-[#09261E]">
               Property Roadmap
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="pb-0">
               {activeProperty && localProperties.find(p => p.id === activeProperty)?.address}
             </DialogDescription>
           </DialogHeader>
           
-          <div className="mt-4">
+          <div className="mt-2">
             <Tabs defaultValue="progress" className="w-full">
               <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
                 <TabsTrigger value="progress" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Progress</TabsTrigger>
@@ -784,47 +784,58 @@ export default function DashboardManageTab() {
                             <span className="text-sm font-medium">Overall Progress</span>
                             <span className="text-sm">65%</span>
                           </div>
-                          <Progress value={65} className="h-2 bg-gray-200" />
+                          <Progress value={65} className="h-2 bg-green-500 bg-opacity-30" />
                         </div>
                         
                         <div className="grid gap-2">
-                          {/* Pipeline stages with checkable tasks */}
+                          {/* Pipeline stages with accordion-style checkable tasks */}
                           {[
-                            { stage: 'Favorited', tasks: ['Save property details', 'Research neighborhood', 'Calculate initial numbers'] },
-                            { stage: 'Contacted', tasks: ['Schedule first call', 'Request property details', 'Prepare questions'] },
-                            { stage: 'Offer Made', tasks: ['Draft offer', 'Submit paperwork', 'Follow up with agent'] },
-                            { stage: 'Pending', tasks: ['Schedule inspection', 'Review disclosures', 'Secure financing'] },
-                            { stage: 'Closing', tasks: ['Final walkthrough', 'Verify wire details', 'Sign closing documents'] }
-                          ].map((stage, stageIndex) => (
-                            <div key={stage.stage} className="mt-2">
-                              <div className="flex items-center mb-1">
-                                <Badge 
-                                  className={`mr-3 ${stageIndex < 3 ? 'bg-green-500' : stageIndex === 3 ? 'bg-green-500' : 'bg-gray-400'}`}
+                            { stage: 'Favorited', tasks: ['Save property details', 'Research neighborhood', 'Calculate initial numbers'], expanded: false },
+                            { stage: 'Contacted', tasks: ['Schedule first call', 'Request property details', 'Prepare questions'], expanded: false },
+                            { stage: 'Offer Made', tasks: ['Draft offer', 'Submit paperwork', 'Follow up with agent'], expanded: false },
+                            { stage: 'Pending', tasks: ['Schedule inspection', 'Review disclosures', 'Secure financing'], expanded: true },
+                            { stage: 'Closing', tasks: ['Final walkthrough', 'Verify wire details', 'Sign closing documents'], expanded: false }
+                          ].map((stage, stageIndex) => {
+                            const [isExpanded, setIsExpanded] = useState(stage.expanded);
+                            return (
+                              <div key={stage.stage} className="mt-2 border border-gray-100 rounded-md overflow-hidden">
+                                <button 
+                                  className="flex items-center justify-between w-full p-3 text-left font-medium hover:bg-gray-50"
+                                  onClick={() => setIsExpanded(!isExpanded)}
                                 >
-                                  {stageIndex < 3 ? 'Completed' : stageIndex === 3 ? 'In Progress' : 'Upcoming'}
-                                </Badge>
-                                <span className="font-medium">{stage.stage}</span>
-                              </div>
-                              
-                              <div className="ml-8 mt-1">
-                                {stage.tasks.map((task, taskIndex) => (
-                                  <div key={task} className="flex items-center my-1">
-                                    <Checkbox 
-                                      id={`task-${stageIndex}-${taskIndex}`} 
-                                      className="mr-2"
-                                      defaultChecked={stageIndex < 3 || (stageIndex === 3 && taskIndex < 2)}
-                                    />
-                                    <label 
-                                      htmlFor={`task-${stageIndex}-${taskIndex}`}
-                                      className={`text-sm ${(stageIndex < 3 || (stageIndex === 3 && taskIndex < 2)) ? 'line-through text-gray-500' : ''}`}
+                                  <div className="flex items-center">
+                                    <Badge 
+                                      className={`mr-3 ${stageIndex < 3 ? 'bg-green-500' : stageIndex === 3 ? 'bg-green-500' : 'bg-gray-400'}`}
                                     >
-                                      {task}
-                                    </label>
+                                      {stageIndex < 3 ? 'Completed' : stageIndex === 3 ? 'In Progress' : 'Upcoming'}
+                                    </Badge>
+                                    <span className="font-medium">{stage.stage}</span>
                                   </div>
-                                ))}
+                                  <ChevronRight className={`h-5 w-5 text-gray-400 transition-transform ${isExpanded ? 'transform rotate-90' : ''}`} />
+                                </button>
+                                
+                                {isExpanded && (
+                                  <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
+                                    {stage.tasks.map((task, taskIndex) => (
+                                      <div key={task} className="flex items-center my-1.5">
+                                        <Checkbox 
+                                          id={`task-${stageIndex}-${taskIndex}`} 
+                                          className="mr-2"
+                                          defaultChecked={stageIndex < 3 || (stageIndex === 3 && taskIndex < 2)}
+                                        />
+                                        <label 
+                                          htmlFor={`task-${stageIndex}-${taskIndex}`}
+                                          className={`text-sm ${(stageIndex < 3 || (stageIndex === 3 && taskIndex < 2)) ? 'line-through text-gray-500' : ''}`}
+                                        >
+                                          {task}
+                                        </label>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     </CardContent>
@@ -853,7 +864,8 @@ export default function DashboardManageTab() {
                                 <p className="text-xs text-gray-500">{event.location}</p>
                               </div>
                             </div>
-                            <Button variant="outline" size="sm" className="h-8">
+                            <Button variant="outline" size="sm" className="h-8 hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
+                              <Calendar className="h-3.5 w-3.5 mr-1.5" />
                               Add to Calendar
                             </Button>
                           </div>
@@ -887,31 +899,48 @@ export default function DashboardManageTab() {
                           <p className="text-xs text-gray-500">Maximum file size: 25MB</p>
                         </div>
                         <div className="space-y-3">
-                          <div className="grid grid-cols-4 gap-4">
-                            <div className="col-span-4 sm:col-span-2">
-                              <Label htmlFor="document-type">Document Type</Label>
-                              <Select>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="purchase">Purchase Agreement</SelectItem>
-                                  <SelectItem value="inspection">Inspection Report</SelectItem>
-                                  <SelectItem value="loan">Loan Documents</SelectItem>
-                                  <SelectItem value="title">Title Documents</SelectItem>
-                                  <SelectItem value="other">Other</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                            <div className="col-span-4 sm:col-span-2">
-                              <Label htmlFor="document-date">Document Date</Label>
-                              <Input type="date" id="document-date" />
-                            </div>
-                          </div>
-                          <div>
-                            <Label htmlFor="document-description">Description (Optional)</Label>
-                            <Textarea id="document-description" rows={3} placeholder="Add notes about this document" />
-                          </div>
+                          {(() => {
+                            const [docType, setDocType] = useState("");
+                            return (
+                              <>
+                                <div className="grid grid-cols-4 gap-4">
+                                  <div className="col-span-4 sm:col-span-2">
+                                    <Label htmlFor="document-type">Document Type</Label>
+                                    <Select onValueChange={setDocType}>
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Select type" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="purchase">Purchase Agreement</SelectItem>
+                                        <SelectItem value="offer">Offer to Purchase</SelectItem>
+                                        <SelectItem value="assignment">Assignment Agreement</SelectItem>
+                                        <SelectItem value="inspection">Inspection Report</SelectItem>
+                                        <SelectItem value="loan">Loan Documents</SelectItem>
+                                        <SelectItem value="title">Title Documents</SelectItem>
+                                        <SelectItem value="other">Other</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                  <div className="col-span-4 sm:col-span-2">
+                                    <Label htmlFor="document-date">Document Date</Label>
+                                    <Input type="date" id="document-date" />
+                                  </div>
+                                </div>
+                                
+                                {docType === "other" && (
+                                  <div>
+                                    <Label htmlFor="document-type-custom">Custom Document Type</Label>
+                                    <Input id="document-type-custom" placeholder="Enter document type" />
+                                  </div>
+                                )}
+                                
+                                <div>
+                                  <Label htmlFor="document-description">Description (Optional)</Label>
+                                  <Textarea id="document-description" rows={3} placeholder="Add notes about this document" />
+                                </div>
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
                       <DialogFooter>
@@ -948,8 +977,8 @@ export default function DashboardManageTab() {
                             }`}>
                               {doc.status}
                             </Badge>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <Download className="h-4 w-4" />
+                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
+                              <Download className="h-4 w-4 text-gray-600" />
                             </Button>
                           </div>
                         </div>
