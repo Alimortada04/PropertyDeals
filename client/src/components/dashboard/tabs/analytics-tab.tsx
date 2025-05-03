@@ -216,9 +216,16 @@ export default function AnalyticsTab() {
   const [propertyMetricView, setPropertyMetricView] = useState("aggregate");
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
   const [showAllProperties, setShowAllProperties] = useState(false);
+  const [showPropertyDetail, setShowPropertyDetail] = useState(false);
 
   // Sort properties by selected metrics for leaderboard
   const sortedProperties = getSortedProperties(leaderboardMetric);
+  
+  // Handle property selection
+  const handleSelectProperty = (property) => {
+    setSelectedProperty(property);
+    setShowPropertyDetail(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -502,7 +509,7 @@ export default function AnalyticsTab() {
                             variant="outline"
                             size="sm"
                             className="mt-1 text-xs px-2 h-7 hover:bg-gray-100 hover:text-[#09261E]"
-                            onClick={() => setSelectedProperty(property)}
+                            onClick={() => handleSelectProperty(property)}
                           >
                             View Details
                           </Button>
@@ -511,19 +518,17 @@ export default function AnalyticsTab() {
                     ))}
                   </div>
                   
-                  {sortedProperties.length > 6 && (
-                    <div className="flex justify-center mt-4">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="hover:bg-gray-100 hover:text-[#09261E]"
-                        onClick={() => setShowAllProperties(true)}
-                      >
-                        View All Properties
-                        <ArrowRight className="h-4 w-4 ml-1" />
-                      </Button>
-                    </div>
-                  )}
+                  <div className="flex justify-center mt-4">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="hover:bg-gray-100 hover:text-[#09261E]"
+                      onClick={() => setShowAllProperties(true)}
+                    >
+                      View All Properties
+                      <ArrowRight className="h-4 w-4 ml-1" />
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -642,7 +647,7 @@ export default function AnalyticsTab() {
                         size="sm" 
                         className="w-full mt-1 hover:bg-gray-100 hover:text-[#09261E]"
                         onClick={() => {
-                          setSelectedProperty(property);
+                          handleSelectProperty(property);
                           setShowAllProperties(false);
                         }}
                       >
@@ -749,7 +754,7 @@ export default function AnalyticsTab() {
                       variant="outline" 
                       size="sm" 
                       className="w-full mt-2 hover:bg-gray-100 hover:text-[#09261E]"
-                      onClick={() => setSelectedProperty(property)}
+                      onClick={() => handleSelectProperty(property)}
                     >
                       View Details
                       <ArrowRight className="h-4 w-4 ml-1" />
@@ -884,6 +889,137 @@ export default function AnalyticsTab() {
           ))}
         </div>
       </div>
+      
+      {/* Property Detail Dialog */}
+      <Dialog open={showPropertyDetail} onOpenChange={setShowPropertyDetail}>
+        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
+          {selectedProperty && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedProperty.nickname}</DialogTitle>
+                <DialogDescription>{selectedProperty.address}</DialogDescription>
+              </DialogHeader>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Financial Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="flex justify-between items-center pb-2 border-b">
+                        <span className="text-sm">Purchase Price</span>
+                        <span className="font-bold">${selectedProperty.purchasePrice.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center pb-2 border-b">
+                        <span className="text-sm">Current Value</span>
+                        <span className="font-bold">${selectedProperty.currentValue.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center pb-2 border-b">
+                        <span className="text-sm">Total Equity</span>
+                        <span className="font-bold">${selectedProperty.equity.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center pb-2 border-b">
+                        <span className="text-sm">Monthly Cashflow</span>
+                        <span className="font-bold">${selectedProperty.monthlyRent.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm">Appreciation Rate</span>
+                        <span className="font-bold">{selectedProperty.appreciation}%</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div>
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Value History</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-[200px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart data={selectedProperty.history}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#f5f5f5" />
+                            <XAxis dataKey="month" />
+                            <YAxis />
+                            <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+                            <Line 
+                              type="monotone" 
+                              dataKey="value" 
+                              stroke="#09261E" 
+                              strokeWidth={2}
+                              dot={true}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold mb-3">Recommendations</h3>
+                <div className="space-y-3">
+                  <Card className="bg-[#F8F9FA]">
+                    <CardContent className="p-4">
+                      <div className="flex gap-3">
+                        <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                          <TrendingUp className="h-4 w-4 text-green-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm">Refinancing Opportunity</h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Based on current market rates, refinancing could save approximately $340/month.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-[#F8F9FA]">
+                    <CardContent className="p-4">
+                      <div className="flex gap-3">
+                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                          <Home className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm">Maintenance Alert</h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            HVAC system is due for maintenance in the next 30 days. Schedule service to avoid future costs.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-[#F8F9FA]">
+                    <CardContent className="p-4">
+                      <div className="flex gap-3">
+                        <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                          <DollarSign className="h-4 w-4 text-amber-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-sm">Rental Price Analysis</h4>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Current rent is 8% below market rate for similar properties. Consider adjusting at next lease renewal.
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+              
+              <DialogFooter className="mt-6">
+                <Button variant="outline" className="hover:bg-gray-100 hover:text-[#09261E]">Schedule Maintenance</Button>
+                <Button className="bg-[#09261E] hover:bg-[#135341]">View Full Report</Button>
+              </DialogFooter>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
