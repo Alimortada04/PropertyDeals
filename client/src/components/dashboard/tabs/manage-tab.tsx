@@ -1295,17 +1295,17 @@ export default function DashboardManageTab() {
                           <SelectValue placeholder="Select recipient" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectOptGroup>
+                          <SelectGroup>
                             <SelectLabel>Property Contacts</SelectLabel>
                             <SelectItem value="sarah">Sarah Johnson (Seller Agent)</SelectItem>
                             <SelectItem value="michael">Michael Chen (Loan Officer)</SelectItem>
                             <SelectItem value="thomas">Thomas Wilson (Home Inspector)</SelectItem>
-                          </SelectOptGroup>
-                          <SelectOptGroup>
+                          </SelectGroup>
+                          <SelectGroup>
                             <SelectLabel>Recommended REPs</SelectLabel>
                             <SelectItem value="david">David Rodriguez (Attorney)</SelectItem>
                             <SelectItem value="jennifer">Jennifer Lee (Appraiser)</SelectItem>
-                          </SelectOptGroup>
+                          </SelectGroup>
                         </SelectContent>
                       </Select>
                     </div>
