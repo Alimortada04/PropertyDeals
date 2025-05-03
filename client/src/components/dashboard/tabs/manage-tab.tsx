@@ -24,6 +24,7 @@ import {
   Calendar,
   CheckCircle2,
   CheckSquare,
+  ChevronDown,
   ChevronRight,
   Clock,
   Clock3,
@@ -446,10 +447,11 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
             </div>
           </div>
           <Badge 
-            className={`${getDaysRemainingColor()} z-10`}
+            className={`${getDaysRemainingColor()} z-10 group-hover:${getDaysRemainingColor()}`}
           >
             {status === "completed" ? 'Completed' : 
-             daysRemaining > 0 ? `${daysRemaining} days remaining` : 'Past due date'}
+             daysRemaining > 0 ? `${daysRemaining} days remaining` : 
+             (project.status === "completed" ? 'Completed' : 'Past due date')}
           </Badge>
         </div>
         
@@ -893,21 +895,47 @@ export default function DashboardManageTab() {
                                 
                                 {isExpanded && (
                                   <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
-                                    {stage.tasks.map((task, taskIndex) => (
-                                      <div key={task} className="flex items-center my-1.5">
-                                        <Checkbox 
-                                          id={`task-${stageIndex}-${taskIndex}`} 
-                                          className="mr-2"
-                                          defaultChecked={stageIndex < 3 || (stageIndex === 3 && taskIndex < 2)}
-                                        />
-                                        <label 
-                                          htmlFor={`task-${stageIndex}-${taskIndex}`}
-                                          className={`text-sm ${(stageIndex < 3 || (stageIndex === 3 && taskIndex < 2)) ? 'line-through text-gray-500' : ''}`}
-                                        >
-                                          {task}
-                                        </label>
-                                      </div>
-                                    ))}
+                                    {stage.tasks.map((task, taskIndex) => {
+                                      const [taskExpanded, setTaskExpanded] = useState(false);
+                                      const isChecked = stageIndex < 3 || (stageIndex === 3 && taskIndex < 2);
+                                      
+                                      return (
+                                        <div key={`task-${stageIndex}-${taskIndex}`} className="my-2">
+                                          <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                              <Checkbox 
+                                                id={`task-${stageIndex}-${taskIndex}`} 
+                                                className="mr-2"
+                                                defaultChecked={isChecked}
+                                              />
+                                              <label 
+                                                htmlFor={`task-${stageIndex}-${taskIndex}`}
+                                                className={`text-sm ${isChecked ? 'line-through text-gray-500' : ''}`}
+                                              >
+                                                {task}
+                                              </label>
+                                            </div>
+                                            <Button 
+                                              variant="ghost" 
+                                              size="sm" 
+                                              className="h-7 p-0 px-1.5"
+                                              onClick={() => setTaskExpanded(!taskExpanded)}
+                                            >
+                                              <ChevronDown className={`h-4 w-4 transition-transform ${taskExpanded ? 'transform rotate-180' : ''}`} />
+                                            </Button>
+                                          </div>
+                                          
+                                          {taskExpanded && (
+                                            <div className="mt-2 ml-6 text-xs text-gray-600 bg-white p-2 rounded-sm border border-gray-100">
+                                              <p className="mb-1"><strong>Due:</strong> {new Date().toLocaleDateString()}</p>
+                                              <p className="mb-1"><strong>Assignee:</strong> {stageIndex === 0 ? 'You' : 'Sarah Johnson'}</p>
+                                              <p className="mb-1"><strong>Priority:</strong> {taskIndex === 0 ? 'High' : 'Medium'}</p>
+                                              <p><strong>Description:</strong> Additional details about this task would appear here.</p>
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
                                   </div>
                                 )}
                               </div>
