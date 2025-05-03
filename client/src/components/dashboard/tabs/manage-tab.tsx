@@ -526,6 +526,19 @@ export default function DashboardManageTab() {
   const [localProperties, setLocalProperties] = useState(properties);
   const [projectStatusFilter, setProjectStatusFilter] = useState<"all" | "active" | "paused" | "completed">("all");
   
+  // States for expansions and replies
+  const [expandedTaskIds, setExpandedTaskIds] = useState<Record<string, boolean>>({});
+  const [showReplies, setShowReplies] = useState(false);
+  const [isReplying, setIsReplying] = useState(false);
+  
+  // Toggle task expansion
+  const toggleTaskExpanded = (taskId: number) => {
+    setExpandedTaskIds(prev => ({
+      ...prev,
+      [taskId]: !prev[taskId]
+    }));
+  };
+  
   // Handle property card clicks
   const handleViewProperty = (propertyId: number) => {
     setLocation(`/properties/${propertyId}`);
@@ -926,7 +939,7 @@ export default function DashboardManageTab() {
                                             </div>
                                           </div>
                                           
-                                          {taskExpanded && (
+                                          {expandedTaskIds[task.id] && (
                                             <div className="mt-2 ml-6 text-xs text-gray-600 bg-white p-2 rounded-sm border border-gray-100">
                                               <p className="mb-1"><strong>Due:</strong> {new Date().toLocaleDateString()}</p>
                                               <p className="mb-1"><strong>Assignee:</strong> {stageIndex === 0 ? 'You' : 'Sarah Johnson'}</p>
@@ -1816,18 +1829,23 @@ export default function DashboardManageTab() {
                   <CardContent className="p-0">
                     <div className="divide-y divide-gray-100">
                       {activeProject && projects.find(p => p.id === activeProject)?.tasks.map((task, index) => (
-                        <div key={task.id} className="p-4 hover:bg-gray-50">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-start gap-3">
+                        <div key={task.id} className="p-3 hover:bg-gray-50">
+                          <div 
+                            className="flex items-center justify-between cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors"
+                            onClick={() => toggleTaskExpanded(task.id)}
+                          >
+                            <div className="flex items-start gap-3 flex-1">
                               <Checkbox 
                                 id={`project-task-${task.id}`} 
                                 className="mt-1"
                                 checked={task.completed}
+                                onClick={(e) => e.stopPropagation()}
                               />
                               <div>
                                 <label 
                                   htmlFor={`project-task-${task.id}`}
-                                  className={`block font-medium mb-1 ${task.completed ? 'line-through text-gray-500' : 'text-[#09261E]'}`}
+                                  className={`block font-medium mb-1 hover:text-[#09261E] ${task.completed ? 'line-through text-gray-500' : 'text-[#09261E]'}`}
+                                  onClick={(e) => e.stopPropagation()}
                                 >
                                   {task.title}
                                 </label>
@@ -1851,10 +1869,37 @@ export default function DashboardManageTab() {
                                 task.status === 'In Progress' ? 'bg-blue-500' :
                                 'bg-green-500'
                               }`}
+                              onClick={(e) => e.stopPropagation()}
                             >
                               {task.status || 'Not Started'}
                             </Badge>
                           </div>
+                          
+                          {expandedTaskIds[task.id] && (
+                            <div className="mt-2 ml-8 bg-white p-3 rounded border border-gray-100 text-sm">
+                              <p className="mb-2 text-[#09261E] font-medium">{task.title}</p>
+                              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs mb-3">
+                                <div>
+                                  <span className="font-medium text-gray-600">Due Date:</span> {task.dueDate || 'Not set'}
+                                </div>
+                                <div>
+                                  <span className="font-medium text-gray-600">Status:</span> {task.status || 'Not Started'}
+                                </div>
+                                <div>
+                                  <span className="font-medium text-gray-600">Assigned:</span> {task.assignedTo || 'Unassigned'}
+                                </div>
+                                <div>
+                                  <span className="font-medium text-gray-600">Priority:</span> Medium
+                                </div>
+                              </div>
+                              <div className="text-xs text-gray-600">
+                                <span className="font-medium">Description:</span>
+                                <p className="mt-1">
+                                  No description provided for this task.
+                                </p>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -2074,9 +2119,9 @@ export default function DashboardManageTab() {
                                     <span className="text-xs text-gray-500">{update.date}</span>
                                   </div>
                                   <p className="text-sm text-gray-700 mt-1">{update.text}</p>
-                                  {update.imgUrl && (
+                                  {update.image && (
                                     <img 
-                                      src={update.imgUrl} 
+                                      src={update.image} 
                                       alt="Update" 
                                       className="mt-3 rounded-md max-h-48 object-cover"
                                     />
