@@ -445,9 +445,10 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
             </div>
           </div>
           <Badge 
-            className={`${getDaysRemainingColor()} group-hover:scale-110 transition-transform z-10`}
+            className={`${getDaysRemainingColor()} z-10`}
           >
-            {daysRemaining > 0 ? `${daysRemaining} days remaining` : 'Past due date'}
+            {status === "completed" ? 'Completed' : 
+             daysRemaining > 0 ? `${daysRemaining} days remaining` : 'Past due date'}
           </Badge>
         </div>
         
@@ -568,56 +569,56 @@ export default function DashboardManageTab() {
     dropped: localProperties.filter(p => p.stage === 'dropped')
   };
   
-  // Column titles and descriptions - using green/gray color scheme
+  // Column titles and descriptions - with updated color scheme
   const columns = [
     {
       id: "favorited",
       title: "Favorited",
       description: "Properties you're interested in",
       properties: propertiesByStageLocal.favorited || [],
-      color: "bg-gray-300"
+      color: "bg-[#803344]" // Wine
     },
     {
       id: "contacted",
       title: "Contacted",
       description: "Seller contacted",
       properties: propertiesByStageLocal.contacted || [],
-      color: "bg-gray-400"
+      color: "bg-yellow-400" // Yellow
     },
     {
       id: "offer_made",
       title: "Offer Made",
       description: "Offer sent to seller",
       properties: propertiesByStageLocal.offer_made || [],
-      color: "bg-gray-500"
+      color: "bg-red-500" // Red
     },
     {
       id: "pending",
       title: "Pending",
       description: "In negotiation",
       properties: propertiesByStageLocal.pending || [],
-      color: "bg-green-300"
+      color: "bg-orange-400" // Orange
     },
     {
       id: "close_pending",
       title: "Closing Soon",
       description: "In process of closing",
       properties: propertiesByStageLocal.close_pending || [],
-      color: "bg-green-400"
+      color: "bg-green-400" // Green
     },
     {
       id: "closed",
       title: "Closed",
       description: "Deal completed",
       properties: propertiesByStageLocal.closed || [],
-      color: "bg-green-500"
+      color: "bg-[#135341]" // Dark Green
     },
     {
       id: "dropped",
       title: "Dropped",
       description: "No longer pursuing",
       properties: propertiesByStageLocal.dropped || [],
-      color: "bg-gray-500"
+      color: "bg-gray-700" // Dark Grey
     }
   ];
   
