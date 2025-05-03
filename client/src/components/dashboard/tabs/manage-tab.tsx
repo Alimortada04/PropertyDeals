@@ -84,9 +84,9 @@ const KanbanPropertyCard = ({ property, onClickProperty, onClickManage, onRemove
   const getPriorityColor = (priority: string = 'medium') => {
     switch(priority.toLowerCase()) {
       case 'high': return 'bg-red-500 text-white';
-      case 'medium': return 'bg-yellow-400 text-black';
+      case 'medium': return 'bg-yellow-400 text-white';
       case 'low': return 'bg-blue-500 text-white';
-      default: return 'bg-yellow-400 text-black';
+      default: return 'bg-yellow-400 text-white';
     }
   };
   
@@ -176,9 +176,9 @@ const PropertyGrid = ({ properties, onClickProperty, onClickManage, onRemove }: 
   const getPriorityColor = (priority: string = 'medium') => {
     switch(priority.toLowerCase()) {
       case 'high': return 'bg-red-500 text-white';
-      case 'medium': return 'bg-yellow-400 text-black';
+      case 'medium': return 'bg-yellow-400 text-white';
       case 'low': return 'bg-blue-500 text-white';
-      default: return 'bg-yellow-400 text-black';
+      default: return 'bg-yellow-400 text-white';
     }
   };
   
