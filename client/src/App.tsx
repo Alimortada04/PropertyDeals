@@ -15,9 +15,10 @@ import ProfilePage from "@/pages/profile/profile-page";
 import ProfileSettingsPage from "@/pages/profile/settings-page";
 import CommunityPage from "@/pages/community-page";
 import EventDetailPage from "@/pages/community/event-detail-page";
-import AuthPage from "@/pages/auth-page";
 import AuthCallbackPage from "@/pages/auth/callback";
 import ForgotPasswordPage from "@/pages/auth/forgot-password";
+import RegisterPage from "@/pages/auth/register";
+import SignInPage from "@/pages/auth/signin";
 import OnboardingPage from "@/pages/onboarding";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
@@ -273,28 +274,22 @@ function Router() {
         <OnboardingPage />
       </Route>
       
-      {/* Main auth route */}
+      {/* Auth routes */}
+      <Route path="/register">
+        <RegisterPage />
+      </Route>
+      <Route path="/signin">
+        <SignInPage />
+      </Route>
       <Route path="/auth">
-        <AuthPage />
+        <Redirect to="/signin" />
       </Route>
       
-      {/* Auth routes */}
-      <Route path="/signin">
-        <AuthPage />
-      </Route>
-      <Route path="/register">
-        <AuthPage />
-      </Route>
-      <Route path="/register-old">
-        <Redirect to="/register" />
-      </Route>
+      {/* Redirect old routes to new ones */}
       <Route path="/auth/signin">
-        <Redirect to="/auth" />
+        <Redirect to="/signin" />
       </Route>
       <Route path="/auth/register">
-        <Redirect to="/register" />
-      </Route>
-      <Route path="/auth/register-flow">
         <Redirect to="/register" />
       </Route>
       
