@@ -19,6 +19,7 @@ import AuthCallbackPage from "@/pages/auth/callback";
 import ForgotPasswordPage from "@/pages/auth/forgot-password";
 import RegisterPage from "@/pages/auth/register";
 import SignInPage from "@/pages/auth/signin";
+import ResetPasswordPage from "@/pages/auth/reset-password";
 import OnboardingPage from "@/pages/onboarding";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
@@ -296,6 +297,14 @@ function Router() {
       {/* Auth callback route for social auth */}
       <Route path="/auth/callback">
         <AuthCallbackPage />
+      </Route>
+      
+      {/* Password reset route */}
+      <Route path="/auth/reset-password">
+        <ResetPasswordPage />
+      </Route>
+      <Route path="/reset-password">
+        <Redirect to="/auth/reset-password" />
       </Route>
       <Route path="/about">
         <AppLayout>

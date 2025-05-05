@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2, ArrowLeft, Check, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 // Forgot password form schema
 const forgotPasswordSchema = z.object({
@@ -57,18 +58,32 @@ export default function ForgotPasswordPage() {
   });
   
   // Handle form submission
-  function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
+  async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
     setIsSubmitting(true);
     
-    // This would be replaced with an actual API call in production
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(values.email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      });
+      
+      if (error) {
+        throw error;
+      }
+      
       setIsSubmitting(false);
       setSubmitted(true);
       toast({
         title: "Reset link sent",
         description: `We've sent a password reset link to ${values.email}`,
       });
-    }, 1500);
+    } catch (error: any) {
+      setIsSubmitting(false);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send reset link. Please try again.",
+        variant: "destructive",
+      });
+    }
   }
   
   return (
