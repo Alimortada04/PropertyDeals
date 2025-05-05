@@ -100,13 +100,19 @@ export default function RegisterPage() {
   };
 
   const handleSocialRegistration = async (provider: "google" | "facebook") => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) alert(error.message);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      console.error(`❌ ${provider} registration failed:`, error.message || "Unknown error");
+      alert(`${provider.charAt(0).toUpperCase() + provider.slice(1)} registration failed. Check console for details.`);
+    }
   };
 
   return (

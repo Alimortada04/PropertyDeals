@@ -270,6 +270,9 @@ function Router() {
       <Route path="/forgot-password">
         <ForgotPasswordPage />
       </Route>
+      <Route path="/auth/forgot-password">
+        <Redirect to="/forgot-password" />
+      </Route>
       {/* Temporarily allow access to onboarding without authentication */}
       <Route path="/onboarding">
         <OnboardingPage />
