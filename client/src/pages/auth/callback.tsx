@@ -81,6 +81,6 @@ export default function AuthCallbackPage() {
     );
   }
 
-  // Redirect to dashboard after successful authentication
-  return <Redirect to="/dashboard" />;
+  // Redirect to home after successful authentication
+  return <Redirect to="/home" />;
 }

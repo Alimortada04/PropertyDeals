@@ -108,7 +108,7 @@ export default function SignInPage() {
   }, []);
 
   if (user) {
-    return <Redirect to="/dashboard" />;
+    return <Redirect to="/home" />;
   }
 
   return (

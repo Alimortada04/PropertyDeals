@@ -91,7 +91,7 @@ export default function RegisterPage() {
     }
   }, [registerForm.watch("fullName")]);
 
-  if (user) return <Redirect to="/dashboard" />;
+  if (user) return <Redirect to="/home" />;
 
   const checkEmailExists = async (email: string) => {
     if (!email || registerForm.formState.errors.email) return;
@@ -268,7 +268,7 @@ export default function RegisterPage() {
           description: "Your account has been created! Redirecting to dashboard...",
         });
         
-        setTimeout(() => navigate("/"), 2000);
+        setTimeout(() => navigate("/home"), 2000);
       }
     } catch (error: any) {
       console.error("Registration error:", error);
