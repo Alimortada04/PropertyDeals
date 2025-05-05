@@ -37,7 +37,7 @@ export default function SignInPage() {
 
   function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     loginMutation.mutate({
-      username: values.email,
+      email: values.email,
       password: values.password,
     });
   }
@@ -56,8 +56,8 @@ export default function SignInPage() {
       });
       
       if (error) throw error;
-    } catch (error) {
-      console.error("❌ Google login failed:", error.message);
+    } catch (error: any) {
+      console.error("❌ Google login failed:", error.message || "Unknown error");
       alert("Google login failed. Check console for details.");
     }
   }
@@ -72,8 +72,8 @@ export default function SignInPage() {
       });
       
       if (error) throw error;
-    } catch (error) {
-      console.error("❌ Facebook login failed:", error.message);
+    } catch (error: any) {
+      console.error("❌ Facebook login failed:", error.message || "Unknown error");
       alert("Facebook login failed. Check console for details.");
     }
   }
