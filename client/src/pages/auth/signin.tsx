@@ -12,7 +12,8 @@ import { Switch } from "@/components/ui/switch";
 import { Loader2, Eye, EyeOff, ArrowRight, Fingerprint } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { supabase } from "@/lib/supabase"; 
+import { supabase } from "@/lib/supabase";
+import { toast } from "@/hooks/use-toast"; 
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -63,7 +64,7 @@ export default function SignInPage() {
       if (error) throw error;
     } catch (error: any) {
       console.error("❌ Google login failed:", error.message || "Unknown error");
-      toast({
+      toast.toast({
         title: "Login failed",
         description: error.message || "Google login failed. Please try again.",
         variant: "destructive",
@@ -83,7 +84,7 @@ export default function SignInPage() {
       if (error) throw error;
     } catch (error: any) {
       console.error("❌ Facebook login failed:", error.message || "Unknown error");
-      toast({
+      toast.toast({
         title: "Login failed",
         description: error.message || "Facebook login failed. Please try again.",
         variant: "destructive",
