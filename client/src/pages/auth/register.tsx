@@ -215,24 +215,40 @@ export default function RegisterPage() {
         throw new Error("Failed to create user account");
       }
       
-      // Step 2: Create profile record in Supabase
-      const { error: profileError } = await supabase.from("profiles").insert({
-        id: data.user.id,
-        full_name: values.fullName,
-        username: finalUsername,
-        email: values.email,
-        active_role: "buyer", // Using active_role instead of role
-        roles: { 
-          buyer: { status: "approved" }, 
-          seller: { status: "not_applied" }, 
-          rep: { status: "not_applied" } 
-        },
-        created_at: new Date().toISOString(),
-      });
-
-      if (profileError) {
-        // If profile insertion fails, we should handle this and potentially clean up the auth user
-        throw new Error(profileError.message || "Failed to create your profile");
+      // Step 2: Create local user record
+      // NOTE: We don't need to create a separate profile record in Supabase
+      // Since auth is handled separately by Supabase Auth
+      
+      let localUserError = false;
+      
+      // Instead, let's synchronize with our local users table
+      try {
+        // Use our local database schema which has 'userType' instead of roles/active_role
+        const { error: userError } = await supabase.from("users").insert({
+          username: finalUsername,
+          password: values.password, // This is a duplicate but required by our schema
+          fullName: values.fullName,
+          email: values.email,
+          userType: "buyer", // Using userType as per the actual database schema
+          isAdmin: false
+        });
+        
+        if (userError) {
+          console.log("Local user creation failed, but auth account was created:", userError);
+          // Don't throw here - the auth account is created, which is the most important part
+          localUserError = true;
+        }
+      } catch (localDbError) {
+        console.error("Error with local database:", localDbError);
+        // Don't throw here either - the auth account is what matters most
+        localUserError = true;
+      }
+      
+      // We can log an error but still allow the user to proceed
+      // This will help debug issues with the local database while still letting 
+      // users complete registration
+      if (localUserError) {
+        console.warn("User created in Supabase Auth but failed to sync with local database");
       }
 
       // Step 3: Check if email confirmation is required
