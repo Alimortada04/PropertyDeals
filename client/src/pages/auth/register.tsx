@@ -97,23 +97,30 @@ export default function RegisterPage() {
     if (!email || registerForm.formState.errors.email) return;
     
     try {
-      // Check if email exists in profiles table
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("email")
-        .eq("email", email)
-        .maybeSingle();
-        
-      if (data) {
-        registerForm.setError("email", {
-          type: "manual",
-          message: "Email already exists. Try signing in instead.",
-        });
-        return true;
+      // First try to check with Supabase auth
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: false, // Just check if the user exists, don't actually create an OTP
+        }
+      });
+      
+      // If we got an error about user not found, the email is available
+      if (error && error.message.includes("not found")) {
+        // Email is available
+        return false;
       }
-      return false;
+      
+      // If we reached here, the email likely exists
+      registerForm.setError("email", {
+        type: "manual",
+        message: "Email already exists. Try signing in instead.",
+      });
+      return true;
     } catch (error) {
       console.error("Email check error:", error);
+      
+      // Default to allowing the user to attempt registration
       return false;
     }
   };
@@ -214,7 +221,12 @@ export default function RegisterPage() {
         full_name: values.fullName,
         username: finalUsername,
         email: values.email,
-        role: "buyer",
+        active_role: "buyer", // Using active_role instead of role
+        roles: { 
+          buyer: { status: "approved" }, 
+          seller: { status: "not_applied" }, 
+          rep: { status: "not_applied" } 
+        },
         created_at: new Date().toISOString(),
       });
 
