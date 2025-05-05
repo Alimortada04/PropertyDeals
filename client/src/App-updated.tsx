@@ -34,7 +34,11 @@ import { AuthProvider } from "@/hooks/use-auth-updated";
 import { ProtectedRoute } from "@/lib/protected-route-updated";
 import { ScrollToTop } from "@/components/common/scroll-to-top";
 
-// We need to check if the Supabase credentials are set
+// ✅ Added these
+import RegisterPage from "@/pages/auth/register";
+import SigninPage from "@/pages/auth/signin";
+
+// ✅ Check Supabase config
 const checkEnvironmentVariables = () => {
   if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
     console.warn(
@@ -43,8 +47,6 @@ const checkEnvironmentVariables = () => {
     );
   }
 };
-
-// Check environment variables on load
 checkEnvironmentVariables();
 
 function Router() {
@@ -72,7 +74,6 @@ function Router() {
           <RepsPage />
         </MainLayout>
       </Route>
-      
       <Route path="/reps/:id">
         {params => (
           <MainLayout>
@@ -80,7 +81,6 @@ function Router() {
           </MainLayout>
         )}
       </Route>
-
       <Route path="/business/:slug">
         {params => (
           <MainLayout>
@@ -93,8 +93,6 @@ function Router() {
           <DiscussionsPage />
         </MainLayout>
       </Route>
-      
-      {/* Redirect from old path to new path */}
       <Route path="/connect">
         <Redirect to="/discussions" />
       </Route>
@@ -127,9 +125,7 @@ function Router() {
         <MainLayout>
           <div className="container mx-auto px-4 py-12 pt-20">
             <h1 className="text-4xl font-heading font-bold text-[#09261E] mb-6">Profile</h1>
-            <p className="text-lg text-gray-600">
-              User profile page will be available in future updates.
-            </p>
+            <p className="text-lg text-gray-600">User profile page will be available in future updates.</p>
           </div>
         </MainLayout>
       </Route>
@@ -137,9 +133,7 @@ function Router() {
         <MainLayout>
           <div className="container mx-auto px-4 py-12 pt-20">
             <h1 className="text-4xl font-heading font-bold text-[#09261E] mb-6">Settings</h1>
-            <p className="text-lg text-gray-600">
-              Account settings and preferences will be available in future updates.
-            </p>
+            <p className="text-lg text-gray-600">Account settings and preferences will be available in future updates.</p>
           </div>
         </MainLayout>
       </Route>
@@ -156,19 +150,19 @@ function Router() {
           <OnboardingPage />
         )} />
       </Route>
-      
-      {/* Authentication routes */}
+
+      {/* ✅ Updated auth routes */}
       <Route path="/auth">
         <AuthPageUpdated />
       </Route>
-      
-      {/* Legacy auth routes with redirects */}
       <Route path="/signin">
-        <Redirect to="/auth" />
+        <SigninPage />
       </Route>
       <Route path="/register">
-        <Redirect to="/auth" />
+        <RegisterPage />
       </Route>
+
+      {/* ✅ Keep legacy redirect paths */}
       <Route path="/register-old">
         <Redirect to="/auth" />
       </Route>
@@ -181,7 +175,7 @@ function Router() {
       <Route path="/auth/register-flow">
         <Redirect to="/auth" />
       </Route>
-      
+
       <Route path="/about">
         <MainLayout>
           <AboutPage />
@@ -227,6 +221,8 @@ function Router() {
           <FHACompliancePage />
         </MainLayout>
       </Route>
+
+      {/* Catch-all 404 */}
       <Route>
         <MainLayout>
           <NotFound />
@@ -237,14 +233,14 @@ function Router() {
 }
 
 function ScrollToTop() {
-  const [_location] = typeof window !== "undefined" 
-    ? useLocation() 
+  const [_location] = typeof window !== "undefined"
+    ? useLocation()
     : ["", () => {}];
-  
+
   React.useEffect(() => {
     window.scrollTo(0, 0);
   }, [_location]);
-  
+
   return null;
 }
 
