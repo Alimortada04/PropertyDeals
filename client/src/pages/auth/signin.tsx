@@ -39,6 +39,11 @@ export default function SignInPage() {
     loginMutation.mutate({
       email: values.email,
       password: values.password,
+    }, {
+      onSuccess: () => {
+        // Force navigation to home after successful login
+        window.location.href = "/home";
+      }
     });
   }
 
@@ -51,14 +56,18 @@ export default function SignInPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback?redirect=/home`
         }
       });
       
       if (error) throw error;
     } catch (error: any) {
       console.error("❌ Google login failed:", error.message || "Unknown error");
-      alert("Google login failed. Check console for details.");
+      toast({
+        title: "Login failed",
+        description: error.message || "Google login failed. Please try again.",
+        variant: "destructive",
+      });
     }
   }
 
@@ -67,14 +76,18 @@ export default function SignInPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback?redirect=/home`
         }
       });
       
       if (error) throw error;
     } catch (error: any) {
       console.error("❌ Facebook login failed:", error.message || "Unknown error");
-      alert("Facebook login failed. Check console for details.");
+      toast({
+        title: "Login failed",
+        description: error.message || "Facebook login failed. Please try again.",
+        variant: "destructive",
+      });
     }
   }
 

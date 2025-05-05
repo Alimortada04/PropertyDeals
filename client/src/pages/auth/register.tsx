@@ -144,8 +144,9 @@ export default function RegisterPage() {
   const checkUsernameAvailability = async (username: string) => {
     if (!username) return false;
     
+    // Check against users table which we know exists
     const { data } = await supabase
-      .from("profiles")
+      .from("users")
       .select("username")
       .eq("username", username)
       .maybeSingle();
@@ -215,15 +216,11 @@ export default function RegisterPage() {
         throw new Error("Failed to create user account");
       }
       
-      // Step 2: Create local user record
-      // NOTE: We don't need to create a separate profile record in Supabase
-      // Since auth is handled separately by Supabase Auth
-      
+      // Step 2: Create both a user record and profile record
       let localUserError = false;
       
-      // Instead, let's synchronize with our local users table
       try {
-        // Use our local database schema which has 'userType' instead of roles/active_role
+        // 1. Create user in the users table
         const { error: userError } = await supabase.from("users").insert({
           username: finalUsername,
           password: values.password, // This is a duplicate but required by our schema
@@ -235,18 +232,49 @@ export default function RegisterPage() {
         
         if (userError) {
           console.log("Local user creation failed, but auth account was created:", userError);
-          // Don't throw here - the auth account is created, which is the most important part
           localUserError = true;
+        } else {
+          console.log("User created successfully in local database");
+          
+          // 2. Create a matching profile in the profiles table if it exists
+          try {
+            // Try to insert into profiles table (will only work if table exists)
+            const { error: profileError } = await supabase.from("profiles").insert({
+              id: data.user.id, // Use Supabase auth ID
+              user_id: data.user.id,
+              username: finalUsername,
+              full_name: values.fullName,
+              email: values.email,
+              avatar_url: null,
+              active_role: "buyer",
+              roles: { 
+                buyer: { status: "approved" }, 
+                seller: { status: "not_applied" }, 
+                rep: { status: "not_applied" } 
+              },
+              created_at: new Date().toISOString(),
+            });
+            
+            if (profileError) {
+              // If the error is related to table not existing, just log it
+              if (profileError.message?.includes("relation") && profileError.message?.includes("does not exist")) {
+                console.log("Profiles table doesn't exist - skipping profile creation");
+              } else {
+                console.warn("Profile creation failed:", profileError);
+              }
+            } else {
+              console.log("Profile created successfully");
+            }
+          } catch (profileError) {
+            // This might happen if the profiles table doesn't exist
+            console.log("Profile creation error:", profileError);
+          }
         }
       } catch (localDbError) {
         console.error("Error with local database:", localDbError);
-        // Don't throw here either - the auth account is what matters most
         localUserError = true;
       }
       
-      // We can log an error but still allow the user to proceed
-      // This will help debug issues with the local database while still letting 
-      // users complete registration
       if (localUserError) {
         console.warn("User created in Supabase Auth but failed to sync with local database");
       }

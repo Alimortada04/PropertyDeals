@@ -81,6 +81,10 @@ export default function AuthCallbackPage() {
     );
   }
 
-  // Redirect to home after successful authentication
-  return <Redirect to="/home" />;
+  // Check if there's a specific redirect path in the URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirectPath = urlParams.get('redirect') || '/home';
+  
+  // Redirect to the specified path or home after successful authentication
+  return <Redirect to={redirectPath} />;
 }
