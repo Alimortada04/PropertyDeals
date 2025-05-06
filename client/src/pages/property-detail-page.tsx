@@ -1054,56 +1054,142 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </div>
                         <div className="space-y-4 mb-5">
                           <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price (Automatic)</label>
-                            <Input 
-                              type="text" 
-                              defaultValue={`$${property.price.toLocaleString()}`} 
-                              className="bg-white" 
-                              id="rental-purchase-price-input"
-                            />
+                            <label className="text-sm font-medium text-gray-600 block mb-1.5 flex items-center">
+                              Purchase Price
+                              <span className="ml-1.5 text-xs text-gray-400">(Auto-filled)</span>
+                            </label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                              <Input 
+                                type="text" 
+                                defaultValue={property.price.toLocaleString()} 
+                                className="bg-white pl-7 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/20" 
+                                id="rental-purchase-price-input"
+                              />
+                            </div>
                           </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Rent</label>
-                            <Input 
-                              type="text" 
-                              defaultValue={`$${(property.price * 0.008).toFixed(0)}`} 
-                              className="bg-white"
-                              id="monthly-rent-input"
-                            />
+                          
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="text-sm font-medium text-gray-600 block mb-1.5">
+                                Monthly Rent
+                              </label>
+                              <div className="relative">
+                                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                                <Input 
+                                  type="text" 
+                                  defaultValue={(property.price * 0.008).toFixed(0)} 
+                                  className="bg-white pl-7 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/20"
+                                  id="monthly-rent-input"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-600 block mb-1.5">
+                                Monthly Expenses
+                              </label>
+                              <div className="relative">
+                                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                                <Input 
+                                  type="text" 
+                                  defaultValue={(property.price * 0.003).toFixed(0)} 
+                                  className="bg-white pl-7 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/20"
+                                  id="monthly-expenses-input"
+                                />
+                              </div>
+                            </div>
                           </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Expenses</label>
-                            <Input 
-                              type="text" 
-                              defaultValue={`$${(property.price * 0.003).toFixed(0)}`} 
-                              className="bg-white"
-                              id="monthly-expenses-input"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Down Payment Percentage</label>
-                            <Input 
-                              type="text" 
-                              defaultValue="20%" 
-                              className="bg-white"
-                              id="down-payment-input"
-                            />
+                          
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="text-sm font-medium text-gray-600 block mb-1.5 flex items-center">
+                                Down Payment
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Info className="h-3.5 w-3.5 ml-1.5 text-gray-400" />
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p className="text-xs">Percentage of the purchase price paid upfront</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </label>
+                              <div className="relative">
+                                <Input 
+                                  type="text" 
+                                  defaultValue="20%" 
+                                  className="bg-white pr-6 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/20"
+                                  id="down-payment-input"
+                                />
+                                <span className="absolute right-3 top-2.5 text-gray-500">%</span>
+                              </div>
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-600 block mb-1.5">
+                                Interest Rate
+                              </label>
+                              <div className="relative">
+                                <Input 
+                                  type="text" 
+                                  defaultValue="4.5%" 
+                                  className="bg-white pr-6 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/20"
+                                  id="interest-rate-input"
+                                />
+                                <span className="absolute right-3 top-2.5 text-gray-500">%</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div className="space-y-2">
+                        <div className="bg-[#09261E]/5 p-4 rounded-lg mb-5 border border-[#09261E]/10">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium text-gray-700">Monthly NOI</span>
+                            <span className="text-[#09261E] font-semibold">
+                              ${((property.price * 0.008) - (property.price * 0.003)).toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium text-gray-700 flex items-center">
+                              Cap Rate
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Info className="h-3.5 w-3.5 ml-1.5 text-gray-400" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="text-xs">Net Operating Income divided by Property Value</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </span>
+                            <span id="cap-rate-result" className="text-[#09261E] font-bold">
+                              {((((property.price * 0.008) - (property.price * 0.003)) * 12) / property.price * 100).toFixed(2)}%
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium text-gray-700">Cash on Cash Return</span>
+                            <span id="cash-on-cash-result" className="text-[#09261E] font-bold text-lg">
+                              {(((((property.price * 0.008) - (property.price * 0.003)) * 12) - ((property.price * 0.8) * 0.045)) / ((property.price * 0.2) + (property.price * 0.03)) * 100).toFixed(2)}%
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3">
                           <Button 
-                            className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
+                            className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
                             onClick={() => {
                               // Parse inputs
                               const purchasePriceStr = (document.getElementById('rental-purchase-price-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const rentStr = (document.getElementById('monthly-rent-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const expensesStr = (document.getElementById('monthly-expenses-input') as HTMLInputElement).value.replace(/[$,]/g, '');
                               const downPaymentStr = (document.getElementById('down-payment-input') as HTMLInputElement).value.replace(/[%,]/g, '');
+                              const interestRateStr = (document.getElementById('interest-rate-input') as HTMLInputElement).value.replace(/[%,]/g, '');
                               
                               const purchasePrice = parseFloat(purchasePriceStr) || property.price;
                               const monthlyRent = parseFloat(rentStr) || property.price * 0.008;
                               const monthlyExpenses = parseFloat(expensesStr) || property.price * 0.003;
                               const downPaymentPercent = parseFloat(downPaymentStr) || 20;
+                              const interestRatePercent = parseFloat(interestRateStr) || 4.5;
                               
                               // Calculate metrics
                               const annualRent = monthlyRent * 12;
@@ -1114,32 +1200,25 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               
                               // Cash on Cash calculation
                               const downPayment = (purchasePrice * downPaymentPercent) / 100;
+                              const loanAmount = purchasePrice - downPayment;
                               const closingCosts = purchasePrice * 0.03;
                               const totalInvestment = downPayment + closingCosts;
-                              const cashOnCash = (netOperatingIncome - (purchasePrice - downPayment) * 0.05) / totalInvestment * 100;
+                              
+                              // Annual mortgage payment (simple calculation)
+                              const annualMortgagePayment = loanAmount * (interestRatePercent / 100);
+                              
+                              const cashOnCash = (netOperatingIncome - annualMortgagePayment) / totalInvestment * 100;
                               
                               // Update results
-                              document.getElementById('rent-percent-result')!.textContent = `${rentPercentage.toFixed(2)}%`;
                               document.getElementById('cap-rate-result')!.textContent = `${capRate.toFixed(2)}%`;
                               document.getElementById('cash-on-cash-result')!.textContent = `${cashOnCash.toFixed(2)}%`;
                             }}
                           >
-                            Calculate Returns
+                            Recalculate
                           </Button>
-                          <div className="space-y-1 pt-2 border-t border-gray-200">
-                            <div className="flex justify-between">
-                              <span className="font-medium">Rent %:</span>
-                              <span className="font-bold text-[#09261E]" id="rent-percent-result">--</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="font-medium">Cap Rate %:</span>
-                              <span className="font-bold text-[#09261E]" id="cap-rate-result">--</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="font-medium">Cash on Cash Return:</span>
-                              <span className="font-bold text-[#09261E]" id="cash-on-cash-result">--</span>
-                            </div>
-                          </div>
+                          <Button variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50">
+                            View Full Analysis
+                          </Button>
                         </div>
                       </div>
                     </div>
