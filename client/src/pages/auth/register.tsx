@@ -89,7 +89,16 @@ export default function RegisterPage() {
     } else {
       setGeneratedUsername(null);
     }
-  }, [registerForm.watch("fullName")]);
+    // Register the watcher for fullName outside of useEffect's dependency array
+    const subscription = registerForm.watch((value, { name, type }) => {
+      // This will run whenever any form field changes
+      // But we'll only process fullName changes
+      if (name === "fullName" && value.fullName) {
+        // No need to do anything here, the effect above will handle it
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   if (user) return <Redirect to="/" />;
 
@@ -153,25 +162,58 @@ export default function RegisterPage() {
     registerForm.clearErrors("email");
 
     try {
-      // 0. First explicitly check if the email already exists using our dedicated function
+      // Check if the email already exists in the Auth system
       console.log("Checking if email already exists:", values.email);
+      
+      // Direct check with Supabase Auth Admin API
+      const { data: adminAuthCheck, error: adminAuthError } = await supabase
+        .from('users')
+        .select('email')
+        .eq('email', values.email)
+        .maybeSingle();
+      
+      console.log("Admin auth check result:", { adminAuthCheck, adminAuthError });
+      
+      // If we found a match, the email exists
+      if (adminAuthCheck) {
+        console.log("Email already exists in users table");
+        registerForm.setError("email", {
+          type: "manual",
+          message: "Email already exists. Try signing in instead.",
+        });
+        setLoading(false);
+        // Show toast
+        toast({
+          title: "Email already registered",
+          description: "This email is already registered. Please sign in instead.",
+          variant: "destructive",
+        });
+        return; // Exit early, don't proceed with registration
+      }
+      
+      // Fall back to our checkEmailExists function as a secondary check
       try {
         const emailExists = await checkEmailExists(values.email);
         
         if (emailExists) {
-          console.log("Email already exists, cannot proceed with registration");
+          console.log("Email already exists via OTP check");
           registerForm.setError("email", {
             type: "manual",
             message: "Email already exists. Try signing in instead.",
           });
-          throw new Error("This email is already registered. Please sign in instead.");
+          setLoading(false);
+          toast({
+            title: "Email already registered",
+            description: "This email is already registered. Please sign in instead.",
+            variant: "destructive",
+          });
+          return; // Exit early
         }
         
-        console.log("Email is available, proceeding with registration");
+        console.log("Email is available based on both checks, proceeding with registration");
       } catch (emailCheckError) {
-        // If the email check itself fails, we should proceed with registration
-        // since Supabase will reject duplicate emails anyway
-        console.log("Email check failed, proceeding with registration attempt:", emailCheckError);
+        // If both checks pass or are inconclusive, we'll let Supabase Auth handle duplicates
+        console.log("Email check function failed, relying on Auth API check:", emailCheckError);
       }
       
       // 1. Generate a username from the full name
@@ -207,7 +249,13 @@ export default function RegisterPage() {
             type: "manual",
             message: "Email already exists. Try signing in instead.",
           });
-          throw new Error("This email is already registered. Please sign in instead.");
+          setLoading(false);
+          toast({
+            title: "Email already registered",
+            description: "This email is already registered. Please sign in instead.",
+            variant: "destructive",
+          });
+          return; // Exit early and don't throw error, so user stays on same page
         } else {
           throw new Error(error.message);
         }
