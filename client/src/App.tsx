@@ -80,15 +80,36 @@ function ScrollToTop() {
 }
 
 function Router() {
-  // Check for password reset related hash fragments
+  // Check for auth-related hash fragments
   React.useEffect(() => {
-    // Check if there's an error fragment in the URL hash that indicates a password reset attempt
+    // First check if there's a ?type= parameter in the URL 
+    const urlParams = new URLSearchParams(window.location.search);
+    const type = urlParams.get('type');
+    
+    // Handle verification links by type parameter
+    if (type === 'signup') {
+      console.log("Detected signup verification, redirecting to home page");
+      window.location.href = "/";
+      return;
+    }
+    
+    // Otherwise check for hash fragments (password reset, errors)
     if (window.location.hash && (
         window.location.hash.includes('error=access_denied') || 
         window.location.hash.includes('error_code=otp_expired') ||
         window.location.hash.includes('type=recovery') ||
         window.location.hash.includes('access_token')
       )) {
+      // Extract type from URL hash if present
+      const hashParams = new URLSearchParams(window.location.hash.substring(1));
+      const hashType = hashParams.get('type');
+      
+      if (hashType === 'signup') {
+        console.log("Detected signup verification in hash, redirecting to home page");
+        window.location.href = "/";
+        return;
+      }
+      
       console.log("Detected password reset hash fragment, redirecting to reset page");
       // Preserve the hash by passing it along
       window.location.href = "/auth/reset-password" + window.location.hash;

@@ -158,6 +158,22 @@ export default function AuthCallbackPage() {
   const redirectPath = urlParams.get('redirect') || '/';
   const type = urlParams.get('type');
   
+  // Check for errors in the URL hash
+  if (window.location.hash) {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    if (hashParams.get('error') || hashParams.get('error_code')) {
+      // Special case for signup
+      if (type === 'signup') {
+        console.log("Signup verification with error, still redirecting to home");
+        return <Redirect to="/" />;
+      }
+      
+      // For other types with errors, go to reset password page
+      console.log("Auth callback has error hash parameters, redirecting to reset page");
+      return <Redirect to={`/auth/reset-password${window.location.hash}`} />;
+    }
+  }
+  
   // If this is a recovery (password reset) callback, redirect to reset-password page
   if (type === 'recovery') {
     // Include any tokens in the redirect
