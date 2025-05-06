@@ -236,7 +236,7 @@ export default function RegisterPage() {
             full_name: values.fullName,
             username: finalUsername,
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
         },
       });
 
@@ -403,7 +403,7 @@ export default function RegisterPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?redirect=/`,
+          redirectTo: `${window.location.origin}/auth/callback?type=signup&redirect=/`,
         },
       });
       if (error) throw error;

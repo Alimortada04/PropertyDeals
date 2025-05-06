@@ -110,7 +110,7 @@ export async function signUpWithEmail(email: string, password: string, fullName?
     email,
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
       data: {
         full_name: fullName || email.split('@')[0], // Use fullName if provided or fallback to part of email
       }

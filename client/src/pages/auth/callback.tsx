@@ -166,6 +166,11 @@ export default function AuthCallbackPage() {
       return <Redirect to={`/auth/reset-password?token=${token}&type=recovery`} />;
     }
     return <Redirect to="/auth/reset-password" />;
+  } 
+  // If this is a signup email verification callback, go directly to home
+  else if (type === 'signup') {
+    console.log("Email verification for signup completed, redirecting to home");
+    return <Redirect to="/" />;
   }
   
   // For other authentication flows, redirect to the specified path or home
