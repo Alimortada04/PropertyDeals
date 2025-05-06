@@ -97,26 +97,29 @@ export default function RegisterPage() {
     if (!email || registerForm.formState.errors.email) return;
     
     try {
-      // First try to check with Supabase auth
-      const { data, error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          shouldCreateUser: false, // Just check if the user exists, don't actually create an OTP
-        }
-      });
+      // Check if this email is registered using admin functions
+      const { count, error } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('email', email);
       
-      // If we got an error about user not found, the email is available
-      if (error && error.message.includes("not found")) {
-        // Email is available
+      if (error) {
+        console.error("Email check database error:", error);
         return false;
       }
       
-      // If we reached here, the email likely exists
-      registerForm.setError("email", {
-        type: "manual",
-        message: "Email already exists. Try signing in instead.",
-      });
-      return true;
+      if (count && count > 0) {
+        // Email exists in the database
+        registerForm.setError("email", {
+          type: "manual",
+          message: "Email already exists. Try signing in instead.",
+        });
+        return true;
+      }
+      
+      // Clear any existing error if email doesn't exist
+      registerForm.clearErrors("email");
+      return false;
     } catch (error) {
       console.error("Email check error:", error);
       
@@ -188,6 +191,8 @@ export default function RegisterPage() {
     }
 
     try {
+      // Email already checked in onRegisterSubmit before we got here
+      
       // Generate a unique username from full name
       const baseUsername = generateUsername(values.fullName);
       if (!baseUsername) {
@@ -209,7 +214,18 @@ export default function RegisterPage() {
         },
       });
 
-      if (error) throw new Error(error.message);
+      if (error) {
+        // Handle specific error cases
+        if (error.message.includes("already exists")) {
+          registerForm.setError("email", {
+            type: "manual",
+            message: "Email already exists. Try signing in instead.",
+          });
+          throw new Error("This email is already registered. Please sign in instead.");
+        } else {
+          throw new Error(error.message);
+        }
+      }
       
       if (!data.user) {
         throw new Error("Failed to create user account");
