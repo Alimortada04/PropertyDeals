@@ -114,50 +114,60 @@ export async function signUpWithEmail(email: string, password: string, fullName?
 }
 
 export async function signInWithEmail(email: string, password: string) {
-  // We'll let the signin page handle email existence checks
-  // This is because if we throw an error here, it would skip the password check
-  // Instead we want to allow the UI to display appropriate errors
+  console.log("Attempting to sign in with email and password");
   
-  // Just proceed directly with the password attempt
-  console.log("Attempting to sign in with password");
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  
-  if (error) {
-    console.error("Sign in error:", error);
+  try {
+    // Attempt to sign in directly
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     
-    // Handle specific error cases - at this point we KNOW the email exists
-    if (error.message.includes("Invalid login credentials")) {
-      // We know this must be a password issue since email exists
-      throw new Error("Incorrect password. Please check your password or reset it.");
-    } else if (error.message.includes("Email not confirmed") || error.message.includes("verification required")) {
-      // Resend the verification email and show a specific error
-      try {
-        console.log("User needs to verify email, attempting to resend verification email");
-        const { error: resendError } = await supabase.auth.resend({
-          type: 'signup',
-          email: email,
-        });
+    if (error) {
+      console.error("Sign in error:", error);
+      
+      // Parse the error message to provide better user feedback
+      if (error.message.includes("Invalid login credentials")) {
+        // Check if the email exists
+        const emailExists = await checkEmailExists(email);
         
-        if (resendError) {
-          console.error("Error resending verification email:", resendError);
+        if (!emailExists) {
+          throw new Error("We couldn't find an account with this email. Please check your email or create a new account.");
         } else {
-          console.log("Verification email resent successfully");
+          // If email exists, then it's a password issue
+          throw new Error("Incorrect password. Please check your password or reset it.");
         }
-      } catch (resendError) {
-        console.error("Error resending verification email:", resendError);
+      } else if (error.message.includes("Email not confirmed") || error.message.includes("verification required")) {
+        // Resend the verification email and show a specific error
+        try {
+          console.log("User needs to verify email, attempting to resend verification email");
+          const { error: resendError } = await supabase.auth.resend({
+            type: 'signup',
+            email: email,
+          });
+          
+          if (resendError) {
+            console.error("Error resending verification email:", resendError);
+          } else {
+            console.log("Verification email resent successfully");
+          }
+        } catch (resendError) {
+          console.error("Error resending verification email:", resendError);
+        }
+        
+        throw new Error("Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in.");
       }
       
-      throw new Error("Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in.");
+      // For any other errors
+      throw error;
     }
     
-    // For any other errors
-    throw error;
+    console.log("Sign in successful");
+    return data;
+  } catch (error) {
+    console.error("Error in signInWithEmail:", error);
+    throw error; // Re-throw to be handled by the calling code
   }
-  
-  return data;
 }
 
 export async function signInWithGoogle() {

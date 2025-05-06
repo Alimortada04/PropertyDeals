@@ -45,103 +45,109 @@ export default function SignInPage() {
     setLoading(true);
     
     try {
-      // Email check should take precedence over password check
-      console.log("Checking if email exists before attempting login:", values.email);
-      
-      // Variable to capture the email existence check result
-      let emailExists = false;
-      
+      // First, try to directly signin without checking if email exists
+      // This is the most reliable way to verify credentials
       try {
-        emailExists = await checkEmailExists(values.email);
+        console.log("Attempting direct login:", values.email);
         
-        if (!emailExists) {
-          // If email doesn't exist, immediately show an email error and don't attempt login
-          console.log("Email not found, showing appropriate error");
-          setLoading(false);
-          setAuthError({
-            type: 'email',
-            message: "We couldn't find an account with this email. Please check your email or create a new account."
-          });
-          return; // Don't proceed with login attempt
-        }
-        
-        // If we get here, the email exists, so we can try to log in
-        console.log("Email exists, attempting login");
-      } catch (emailCheckError) {
-        // If the email check itself fails, we should proceed with login attempt
-        console.log("Email check failed, proceeding with login attempt:", emailCheckError);
-        // Since we couldn't verify for sure, we'll attempt login anyway
-        emailExists = true; // Assume it exists to give a chance to log in
-      }
-      
-      loginMutation.mutate({
-        email: values.email,
-        password: values.password,
-      }, {
-        onSuccess: () => {
-          toast({
-            title: "Login successful",
-            description: "Welcome back! Redirecting...",
-          });
-          
-          // Show a smooth transition animation before redirecting
-          const overlay = document.createElement('div');
-          overlay.className = 'fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500';
-          overlay.innerHTML = `
-            <div class="text-center">
-              <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#09261E] border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
-              <p class="text-[#09261E] font-medium text-lg">Taking you to your dashboard...</p>
-            </div>
-          `;
-          document.body.appendChild(overlay);
-          
-          // Redirect to home page after a short delay
-          setTimeout(() => {
-            window.location.href = "/";
-          }, 1000);
-        },
-        onError: (error: Error) => {
-          console.log("Login error:", error.message);
-          
-          // Check error types and prioritize them
-          if (error.message.includes('not found') || 
-              error.message.includes('User not found') || 
-              error.message.includes('Invalid login credentials')) {
+        loginMutation.mutate({
+          email: values.email,
+          password: values.password,
+        }, {
+          onSuccess: () => {
+            setLoading(false);
+            toast({
+              title: "Login successful",
+              description: "Welcome back! Redirecting...",
+            });
             
-            // Prioritize email check if it failed
-            if (!emailExists) {
-              setAuthError({
-                type: 'email',
-                message: "We couldn't find an account with this email. Please check your email or create a new account."
-              });
-            } else {
-              // If email exists, then it must be a password error
-              setAuthError({
-                type: 'password',
-                message: "Incorrect password. Please try again or reset your password."
-              });
+            // Show a smooth transition animation before redirecting
+            const overlay = document.createElement('div');
+            overlay.className = 'fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500';
+            overlay.innerHTML = `
+              <div class="text-center">
+                <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#09261E] border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
+                <p class="text-[#09261E] font-medium text-lg">Taking you to your dashboard...</p>
+              </div>
+            `;
+            document.body.appendChild(overlay);
+            
+            // Redirect to home page after a short delay
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 1000);
+          },
+          onError: async (error: Error) => {
+            console.log("Login error:", error.message);
+            
+            // If login fails, let's check if the email exists to provide better error messages
+            try {
+              const emailExists = await checkEmailExists(values.email);
+              
+              if (!emailExists) {
+                // Email doesn't exist, show email error
+                setLoading(false);
+                setAuthError({
+                  type: 'email',
+                  message: "We couldn't find an account with this email. Please check your email or create a new account."
+                });
+              } else if (error.message.includes('password') || error.message.includes('Invalid login credentials')) {
+                // Email exists but password is wrong
+                setLoading(false);
+                setAuthError({
+                  type: 'password',
+                  message: "Incorrect password. Please try again or reset your password."
+                });
+              } else if (error.message.includes('Email not confirmed') || error.message.includes('verification required')) {
+                // Email exists but needs verification
+                setLoading(false);
+                setAuthError({
+                  type: 'verification',
+                  message: "Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in."
+                });
+              } else {
+                // Other error
+                setLoading(false);
+                setAuthError({
+                  type: 'general',
+                  message: error.message || "Sign in failed. Please try again."
+                });
+              }
+            } catch (emailCheckError) {
+              // If email check fails, fallback to basic error messaging
+              console.error("Error checking email:", emailCheckError);
+              setLoading(false);
+              
+              if (error.message.includes('password')) {
+                setAuthError({
+                  type: 'password',
+                  message: "Incorrect password. Please try again or reset your password."
+                });
+              } else if (error.message.includes('Email not confirmed') || error.message.includes('verification required')) {
+                setAuthError({
+                  type: 'verification',
+                  message: "Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in."
+                });
+              } else {
+                setAuthError({
+                  type: 'general',
+                  message: error.message || "Sign in failed. Please try again."
+                });
+              }
             }
-          } else if (error.message.includes('password')) {
-            setAuthError({
-              type: 'password',
-              message: "Incorrect password. Please try again or reset your password."
-            });
-          } else if (error.message.includes('Email not confirmed') || error.message.includes('Email verification required')) {
-            // Handle verification error without trying to resend here - it's already handled in the supabase.ts file
-            setAuthError({
-              type: 'verification',
-              message: "Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in."
-            });
-          } else {
-            setAuthError({
-              type: 'general',
-              message: error.message || "Sign in failed. Please try again."
-            });
           }
-        }
-      });
+        });
+      } catch (loginError) {
+        console.error("Fatal error during login process:", loginError);
+        setLoading(false);
+        setAuthError({
+          type: 'general',
+          message: "An unexpected error occurred. Please try again."
+        });
+      }
     } catch (error: any) {
       console.error("Error during login attempt:", error);
+      setLoading(false);
       setAuthError({
         type: 'general',
         message: error.message || "An unexpected error occurred. Please try again."
