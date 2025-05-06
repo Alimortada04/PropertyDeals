@@ -193,7 +193,8 @@ export default function RegisterPage() {
       
       // Fall back to our checkEmailExists function as a secondary check
       try {
-        const emailExists = await checkEmailExists(values.email);
+        // Pass true as the second parameter to indicate this is a registration check
+        const emailExists = await checkEmailExists(values.email, true);
         
         if (emailExists) {
           console.log("Email already exists via OTP check");
@@ -210,9 +211,9 @@ export default function RegisterPage() {
           return; // Exit early
         }
         
-        console.log("Email is available based on both checks, proceeding with registration");
+        console.log("Email is available, proceeding with registration");
       } catch (emailCheckError) {
-        // If both checks pass or are inconclusive, we'll let Supabase Auth handle duplicates
+        // If checks are inconclusive, we'll let Supabase Auth handle duplicates
         console.log("Email check function failed, relying on Auth API check:", emailCheckError);
       }
       
