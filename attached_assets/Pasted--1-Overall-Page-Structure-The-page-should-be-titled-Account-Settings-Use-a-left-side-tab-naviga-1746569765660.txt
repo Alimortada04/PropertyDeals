@@ -1,0 +1,130 @@
+✅ 1. Overall Page Structure
+The page should be titled “Account Settings”
+
+Use a left-side tab navigation layout
+
+Tabs:
+
+Account Settings (default)
+
+Profile
+
+Property Preferences
+
+Professional Preferences
+
+Use a consistent layout with headings, form sections, and save buttons per tab.
+
+✅ 2. Tab: Account Settings
+Fields:
+
+Full Name (full_name)
+
+Bio (bio) → textarea with real-time height
+
+Username (username) → check uniqueness on blur
+
+Email (email) → read-only
+
+Phone Number (phone) → editable + placeholder for “Verify” feature
+
+All fields should be fetched from the Supabase profiles table using the current user's ID.
+
+✅ 3. Tab: Profile
+Includes Experience, Buyer Identity, and Socials.
+
+Fields:
+
+In Real Estate Since → in_real_estate_since (date)
+
+Business Name → business_name
+
+Type of Buyer → type_of_buyer (multi-select with custom tags)
+
+Website, Instagram, Facebook, LinkedIn (basic text fields)
+
+Profile Photo → profile_photo_url
+
+Use Supabase Storage (avatars/)
+
+Drag/drop or file upload, save public URL
+
+Add display-only info:
+
+Member Since → created_at
+
+User # → join_number
+
+Profile Completion Score → render profile_completion_score as a progress bar
+
+✅ 4. Tab: Property Preferences
+Includes Property Preference and Deal Info.
+
+Fields:
+
+Location → location
+
+Markets → markets (multi-select + custom)
+
+Property Types → property_types
+
+Property Conditions → property_conditions
+
+Budget Min / Max → ideal_budget_min, ideal_budget_max
+
+Financing Methods → financing_methods (multi-select)
+
+Preferred Financing Method → preferred_financing_method
+
+Closing Timeline → closing_timeline
+
+Deals Last 12 Months → number_of_deals_last_12_months
+Goal Deals Next 12 Months → goal_deals_next_12_months
+
+Total Deals Done → total_deals_done
+
+Properties Currently Owned → current_portfolio_count
+
+Buyer Verification Tag → read-only (buyer_verification_tag)
+
+Proof of Funds Upload:
+
+Upload PDF to Supabase Storage (proof_of_funds/)
+
+Save public URL to proof_of_funds_url
+
+Show badge:
+
+“Pending” if proof_of_funds_verified = false
+
+“Verified” if true
+
+✅ 5. Tab: Professional Preferences
+Includes vendor preferences.
+
+Fields:
+
+Preferred Inspectors → preferred_inspectors (multi-select from users table)
+
+Preferred Agents → preferred_agents
+
+Preferred Contractors → preferred_contractors
+
+Preferred Lenders → preferred_lenders
+
+These are UUID[] fields that should support multi-select with search from profiles table.
+
+✅ 6. Save Logic
+Save button at the bottom of each tab
+
+On click: update profiles set ... where id = auth.user().id
+
+Only editable fields should be sent
+
+Show success toast/indicator
+
+⚠️ Restrictions
+Fields like email, created_at, join_number, buyer_verification_tag, and proof_of_funds_verified must be read-only
+
+Save buttons should disable during submission
+

@@ -289,12 +289,7 @@ function Router() {
       </Route>
       <Route path="/settings">
         <AppLayout>
-          <div className="container mx-auto px-4 py-12 pt-20">
-            <h1 className="text-4xl font-heading font-bold text-[#09261E] mb-6">Settings</h1>
-            <p className="text-lg text-gray-600">
-              Account settings and preferences will be available in future updates.
-            </p>
-          </div>
+          <ProfileSettingsPage />
         </AppLayout>
       </Route>
       {/* Temporarily allow access to seller dashboard without authentication */}
