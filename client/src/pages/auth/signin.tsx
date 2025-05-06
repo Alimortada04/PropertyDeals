@@ -124,7 +124,8 @@ export default function SignInPage() {
               type: 'password',
               message: "Incorrect password. Please try again or reset your password."
             });
-          } else if (error.message.includes('Email not confirmed')) {
+          } else if (error.message.includes('Email not confirmed') || error.message.includes('Email verification required')) {
+            // Handle verification error without trying to resend here - it's already handled in the supabase.ts file
             setAuthError({
               type: 'verification',
               message: "Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in."

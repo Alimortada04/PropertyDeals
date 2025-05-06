@@ -59,7 +59,6 @@ export async function signUpWithEmail(email: string, password: string, fullName?
     options: {
       emailRedirectTo: `${window.location.origin}/auth/callback`,
       data: {
-        confirmed_at: new Date().toISOString(), // Pre-confirm the user for testing
         full_name: fullName || email.split('@')[0], // Use fullName if provided or fallback to part of email
       }
     }
@@ -93,9 +92,10 @@ export async function signInWithEmail(email: string, password: string) {
     if (error.message.includes("Invalid login credentials")) {
       // We know this must be a password issue since email exists
       throw new Error("Incorrect password. Please check your password or reset it.");
-    } else if (error.message.includes("Email not confirmed")) {
+    } else if (error.message.includes("Email not confirmed") || error.message.includes("verification required")) {
       // Resend the verification email and show a specific error
       try {
+        console.log("User needs to verify email, attempting to resend verification email");
         const { error: resendError } = await supabase.auth.resend({
           type: 'signup',
           email: email,
