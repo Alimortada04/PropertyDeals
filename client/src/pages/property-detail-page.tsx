@@ -685,67 +685,66 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         I'm a contractor — Submit a Quote
                       </Link>
                     </div>
+                    
+                    {/* Investment Calculators Section - Added under The Numbers */}
+                    <div className="mt-8 pt-6 border-t border-gray-200">
+                      <h3 className="text-xl font-medium text-[#09261E] mb-4 flex items-center">
+                        <PercentSquare className="h-5 w-5 mr-2" />
+                        Investment Calculators
+                      </h3>
+                      
+                      <div className="space-y-4">
+                        <div className="bg-[#09261E]/5 p-4 rounded-lg">
+                          <h4 className="font-medium text-lg text-[#09261E] mb-2">Flip Calculator</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
+                              <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs</label>
+                              <Input type="text" defaultValue={`$${(property.price * 0.05).toFixed(0)}`} className="bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">After Repair Value</label>
+                              <Input type="text" defaultValue={`$${(property.price * 1.2).toFixed(0)}`} className="bg-white" />
+                            </div>
+                          </div>
+                          <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Profit & ROI</Button>
+                        </div>
+                        
+                        <div className="bg-[#09261E]/5 p-4 rounded-lg">
+                          <h4 className="font-medium text-lg text-[#09261E] mb-2">Rental Calculator</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
+                              <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Rent</label>
+                              <Input type="text" defaultValue={`$${(property.price * 0.008).toFixed(0)}`} className="bg-white" />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Expenses</label>
+                              <Input type="text" defaultValue={`$${(property.price * 0.003).toFixed(0)}`} className="bg-white" />
+                            </div>
+                          </div>
+                          <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Cash Flow & ROI</Button>
+                        </div>
+                      </div>
+                      
+                      <div className="text-center py-4">
+                        <Link to="/playbook#tools" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                          View All Property Calculators <ChevronRight className="h-4 w-4 ml-1" />
+                        </Link>
+                      </div>
+                    </div>
+                    
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
               
-              {/* Relevant Calculators Section */}
-              <Accordion type="single" defaultValue="calculators" collapsible className="w-full">
-                <AccordionItem value="calculators" className="border-b border-gray-200">
-                  <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
-                    <div className="flex items-center">
-                      <span className="mr-3 text-2xl">📈</span>
-                      <span>Relevant Calculators</span>
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 py-4">
-                    <div className="space-y-4">
-                      <div className="bg-[#09261E]/5 p-4 rounded-lg">
-                        <h4 className="font-medium text-lg text-[#09261E] mb-2">Flip Calculator</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
-                            <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs</label>
-                            <Input type="text" defaultValue={`$${(property.price * 0.05).toFixed(0)}`} className="bg-white" />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">ARV</label>
-                            <Input type="text" defaultValue={`$${(property.price * 1.2).toFixed(0)}`} className="bg-white" />
-                          </div>
-                        </div>
-                        <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Potential Profit</Button>
-                      </div>
-                      
-                      <div className="bg-[#09261E]/5 p-4 rounded-lg">
-                        <h4 className="font-medium text-lg text-[#09261E] mb-2">Rental Calculator</h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price</label>
-                            <Input type="text" defaultValue={`$${property.price.toLocaleString()}`} className="bg-white" />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Rent</label>
-                            <Input type="text" defaultValue={`$${(property.price * 0.008).toFixed(0)}`} className="bg-white" />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Monthly Expenses</label>
-                            <Input type="text" defaultValue={`$${(property.price * 0.003).toFixed(0)}`} className="bg-white" />
-                          </div>
-                        </div>
-                        <Button className="w-full bg-[#09261E] hover:bg-[#135341] text-white">Calculate Cash Flow & ROI</Button>
-                      </div>
-                    </div>
-                    <div className="text-center py-4">
-                      <Link to="/playbook#tools" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
-                        View All Property Calculators <ChevronRight className="h-4 w-4 ml-1" />
-                      </Link>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+
               
               {/* Find a REP Section */}
               <Accordion type="single" defaultValue="reps" collapsible className="w-full">
