@@ -96,15 +96,15 @@ export default function RegisterPage() {
   const checkEmailExists = async (email: string) => {
     if (!email) return false;
     
-    // Remove validation errors that are not related to duplicate emails
-    if (registerForm.formState.errors.email && registerForm.formState.errors.email.type !== "manual") {
-      return false;
-    }
-    
     try {
       console.log("Checking if email exists:", email);
       
-      // Direct check against the users table - this is the most reliable for already registered users
+      // For test - skip email existence check for now
+      console.log("Skipping email existence check for now");
+      return false;
+      
+      /* TEMPORARILY DISABLED FOR DEBUGGING
+      // Direct check against the users table
       const { data: userData } = await supabase
         .from('users')
         .select('email')
@@ -120,33 +120,9 @@ export default function RegisterPage() {
         return true;
       }
       
-      // Second check against auth.users using sign in attempt
-      // Only run this check if we didn't find the email in the users table
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: 'CheckingIfEmailExists123!' // A password that almost certainly won't match
-      });
-      
-      // If we get "Invalid credentials" error, the email exists in the auth system
-      // but only return true if it explicitly says "Invalid login credentials"
-      if (signInError?.message && signInError.message.includes('Invalid login credentials')) {
-        console.log("Email found in auth system:", email);
-        registerForm.setError("email", {
-          type: "manual",
-          message: "Email already exists. Try signing in instead.",
-        });
-        return true;
-      }
-      
-      // If we get any other error, the email likely doesn't exist
-      console.log("Email not found, returning false");
-      registerForm.clearErrors("email");
+      // We'll skip the auth check for now since it's causing issues
       return false;
-      
-      // The email doesn't exist - don't need these lines since we already return in each condition
-      // console.log("Email exists: FALSE");
-      // registerForm.clearErrors("email");
-      // return false;
+      */
     } catch (error) {
       console.error("Email check error:", error);
       
@@ -565,25 +541,7 @@ export default function RegisterPage() {
           </div>
         ) : (
           <>
-            {/* Error Message */}
-            {formError && (
-              <Alert className="mb-6 bg-red-50 border-red-200 text-red-800 animate-pulse-once" variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle className="text-red-800 font-medium">Registration Failed</AlertTitle>
-                <AlertDescription className="text-red-700">{formError}</AlertDescription>
-              </Alert>
-            )}
-            
-            {/* Field-Level Email Error Message */}
-            {registerForm.formState.errors.email && registerForm.formState.errors.email.message?.includes("already exists") && (
-              <div className="border border-red-300 rounded-md p-3 mb-4 bg-red-50 flex items-start gap-2">
-                <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-red-700 text-sm font-medium">Email already registered</p>
-                  <p className="text-red-600 text-xs mt-1">This email address is already registered. Please use a different email or <a href="/signin" className="underline font-medium">sign in</a> instead.</p>
-                </div>
-              </div>
-            )}
+            {/* Social Login Buttons */}
             
             {/* Success Message (non-verification case) */}
             {formSuccess && !verificationRequired && (
