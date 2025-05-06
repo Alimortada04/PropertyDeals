@@ -45,20 +45,32 @@ export default function SignInPage() {
     // First, let's check if the email exists to provide better error messages
     try {
       // Email check should take precedence over password check
-      const emailExists = await checkEmailExists(values.email);
+      console.log("Checking if email exists before attempting login:", values.email);
       
-      if (!emailExists) {
-        // If email doesn't exist, immediately show an email error and don't attempt login
-        console.log("Email not found, showing appropriate error");
-        setAuthError({
-          type: 'email',
-          message: "We couldn't find an account with this email. Please check your email or create a new account."
-        });
-        return; // Don't proceed with login attempt
+      // Variable to capture the email existence check result
+      let emailExists = false;
+      
+      try {
+        emailExists = await checkEmailExists(values.email);
+        
+        if (!emailExists) {
+          // If email doesn't exist, immediately show an email error and don't attempt login
+          console.log("Email not found, showing appropriate error");
+          setAuthError({
+            type: 'email',
+            message: "We couldn't find an account with this email. Please check your email or create a new account."
+          });
+          return; // Don't proceed with login attempt
+        }
+        
+        // If we get here, the email exists, so we can try to log in
+        console.log("Email exists, attempting login");
+      } catch (emailCheckError) {
+        // If the email check itself fails, we should proceed with login attempt
+        console.log("Email check failed, proceeding with login attempt:", emailCheckError);
+        // Since check failed, we assume email might exist and let the login attempt reveal the truth
+        emailExists = false;
       }
-      
-      // If we get here, the email exists, so we can try to log in
-      console.log("Email exists, attempting login");
       
       loginMutation.mutate({
         email: values.email,
@@ -89,8 +101,25 @@ export default function SignInPage() {
         onError: (error: Error) => {
           console.log("Login error:", error.message);
           
-          // Since we already verified email exists, any login error must be password or verification related
-          if (error.message.includes('password')) {
+          // Check error types and prioritize them
+          if (error.message.includes('not found') || 
+              error.message.includes('User not found') || 
+              error.message.includes('Invalid login credentials')) {
+            
+            // Prioritize email check if it failed
+            if (!emailExists) {
+              setAuthError({
+                type: 'email',
+                message: "We couldn't find an account with this email. Please check your email or create a new account."
+              });
+            } else {
+              // If email exists, then it must be a password error
+              setAuthError({
+                type: 'password',
+                message: "Incorrect password. Please try again or reset your password."
+              });
+            }
+          } else if (error.message.includes('password')) {
             setAuthError({
               type: 'password',
               message: "Incorrect password. Please try again or reset your password."

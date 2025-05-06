@@ -15,7 +15,8 @@ export async function checkEmailExists(email: string): Promise<boolean> {
   console.log("Checking if email exists:", email);
   
   try {
-    // Method 1: Try to use OTP check (most reliable)
+    // The most reliable way to check if an email exists is to try to sign in with OTP
+    // and specifically check for the "not found" error message
     const { error: otpError } = await supabase.auth.signInWithOtp({
       email: email,
       options: {
@@ -23,18 +24,28 @@ export async function checkEmailExists(email: string): Promise<boolean> {
       }
     });
     
-    // If there's no error or error doesn't contain "not found", the email exists
-    if (!otpError || !otpError.message.includes("not found")) {
-      console.log("Email exists (OTP check)");
+    // If there's no error from the OTP request, the email exists
+    if (!otpError) {
+      console.log("Email exists (no error from OTP check)");
       return true;
     }
     
-    // If we get here, the OTP check says the email doesn't exist
-    console.log("Email doesn't exist (OTP check)");
+    // If there's an error message that specifically says "not found",
+    // then the email doesn't exist
+    if (otpError.message && otpError.message.includes("not found")) {
+      console.log("Email doesn't exist (OTP check returned 'not found')");
+      return false;
+    }
+    
+    // For other error messages (rate limiting, etc.), we can't be sure
+    // But most likely if we got an error here that's not "not found", the email exists
+    console.log("Email existence unknown, got error:", otpError.message);
+    console.log("Assuming email doesn't exist to allow registration attempt");
     return false;
   } catch (error) {
     console.error("Error checking email existence:", error);
-    // If there's an error in the check, assume the email might exist to be safe
+    // If there's an exception in the check, don't prevent registration
+    console.log("Assuming email doesn't exist due to error");
     return false;
   }
 }
@@ -64,19 +75,12 @@ export async function signUpWithEmail(email: string, password: string, fullName?
 }
 
 export async function signInWithEmail(email: string, password: string) {
-  // Step 1: First explicitly check if the email exists in the system
-  console.log("Checking if email exists for sign-in:", email);
-  const emailExists = await checkEmailExists(email);
+  // We'll let the signin page handle email existence checks
+  // This is because if we throw an error here, it would skip the password check
+  // Instead we want to allow the UI to display appropriate errors
   
-  // If email doesn't exist, immediately return an email-specific error
-  // This is the most important user experience improvement - email errors take precedence
-  if (!emailExists) {
-    console.log("Email not found in system, cannot proceed with login");
-    throw new Error("Email not found. Please check your email or create a new account.");
-  }
-  
-  // Step 2: If we get here, we know the email exists, now try the password
-  console.log("Email exists, attempting to sign in with password");
+  // Just proceed directly with the password attempt
+  console.log("Attempting to sign in with password");
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,

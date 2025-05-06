@@ -155,18 +155,24 @@ export default function RegisterPage() {
     try {
       // 0. First explicitly check if the email already exists using our dedicated function
       console.log("Checking if email already exists:", values.email);
-      const emailExists = await checkEmailExists(values.email);
-      
-      if (emailExists) {
-        console.log("Email already exists, cannot proceed with registration");
-        registerForm.setError("email", {
-          type: "manual",
-          message: "Email already exists. Try signing in instead.",
-        });
-        throw new Error("This email is already registered. Please sign in instead.");
+      try {
+        const emailExists = await checkEmailExists(values.email);
+        
+        if (emailExists) {
+          console.log("Email already exists, cannot proceed with registration");
+          registerForm.setError("email", {
+            type: "manual",
+            message: "Email already exists. Try signing in instead.",
+          });
+          throw new Error("This email is already registered. Please sign in instead.");
+        }
+        
+        console.log("Email is available, proceeding with registration");
+      } catch (emailCheckError) {
+        // If the email check itself fails, we should proceed with registration
+        // since Supabase will reject duplicate emails anyway
+        console.log("Email check failed, proceeding with registration attempt:", emailCheckError);
       }
-      
-      console.log("Email is available, proceeding with registration");
       
       // 1. Generate a username from the full name
       const baseUsername = generateUsername(values.fullName);
