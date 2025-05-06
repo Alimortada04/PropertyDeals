@@ -1223,8 +1223,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       </div>
                     </div>
                     <div className="text-center py-4">
-                      <Link to="/tools" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
-                        View All Property Calculators <i className="fas fa-arrow-right ml-2"></i>
+                      <Link to="/playbook#tools" className="text-[#09261E] hover:underline font-medium inline-flex items-center">
+                        View All Property Calculators <ChevronRight className="h-4 w-4 ml-1" />
                       </Link>
                     </div>
                   </AccordionContent>

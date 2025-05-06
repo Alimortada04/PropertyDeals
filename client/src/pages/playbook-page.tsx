@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "wouter";
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { Book, Calculator, Search, Briefcase, Home, Users, Filter, FileText, Layers } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,10 +15,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 export default function PlaybookPage() {
+  const [location] = useLocation();
   const [activeTab, setActiveTab] = useState<"resources" | "tools">("tools");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("General");
   const [activeToolCategory, setActiveToolCategory] = useState("All Tools");
+  
+  // Check URL hash to set active tab
+  useEffect(() => {
+    const hash = window.location.hash.toLowerCase();
+    if (hash === '#tools') {
+      setActiveTab('tools');
+    } else if (hash === '#resources') {
+      setActiveTab('resources');
+    }
+  }, [location]);
 
   // Resource categories
   const resourceCategories = [
