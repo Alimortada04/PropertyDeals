@@ -368,10 +368,10 @@ export default function RegisterPage() {
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6 bg-white overflow-hidden">
       {/* Background Blobs - Animated with staggered animation */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Primary green large blob - top right */}
         <div
-          className="absolute w-[700px] h-[700px] bg-[#135341]/20 rounded-full blur-3xl -top-[10%] -right-[10%] animate-breathe"
+          className="absolute w-[700px] h-[700px] bg-[#135341]/40 rounded-full blur-3xl -top-[10%] -right-[10%] animate-breathe"
           style={{ 
             transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
             '--blur-amount': '120px'
@@ -380,7 +380,7 @@ export default function RegisterPage() {
         
         {/* Wine accent blob - bottom left */}
         <div
-          className="absolute w-[600px] h-[600px] bg-[#803344]/20 rounded-full blur-3xl -bottom-[15%] -left-[10%] animate-float"
+          className="absolute w-[600px] h-[600px] bg-[#803344]/40 rounded-full blur-3xl -bottom-[15%] -left-[10%] animate-float"
           style={{ 
             transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * -20}px)`,
           }}
@@ -388,7 +388,7 @@ export default function RegisterPage() {
         
         {/* Accent pink blob - mid center */}
         <div
-          className="absolute w-[500px] h-[500px] bg-[#E59F9F]/20 rounded-full blur-3xl top-[40%] left-[30%] animate-pulse-slow"
+          className="absolute w-[500px] h-[500px] bg-[#E59F9F]/30 rounded-full blur-3xl top-[40%] left-[30%] animate-pulse-slow"
           style={{ 
             transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * 15}px)`,
           }}
@@ -396,7 +396,7 @@ export default function RegisterPage() {
         
         {/* Light green blob - top left */}
         <div
-          className="absolute w-[400px] h-[400px] bg-[#135341]/15 rounded-full blur-3xl top-[10%] left-[5%] animate-float-slow"
+          className="absolute w-[400px] h-[400px] bg-[#135341]/30 rounded-full blur-3xl top-[10%] left-[5%] animate-float-slow"
           style={{ 
             transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * 15}px)`,
           }}
