@@ -357,34 +357,71 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <span>{property.city}, {property.state} {property.zipCode}</span>
               </div>
               
-              {/* Property Status Tags */}
+              {/* Action Buttons (Relocated from below) */}
               <div className="flex flex-wrap gap-2 mt-3">
-                {property.propertyType && (
-                  <Badge variant="outline" className="bg-[#09261E]/10 text-[#09261E] border-0">
-                    {property.propertyType}
-                  </Badge>
-                )}
-                {/* Condition Badge - Would come from property data in real implementation */}
-                <Badge variant="outline" className="bg-[#135341]/10 text-[#135341] border-0">
-                  Light Rehab
-                </Badge>
-                <Badge variant="outline" className="bg-gray-100 text-gray-700 border-0">
-                  {daysOnMarket} {daysOnMarket === 1 ? 'day' : 'days'} on PropertyDeals
+                <button
+                  className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+                  onClick={() => setContactModalOpen(true)}
+                >
+                  <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
+                  Contact Seller
+                </button>
+                <button
+                  className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+                  onClick={() => setOfferModalOpen(true)}
+                >
+                  <DollarSign className="h-3.5 w-3.5 mr-1.5" />
+                  Make an Offer
+                </button>
+                <button
+                  className={`px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 border border-gray-200 flex items-center ${
+                    isInWatchlist 
+                      ? "bg-[#EAF2EF] text-[#135341] shadow-sm" 
+                      : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+                  }`}
+                  onClick={handleWatchlistToggle}
+                >
+                  <Heart className={`h-3.5 w-3.5 mr-1.5 ${isInWatchlist ? 'fill-[#135341]' : ''}`} />
+                  {isInWatchlist ? 'Saved' : 'Save'}
+                </button>
+                <button
+                  className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+                  onClick={() => {
+                    generateShareableUrl();
+                    setShareModalOpen(true);
+                  }}
+                >
+                  <Share2 className="h-3.5 w-3.5 mr-1.5" />
+                  Share
+                </button>
+                
+                {/* Property Info Badge */}
+                <Badge variant="outline" className="bg-gray-100 text-gray-700 border-0 ml-auto flex items-center">
+                  <Calendar className="h-3 w-3 mr-1" />
+                  {daysOnMarket} {daysOnMarket === 1 ? 'day' : 'days'} on market
                 </Badge>
               </div>
             </div>
             
             <div className="mt-4 md:mt-0 flex flex-col items-end">
               <div className="text-3xl md:text-4xl font-bold text-[#09261E]">${property.price.toLocaleString()}</div>
-              {/* PD Rating - Color coded by rating value */}
-              <div className={`font-medium ${
-                // Color coding based on rating value
-                propertyId % 10 <= 3 ? 'text-[#803344]' : 
-                propertyId % 10 <= 6 ? 'text-gray-600' : 
-                'text-[#135341]'
-              }`}>
-                PD Rating: {propertyId % 10}/10
-              </div>
+              {/* PD Rating - Color coded by rating value with tooltip */}
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className={`font-medium flex items-center ${
+                    // Color coding based on rating value
+                    propertyId % 10 <= 3 ? 'text-[#803344]' : 
+                    propertyId % 10 <= 6 ? 'text-gray-600' : 
+                    'text-[#135341]'
+                  }`}>
+                    PD Rating: {propertyId % 10}/10
+                    <HelpCircle className="h-3.5 w-3.5 ml-1 opacity-70" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p>PD Rating is our proprietary scoring system that evaluates properties based on value, market conditions, and investment potential. A higher score indicates a better investment opportunity.</p>
+                </TooltipContent>
+              </Tooltip>
               <div className="text-gray-600">
                 ${property.squareFeet ? Math.round(property.price / property.squareFeet) : '0'}/sqft
               </div>
@@ -471,48 +508,25 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
           </div>
           
-          {/* Action Buttons */}
+          {/* Property Type & Status Badges */}
           <div className="flex flex-wrap gap-3">
-            <button
-              className="px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
-              onClick={() => setContactModalOpen(true)}
-            >
-              Contact Seller
-            </button>
-            <button
-              className="px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200"
-              onClick={() => setOfferModalOpen(true)}
-            >
-              Make an Offer
-            </button>
-            <button
-              className={`px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 border border-gray-200 flex items-center ${
-                isInWatchlist 
-                  ? "bg-[#EAF2EF] text-[#135341] shadow-sm" 
-                  : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
-              }`}
-              onClick={handleWatchlistToggle}
-            >
-              <Heart className={`h-4 w-4 mr-2 ${isInWatchlist ? 'fill-[#135341]' : ''}`} />
-              {isInWatchlist ? 'Saved' : 'Save'}
-            </button>
-
-            <button
-              className="px-5 py-2 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
-              onClick={() => {
-                generateShareableUrl();
-                setShareModalOpen(true);
-              }}
-            >
-              <Share2 className="h-4 w-4 mr-2" />
-              Share
-            </button>
+            {property.propertyType && (
+              <Badge variant="outline" className="px-4 py-1.5 bg-[#09261E]/10 text-[#09261E] border-0 flex items-center">
+                <HomeIcon className="h-3.5 w-3.5 mr-1.5" />
+                {property.propertyType}
+              </Badge>
+            )}
+            {/* Condition Badge - Would come from property data in real implementation */}
+            <Badge variant="outline" className="px-4 py-1.5 bg-[#135341]/10 text-[#135341] border-0 flex items-center">
+              <Hammer className="h-3.5 w-3.5 mr-1.5" />
+              Light Rehab
+            </Badge>
           </div>
         </div>
       </section>
 
       {/* Sticky Navigation Menu */}
-      <div className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200" style={{ position: "sticky" }}>
+      <div className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-200" style={{ position: "sticky" }}>
         <div className="container mx-auto px-4">
           <div className="hidden md:flex items-center h-14 overflow-x-auto hide-scrollbar gap-x-1.5">
             <a href="#numbers" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
