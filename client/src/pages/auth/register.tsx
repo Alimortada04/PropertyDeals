@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, ArrowRight, Eye, EyeOff, CheckCircle2, Mail, AlertCircle, Copy } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { supabase, checkEmailExists } from "@/lib/supabase";
 import { SiGoogle, SiFacebook, SiApple } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -93,13 +93,6 @@ export default function RegisterPage() {
 
   if (user) return <Redirect to="/" />;
 
-  // Remove premature duplicate email check - we'll only validate this when actually submitting
-  const checkEmailExists = async (email: string) => {
-    // Return false to allow the form submission to proceed
-    // We'll properly check if email exists only when submitting to Supabase
-    return false;
-  };
-
   // Generate a username from full name without adding numbers initially
   const generateUsername = (fullName: string) => {
     if (!fullName) return null;
@@ -160,6 +153,21 @@ export default function RegisterPage() {
     registerForm.clearErrors("email");
 
     try {
+      // 0. First explicitly check if the email already exists using our dedicated function
+      console.log("Checking if email already exists:", values.email);
+      const emailExists = await checkEmailExists(values.email);
+      
+      if (emailExists) {
+        console.log("Email already exists, cannot proceed with registration");
+        registerForm.setError("email", {
+          type: "manual",
+          message: "Email already exists. Try signing in instead.",
+        });
+        throw new Error("This email is already registered. Please sign in instead.");
+      }
+      
+      console.log("Email is available, proceeding with registration");
+      
       // 1. Generate a username from the full name
       const baseUsername = generateUsername(values.fullName);
       if (!baseUsername) {
