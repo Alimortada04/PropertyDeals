@@ -155,7 +155,7 @@ export default function AuthCallbackPage() {
 
   // Check if there's a specific redirect path in the URL parameters
   const urlParams = new URLSearchParams(window.location.search);
-  const redirectPath = urlParams.get('redirect') || '/home';
+  const redirectPath = urlParams.get('redirect') || '/';
   
   // Redirect to the specified path or home after successful authentication
   return <Redirect to={redirectPath} />;
