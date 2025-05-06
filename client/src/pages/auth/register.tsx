@@ -93,57 +93,11 @@ export default function RegisterPage() {
 
   if (user) return <Redirect to="/" />;
 
+  // Remove premature duplicate email check - we'll only validate this when actually submitting
   const checkEmailExists = async (email: string) => {
-    if (!email) return false;
-    
-    try {
-      console.log("Checking if email exists:", email);
-      
-      // First check in Supabase Auth - the most reliable source for existing emails
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email,
-        options: {
-          shouldCreateUser: false // Do not create a new user, just check if exists
-        }
-      });
-      
-      // If the error message doesn't include "User not found", the email exists
-      if (error && !error.message.includes("not found")) {
-        console.log("Email found in auth system:", email);
-        registerForm.setError("email", {
-          type: "manual",
-          message: "An account with this email already exists, please sign in.",
-        });
-        return true;
-      }
-      
-      // Second check against the users table for completeness
-      const { data: userData } = await supabase
-        .from('users')
-        .select('email')
-        .eq('email', email)
-        .maybeSingle();
-      
-      if (userData) {
-        console.log("Email found in users table:", email);
-        registerForm.setError("email", {
-          type: "manual",
-          message: "An account with this email already exists, please sign in.",
-        });
-        return true;
-      }
-      
-      // Email is available
-      console.log("Email available:", email);
-      registerForm.clearErrors("email");
-      return false;
-    } catch (error) {
-      console.error("Email check error:", error);
-      
-      // In case of any errors, don't block the user
-      registerForm.clearErrors("email");
-      return false;
-    }
+    // Return false to allow the form submission to proceed
+    // We'll properly check if email exists only when submitting to Supabase
+    return false;
   };
 
   // Generate a username from full name without adding numbers initially
@@ -201,22 +155,7 @@ export default function RegisterPage() {
     setVerificationRequired(false);
     setLoading(true);
 
-    // Check if email exists before proceeding
-    const emailExists = await checkEmailExists(values.email);
-    if (emailExists) {
-      setFormError("This email is already registered. Please sign in instead.");
-      toast({
-        title: "Registration failed",
-        description: "This email is already registered. Please sign in instead.",
-        variant: "destructive",
-      });
-      setLoading(false);
-      return;
-    }
-
     try {
-      // Email already checked in onRegisterSubmit before we got here
-      
       // Generate a unique username from full name
       const baseUsername = generateUsername(values.fullName);
       if (!baseUsername) {
@@ -225,13 +164,8 @@ export default function RegisterPage() {
       
       const finalUsername = await findAvailableUsername(baseUsername);
       
-      // Final check before trying to create the account
-      const lastEmailCheck = await checkEmailExists(values.email);
-      if (lastEmailCheck) {
-        throw new Error("This email is already registered. Please sign in instead.");
-      }
-      
       // Step 1: Sign up with Supabase Auth
+      console.log("Attempting Supabase signup with email:", values.email);
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
@@ -245,8 +179,11 @@ export default function RegisterPage() {
       });
 
       if (error) {
+        console.error("Supabase signup error:", error);
         // Handle specific error cases
-        if (error.message.includes("already exists") || error.message.includes("already registered")) {
+        if (error.message.includes("already exists") || 
+            error.message.includes("already registered") ||
+            error.message.includes("User already registered")) {
           registerForm.setError("email", {
             type: "manual",
             message: "Email already exists. Try signing in instead.",
@@ -256,6 +193,8 @@ export default function RegisterPage() {
           throw new Error(error.message);
         }
       }
+      
+      console.log("Supabase signup successful:", data);
       
       if (!data.user) {
         throw new Error("Failed to create user account");
@@ -560,7 +499,16 @@ export default function RegisterPage() {
               <Alert className="mb-6 bg-red-50 border-red-200 text-red-800 animate-pulse-once" variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle className="text-red-800 font-medium">Registration Failed</AlertTitle>
-                <AlertDescription className="text-red-700">{formError}</AlertDescription>
+                <AlertDescription className="text-red-700">
+                  {formError}
+                  {formError.includes("already registered") && (
+                    <div className="mt-2">
+                      <Link to="/signin" className="font-medium underline hover:text-red-900">
+                        Sign in here
+                      </Link> with your existing account.
+                    </div>
+                  )}
+                </AlertDescription>
               </Alert>
             )}
             
