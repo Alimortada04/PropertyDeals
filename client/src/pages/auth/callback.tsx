@@ -156,7 +156,18 @@ export default function AuthCallbackPage() {
   // Check if there's a specific redirect path in the URL parameters
   const urlParams = new URLSearchParams(window.location.search);
   const redirectPath = urlParams.get('redirect') || '/';
+  const type = urlParams.get('type');
   
-  // Redirect to the specified path or home after successful authentication
+  // If this is a recovery (password reset) callback, redirect to reset-password page
+  if (type === 'recovery') {
+    // Include any tokens in the redirect
+    const token = urlParams.get('token') || urlParams.get('access_token');
+    if (token) {
+      return <Redirect to={`/auth/reset-password?token=${token}&type=recovery`} />;
+    }
+    return <Redirect to="/auth/reset-password" />;
+  }
+  
+  // For other authentication flows, redirect to the specified path or home
   return <Redirect to={redirectPath} />;
 }

@@ -36,17 +36,127 @@ export default function ResetPasswordPage() {
     },
   });
 
+  // States for session verification
+  const [token, setToken] = useState<string | null>(null);
+  const [isVerifying, setIsVerifying] = useState(true);
+  const [sessionValid, setSessionValid] = useState(false);
+  
+  // Parse the URL and verify session on component mount
+  useEffect(() => {
+    async function verifySession() {
+      setIsVerifying(true);
+      
+      try {
+        // First, check if we have a session
+        const { data: sessionData } = await supabase.auth.getSession();
+        
+        if (sessionData.session) {
+          console.log("Active session found, can proceed with password reset");
+          setSessionValid(true);
+          setIsVerifying(false);
+          return;
+        }
+        
+        // If no active session, check for a token in the URL
+        // First, check if there's a token in the URL hash
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        const hashToken = hashParams.get('token') || hashParams.get('access_token');
+        
+        if (hashToken) {
+          console.log("Access token found in hash");
+          
+          // Try to set the session with this token
+          const { error } = await supabase.auth.setSession({ 
+            access_token: hashToken, 
+            refresh_token: '' 
+          });
+          
+          if (!error) {
+            setSessionValid(true);
+            setToken(hashToken);
+            setIsVerifying(false);
+            return;
+          }
+        }
+        
+        // Second, check if there's a token in the URL search params
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlToken = urlParams.get('token') || urlParams.get('access_token');
+        const type = urlParams.get('type');
+        
+        if (urlToken) {
+          console.log("Access token found in URL params");
+          
+          // Check if this is a recovery type request
+          if (type === 'recovery') {
+            console.log("Recovery type token found");
+            
+            // Try to set the session with this token
+            const { error } = await supabase.auth.setSession({ 
+              access_token: urlToken, 
+              refresh_token: '' 
+            });
+            
+            if (!error) {
+              setSessionValid(true);
+              setToken(urlToken);
+              setIsVerifying(false);
+              return;
+            }
+          }
+          
+          setToken(urlToken);
+          setIsVerifying(false);
+          return;
+        }
+        
+        // If we get here, no valid token was found
+        setIsVerifying(false);
+        toast({
+          title: "Missing or invalid reset token",
+          description: "The password reset link appears to be invalid or has expired. Please request a new one.",
+          variant: "destructive",
+        });
+        
+      } catch (error) {
+        console.error("Error verifying token/session:", error);
+        setIsVerifying(false);
+        toast({
+          title: "Error verifying authentication",
+          description: "An error occurred while verifying your authentication. Please request a new password reset link.",
+          variant: "destructive",
+        });
+      }
+    }
+    
+    verifySession();
+  }, [toast]);
+
   // Handle form submission
   async function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
     setIsSubmitting(true);
     
     try {
-      const { error } = await supabase.auth.updateUser({ 
-        password: values.password 
-      });
-      
-      if (error) {
-        throw error;
+      // If we have a token, try to update the password with it
+      if (token) {
+        // Use the token to update the password
+        const { error } = await supabase.auth.updateUser({ 
+          password: values.password 
+        });
+        
+        if (error) {
+          throw error;
+        }
+      } else {
+        // No token, so try to update password for the current session
+        const { error } = await supabase.auth.updateUser({ 
+          password: values.password 
+        });
+        
+        if (error) {
+          // If this fails, the user might not be authenticated
+          throw new Error("No valid session or token found. Please request a new password reset link.");
+        }
       }
       
       setIsSubmitting(false);
@@ -93,7 +203,40 @@ export default function ResetPasswordPage() {
       {/* Main Content Container */}
       <div className="relative z-10 w-full max-w-md px-4">
         <div className="bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-white/30">
-          {!isComplete ? (
+          {isVerifying ? (
+            // Loading state while verifying token/session
+            <div className="text-center py-8">
+              <div className="mx-auto w-12 h-12 flex items-center justify-center mb-4">
+                <Loader2 className="h-8 w-8 animate-spin text-[#09261E]" />
+              </div>
+              <h2 className="text-xl font-medium text-[#09261E] mb-2">Verifying your request</h2>
+              <p className="text-gray-500">
+                Please wait while we verify your password reset request...
+              </p>
+            </div>
+          ) : isComplete ? (
+            // Success state
+            <div className="text-center py-6">
+              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                <Check className="h-8 w-8 text-green-600" />
+              </div>
+              
+              <h2 className="text-2xl font-bold text-[#09261E] mb-4">Password Reset Complete</h2>
+              <p className="text-gray-600 mb-6">
+                Your password has been successfully reset. You will be redirected to sign in shortly.
+              </p>
+              
+              <Button 
+                asChild
+                className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <Link href="/signin">
+                  Sign In
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            // Form state when verified and ready to reset password
             <>
               <div className="text-center mb-8">
                 <div className="mx-auto w-12 h-12 bg-[#09261E]/10 rounded-full flex items-center justify-center mb-4">
@@ -180,23 +323,19 @@ export default function ResetPasswordPage() {
                 </form>
               </Form>
             </>
-          ) : (
-            <div className="text-center py-6">
-              <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                <Check className="h-8 w-8 text-green-600" />
-              </div>
-              
-              <h2 className="text-2xl font-bold text-[#09261E] mb-4">Password Reset Complete</h2>
-              <p className="text-gray-600 mb-6">
-                Your password has been successfully reset. You will be redirected to sign in shortly.
-              </p>
-              
+          )}
+          
+          {/* Error state with link to request new reset link */}
+          {!isVerifying && !sessionValid && !token && !isComplete && (
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <p className="text-center text-gray-600 mb-4">Need a new reset link?</p>
               <Button 
                 asChild
-                className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white transition-all hover:scale-[1.02] active:scale-[0.98]"
+                variant="outline"
+                className="w-full h-10 transition-all hover:bg-gray-50"
               >
-                <Link href="/signin">
-                  Sign In
+                <Link href="/forgot-password">
+                  Request New Reset Link
                 </Link>
               </Button>
             </div>
