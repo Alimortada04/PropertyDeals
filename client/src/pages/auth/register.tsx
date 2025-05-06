@@ -18,7 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, ArrowRight, Eye, EyeOff, CheckCircle2, Mail, AlertCircle, Copy } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { SiGoogle, SiFacebook } from "react-icons/si";
+import { SiGoogle, SiFacebook, SiApple } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
@@ -412,7 +412,7 @@ export default function RegisterPage() {
                   href="https://mail.google.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
                 >
                   <SiGoogle className="h-4 w-4 text-[#4285F4]" />
                   <span className="font-medium">Gmail</span>
@@ -421,7 +421,7 @@ export default function RegisterPage() {
                   href="https://outlook.live.com/mail/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
                 >
                   <Mail className="h-4 w-4 text-[#0078D4]" />
                   <span className="font-medium">Outlook</span>
@@ -430,7 +430,7 @@ export default function RegisterPage() {
                   href="https://mail.yahoo.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
                 >
                   <Mail className="h-4 w-4 text-[#6001D2]" />
                   <span className="font-medium">Yahoo</span>
@@ -439,9 +439,9 @@ export default function RegisterPage() {
                   href="https://www.icloud.com/mail" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
                 >
-                  <Mail className="h-4 w-4" />
+                  <SiApple className="h-4 w-4" />
                   <span className="font-medium">iCloud</span>
                 </a>
               </div>
