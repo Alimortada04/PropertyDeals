@@ -42,8 +42,26 @@ export default function SignInPage() {
       password: values.password,
     }, {
       onSuccess: () => {
-        // Force navigation to home after successful login
-        window.location.href = "/home";
+        toast({
+          title: "Login successful",
+          description: "Welcome back! Redirecting...",
+        });
+        
+        // Show a smooth transition animation before redirecting
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500';
+        overlay.innerHTML = `
+          <div class="text-center">
+            <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#09261E] border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
+            <p class="text-[#09261E] font-medium text-lg">Taking you to your dashboard...</p>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+        
+        // Redirect to home page after a short delay
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1000);
       }
     });
   }
@@ -57,7 +75,7 @@ export default function SignInPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?redirect=/home`
+          redirectTo: `${window.location.origin}/auth/callback?redirect=/`
         }
       });
       
@@ -77,7 +95,7 @@ export default function SignInPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback?redirect=/home`
+          redirectTo: `${window.location.origin}/auth/callback?redirect=/`
         }
       });
       
@@ -122,7 +140,7 @@ export default function SignInPage() {
   }, []);
 
   if (user) {
-    return <Redirect to="/home" />;
+    return <Redirect to="/" />;
   }
 
   return (

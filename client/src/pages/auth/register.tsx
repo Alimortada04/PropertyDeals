@@ -91,7 +91,7 @@ export default function RegisterPage() {
     }
   }, [registerForm.watch("fullName")]);
 
-  if (user) return <Redirect to="/home" />;
+  if (user) return <Redirect to="/" />;
 
   const checkEmailExists = async (email: string) => {
     if (!email || registerForm.formState.errors.email) return;
@@ -296,7 +296,19 @@ export default function RegisterPage() {
           description: "Your account has been created! Redirecting to dashboard...",
         });
         
-        setTimeout(() => navigate("/home"), 2000);
+        // Show a smooth transition animation before redirecting
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500';
+        overlay.innerHTML = `
+          <div class="text-center">
+            <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#09261E] border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
+            <p class="text-[#09261E] font-medium text-lg">Setting up your account...</p>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+        
+        // Redirect to home page after a short delay
+        setTimeout(() => navigate("/"), 1500);
       }
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -326,7 +338,7 @@ export default function RegisterPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?redirect=/`,
         },
       });
       if (error) throw error;
