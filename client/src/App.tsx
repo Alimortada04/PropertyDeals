@@ -12,6 +12,7 @@ import SellerDashboard from "@/pages/seller-dashboard";
 import DashboardNewPage from "@/pages/dashboard";
 import DashboardPage from "@/pages/dashboard-page";
 import ProfilePage from "@/pages/profile/profile-page";
+import UserProfilePage from "@/pages/user-profile-page";
 import CommunityPage from "@/pages/community-page";
 import EventDetailPage from "@/pages/community/event-detail-page";
 import AuthCallbackPage from "@/pages/auth/callback";
@@ -290,6 +291,15 @@ function Router() {
       {/* Redirect /settings to /profile */}
       <Route path="/settings">
         <Redirect to="/profile" />
+      </Route>
+      
+      {/* User public profile page */}
+      <Route path="/user/:username">
+        {params => (
+          <AppLayout>
+            <UserProfilePage />
+          </AppLayout>
+        )}
       </Route>
 
       {/* Temporarily allow access to seller dashboard without authentication */}

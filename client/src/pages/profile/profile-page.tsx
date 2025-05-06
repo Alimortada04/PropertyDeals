@@ -80,16 +80,20 @@ const ProfileMenuItem: React.FC<ProfileMenuItemProps> = ({
     <Link href={href}>
       <div
         className={cn(
-          "flex items-center px-3 py-2 text-sm transition-colors cursor-pointer my-0.5 rounded-md",
+          "flex items-center px-4 py-2.5 text-sm transition-all duration-200 cursor-pointer my-0.5 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
           active
-            ? "bg-gray-100 text-[#09261E] font-medium"
-            : "text-gray-700 hover:bg-gray-50",
-          danger && "text-red-500 hover:text-red-700",
+            ? "bg-[#09261E]/10 font-medium shadow-sm"
+            : "hover:bg-gray-100/80",
+          danger 
+            ? "text-red-500 hover:text-red-600" 
+            : active 
+              ? "text-[#09261E]" 
+              : "text-gray-700",
           className
         )}
         onClick={onClick}
       >
-        <div className="mr-2.5 text-gray-500">{icon}</div>
+        <div className={cn("mr-3", active ? "text-[#09261E]" : danger ? "text-red-500" : "text-gray-500")}>{icon}</div>
         <span>{label}</span>
       </div>
     </Link>
@@ -670,76 +674,107 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="flex bg-white">
+    <div className="flex bg-white min-h-screen">
       {/* Left sidebar */}
-      <div className="w-[230px] border-r h-screen sticky top-0 flex flex-col bg-white shadow-sm overflow-y-auto">
+      <div className="w-[250px] border-r h-auto min-h-screen sticky top-0 flex flex-col bg-white shadow-sm overflow-y-auto">
         {/* Profile info */}
         <div className="px-6 py-6 mb-4 border-b flex flex-col items-center">
-          <Avatar className="h-20 w-20 mb-4">
-            <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
-            <AvatarFallback className="bg-gray-200 text-gray-700 text-xl font-medium">
-              {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative group">
+            <Avatar className="h-20 w-20 mb-2 ring-2 ring-offset-2 ring-[#09261E]/50 group-hover:ring-[#09261E]">
+              <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
+              <AvatarFallback className="bg-[#09261E] text-white text-xl font-medium">
+                {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+            >
+              <Upload className="h-5 w-5 text-white" />
+            </div>
+            <input 
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleProfilePhotoChange}
+            />
+          </div>
+          
           <h2 className="font-bold text-lg">{profileData.full_name || profileData.username}</h2>
-          <p className="text-gray-500 text-sm">@{profileData.username}</p>
+          <p className="text-gray-500 text-sm mb-3">@{profileData.username}</p>
+          
+          <Button 
+            type="button" 
+            variant="outline"
+            size="sm"
+            className="text-xs border border-gray-300 transition-colors hover:bg-gray-50"
+            onClick={() => window.open(`/user/${profileData.username}`, '_blank')}
+          >
+            <ExternalLink className="h-3 w-3 mr-1" />
+            Preview Public Profile
+          </Button>
         </div>
         
         {/* Menu */}
         <div className="px-3 flex-1 overflow-y-auto">
-          <button
-            onClick={() => setActiveTab("account")}
-            className={cn(
-              "w-full flex items-center px-3 py-2 text-left rounded-md transition-colors my-0.5",
-              activeTab === "account"
-                ? "bg-gray-100 text-[#09261E] font-medium"
-                : "text-gray-700 hover:bg-gray-50"
-            )}
-          >
-            <UserCircle size={18} className="mr-2.5 text-gray-500" />
-            <span>Account Settings</span>
-          </button>
-          
-          <button
-            onClick={() => setActiveTab("profile")}
-            className={cn(
-              "w-full flex items-center px-3 py-2 text-left rounded-md transition-colors my-0.5",
-              activeTab === "profile"
-                ? "bg-gray-100 text-[#09261E] font-medium"
-                : "text-gray-700 hover:bg-gray-50"
-            )}
-          >
-            <User size={18} className="mr-2.5 text-gray-500" />
-            <span>Profile</span>
-          </button>
-          
-          <button
-            onClick={() => setActiveTab("property")}
-            className={cn(
-              "w-full flex items-center px-3 py-2 text-left rounded-md transition-colors my-0.5",
-              activeTab === "property"
-                ? "bg-gray-100 text-[#09261E] font-medium"
-                : "text-gray-700 hover:bg-gray-50"
-            )}
-          >
-            <Building size={18} className="mr-2.5 text-gray-500" />
-            <span>Property Preferences</span>
-          </button>
-          
-          <button
-            onClick={() => setActiveTab("professional")}
-            className={cn(
-              "w-full flex items-center px-3 py-2 text-left rounded-md transition-colors my-0.5",
-              activeTab === "professional"
-                ? "bg-gray-100 text-[#09261E] font-medium"
-                : "text-gray-700 hover:bg-gray-50"
-            )}
-          >
-            <Users size={18} className="mr-2.5 text-gray-500" />
-            <span>Professional Preferences</span>
-          </button>
+          <div className="mb-2">
+            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Profile Settings</h3>
+            <button
+              onClick={() => setActiveTab("account")}
+              className={cn(
+                "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
+                activeTab === "account"
+                  ? "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+                  : "text-gray-700 hover:bg-gray-100/80"
+              )}
+            >
+              <UserCircle size={18} className={cn("mr-3", activeTab === "account" ? "text-[#09261E]" : "text-gray-500")} />
+              <span>Account Settings</span>
+            </button>
+            
+            <button
+              onClick={() => setActiveTab("profile")}
+              className={cn(
+                "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
+                activeTab === "profile"
+                  ? "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+                  : "text-gray-700 hover:bg-gray-100/80"
+              )}
+            >
+              <User size={18} className={cn("mr-3", activeTab === "profile" ? "text-[#09261E]" : "text-gray-500")} />
+              <span>Profile</span>
+            </button>
+            
+            <button
+              onClick={() => setActiveTab("property")}
+              className={cn(
+                "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
+                activeTab === "property"
+                  ? "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+                  : "text-gray-700 hover:bg-gray-100/80"
+              )}
+            >
+              <Building size={18} className={cn("mr-3", activeTab === "property" ? "text-[#09261E]" : "text-gray-500")} />
+              <span>Property Preferences</span>
+            </button>
+            
+            <button
+              onClick={() => setActiveTab("professional")}
+              className={cn(
+                "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
+                activeTab === "professional"
+                  ? "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+                  : "text-gray-700 hover:bg-gray-100/80"
+              )}
+            >
+              <Users size={18} className={cn("mr-3", activeTab === "professional" ? "text-[#09261E]" : "text-gray-500")} />
+              <span>Professional Preferences</span>
+            </button>
+          </div>
           
           <div className="mt-6 pt-6 border-t">
+            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Account</h3>
             <ProfileMenuItem
               icon={<LinkIcon size={18} />}
               label="Connected accounts"
@@ -752,6 +787,7 @@ export default function ProfilePage() {
               href="/profile/security"
               active={location === "/profile/security"}
             />
+            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2 mt-4">Billing</h3>
             <ProfileMenuItem
               icon={<CreditCard size={18} />}
               label="Payment methods"
@@ -770,6 +806,7 @@ export default function ProfilePage() {
               href="/profile/billing"
               active={location === "/profile/billing"}
             />
+            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2 mt-4">Other</h3>
             <ProfileMenuItem
               icon={<Settings size={18} />}
               label="Memberships"
@@ -787,17 +824,18 @@ export default function ProfilePage() {
               label="Danger zone"
               href="/profile/danger"
               active={location === "/profile/danger"}
+              danger
             />
           </div>
         </div>
         
         {/* Logout */}
-        <div className="mt-auto px-3 pb-5">
+        <div className="mt-auto px-3 pb-5 pt-3 border-t">
           <button
-            className="flex items-center px-3 py-2 text-sm rounded-md transition-colors text-red-500 hover:bg-gray-50 hover:text-red-700 w-full"
+            className="flex items-center px-4 py-2.5 text-sm rounded-md transition-all duration-200 text-red-500 hover:bg-red-50/80 hover:text-red-600 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
             onClick={handleLogout}
           >
-            <LogOut size={18} className="mr-2.5 text-red-500/70" />
+            <LogOut size={18} className="mr-3 text-red-500/80" />
             <span>Log out</span>
           </button>
         </div>
