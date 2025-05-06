@@ -341,16 +341,34 @@ export default function ProfilePage() {
     }
     
     const file = event.target.files[0];
+    
+    // Validate file type
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validImageTypes.includes(file.type)) {
+      toast({
+        title: "Invalid file",
+        description: "Please upload a valid image file (JPEG, PNG, GIF, or WEBP)",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Create a unique filename
     const fileExt = file.name.split('.').pop();
-    const fileName = `${supabaseUser.id}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const fileName = `${supabaseUser.id}-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
     
     try {
       setLoading(true);
       
+      // Upload file to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('public')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.type
+        });
       
       if (uploadError) {
         throw uploadError;
@@ -359,17 +377,30 @@ export default function ProfilePage() {
       // Get public URL
       const { data } = supabase.storage.from('public').getPublicUrl(filePath);
       
+      if (!data.publicUrl) {
+        throw new Error("Failed to get public URL for uploaded image");
+      }
+      
       // Update profile data with new avatar URL
       setProfileData({
         ...profileData,
         profile_photo_url: data.publicUrl
       });
       
-      setIsProfileModified(true);
+      // Also update database immediately
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ profile_photo_url: data.publicUrl })
+        .eq('id', supabaseUser.id);
+      
+      if (updateError) {
+        throw updateError;
+      }
       
       toast({
         title: "Success",
-        description: "Profile photo uploaded successfully"
+        description: "Profile photo updated successfully",
+        variant: "default"
       });
     } catch (error) {
       console.error("Error uploading profile photo:", error);
@@ -392,22 +423,28 @@ export default function ProfilePage() {
     const file = event.target.files[0];
     if (file.type !== 'application/pdf') {
       toast({
-        title: "Error",
+        title: "Invalid file",
         description: "Please upload a PDF file",
         variant: "destructive"
       });
       return;
     }
     
-    const fileName = `${supabaseUser.id}-proof-${Math.random().toString(36).substring(2)}.pdf`;
+    // Create a unique filename
+    const fileName = `${supabaseUser.id}-proof-${Date.now()}-${Math.random().toString(36).substring(2)}.pdf`;
     const filePath = `proof_of_funds/${fileName}`;
     
     try {
       setLoading(true);
       
+      // Upload file to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from('public')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: 'application/pdf'
+        });
       
       if (uploadError) {
         throw uploadError;
@@ -415,6 +452,10 @@ export default function ProfilePage() {
       
       // Get public URL
       const { data } = supabase.storage.from('public').getPublicUrl(filePath);
+      
+      if (!data.publicUrl) {
+        throw new Error("Failed to get public URL for uploaded document");
+      }
       
       // Update profile data with new proof URL
       setProfileData({
@@ -424,11 +465,25 @@ export default function ProfilePage() {
         proof_of_funds_verified: false
       });
       
+      // Also update database immediately
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ 
+          proof_of_funds_url: data.publicUrl,
+          proof_of_funds_verified: false
+        })
+        .eq('id', supabaseUser.id);
+      
+      if (updateError) {
+        throw updateError;
+      }
+      
       setIsPropertyModified(true);
       
       toast({
         title: "Success",
-        description: "Proof of funds uploaded successfully. It will be reviewed by our team."
+        description: "Proof of funds uploaded successfully. It will be reviewed by our team.",
+        variant: "default"
       });
     } catch (error) {
       console.error("Error uploading proof of funds:", error);
