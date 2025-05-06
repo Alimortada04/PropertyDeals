@@ -145,17 +145,97 @@ export default function SignInPage() {
 
   return (
     <div className="relative min-h-screen bg-white flex items-center justify-center overflow-hidden">
-      {/* Background Blobs */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Background Blobs - Animated with staggered animation */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Primary green large blob - top right */}
         <div
-          className="absolute w-[600px] h-[600px] bg-[#09261E]/15 rounded-full blur-3xl top-[-150px] right-[-150px]"
-          style={{ transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * 30}px)` }}
+          className="absolute w-[700px] h-[700px] bg-[#09261E]/10 rounded-full blur-3xl -top-[10%] -right-[10%] animate-blob-pulse-slow will-change-transform"
+          style={{ 
+            transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px) scale(${1 + Math.sin(Date.now() * 0.0005) * 0.05})`,
+            opacity: 0.7 + Math.sin(Date.now() * 0.0003) * 0.1
+          }}
         />
+        
+        {/* Secondary green medium blob - mid-right */}
         <div
-          className="absolute w-[500px] h-[500px] bg-[#803344]/15 rounded-full blur-3xl bottom-[-150px] left-[-150px]"
-          style={{ transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)` }}
+          className="absolute w-[500px] h-[500px] bg-[#135341]/15 rounded-full blur-3xl top-[30%] -right-[5%] animate-blob-pulse-fast will-change-transform"
+          style={{ 
+            transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * 25}px) scale(${1 + Math.sin(Date.now() * 0.0007) * 0.08})`,
+            opacity: 0.6 + Math.sin(Date.now() * 0.0004) * 0.15
+          }}
+        />
+        
+        {/* Wine accent blob - bottom left */}
+        <div
+          className="absolute w-[600px] h-[600px] bg-[#803344]/10 rounded-full blur-3xl -bottom-[15%] -left-[10%] animate-blob-float will-change-transform"
+          style={{ 
+            transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * -20}px) scale(${1 + Math.cos(Date.now() * 0.0004) * 0.07})`,
+            opacity: 0.5 + Math.cos(Date.now() * 0.0005) * 0.15
+          }}
+        />
+        
+        {/* Small light green blob - top left */}
+        <div
+          className="absolute w-[300px] h-[300px] bg-[#F2F8F5]/80 rounded-full blur-xl top-[15%] left-[20%] animate-blob-float-slow will-change-transform"
+          style={{ 
+            transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * 15}px) scale(${1 + Math.sin(Date.now() * 0.0006) * 0.06})`,
+            opacity: 0.7 + Math.sin(Date.now() * 0.0006) * 0.1
+          }}
+        />
+        
+        {/* Very subtle accent blob - bottom right */}
+        <div
+          className="absolute w-[400px] h-[400px] bg-[#09261E]/5 rounded-full blur-2xl bottom-[10%] right-[20%] animate-blob-pulse-slow will-change-transform"
+          style={{ 
+            transform: `translate(${mousePosition.x * -10}px, ${mousePosition.y * -15}px) scale(${1 + Math.sin(Date.now() * 0.0003) * 0.06})`,
+            opacity: 0.6 + Math.cos(Date.now() * 0.0004) * 0.1
+          }}
         />
       </div>
+      
+      {/* Dynamic background styles */}
+      <style>{`
+        @keyframes blob-pulse-slow {
+          0%, 100% { transform: scale(1) translate(0px, 0px); opacity: 0.7; }
+          50% { transform: scale(1.05) translate(10px, -10px); opacity: 0.9; }
+        }
+        
+        @keyframes blob-pulse-fast {
+          0%, 100% { transform: scale(1) translate(0px, 0px); opacity: 0.6; }
+          50% { transform: scale(1.08) translate(-5px, 15px); opacity: 0.8; }
+        }
+        
+        @keyframes blob-float {
+          0% { transform: translate(0px, 0px) scale(1); opacity: 0.5; }
+          33% { transform: translate(10px, -20px) scale(1.03); opacity: 0.7; }
+          66% { transform: translate(-15px, 10px) scale(0.98); opacity: 0.6; }
+          100% { transform: translate(0px, 0px) scale(1); opacity: 0.5; }
+        }
+        
+        @keyframes blob-float-slow {
+          0% { transform: translate(0px, 0px) scale(1); opacity: 0.6; }
+          25% { transform: translate(-10px, 15px) scale(1.05); opacity: 0.8; }
+          50% { transform: translate(15px, 5px) scale(1.02); opacity: 0.7; }
+          75% { transform: translate(5px, -10px) scale(0.98); opacity: 0.7; }
+          100% { transform: translate(0px, 0px) scale(1); opacity: 0.6; }
+        }
+        
+        .animate-blob-pulse-slow {
+          animation: blob-pulse-slow 15s ease-in-out infinite;
+        }
+        
+        .animate-blob-pulse-fast {
+          animation: blob-pulse-fast 12s ease-in-out infinite;
+        }
+        
+        .animate-blob-float {
+          animation: blob-float 20s ease-in-out infinite;
+        }
+        
+        .animate-blob-float-slow {
+          animation: blob-float-slow 25s ease-in-out infinite;
+        }
+      `}</style>
 
       {/* Main Card */}
       <div className="relative bg-white/90 backdrop-blur-lg shadow-2xl rounded-xl p-8 w-full max-w-md z-10 space-y-6">
