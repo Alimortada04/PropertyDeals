@@ -9,10 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Eye, EyeOff, ArrowRight, Fingerprint } from "lucide-react";
+import { Loader2, Eye, EyeOff, ArrowRight, Fingerprint, AlertCircle } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { supabase } from "@/lib/supabase";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast"; 
 
 const loginSchema = z.object({
@@ -26,6 +27,7 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [supportsBiometric, setSupportsBiometric] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [authError, setAuthError] = useState<{ type: 'email' | 'password' | 'general', message: string } | null>(null);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -37,6 +39,9 @@ export default function SignInPage() {
   });
 
   function onLoginSubmit(values: z.infer<typeof loginSchema>) {
+    // Clear any previous error
+    setAuthError(null);
+    
     loginMutation.mutate({
       email: values.email,
       password: values.password,
@@ -62,6 +67,25 @@ export default function SignInPage() {
         setTimeout(() => {
           window.location.href = "/";
         }, 1000);
+      },
+      onError: (error: Error) => {
+        // Set specific error type based on error message
+        if (error.message.includes('Email not found')) {
+          setAuthError({
+            type: 'email',
+            message: "Incorrect email/username. Please check your email or create a new account."
+          });
+        } else if (error.message.includes('password')) {
+          setAuthError({
+            type: 'password',
+            message: "Incorrect password. Please try again or reset your password."
+          });
+        } else {
+          setAuthError({
+            type: 'general',
+            message: error.message || "Sign in failed. Please try again."
+          });
+        }
       }
     });
   }
@@ -187,6 +211,48 @@ export default function SignInPage() {
           <h2 className="text-2xl font-bold text-[#09261E]">Welcome Back</h2>
           <p className="text-gray-600 text-sm mt-2">Please sign in to continue</p>
         </div>
+
+        {/* Authentication Error Messages */}
+        {authError && (
+          <div
+            className={`border rounded-md p-3 mb-4 flex items-start gap-2 ${
+              authError.type === 'email'
+                ? "border-red-300 bg-red-50"
+                : authError.type === 'password'
+                ? "border-amber-300 bg-amber-50"
+                : "border-red-300 bg-red-50"
+            }`}
+          >
+            <AlertCircle className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
+              authError.type === 'email' ? "text-red-600" : 
+              authError.type === 'password' ? "text-amber-600" :
+              "text-red-600"
+            }`} />
+            <div>
+              <p className={`text-sm font-medium ${
+                authError.type === 'email' ? "text-red-700" : 
+                authError.type === 'password' ? "text-amber-700" :
+                "text-red-700"
+              }`}>
+                {authError.type === 'email' 
+                  ? "Incorrect email/username" 
+                  : authError.type === 'password' 
+                  ? "Incorrect password" 
+                  : "Authentication failed"}
+              </p>
+              <p className={`text-xs mt-1 ${
+                authError.type === 'email' ? "text-red-600" : 
+                authError.type === 'password' ? "text-amber-600" :
+                "text-red-600"
+              }`}>
+                {authError.message}
+                {authError.type === 'password' && (
+                  <> <Link to="/forgot-password" className="underline font-medium">Reset password</Link></>
+                )}
+              </p>
+            </div>
+          </div>
+        )}
 
         <Form {...loginForm}>
           <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-5">
