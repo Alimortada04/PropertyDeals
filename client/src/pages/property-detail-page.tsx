@@ -420,52 +420,54 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             <div className="mt-4 md:mt-0 flex flex-col items-end">
               <div className="text-3xl md:text-4xl font-bold text-[#09261E]">${property.price.toLocaleString()}</div>
               {/* PD Rating - Color coded by rating value with tooltip */}
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className={`font-medium flex items-center ${
-                    // Color coding based on rating value
-                    propertyId % 10 <= 3 ? 'text-[#803344]' : 
-                    propertyId % 10 <= 6 ? 'text-gray-600' : 
-                    'text-[#135341]'
-                  }`}>
-                    PD Rating: {propertyId % 10}/10
-                    <span className="inline-flex items-center justify-center h-3.5 w-3.5 ml-1 text-xs font-bold bg-gray-200 text-gray-600 rounded-full">i</span>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent className="max-w-xs p-4 space-y-2">
-                  <h4 className="font-bold text-[#09261E]">PD Rating Explanation</h4>
-                  <p>This score is based on repair costs, location, pricing vs comps, and projected rental income.</p>
-                  <div className="mt-3 space-y-2">
-                    <h5 className="text-sm font-medium text-[#09261E]">Rating Breakdown:</h5>
-                    <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
-                      <div className="flex items-center">
-                        <span className="h-2.5 w-2.5 bg-green-500 rounded-full mr-1.5"></span>
-                        <span className="text-gray-600">Repair Costs:</span>
+              <div className={`font-medium flex items-center ${
+                // Color coding based on rating value
+                propertyId % 10 <= 3 ? 'text-[#803344]' : 
+                propertyId % 10 <= 6 ? 'text-gray-600' : 
+                'text-[#135341]'
+              }`}>
+                PD Rating: {propertyId % 10}/10
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button type="button" className="inline-flex items-center justify-center h-4 w-4 ml-1 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300">i</button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs p-4 space-y-2 bg-white shadow-lg border z-50">
+                      <h4 className="font-bold text-[#09261E]">PD Rating Explanation</h4>
+                      <p>This score is based on repair costs, location, pricing vs comps, and projected rental income.</p>
+                      <div className="mt-3 space-y-2">
+                        <h5 className="text-sm font-medium text-[#09261E]">Rating Breakdown:</h5>
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
+                          <div className="flex items-center">
+                            <span className="h-2.5 w-2.5 bg-green-500 rounded-full mr-1.5"></span>
+                            <span className="text-gray-600">Repair Costs:</span>
+                          </div>
+                          <div className="text-right font-medium">{Math.min(3, propertyId % 3 + 1)}/3</div>
+                          
+                          <div className="flex items-center">
+                            <span className="h-2.5 w-2.5 bg-blue-500 rounded-full mr-1.5"></span>
+                            <span className="text-gray-600">Location:</span>
+                          </div>
+                          <div className="text-right font-medium">{Math.min(2, (propertyId % 5) % 2 + 1)}/2</div>
+                          
+                          <div className="flex items-center">
+                            <span className="h-2.5 w-2.5 bg-purple-500 rounded-full mr-1.5"></span>
+                            <span className="text-gray-600">Price vs Comps:</span>
+                          </div>
+                          <div className="text-right font-medium">{Math.min(3, (propertyId % 7) % 3 + 1)}/3</div>
+                          
+                          <div className="flex items-center">
+                            <span className="h-2.5 w-2.5 bg-amber-500 rounded-full mr-1.5"></span>
+                            <span className="text-gray-600">Rental Income:</span>
+                          </div>
+                          <div className="text-right font-medium">{Math.min(2, (propertyId % 4) % 2 + 1)}/2</div>
+                        </div>
                       </div>
-                      <div className="text-right font-medium">{Math.min(3, propertyId % 3 + 1)}/3</div>
-                      
-                      <div className="flex items-center">
-                        <span className="h-2.5 w-2.5 bg-blue-500 rounded-full mr-1.5"></span>
-                        <span className="text-gray-600">Location:</span>
-                      </div>
-                      <div className="text-right font-medium">{Math.min(2, (propertyId % 5) % 2 + 1)}/2</div>
-                      
-                      <div className="flex items-center">
-                        <span className="h-2.5 w-2.5 bg-purple-500 rounded-full mr-1.5"></span>
-                        <span className="text-gray-600">Price vs Comps:</span>
-                      </div>
-                      <div className="text-right font-medium">{Math.min(3, (propertyId % 7) % 3 + 1)}/3</div>
-                      
-                      <div className="flex items-center">
-                        <span className="h-2.5 w-2.5 bg-amber-500 rounded-full mr-1.5"></span>
-                        <span className="text-gray-600">Rental Income:</span>
-                      </div>
-                      <div className="text-right font-medium">{Math.min(2, (propertyId % 4) % 2 + 1)}/2</div>
-                    </div>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-2">Our proprietary scoring system evaluates properties based on value, market conditions, and investment potential. A higher score indicates a better investment opportunity.</p>
-                </TooltipContent>
-              </Tooltip>
+                      <p className="text-xs text-gray-500 mt-2">Our proprietary scoring system evaluates properties based on value, market conditions, and investment potential. A higher score indicates a better investment opportunity.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               <div className="text-gray-600">
                 ${property.squareFeet ? Math.round(property.price / property.squareFeet) : '0'}/sqft
               </div>
@@ -882,14 +884,16 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       <div className="flex justify-between items-center border-b border-gray-100 pb-3">
                         <div className="flex items-center">
                           <span className="text-gray-600 font-medium">ARV</span>
-                          <Tooltip delayDuration={0}>
-                            <TooltipTrigger>
-                              <HelpCircle className="h-4 w-4 ml-1 text-gray-400 cursor-help" />
-                            </TooltipTrigger>
-                            <TooltipContent side="top" className="bg-white p-2 rounded shadow-lg border z-50">
-                              <p className="text-sm font-medium">After Repair Value</p>
-                            </TooltipContent>
-                          </Tooltip>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button type="button" className="inline-flex items-center justify-center h-4 w-4 ml-1 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300">i</button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="bg-white p-2 rounded shadow-lg border z-50">
+                                <p className="text-sm font-medium">After Repair Value</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                         <span className="font-semibold text-[#09261E]">${(property.price * 1.2).toFixed(0)}</span>
                       </div>
