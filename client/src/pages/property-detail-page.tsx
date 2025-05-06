@@ -529,26 +529,96 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       <div className="sticky top-0 z-40 bg-white shadow-sm border-b border-gray-200" style={{ position: "sticky" }}>
         <div className="container mx-auto px-4">
           <div className="hidden md:flex items-center h-14 overflow-x-auto hide-scrollbar gap-x-1.5">
-            <a href="#numbers" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
+            <button
+              onClick={() => {
+                const element = document.getElementById('numbers');
+                if (element) {
+                  const headerOffset = 100; // Height of sticky header + padding
+                  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                  const offsetPosition = elementPosition - headerOffset;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+            >
               <Calculator className="h-4 w-4 mr-1.5" />
               Numbers
-            </a>
-            <a href="#calculators" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
+            </button>
+            <button
+              onClick={() => {
+                const element = document.getElementById('calculators');
+                if (element) {
+                  const headerOffset = 100; // Height of sticky header + padding
+                  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                  const offsetPosition = elementPosition - headerOffset;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+            >
               <PercentSquare className="h-4 w-4 mr-1.5" />
               Calculators
-            </a>
-            <a href="#location" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
+            </button>
+            <button
+              onClick={() => {
+                const element = document.getElementById('location');
+                if (element) {
+                  const headerOffset = 100; // Height of sticky header + padding
+                  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                  const offsetPosition = elementPosition - headerOffset;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+            >
               <MapPin className="h-4 w-4 mr-1.5" />
               Location
-            </a>
-            <a href="#reps" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
+            </button>
+            <button
+              onClick={() => {
+                const element = document.getElementById('reps');
+                if (element) {
+                  const headerOffset = 100; // Height of sticky header + padding
+                  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                  const offsetPosition = elementPosition - headerOffset;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+            >
               <Wrench className="h-4 w-4 mr-1.5" />
               REPs
-            </a>
-            <a href="#history" className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center">
+            </button>
+            <button
+              onClick={() => {
+                const element = document.getElementById('history');
+                if (element) {
+                  const headerOffset = 100; // Height of sticky header + padding
+                  const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                  const offsetPosition = elementPosition - headerOffset;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+              className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+            >
               <FileText className="h-4 w-4 mr-1.5" />
               History
-            </a>
+            </button>
           </div>
         </div>
       </div>
