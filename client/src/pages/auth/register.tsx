@@ -104,30 +104,15 @@ export default function RegisterPage() {
     try {
       console.log("Checking if email exists:", email);
       
-      // Most reliable approach: try to sign in with a wrong password to see if the email exists
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: 'CheckingIfEmailExists123!' // A password that almost certainly won't match
-      });
-      
-      // If we get "Invalid credentials" error, the email exists in the auth system
-      const doesEmailExist = signInError?.message?.includes('Invalid login credentials') || false;
-      
-      console.log("Sign in check result:", signInError?.message);
-      console.log("Email exists in Auth:", doesEmailExist);
-      
-      // Second check: Look for the email in the users table
+      // Direct check against the users table - this is the most reliable for already registered users
       const { data: userData } = await supabase
         .from('users')
         .select('email')
         .eq('email', email)
         .maybeSingle();
       
-      console.log("Email exists in DB:", !!userData);
-      
-      // If email exists in either auth or the database
-      if (doesEmailExist || !!userData) {
-        console.log("Email exists: TRUE");
+      if (userData) {
+        console.log("Email found in users table:", email);
         registerForm.setError("email", {
           type: "manual",
           message: "Email already exists. Try signing in instead.",
@@ -135,10 +120,33 @@ export default function RegisterPage() {
         return true;
       }
       
-      // If we didn't get an email exists error, the email is available
-      console.log("Email exists: FALSE");
+      // Second check against auth.users using sign in attempt
+      // Only run this check if we didn't find the email in the users table
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: 'CheckingIfEmailExists123!' // A password that almost certainly won't match
+      });
+      
+      // If we get "Invalid credentials" error, the email exists in the auth system
+      // but only return true if it explicitly says "Invalid login credentials"
+      if (signInError?.message && signInError.message.includes('Invalid login credentials')) {
+        console.log("Email found in auth system:", email);
+        registerForm.setError("email", {
+          type: "manual",
+          message: "Email already exists. Try signing in instead.",
+        });
+        return true;
+      }
+      
+      // If we get any other error, the email likely doesn't exist
+      console.log("Email not found, returning false");
       registerForm.clearErrors("email");
       return false;
+      
+      // The email doesn't exist - don't need these lines since we already return in each condition
+      // console.log("Email exists: FALSE");
+      // registerForm.clearErrors("email");
+      // return false;
     } catch (error) {
       console.error("Email check error:", error);
       
@@ -641,12 +649,6 @@ export default function RegisterPage() {
                         />
                       </FormControl>
                       <FormMessage />
-                      {generatedUsername && field.value && field.value.length > 2 && !verificationRequired && (
-                        <FormDescription className="text-xs mt-1 flex items-center text-green-600">
-                          <CheckCircle2 className="h-3 w-3 mr-1" />
-                          Username will be auto-generated from your name
-                        </FormDescription>
-                      )}
                     </FormItem>
                   )}
                 />
@@ -799,6 +801,16 @@ export default function RegisterPage() {
                 </Button>
               </form>
             </Form>
+            
+            {/* Username hint message */}
+            {!verificationRequired && registerForm.watch("fullName") && registerForm.watch("fullName").length > 2 && (
+              <div className="mt-3 border border-gray-200 rounded-md bg-[#f7fff9] p-3 flex items-center">
+                <CheckCircle2 className="h-4 w-4 text-green-600 mr-2 flex-shrink-0" />
+                <p className="text-xs text-gray-700">
+                  A unique username will be automatically generated from your name when you register
+                </p>
+              </div>
+            )}
 
             {/* Footer */}
             <p className="text-sm text-center mt-6 text-gray-600">
