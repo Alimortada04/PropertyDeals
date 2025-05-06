@@ -25,6 +25,20 @@
   .progress-value-warning .w-full {
     @apply bg-[#09261E] !important; /* Use the dark green for all progress bars, even warning ones */
   }
+  
+  /* Animation for pulse once and stop */
+  .animate-pulse-once {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) 1;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
 }
 
 /* Custom scroll behavior */

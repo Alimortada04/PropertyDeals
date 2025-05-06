@@ -97,19 +97,49 @@ export default function RegisterPage() {
     if (!email || registerForm.formState.errors.email) return;
     
     try {
-      // Check if this email is registered using admin functions
-      const { count, error } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true })
-        .eq('email', email);
+      // Use Supabase Auth directly to check if email exists
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: "checkonly" + Math.random(), // Use a random string to ensure this fails but checks email
+      });
       
-      if (error) {
-        console.error("Email check database error:", error);
+      // If the error contains "Invalid login credentials" it means the email exists but wrong password
+      if (error && error.message && error.message.includes("Invalid login credentials")) {
+        console.log("Email exists check: Email found");
+        registerForm.setError("email", {
+          type: "manual",
+          message: "Email already exists. Try signing in instead.",
+        });
+        return true;
+      }
+      
+      // If the error contains "Email not confirmed" it means the email exists but not confirmed
+      if (error && error.message && error.message.includes("Email not confirmed")) {
+        console.log("Email exists check: Email found (not confirmed)");
+        registerForm.setError("email", {
+          type: "manual",
+          message: "Email already exists. Try signing in instead.",
+        });
+        return true;
+      }
+      
+      // If we got "User not found" then email is available
+      if (error && error.message && error.message.includes("user not found")) {
+        console.log("Email exists check: Email is available");
+        registerForm.clearErrors("email");
         return false;
       }
       
-      if (count && count > 0) {
-        // Email exists in the database
+      // Fallback check with users table
+      console.log("Performing fallback email check");
+      const { data: userData } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', email)
+        .limit(1);
+      
+      if (userData && userData.length > 0) {
+        console.log("Email exists in users table");
         registerForm.setError("email", {
           type: "manual",
           message: "Email already exists. Try signing in instead.",
@@ -186,6 +216,12 @@ export default function RegisterPage() {
     // Check if email exists before proceeding
     const emailExists = await checkEmailExists(values.email);
     if (emailExists) {
+      setFormError("This email is already registered. Please sign in instead.");
+      toast({
+        title: "Registration failed",
+        description: "This email is already registered. Please sign in instead.",
+        variant: "destructive",
+      });
       setLoading(false);
       return;
     }
@@ -200,6 +236,12 @@ export default function RegisterPage() {
       }
       
       const finalUsername = await findAvailableUsername(baseUsername);
+      
+      // Final check before trying to create the account
+      const lastEmailCheck = await checkEmailExists(values.email);
+      if (lastEmailCheck) {
+        throw new Error("This email is already registered. Please sign in instead.");
+      }
       
       // Step 1: Sign up with Supabase Auth
       const { data, error } = await supabase.auth.signUp({
@@ -216,7 +258,7 @@ export default function RegisterPage() {
 
       if (error) {
         // Handle specific error cases
-        if (error.message.includes("already exists")) {
+        if (error.message.includes("already exists") || error.message.includes("already registered")) {
           registerForm.setError("email", {
             type: "manual",
             message: "Email already exists. Try signing in instead.",
@@ -527,11 +569,22 @@ export default function RegisterPage() {
           <>
             {/* Error Message */}
             {formError && (
-              <Alert className="mb-6 bg-red-50 border-red-200 text-red-800" variant="destructive">
+              <Alert className="mb-6 bg-red-50 border-red-200 text-red-800 animate-pulse-once" variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle className="text-red-800 font-medium">Registration Failed</AlertTitle>
                 <AlertDescription className="text-red-700">{formError}</AlertDescription>
               </Alert>
+            )}
+            
+            {/* Field-Level Email Error Message */}
+            {registerForm.formState.errors.email && registerForm.formState.errors.email.message?.includes("already exists") && (
+              <div className="border border-red-300 rounded-md p-3 mb-4 bg-red-50 flex items-start gap-2">
+                <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-red-700 text-sm font-medium">Email already registered</p>
+                  <p className="text-red-600 text-xs mt-1">This email address is already registered. Please use a different email or <a href="/signin" className="underline font-medium">sign in</a> instead.</p>
+                </div>
+              </div>
             )}
             
             {/* Success Message (non-verification case) */}
