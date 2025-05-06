@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Loader2, ArrowRight, Eye, EyeOff, CheckCircle2, Mail, AlertCircle, Copy } from "lucide-react";
+import { Loader2, ArrowRight, Eye, EyeOff, CheckCircle2, Mail, AlertCircle, Copy, RefreshCw } from "lucide-react";
 import { supabase, checkEmailExists } from "@/lib/supabase";
 import { SiGoogle, SiFacebook, SiApple } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
@@ -562,6 +562,48 @@ export default function RegisterPage() {
                   <span className="font-medium">iCloud</span>
                 </a>
               </div>
+            </div>
+            
+            {/* Resend Button */}
+            <div className="mb-6">
+              <Button 
+                variant="outline"
+                className="w-full border-gray-200 h-11 mb-2 font-medium text-sm gap-2 hover:bg-gray-50"
+                onClick={async () => {
+                  const email = registerForm.getValues("email");
+                  if (!email) return;
+                  
+                  try {
+                    const { error } = await supabase.auth.resend({
+                      type: 'signup',
+                      email,
+                      options: {
+                        emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
+                      }
+                    });
+                    
+                    if (error) throw error;
+                    
+                    toast({
+                      title: "Verification email resent",
+                      description: "Please check your inbox for the new verification link.",
+                    });
+                  } catch (error: any) {
+                    console.error("Failed to resend verification:", error);
+                    toast({
+                      title: "Failed to resend verification",
+                      description: error.message || "Please try again or contact support.",
+                      variant: "destructive",
+                    });
+                  }
+                }}
+              >
+                <RefreshCw className="h-4 w-4" />
+                Resend verification email
+              </Button>
+              <p className="text-xs text-center text-gray-500">
+                Didn't receive the email? Click above to resend it.
+              </p>
             </div>
             
             {/* CTA Button */}
