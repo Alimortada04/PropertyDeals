@@ -666,14 +666,17 @@ export default function RegisterPage() {
                           type="email"
                           className="h-11"
                           placeholder="you@example.com"
-                          onBlur={async (e) => {
-                            field.onBlur();
-                            // Only check for duplicates if email passes validation
-                            const emailValue = e.target.value;
-                            if (emailValue && emailValue.includes('@') && !registerForm.formState.errors.email?.message) {
-                              console.log("Checking email on blur:", emailValue);
-                              await checkEmailExists(emailValue);
+                          onChange={(e) => {
+                            field.onChange(e);
+                            // Clear any manual errors when the user types
+                            if (registerForm.formState.errors.email?.type === "manual") {
+                              registerForm.clearErrors("email");
                             }
+                          }}
+                          onBlur={(e) => {
+                            field.onBlur();
+                            // Don't check for duplicates on every blur - too aggressive
+                            // This will now happen only on form submission
                           }}
                           aria-required="true"
                           aria-invalid={!!registerForm.formState.errors.email}
