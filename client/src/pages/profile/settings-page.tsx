@@ -1300,7 +1300,12 @@ export default function ProfileSettingsPage() {
                                   type="button" 
                                   variant="outline" 
                                   size="sm"
-                                  onClick={() => window.open(profileData.proof_of_funds_url, '_blank')}
+                                  onClick={() => {
+                                    const url = profileData.proof_of_funds_url;
+                                    if (url && typeof url === 'string') {
+                                      window.open(url, '_blank');
+                                    }
+                                  }}
                                 >
                                   View
                                 </Button>
