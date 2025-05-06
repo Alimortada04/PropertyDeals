@@ -156,6 +156,27 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      // First explicitly check if the email already exists
+      console.log("Checking if email already exists:", values.email);
+      const { error: checkError } = await supabase.auth.signInWithOtp({
+        email: values.email,
+        options: {
+          shouldCreateUser: false
+        }
+      });
+      
+      // If there's no error or error doesn't include "not found", the email already exists
+      if (!checkError || !checkError.message.includes("not found")) {
+        console.error("Email already exists check:", checkError);
+        registerForm.setError("email", {
+          type: "manual",
+          message: "Email already exists. Try signing in instead.",
+        });
+        throw new Error("This email is already registered. Please sign in instead.");
+      }
+      
+      console.log("Email is available, proceeding with registration");
+      
       // Generate a unique username from full name
       const baseUsername = generateUsername(values.fullName);
       if (!baseUsername) {

@@ -56,10 +56,32 @@ export async function signInWithEmail(email: string, password: string) {
   });
   
   if (error) {
-    // Give specific error message for incorrect password
+    console.error("Sign in error:", error);
+    
+    // Handle specific error cases
     if (error.message.includes("Invalid login credentials")) {
       throw new Error("Incorrect password. Please check your password or reset it.");
+    } else if (error.message.includes("Email not confirmed")) {
+      // Resend the verification email and show a specific error
+      try {
+        const { error: resendError } = await supabase.auth.resend({
+          type: 'signup',
+          email: email,
+        });
+        
+        if (resendError) {
+          console.error("Error resending verification email:", resendError);
+        } else {
+          console.log("Verification email resent successfully");
+        }
+      } catch (resendError) {
+        console.error("Error resending verification email:", resendError);
+      }
+      
+      throw new Error("Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in.");
     }
+    
+    // For any other errors
     throw error;
   }
   

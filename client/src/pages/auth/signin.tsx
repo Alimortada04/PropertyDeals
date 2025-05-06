@@ -27,7 +27,7 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [supportsBiometric, setSupportsBiometric] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [authError, setAuthError] = useState<{ type: 'email' | 'password' | 'general', message: string } | null>(null);
+  const [authError, setAuthError] = useState<{ type: 'email' | 'password' | 'verification' | 'general', message: string } | null>(null);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -69,6 +69,8 @@ export default function SignInPage() {
         }, 1000);
       },
       onError: (error: Error) => {
+        console.log("Login error:", error.message);
+        
         // Set specific error type based on error message
         if (error.message.includes('Email not found')) {
           setAuthError({
@@ -79,6 +81,11 @@ export default function SignInPage() {
           setAuthError({
             type: 'password',
             message: "Incorrect password. Please try again or reset your password."
+          });
+        } else if (error.message.includes('Email not confirmed')) {
+          setAuthError({
+            type: 'verification',
+            message: "Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in."
           });
         } else {
           setAuthError({
@@ -219,35 +226,47 @@ export default function SignInPage() {
               authError.type === 'email'
                 ? "border-red-300 bg-red-50"
                 : authError.type === 'password'
-                ? "border-amber-300 bg-amber-50"
+                ? "border-amber-300 bg-amber-50" 
+                : authError.type === 'verification'
+                ? "border-blue-300 bg-blue-50"
                 : "border-red-300 bg-red-50"
             }`}
           >
             <AlertCircle className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
               authError.type === 'email' ? "text-red-600" : 
               authError.type === 'password' ? "text-amber-600" :
+              authError.type === 'verification' ? "text-blue-600" :
               "text-red-600"
             }`} />
             <div>
               <p className={`text-sm font-medium ${
                 authError.type === 'email' ? "text-red-700" : 
                 authError.type === 'password' ? "text-amber-700" :
+                authError.type === 'verification' ? "text-blue-700" :
                 "text-red-700"
               }`}>
                 {authError.type === 'email' 
                   ? "Incorrect email/username" 
-                  : authError.type === 'password' 
-                  ? "Incorrect password" 
+                  : authError.type === 'password'
+                  ? "Incorrect password"
+                  : authError.type === 'verification'
+                  ? "Email verification required"
                   : "Authentication failed"}
               </p>
               <p className={`text-xs mt-1 ${
                 authError.type === 'email' ? "text-red-600" : 
                 authError.type === 'password' ? "text-amber-600" :
+                authError.type === 'verification' ? "text-blue-600" :
                 "text-red-600"
               }`}>
                 {authError.message}
                 {authError.type === 'password' && (
                   <> <Link to="/forgot-password" className="underline font-medium">Reset password</Link></>
+                )}
+                {authError.type === 'verification' && (
+                  <div className="mt-1">
+                    <span>Check your inbox and spam folder for the verification email.</span>
+                  </div>
                 )}
               </p>
             </div>
