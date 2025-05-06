@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Loader2, Eye, EyeOff, ArrowRight, Fingerprint, AlertCircle } from "lucide-react";
 import { SiGoogle, SiFacebook } from "react-icons/si";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { supabase } from "@/lib/supabase";
+import { supabase, checkEmailExists } from "@/lib/supabase";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast"; 
 
@@ -38,63 +38,83 @@ export default function SignInPage() {
     },
   });
 
-  function onLoginSubmit(values: z.infer<typeof loginSchema>) {
+  async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     // Clear any previous error
     setAuthError(null);
     
-    loginMutation.mutate({
-      email: values.email,
-      password: values.password,
-    }, {
-      onSuccess: () => {
-        toast({
-          title: "Login successful",
-          description: "Welcome back! Redirecting...",
+    // First, let's check if the email exists to provide better error messages
+    try {
+      // Email check should take precedence over password check
+      const emailExists = await checkEmailExists(values.email);
+      
+      if (!emailExists) {
+        // If email doesn't exist, immediately show an email error and don't attempt login
+        console.log("Email not found, showing appropriate error");
+        setAuthError({
+          type: 'email',
+          message: "We couldn't find an account with this email. Please check your email or create a new account."
         });
-        
-        // Show a smooth transition animation before redirecting
-        const overlay = document.createElement('div');
-        overlay.className = 'fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500';
-        overlay.innerHTML = `
-          <div class="text-center">
-            <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#09261E] border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
-            <p class="text-[#09261E] font-medium text-lg">Taking you to your dashboard...</p>
-          </div>
-        `;
-        document.body.appendChild(overlay);
-        
-        // Redirect to home page after a short delay
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
-      },
-      onError: (error: Error) => {
-        console.log("Login error:", error.message);
-        
-        // Set specific error type based on error message
-        if (error.message.includes('Email not found')) {
-          setAuthError({
-            type: 'email',
-            message: "Incorrect email/username. Please check your email or create a new account."
-          });
-        } else if (error.message.includes('password')) {
-          setAuthError({
-            type: 'password',
-            message: "Incorrect password. Please try again or reset your password."
-          });
-        } else if (error.message.includes('Email not confirmed')) {
-          setAuthError({
-            type: 'verification',
-            message: "Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in."
-          });
-        } else {
-          setAuthError({
-            type: 'general',
-            message: error.message || "Sign in failed. Please try again."
-          });
-        }
+        return; // Don't proceed with login attempt
       }
-    });
+      
+      // If we get here, the email exists, so we can try to log in
+      console.log("Email exists, attempting login");
+      
+      loginMutation.mutate({
+        email: values.email,
+        password: values.password,
+      }, {
+        onSuccess: () => {
+          toast({
+            title: "Login successful",
+            description: "Welcome back! Redirecting...",
+          });
+          
+          // Show a smooth transition animation before redirecting
+          const overlay = document.createElement('div');
+          overlay.className = 'fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500';
+          overlay.innerHTML = `
+            <div class="text-center">
+              <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#09261E] border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
+              <p class="text-[#09261E] font-medium text-lg">Taking you to your dashboard...</p>
+            </div>
+          `;
+          document.body.appendChild(overlay);
+          
+          // Redirect to home page after a short delay
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+        },
+        onError: (error: Error) => {
+          console.log("Login error:", error.message);
+          
+          // Since we already verified email exists, any login error must be password or verification related
+          if (error.message.includes('password')) {
+            setAuthError({
+              type: 'password',
+              message: "Incorrect password. Please try again or reset your password."
+            });
+          } else if (error.message.includes('Email not confirmed')) {
+            setAuthError({
+              type: 'verification',
+              message: "Email not confirmed. We've sent a new verification email - please check your inbox and verify your email address before signing in."
+            });
+          } else {
+            setAuthError({
+              type: 'general',
+              message: error.message || "Sign in failed. Please try again."
+            });
+          }
+        }
+      });
+    } catch (error: any) {
+      console.error("Error during login attempt:", error);
+      setAuthError({
+        type: 'general',
+        message: error.message || "An unexpected error occurred. Please try again."
+      });
+    }
   }
 
   function togglePasswordVisibility() {
