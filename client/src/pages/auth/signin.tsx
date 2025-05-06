@@ -147,9 +147,9 @@ export default function SignInPage() {
     <div className="relative min-h-screen bg-white flex items-center justify-center overflow-hidden">
       {/* Background Blobs - Animated with staggered animation */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Primary green large blob - top right */}
+        {/* Primary dark green large blob - top right */}
         <div
-          className="absolute w-[700px] h-[700px] bg-[#135341]/40 rounded-full blur-3xl -top-[10%] -right-[10%] animate-breathe"
+          className="absolute w-[700px] h-[700px] bg-[#09261E]/40 rounded-full blur-3xl -top-[10%] -right-[10%] animate-breathe"
           style={{ 
             transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
             '--blur-amount': '120px'
@@ -158,13 +158,13 @@ export default function SignInPage() {
         
         {/* Wine accent blob - bottom left */}
         <div
-          className="absolute w-[600px] h-[600px] bg-[#803344]/40 rounded-full blur-3xl -bottom-[15%] -left-[10%] animate-float"
+          className="absolute w-[600px] h-[600px] bg-[#803344]/35 rounded-full blur-3xl -bottom-[15%] -left-[10%] animate-float"
           style={{ 
             transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * -20}px)`,
           }}
         />
         
-        {/* Accent pink blob - mid center */}
+        {/* Salmon accent blob - mid center */}
         <div
           className="absolute w-[500px] h-[500px] bg-[#E59F9F]/30 rounded-full blur-3xl top-[40%] left-[30%] animate-pulse-slow"
           style={{ 
@@ -172,9 +172,9 @@ export default function SignInPage() {
           }}
         />
         
-        {/* Light green blob - top left */}
+        {/* Silver blob - top left */}
         <div
-          className="absolute w-[400px] h-[400px] bg-[#135341]/30 rounded-full blur-3xl top-[10%] left-[5%] animate-float-slow"
+          className="absolute w-[400px] h-[400px] bg-[#D8D8D8]/40 rounded-full blur-3xl top-[10%] left-[5%] animate-float-slow"
           style={{ 
             transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * 15}px)`,
           }}
@@ -239,7 +239,11 @@ export default function SignInPage() {
                 render={({ field }) => (
                   <FormItem className="flex items-center gap-2">
                     <FormControl>
-                      <Switch checked={field.value} onCheckedChange={field.onChange} />
+                      <Switch 
+                        checked={field.value} 
+                        onCheckedChange={field.onChange}
+                        className="transition-all data-[state=checked]:animate-pulse-slow data-[state=checked]:bg-[#09261E]"
+                      />
                     </FormControl>
                     <FormLabel className="text-xs text-gray-500">Stay signed in</FormLabel>
                   </FormItem>
@@ -282,18 +286,33 @@ export default function SignInPage() {
 
         {/* Social Buttons */}
         <div className="flex justify-center gap-4">
-          <Button variant="outline" size="icon" onClick={handleGoogleLogin} className="w-12 h-12">
-            <SiGoogle className="h-5 w-5" />
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={handleGoogleLogin} 
+            className="w-12 h-12 transition-all hover:bg-red-50 hover:border-red-200 group"
+          >
+            <SiGoogle className="h-5 w-5 text-[#4285F4] group-hover:scale-110 transition-transform" />
           </Button>
-          <Button variant="outline" size="icon" onClick={handleFacebookLogin} className="w-12 h-12">
-            <SiFacebook className="h-5 w-5 text-[#1877F2]" />
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={handleFacebookLogin} 
+            className="w-12 h-12 transition-all hover:bg-blue-50 hover:border-blue-200 group"
+          >
+            <SiFacebook className="h-5 w-5 text-[#1877F2] group-hover:scale-110 transition-transform" />
           </Button>
           {supportsBiometric && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={handleBiometricLogin} className="w-12 h-12">
-                    <Fingerprint className="h-5 w-5" />
+                  <Button 
+                    variant="outline" 
+                    size="icon" 
+                    onClick={handleBiometricLogin} 
+                    className="w-12 h-12 transition-all hover:bg-gray-100 hover:border-gray-300 group"
+                  >
+                    <Fingerprint className="h-5 w-5 group-hover:scale-110 transition-transform" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>

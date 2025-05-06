@@ -369,9 +369,9 @@ export default function RegisterPage() {
     <div className="relative min-h-screen flex items-center justify-center p-6 bg-white overflow-hidden">
       {/* Background Blobs - Animated with staggered animation */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Primary green large blob - top right */}
+        {/* Primary dark green large blob - top right */}
         <div
-          className="absolute w-[700px] h-[700px] bg-[#135341]/40 rounded-full blur-3xl -top-[10%] -right-[10%] animate-breathe"
+          className="absolute w-[700px] h-[700px] bg-[#09261E]/40 rounded-full blur-3xl -top-[10%] -right-[10%] animate-breathe"
           style={{ 
             transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
             '--blur-amount': '120px'
@@ -380,13 +380,13 @@ export default function RegisterPage() {
         
         {/* Wine accent blob - bottom left */}
         <div
-          className="absolute w-[600px] h-[600px] bg-[#803344]/40 rounded-full blur-3xl -bottom-[15%] -left-[10%] animate-float"
+          className="absolute w-[600px] h-[600px] bg-[#803344]/35 rounded-full blur-3xl -bottom-[15%] -left-[10%] animate-float"
           style={{ 
             transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * -20}px)`,
           }}
         />
         
-        {/* Accent pink blob - mid center */}
+        {/* Salmon accent blob - mid center */}
         <div
           className="absolute w-[500px] h-[500px] bg-[#E59F9F]/30 rounded-full blur-3xl top-[40%] left-[30%] animate-pulse-slow"
           style={{ 
@@ -394,9 +394,9 @@ export default function RegisterPage() {
           }}
         />
         
-        {/* Light green blob - top left */}
+        {/* Silver blob - top left */}
         <div
-          className="absolute w-[400px] h-[400px] bg-[#135341]/30 rounded-full blur-3xl top-[10%] left-[5%] animate-float-slow"
+          className="absolute w-[400px] h-[400px] bg-[#D8D8D8]/40 rounded-full blur-3xl top-[10%] left-[5%] animate-float-slow"
           style={{ 
             transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * 15}px)`,
           }}
@@ -533,17 +533,19 @@ export default function RegisterPage() {
                 type="button"
                 onClick={() => handleSocialRegistration("google")}
                 variant="outline"
-                className="w-full h-11 border-gray-200 hover:bg-gray-50 transition-all"
+                className="w-full h-11 border-gray-200 hover:bg-red-50 hover:border-red-200 transition-all group"
               >
-                <SiGoogle className="mr-2 text-[#4285F4]" /> Continue with Google
+                <SiGoogle className="mr-2 text-[#4285F4] group-hover:scale-110 transition-transform" /> 
+                <span className="group-hover:text-gray-800 transition-colors">Continue with Google</span>
               </Button>
               <Button
                 type="button"
                 onClick={() => handleSocialRegistration("facebook")}
                 variant="outline"
-                className="w-full h-11 border-gray-200 hover:bg-gray-50 transition-all"
+                className="w-full h-11 border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-all group"
               >
-                <SiFacebook className="mr-2 text-[#1877F2]" /> Continue with Facebook
+                <SiFacebook className="mr-2 text-[#1877F2] group-hover:scale-110 transition-transform" /> 
+                <span className="group-hover:text-gray-800 transition-colors">Continue with Facebook</span>
               </Button>
             </div>
 
@@ -700,7 +702,7 @@ export default function RegisterPage() {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="mt-0.5"
+                          className="mt-0.5 data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E] transition-all hover:border-[#09261E]"
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
