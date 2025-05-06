@@ -15,8 +15,24 @@ export async function checkEmailExists(email: string): Promise<boolean> {
   console.log("Checking if email exists:", email);
   
   try {
-    // The most reliable way to check if an email exists is to try to sign in with OTP
-    // and specifically check for the "not found" error message
+    // First check: Query our local database
+    try {
+      const { data: userFromDb } = await supabase
+        .from('users')
+        .select('email')
+        .eq('email', email)
+        .maybeSingle();
+      
+      if (userFromDb) {
+        console.log("Email exists in local database");
+        return true;
+      }
+    } catch (dbError) {
+      console.error("Error checking local database:", dbError);
+    }
+    
+    // Second check: Try to sign in with OTP (password-less) which will fail with a specific
+    // error if the user doesn't exist
     const { error: otpError } = await supabase.auth.signInWithOtp({
       email: email,
       options: {
@@ -37,16 +53,40 @@ export async function checkEmailExists(email: string): Promise<boolean> {
       return false;
     }
     
-    // For other error messages (rate limiting, etc.), we can't be sure
-    // But most likely if we got an error here that's not "not found", the email exists
-    console.log("Email existence unknown, got error:", otpError.message);
-    console.log("Assuming email doesn't exist to allow registration attempt");
-    return false;
+    // Third check: Direct check against Supabase Auth (this is more reliable for existing users)
+    try {
+      // Reset password will fail with "User not found" if the email doesn't exist
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      });
+      
+      // If no error, the user exists
+      if (!resetError) {
+        console.log("Email exists (confirmed via password reset)");
+        return true;
+      }
+      
+      // If we get a "User not found" error, the email doesn't exist
+      if (resetError.message && resetError.message.includes("not found")) {
+        console.log("Email doesn't exist (confirmed via password reset)");
+        return false;
+      }
+      
+      // For any other error, we assume the user might exist
+      console.log("Could not confirm email existence via password reset:", resetError.message);
+    } catch (resetError) {
+      console.error("Error checking email via password reset:", resetError);
+    }
+    
+    // If we can't determine for sure, assume the email exists to be safe
+    // for login checks (better to fail on password than to say user doesn't exist)
+    console.log("Email existence uncertain, defaulting to assume it exists");
+    return true;
   } catch (error) {
-    console.error("Error checking email existence:", error);
-    // If there's an exception in the check, don't prevent registration
-    console.log("Assuming email doesn't exist due to error");
-    return false;
+    console.error("Error in comprehensive email check:", error);
+    // If there's an exception in the entire check process, assume it might exist
+    // This prevents false negatives during login
+    return true;
   }
 }
 

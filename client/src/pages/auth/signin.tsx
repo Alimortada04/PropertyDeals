@@ -27,6 +27,7 @@ export default function SignInPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [supportsBiometric, setSupportsBiometric] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isLoading, setLoading] = useState(false);
   const [authError, setAuthError] = useState<{ type: 'email' | 'password' | 'verification' | 'general', message: string } | null>(null);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -41,8 +42,8 @@ export default function SignInPage() {
   async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     // Clear any previous error
     setAuthError(null);
+    setLoading(true);
     
-    // First, let's check if the email exists to provide better error messages
     try {
       // Email check should take precedence over password check
       console.log("Checking if email exists before attempting login:", values.email);
@@ -56,6 +57,7 @@ export default function SignInPage() {
         if (!emailExists) {
           // If email doesn't exist, immediately show an email error and don't attempt login
           console.log("Email not found, showing appropriate error");
+          setLoading(false);
           setAuthError({
             type: 'email',
             message: "We couldn't find an account with this email. Please check your email or create a new account."
@@ -68,8 +70,8 @@ export default function SignInPage() {
       } catch (emailCheckError) {
         // If the email check itself fails, we should proceed with login attempt
         console.log("Email check failed, proceeding with login attempt:", emailCheckError);
-        // Since check failed, we assume email might exist and let the login attempt reveal the truth
-        emailExists = false;
+        // Since we couldn't verify for sure, we'll attempt login anyway
+        emailExists = true; // Assume it exists to give a chance to log in
       }
       
       loginMutation.mutate({
@@ -392,9 +394,9 @@ export default function SignInPage() {
             <Button
               type="submit"
               className="w-full bg-[#09261E] hover:bg-[#0c3a2d] text-white h-11 flex items-center justify-center gap-2"
-              disabled={loginMutation.isPending}
+              disabled={loginMutation.isPending || isLoading}
             >
-              {loginMutation.isPending ? (
+              {loginMutation.isPending || isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
                   Signing In...

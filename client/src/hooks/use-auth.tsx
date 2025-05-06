@@ -89,6 +89,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           throw new Error("Invalid credentials");
         }
         
+        // Check if user is verified
+        if (authData.user.email_confirmed_at || authData.user.confirmed_at) {
+          console.log("Email login successful for verified user");
+        } else {
+          console.log("User not verified, but login successful - Auth will show verification message");
+        }
+        
         console.log("Email login successful");
         return authData;
       } catch (error) {
