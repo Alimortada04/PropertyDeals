@@ -150,43 +150,27 @@ export default function RegisterPage() {
   };
 
   const onRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
+    // Reset all state before attempting registration
     setFormError(null);
     setFormSuccess(null);
     setVerificationRequired(false);
     setLoading(true);
+    
+    // Clear any existing email error
+    registerForm.clearErrors("email");
 
     try {
-      // First explicitly check if the email already exists
-      console.log("Checking if email already exists:", values.email);
-      const { error: checkError } = await supabase.auth.signInWithOtp({
-        email: values.email,
-        options: {
-          shouldCreateUser: false
-        }
-      });
-      
-      // If there's no error or error doesn't include "not found", the email already exists
-      if (!checkError || !checkError.message.includes("not found")) {
-        console.error("Email already exists check:", checkError);
-        registerForm.setError("email", {
-          type: "manual",
-          message: "Email already exists. Try signing in instead.",
-        });
-        throw new Error("This email is already registered. Please sign in instead.");
-      }
-      
-      console.log("Email is available, proceeding with registration");
-      
-      // Generate a unique username from full name
+      // 1. Generate a username from the full name
       const baseUsername = generateUsername(values.fullName);
       if (!baseUsername) {
         throw new Error("Could not generate a valid username");
       }
       
       const finalUsername = await findAvailableUsername(baseUsername);
+      console.log("Generated username:", finalUsername);
       
-      // Step 1: Sign up with Supabase Auth
-      console.log("Attempting Supabase signup with email:", values.email);
+      // 2. Call Supabase Auth signup directly
+      console.log("Attempting registration with Supabase Auth...");
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
@@ -321,18 +305,31 @@ export default function RegisterPage() {
       // Handle user-friendly error messages
       let errorMessage = error.message || "An unexpected error occurred";
       
-      if (errorMessage.includes("already exists")) {
-        errorMessage = "This email is already registered. Please sign in instead.";
+      // Only set form error if it's not already captured as a field error
+      if (errorMessage.includes("already exists") || errorMessage.includes("already registered")) {
+        // Don't set formError for email errors - these are already handled by the form field
+        // Just set a toast notification
+        toast({
+          title: "Email already registered",
+          description: "This email is already registered. Please sign in instead.",
+          variant: "destructive",
+        });
       } else if (errorMessage.includes("sign up")) {
         errorMessage = "Unable to create your account. Please try again later.";
+        setFormError(errorMessage);
+        toast({
+          title: "Registration failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      } else {
+        setFormError(errorMessage);
+        toast({
+          title: "Registration failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
       }
-      
-      setFormError(errorMessage);
-      toast({
-        title: "Registration failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
     } finally {
       setLoading(false);
     }
@@ -515,24 +512,6 @@ export default function RegisterPage() {
           </div>
         ) : (
           <>
-            {/* Error Message */}
-            {formError && (
-              <Alert className="mb-6 bg-red-50 border-red-200 text-red-800 animate-pulse-once" variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle className="text-red-800 font-medium">Registration Failed</AlertTitle>
-                <AlertDescription className="text-red-700">
-                  {formError}
-                  {formError.includes("already registered") && (
-                    <div className="mt-2">
-                      <Link to="/signin" className="font-medium underline hover:text-red-900">
-                        Sign in here
-                      </Link> with your existing account.
-                    </div>
-                  )}
-                </AlertDescription>
-              </Alert>
-            )}
-            
             {/* Field-Level Email Error Message */}
             {registerForm.formState.errors.email && registerForm.formState.errors.email.message?.includes("already exists") && (
               <div className="border border-red-300 rounded-md p-3 mb-4 bg-red-50 flex items-start gap-2">
