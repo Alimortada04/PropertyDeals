@@ -353,7 +353,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     <TooltipProvider>
       {/* Property Hero Section with Photo Gallery */}
       <section className="relative bg-white pt-6">
-        <div className="container mx-auto px-4 pt-2 pb-8">
+        <div className="container mx-auto px-4 pt-2">
           {/* Breadcrumb Navigation */}
           <nav className="flex text-sm text-gray-500 mb-4 items-center">
             <Link to="/" className="hover:text-[#09261E]">Home</Link>
@@ -432,8 +432,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     <HelpCircle className="h-3.5 w-3.5 ml-1 opacity-70" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent className="max-w-xs">
-                  <p>PD Rating is our proprietary scoring system that evaluates properties based on value, market conditions, and investment potential. A higher score indicates a better investment opportunity.</p>
+                <TooltipContent className="max-w-xs p-4 space-y-2">
+                  <h4 className="font-bold text-[#09261E]">PD Rating Explanation</h4>
+                  <p>This score is based on repair costs, location, pricing vs comps, and projected rental income.</p>
+                  <p className="text-xs text-gray-500 mt-2">Our proprietary scoring system evaluates properties based on value, market conditions, and investment potential. A higher score indicates a better investment opportunity.</p>
                 </TooltipContent>
               </Tooltip>
               <div className="text-gray-600">
