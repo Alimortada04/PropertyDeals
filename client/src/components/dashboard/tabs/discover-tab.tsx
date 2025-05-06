@@ -214,11 +214,11 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
           
           {/* Primary action card - Connect with Professional */}
           <Card 
-            className="hover:shadow-md transition-all duration-200 cursor-pointer"
+            className="hover:shadow-lg transition-all duration-300 cursor-pointer bg-[#F2F8F5] hover:bg-gradient-to-br hover:from-[#EAF2EF] hover:to-[#135341]/20 text-[#09261E] overflow-hidden transform hover:scale-[1.01]"
             onClick={() => setLocation("/reps")}
           >
             <CardContent className="p-6 flex items-center">
-              <div className="w-14 h-14 rounded-full bg-[#EAF2EF] flex items-center justify-center mr-4 flex-shrink-0">
+              <div className="w-14 h-14 rounded-full bg-[#135341]/20 flex items-center justify-center mr-4 flex-shrink-0">
                 <UserSearch className="h-8 w-8 text-[#09261E]" />
               </div>
               <div className="flex-1">
