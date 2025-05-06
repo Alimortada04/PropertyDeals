@@ -1,0 +1,84 @@
+1. Relocate Action Buttons
+Move the existing buttons:
+
+Contact Seller
+
+Make an Offer
+
+Save
+
+Share
+
+To this new location:
+
+Replace the current property tag section (where “Single Family,” “Light Rehab,” and “5 days on PropertyDeals” are shown).
+
+Completely remove those tag elements from the page.
+
+Make sure spacing and alignment of the new button area looks clean and balanced under the property address and price.
+
+✅ 2. Clean Up Spacing Above Nav Menu
+Reduce or eliminate the vertical spacing above the section navigation (Numbers, Location, REPs, etc.).
+
+Ensure this nav bar appears visually connected to the property content above it.
+
+✅ 3. Fix Sticky Header Scroll Offset
+When clicking the nav menu (e.g., "Numbers", "Location"), the scroll should:
+
+Not cover the section heading with the sticky nav bar.
+
+Implement a scroll offset:
+
+js
+Copy
+Edit
+const scrollWithOffset = (elId) => {
+  const el = document.getElementById(elId);
+  const yOffset = -64; // Adjust based on exact navbar height
+  const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+};
+Replace regular anchor behavior with this scroll function on click.
+
+✅ 4. PD Rating Tooltip
+Next to the PD Rating (e.g. “PD Rating: 7/10”), add a small (i) icon.
+
+On hover, show a tooltip that says:
+
+PD Rating Explanation
+This score is based on repair costs, location, pricing vs comps, and projected rental income.
+
+Use a tooltip/popup styled component already used on the site (or lightweight new one if needed).
+
+✅ 5. Redesign Calculators Under “The Numbers” Section
+Instead of showing both full calculators by default:
+
+Remove the current “Flip Calculator” and “Rental Calculator” cards.
+
+Inside the "The Numbers" section, add two buttons:
+
+Calculate Flip Profit
+
+Calculate Rental Returns
+
+When either is clicked:
+
+Reveal an inline calculator section below the buttons.
+
+Pre-fill with available values (purchase price, repair cost, ARV, rent, expenses, etc.).
+
+Allow users to edit those values freely.
+
+Show calculated outputs (e.g. “Estimated Profit: $X”, “Cap Rate: Y%”).
+
+Include a button: Reset to Default to restore original data.
+
+Keep the interaction smooth:
+
+Don’t use modals.
+
+Use collapsible/accordion or inline reveal patterns.
+
+Ensure all updates are responsive and maintain consistent styling with the rest of the page.
+
+Let me know if you’d like this broken into commit-sized tasks or if you need Figma mockups as reference.
