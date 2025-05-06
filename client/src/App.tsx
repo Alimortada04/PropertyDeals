@@ -236,46 +236,61 @@ function Router() {
       {/* Profile routes - temporarily allow access without authentication */}
       <Route path="/profile">
         <AppLayout>
-          <ProfileSettingsPage />
+          <ProfilePage />
         </AppLayout>
       </Route>
       
-      {/* Preserve old routes but redirect to the new profile page */}
       <Route path="/profile/connected-accounts">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
       </Route>
       
       <Route path="/profile/security">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
       </Route>
       
       <Route path="/profile/payment">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
       </Route>
       
       <Route path="/profile/balance">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
       </Route>
       
       <Route path="/profile/billing">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
       </Route>
       
       <Route path="/profile/memberships">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
       </Route>
       
       <Route path="/profile/resolution">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
       </Route>
       
       <Route path="/profile/danger">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
       </Route>
-      
-      {/* Redirect /settings to /profile */}
       <Route path="/settings">
-        <Redirect to="/profile" />
+        <AppLayout>
+          <ProfileSettingsPage />
+        </AppLayout>
       </Route>
       {/* Temporarily allow access to seller dashboard without authentication */}
       <Route path="/seller-dashboard">
