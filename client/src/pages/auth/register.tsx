@@ -94,52 +94,40 @@ export default function RegisterPage() {
   if (user) return <Redirect to="/" />;
 
   const checkEmailExists = async (email: string) => {
-    if (!email || registerForm.formState.errors.email) return;
+    if (!email) return false;
+    
+    // Remove validation errors that are not related to duplicate emails
+    if (registerForm.formState.errors.email && registerForm.formState.errors.email.type !== "manual") {
+      return false;
+    }
     
     try {
-      // Use Supabase Auth directly to check if email exists
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log("Checking if email exists:", email);
+      
+      // Most reliable approach: try to sign in with a wrong password to see if the email exists
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email: email,
-        password: "checkonly" + Math.random(), // Use a random string to ensure this fails but checks email
+        password: 'CheckingIfEmailExists123!' // A password that almost certainly won't match
       });
       
-      // If the error contains "Invalid login credentials" it means the email exists but wrong password
-      if (error && error.message && error.message.includes("Invalid login credentials")) {
-        console.log("Email exists check: Email found");
-        registerForm.setError("email", {
-          type: "manual",
-          message: "Email already exists. Try signing in instead.",
-        });
-        return true;
-      }
+      // If we get "Invalid credentials" error, the email exists in the auth system
+      const doesEmailExist = signInError?.message?.includes('Invalid login credentials') || false;
       
-      // If the error contains "Email not confirmed" it means the email exists but not confirmed
-      if (error && error.message && error.message.includes("Email not confirmed")) {
-        console.log("Email exists check: Email found (not confirmed)");
-        registerForm.setError("email", {
-          type: "manual",
-          message: "Email already exists. Try signing in instead.",
-        });
-        return true;
-      }
+      console.log("Sign in check result:", signInError?.message);
+      console.log("Email exists in Auth:", doesEmailExist);
       
-      // If we got "User not found" then email is available
-      if (error && error.message && error.message.includes("user not found")) {
-        console.log("Email exists check: Email is available");
-        registerForm.clearErrors("email");
-        return false;
-      }
-      
-      // Fallback check with users table
-      console.log("Performing fallback email check");
+      // Second check: Look for the email in the users table
       const { data: userData } = await supabase
         .from('users')
-        .select('id')
+        .select('email')
         .eq('email', email)
-        .limit(1);
+        .maybeSingle();
       
-      if (userData && userData.length > 0) {
-        console.log("Email exists in users table");
+      console.log("Email exists in DB:", !!userData);
+      
+      // If email exists in either auth or the database
+      if (doesEmailExist || !!userData) {
+        console.log("Email exists: TRUE");
         registerForm.setError("email", {
           type: "manual",
           message: "Email already exists. Try signing in instead.",
@@ -147,13 +135,15 @@ export default function RegisterPage() {
         return true;
       }
       
-      // Clear any existing error if email doesn't exist
+      // If we didn't get an email exists error, the email is available
+      console.log("Email exists: FALSE");
       registerForm.clearErrors("email");
       return false;
     } catch (error) {
       console.error("Email check error:", error);
       
-      // Default to allowing the user to attempt registration
+      // In case of any errors, don't block the user
+      registerForm.clearErrors("email");
       return false;
     }
   };
@@ -676,7 +666,12 @@ export default function RegisterPage() {
                           placeholder="you@example.com"
                           onBlur={async (e) => {
                             field.onBlur();
-                            await checkEmailExists(e.target.value);
+                            // Only check for duplicates if email passes validation
+                            const emailValue = e.target.value;
+                            if (emailValue && emailValue.includes('@') && !registerForm.formState.errors.email?.message) {
+                              console.log("Checking email on blur:", emailValue);
+                              await checkEmailExists(emailValue);
+                            }
                           }}
                           aria-required="true"
                           aria-invalid={!!registerForm.formState.errors.email}
