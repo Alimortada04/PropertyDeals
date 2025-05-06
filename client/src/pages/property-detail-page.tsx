@@ -353,7 +353,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     <TooltipProvider>
       {/* Property Hero Section with Photo Gallery */}
       <section className="relative bg-white pt-6">
-        <div className="container mx-auto px-4 pt-2">
+        <div className="container mx-auto px-4 pt-2 pb-4">
           {/* Breadcrumb Navigation */}
           <nav className="flex text-sm text-gray-500 mb-4 items-center">
             <Link to="/" className="hover:text-[#09261E]">Home</Link>
@@ -429,12 +429,40 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     'text-[#135341]'
                   }`}>
                     PD Rating: {propertyId % 10}/10
-                    <HelpCircle className="h-3.5 w-3.5 ml-1 opacity-70" />
+                    <span className="inline-flex items-center justify-center h-3.5 w-3.5 ml-1 text-xs font-bold bg-gray-200 text-gray-600 rounded-full">i</span>
                   </div>
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs p-4 space-y-2">
                   <h4 className="font-bold text-[#09261E]">PD Rating Explanation</h4>
                   <p>This score is based on repair costs, location, pricing vs comps, and projected rental income.</p>
+                  <div className="mt-3 space-y-2">
+                    <h5 className="text-sm font-medium text-[#09261E]">Rating Breakdown:</h5>
+                    <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
+                      <div className="flex items-center">
+                        <span className="h-2.5 w-2.5 bg-green-500 rounded-full mr-1.5"></span>
+                        <span className="text-gray-600">Repair Costs:</span>
+                      </div>
+                      <div className="text-right font-medium">{Math.min(3, propertyId % 3 + 1)}/3</div>
+                      
+                      <div className="flex items-center">
+                        <span className="h-2.5 w-2.5 bg-blue-500 rounded-full mr-1.5"></span>
+                        <span className="text-gray-600">Location:</span>
+                      </div>
+                      <div className="text-right font-medium">{Math.min(2, (propertyId % 5) % 2 + 1)}/2</div>
+                      
+                      <div className="flex items-center">
+                        <span className="h-2.5 w-2.5 bg-purple-500 rounded-full mr-1.5"></span>
+                        <span className="text-gray-600">Price vs Comps:</span>
+                      </div>
+                      <div className="text-right font-medium">{Math.min(3, (propertyId % 7) % 3 + 1)}/3</div>
+                      
+                      <div className="flex items-center">
+                        <span className="h-2.5 w-2.5 bg-amber-500 rounded-full mr-1.5"></span>
+                        <span className="text-gray-600">Rental Income:</span>
+                      </div>
+                      <div className="text-right font-medium">{Math.min(2, (propertyId % 4) % 2 + 1)}/2</div>
+                    </div>
+                  </div>
                   <p className="text-xs text-gray-500 mt-2">Our proprietary scoring system evaluates properties based on value, market conditions, and investment potential. A higher score indicates a better investment opportunity.</p>
                 </TooltipContent>
               </Tooltip>
