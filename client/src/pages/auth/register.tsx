@@ -361,32 +361,31 @@ export default function RegisterPage() {
         
         {verificationRequired ? (
           /* Email Verification Success View */
-          <div className="w-full bg-gradient-to-br from-[#F2F8F5] to-[#FAF6F7] p-6 rounded-lg border-l-4 border-[#09261E] shadow-sm relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-16 h-16 border-t-4 border-r-4 border-[#803344]/20 rounded-bl-3xl"></div>
+          <div className="w-full bg-[#f7f9f7] p-6 rounded-xl border border-gray-100 shadow-sm">
             {/* Success Icon */}
             <div className="flex justify-center mb-5">
-              <div className="w-20 h-20 rounded-full bg-[#09261E]/10 flex items-center justify-center border-2 border-[#09261E]/20">
-                <CheckCircle2 className="h-10 w-10 text-[#09261E]" />
+              <div className="w-16 h-16 rounded-full bg-[#f0f5f2] flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6 text-[#09261E]" />
               </div>
             </div>
             
             {/* Headline */}
-            <h2 className="text-2xl font-bold text-center text-[#09261E] mb-3 font-['League_Spartan',_sans-serif]">Verify Your Email</h2>
+            <h2 className="text-2xl font-bold text-center text-[#09261E] mb-3">Verify Your Email</h2>
             
             {/* Message */}
-            <p className="text-center text-gray-600 mb-7 font-['Lato',_sans-serif]">
+            <p className="text-center text-gray-600 mb-7">
               We've sent a verification link to <span className="font-medium text-[#09261E]">{registerForm.getValues("email")}</span>. 
               <br />Please check your inbox to complete your registration.
             </p>
             
             {/* Username Box */}
             {generatedUsername && (
-              <div className="bg-white p-5 rounded-lg border border-[#09261E]/10 mb-8 shadow-sm">
-                <p className="text-sm text-gray-700 mb-2 font-['Lato',_sans-serif]">
+              <div className="bg-white p-5 rounded-lg border border-gray-100 mb-8">
+                <p className="text-sm text-gray-700 mb-2">
                   This is your username — you can change it later in your profile settings.
                 </p>
-                <div className="flex items-center bg-[#F2F8F5] p-3 rounded border border-gray-200">
-                  <p className="text-[#135341] flex-grow font-medium font-['League_Spartan',_sans-serif]">{generatedUsername}</p>
+                <div className="flex items-center bg-[#f7f9f7] p-3 rounded border border-gray-200">
+                  <p className="text-[#135341] flex-grow font-medium">{generatedUsername}</p>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -407,13 +406,13 @@ export default function RegisterPage() {
             
             {/* Email Provider Buttons */}
             <div className="mb-8">
-              <p className="text-sm text-center text-gray-600 mb-3 font-['Lato',_sans-serif]">Need help checking your inbox?</p>
-              <div className="flex items-center justify-center gap-3 flex-wrap">
+              <p className="text-sm text-center text-gray-600 mb-3">Need help checking your inbox?</p>
+              <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
                 <a 
                   href="https://mail.google.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm shadow-sm hover:shadow"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
                 >
                   <SiGoogle className="h-4 w-4 text-[#4285F4]" />
                   <span className="font-medium">Gmail</span>
@@ -422,7 +421,7 @@ export default function RegisterPage() {
                   href="https://outlook.live.com/mail/" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm shadow-sm hover:shadow"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
                 >
                   <Mail className="h-4 w-4 text-[#0078D4]" />
                   <span className="font-medium">Outlook</span>
@@ -431,7 +430,7 @@ export default function RegisterPage() {
                   href="https://mail.yahoo.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm shadow-sm hover:shadow"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
                 >
                   <Mail className="h-4 w-4 text-[#6001D2]" />
                   <span className="font-medium">Yahoo</span>
@@ -440,7 +439,7 @@ export default function RegisterPage() {
                   href="https://www.icloud.com/mail" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm shadow-sm hover:shadow"
+                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
                 >
                   <Mail className="h-4 w-4" />
                   <span className="font-medium">iCloud</span>
@@ -451,7 +450,7 @@ export default function RegisterPage() {
             {/* CTA Button */}
             <Button 
               onClick={() => navigate("/signin")}
-              className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white font-medium shadow-md transition-all hover:translate-y-[-1px]"
+              className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white font-medium inline-flex items-center justify-center"
             >
               Go to Sign In
               <ArrowRight className="ml-2 h-4 w-4" />
