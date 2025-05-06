@@ -885,71 +885,130 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </AccordionTrigger>
                   <AccordionContent className="px-6 py-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Flip Calculator */}
-                      <div className="bg-[#09261E]/5 p-4 rounded-lg">
-                        <h4 className="font-medium text-lg text-[#09261E] mb-2">Flip Calculator</h4>
-                        <div className="space-y-3 mb-4">
+                      {/* Flip Calculator - Redesigned */}
+                      <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="font-medium text-lg text-[#09261E] flex items-center">
+                            <PercentSquare className="h-5 w-5 mr-2 text-[#135341]" />
+                            Flip Calculator
+                          </h4>
+                          <Badge variant="outline" className="bg-[#135341]/10 text-[#135341] border-0">
+                            House Flip
+                          </Badge>
+                        </div>
+                        <div className="space-y-4 mb-5">
                           <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price (Automatic)</label>
-                            <Input 
-                              type="text" 
-                              defaultValue={`$${property.price.toLocaleString()}`} 
-                              className="bg-white" 
-                              id="purchase-price-input"
-                            />
+                            <label className="text-sm font-medium text-gray-600 block mb-1.5 flex items-center">
+                              Purchase Price
+                              <span className="ml-1.5 text-xs text-gray-400">(Auto-filled)</span>
+                            </label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                              <Input 
+                                type="text" 
+                                defaultValue={property.price.toLocaleString()} 
+                                className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20" 
+                                id="purchase-price-input"
+                              />
+                            </div>
                           </div>
+                          
                           <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Repair Costs (Automatic)</label>
-                            <Input 
-                              type="text" 
-                              defaultValue={`$${(property.price * 0.05).toFixed(0)}`} 
-                              className="bg-white" 
-                              id="repair-costs-input"
-                            />
+                            <label className="text-sm font-medium text-gray-600 block mb-1.5 flex items-center">
+                              Repair Costs
+                              <span className="ml-1.5 text-xs text-gray-400">(Estimated)</span>
+                            </label>
+                            <div className="relative">
+                              <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                              <Input 
+                                type="text" 
+                                defaultValue={(property.price * 0.05).toFixed(0)} 
+                                className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20" 
+                                id="repair-costs-input"
+                              />
+                            </div>
                           </div>
+                          
                           <div>
-                            <label className="flex items-center text-sm font-medium text-gray-500 block mb-1">
-                              ARV
+                            <label className="text-sm font-medium text-gray-600 block mb-1.5 flex items-center">
+                              After Repair Value (ARV)
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <Info className="h-3.5 w-3.5 ml-1.5 text-gray-500" />
+                                    <Info className="h-3.5 w-3.5 ml-1.5 text-gray-400" />
                                   </TooltipTrigger>
                                   <TooltipContent>
-                                    <p className="text-xs">After Repair Value</p>
+                                    <p className="text-xs">Estimated value of the property after all repairs and renovations are completed</p>
                                   </TooltipContent>
                                 </Tooltip>
                               </TooltipProvider>
                             </label>
-                            <Input 
-                              type="text" 
-                              defaultValue={`$${(property.price * 1.2).toFixed(0)}`} 
-                              className="bg-white" 
-                              id="arv-input"
-                            />
+                            <div className="relative">
+                              <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                              <Input 
+                                type="text" 
+                                defaultValue={(property.price * 1.2).toFixed(0)} 
+                                className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20" 
+                                id="arv-input"
+                              />
+                            </div>
                           </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Holding Costs</label>
-                            <Input 
-                              type="text" 
-                              defaultValue={`$${(property.price * 0.02).toFixed(0)}`} 
-                              className="bg-white" 
-                              id="holding-costs-input"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-500 block mb-1">Selling Costs</label>
-                            <Input 
-                              type="text" 
-                              defaultValue={`$${(property.price * 0.06).toFixed(0)}`} 
-                              className="bg-white" 
-                              id="selling-costs-input"
-                            />
+                          
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="text-sm font-medium text-gray-600 block mb-1.5">
+                                Holding Costs
+                              </label>
+                              <div className="relative">
+                                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                                <Input 
+                                  type="text" 
+                                  defaultValue={(property.price * 0.02).toFixed(0)} 
+                                  className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20" 
+                                  id="holding-costs-input"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium text-gray-600 block mb-1.5">
+                                Selling Costs
+                              </label>
+                              <div className="relative">
+                                <span className="absolute left-3 top-2.5 text-gray-500">$</span>
+                                <Input 
+                                  type="text" 
+                                  defaultValue={(property.price * 0.06).toFixed(0)} 
+                                  className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20" 
+                                  id="selling-costs-input"
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
-                        <div className="space-y-2">
+                        <div className="bg-[#EAF2EF] p-4 rounded-lg mb-5 border border-[#135341]/20">
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium text-gray-700">Total Investment</span>
+                            <span className="text-[#09261E] font-semibold">
+                              ${(property.price + (property.price * 0.05) + (property.price * 0.02)).toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-medium text-gray-700">Total Profit</span>
+                            <span id="flip-result" className="text-[#135341] font-bold text-lg">
+                              ${((property.price * 1.2) - property.price - (property.price * 0.05) - (property.price * 0.02) - (property.price * 0.06)).toLocaleString(undefined, {maximumFractionDigits: 0})}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm font-medium text-gray-700">ROI</span>
+                            <span className="text-[#09261E] font-bold">
+                              {(((property.price * 1.2) - property.price - (property.price * 0.05) - (property.price * 0.02) - (property.price * 0.06)) / (property.price + (property.price * 0.05) + (property.price * 0.02)) * 100).toFixed(1)}%
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-3">
                           <Button 
-                            className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
+                            className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
                             onClick={() => {
                               // Parse inputs
                               const purchasePriceStr = (document.getElementById('purchase-price-input') as HTMLInputElement).value.replace(/[$,]/g, '');
@@ -974,19 +1033,26 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               }
                             }}
                           >
-                            Calculate Profit
+                            Recalculate
                           </Button>
-                          <div className="flex justify-between pt-2 border-t border-gray-200">
-                            <span className="font-medium">Potential Profit:</span>
-                            <span className="font-bold text-[#09261E]" id="flip-result">--</span>
-                          </div>
+                          <Button variant="outline" className="border-gray-200 text-gray-600 hover:bg-gray-50">
+                            View Full Analysis
+                          </Button>
                         </div>
                       </div>
                       
-                      {/* Rental Calculator */}
-                      <div className="bg-[#09261E]/5 p-4 rounded-lg">
-                        <h4 className="font-medium text-lg text-[#09261E] mb-2">Rental Calculator</h4>
-                        <div className="space-y-3 mb-4">
+                      {/* Rental Calculator - Redesigned */}
+                      <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="font-medium text-lg text-[#09261E] flex items-center">
+                            <Home className="h-5 w-5 mr-2 text-[#135341]" />
+                            Rental Calculator
+                          </h4>
+                          <Badge variant="outline" className="bg-[#09261E]/10 text-[#09261E] border-0">
+                            Rental Property
+                          </Badge>
+                        </div>
+                        <div className="space-y-4 mb-5">
                           <div>
                             <label className="text-sm font-medium text-gray-500 block mb-1">Purchase Price (Automatic)</label>
                             <Input 
