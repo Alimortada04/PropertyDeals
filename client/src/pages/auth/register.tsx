@@ -99,12 +99,25 @@ export default function RegisterPage() {
     try {
       console.log("Checking if email exists:", email);
       
-      // For test - skip email existence check for now
-      console.log("Skipping email existence check for now");
-      return false;
+      // First check in Supabase Auth - the most reliable source for existing emails
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email,
+        options: {
+          shouldCreateUser: false // Do not create a new user, just check if exists
+        }
+      });
       
-      /* TEMPORARILY DISABLED FOR DEBUGGING
-      // Direct check against the users table
+      // If the error message doesn't include "User not found", the email exists
+      if (error && !error.message.includes("not found")) {
+        console.log("Email found in auth system:", email);
+        registerForm.setError("email", {
+          type: "manual",
+          message: "An account with this email already exists, please sign in.",
+        });
+        return true;
+      }
+      
+      // Second check against the users table for completeness
       const { data: userData } = await supabase
         .from('users')
         .select('email')
@@ -115,14 +128,15 @@ export default function RegisterPage() {
         console.log("Email found in users table:", email);
         registerForm.setError("email", {
           type: "manual",
-          message: "Email already exists. Try signing in instead.",
+          message: "An account with this email already exists, please sign in.",
         });
         return true;
       }
       
-      // We'll skip the auth check for now since it's causing issues
+      // Email is available
+      console.log("Email available:", email);
+      registerForm.clearErrors("email");
       return false;
-      */
     } catch (error) {
       console.error("Email check error:", error);
       
@@ -541,7 +555,27 @@ export default function RegisterPage() {
           </div>
         ) : (
           <>
-            {/* Social Login Buttons */}
+            {/* Error Message */}
+            {formError && (
+              <Alert className="mb-6 bg-red-50 border-red-200 text-red-800 animate-pulse-once" variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle className="text-red-800 font-medium">Registration Failed</AlertTitle>
+                <AlertDescription className="text-red-700">{formError}</AlertDescription>
+              </Alert>
+            )}
+            
+            {/* Field-Level Email Error Message */}
+            {registerForm.formState.errors.email && registerForm.formState.errors.email.message?.includes("already exists") && (
+              <div className="border border-red-300 rounded-md p-3 mb-4 bg-red-50 flex items-start gap-2">
+                <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-red-700 text-sm font-medium">Email already registered</p>
+                  <p className="text-red-600 text-xs mt-1">
+                    An account with this email already exists, please <Link to="/signin" className="underline font-medium">sign in</Link> instead.
+                  </p>
+                </div>
+              </div>
+            )}
             
             {/* Success Message (non-verification case) */}
             {formSuccess && !verificationRequired && (

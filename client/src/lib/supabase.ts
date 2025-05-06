@@ -35,12 +35,34 @@ export async function signUpWithEmail(email: string, password: string, fullName?
 }
 
 export async function signInWithEmail(email: string, password: string) {
+  // First check if the email exists in the system
+  const { error: checkError } = await supabase.auth.signInWithOtp({
+    email: email,
+    options: {
+      shouldCreateUser: false
+    }
+  });
+  
+  // If the error contains "not found", it means the email doesn't exist
+  if (checkError && checkError.message.includes("not found")) {
+    throw new Error("Email not found. Please check your email or create a new account.");
+  }
+  
+  // If no error, or error doesn't contain "not found", the email exists
+  // Now try to sign in with the password
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
   
-  if (error) throw error;
+  if (error) {
+    // Give specific error message for incorrect password
+    if (error.message.includes("Invalid login credentials")) {
+      throw new Error("Incorrect password. Please check your password or reset it.");
+    }
+    throw error;
+  }
+  
   return data;
 }
 
