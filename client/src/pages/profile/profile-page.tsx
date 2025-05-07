@@ -831,10 +831,53 @@ export default function ProfilePage() {
 
   return (
     <div className="flex bg-white min-h-screen">
-      {/* Left sidebar */}
-      <div className="w-[250px] border-r fixed left-0 top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-10">
+      {/* Main app sidebar - Fixed */}
+      <div className="w-[70px] border-r fixed left-0 top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-20">
+        {/* Main app logo */}
+        <div className="flex justify-center py-5">
+          <div className="w-10 h-10 flex items-center justify-center">
+            <span className="text-[#09261E] font-bold text-xl">PD</span>
+          </div>
+        </div>
+        
+        {/* Main navigation icons */}
+        <div className="flex-1 flex flex-col items-center py-6 space-y-8">
+          <div className="flex flex-col space-y-6">
+            <a href="/dashboard" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+              <Home className="w-6 h-6" />
+            </a>
+            <a href="/properties" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+              <Building className="w-6 h-6" />
+            </a>
+            <a href="/messages" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+              <FacebookIcon className="w-6 h-6" /> {/* Using as message icon temporarily */}
+            </a>
+            <a href="/calendar" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+              <Calendar className="w-6 h-6" />
+            </a>
+            <a href="/tools" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+              <Wrench className="w-6 h-6" />
+            </a>
+          </div>
+        </div>
+        
+        {/* Bottom user avatar */}
+        <div className="pb-6 flex justify-center">
+          <a href="/profile">
+            <Avatar className="h-9 w-9 ring-2 ring-offset-2 ring-[#09261E]/50 hover:ring-[#09261E] transition-all">
+              <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
+              <AvatarFallback className="bg-[#09261E] text-white text-sm">
+                {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+          </a>
+        </div>
+      </div>
+      
+      {/* Settings sidebar - Positioned next to main sidebar */}
+      <div className="w-[250px] border-r fixed left-[70px] top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-10">
         {/* Profile info - Sticky top */}
-        <div className="px-6 py-6 mb-2 border-b flex flex-col items-center sticky top-0 bg-white z-20">
+        <div className="px-6 py-6 mb-2 border-b flex flex-col items-center sticky top-0 bg-white z-10">
           <div className="relative group">
             <Avatar className="h-20 w-20 mb-2 ring-2 ring-offset-2 ring-[#09261E]/50 group-hover:ring-[#09261E]">
               <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
@@ -937,8 +980,8 @@ export default function ProfilePage() {
         </div>
       </div>
       
-      {/* Right content area - Adjust margin-left to accommodate fixed sidebar */}
-      <div className="flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto ml-[250px]">
+      {/* Right content area - Adjust margin-left to accommodate both sidebars */}
+      <div className="flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto ml-[320px]">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="border-b pb-4 mb-6">
             <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
