@@ -72,6 +72,7 @@ import {
   ArrowRight,
   Pencil,
   Search,
+  CircleUserRound,
 } from "lucide-react";
 
 // Third-party icons - we use these directly for specialized icons
