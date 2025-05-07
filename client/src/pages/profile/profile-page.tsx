@@ -92,7 +92,7 @@ interface ProfileData {
   preferred_contractors: string[];
   preferred_lenders: string[];
   showProfile: boolean;
-  [key: string]: any; // Index signature for dynamic access
+  [key: string]: any; // Index signature for dynamic access - allows for string or other types
 }
 
 interface ProfileMenuItem {
@@ -159,7 +159,7 @@ export default function ProfilePage() {
   
   // Default profile data
   const [profileData, setProfileData] = useState<ProfileData>({
-    id: user?.id || "",
+    id: user?.id?.toString() || "",
     full_name: user?.fullName || "",
     bio: null,
     username: user?.username || "",
@@ -1232,7 +1232,7 @@ export default function ProfilePage() {
                             id={`financing_method_${option}`}
                             checked={profileData.financing_methods?.includes(option)}
                             onCheckedChange={(checked) => {
-                              if (checked) {
+                              if (checked === true) {
                                 handleMultiSelectChange('financing_methods', option, 'property');
                               } else {
                                 handleMultiSelectChange('financing_methods', option, 'property');
