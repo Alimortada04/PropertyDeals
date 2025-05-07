@@ -168,24 +168,12 @@ export default function ProfilePage() {
   const { user, supabaseUser, logoutMutation } = useAuth();
   const [location] = useLocation();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("account");
+  // Keep track of which section is being edited
+  const [editingSection, setEditingSection] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
   const [usernameMessage, setUsernameMessage] = useState("");
-  
-  // To set the active tab from URL hash if present
-  useEffect(() => {
-    const hash = window.location.hash.replace('#', '');
-    if (hash && ['account', 'profile', 'property', 'professional'].includes(hash)) {
-      setActiveTab(hash);
-    }
-  }, []);
-
-  // Update the URL hash when tab changes
-  useEffect(() => {
-    window.location.hash = activeTab;
-  }, [activeTab]);
 
   // Refs for the file input and preview
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -731,7 +719,7 @@ export default function ProfilePage() {
   return (
     <div className="flex bg-white min-h-screen">
       {/* Left sidebar */}
-      <div className="w-[250px] border-r h-auto min-h-screen sticky top-0 flex flex-col bg-white shadow-sm overflow-y-auto">
+      <div className="w-[230px] border-r h-auto min-h-screen sticky top-0 flex flex-col bg-white shadow-sm overflow-y-auto">
         {/* Profile info */}
         <div className="px-6 py-6 mb-4 border-b flex flex-col items-center">
           <div className="relative group">
@@ -777,102 +765,26 @@ export default function ProfilePage() {
             <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Profile Settings</h3>
             <button
               onClick={() => setActiveTab("account")}
-              className={cn(
-                "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
-                activeTab === "account"
-                  ? "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
-                  : "text-gray-700 hover:bg-gray-100/80"
-              )}
+              className="w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
             >
-              <UserCircle size={18} className={cn("mr-3", activeTab === "account" ? "text-[#09261E]" : "text-gray-500")} />
-              <span>Account Settings</span>
-            </button>
-            
-            <button
-              onClick={() => setActiveTab("profile")}
-              className={cn(
-                "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
-                activeTab === "profile"
-                  ? "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
-                  : "text-gray-700 hover:bg-gray-100/80"
-              )}
-            >
-              <User size={18} className={cn("mr-3", activeTab === "profile" ? "text-[#09261E]" : "text-gray-500")} />
-              <span>Profile</span>
-            </button>
-            
-            <button
-              onClick={() => setActiveTab("property")}
-              className={cn(
-                "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
-                activeTab === "property"
-                  ? "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
-                  : "text-gray-700 hover:bg-gray-100/80"
-              )}
-            >
-              <Building size={18} className={cn("mr-3", activeTab === "property" ? "text-[#09261E]" : "text-gray-500")} />
-              <span>Property Preferences</span>
-            </button>
-            
-            <button
-              onClick={() => setActiveTab("professional")}
-              className={cn(
-                "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50",
-                activeTab === "professional"
-                  ? "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
-                  : "text-gray-700 hover:bg-gray-100/80"
-              )}
-            >
-              <Users size={18} className={cn("mr-3", activeTab === "professional" ? "text-[#09261E]" : "text-gray-500")} />
-              <span>Professional Preferences</span>
+              <UserCircle size={18} className="mr-3 text-[#09261E]" />
+              <span>Account</span>
             </button>
           </div>
           
           <div className="mt-6 pt-6 border-t">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Account</h3>
-            <ProfileMenuItem
-              icon={<LinkIcon size={18} />}
-              label="Connected accounts"
-              href="/profile/connected-accounts"
-              active={location === "/profile/connected-accounts"}
-            />
+            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Other Settings</h3>
             <ProfileMenuItem
               icon={<Shield size={18} />}
               label="Security & Privacy"
               href="/profile/security"
               active={location === "/profile/security"}
             />
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2 mt-4">Billing</h3>
             <ProfileMenuItem
               icon={<CreditCard size={18} />}
               label="Payment methods"
               href="/profile/payment"
               active={location === "/profile/payment"}
-            />
-            <ProfileMenuItem
-              icon={<BarChart size={18} />}
-              label="Balance"
-              href="/profile/balance"
-              active={location === "/profile/balance"}
-            />
-            <ProfileMenuItem
-              icon={<ClipboardList size={18} />}
-              label="Billing history"
-              href="/profile/billing"
-              active={location === "/profile/billing"}
-            />
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2 mt-4">Other</h3>
-            <ProfileMenuItem
-              icon={<Settings size={18} />}
-              label="Memberships"
-              href="/profile/memberships"
-              active={location === "/profile/memberships"}
-            />
-            <ProfileMenuItem
-              icon={<Settings size={18} />}
-              label="Resolution center"
-              href="/profile/resolution"
-              active={location === "/profile/resolution"}
             />
             <ProfileMenuItem
               icon={<AlertTriangle size={18} />}
