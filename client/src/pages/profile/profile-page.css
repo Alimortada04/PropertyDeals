@@ -1,0 +1,11 @@
+/* Custom styles for profile page */
+
+/* Hide the bottom dock bar on profile pages */
+body:has(.profile-page-root) .fixed.bottom-0.left-0.w-full.h-12.bg-white.border-t {
+  display: none !important;
+}
+
+/* Also adjust padding to remove the space for the dock */
+body:has(.profile-page-root) .pl-16.pb-12 {
+  padding-bottom: 0 !important;
+}

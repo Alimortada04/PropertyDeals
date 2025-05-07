@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import styles from "./profile-page.module.css";
 
 // UI Components
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -830,7 +831,7 @@ export default function ProfilePage() {
       profileData.total_deals_done, profileData.current_portfolio_count]);
 
   return (
-    <div className="flex bg-white min-h-screen">
+    <div className={`flex bg-white min-h-screen ${styles.profile_page_container}`}>
       {/* Main app sidebar - Fixed */}
       <div className="w-[70px] border-r fixed left-0 top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-20">
         {/* Main app logo */}
@@ -841,21 +842,21 @@ export default function ProfilePage() {
         </div>
         
         {/* Main navigation icons */}
-        <div className="flex-1 flex flex-col items-center py-6 space-y-8">
-          <div className="flex flex-col space-y-6">
-            <a href="/dashboard" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+        <div className="flex-1 flex flex-col items-center py-0 space-y-8">
+          <div className="flex flex-col space-y-6 pt-6">
+            <a href="/dashboard" className="text-gray-500 hover:text-[#09261E] transition-colors flex justify-center">
               <Home className="w-6 h-6" />
             </a>
-            <a href="/properties" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+            <a href="/properties" className="text-gray-500 hover:text-[#09261E] transition-colors flex justify-center">
               <Building className="w-6 h-6" />
             </a>
-            <a href="/messages" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+            <a href="/messages" className="text-gray-500 hover:text-[#09261E] transition-colors flex justify-center">
               <FacebookIcon className="w-6 h-6" /> {/* Using as message icon temporarily */}
             </a>
-            <a href="/calendar" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+            <a href="/calendar" className="text-gray-500 hover:text-[#09261E] transition-colors flex justify-center">
               <Calendar className="w-6 h-6" />
             </a>
-            <a href="/tools" className="text-gray-500 hover:text-[#09261E] transition-colors flex flex-col items-center">
+            <a href="/tools" className="text-gray-500 hover:text-[#09261E] transition-colors flex justify-center">
               <Wrench className="w-6 h-6" />
             </a>
           </div>
@@ -980,8 +981,8 @@ export default function ProfilePage() {
         </div>
       </div>
       
-      {/* Right content area - Adjust margin-left to accommodate both sidebars */}
-      <div className="flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto ml-[320px]">
+      {/* Right content area - No margin-left */}
+      <div className="flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="border-b pb-4 mb-6">
             <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>

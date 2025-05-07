@@ -1,0 +1,7 @@
+/* Profile page overrides */
+.profile_page_container {
+  position: relative;
+  z-index: 40; /* Ensure it's above the bottom dock */
+  min-height: 100vh;
+  background-color: white;
+}
