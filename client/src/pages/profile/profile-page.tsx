@@ -818,13 +818,30 @@ export default function ProfilePage() {
         
         {/* Logout Button - Sticky bottom */}
         <div className="px-3 py-3 border-t sticky bottom-0 bg-white mt-auto">
-          <Button 
-            onClick={handleLogout}
-            className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
-          >
-            <LogOut size={18} />
-            <span>Log Out</span>
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+              >
+                <LogOut size={18} />
+                <span>Log Out</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  You will need to sign in again to access your account.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>No, take me back</AlertDialogCancel>
+                <AlertDialogAction onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white">
+                  Yes, I'm sure
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
       

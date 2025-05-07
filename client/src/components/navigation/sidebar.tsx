@@ -2,6 +2,7 @@ import React, { useState, FC } from "react";
 import { useLocation, Link } from "wouter";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/use-auth";
+import { useQuery } from "@tanstack/react-query";
 import {
   Home,
   Building,
@@ -76,6 +77,12 @@ export default function Sidebar() {
   const [location] = useLocation();
   const { user, logoutMutation } = useAuth();
   const activeRole = user?.activeRole || "visitor";
+  
+  // Fetch profile data including profile photo
+  const { data: profileData } = useQuery({
+    queryKey: ['/api/profile'],
+    enabled: !!user
+  });
   
   // Menu popup state
   const [showMenu, setShowMenu] = useState(false);
@@ -226,9 +233,12 @@ export default function Sidebar() {
           href="/profile" 
           icon={
             <Avatar className="h-8 w-8 transition-all transform group-hover:scale-110 duration-200">
-              {/* Use only the fallback since we don't have direct access to the avatar URL */}
+              <AvatarImage 
+                src={profileData?.profile_photo_url} 
+                alt={profileData?.full_name || user?.fullName || "User"} 
+              />
               <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">
-                {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
+                {profileData?.full_name?.charAt(0) || user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
           } 
