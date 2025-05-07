@@ -71,6 +71,7 @@ import {
   MessageSquare,
   ArrowRight,
   Pencil,
+  Search,
 } from "lucide-react";
 
 // Third-party icons - we use these directly for specialized icons
@@ -1630,6 +1631,921 @@ export default function ProfilePage() {
                           disabled={loading || !isProfileSectionModified}
                         >
                           {loading ? "Saving..." : "Save Profile Changes"}
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+
+                {/* Property Preferences Section */}
+                <Card className="border-gray-200 shadow-sm">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <Building className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Property Preferences</CardTitle>
+                        <CardDescription>Your investment criteria and deal preferences</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6 space-y-8">
+                    <form onSubmit={handlePropertySectionSubmit}>
+                      {/* Investment Criteria */}
+                      <div className="space-y-4 mb-8">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Investment Criteria</span>
+                          {!profileData.markets?.length || !profileData.property_types?.length ? (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
+                                    ⚠️ Needs attention
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="text-sm">Define your investment criteria to get better matches</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ) : (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              ✓ Complete
+                            </span>
+                          )}
+                        </h3>
+                        
+                        <div>
+                          <label className="text-sm font-medium mb-2 flex items-center text-gray-700" htmlFor="markets">
+                            Target Markets
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <HelpCircle className="ml-1 h-3.5 w-3.5 text-gray-400 cursor-help" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="text-sm">Select markets where you're actively looking to invest</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </label>
+                          <div className="relative">
+                            <Input
+                              id="markets"
+                              name="markets"
+                              className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 mb-2"
+                              placeholder="Add markets separated by commas (e.g. Dallas TX, Houston TX)"
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  const input = e.currentTarget;
+                                  const value = input.value.trim();
+                                  if (value) {
+                                    const markets = value.split(',').map(m => m.trim()).filter(Boolean);
+                                    markets.forEach(market => {
+                                      if (!profileData.markets.includes(market)) {
+                                        handleMultiSelectChange('markets', market, 'property');
+                                      }
+                                    });
+                                    input.value = '';
+                                  }
+                                }
+                              }}
+                              data-incomplete={!profileData.markets?.length ? "true" : "false"}
+                            />
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {profileData.markets?.map((market) => (
+                                <Badge 
+                                  key={market} 
+                                  className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E] pl-2 pr-1 py-1 rounded-md border border-[#09261E]/10"
+                                >
+                                  <MapPin className="h-3 w-3 mr-1 inline" />
+                                  {market}
+                                  <button
+                                    type="button"
+                                    className="ml-1 rounded-full hover:bg-[#09261E]/10 p-0.5"
+                                    onClick={() => handleMultiSelectChange('markets', market, 'property')}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </button>
+                                </Badge>
+                              ))}
+                            </div>
+                            <p className="text-xs mt-2 text-gray-500">
+                              Press Enter to add multiple markets separated by commas
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-gray-700">
+                            Property Types
+                          </label>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                            {propertyTypeOptions.map((option) => (
+                              <div 
+                                key={option} 
+                                className={`flex items-center p-2 rounded-md border transition-all ${
+                                  profileData.property_types?.includes(option) 
+                                    ? 'border-[#09261E]/20 bg-[#09261E]/5' 
+                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                }`}
+                              >
+                                <Checkbox 
+                                  id={`property_type_${option}`}
+                                  checked={profileData.property_types?.includes(option)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked === true) {
+                                      handleMultiSelectChange('property_types', option, 'property');
+                                    } else {
+                                      handleMultiSelectChange('property_types', option, 'property');
+                                    }
+                                  }}
+                                  className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                                />
+                                <label 
+                                  htmlFor={`property_type_${option}`}
+                                  className="ml-2 text-sm text-gray-700 cursor-pointer flex-1"
+                                >
+                                  {option}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-gray-700">
+                            Property Conditions
+                          </label>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                            {propertyConditionOptions.map((option) => (
+                              <div 
+                                key={option} 
+                                className={`flex items-center p-2 rounded-md border transition-all ${
+                                  profileData.property_conditions?.includes(option) 
+                                    ? 'border-[#09261E]/20 bg-[#09261E]/5' 
+                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                }`}
+                              >
+                                <Checkbox 
+                                  id={`property_condition_${option}`}
+                                  checked={profileData.property_conditions?.includes(option)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked === true) {
+                                      handleMultiSelectChange('property_conditions', option, 'property');
+                                    } else {
+                                      handleMultiSelectChange('property_conditions', option, 'property');
+                                    }
+                                  }}
+                                  className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                                />
+                                <label 
+                                  htmlFor={`property_condition_${option}`}
+                                  className="ml-2 text-sm text-gray-700 cursor-pointer flex-1"
+                                >
+                                  {option}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 flex items-center text-gray-700" htmlFor="ideal_budget_min">
+                              Budget Range (Min)
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <HelpCircle className="ml-1 h-3.5 w-3.5 text-gray-400 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="text-sm">Your minimum investment budget</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </label>
+                            <div className="relative">
+                              <Input 
+                                id="ideal_budget_min"
+                                name="ideal_budget_min"
+                                type="number"
+                                min="0"
+                                step="1000"
+                                value={profileData.ideal_budget_min || ""}
+                                onChange={(e) => handleInputChange(e, 'property')}
+                                className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 pl-8"
+                                placeholder="Minimum budget"
+                              />
+                              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <span className="text-gray-500">$</span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <label className="text-sm font-medium mb-2 flex items-center text-gray-700" htmlFor="ideal_budget_max">
+                              Budget Range (Max)
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <HelpCircle className="ml-1 h-3.5 w-3.5 text-gray-400 cursor-help" />
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p className="text-sm">Your maximum investment budget</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </label>
+                            <div className="relative">
+                              <Input 
+                                id="ideal_budget_max"
+                                name="ideal_budget_max"
+                                type="number"
+                                min={profileData.ideal_budget_min || 0}
+                                step="1000"
+                                value={profileData.ideal_budget_max || ""}
+                                onChange={(e) => handleInputChange(e, 'property')}
+                                className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 pl-8"
+                                placeholder="Maximum budget"
+                              />
+                              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <span className="text-gray-500">$</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Deal Preferences */}
+                      <div className="space-y-4 mb-8 pt-6 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Deal Preferences</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full cursor-help">
+                                  Helps Matching
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-sm">Providing these details improves deal matching and seller trust</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </h3>
+                        
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-gray-700">
+                            Financing Methods
+                          </label>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                            {financingMethodOptions.map((option) => (
+                              <div 
+                                key={option} 
+                                className={`flex items-center p-2 rounded-md border transition-all ${
+                                  profileData.financing_methods?.includes(option) 
+                                    ? 'border-[#09261E]/20 bg-[#09261E]/5' 
+                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                }`}
+                              >
+                                <Checkbox 
+                                  id={`financing_${option}`}
+                                  checked={profileData.financing_methods?.includes(option)}
+                                  onCheckedChange={(checked) => {
+                                    if (checked === true) {
+                                      handleMultiSelectChange('financing_methods', option, 'property');
+                                    } else {
+                                      handleMultiSelectChange('financing_methods', option, 'property');
+                                    }
+                                  }}
+                                  className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                                />
+                                <label 
+                                  htmlFor={`financing_${option}`}
+                                  className="ml-2 text-sm text-gray-700 cursor-pointer flex-1"
+                                >
+                                  {option}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="preferred_financing_method">
+                              Preferred Financing Method
+                            </label>
+                            <Select
+                              value={profileData.preferred_financing_method || ""}
+                              onValueChange={(value) => {
+                                setProfileData(prev => ({
+                                  ...prev,
+                                  preferred_financing_method: value
+                                }));
+                                setIsPropertySectionModified(true);
+                              }}
+                            >
+                              <SelectTrigger className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50">
+                                <SelectValue placeholder="Select preferred method" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {financingMethodOptions.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          
+                          <div>
+                            <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="closing_timeline">
+                              Closing Timeline
+                            </label>
+                            <Select
+                              value={profileData.closing_timeline || ""}
+                              onValueChange={(value) => {
+                                setProfileData(prev => ({
+                                  ...prev,
+                                  closing_timeline: value
+                                }));
+                                setIsPropertySectionModified(true);
+                              }}
+                            >
+                              <SelectTrigger className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50">
+                                <SelectValue placeholder="Select timeline" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {closingTimelineOptions.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="number_of_deals_last_12_months">
+                              Deals in Last 12 Months
+                            </label>
+                            <Input 
+                              id="number_of_deals_last_12_months"
+                              name="number_of_deals_last_12_months"
+                              type="number"
+                              min="0"
+                              value={profileData.number_of_deals_last_12_months || ""}
+                              onChange={(e) => handleInputChange(e, 'property')}
+                              className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                              placeholder="Number of deals closed"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="goal_deals_next_12_months">
+                              Deal Goal for Next 12 Months
+                            </label>
+                            <Input 
+                              id="goal_deals_next_12_months"
+                              name="goal_deals_next_12_months"
+                              type="number"
+                              min="0"
+                              value={profileData.goal_deals_next_12_months || ""}
+                              onChange={(e) => handleInputChange(e, 'property')}
+                              className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                              placeholder="Number of deals targeted"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="total_deals_done">
+                              Total Deals Completed
+                            </label>
+                            <Input 
+                              id="total_deals_done"
+                              name="total_deals_done"
+                              type="number"
+                              min="0"
+                              value={profileData.total_deals_done || ""}
+                              onChange={(e) => handleInputChange(e, 'property')}
+                              className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                              placeholder="Lifetime deals closed"
+                            />
+                          </div>
+                          
+                          <div>
+                            <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="current_portfolio_count">
+                              Properties Currently Owned
+                            </label>
+                            <Input 
+                              id="current_portfolio_count"
+                              name="current_portfolio_count"
+                              type="number"
+                              min="0"
+                              value={profileData.current_portfolio_count || ""}
+                              onChange={(e) => handleInputChange(e, 'property')}
+                              className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                              placeholder="Number of properties"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Proof of Funds */}
+                      <div className="space-y-4 mb-8 pt-6 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Proof of Funds</span>
+                          {!profileData.proof_of_funds_url ? (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
+                                    Recommended
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="text-sm">Verified buyers get 4x more responses from sellers</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ) : profileData.proof_of_funds_verified ? (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              ✓ Verified
+                            </span>
+                          ) : (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
+                              ⏳ Pending Verification
+                            </span>
+                          )}
+                        </h3>
+                        
+                        <div className="bg-gray-50/80 p-4 rounded-md border border-gray-200">
+                          <div className="mb-4">
+                            <p className="text-sm text-gray-700 mb-2">
+                              Uploading proof of funds increases your credibility with sellers and can help you win more deals.
+                            </p>
+                            <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
+                              <li>Acceptable documents: Bank statements, line of credit letter, or investment account statement</li>
+                              <li>Must be dated within the last 60 days</li>
+                              <li>Must show your name and available funds</li>
+                              <li>All sensitive information will be kept confidential</li>
+                            </ul>
+                          </div>
+                          
+                          <div className="flex items-center">
+                            {profileData.proof_of_funds_url ? (
+                              <>
+                                <div className="flex-1">
+                                  <div className="flex items-center text-sm">
+                                    <FileCheck className="mr-2 h-5 w-5 text-green-600" />
+                                    <span className="font-semibold">Proof of Funds Document Uploaded</span>
+                                  </div>
+                                  {profileData.proof_of_funds_verified ? (
+                                    <span className="text-green-600 text-xs flex items-center mt-1">
+                                      <Check className="h-3.5 w-3.5 mr-1" />
+                                      Verified by PropertyDeals Team
+                                    </span>
+                                  ) : (
+                                    <span className="text-amber-600 text-xs flex items-center mt-1">
+                                      <AlertTriangle className="h-3.5 w-3.5 mr-1" />
+                                      Pending Verification (1-2 business days)
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="ml-4">
+                                  <Button 
+                                    type="button"
+                                    variant="outline"
+                                    className="text-red-600 hover:text-red-700 hover:bg-red-50/50 border-red-200"
+                                    onClick={() => {
+                                      if (window.confirm("Are you sure you want to remove your proof of funds document?")) {
+                                        setProfileData(prev => ({
+                                          ...prev,
+                                          proof_of_funds_url: null,
+                                          proof_of_funds_verified: false
+                                        }));
+                                        setIsPropertySectionModified(true);
+                                      }
+                                    }}
+                                  >
+                                    <Trash className="mr-2 h-4 w-4" />
+                                    Remove
+                                  </Button>
+                                </div>
+                              </>
+                            ) : (
+                              <Button
+                                type="button"
+                                onClick={() => {/* Handle proof of funds upload */}}
+                                className="w-full py-6 flex flex-col items-center justify-center bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 rounded-md"
+                              >
+                                <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                                <span className="font-medium text-gray-700">Upload Proof of Funds</span>
+                                <span className="text-xs text-gray-500 mt-1">PDF, JPG, or PNG (Max 5MB)</span>
+                              </Button>
+                            )}
+                          </div>
+                          
+                          {profileData.buyer_verification_tag && (
+                            <div className="mt-4 bg-[#09261E]/5 border border-[#09261E]/10 rounded-md p-3 flex items-center">
+                              <div className="mr-3 p-1.5 rounded-full bg-[#09261E]/10">
+                                <Shield className="h-4 w-4 text-[#09261E]" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-800">
+                                  {profileData.buyer_verification_tag}
+                                </p>
+                                <p className="text-xs text-gray-600">
+                                  Your buyer verification status helps sellers trust your offers
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="pt-6 flex justify-end border-t">
+                        <Button 
+                          type="submit" 
+                          className={`flex items-center transition-all duration-200 ${
+                            loading ? "bg-gray-400" : isPropertySectionModified ? "bg-[#09261E] hover:bg-[#09261E]/90" : "bg-gray-200 text-gray-500"
+                          } text-white`}
+                          disabled={loading || !isPropertySectionModified}
+                        >
+                          {loading ? (
+                            <>
+                              <span className="h-4 w-4 mr-2 rounded-full border-2 border-t-transparent border-white animate-spin"></span>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="mr-2 h-4 w-4" />
+                              Save Property Preferences
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+
+                {/* Professionals Section */}
+                <Card className="border-gray-200 shadow-sm">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <Users className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Professionals</CardTitle>
+                        <CardDescription>Your trusted real estate professionals</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6 space-y-8">
+                    <form onSubmit={handleProfileSectionSubmit}>
+
+                      {/* Introduction */}
+                      <div className="mb-6">
+                        <div className="p-4 bg-gray-50/80 rounded-md border border-gray-200">
+                          <p className="text-sm text-gray-700 flex items-start">
+                            <AlertTriangle className="h-4 w-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <span>
+                              Add your trusted real estate professionals to streamline your investments. You'll be able to quickly connect them to new deals and projects.
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Preferred Sellers */}
+                      <div className="space-y-4 mb-8">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Preferred Sellers</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full cursor-help">
+                                  Build Your Network
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-sm">Add sellers you've worked with previously to build your network</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </h3>
+                        
+                        <div className="relative">
+                          <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                            <Search className="h-4 w-4 mr-2 text-gray-400" />
+                            <Input 
+                              id="search_sellers"
+                              className="border-0 focus:ring-0 p-0 h-8"
+                              placeholder="Search for a seller by name or username..."
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            {profileData.preferred_sellers?.length > 0 ? (
+                              profileData.preferred_sellers.map((seller, index) => (
+                                <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                  <Avatar className="h-10 w-10 mr-3">
+                                    <AvatarFallback className="bg-[#135341] text-white">{seller.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-gray-800 truncate">{seller}</p>
+                                    <p className="text-xs text-gray-500 truncate">Seller • PropertyDeals</p>
+                                  </div>
+                                  <button 
+                                    type="button" 
+                                    className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                    onClick={() => handleMultiSelectChange('preferred_sellers', seller, 'professionals')}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="col-span-full p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                <Users className="h-10 w-10 text-gray-400 mb-2" />
+                                <h4 className="text-lg font-medium text-gray-700">No preferred sellers yet</h4>
+                                <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                  Add sellers you've worked with to streamline communication on future deals
+                                </p>
+                                <Button
+                                  type="button"
+                                  className="mt-4 bg-[#135341] hover:bg-[#135341]/90 text-white"
+                                >
+                                  <Plus className="h-4 w-4 mr-2" />
+                                  Add Seller
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Preferred Agents */}
+                      <div className="space-y-4 mb-8 pt-6 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Preferred Agents</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full cursor-help">
+                                  Build Your Network
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-sm">Add agents you've worked with to streamline your investments</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </h3>
+                        
+                        <div className="relative">
+                          <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                            <Search className="h-4 w-4 mr-2 text-gray-400" />
+                            <Input 
+                              id="search_agents"
+                              className="border-0 focus:ring-0 p-0 h-8"
+                              placeholder="Search for an agent by name or username..."
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            {profileData.preferred_agents?.length > 0 ? (
+                              profileData.preferred_agents.map((agent, index) => (
+                                <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                  <Avatar className="h-10 w-10 mr-3">
+                                    <AvatarFallback className="bg-[#803344] text-white">{agent.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-gray-800 truncate">{agent}</p>
+                                    <p className="text-xs text-gray-500 truncate">Agent • REP</p>
+                                  </div>
+                                  <button 
+                                    type="button" 
+                                    className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                    onClick={() => handleMultiSelectChange('preferred_agents', agent, 'professionals')}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="col-span-full p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                <Users className="h-10 w-10 text-gray-400 mb-2" />
+                                <h4 className="text-lg font-medium text-gray-700">No preferred agents yet</h4>
+                                <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                  Add agents you trust to help with your real estate transactions
+                                </p>
+                                <Button
+                                  type="button"
+                                  className="mt-4 bg-[#803344] hover:bg-[#803344]/90 text-white"
+                                >
+                                  <Plus className="h-4 w-4 mr-2" />
+                                  Add Agent
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Other Professionals Tabs */}
+                      <div className="space-y-4 pt-6 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Other Professionals</h3>
+                        
+                        <Tabs defaultValue="contractors" className="w-full">
+                          <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="contractors">Contractors</TabsTrigger>
+                            <TabsTrigger value="lenders">Lenders</TabsTrigger>
+                            <TabsTrigger value="inspectors">Inspectors</TabsTrigger>
+                          </TabsList>
+                          
+                          <TabsContent value="contractors" className="mt-6">
+                            <div className="relative">
+                              <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                                <Search className="h-4 w-4 mr-2 text-gray-400" />
+                                <Input 
+                                  id="search_contractors"
+                                  className="border-0 focus:ring-0 p-0 h-8"
+                                  placeholder="Search for a contractor..."
+                                />
+                              </div>
+                              
+                              {profileData.preferred_contractors?.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                  {profileData.preferred_contractors.map((contractor, index) => (
+                                    <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                      <Avatar className="h-10 w-10 mr-3">
+                                        <AvatarFallback className="bg-[#803344] text-white">{contractor.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-gray-800 truncate">{contractor}</p>
+                                        <p className="text-xs text-gray-500 truncate">Contractor • REP</p>
+                                      </div>
+                                      <button 
+                                        type="button" 
+                                        className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                        onClick={() => handleMultiSelectChange('preferred_contractors', contractor, 'professionals')}
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                  <Wrench className="h-10 w-10 text-gray-400 mb-2" />
+                                  <h4 className="text-lg font-medium text-gray-700">No contractors yet</h4>
+                                  <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                    Add contractors you've worked with for renovations and repairs
+                                  </p>
+                                  <Button
+                                    type="button"
+                                    className="mt-4 bg-[#803344] hover:bg-[#803344]/90 text-white"
+                                  >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Contractor
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="lenders" className="mt-6">
+                            <div className="relative">
+                              <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                                <Search className="h-4 w-4 mr-2 text-gray-400" />
+                                <Input 
+                                  id="search_lenders"
+                                  className="border-0 focus:ring-0 p-0 h-8"
+                                  placeholder="Search for a lender..."
+                                />
+                              </div>
+                              
+                              {profileData.preferred_lenders?.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                  {profileData.preferred_lenders.map((lender, index) => (
+                                    <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                      <Avatar className="h-10 w-10 mr-3">
+                                        <AvatarFallback className="bg-[#803344] text-white">{lender.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-gray-800 truncate">{lender}</p>
+                                        <p className="text-xs text-gray-500 truncate">Lender • REP</p>
+                                      </div>
+                                      <button 
+                                        type="button" 
+                                        className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                        onClick={() => handleMultiSelectChange('preferred_lenders', lender, 'professionals')}
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                  <DollarSign className="h-10 w-10 text-gray-400 mb-2" />
+                                  <h4 className="text-lg font-medium text-gray-700">No lenders yet</h4>
+                                  <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                    Add lenders who can help finance your investment properties
+                                  </p>
+                                  <Button
+                                    type="button"
+                                    className="mt-4 bg-[#803344] hover:bg-[#803344]/90 text-white"
+                                  >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Lender
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="inspectors" className="mt-6">
+                            <div className="relative">
+                              <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                                <Search className="h-4 w-4 mr-2 text-gray-400" />
+                                <Input 
+                                  id="search_inspectors"
+                                  className="border-0 focus:ring-0 p-0 h-8"
+                                  placeholder="Search for an inspector..."
+                                />
+                              </div>
+                              
+                              {profileData.preferred_inspectors?.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                  {profileData.preferred_inspectors.map((inspector, index) => (
+                                    <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                      <Avatar className="h-10 w-10 mr-3">
+                                        <AvatarFallback className="bg-[#803344] text-white">{inspector.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-gray-800 truncate">{inspector}</p>
+                                        <p className="text-xs text-gray-500 truncate">Inspector • REP</p>
+                                      </div>
+                                      <button 
+                                        type="button" 
+                                        className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                        onClick={() => handleMultiSelectChange('preferred_inspectors', inspector, 'professionals')}
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                  <FileCheck className="h-10 w-10 text-gray-400 mb-2" />
+                                  <h4 className="text-lg font-medium text-gray-700">No inspectors yet</h4>
+                                  <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                    Add property inspectors you trust to evaluate potential investments
+                                  </p>
+                                  <Button
+                                    type="button"
+                                    className="mt-4 bg-[#803344] hover:bg-[#803344]/90 text-white"
+                                  >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Inspector
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </TabsContent>
+                        </Tabs>
+                      </div>
+                      
+                      <div className="pt-6 flex justify-end border-t mt-8">
+                        <Button 
+                          type="submit" 
+                          className={`flex items-center transition-all duration-200 ${
+                            loading ? "bg-gray-400" : isProfessionalSectionModified ? "bg-[#09261E] hover:bg-[#09261E]/90" : "bg-gray-200 text-gray-500"
+                          } text-white`}
+                          disabled={loading || !isProfessionalSectionModified}
+                        >
+                          {loading ? (
+                            <>
+                              <span className="h-4 w-4 mr-2 rounded-full border-2 border-t-transparent border-white animate-spin"></span>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="mr-2 h-4 w-4" />
+                              Save Professionals
+                            </>
+                          )}
                         </Button>
                       </div>
                     </form>
