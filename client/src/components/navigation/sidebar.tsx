@@ -242,8 +242,8 @@ export default function Sidebar() {
                 src={profileData?.profile_photo_url || ""} 
                 alt={(profileData?.full_name || user?.fullName || "User") as string} 
               />
-              <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">
-                {(profileData?.full_name as string)?.charAt(0) || (user?.fullName as string)?.charAt(0) || (user?.username as string)?.charAt(0) || "U"}
+              <AvatarFallback className="bg-white p-0">
+                <img src="/images/logo.png" alt="PropertyDeals Logo" className="w-full h-full object-contain" />
               </AvatarFallback>
             </Avatar>
           } 

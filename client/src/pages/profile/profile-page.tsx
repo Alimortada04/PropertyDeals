@@ -673,7 +673,7 @@ export default function ProfilePage() {
       {/* Main content with sidebar */}
       <div className="flex flex-1">
         {/* Settings Menu Sidebar - reduced width to 220px */}
-        <div className="w-[220px] fixed top-0 left-16 bottom-0 bg-white border-r h-screen flex flex-col shadow-sm">
+        <div className="w-[220px] fixed top-0 left-16 bottom-16 bg-white border-r h-[calc(100vh-4rem)] flex flex-col shadow-sm">
           {/* User Profile Section */}
           <div className="px-4 py-5 border-b">
             <div className="flex items-center space-x-3">
@@ -682,8 +682,8 @@ export default function ProfilePage() {
                   {profileData.profile_photo_url ? (
                     <AvatarImage src={profileData.profile_photo_url} />
                   ) : (
-                    <AvatarFallback className="bg-[#09261E]/10 text-[#09261E]">
-                      {profileData.full_name?.charAt(0) || "U"}
+                    <AvatarFallback className="bg-white p-0">
+                      <img src="/images/logo.png" alt="PropertyDeals Logo" className="w-full h-full object-contain" />
                     </AvatarFallback>
                   )}
                 </Avatar>
