@@ -701,10 +701,10 @@ export default function ProfilePage() {
             </p>
             
             <Button 
-              variant="outline" 
+              variant="ghost" 
               size="sm" 
               className="w-full text-sm font-medium flex items-center justify-center gap-2 
-                         transition-all duration-200 border-[#09261E]/30 bg-white hover:bg-[#09261E]/5 
+                         transition-all duration-200 border border-[#09261E]/30 bg-white hover:bg-[#09261E]/5 
                          hover:border-[#09261E]/70 hover:shadow-sm active:scale-95 hover:scale-[1.02]
                          group"
               onClick={() => window.open(`/profile/${profileData.username}`, '_blank')}
@@ -729,7 +729,6 @@ export default function ProfilePage() {
                   // Client-side refresh of current page content
                   queryClient.invalidateQueries({queryKey: ['/api/profile']});
                 }}
-                className="bg-gray-100/80"
               />
               
               <ProfileMenuItem
