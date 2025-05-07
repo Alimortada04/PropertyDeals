@@ -536,8 +536,45 @@ export default function ProfilePage() {
     }
   };
   
+  // Handle remove profile photo
+  const handleRemoveProfilePhoto = async () => {
+    try {
+      setLoading(true);
+      
+      // Update profile data locally first for immediate UI feedback
+      setProfileData(prev => ({
+        ...prev,
+        profile_photo_url: null
+      }));
+      
+      // Update profile in database
+      await supabase
+        .from('profiles')
+        .update({ profile_photo_url: null })
+        .eq('id', user?.id);
+      
+      toast({
+        title: "Profile photo removed",
+        description: "Your profile photo has been removed successfully.",
+      });
+      
+    } catch (error) {
+      console.error('Error removing profile photo:', error);
+      toast({
+        title: "Error removing profile photo",
+        description: "There was an error removing your profile photo. Please try again.",
+        variant: "destructive",
+      });
+      
+      // Refetch profile data to ensure UI is in sync with DB
+      queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   // Handle banner image change
-  const handleBannerChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBannerImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
@@ -772,7 +809,7 @@ export default function ProfilePage() {
       <input
         type="file"
         ref={bannerInputRef}
-        onChange={handleBannerChange}
+        onChange={handleBannerImageChange}
         accept="image/*"
         className="hidden"
       />
