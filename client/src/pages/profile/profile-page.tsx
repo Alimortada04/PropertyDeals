@@ -28,6 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { navigateToHelpSection, navigateToProfileTab } from "@/lib/navigation";
 import styles from "./profile-page.module.css";
 
 // Import icons
@@ -202,9 +203,33 @@ export default function ProfilePage() {
   // Handle tab change without full page reload
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    // Update the URL without triggering a navigation/reload
-    window.history.pushState({}, '', `/profile/${tab}`);
+    // Use our navigation utility to update URL without page reload
+    navigateToProfileTab(tab);
   };
+  
+  // Listen for path changes and update UI accordingly
+  useEffect(() => {
+    const handlePathChanged = () => {
+      // Update active tab based on current URL
+      const path = window.location.pathname;
+      const pathSegments = path.split('/');
+      const lastSegment = pathSegments[pathSegments.length - 1];
+      const validTabs = ["account", "notifications", "connected", "memberships", "security", "help"];
+      
+      if (validTabs.includes(lastSegment)) {
+        setActiveTab(lastSegment);
+      }
+    };
+    
+    // Listen for custom navigation events
+    window.addEventListener('pathChanged', handlePathChanged);
+    window.addEventListener('profileTabChanged', (e: any) => setActiveTab(e.detail.tab));
+    
+    return () => {
+      window.removeEventListener('pathChanged', handlePathChanged);
+      window.removeEventListener('profileTabChanged', (e: any) => setActiveTab(e.detail.tab));
+    };
+  }, []);
   
   // Default profile data
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -1256,8 +1281,8 @@ export default function ProfilePage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                   {/* FAQ Card - Entire card is clickable */}
-                  <a 
-                    href="/profile/help/faq" 
+                  <div
+                    onClick={() => navigateToHelpSection("faq")} 
                     className="block cursor-pointer group"
                   >
                     <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
@@ -1274,11 +1299,11 @@ export default function ProfilePage() {
                         </div>
                       </CardContent>
                     </Card>
-                  </a>
+                  </div>
 
                   {/* Suggestions Card - Entire card is clickable */}
-                  <a 
-                    href="/profile/help/suggestions" 
+                  <div
+                    onClick={() => navigateToHelpSection("suggestions")} 
                     className="block cursor-pointer group"
                   >
                     <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
@@ -1295,11 +1320,11 @@ export default function ProfilePage() {
                         </div>
                       </CardContent>
                     </Card>
-                  </a>
+                  </div>
 
                   {/* Report a Problem Card - Entire card is clickable with red hover */}
-                  <a 
-                    href="/profile/help/report" 
+                  <div
+                    onClick={() => navigateToHelpSection("report")} 
                     className="block cursor-pointer group"
                   >
                     <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-red-50/50">
@@ -1316,7 +1341,7 @@ export default function ProfilePage() {
                         </div>
                       </CardContent>
                     </Card>
-                  </a>
+                  </div>
                 </div>
 
                 {/* Can't find what you're looking for section - Green hover */}
