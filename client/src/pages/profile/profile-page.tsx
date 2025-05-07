@@ -21,12 +21,11 @@ import {
   UserCircle, Shield, CreditCard, AlertTriangle, 
   LogOut, ExternalLink, Upload, Check, Info, 
   Briefcase, MapPin, Building, Clock, Hash, ChevronRight,
-  DollarSign, FileText, User, Calendar, Star, Home,
-  FileBadge, Download, Award, Users, Wrench, Heart,
+  DollarSign, Smile, FileText, User, Calendar, Star, Home,
+  FileBadge, Download, Award, Search, Users, Wrench, Heart,
   Wallet, PenTool, BookLock, BookCheck, Landmark, PiggyBank,
-  Map, Settings as SettingsIcon, ArrowUpRight, 
-  Facebook as FacebookIcon, Instagram, Linkedin, Target, 
-  Bell, HelpCircle, MessageSquare, Flag, Globe
+  Map, Settings as SettingsIcon, ArrowUpRight, ChevronsDown, Save, Globe,
+  Facebook as FacebookIcon, Instagram, Linkedin, Target
 } from "lucide-react";
 
 // Profile MenuItem component
@@ -78,7 +77,6 @@ interface ProfileData {
   facebook: string | null;
   linkedin: string | null;
   profile_photo_url: string | null;
-  profile_banner_url: string | null; // New field for banner image
   created_at: string;
   join_number: number | null;
   profile_completion_score: number;
@@ -135,190 +133,1480 @@ const closingTimelineOptions = [
 
 // Main profile page component
 export default function ProfilePage() {
-  const { user, logoutMutation } = useAuth();
-  const [location, setLocation] = useLocation();
+  const { user, supabaseUser, logoutMutation } = useAuth();
+  const [location] = useLocation();
   const { toast } = useToast();
   
-  // Initially use simplified placeholder component
-  // until we fix the full implementation
+  // Keep track of which section is being edited
+  const [editingSection, setEditingSection] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
+  const [usernameMessage, setUsernameMessage] = useState("");
+
+  // Refs for the file input and preview
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const proofFileInputRef = useRef<HTMLInputElement>(null);
+  
+  // Track if each form section has been modified
+  const [isProfileSectionModified, setIsProfileSectionModified] = useState(false);
+  const [isPropertySectionModified, setIsPropertySectionModified] = useState(false);
+  const [isProfessionalSectionModified, setIsProfessionalSectionModified] = useState(false);
+  
+  // Profile state with all required fields
+  const [profileData, setProfileData] = useState<ProfileData>({
+    id: "",
+    full_name: user?.fullName || "",
+    bio: "",
+    username: user?.username || "",
+    email: user?.email || "",
+    phone: "",
+    in_real_estate_since: null,
+    business_name: null,
+    type_of_buyer: [],
+    website: null,
+    instagram: null,
+    facebook: null,
+    linkedin: null,
+    profile_photo_url: null,
+    created_at: new Date().toISOString(),
+    join_number: null,
+    profile_completion_score: 0,
+    location: null,
+    markets: [],
+    property_types: [],
+    property_conditions: [],
+    ideal_budget_min: null,
+    ideal_budget_max: null,
+    financing_methods: [],
+    preferred_financing_method: null,
+    closing_timeline: null,
+    number_of_deals_last_12_months: null,
+    goal_deals_next_12_months: null,
+    total_deals_done: null,
+    current_portfolio_count: null,
+    buyer_verification_tag: null,
+    proof_of_funds_url: null,
+    proof_of_funds_verified: false,
+    preferred_inspectors: [],
+    preferred_agents: [],
+    preferred_contractors: [],
+    preferred_lenders: [],
+    showProfile: true
+  });
+  
+  // Fetch profile data on component mount
+  useEffect(() => {
+    if (supabaseUser) {
+      fetchProfileData();
+    }
+  }, [supabaseUser]);
+
+  // Fetch profile data from Supabase
+  const fetchProfileData = async () => {
+    try {
+      setLoading(true);
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', supabaseUser.id)
+        .single();
+      
+      if (error) {
+        throw error;
+      }
+      
+      if (data) {
+        // Fill in the form with the profile data
+        setProfileData({
+          ...profileData,
+          ...data,
+          // Ensure arrays are initialized properly
+          type_of_buyer: data.type_of_buyer || [],
+          markets: data.markets || [],
+          property_types: data.property_types || [],
+          property_conditions: data.property_conditions || [],
+          financing_methods: data.financing_methods || [],
+          preferred_inspectors: data.preferred_inspectors || [],
+          preferred_agents: data.preferred_agents || [],
+          preferred_contractors: data.preferred_contractors || [],
+          preferred_lenders: data.preferred_lenders || [],
+          showProfile: true // Default visibility setting
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load profile data. Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Check username availability with debounce
+  const checkUsernameAvailability = async (username: string) => {
+    if (!username) return;
+    
+    setIsCheckingUsername(true);
+    setUsernameMessage("");
+    
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('username', username)
+        .neq('id', supabaseUser.id) // Exclude the current user
+        .maybeSingle();
+      
+      if (error) throw error;
+      
+      if (data) {
+        setIsUsernameAvailable(false);
+        setUsernameMessage("This username is already taken");
+      } else {
+        setIsUsernameAvailable(true);
+        setUsernameMessage("Username is available");
+      }
+    } catch (error) {
+      console.error("Error checking username:", error);
+      setUsernameMessage("Error checking username availability");
+    } finally {
+      setIsCheckingUsername(false);
+    }
+  };
+
+  // Debounce for username check
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (profileData.username && profileData.username !== user?.username) {
+        checkUsernameAvailability(profileData.username);
+      }
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [profileData.username]);
+
+  // Handle profile photo upload
+  const handleProfilePhotoChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      return;
+    }
+    
+    const file = event.target.files[0];
+    
+    // Validate file type
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validImageTypes.includes(file.type)) {
+      toast({
+        title: "Invalid file",
+        description: "Please upload a valid image file (JPEG, PNG, GIF, or WEBP)",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Create a unique filename
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${supabaseUser.id}-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `avatars/${fileName}`;
+    
+    try {
+      setLoading(true);
+      
+      // Upload file to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('public')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.type
+        });
+      
+      if (uploadError) {
+        throw uploadError;
+      }
+      
+      // Get public URL
+      const { data } = supabase.storage.from('public').getPublicUrl(filePath);
+      
+      if (!data.publicUrl) {
+        throw new Error("Failed to get public URL for uploaded image");
+      }
+      
+      // Update profile data with new avatar URL
+      setProfileData({
+        ...profileData,
+        profile_photo_url: data.publicUrl
+      });
+      
+      // Also update database immediately
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ profile_photo_url: data.publicUrl })
+        .eq('id', supabaseUser.id);
+      
+      if (updateError) {
+        throw updateError;
+      }
+      
+      toast({
+        title: "Success",
+        description: "Profile photo updated successfully",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error("Error uploading profile photo:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload profile photo. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle proof of funds upload
+  const handleProofOfFundsChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      return;
+    }
+    
+    const file = event.target.files[0];
+    if (file.type !== 'application/pdf') {
+      toast({
+        title: "Invalid file",
+        description: "Please upload a PDF file",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Create a unique filename
+    const fileName = `${supabaseUser.id}-proof-${Date.now()}-${Math.random().toString(36).substring(2)}.pdf`;
+    const filePath = `proof_of_funds/${fileName}`;
+    
+    try {
+      setLoading(true);
+      
+      // Upload file to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('public')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: 'application/pdf'
+        });
+      
+      if (uploadError) {
+        throw uploadError;
+      }
+      
+      // Get public URL
+      const { data } = supabase.storage.from('public').getPublicUrl(filePath);
+      
+      if (!data.publicUrl) {
+        throw new Error("Failed to get public URL for uploaded document");
+      }
+      
+      // Update profile data with new proof URL
+      setProfileData({
+        ...profileData,
+        proof_of_funds_url: data.publicUrl,
+        // Set to false since it needs to be verified
+        proof_of_funds_verified: false
+      });
+      
+      // Also update database immediately
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ 
+          proof_of_funds_url: data.publicUrl,
+          proof_of_funds_verified: false
+        })
+        .eq('id', supabaseUser.id);
+      
+      if (updateError) {
+        throw updateError;
+      }
+      
+      setIsPropertySectionModified(true);
+      
+      toast({
+        title: "Success",
+        description: "Proof of funds uploaded successfully. It will be reviewed by our team.",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error("Error uploading proof of funds:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload proof of funds. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle text input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, section: 'profile' | 'property' | 'professional'): void => {
+    const { name, value } = e.target;
+    
+    setProfileData({
+      ...profileData,
+      [name]: value
+    });
+    
+    // Set the appropriate modification flag based on the section
+    if (section === 'profile') setIsProfileSectionModified(true);
+    if (section === 'property') setIsPropertySectionModified(true);
+    if (section === 'professional') setIsProfessionalSectionModified(true);
+  };
+
+  // Handle select changes
+  const handleSelectChange = (name: string, value: string, section: 'profile' | 'property' | 'professional'): void => {
+    setProfileData({
+      ...profileData,
+      [name]: value
+    });
+    
+    // Set the appropriate modification flag based on the section
+    if (section === 'profile') setIsProfileSectionModified(true);
+    if (section === 'property') setIsPropertySectionModified(true);
+    if (section === 'professional') setIsProfessionalSectionModified(true);
+  };
+
+  // Handle multi-select changes (add or remove value)
+  const handleMultiSelectChange = (name: string, value: string, section: 'profile' | 'property' | 'professional'): void => {
+    const currentValues = profileData[name as keyof ProfileData] as string[] || [];
+    const newValues = currentValues.includes(value)
+      ? currentValues.filter(v => v !== value)
+      : [...currentValues, value];
+    
+    setProfileData({
+      ...profileData,
+      [name]: newValues
+    });
+    
+    // Set the appropriate modification flag based on the section
+    if (section === 'profile') setIsProfileSectionModified(true);
+    if (section === 'property') setIsPropertySectionModified(true);
+    if (section === 'professional') setIsProfessionalSectionModified(true);
+  };
+
+  // Handle profile section form submission
+  const handleProfileSectionSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isProfileSectionModified) return;
+    
+    // Validate username
+    if (!isUsernameAvailable && profileData.username !== user?.username) {
+      toast({
+        title: "Error",
+        description: "Username is already taken. Please choose another one.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: profileData.full_name,
+          username: profileData.username,
+          phone: profileData.phone,
+          bio: profileData.bio,
+          in_real_estate_since: profileData.in_real_estate_since,
+          business_name: profileData.business_name,
+          type_of_buyer: profileData.type_of_buyer,
+          website: profileData.website,
+          instagram: profileData.instagram,
+          facebook: profileData.facebook,
+          linkedin: profileData.linkedin,
+        })
+        .eq('id', supabaseUser.id);
+      
+      if (error) {
+        throw error;
+      }
+      
+      setIsProfileSectionModified(false);
+      
+      toast({
+        title: "Success",
+        description: "Profile information updated successfully",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile information",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle property preferences form submission
+  const handlePropertySectionSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isPropertySectionModified) return;
+    
+    try {
+      setLoading(true);
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          location: profileData.location,
+          markets: profileData.markets,
+          property_types: profileData.property_types,
+          property_conditions: profileData.property_conditions,
+          ideal_budget_min: profileData.ideal_budget_min,
+          ideal_budget_max: profileData.ideal_budget_max,
+          financing_methods: profileData.financing_methods,
+          preferred_financing_method: profileData.preferred_financing_method,
+          closing_timeline: profileData.closing_timeline,
+          number_of_deals_last_12_months: profileData.number_of_deals_last_12_months,
+          goal_deals_next_12_months: profileData.goal_deals_next_12_months,
+          total_deals_done: profileData.total_deals_done,
+          current_portfolio_count: profileData.current_portfolio_count
+        })
+        .eq('id', supabaseUser.id);
+      
+      if (error) {
+        throw error;
+      }
+      
+      setIsPropertySectionModified(false);
+      
+      toast({
+        title: "Success",
+        description: "Property preferences updated successfully",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error("Error updating property preferences:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update property preferences",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle professional preferences form submission
+  const handleProfessionalSectionSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isProfessionalSectionModified) return;
+    
+    try {
+      setLoading(true);
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          preferred_inspectors: profileData.preferred_inspectors,
+          preferred_agents: profileData.preferred_agents,
+          preferred_contractors: profileData.preferred_contractors,
+          preferred_lenders: profileData.preferred_lenders
+        })
+        .eq('id', supabaseUser.id);
+      
+      if (error) {
+        throw error;
+      }
+      
+      setIsProfessionalSectionModified(false);
+      
+      toast({
+        title: "Success",
+        description: "Professional preferences updated successfully",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error("Error updating professional preferences:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update professional preferences",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    logoutMutation.mutate();
+  };
+
+  // Format date string to readable format
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }).format(date);
+  };
+
+  // Calculate profile completion percentage
+  const calculateProfileCompletion = () => {
+    // Basic fields (weight: 40%)
+    const basicFields = [
+      profileData.full_name, 
+      profileData.username, 
+      profileData.email,
+      profileData.profile_photo_url,
+      profileData.bio
+    ];
+    
+    const basicFieldsCompleted = basicFields.filter(Boolean).length;
+    const basicScore = (basicFieldsCompleted / basicFields.length) * 40;
+    
+    // Property preferences (weight: 30%)
+    const propertyFields = [
+      profileData.location,
+      profileData.markets.length > 0,
+      profileData.property_types.length > 0,
+      profileData.ideal_budget_min,
+      profileData.ideal_budget_max,
+      profileData.financing_methods.length > 0
+    ];
+    
+    const propertyFieldsCompleted = propertyFields.filter(Boolean).length;
+    const propertyScore = (propertyFieldsCompleted / propertyFields.length) * 30;
+    
+    // Deal history (weight: 30%)
+    const dealFields = [
+      profileData.number_of_deals_last_12_months,
+      profileData.goal_deals_next_12_months,
+      profileData.total_deals_done,
+      profileData.current_portfolio_count
+    ];
+    
+    const dealFieldsCompleted = dealFields.filter(Boolean).length;
+    const dealScore = (dealFieldsCompleted / dealFields.length) * 30;
+    
+    // Total score (0-100)
+    return Math.round(basicScore + propertyScore + dealScore);
+  };
+  
+  // Effect to update profile completion score
+  useEffect(() => {
+    const score = calculateProfileCompletion();
+    
+    // Update local state
+    setProfileData(prev => ({
+      ...prev,
+      profile_completion_score: score
+    }));
+    
+    // Only update in database periodically to avoid too many requests
+    const timer = setTimeout(async () => {
+      if (supabaseUser?.id) {
+        await supabase
+          .from('profiles')
+          .update({ profile_completion_score: score })
+          .eq('id', supabaseUser.id);
+      }
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, [profileData.full_name, profileData.username, profileData.email, 
+      profileData.bio, profileData.profile_photo_url, profileData.location,
+      profileData.markets, profileData.property_types, profileData.financing_methods,
+      profileData.ideal_budget_min, profileData.ideal_budget_max,
+      profileData.number_of_deals_last_12_months, profileData.goal_deals_next_12_months,
+      profileData.total_deals_done, profileData.current_portfolio_count]);
+
   return (
-    <div className="flex flex-col md:flex-row min-h-[calc(100vh-4rem)] bg-white">
+    <div className="flex bg-white min-h-screen">
       {/* Left sidebar */}
-      <div className="w-full md:w-64 flex-shrink-0 border-r border-gray-200 overflow-y-auto h-full">
-        <div className="p-4 sticky top-0">
-          <h3 className="font-semibold text-lg mb-4">Account Settings</h3>
-          
-          <div className="flex flex-col space-y-1">
-            <ProfileMenuItem 
-              icon={<UserCircle size={18} />}
-              label="Account Settings"
-              href="/profile"
-              active={location === '/profile'}
-            />
-            
-            <ProfileMenuItem 
-              icon={<Shield size={18} />}
-              label="Profile"
-              href="/profile/profile"
-              active={location === '/profile/profile'}
-            />
-            
-            <ProfileMenuItem 
-              icon={<CreditCard size={18} />}
-              label="Property Preferences"
-              href="/profile/property"
-              active={location === '/profile/property'}
-            />
-            
-            <ProfileMenuItem 
-              icon={<Bell size={18} />}
-              label="Professional Preferences"
-              href="/profile/professional"
-              active={location === '/profile/professional'}
-            />
-
-            <Separator className="my-2" />
-            
-            <ProfileMenuItem 
-              icon={<HelpCircle size={18} />}
-              label="Help Center"
-              href="/help"
-              active={location === '/help'}
-            />
-            
-            <ProfileMenuItem 
-              icon={<MessageSquare size={18} />}
-              label="Support"
-              href="/contact"
-              active={location === '/contact'}
-            />
-            
-            <ProfileMenuItem 
-              icon={<Flag size={18} />}
-              label="Report Issue"
-              href="/help/report"
-              active={location === '/help/report'}
-            />
-
-            <Separator className="my-2" />
-            
-            <ProfileMenuItem 
-              icon={<HelpCircle size={18} />}
-              label="Terms & Conditions"
-              href="/legal/terms"
-              active={location === '/legal/terms'}
-            />
-            
-            <ProfileMenuItem 
-              icon={<AlertTriangle size={18} />}
-              label="Privacy Policy"
-              href="/legal/privacy" 
-              active={location === '/legal/privacy'}
-            />
-            
-            <Separator className="my-2" />
-            
-            <div className="mt-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50/80"
-                onClick={() => logoutMutation.mutate()}
-              >
-                <LogOut className="mr-2 h-4 w-4" /> Log Out
-              </Button>
+      <div className="w-[230px] border-r h-auto min-h-screen sticky top-0 flex flex-col bg-white shadow-sm overflow-y-auto">
+        {/* Profile info */}
+        <div className="px-6 py-6 mb-4 border-b flex flex-col items-center">
+          <div className="relative group">
+            <Avatar className="h-20 w-20 mb-2 ring-2 ring-offset-2 ring-[#09261E]/50 group-hover:ring-[#09261E]">
+              <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
+              <AvatarFallback className="bg-[#09261E] text-white text-xl font-medium">
+                {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+            >
+              <Upload className="h-5 w-5 text-white" />
             </div>
+            <input 
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleProfilePhotoChange}
+            />
           </div>
+          
+          <h2 className="font-bold text-lg">{profileData.full_name || profileData.username}</h2>
+          <p className="text-gray-500 text-sm mb-3">@{profileData.username}</p>
+          
+          <Button 
+            type="button" 
+            variant="outline"
+            size="sm"
+            className="text-xs border border-gray-300 transition-colors hover:bg-gray-50"
+            onClick={() => window.open(`/user/${profileData.username}`, '_blank')}
+          >
+            <ExternalLink className="h-3 w-3 mr-1" />
+            Preview Public Profile
+          </Button>
+        </div>
+        
+        {/* Menu */}
+        <div className="px-3 flex-1 overflow-y-auto">
+          <div className="mb-2">
+            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Settings</h3>
+            <button
+              className="w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+            >
+              <UserCircle size={18} className="mr-3 text-[#09261E]" />
+              <span>Account</span>
+            </button>
+          </div>
+          
+          <div className="mt-6 pt-6 border-t">
+            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Other Settings</h3>
+            <ProfileMenuItem
+              icon={<Shield size={18} />}
+              label="Security & Privacy"
+              href="/profile/security"
+              active={location === "/profile/security"}
+            />
+            <ProfileMenuItem
+              icon={<CreditCard size={18} />}
+              label="Payment methods"
+              href="/profile/payment"
+              active={location === "/profile/payment"}
+            />
+            <ProfileMenuItem
+              icon={<AlertTriangle size={18} />}
+              label="Danger zone"
+              href="/profile/danger"
+              active={location === "/profile/danger"}
+              danger
+            />
+          </div>
+        </div>
+        
+        {/* Logout */}
+        <div className="mt-auto px-3 pb-5 pt-3 border-t">
+          <button
+            className="flex items-center px-4 py-2.5 text-sm rounded-md transition-all duration-200 text-red-500 hover:bg-red-50/80 hover:text-red-600 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
+            onClick={handleLogout}
+          >
+            <LogOut size={18} className="mr-3 text-red-500/80" />
+            <span>Log out</span>
+          </button>
         </div>
       </div>
       
-      {/* Main content */}
-      <div className="flex-1 p-6 md:p-8 overflow-y-auto">
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Account Settings</CardTitle>
-            <CardDescription>Manage your account details and preferences</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="full_name" className="block text-sm font-medium mb-1">Full Name</label>
-                  <Input
-                    id="full_name" 
-                    placeholder="Your full name"
-                    value={user?.fullName || ""}
-                  />
+      {/* Right content area */}
+      <div className="flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="border-b pb-4 mb-6">
+            <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
+            <p className="text-gray-500 mt-1">Manage your profile information and preferences</p>
+          </div>
+          
+          {/* Profile Section */}
+          <Card className="border-gray-200 shadow-sm">
+            <CardHeader className="border-b pb-4">
+              <CardTitle className="text-xl">Profile</CardTitle>
+              <CardDescription>Your personal and business information</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <form onSubmit={handleProfileSectionSubmit}>
+                {/* Basic Info Section */}
+                <div className="space-y-4 mb-8">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Basic Information</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="full_name">
+                        Full Name
+                      </label>
+                      <Input 
+                        id="full_name"
+                        name="full_name"
+                        value={profileData.full_name}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 flex items-center text-gray-700" htmlFor="username">
+                        Username
+                        {isCheckingUsername && <span className="ml-2 text-xs text-gray-400">Checking availability...</span>}
+                        {!isCheckingUsername && usernameMessage && (
+                          <span className={`ml-2 text-xs ${isUsernameAvailable ? 'text-green-500' : 'text-red-500'}`}>
+                            {usernameMessage}
+                          </span>
+                        )}
+                      </label>
+                      <Input 
+                        id="username"
+                        name="username"
+                        value={profileData.username}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className={`border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 ${
+                          usernameMessage && !isUsernameAvailable ? 'border-red-300' : ''
+                        }`}
+                        placeholder="Choose a username"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="email">
+                        Email
+                      </label>
+                      <Input 
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={profileData.email}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Your email address"
+                        disabled // Email is managed by Supabase auth and can't be changed here
+                      />
+                      <p className="text-xs mt-1 text-gray-500">
+                        Email changes are managed through security settings.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="phone">
+                        Phone Number
+                      </label>
+                      <Input 
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={profileData.phone || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Your phone number"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="bio">
+                      Bio
+                    </label>
+                    <Textarea 
+                      id="bio"
+                      name="bio"
+                      value={profileData.bio || ""}
+                      onChange={(e) => handleInputChange(e, 'profile')}
+                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 min-h-[100px]"
+                      placeholder="Tell us about yourself and your real estate journey..."
+                    />
+                  </div>
                 </div>
                 
-                <div>
-                  <label htmlFor="username" className="block text-sm font-medium mb-1">Username</label>
-                  <Input
-                    id="username" 
-                    placeholder="Your username"
-                    value={user?.username || ""}
-                  />
+                {/* Professional Info */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Professional Information</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="in_real_estate_since">
+                        In Real Estate Since
+                      </label>
+                      <Input 
+                        id="in_real_estate_since"
+                        name="in_real_estate_since"
+                        type="number"
+                        min="1900"
+                        max={new Date().getFullYear()}
+                        value={profileData.in_real_estate_since || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Year"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="business_name">
+                        Business Name
+                      </label>
+                      <Input 
+                        id="business_name"
+                        name="business_name"
+                        value={profileData.business_name || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Your business name"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">
+                      Type of Buyer
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                      {buyerTypeOptions.map((option) => (
+                        <div key={option} className="flex items-center">
+                          <Checkbox 
+                            id={`type_${option}`}
+                            checked={profileData.type_of_buyer.includes(option)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                handleMultiSelectChange('type_of_buyer', option, 'profile');
+                              } else {
+                                handleMultiSelectChange('type_of_buyer', option, 'profile');
+                              }
+                            }}
+                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                          />
+                          <label 
+                            htmlFor={`type_${option}`}
+                            className="ml-2 text-sm text-gray-700"
+                          >
+                            {option}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
                 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-1">Email Address</label>
-                  <Input
-                    id="email" 
-                    placeholder="Your email"
-                    value={user?.email || ""}
-                    disabled
-                  />
+                {/* Social Media */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Social Media</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="website">
+                        <Globe className="mr-2 h-4 w-4" />
+                        Website
+                      </label>
+                      <Input 
+                        id="website"
+                        name="website"
+                        value={profileData.website || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="https://yourwebsite.com"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="instagram">
+                        <Instagram className="mr-2 h-4 w-4" />
+                        Instagram
+                      </label>
+                      <Input 
+                        id="instagram"
+                        name="instagram"
+                        value={profileData.instagram || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="@yourusername"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="facebook">
+                        <FacebookIcon className="mr-2 h-4 w-4" />
+                        Facebook
+                      </label>
+                      <Input 
+                        id="facebook"
+                        name="facebook"
+                        value={profileData.facebook || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="facebook.com/yourprofile"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="linkedin">
+                        <Linkedin className="mr-2 h-4 w-4" />
+                        LinkedIn
+                      </label>
+                      <Input 
+                        id="linkedin"
+                        name="linkedin"
+                        value={profileData.linkedin || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="linkedin.com/in/yourprofile"
+                      />
+                    </div>
+                  </div>
                 </div>
                 
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium mb-1">Phone</label>
-                  <Input
-                    id="phone" 
-                    placeholder="Your phone number"
-                    value=""
-                  />
+                {/* Profile Stats */}
+                <div className="pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider mb-4">Profile Stats</h3>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <p className="text-xs text-gray-500">Member Since</p>
+                      <p className="font-medium">{formatDate(profileData.created_at)}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-xs text-gray-500">User #</p>
+                      <p className="font-medium">{profileData.join_number || "N/A"}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-xs text-gray-500">Profile Completion</p>
+                      <div className="flex items-center mt-1">
+                        <div className="h-2 bg-gray-200 rounded-full w-full mr-2">
+                          <div 
+                            className="h-2 bg-[#09261E] rounded-full"
+                            style={{ width: `${profileData.profile_completion_score}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-xs font-medium">{profileData.profile_completion_score}%</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              
-              <div>
-                <label htmlFor="bio" className="block text-sm font-medium mb-1">Bio</label>
-                <Textarea
-                  id="bio" 
-                  placeholder="Write something about yourself..."
-                  className="min-h-24"
-                />
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button>Save Changes</Button>
-          </CardFooter>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile Photo</CardTitle>
-            <CardDescription>Update your profile picture</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-4">
-              <Avatar className="h-24 w-24">
-                <AvatarImage src={user?.avatarUrl || ""} alt={user?.fullName || "User"} />
-                <AvatarFallback className="text-xl">{user?.fullName?.substring(0, 2) || "U"}</AvatarFallback>
-              </Avatar>
-              
-              <div>
-                <Button variant="outline" className="mb-2">
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload Photo
-                </Button>
-                <p className="text-xs text-gray-500">
-                  Supported formats: JPEG, PNG, GIF, WEBP. Max size 2MB.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                
+                <div className="pt-6 flex justify-end">
+                  <Button 
+                    type="submit" 
+                    className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    disabled={loading || !isProfileSectionModified}
+                  >
+                    {loading ? "Saving..." : "Save Profile"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+          
+          {/* Property Preferences */}
+          <Card className="border-gray-200 shadow-sm">
+            <CardHeader className="border-b pb-4">
+              <CardTitle className="text-xl">Property Preferences</CardTitle>
+              <CardDescription>Let us know what kind of properties you're looking for</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <form onSubmit={handlePropertySectionSubmit}>
+                {/* Location Section */}
+                <div className="space-y-4 mb-8">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Location</h3>
+                  
+                  <div>
+                    <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="location">
+                      <MapPin className="mr-2 h-4 w-4" />
+                      Primary Location
+                    </label>
+                    <Input 
+                      id="location"
+                      name="location"
+                      value={profileData.location || ""}
+                      onChange={(e) => handleInputChange(e, 'property')}
+                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                      placeholder="City, State"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="flex items-center text-sm font-medium mb-2 text-gray-700">
+                      <Map className="mr-2 h-4 w-4" />
+                      Target Markets
+                    </label>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {marketOptions.map((market) => (
+                        <button
+                          key={market}
+                          type="button"
+                          onClick={() => handleMultiSelectChange('markets', market, 'property')}
+                          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                            profileData.markets.includes(market)
+                              ? 'bg-[#09261E] text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          {market}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Property Types Section */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Property Types & Conditions</h3>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">
+                      Property Types
+                    </label>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {propertyTypeOptions.map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => handleMultiSelectChange('property_types', type, 'property')}
+                          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                            profileData.property_types.includes(type)
+                              ? 'bg-[#09261E] text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">
+                      Property Conditions
+                    </label>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {propertyConditionOptions.map((condition) => (
+                        <button
+                          key={condition}
+                          type="button"
+                          onClick={() => handleMultiSelectChange('property_conditions', condition, 'property')}
+                          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                            profileData.property_conditions.includes(condition)
+                              ? 'bg-[#09261E] text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          {condition}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Budget & Financing Section */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Budget & Financing</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="ideal_budget_min">
+                        <DollarSign className="mr-2 h-4 w-4" />
+                        Budget Minimum
+                      </label>
+                      <Input 
+                        id="ideal_budget_min"
+                        name="ideal_budget_min"
+                        type="number"
+                        value={profileData.ideal_budget_min || ""}
+                        onChange={(e) => handleInputChange(e, 'property')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="$"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="ideal_budget_max">
+                        <DollarSign className="mr-2 h-4 w-4" />
+                        Budget Maximum
+                      </label>
+                      <Input 
+                        id="ideal_budget_max"
+                        name="ideal_budget_max"
+                        type="number"
+                        value={profileData.ideal_budget_max || ""}
+                        onChange={(e) => handleInputChange(e, 'property')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="$"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">
+                      Financing Methods
+                    </label>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {financingMethodOptions.map((method) => (
+                        <button
+                          key={method}
+                          type="button"
+                          onClick={() => handleMultiSelectChange('financing_methods', method, 'property')}
+                          className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                            profileData.financing_methods.includes(method)
+                              ? 'bg-[#09261E] text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
+                        >
+                          {method}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="preferred_financing_method">
+                        <Wallet className="mr-2 h-4 w-4" />
+                        Preferred Financing Method
+                      </label>
+                      <Select
+                        value={profileData.preferred_financing_method || ""}
+                        onValueChange={(value) => handleSelectChange('preferred_financing_method', value, 'property')}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your preferred method" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {financingMethodOptions.map((method) => (
+                            <SelectItem key={method} value={method}>
+                              {method}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="closing_timeline">
+                        <Clock className="mr-2 h-4 w-4" />
+                        Closing Timeline
+                      </label>
+                      <Select
+                        value={profileData.closing_timeline || ""}
+                        onValueChange={(value) => handleSelectChange('closing_timeline', value, 'property')}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your timeline" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {closingTimelineOptions.map((timeline) => (
+                            <SelectItem key={timeline} value={timeline}>
+                              {timeline}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Deal History Section */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Deal History</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="number_of_deals_last_12_months">
+                        <Hash className="mr-2 h-4 w-4" />
+                        Deals in Last 12 Months
+                      </label>
+                      <Input 
+                        id="number_of_deals_last_12_months"
+                        name="number_of_deals_last_12_months"
+                        type="number"
+                        min="0"
+                        value={profileData.number_of_deals_last_12_months || ""}
+                        onChange={(e) => handleInputChange(e, 'property')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="#"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="goal_deals_next_12_months">
+                        <Target className="mr-2 h-4 w-4" />
+                        Goal for Next 12 Months
+                      </label>
+                      <Input 
+                        id="goal_deals_next_12_months"
+                        name="goal_deals_next_12_months"
+                        type="number"
+                        min="0"
+                        value={profileData.goal_deals_next_12_months || ""}
+                        onChange={(e) => handleInputChange(e, 'property')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="#"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="total_deals_done">
+                        <FileText className="mr-2 h-4 w-4" />
+                        Total Deals Done
+                      </label>
+                      <Input 
+                        id="total_deals_done"
+                        name="total_deals_done"
+                        type="number"
+                        min="0"
+                        value={profileData.total_deals_done || ""}
+                        onChange={(e) => handleInputChange(e, 'property')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="#"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="current_portfolio_count">
+                        <Home className="mr-2 h-4 w-4" />
+                        Properties Currently Owned
+                      </label>
+                      <Input 
+                        id="current_portfolio_count"
+                        name="current_portfolio_count"
+                        type="number"
+                        min="0"
+                        value={profileData.current_portfolio_count || ""}
+                        onChange={(e) => handleInputChange(e, 'property')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="#"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Verification Section */}
+                <div className="space-y-4 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Verification</h3>
+                  
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <div className="flex items-start mb-4">
+                      <div className="flex-shrink-0 mt-0.5">
+                        <FileBadge className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div className="ml-3">
+                        <h4 className="text-sm font-medium text-gray-900">Buyer Verification Tag</h4>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Your verification status helps sellers trust your offers
+                        </p>
+                        <div className="mt-2">
+                          {profileData.buyer_verification_tag ? (
+                            <Badge className="bg-green-100 text-green-800 hover:bg-green-100 px-2 py-0.5 text-xs">
+                              {profileData.buyer_verification_tag}
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-100 px-2 py-0.5 text-xs">
+                              Not Verified
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0 mt-0.5">
+                        <FileText className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div className="ml-3">
+                        <h4 className="text-sm font-medium text-gray-900">Proof of Funds</h4>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Upload a PDF document showing your proof of funds
+                        </p>
+                        <div className="mt-2 flex items-center">
+                          {profileData.proof_of_funds_url ? (
+                            <>
+                              <a 
+                                href={profileData.proof_of_funds_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-xs text-[#09261E] font-medium mr-3 flex items-center hover:underline"
+                              >
+                                <Download size={14} className="mr-1" />
+                                View Document
+                              </a>
+                              {profileData.proof_of_funds_verified ? (
+                                <Badge className="bg-green-100 text-green-800 hover:bg-green-100 px-2 py-0.5 text-xs">
+                                  Verified
+                                </Badge>
+                              ) : (
+                                <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100 px-2 py-0.5 text-xs">
+                                  Pending Verification
+                                </Badge>
+                              )}
+                            </>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="text-xs"
+                              onClick={() => proofFileInputRef.current?.click()}
+                            >
+                              <Upload size={14} className="mr-1" />
+                              Upload PDF
+                            </Button>
+                          )}
+                          <input 
+                            ref={proofFileInputRef}
+                            type="file"
+                            accept="application/pdf"
+                            className="hidden"
+                            onChange={handleProofOfFundsChange}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pt-6 flex justify-end">
+                  <Button 
+                    type="submit" 
+                    className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    disabled={loading || !isPropertySectionModified}
+                  >
+                    {loading ? "Saving..." : "Save Property Preferences"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+          
+          {/* Professionals Section */}
+          <Card className="border-gray-200 shadow-sm">
+            <CardHeader className="border-b pb-4">
+              <CardTitle className="text-xl">Professionals</CardTitle>
+              <CardDescription>Manage your preferred professionals for real estate transactions</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <form onSubmit={handleProfessionalSectionSubmit}>
+                {/* Preferred Inspectors */}
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Preferred Inspectors</h3>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info size={16} className="text-gray-400" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs max-w-xs">Add your preferred inspectors. These will be suggested when making offers.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-gray-500 text-sm text-center py-4">
+                      Coming soon! You'll be able to add your preferred inspectors here.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Preferred Agents */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Preferred Agents</h3>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info size={16} className="text-gray-400" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs max-w-xs">Add agents you've worked with before and trust.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-gray-500 text-sm text-center py-4">
+                      Coming soon! You'll be able to add your preferred agents here.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Preferred Contractors */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Preferred Contractors</h3>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info size={16} className="text-gray-400" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs max-w-xs">Add contractors you've worked with on renovations or repairs.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-gray-500 text-sm text-center py-4">
+                      Coming soon! You'll be able to add your preferred contractors here.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Preferred Lenders */}
+                <div className="space-y-4 pt-6 border-t">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Preferred Lenders</h3>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info size={16} className="text-gray-400" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs max-w-xs">Add lenders you work with for financing your deals.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <p className="text-gray-500 text-sm text-center py-4">
+                      Coming soon! You'll be able to add your preferred lenders here.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="pt-6 flex justify-end">
+                  <Button 
+                    type="submit" 
+                    className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    disabled={loading || !isProfessionalSectionModified}
+                  >
+                    {loading ? "Saving..." : "Save Professional Preferences"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
