@@ -69,6 +69,9 @@ import {
 // Third-party icons - we use these directly for specialized icons
 import { Instagram, Linkedin, Facebook as FacebookIcon } from "lucide-react";
 
+// Import the Help Center components
+import { HelpCenterTabs } from "@/components/help";
+
 interface ProfileData {
   id: string;
   full_name: string;
