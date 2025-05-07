@@ -703,11 +703,17 @@ export default function ProfilePage() {
             <Button 
               variant="outline" 
               size="sm" 
-              className="w-full text-sm font-medium flex items-center justify-center gap-2"
+              className="w-full text-sm font-medium flex items-center justify-center gap-2 
+                         transition-all duration-200 border-[#09261E]/30 bg-white hover:bg-[#09261E]/5 
+                         hover:border-[#09261E]/70 hover:shadow-sm active:scale-95 hover:scale-[1.02]
+                         group"
               onClick={() => window.open(`/profile/${profileData.username}`, '_blank')}
             >
-              <ExternalLink size={16} className="mr-1" />
-              Preview Public Profile
+              <ExternalLink size={16} className="mr-1 group-hover:text-[#09261E] transition-colors" />
+              <span className="group-hover:text-[#09261E] transition-colors relative">
+                Preview Public Profile
+                <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#09261E]/50 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+              </span>
             </Button>
           </div>
         
@@ -727,24 +733,6 @@ export default function ProfilePage() {
               />
               
               <ProfileMenuItem
-                icon={<Shield size={18} />}
-                label="Security & Privacy"
-                onClick={() => {
-                  setActiveTab("security");
-                }}
-                active={activeTab === "security"}
-              />
-              
-              <ProfileMenuItem
-                icon={<CreditCard size={18} />}
-                label="Payment Methods"
-                onClick={() => {
-                  setActiveTab("payment");
-                }}
-                active={activeTab === "payment"}
-              />
-              
-              <ProfileMenuItem
                 icon={<BellRing size={18} />}
                 label="Notifications"
                 onClick={() => {
@@ -755,14 +743,30 @@ export default function ProfilePage() {
               
               <ProfileMenuItem
                 icon={<LinkIcon size={18} />}
-                label="Connected Accounts"
+                label="Integrations"
                 onClick={() => {
                   setActiveTab("connected");
                 }}
                 active={activeTab === "connected"}
               />
               
-              <hr className="my-4 border-gray-200" />
+              <ProfileMenuItem
+                icon={<CreditCard size={18} />}
+                label="Memberships"
+                onClick={() => {
+                  setActiveTab("payment");
+                }}
+                active={activeTab === "payment"}
+              />
+              
+              <ProfileMenuItem
+                icon={<Shield size={18} />}
+                label="Security & Privacy"
+                onClick={() => {
+                  setActiveTab("security");
+                }}
+                active={activeTab === "security"}
+              />
               
               <ProfileMenuItem
                 icon={<HelpCircle size={18} />}
