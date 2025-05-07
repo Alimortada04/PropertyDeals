@@ -126,7 +126,7 @@ const closingTimelineOptions = ["ASAP (7-14 days)", "15-30 days", "30-60 days", 
 
 // Component for consistent menu items in the left sidebar
 const ProfileMenuItem = ({ icon, label, href, active, onClick, danger }: ProfileMenuItem) => {
-  const baseClasses = "w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50";
+  const baseClasses = "w-full flex items-center px-4 py-3 text-left rounded-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50";
   const activeClasses = "bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm";
   const normalClasses = "text-gray-700 hover:bg-gray-100";
   const dangerClasses = "text-red-600 hover:bg-red-50";
@@ -137,7 +137,7 @@ const ProfileMenuItem = ({ icon, label, href, active, onClick, danger }: Profile
     return (
       <a href={href} className={className}>
         <span className="mr-3 text-current">{icon}</span>
-        <span>{label}</span>
+        <span className="font-medium text-sm">{label}</span>
       </a>
     );
   }
@@ -145,7 +145,7 @@ const ProfileMenuItem = ({ icon, label, href, active, onClick, danger }: Profile
   return (
     <button onClick={onClick} className={className}>
       <span className="mr-3 text-current">{icon}</span>
-      <span>{label}</span>
+      <span className="font-medium text-sm">{label}</span>
     </button>
   );
 };
@@ -673,12 +673,12 @@ export default function ProfilePage() {
       {/* Main content with sidebar */}
       <div className="flex flex-1">
         {/* Settings Menu Sidebar - reduced width to 220px */}
-        <div className="w-[220px] fixed top-16 left-16 bottom-0 bg-white border-r h-[calc(100vh-4rem)] flex flex-col">
+        <div className="w-[220px] fixed top-16 left-16 bottom-0 bg-white border-r h-[calc(100vh-4rem)] flex flex-col shadow-sm">
           {/* User Profile Section */}
-          <div className="px-3 py-4 border-b">
+          <div className="px-4 py-5 border-b">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <Avatar className="h-10 w-10 border">
+                <Avatar className="h-12 w-12 border border-gray-200">
                   {profileData.profile_photo_url ? (
                     <AvatarImage src={profileData.profile_photo_url} />
                   ) : (
@@ -689,9 +689,9 @@ export default function ProfilePage() {
                 </Avatar>
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-1 -right-1 bg-white p-0.5 rounded-full border shadow-sm hover:bg-gray-50 transition-colors"
+                  className="absolute -bottom-1 -right-1 bg-white p-1 rounded-full border shadow-sm hover:bg-gray-50 transition-colors"
                 >
-                  <Camera size={12} className="text-gray-600" />
+                  <Camera size={14} className="text-gray-600" />
                 </button>
               </div>
               <div className="flex-1 min-w-0">
@@ -708,7 +708,7 @@ export default function ProfilePage() {
           {/* Scrollable Menu Section */}
           <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent pb-16">
             {/* Menu Items */}
-            <div className="py-2 space-y-1">
+            <div className="py-4 space-y-1.5">
               <ProfileMenuItem
                 icon={<UserCircle size={18} />}
                 label="Account"
@@ -759,15 +759,15 @@ export default function ProfilePage() {
           </div>
           
           {/* Logout Button - Sticky bottom with red text/icon but no red background */}
-          <div className="px-3 py-3 border-t sticky bottom-0 bg-white mt-auto">
+          <div className="px-4 py-5 border-t sticky bottom-0 bg-white mt-auto">
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button 
                   variant="ghost"
-                  className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 flex items-center justify-center gap-2"
+                  className="w-full text-red-600 hover:text-red-700 hover:bg-red-50/50 flex items-center justify-start gap-2 px-4 py-3"
                 >
-                  <LogOut size={18} className="text-red-600" />
-                  <span>Log Out</span>
+                  <LogOut size={18} className="text-red-600 mr-1" />
+                  <span className="font-medium text-sm">Log Out</span>
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
