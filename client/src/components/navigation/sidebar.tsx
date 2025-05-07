@@ -28,6 +28,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
+interface ProfileData {
+  profile_photo_url?: string | null;
+  full_name?: string | null;
+}
+
 interface NavItemProps {
   href: string;
   icon: React.ReactNode;
@@ -79,7 +84,7 @@ export default function Sidebar() {
   const activeRole = user?.activeRole || "visitor";
   
   // Fetch profile data including profile photo
-  const { data: profileData } = useQuery({
+  const { data: profileData = {} as ProfileData } = useQuery<ProfileData>({
     queryKey: ['/api/profile'],
     enabled: !!user
   });
@@ -234,11 +239,11 @@ export default function Sidebar() {
           icon={
             <Avatar className="h-8 w-8 transition-all transform group-hover:scale-110 duration-200">
               <AvatarImage 
-                src={profileData?.profile_photo_url} 
-                alt={profileData?.full_name || user?.fullName || "User"} 
+                src={profileData?.profile_photo_url || ""} 
+                alt={(profileData?.full_name || user?.fullName || "User") as string} 
               />
               <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">
-                {profileData?.full_name?.charAt(0) || user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
+                {(profileData?.full_name as string)?.charAt(0) || (user?.fullName as string)?.charAt(0) || (user?.username as string)?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
           } 
