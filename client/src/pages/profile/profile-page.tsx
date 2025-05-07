@@ -629,6 +629,43 @@ export default function ProfilePage() {
     }
   };
   
+  // Handle remove banner image
+  const handleRemoveBannerImage = async () => {
+    try {
+      setLoading(true);
+      
+      // Update profile data locally first for immediate UI feedback
+      setProfileData(prev => ({
+        ...prev,
+        profile_banner_url: null
+      }));
+      
+      // Update profile in database
+      await supabase
+        .from('profiles')
+        .update({ profile_banner_url: null })
+        .eq('id', user?.id);
+      
+      toast({
+        title: "Banner image removed",
+        description: "Your banner image has been removed successfully.",
+      });
+      
+    } catch (error) {
+      console.error('Error removing banner image:', error);
+      toast({
+        title: "Error removing banner image",
+        description: "There was an error removing your banner image. Please try again.",
+        variant: "destructive",
+      });
+      
+      // Refetch profile data to ensure UI is in sync with DB
+      queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   // Update profile data - handle form submissions
   const handleProfileSectionSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
