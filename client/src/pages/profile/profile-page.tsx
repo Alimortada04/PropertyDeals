@@ -14,6 +14,12 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -961,9 +967,26 @@ export default function ProfilePage() {
                               value={profileData.phone || ""}
                               onChange={(e) => handleInputChange(e, 'profile')}
                               className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                              placeholder="Your phone number"
+                              placeholder="Your phone number (123-456-7890)"
                             />
+                            <p className="text-xs mt-1 text-gray-500">
+                              Adding a phone number enables text notifications (verification required).
+                            </p>
                           </div>
+                        </div>
+                        
+                        <div>
+                          <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="location">
+                            Location Based In
+                          </label>
+                          <Input 
+                            id="location"
+                            name="location"
+                            value={profileData.location || ""}
+                            onChange={(e) => handleInputChange(e, 'profile')}
+                            className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                            placeholder="City, State (e.g. Austin, TX)"
+                          />
                         </div>
                         
                         <div>
@@ -1013,6 +1036,192 @@ export default function ProfilePage() {
                         </Button>
                       </div>
                     </form>
+                  </CardContent>
+                </Card>
+                
+                {/* Profile Images Section */}
+                <Card className="border-gray-200 shadow-sm">
+                  <CardHeader className="border-b pb-4">
+                    <CardTitle className="text-xl">Profile Images</CardTitle>
+                    <CardDescription>Upload your profile picture and banner image</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-6 space-y-8">
+                    <div className="space-y-8">
+                      {/* Profile Photo */}
+                      <div>
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider mb-4">Profile Photo</h3>
+                        <div className="flex items-center">
+                          <div className="mr-6">
+                            <Avatar className="h-24 w-24 border-2 border-gray-200">
+                              {profileData.profile_photo_url ? (
+                                <AvatarImage src={profileData.profile_photo_url} />
+                              ) : (
+                                <AvatarFallback className="bg-[#09261E] text-white text-2xl font-semibold">
+                                  {profileData.full_name ? profileData.full_name.charAt(0) : "PD"}
+                                </AvatarFallback>
+                              )}
+                            </Avatar>
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm text-gray-700 mb-3">
+                              Upload a professional photo to make your profile more approachable. 
+                              Square images work best (minimum 400x400 pixels).
+                            </p>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => fileInputRef.current?.click()}
+                              className="mr-2"
+                            >
+                              <Upload className="mr-2 h-4 w-4" />
+                              Upload Photo
+                            </Button>
+                            
+                            {profileData.profile_photo_url && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50/50 border-red-200"
+                                onClick={async () => {
+                                  if (window.confirm("Are you sure you want to remove your profile photo?")) {
+                                    setProfileData(prev => ({
+                                      ...prev,
+                                      profile_photo_url: null
+                                    }));
+                                    setIsProfileSectionModified(true);
+                                  }
+                                }}
+                              >
+                                <Trash className="mr-2 h-4 w-4" />
+                                Remove
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Banner Image */}
+                      <div className="pt-6 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider mb-4">Banner Image</h3>
+                        <div>
+                          <div className="relative w-full h-36 rounded-md overflow-hidden mb-4 bg-gray-100 flex items-center justify-center border-2 border-dashed border-gray-200">
+                            {profileData.profile_banner_url ? (
+                              <>
+                                <img 
+                                  src={profileData.profile_banner_url} 
+                                  alt="Profile banner" 
+                                  className="w-full h-full object-cover"
+                                />
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="absolute bottom-2 right-2 bg-white/90 hover:bg-white shadow-sm text-red-600 hover:text-red-700 hover:bg-red-50/80 border-red-200"
+                                  onClick={async () => {
+                                    if (window.confirm("Are you sure you want to remove your banner image?")) {
+                                      setProfileData(prev => ({
+                                        ...prev,
+                                        profile_banner_url: null
+                                      }));
+                                      setIsProfileSectionModified(true);
+                                    }
+                                  }}
+                                >
+                                  <Trash className="mr-2 h-4 w-4" />
+                                  Remove
+                                </Button>
+                              </>
+                            ) : (
+                              <div className="text-center">
+                                <p className="text-gray-500 text-sm mb-2">No banner image uploaded</p>
+                                <p className="text-xs text-gray-400">Recommended size: 1200 x 300 pixels</p>
+                              </div>
+                            )}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => bannerInputRef.current?.click()}
+                            className="mr-2"
+                          >
+                            <Upload className="mr-2 h-4 w-4" />
+                            Upload Banner
+                          </Button>
+                          <p className="text-xs text-gray-500 mt-2">
+                            A banner image will appear at the top of your public profile page.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                {/* Member Information Section */}
+                <Card className="border-gray-200 shadow-sm">
+                  <CardHeader className="border-b pb-4">
+                    <CardTitle className="text-xl">Member Information</CardTitle>
+                    <CardDescription>Your PropertyDeals membership details</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {/* Member Since */}
+                      <div className="bg-gray-50/80 p-4 rounded-md border border-gray-200">
+                        <div className="flex items-center mb-2">
+                          <Calendar className="h-5 w-5 text-[#09261E] mr-2" />
+                          <h3 className="font-medium text-gray-900">Member Since</h3>
+                        </div>
+                        <p className="text-gray-700">
+                          {profileData.created_at 
+                            ? new Date(profileData.created_at).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              })
+                            : "N/A"}
+                        </p>
+                      </div>
+                      
+                      {/* User Number */}
+                      <div className="bg-gray-50/80 p-4 rounded-md border border-gray-200">
+                        <div className="flex items-center mb-2">
+                          <UserCircle className="h-5 w-5 text-[#09261E] mr-2" />
+                          <h3 className="font-medium text-gray-900">Member #</h3>
+                        </div>
+                        <p className="text-gray-700">
+                          {profileData.join_number 
+                            ? `#${profileData.join_number}` 
+                            : "Not assigned yet"}
+                        </p>
+                      </div>
+                      
+                      {/* Profile Completion */}
+                      <div className="bg-gray-50/80 p-4 rounded-md border border-gray-200">
+                        <div className="flex items-center mb-2">
+                          <TrendingUp className="h-5 w-5 text-[#09261E] mr-2" />
+                          <h3 className="font-medium text-gray-900">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="flex items-center cursor-help">
+                                    Profile Completion
+                                    <HelpCircle className="ml-1 h-3.5 w-3.5 text-gray-400" />
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-xs">
+                                  <p>Complete your profile to unlock full platform features like REP matching, deal prioritization, and public visibility.</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </h3>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                          <div 
+                            className="bg-[#09261E] h-2.5 rounded-full" 
+                            style={{ width: `${profileData.profile_completion_score || 0}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-gray-700 text-sm">{profileData.profile_completion_score || 0}% Complete</p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
 
