@@ -75,7 +75,21 @@ import {
 } from "lucide-react";
 
 // Third-party icons - we use these directly for specialized icons
-import { Instagram, Linkedin, Facebook as FacebookIcon } from "lucide-react";
+import { Instagram, Linkedin, Facebook as FacebookIcon, Info } from "lucide-react";
+
+// Icon component for social media and other special icons
+const Icon = ({ icon, className = "" }: { icon: string; className?: string }) => {
+  switch (icon) {
+    case "instagram":
+      return <Instagram className={className} />;
+    case "linkedIn":
+      return <Linkedin className={className} />;
+    case "facebook":
+      return <FacebookIcon className={className} />;
+    default:
+      return <Globe className={className} />;
+  }
+};
 
 // Import the Help Center components
 import { HelpFAQ, HelpSuggestions, HelpReport } from "@/components/help";
@@ -901,22 +915,48 @@ export default function ProfilePage() {
 
                 
                 {/* Profile Card */}
-                <Card className="border-gray-200 shadow-sm">
+                <Card className="border-gray-200 shadow-sm bg-white">
                   <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
-                    <div className="flex items-center">
-                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
-                        <User className="h-5 w-5 text-[#09261E]" />
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                          <User className="h-5 w-5 text-[#09261E]" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-xl">Profile</CardTitle>
+                          <CardDescription>Your personal and business information</CardDescription>
+                        </div>
                       </div>
-                      <div>
-                        <CardTitle className="text-xl">Profile</CardTitle>
-                        <CardDescription>Your personal and business information</CardDescription>
+                      <div className="hidden md:flex items-center gap-2">
+                        <span className="text-sm text-gray-500">Completion:</span>
+                        <div className="w-32 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${
+                              profileData.profile_completion_score < 40 
+                                ? 'bg-red-500' 
+                                : profileData.profile_completion_score < 70 
+                                  ? 'bg-amber-500' 
+                                  : 'bg-green-600'
+                            }`}
+                            style={{ width: `${profileData.profile_completion_score}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-sm font-medium">{profileData.profile_completion_score}%</span>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-6 space-y-8">
+                  <CardContent className="pt-6">
                     <form onSubmit={handleProfileSectionSubmit}>
-                      {/* General Information Section */}
-                      <div className="space-y-4 mb-8">
+                      <Tabs defaultValue="general" className="w-full">
+                        <TabsList className="grid w-full grid-cols-3 mb-6">
+                          <TabsTrigger value="general" className="text-sm">General Information</TabsTrigger>
+                          <TabsTrigger value="business" className="text-sm">Business Information</TabsTrigger>
+                          <TabsTrigger value="social" className="text-sm">Social Media</TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="general" className="space-y-6">
+                          {/* General Information Section */}
+                          <div className="space-y-4 mb-8">
                         <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
                           <span>General Information</span>
                           {!profileData.full_name || !profileData.username ? (
@@ -1136,6 +1176,22 @@ export default function ProfilePage() {
                           )}
                         </Button>
                       </div>
+                        </TabsContent>
+                        
+                        <TabsContent value="business" className="space-y-6">
+                          {/* Business Information will go here */}
+                          <div className="p-4 text-center bg-gray-50 rounded-md">
+                            <p className="text-gray-500">Business information section coming soon</p>
+                          </div>
+                        </TabsContent>
+                        
+                        <TabsContent value="social" className="space-y-6">
+                          {/* Social Media will go here */}
+                          <div className="p-4 text-center bg-gray-50 rounded-md">
+                            <p className="text-gray-500">Social media section coming soon</p>
+                          </div>
+                        </TabsContent>
+                      </Tabs>
                     </form>
                   </CardContent>
                 </Card>
