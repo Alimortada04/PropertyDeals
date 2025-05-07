@@ -28,7 +28,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { navigateToHelpSection, navigateToProfileTab } from "@/lib/navigation";
+import { navigateToHelpSection, navigateToProfileTab, getCurrentHelpSection } from "@/lib/navigation";
 import styles from "./profile-page.module.css";
 
 // Import icons
@@ -197,14 +197,20 @@ export default function ProfilePage() {
     return "account"; // Default tab
   }, [location]);
   
-  // Track active settings tab
+  // Track active settings tab and help section
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [activeHelpSection, setActiveHelpSection] = useState<string>('main');
   
   // Handle tab change without full page reload
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
     // Use our navigation utility to update URL without page reload
     navigateToProfileTab(tab);
+    
+    // Reset help section when switching tabs
+    if (tab === 'help') {
+      setActiveHelpSection('main');
+    }
   };
   
   // Listen for path changes and update UI accordingly
@@ -221,15 +227,33 @@ export default function ProfilePage() {
       }
     };
     
-    // Listen for custom navigation events
+    // Handle custom navigation events
+    const handleProfileTabChanged = (e: CustomEvent) => {
+      const { tab } = (e as any).detail;
+      setActiveTab(tab);
+    };
+    
+    const handleHelpSectionChanged = (e: CustomEvent) => {
+      const { section } = (e as any).detail;
+      setActiveHelpSection(section);
+      
+      // Make sure we're on the help tab
+      if (activeTab !== 'help') {
+        setActiveTab('help');
+      }
+    };
+    
+    // Register event listeners
     window.addEventListener('pathChanged', handlePathChanged);
-    window.addEventListener('profileTabChanged', (e: any) => setActiveTab(e.detail.tab));
+    window.addEventListener('profileTabChanged', handleProfileTabChanged as EventListener);
+    window.addEventListener('helpSectionChanged', handleHelpSectionChanged as EventListener);
     
     return () => {
       window.removeEventListener('pathChanged', handlePathChanged);
-      window.removeEventListener('profileTabChanged', (e: any) => setActiveTab(e.detail.tab));
+      window.removeEventListener('profileTabChanged', handleProfileTabChanged as EventListener);
+      window.removeEventListener('helpSectionChanged', handleHelpSectionChanged as EventListener);
     };
-  }, []);
+  }, [activeTab]);
   
   // Default profile data
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -1279,168 +1303,166 @@ export default function ProfilePage() {
                   <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  {/* FAQ Card - Entire card is clickable */}
-                  <div
-                    onClick={() => navigateToHelpSection("faq")} 
-                    className="block cursor-pointer group"
-                  >
-                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
-                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
-                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-gray-200 transition-colors">
-                          <HelpCircle className="h-6 w-6 text-[#09261E]" />
-                        </div>
-                        <h3 className="text-lg font-semibold mb-2 group-hover:text-[#09261E] transition-colors">Frequently Asked Questions</h3>
-                        <p className="text-gray-600 text-sm mb-6 flex-grow">
-                          Find answers to common questions about buying, selling, and investing in real estate.
-                        </p>
-                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-[#09261E] transition-colors">
-                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                {/* Main Help Section (default view) */}
+                {activeHelpSection === 'main' && (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                      {/* FAQ Card - Entire card is clickable */}
+                      <div
+                        onClick={() => navigateToHelpSection("faq")} 
+                        className="block cursor-pointer group"
+                      >
+                        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
+                          <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                            <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-gray-200 transition-colors">
+                              <HelpCircle className="h-6 w-6 text-[#09261E]" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2 group-hover:text-[#09261E] transition-colors">Frequently Asked Questions</h3>
+                            <p className="text-gray-600 text-sm mb-6 flex-grow">
+                              Find answers to common questions about buying, selling, and investing in real estate.
+                            </p>
+                            <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-[#09261E] transition-colors">
+                              Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
 
-                  {/* Suggestions Card - Entire card is clickable */}
-                  <div
-                    onClick={() => navigateToHelpSection("suggestions")} 
-                    className="block cursor-pointer group"
-                  >
-                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
-                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
-                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-gray-200 transition-colors">
-                          <MessageSquare className="h-6 w-6 text-[#09261E]" />
-                        </div>
-                        <h3 className="text-lg font-semibold mb-2 group-hover:text-[#09261E] transition-colors">Suggestions</h3>
-                        <p className="text-gray-600 text-sm mb-6 flex-grow">
-                          Submit your ideas for new features or improvements to the PropertyDeals platform.
-                        </p>
-                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-[#09261E] transition-colors">
-                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                      {/* Suggestions Card - Entire card is clickable */}
+                      <div
+                        onClick={() => navigateToHelpSection("suggestions")} 
+                        className="block cursor-pointer group"
+                      >
+                        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
+                          <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                            <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-gray-200 transition-colors">
+                              <MessageSquare className="h-6 w-6 text-[#09261E]" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2 group-hover:text-[#09261E] transition-colors">Suggestions</h3>
+                            <p className="text-gray-600 text-sm mb-6 flex-grow">
+                              Submit your ideas for new features or improvements to the PropertyDeals platform.
+                            </p>
+                            <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-[#09261E] transition-colors">
+                              Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
 
-                  {/* Report a Problem Card - Entire card is clickable with red hover */}
-                  <div
-                    onClick={() => navigateToHelpSection("report")} 
-                    className="block cursor-pointer group"
-                  >
-                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-red-50/50">
-                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
-                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-red-100/70 transition-colors">
-                          <AlertTriangle className="h-6 w-6 text-[#09261E] group-hover:text-red-600 transition-colors" />
-                        </div>
-                        <h3 className="text-lg font-semibold mb-2 group-hover:text-red-600 transition-colors">Report a Problem</h3>
-                        <p className="text-gray-600 text-sm mb-6 flex-grow">
-                          Encountered an issue? Let us know so we can fix it as quickly as possible.
-                        </p>
-                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-red-600 transition-colors">
-                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-
-                {/* Can't find what you're looking for section - Green hover */}
-                <Card className="border border-gray-200 shadow-sm bg-gray-50/80 mb-6 hover:bg-green-50/50 transition-colors">
-                  <CardContent className="pt-6 px-6 pb-6">
-                    <h3 className="text-lg font-semibold mb-3">Can't find what you're looking for?</h3>
-                    <p className="text-gray-600 text-sm mb-6">
-                      Our support team is here to help you with any questions or concerns that aren't addressed in our help resources.
-                    </p>
-                    
-                    <div className="bg-white p-5 rounded-md border border-gray-200">
-                      <h4 className="font-medium text-sm mb-2">Contact Support</h4>
-                      <p className="text-gray-500 text-sm mb-4">Business hours: Monday to Friday, 9 AM - 5 PM ET</p>
-                      <div className="flex flex-wrap gap-3">
-                        <Button 
-                          className="bg-[#09261E] hover:bg-gray-700 text-white font-medium"
-                          onClick={() => window.open('mailto:support@propertydeals.com')}
-                        >
-                          Contact Us
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          className="border-gray-300 hover:bg-gray-100 hover:text-gray-800"
-                          onClick={() => window.open('mailto:support@propertydeals.com')}
-                        >
-                          Email Support
-                        </Button>
+                      {/* Report a Problem Card - Entire card is clickable with red hover */}
+                      <div
+                        onClick={() => navigateToHelpSection("report")} 
+                        className="block cursor-pointer group"
+                      >
+                        <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-red-50/50">
+                          <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                            <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-red-100/70 transition-colors">
+                              <AlertTriangle className="h-6 w-6 text-[#09261E] group-hover:text-red-600 transition-colors" />
+                            </div>
+                            <h3 className="text-lg font-semibold mb-2 group-hover:text-red-600 transition-colors">Report a Problem</h3>
+                            <p className="text-gray-600 text-sm mb-6 flex-grow">
+                              Encountered an issue? Let us know so we can fix it as quickly as possible.
+                            </p>
+                            <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-red-600 transition-colors">
+                              Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                            </div>
+                          </CardContent>
+                        </Card>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+
+                    {/* Can't find what you're looking for section - Green hover */}
+                    <Card className="border border-gray-200 shadow-sm bg-gray-50/80 mb-6 hover:bg-green-50/50 transition-colors">
+                      <CardContent className="pt-6 px-6 pb-6">
+                        <h3 className="text-lg font-semibold mb-3">Can't find what you're looking for?</h3>
+                        <p className="text-gray-600 text-sm mb-6">
+                          Our support team is here to help you with any questions or concerns that aren't addressed in our help resources.
+                        </p>
+                        
+                        <div className="bg-white p-5 rounded-md border border-gray-200">
+                          <h4 className="font-medium text-sm mb-2">Contact Support</h4>
+                          <p className="text-gray-500 text-sm mb-4">Business hours: Monday to Friday, 9 AM - 5 PM ET</p>
+                          <div className="flex flex-wrap gap-3">
+                            <Button 
+                              className="bg-[#09261E] hover:bg-gray-700 text-white font-medium"
+                              onClick={() => window.open('mailto:support@propertydeals.com')}
+                            >
+                              Contact Us
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              className="border-gray-300 hover:bg-gray-100 hover:text-gray-800"
+                              onClick={() => window.open('mailto:support@propertydeals.com')}
+                            >
+                              Email Support
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </>
+                )}
+                
+                {/* FAQ Section */}
+                {activeHelpSection === 'faq' && (
+                  <>
+                    <div className="mb-8">
+                      <HelpFAQ />
+                    </div>
+                    <div className="flex justify-start mt-8">
+                      <Button
+                        variant="outline"
+                        onClick={() => navigateToHelpSection('main')}
+                        className="flex items-center"
+                      >
+                        <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
+                        Back to Help Center
+                      </Button>
+                    </div>
+                  </>
+                )}
+                
+                {/* Suggestions Section */}
+                {activeHelpSection === 'suggestions' && (
+                  <>
+                    <div className="mb-8">
+                      <HelpSuggestions />
+                    </div>
+                    <div className="flex justify-start mt-8">
+                      <Button
+                        variant="outline"
+                        onClick={() => navigateToHelpSection('main')}
+                        className="flex items-center"
+                      >
+                        <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
+                        Back to Help Center
+                      </Button>
+                    </div>
+                  </>
+                )}
+                
+                {/* Report a Problem Section */}
+                {activeHelpSection === 'report' && (
+                  <>
+                    <div className="mb-8">
+                      <HelpReport />
+                    </div>
+                    <div className="flex justify-start mt-8">
+                      <Button
+                        variant="outline"
+                        onClick={() => navigateToHelpSection('main')}
+                        className="flex items-center"
+                      >
+                        <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
+                        Back to Help Center
+                      </Button>
+                    </div>
+                  </>
+                )}
               </>
             )}
             
-            {location.includes('/profile/help/faq') && (
-              <>
-                <div className="border-b pb-4 mb-6">
-                  <h1 className="text-2xl font-bold text-gray-900">Help Center</h1>
-                  <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
-                </div>
-                <div className="mb-8">
-                  <HelpFAQ />
-                </div>
-                <div className="flex justify-start mt-8">
-                  <Button
-                    variant="outline"
-                    onClick={() => window.history.pushState({}, '', '/profile/help')}
-                    className="flex items-center"
-                  >
-                    <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
-                    Back to Help Center
-                  </Button>
-                </div>
-              </>
-            )}
-            
-            {location.includes('/profile/help/suggestions') && (
-              <>
-                <div className="border-b pb-4 mb-6">
-                  <h1 className="text-2xl font-bold text-gray-900">Help Center</h1>
-                  <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
-                </div>
-                <div className="mb-8">
-                  <HelpSuggestions />
-                </div>
-                <div className="flex justify-start mt-8">
-                  <Button
-                    variant="outline"
-                    onClick={() => window.history.pushState({}, '', '/profile/help')}
-                    className="flex items-center"
-                  >
-                    <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
-                    Back to Help Center
-                  </Button>
-                </div>
-              </>
-            )}
-            
-            {location.includes('/profile/help/report') && (
-              <>
-                <div className="border-b pb-4 mb-6">
-                  <h1 className="text-2xl font-bold text-gray-900">Help Center</h1>
-                  <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
-                </div>
-                <div className="mb-8">
-                  <HelpReport />
-                </div>
-                <div className="flex justify-start mt-8">
-                  <Button
-                    variant="outline"
-                    onClick={() => window.history.pushState({}, '', '/profile/help')}
-                    className="flex items-center"
-                  >
-                    <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
-                    Back to Help Center
-                  </Button>
-                </div>
-              </>
-            )}
+
 
             {activeTab === "connected" && (
               <Card className="border-gray-200 shadow-sm">
