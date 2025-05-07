@@ -976,7 +976,7 @@ export default function ProfilePage() {
                   </CardContent>
                 </Card>
                 
-                {/* Profile Section */}
+                {/* Profile Card */}
                 <Card className="border-gray-200 shadow-sm">
                   <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
                     <div className="flex items-center">
