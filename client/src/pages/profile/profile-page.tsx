@@ -25,7 +25,7 @@ import {
   FileBadge, Download, Award, Search, Users, Wrench, Heart,
   Wallet, PenTool, BookLock, BookCheck, Landmark, PiggyBank,
   Map, Settings as SettingsIcon, ArrowUpRight, ChevronsDown, Save, Globe,
-  Facebook as FacebookIcon, Instagram, Linkedin, Target
+  Facebook as FacebookIcon, Instagram, Linkedin, Target, Bell, HelpCircle
 } from "lucide-react";
 
 // Profile MenuItem component
@@ -77,6 +77,7 @@ interface ProfileData {
   facebook: string | null;
   linkedin: string | null;
   profile_photo_url: string | null;
+  profile_banner_url: string | null;
   created_at: string;
   join_number: number | null;
   profile_completion_score: number;
@@ -144,9 +145,10 @@ export default function ProfilePage() {
   const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
   const [usernameMessage, setUsernameMessage] = useState("");
 
-  // Refs for the file input and preview
+  // Refs for the file inputs
   const fileInputRef = useRef<HTMLInputElement>(null);
   const proofFileInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
   
   // Track if each form section has been modified
   const [isProfileSectionModified, setIsProfileSectionModified] = useState(false);
@@ -169,6 +171,7 @@ export default function ProfilePage() {
     facebook: null,
     linkedin: null,
     profile_photo_url: null,
+    profile_banner_url: null,
     created_at: new Date().toISOString(),
     join_number: null,
     profile_completion_score: 0,
@@ -363,6 +366,88 @@ export default function ProfilePage() {
       toast({
         title: "Error",
         description: "Failed to upload profile photo. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle banner image upload
+  const handleBannerImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      return;
+    }
+    
+    const file = event.target.files[0];
+    
+    // Validate file type
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validImageTypes.includes(file.type)) {
+      toast({
+        title: "Invalid file",
+        description: "Please upload a valid image file (JPEG, PNG, GIF, or WEBP)",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Create a unique filename
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${supabaseUser.id}-banner-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `banners/${fileName}`;
+    
+    try {
+      setLoading(true);
+      
+      // Upload file to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('public')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+          contentType: file.type
+        });
+      
+      if (uploadError) {
+        throw uploadError;
+      }
+      
+      // Get public URL
+      const { data } = supabase.storage.from('public').getPublicUrl(filePath);
+      
+      if (!data.publicUrl) {
+        throw new Error("Failed to get public URL for uploaded image");
+      }
+      
+      // Update profile data with new banner URL
+      setProfileData({
+        ...profileData,
+        profile_banner_url: data.publicUrl
+      });
+      
+      // Also update database immediately
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ profile_banner_url: data.publicUrl })
+        .eq('id', supabaseUser.id);
+      
+      if (updateError) {
+        throw updateError;
+      }
+      
+      setIsProfileSectionModified(true);
+      
+      toast({
+        title: "Success",
+        description: "Banner image updated successfully",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error("Error uploading banner image:", error);
+      toast({
+        title: "Error",
+        description: "Failed to upload banner image. Please try again.",
         variant: "destructive"
       });
     } finally {
@@ -741,9 +826,9 @@ export default function ProfilePage() {
   return (
     <div className="flex bg-white min-h-screen">
       {/* Left sidebar */}
-      <div className="w-[230px] border-r h-auto min-h-screen sticky top-0 flex flex-col bg-white shadow-sm overflow-y-auto">
-        {/* Profile info */}
-        <div className="px-6 py-6 mb-4 border-b flex flex-col items-center">
+      <div className="w-[250px] border-r fixed left-0 top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-10">
+        {/* Profile info - Sticky top */}
+        <div className="px-6 py-6 mb-2 border-b flex flex-col items-center sticky top-0 bg-white z-20">
           <div className="relative group">
             <Avatar className="h-20 w-20 mb-2 ring-2 ring-offset-2 ring-[#09261E]/50 group-hover:ring-[#09261E]">
               <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
@@ -773,7 +858,7 @@ export default function ProfilePage() {
             type="button" 
             variant="outline"
             size="sm"
-            className="text-xs border border-gray-300 transition-colors hover:bg-gray-50"
+            className="text-xs border border-gray-300 transition-colors hover:bg-gray-50 w-full"
             onClick={() => window.open(`/user/${profileData.username}`, '_blank')}
           >
             <ExternalLink className="h-3 w-3 mr-1" />
@@ -781,44 +866,62 @@ export default function ProfilePage() {
           </Button>
         </div>
         
-        {/* Menu */}
-        <div className="px-3 flex-1 overflow-y-auto">
-          <div className="mb-2">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Settings</h3>
+        {/* Scrollable Menu Section */}
+        <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+          {/* Account Settings */}
+          <div className="py-2">
             <button
-              className="w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+              className="w-full flex items-center px-4 py-3 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
             >
               <UserCircle size={18} className="mr-3 text-[#09261E]" />
               <span>Account</span>
             </button>
-          </div>
-          
-          <div className="mt-6 pt-6 border-t">
-            <h3 className="text-xs uppercase tracking-wider text-gray-500 font-semibold ml-3 mb-2">Other Settings</h3>
+            
             <ProfileMenuItem
               icon={<Shield size={18} />}
               label="Security & Privacy"
               href="/profile/security"
               active={location === "/profile/security"}
             />
+            
             <ProfileMenuItem
               icon={<CreditCard size={18} />}
-              label="Payment methods"
+              label="Payment Methods"
               href="/profile/payment"
               active={location === "/profile/payment"}
             />
+            
             <ProfileMenuItem
-              icon={<AlertTriangle size={18} />}
-              label="Danger zone"
-              href="/profile/danger"
-              active={location === "/profile/danger"}
-              danger
+              icon={<Bell size={18} />}
+              label="Notifications"
+              href="/profile/notifications"
+              active={location === "/profile/notifications"}
+            />
+            
+            <ProfileMenuItem
+              icon={<HelpCircle size={18} />}
+              label="Help Center"
+              href="/profile/help"
+              active={location === "/profile/help"}
             />
           </div>
         </div>
         
-        {/* Logout */}
-        <div className="mt-auto px-3 pb-5 pt-3 border-t">
+        {/* User info and Logout - Sticky bottom */}
+        <div className="px-3 py-3 border-t sticky bottom-0 bg-white mt-auto">
+          <div className="flex items-center px-4 py-2 mb-2">
+            <Avatar className="h-8 w-8 mr-3">
+              <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
+              <AvatarFallback className="bg-[#09261E] text-white text-sm font-medium">
+                {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 truncate">
+              <p className="text-sm font-medium truncate">{profileData.full_name || profileData.username}</p>
+              <p className="text-xs text-gray-500 truncate">@{profileData.username}</p>
+            </div>
+          </div>
+          
           <button
             className="flex items-center px-4 py-2.5 text-sm rounded-md transition-all duration-200 text-red-500 hover:bg-red-50/80 hover:text-red-600 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
             onClick={handleLogout}
@@ -829,8 +932,8 @@ export default function ProfilePage() {
         </div>
       </div>
       
-      {/* Right content area */}
-      <div className="flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto">
+      {/* Right content area - Adjust margin-left to accommodate fixed sidebar */}
+      <div className="flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto ml-[250px]">
         <div className="max-w-4xl mx-auto space-y-8">
           <div className="border-b pb-4 mb-6">
             <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
