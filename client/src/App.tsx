@@ -240,31 +240,20 @@ function Router() {
         </AppLayout>
       </Route>
       
-      <Route path="/profile/connected-accounts">
+      {/* New URL-based profile tab routes */}
+      <Route path="/profile/account">
         <AppLayout>
           <ProfilePage />
         </AppLayout>
       </Route>
       
-      <Route path="/profile/security">
+      <Route path="/profile/notifications">
         <AppLayout>
           <ProfilePage />
         </AppLayout>
       </Route>
       
-      <Route path="/profile/payment">
-        <AppLayout>
-          <ProfilePage />
-        </AppLayout>
-      </Route>
-      
-      <Route path="/profile/balance">
-        <AppLayout>
-          <ProfilePage />
-        </AppLayout>
-      </Route>
-      
-      <Route path="/profile/billing">
+      <Route path="/profile/connected">
         <AppLayout>
           <ProfilePage />
         </AppLayout>
@@ -276,16 +265,41 @@ function Router() {
         </AppLayout>
       </Route>
       
-      <Route path="/profile/resolution">
+      <Route path="/profile/security">
         <AppLayout>
           <ProfilePage />
         </AppLayout>
       </Route>
       
-      <Route path="/profile/danger">
+      <Route path="/profile/help">
         <AppLayout>
           <ProfilePage />
         </AppLayout>
+      </Route>
+      
+      {/* Legacy profile routes - keep for backwards compatibility */}
+      <Route path="/profile/connected-accounts">
+        <Redirect to="/profile/connected" />
+      </Route>
+      
+      <Route path="/profile/payment">
+        <Redirect to="/profile/memberships" />
+      </Route>
+      
+      <Route path="/profile/balance">
+        <Redirect to="/profile/memberships" />
+      </Route>
+      
+      <Route path="/profile/billing">
+        <Redirect to="/profile/memberships" />
+      </Route>
+      
+      <Route path="/profile/resolution">
+        <Redirect to="/profile/help" />
+      </Route>
+      
+      <Route path="/profile/danger">
+        <Redirect to="/profile/security" />
       </Route>
 
       {/* Redirect /settings to /profile */}
