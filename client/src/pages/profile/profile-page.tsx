@@ -175,8 +175,26 @@ export default function ProfilePage() {
   const [isPropertySectionModified, setIsPropertySectionModified] = useState(false);
   const [isProfessionalSectionModified, setIsProfessionalSectionModified] = useState(false);
   
+  // Determine active tab from URL (either from hash or path segments)
+  const initialTab = useMemo(() => {
+    const validTabs = ["account", "notifications", "connected", "memberships", "security", "help"];
+    
+    // Check hash-based routing first (#help, #account, etc.)
+    if (location.includes('#')) {
+      const hash = location.split('#')[1];
+      if (validTabs.includes(hash)) return hash;
+    }
+    
+    // Then check path-based routing (/profile/help, etc.)
+    const pathSegments = location.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    if (validTabs.includes(lastSegment)) return lastSegment;
+    
+    return "account"; // Default tab
+  }, [location]);
+  
   // Track active settings tab
-  const [activeTab, setActiveTab] = useState("account");
+  const [activeTab, setActiveTab] = useState(initialTab);
   
   // Default profile data
   const [profileData, setProfileData] = useState<ProfileData>({
