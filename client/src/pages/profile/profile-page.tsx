@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,7 +57,8 @@ import {
   ExternalLink,
   Camera,
   AlertTriangle,
-  Wrench
+  Wrench,
+  Link2 as LinkIcon
 } from "lucide-react";
 
 // Third-party icons - we use these directly for specialized icons
@@ -704,8 +705,8 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-row">
-      {/* Settings sidebar - Positioned exactly flush against main sidebar */}
-      <div className="w-[250px] border-r fixed left-16 top-0 bottom-12 flex flex-col bg-white shadow-sm z-10">
+      {/* Settings sidebar - Positioned exactly flush against main sidebar with reduced width */}
+      <div className="w-[220px] border-r fixed left-16 top-0 bottom-12 flex flex-col bg-white shadow-sm z-10">
         {/* Profile info - Sticky top */}
         <div className="px-6 py-6 mb-2 border-b flex flex-col items-center sticky top-0 bg-white z-10">
           <div className="relative group">
@@ -765,32 +766,6 @@ export default function ProfilePage() {
             </button>
             
             <ProfileMenuItem
-              icon={<Shield size={18} />}
-              label="Security & Privacy"
-              onClick={() => {
-                // Client-side navigation would happen here
-                // Just for now, we'll show a toast
-                toast({
-                  title: "Coming Soon",
-                  description: "Security & Privacy settings will be available soon.",
-                });
-              }}
-              active={false}
-            />
-            
-            <ProfileMenuItem
-              icon={<CreditCard size={18} />}
-              label="Payment Methods" 
-              onClick={() => {
-                toast({
-                  title: "Coming Soon",
-                  description: "Payment Methods settings will be available soon.",
-                });
-              }}
-              active={false}
-            />
-            
-            <ProfileMenuItem
               icon={<Bell size={18} />}
               label="Notifications"
               onClick={() => {
@@ -813,6 +788,30 @@ export default function ProfilePage() {
               }}
               active={false}
             />
+            
+            <ProfileMenuItem
+              icon={<Link size={18} />}
+              label="Connected Accounts"
+              onClick={() => {
+                toast({
+                  title: "Coming Soon",
+                  description: "Connected Accounts settings will be available soon.",
+                });
+              }}
+              active={false}
+            />
+            
+            <ProfileMenuItem
+              icon={<CreditCard size={18} />}
+              label="Memberships" 
+              onClick={() => {
+                toast({
+                  title: "Coming Soon",
+                  description: "Membership settings will be available soon.",
+                });
+              }}
+              active={false}
+            />
           </div>
         </div>
         
@@ -821,9 +820,10 @@ export default function ProfilePage() {
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button 
-                className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+                variant="ghost"
+                className="w-full text-red-600 hover:text-red-700 hover:bg-red-50 flex items-center justify-center gap-2"
               >
-                <LogOut size={18} />
+                <LogOut size={18} className="text-red-600" />
                 <span>Log Out</span>
               </Button>
             </AlertDialogTrigger>
@@ -846,7 +846,7 @@ export default function ProfilePage() {
       </div>
       
       {/* Main content area - Adjusted margin-left to account for both sidebars */}
-      <div className="ml-[266px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20">
+      <div className="ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20">
         <div className="max-w-3xl mx-auto space-y-6">
           <div className="border-b pb-4 mb-6">
             <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
