@@ -61,6 +61,9 @@ import {
   Link2 as LinkIcon,
   Plus,
   BellRing,
+  MessageSquare,
+  ArrowRight,
+  Pencil,
 } from "lucide-react";
 
 // Third-party icons - we use these directly for specialized icons
@@ -704,14 +707,14 @@ export default function ProfilePage() {
               variant="ghost" 
               size="sm" 
               className="w-full text-sm font-medium flex items-center justify-center gap-2 
-                         transition-all duration-200 border border-[#09261E]/30 bg-white hover:bg-[#09261E]/5 
-                         hover:border-[#09261E]/70 hover:shadow-sm active:scale-95 hover:scale-[1.02]
+                         transition-all duration-200 bg-white hover:bg-[#09261E]/5 
+                         shadow-none hover:shadow-sm active:scale-95 hover:scale-[1.02]
                          group"
               onClick={() => window.open(`/profile/${profileData.username}`, '_blank')}
             >
               <ExternalLink size={16} className="mr-1 group-hover:text-[#09261E] transition-colors" />
               <span className="group-hover:text-[#09261E] transition-colors relative">
-                Preview Public Profile
+                Preview Profile
                 <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#09261E]/50 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
               </span>
             </Button>
@@ -1235,79 +1238,107 @@ export default function ProfilePage() {
             )}
 
             {activeTab === "help" && (
-              <Card className="border-gray-200 shadow-sm">
-                <CardHeader className="border-b pb-4">
-                  <CardTitle className="text-xl">Help Center</CardTitle>
-                  <CardDescription>Get help and support for your PropertyDeals account</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-6 space-y-8">
-                  <div className="space-y-4">
-                    <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Frequently Asked Questions</h3>
+              <>
+                <div className="border-b pb-4 mb-6">
+                  <h1 className="text-2xl font-bold text-gray-900">Help Center</h1>
+                  <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  {/* FAQ Card */}
+                  <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                    <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                      <div className="p-3 rounded-full bg-gray-100 mb-4">
+                        <HelpCircle className="h-6 w-6 text-[#09261E]" />
+                      </div>
+                      <h3 className="text-lg font-semibold mb-2">Frequently Asked Questions</h3>
+                      <p className="text-gray-600 text-sm mb-6 flex-grow">
+                        Find answers to common questions about buying, selling, and investing in real estate.
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-auto flex items-center"
+                        onClick={() => window.open('/help/faq', '_blank')}
+                      >
+                        Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Suggestions Card */}
+                  <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                    <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                      <div className="p-3 rounded-full bg-gray-100 mb-4">
+                        <MessageSquare className="h-6 w-6 text-[#09261E]" />
+                      </div>
+                      <h3 className="text-lg font-semibold mb-2">Suggestions</h3>
+                      <p className="text-gray-600 text-sm mb-6 flex-grow">
+                        Submit your ideas for new features or improvements to the PropertyDeals platform.
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-auto flex items-center"
+                        onClick={() => window.open('/help/suggestions', '_blank')}
+                      >
+                        Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Report a Problem Card */}
+                  <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                    <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                      <div className="p-3 rounded-full bg-gray-100 mb-4">
+                        <AlertTriangle className="h-6 w-6 text-[#09261E]" />
+                      </div>
+                      <h3 className="text-lg font-semibold mb-2">Report a Problem</h3>
+                      <p className="text-gray-600 text-sm mb-6 flex-grow">
+                        Encountered an issue? Let us know so we can fix it as quickly as possible.
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-auto flex items-center"
+                        onClick={() => window.open('/help/report', '_blank')}
+                      >
+                        Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Can't find what you're looking for section */}
+                <Card className="border border-gray-200 shadow-sm bg-gray-50/80 mb-6">
+                  <CardContent className="pt-6 px-6 pb-6">
+                    <h3 className="text-lg font-semibold mb-3">Can't find what you're looking for?</h3>
+                    <p className="text-gray-600 text-sm mb-6">
+                      Our support team is here to help you with any questions or concerns that aren't addressed in our help resources.
+                    </p>
                     
-                    <div className="rounded-md border border-gray-200 divide-y divide-gray-200">
-                      <div className="p-4">
-                        <button className="flex justify-between items-center w-full text-left" aria-expanded="true">
-                          <h4 className="text-sm font-medium text-gray-900">How do I update my profile?</h4>
-                          <Plus size={18} className="text-gray-500" />
-                        </button>
-                        <div className="mt-2 text-sm text-gray-600 hidden">
-                          You can update your profile in the Account section of your settings. Make sure to click "Save Profile Changes" after making your updates.
-                        </div>
-                      </div>
-
-                      <div className="p-4">
-                        <button className="flex justify-between items-center w-full text-left" aria-expanded="false">
-                          <h4 className="text-sm font-medium text-gray-900">How do I change my email address?</h4>
-                          <Plus size={18} className="text-gray-500" />
-                        </button>
-                      </div>
-
-                      <div className="p-4">
-                        <button className="flex justify-between items-center w-full text-left" aria-expanded="false">
-                          <h4 className="text-sm font-medium text-gray-900">What happens when I deactivate my account?</h4>
-                          <Plus size={18} className="text-gray-500" />
-                        </button>
+                    <div className="bg-white p-5 rounded-md border border-gray-200">
+                      <h4 className="font-medium text-sm mb-2">Contact Support</h4>
+                      <p className="text-gray-500 text-sm mb-4">Business hours: Monday to Friday, 9 AM - 5 PM ET</p>
+                      <div className="flex flex-wrap gap-3">
+                        <Button 
+                          className="bg-[#09261E] hover:bg-[#09261E]/90 text-white font-medium"
+                          onClick={() => window.open('/help/contact', '_blank')}
+                        >
+                          Contact Us
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          className="border-gray-300"
+                          onClick={() => window.open('mailto:support@propertydeals.com')}
+                        >
+                          Email Support
+                        </Button>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-4 pt-6 border-t">
-                    <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Support</h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Card className="border-gray-200">
-                        <CardContent className="pt-6">
-                          <div className="text-center space-y-2">
-                            <div className="bg-gray-50 h-12 w-12 rounded-full flex items-center justify-center mx-auto">
-                              <HelpCircle className="h-6 w-6 text-[#09261E]" />
-                            </div>
-                            <h3 className="font-medium text-gray-900">Contact Support</h3>
-                            <p className="text-sm text-gray-500">Get help from our customer support team</p>
-                            <Button variant="outline" className="mt-2">
-                              Contact Support
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="border-gray-200">
-                        <CardContent className="pt-6">
-                          <div className="text-center space-y-2">
-                            <div className="bg-gray-50 h-12 w-12 rounded-full flex items-center justify-center mx-auto">
-                              <FileCheck className="h-6 w-6 text-[#09261E]" />
-                            </div>
-                            <h3 className="font-medium text-gray-900">Knowledge Base</h3>
-                            <p className="text-sm text-gray-500">Browse our extensive documentation</p>
-                            <Button variant="outline" className="mt-2">
-                              View Articles
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </>
             )}
 
             {activeTab === "connected" && (
