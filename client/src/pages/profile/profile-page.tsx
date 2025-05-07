@@ -740,6 +740,14 @@ export default function ProfilePage() {
           <div className="py-2 space-y-1">
             <button
               className="w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+              onClick={() => {
+                // Client-side refresh of current page content
+                queryClient.invalidateQueries({queryKey: ['/api/profile']});
+                toast({
+                  title: "Account settings refreshed",
+                  description: "Your account settings have been refreshed.",
+                });
+              }}
             >
               <UserCircle size={18} className="mr-3 text-[#09261E]" />
               <span>Account</span>
@@ -748,54 +756,64 @@ export default function ProfilePage() {
             <ProfileMenuItem
               icon={<Shield size={18} />}
               label="Security & Privacy"
-              href="/profile/security"
-              active={location === "/profile/security"}
+              onClick={() => {
+                // Client-side navigation would happen here
+                // Just for now, we'll show a toast
+                toast({
+                  title: "Coming Soon",
+                  description: "Security & Privacy settings will be available soon.",
+                });
+              }}
+              active={false}
             />
             
             <ProfileMenuItem
               icon={<CreditCard size={18} />}
-              label="Payment Methods"
-              href="/profile/payment"
-              active={location === "/profile/payment"}
+              label="Payment Methods" 
+              onClick={() => {
+                toast({
+                  title: "Coming Soon",
+                  description: "Payment Methods settings will be available soon.",
+                });
+              }}
+              active={false}
             />
             
             <ProfileMenuItem
               icon={<Bell size={18} />}
               label="Notifications"
-              href="/profile/notifications"
-              active={location === "/profile/notifications"}
+              onClick={() => {
+                toast({
+                  title: "Coming Soon",
+                  description: "Notification settings will be available soon.",
+                });
+              }}
+              active={false}
             />
             
             <ProfileMenuItem
               icon={<HelpCircle size={18} />}
               label="Help Center"
-              href="/profile/help"
-              active={location === "/profile/help"}
+              onClick={() => {
+                toast({
+                  title: "Coming Soon",
+                  description: "Help Center will be available soon.",
+                });
+              }}
+              active={false}
             />
           </div>
         </div>
         
-        {/* User info and Logout - Sticky bottom */}
+        {/* Logout Button - Sticky bottom */}
         <div className="px-3 py-3 border-t sticky bottom-0 bg-white mt-auto">
-          <div className="flex items-center px-4 py-2 mb-2">
-            <Avatar className="h-8 w-8 mr-3">
-              <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
-              <AvatarFallback className="bg-[#09261E] text-white text-sm font-medium">
-                {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 truncate">
-              <p className="text-sm font-medium truncate">{profileData.full_name || profileData.username}</p>
-              <p className="text-xs text-gray-500 truncate">@{profileData.username}</p>
-            </div>
-          </div>
-          
-          <ProfileMenuItem
-            icon={<LogOut size={18} />}
-            label="Log out"
-            danger={true}
+          <Button 
             onClick={handleLogout}
-          />
+            className="w-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+          >
+            <LogOut size={18} />
+            <span>Log Out</span>
+          </Button>
         </div>
       </div>
       
