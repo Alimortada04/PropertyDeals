@@ -1244,72 +1244,9 @@ export default function ProfilePage() {
                   <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  {/* FAQ Card - Entire card is clickable */}
-                  <a 
-                    href="/help/faq" 
-                    target="_blank" 
-                    className="block cursor-pointer group"
-                  >
-                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
-                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
-                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-gray-200 transition-colors">
-                          <HelpCircle className="h-6 w-6 text-[#09261E]" />
-                        </div>
-                        <h3 className="text-lg font-semibold mb-2 group-hover:text-[#09261E] transition-colors">Frequently Asked Questions</h3>
-                        <p className="text-gray-600 text-sm mb-6 flex-grow">
-                          Find answers to common questions about buying, selling, and investing in real estate.
-                        </p>
-                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-[#09261E] transition-colors">
-                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </a>
-
-                  {/* Suggestions Card - Entire card is clickable */}
-                  <a 
-                    href="/help/suggestions" 
-                    target="_blank" 
-                    className="block cursor-pointer group"
-                  >
-                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
-                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
-                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-gray-200 transition-colors">
-                          <MessageSquare className="h-6 w-6 text-[#09261E]" />
-                        </div>
-                        <h3 className="text-lg font-semibold mb-2 group-hover:text-[#09261E] transition-colors">Suggestions</h3>
-                        <p className="text-gray-600 text-sm mb-6 flex-grow">
-                          Submit your ideas for new features or improvements to the PropertyDeals platform.
-                        </p>
-                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-[#09261E] transition-colors">
-                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </a>
-
-                  {/* Report a Problem Card - Entire card is clickable with red hover */}
-                  <a 
-                    href="/help/report" 
-                    target="_blank" 
-                    className="block cursor-pointer group"
-                  >
-                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-red-50/50">
-                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
-                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-red-100/70 transition-colors">
-                          <AlertTriangle className="h-6 w-6 text-[#09261E] group-hover:text-red-600 transition-colors" />
-                        </div>
-                        <h3 className="text-lg font-semibold mb-2 group-hover:text-red-600 transition-colors">Report a Problem</h3>
-                        <p className="text-gray-600 text-sm mb-6 flex-grow">
-                          Encountered an issue? Let us know so we can fix it as quickly as possible.
-                        </p>
-                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-red-600 transition-colors">
-                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </a>
+                {/* Import and use the new HelpCenterTabs component */}
+                <div className="mb-8">
+                  <HelpCenterTabs />
                 </div>
 
                 {/* Can't find what you're looking for section - Green hover */}
@@ -1326,7 +1263,7 @@ export default function ProfilePage() {
                       <div className="flex flex-wrap gap-3">
                         <Button 
                           className="bg-[#09261E] hover:bg-gray-700 text-white font-medium"
-                          onClick={() => window.open('/help/contact', '_blank')}
+                          onClick={() => window.open('mailto:support@propertydeals.com')}
                         >
                           Contact Us
                         </Button>
