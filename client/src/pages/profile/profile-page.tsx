@@ -340,10 +340,11 @@ export default function ProfilePage() {
   
   // Handle checkbox changes (for showProfile)
   const handleCheckboxChange = (checked: boolean | string, field: keyof ProfileData, section: string) => {
-    // Update the state
+    // Update the state with properly typed value
+    const boolValue: boolean = typeof checked === 'boolean' ? checked : checked === 'true';
     setProfileData(prev => ({
       ...prev,
-      [field]: typeof checked === 'boolean' ? checked : checked === 'true'
+      [field]: boolValue
     }));
     
     // Mark the appropriate section as modified
@@ -519,6 +520,97 @@ export default function ProfilePage() {
     }
   };
   
+  // Handle property preferences form submission
+  const handlePropertySectionSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isPropertySectionModified) return;
+    
+    try {
+      setLoading(true);
+      
+      const propertyPayload = {
+        location: profileData.location,
+        markets: profileData.markets,
+        property_types: profileData.property_types,
+        property_conditions: profileData.property_conditions,
+        ideal_budget_min: profileData.ideal_budget_min,
+        ideal_budget_max: profileData.ideal_budget_max,
+        financing_methods: profileData.financing_methods,
+        preferred_financing_method: profileData.preferred_financing_method,
+        closing_timeline: profileData.closing_timeline,
+      };
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update(propertyPayload)
+        .eq('id', user?.id);
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Property preferences updated",
+        description: "Your property preferences have been updated successfully.",
+      });
+      
+      setIsPropertySectionModified(false);
+    } catch (error) {
+      console.error('Error updating property preferences:', error);
+      toast({
+        title: "Error updating property preferences",
+        description: "There was an error updating your property preferences. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Handle professional information form submission
+  const handleProfessionalSectionSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!isProfessionalSectionModified) return;
+    
+    try {
+      setLoading(true);
+      
+      const professionalPayload = {
+        number_of_deals_last_12_months: profileData.number_of_deals_last_12_months,
+        goal_deals_next_12_months: profileData.goal_deals_next_12_months,
+        total_deals_done: profileData.total_deals_done,
+        current_portfolio_count: profileData.current_portfolio_count,
+        preferred_inspectors: profileData.preferred_inspectors,
+        preferred_agents: profileData.preferred_agents,
+        preferred_contractors: profileData.preferred_contractors,
+        preferred_lenders: profileData.preferred_lenders,
+      };
+      
+      const { error } = await supabase
+        .from('profiles')
+        .update(professionalPayload)
+        .eq('id', user?.id);
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Deal history updated",
+        description: "Your deal history and professional information has been updated successfully.",
+      });
+      
+      setIsProfessionalSectionModified(false);
+    } catch (error) {
+      console.error('Error updating professional information:', error);
+      toast({
+        title: "Error updating professional information",
+        description: "There was an error updating your professional information. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   // Handle logout
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -601,8 +693,8 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-row">
-      {/* Settings sidebar - Positioned next to main sidebar, flush against it */}
-      <div className="w-[250px] border-r fixed left-[70px] top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-10">
+      {/* Settings sidebar - Positioned exactly flush against main sidebar */}
+      <div className="w-[250px] border-r fixed left-16 top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-10">
         {/* Profile info - Sticky top */}
         <div className="px-6 py-6 mb-2 border-b flex flex-col items-center sticky top-0 bg-white z-10">
           <div className="relative group">
@@ -708,8 +800,8 @@ export default function ProfilePage() {
       </div>
       
       {/* Main content area - Adjusted margin-left to account for both sidebars */}
-      <div className="ml-[320px] flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="ml-[266px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto">
+        <div className="max-w-3xl mx-auto space-y-6">
           <div className="border-b pb-4 mb-6">
             <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
             <p className="text-gray-500 mt-1">Manage your profile information and preferences</p>
@@ -844,6 +936,439 @@ export default function ProfilePage() {
                     disabled={loading || !isProfileSectionModified}
                   >
                     {loading ? "Saving..." : "Save Profile Changes"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Professional Information Section */}
+          <Card className="border-gray-200 shadow-sm">
+            <CardHeader className="border-b pb-4">
+              <CardTitle className="text-xl">Professional Information</CardTitle>
+              <CardDescription>Your business details and professional background</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <form onSubmit={handleProfileSectionSubmit}>
+                {/* Professional Info */}
+                <div className="space-y-4 mb-8">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Business Information</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="in_real_estate_since">
+                        In Real Estate Since
+                      </label>
+                      <Input 
+                        id="in_real_estate_since"
+                        name="in_real_estate_since"
+                        type="number"
+                        min="1900"
+                        max={new Date().getFullYear()}
+                        value={profileData.in_real_estate_since || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Year"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="business_name">
+                        Business Name
+                      </label>
+                      <Input 
+                        id="business_name"
+                        name="business_name"
+                        value={profileData.business_name || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Your business name"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">
+                      Type of Buyer
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                      {buyerTypeOptions.map((option) => (
+                        <div key={option} className="flex items-center">
+                          <Checkbox 
+                            id={`type_${option}`}
+                            checked={profileData.type_of_buyer?.includes(option)}
+                            onCheckedChange={(checked) => {
+                              if (checked === true) {
+                                handleMultiSelectChange('type_of_buyer', option, 'profile');
+                              } else {
+                                handleMultiSelectChange('type_of_buyer', option, 'profile');
+                              }
+                            }}
+                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                          />
+                          <label 
+                            htmlFor={`type_${option}`}
+                            className="ml-2 text-sm text-gray-700"
+                          >
+                            {option}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Social Media */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Social Media</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="website">
+                        <Globe className="mr-2 h-4 w-4" />
+                        Website
+                      </label>
+                      <Input 
+                        id="website"
+                        name="website"
+                        value={profileData.website || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="https://yourwebsite.com"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="instagram">
+                        <Instagram className="mr-2 h-4 w-4" />
+                        Instagram
+                      </label>
+                      <Input 
+                        id="instagram"
+                        name="instagram"
+                        value={profileData.instagram || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="@yourusername"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="facebook">
+                        <FacebookIcon className="mr-2 h-4 w-4" />
+                        Facebook
+                      </label>
+                      <Input 
+                        id="facebook"
+                        name="facebook"
+                        value={profileData.facebook || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="facebook.com/yourprofile"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="linkedin">
+                        <Linkedin className="mr-2 h-4 w-4" />
+                        LinkedIn
+                      </label>
+                      <Input 
+                        id="linkedin"
+                        name="linkedin"
+                        value={profileData.linkedin || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="linkedin.com/in/yourprofile"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pt-6 flex justify-end border-t">
+                  <Button 
+                    type="submit" 
+                    className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    disabled={loading || !isProfileSectionModified}
+                  >
+                    {loading ? "Saving..." : "Save Professional Information"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+          
+          {/* Property Preferences Section */}
+          <Card className="border-gray-200 shadow-sm">
+            <CardHeader className="border-b pb-4">
+              <CardTitle className="text-xl">Property Preferences</CardTitle>
+              <CardDescription>Tell us what kind of properties you're looking for</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <form onSubmit={handlePropertySectionSubmit}>
+                {/* Location */}
+                <div className="space-y-4 mb-8">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Location</h3>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700" htmlFor="location">
+                      Primary Location
+                    </label>
+                    <Input 
+                      id="location"
+                      name="location"
+                      value={profileData.location || ""}
+                      onChange={(e) => handleInputChange(e, 'property')}
+                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                      placeholder="City, State or Region"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">
+                      Property Types
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                      {propertyTypeOptions.map((option) => (
+                        <div key={option} className="flex items-center">
+                          <Checkbox 
+                            id={`property_type_${option}`}
+                            checked={profileData.property_types?.includes(option)}
+                            onCheckedChange={(checked) => {
+                              if (checked === true) {
+                                handleMultiSelectChange('property_types', option, 'property');
+                              } else {
+                                handleMultiSelectChange('property_types', option, 'property');
+                              }
+                            }}
+                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                          />
+                          <label 
+                            htmlFor={`property_type_${option}`}
+                            className="ml-2 text-sm text-gray-700"
+                          >
+                            {option}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">
+                      Property Conditions
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                      {propertyConditionOptions.map((option) => (
+                        <div key={option} className="flex items-center">
+                          <Checkbox 
+                            id={`property_condition_${option}`}
+                            checked={profileData.property_conditions?.includes(option)}
+                            onCheckedChange={(checked) => {
+                              if (checked === true) {
+                                handleMultiSelectChange('property_conditions', option, 'property');
+                              } else {
+                                handleMultiSelectChange('property_conditions', option, 'property');
+                              }
+                            }}
+                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                          />
+                          <label 
+                            htmlFor={`property_condition_${option}`}
+                            className="ml-2 text-sm text-gray-700"
+                          >
+                            {option}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Budget & Financing */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Budget & Financing</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="ideal_budget_min">
+                        Minimum Budget
+                      </label>
+                      <Input 
+                        id="ideal_budget_min"
+                        name="ideal_budget_min"
+                        type="number"
+                        value={profileData.ideal_budget_min || ""}
+                        onChange={(e) => handleInputChange(e, 'property')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="$"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="ideal_budget_max">
+                        Maximum Budget
+                      </label>
+                      <Input 
+                        id="ideal_budget_max"
+                        name="ideal_budget_max"
+                        type="number"
+                        value={profileData.ideal_budget_max || ""}
+                        onChange={(e) => handleInputChange(e, 'property')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="$"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">
+                      Financing Methods
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+                      {financingMethodOptions.map((option) => (
+                        <div key={option} className="flex items-center">
+                          <Checkbox 
+                            id={`financing_method_${option}`}
+                            checked={profileData.financing_methods?.includes(option)}
+                            onCheckedChange={(checked) => {
+                              if (checked) {
+                                handleMultiSelectChange('financing_methods', option, 'property');
+                              } else {
+                                handleMultiSelectChange('financing_methods', option, 'property');
+                              }
+                            }}
+                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                          />
+                          <label 
+                            htmlFor={`financing_method_${option}`}
+                            className="ml-2 text-sm text-gray-700"
+                          >
+                            {option}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700" htmlFor="closing_timeline">
+                      Closing Timeline
+                    </label>
+                    <Select 
+                      value={profileData.closing_timeline || ""} 
+                      onValueChange={(value) => handleSelectChange(value, 'closing_timeline', 'property')}
+                    >
+                      <SelectTrigger className="w-full border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50">
+                        <SelectValue placeholder="Select your preferred closing timeline" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {closingTimelineOptions.map((option) => (
+                          <SelectItem key={option} value={option}>{option}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="pt-6 flex justify-end border-t">
+                  <Button 
+                    type="submit" 
+                    className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    disabled={loading || !isPropertySectionModified}
+                  >
+                    {loading ? "Saving..." : "Save Property Preferences"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+          
+          {/* Deal History Section */}
+          <Card className="border-gray-200 shadow-sm">
+            <CardHeader className="border-b pb-4">
+              <CardTitle className="text-xl">Deal History & Goals</CardTitle>
+              <CardDescription>Share your real estate track record and future goals</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <form onSubmit={handleProfessionalSectionSubmit}>
+                <div className="space-y-4 mb-8">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Deal Information</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="number_of_deals_last_12_months">
+                        Deals in Last 12 Months
+                      </label>
+                      <Input 
+                        id="number_of_deals_last_12_months"
+                        name="number_of_deals_last_12_months"
+                        type="number"
+                        min="0"
+                        value={profileData.number_of_deals_last_12_months || ""}
+                        onChange={(e) => handleInputChange(e, 'professional')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Number of deals"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="goal_deals_next_12_months">
+                        Target Deals Next 12 Months
+                      </label>
+                      <Input 
+                        id="goal_deals_next_12_months"
+                        name="goal_deals_next_12_months"
+                        type="number"
+                        min="0"
+                        value={profileData.goal_deals_next_12_months || ""}
+                        onChange={(e) => handleInputChange(e, 'professional')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Number of deals"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="total_deals_done">
+                        Total Deals Done
+                      </label>
+                      <Input 
+                        id="total_deals_done"
+                        name="total_deals_done"
+                        type="number"
+                        min="0"
+                        value={profileData.total_deals_done || ""}
+                        onChange={(e) => handleInputChange(e, 'professional')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Number of deals"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="current_portfolio_count">
+                        Current Portfolio Size
+                      </label>
+                      <Input 
+                        id="current_portfolio_count"
+                        name="current_portfolio_count"
+                        type="number"
+                        min="0"
+                        value={profileData.current_portfolio_count || ""}
+                        onChange={(e) => handleInputChange(e, 'professional')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Number of properties"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pt-6 flex justify-end border-t">
+                  <Button 
+                    type="submit" 
+                    className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    disabled={loading || !isProfessionalSectionModified}
+                  >
+                    {loading ? "Saving..." : "Save Deal History"}
                   </Button>
                 </div>
               </form>
