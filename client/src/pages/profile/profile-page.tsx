@@ -947,16 +947,9 @@ export default function ProfilePage() {
                   </CardHeader>
                   <CardContent className="pt-6">
                     <form onSubmit={handleProfileSectionSubmit}>
-                      <Tabs defaultValue="general" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 mb-6">
-                          <TabsTrigger value="general" className="text-sm">General Information</TabsTrigger>
-                          <TabsTrigger value="business" className="text-sm">Business Information</TabsTrigger>
-                          <TabsTrigger value="social" className="text-sm">Social Media</TabsTrigger>
-                        </TabsList>
-                        
-                        <TabsContent value="general" className="space-y-6">
-                          {/* General Information Section */}
-                          <div className="space-y-4 mb-8">
+                      <div className="space-y-8">
+                        {/* General Information Section */}
+                        <div className="space-y-4">
                             <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
                               <span>General Information</span>
                               {!profileData.full_name || !profileData.username ? (
@@ -1155,271 +1148,23 @@ export default function ProfilePage() {
                         </div>
                       </div>
                       
-                      <div className="pt-6 flex justify-end border-t">
-                        <Button 
-                          type="submit" 
-                          className={`flex items-center transition-all duration-200 ${
-                            loading ? "bg-gray-400" : isProfileSectionModified ? "bg-[#09261E] hover:bg-[#09261E]/90" : "bg-gray-200 text-gray-500"
-                          } text-white`}
-                          disabled={loading || !isProfileSectionModified}
-                        >
-                          {loading ? (
-                            <>
-                              <span className="h-4 w-4 mr-2 rounded-full border-2 border-t-transparent border-white animate-spin"></span>
-                              Saving...
-                            </>
-                          ) : (
-                            <>
-                              <Save className="mr-2 h-4 w-4" />
-                              Save Profile Changes
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                        </TabsContent>
-                        
-                        <TabsContent value="business" className="space-y-6">
-                          {/* Business Information will go here */}
-                          <div className="p-4 text-center bg-gray-50 rounded-md">
-                            <p className="text-gray-500">Business information section coming soon</p>
-                          </div>
-                        </TabsContent>
-                        
-                        <TabsContent value="social" className="space-y-6">
-                          {/* Social Media will go here */}
-                          <div className="p-4 text-center bg-gray-50 rounded-md">
-                            <p className="text-gray-500">Social media section coming soon</p>
-                          </div>
-                        </TabsContent>
-                      </Tabs>
-                    </form>
-                  </CardContent>
-                </Card>
-                
-                {/* Profile Images Section */}
-                <Card className="border-gray-200 shadow-sm">
-                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
-                    <div className="flex items-center">
-                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
-                        <Camera className="h-5 w-5 text-[#09261E]" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-xl">Profile Uploads</CardTitle>
-                        <CardDescription>Upload your profile photo and banner image</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-6 space-y-8">
-                    <div className="space-y-8">
-                      {/* Profile Photo */}
-                      <div>
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center mb-4">
-                          <span>Profile Photo</span>
-                          {!profileData.profile_photo_url ? (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
-                                    Add photo
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p className="text-sm">Profiles with photos get 11x more engagement</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                              ✓ Uploaded
-                            </span>
-                          )}
-                        </h3>
-                        <div className="flex flex-col md:flex-row items-start md:items-center">
-                          <div className="mr-6 mb-4 md:mb-0">
-                            <div className="relative group">
-                              <Avatar className="h-24 w-24 border-2 border-gray-200 group-hover:border-[#09261E]/20 transition-all duration-200">
-                                {profileData.profile_photo_url ? (
-                                  <AvatarImage src={profileData.profile_photo_url} />
-                                ) : (
-                                  <AvatarFallback className="bg-[#09261E] text-white text-2xl font-semibold">
-                                    {profileData.full_name ? profileData.full_name.charAt(0) : "PD"}
-                                  </AvatarFallback>
-                                )}
-                              </Avatar>
-                              <button 
-                                onClick={() => fileInputRef.current?.click()}
-                                className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 rounded-full transition-opacity duration-200"
-                              >
-                                <Camera className="h-8 w-8 text-white" />
-                              </button>
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <div className="p-3 bg-gray-50 rounded-md border border-gray-200 mb-3">
-                              <p className="text-sm text-gray-700 flex items-start">
-                                <AlertTriangle className="h-4 w-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" />
-                                <span>
-                                  Upload a professional photo to make your profile more approachable.
-                                  Square images work best.
+                      {/* Business Information Section */}
+                      <div className="space-y-4 pt-8 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Business Information</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full cursor-help">
+                                  Optional
                                 </span>
-                              </p>
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                              <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => fileInputRef.current?.click()}
-                                className="mr-2"
-                              >
-                                <Upload className="mr-2 h-4 w-4" />
-                                Upload Photo
-                              </Button>
-                              
-                              {profileData.profile_photo_url && (
-                                <Button
-                                  type="button"
-                                  variant="outline"
-                                  className="text-red-600 hover:text-red-700 hover:bg-red-50/50 border-red-200"
-                                  onClick={async () => {
-                                    if (window.confirm("Are you sure you want to remove your profile photo?")) {
-                                      setProfileData(prev => ({
-                                        ...prev,
-                                        profile_photo_url: null
-                                      }));
-                                      setIsProfileSectionModified(true);
-                                    }
-                                  }}
-                                >
-                                  <Trash className="mr-2 h-4 w-4" />
-                                  Remove
-                                </Button>
-                              )}
-                            </div>
-                            <p className="text-xs mt-2 text-gray-500">
-                              Recommended size: 400 x 400 pixels (JPG, PNG)
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Banner Image */}
-                      <div className="pt-6 border-t">
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center mb-4">
-                          <span>Banner Image</span>
-                          {!profileData.profile_banner_url ? (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
-                                    Recommended
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p className="text-sm">A banner image enhances your professional presence</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                              ✓ Uploaded
-                            </span>
-                          )}
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-sm">Share your business details to help connect with partners</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </h3>
-                        <div>
-                          <div className="relative w-full h-44 rounded-md overflow-hidden mb-4 bg-gray-100 group">
-                            {profileData.profile_banner_url ? (
-                              <>
-                                <img 
-                                  src={profileData.profile_banner_url} 
-                                  alt="Profile banner" 
-                                  className="w-full h-full object-cover"
-                                />
-                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                                  <Button
-                                    type="button"
-                                    onClick={() => bannerInputRef.current?.click()}
-                                    className="bg-white/80 hover:bg-white text-gray-800 mr-2"
-                                  >
-                                    <Camera className="mr-2 h-4 w-4" />
-                                    Change
-                                  </Button>
-                                  
-                                  <Button
-                                    type="button"
-                                    variant="outline"
-                                    className="bg-white/80 hover:bg-white text-red-600 hover:text-red-700"
-                                    onClick={async () => {
-                                      if (window.confirm("Are you sure you want to remove your banner image?")) {
-                                        setProfileData(prev => ({
-                                          ...prev,
-                                          profile_banner_url: null
-                                        }));
-                                        setIsProfileSectionModified(true);
-                                      }
-                                    }}
-                                  >
-                                    <Trash className="mr-2 h-4 w-4" />
-                                    Remove
-                                  </Button>
-                                </div>
-                              </>
-                            ) : (
-                              <div className="h-full w-full border-2 border-dashed border-gray-200 flex flex-col items-center justify-center p-4">
-                                <div className="p-3 bg-white rounded-md mb-2 shadow-sm">
-                                  <p className="text-gray-600 text-sm">Add a banner image to enhance your profile</p>
-                                </div>
-                                <p className="text-xs text-gray-400">Recommended size: 1200 x 300 pixels</p>
-                                <Button
-                                  type="button"
-                                  onClick={() => bannerInputRef.current?.click()}
-                                  className="mt-3 bg-white text-gray-800 border border-gray-300"
-                                >
-                                  <Upload className="mr-2 h-4 w-4" />
-                                  Upload Banner
-                                </Button>
-                              </div>
-                            )}
-                          </div>
-                          {profileData.profile_banner_url ? null : (
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={() => bannerInputRef.current?.click()}
-                              className="mr-2"
-                            >
-                              <Upload className="mr-2 h-4 w-4" />
-                              Upload Banner
-                            </Button>
-                          )}
-                          <p className="text-xs text-gray-500 mt-2 flex items-center">
-                            <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span>
-                            A banner image will appear at the top of your public profile page
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-
-                {/* Professional Information Section */}
-                <Card className="border-gray-200 shadow-sm">
-                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
-                    <div className="flex items-center">
-                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
-                        <Briefcase className="h-5 w-5 text-[#09261E]" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-xl">Professional Information</CardTitle>
-                        <CardDescription>Your business details and professional background</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-6 space-y-8">
-                    <form onSubmit={handleProfileSectionSubmit}>
-                      {/* Professional Info */}
-                      <div className="space-y-4 mb-8">
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Business Information</h3>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
@@ -1485,9 +1230,23 @@ export default function ProfilePage() {
                         </div>
                       </div>
                       
-                      {/* Social Media */}
-                      <div className="space-y-4 mb-8 pt-6 border-t">
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Social Media</h3>
+                      {/* Social Media Section */}
+                      <div className="space-y-4 pt-8 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Social Media</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full cursor-help">
+                                  Optional
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-sm">Add your social profiles to expand your network</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </h3>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
@@ -1555,155 +1314,33 @@ export default function ProfilePage() {
                       <div className="pt-6 flex justify-end border-t">
                         <Button 
                           type="submit" 
-                          className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                          className={`flex items-center transition-all duration-200 ${
+                            loading ? "bg-gray-400" : isProfileSectionModified ? "bg-[#09261E] hover:bg-[#09261E]/90" : "bg-gray-200 text-gray-500"
+                          } text-white`}
                           disabled={loading || !isProfileSectionModified}
                         >
-                          {loading ? "Saving..." : "Save Profile Changes"}
+                          {loading ? (
+                            <>
+                              <span className="h-4 w-4 mr-2 rounded-full border-2 border-t-transparent border-white animate-spin"></span>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="mr-2 h-4 w-4" />
+                              Save Profile Changes
+                            </>
+                          )}
                         </Button>
+                      </div>
                       </div>
                     </form>
                   </CardContent>
                 </Card>
 
-                {/* Profile Uploads Card */}
-                <Card className="border-gray-200 shadow-sm bg-white">
-                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
-                    <div className="flex items-center">
-                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
-                        <Camera className="h-5 w-5 text-[#09261E]" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-xl">Profile Uploads</CardTitle>
-                        <CardDescription>Your profile photo and banner image</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Profile Photo Upload Section */}
-                      <div className="space-y-4">
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
-                          <span>Profile Photo</span>
-                          {!profileData.profile_photo_url ? (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344]/20 text-[#803344] rounded-full cursor-help">
-                                    Recommended
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent className="p-3 bg-white border shadow-md rounded-md max-w-[300px]">
-                                  <p className="text-sm">Profiles with photos get 11x more engagement and build trust with potential partners.</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                              ✓ Uploaded
-                            </span>
-                          )}
-                        </h3>
-                        
-                        <div className="flex flex-col items-center p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-[#09261E]/30 transition-colors duration-200">
-                          <div className="mb-4 relative">
-                            <Avatar className="h-32 w-32 border-2 border-gray-200">
-                              {profileData.profile_photo_url ? (
-                                <AvatarImage src={profileData.profile_photo_url} alt="Profile Photo" />
-                              ) : (
-                                <AvatarFallback className="bg-[#09261E] text-white text-xl font-semibold">
-                                  {profileData.full_name ? profileData.full_name.substring(0, 2).toUpperCase() : "PD"}
-                                </AvatarFallback>
-                              )}
-                            </Avatar>
-                            
-                            <button 
-                              onClick={() => fileInputRef.current?.click()}
-                              className="absolute -bottom-1 -right-1 bg-white p-2 rounded-full border shadow-sm hover:bg-[#09261E]/10 transition-all duration-200"
-                            >
-                              <Camera size={18} className="text-gray-600" />
-                            </button>
-                          </div>
-                          
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="mt-2 transition-all duration-300 hover:bg-gray-200 active:bg-[#09261E]/20 focus:bg-[#09261E]/10"
-                            onClick={() => fileInputRef.current?.click()}
-                          >
-                            <Upload className="mr-2 h-4 w-4" />
-                            {profileData.profile_photo_url ? "Change Photo" : "Upload Photo"}
-                          </Button>
-                          
-                          <p className="text-xs text-gray-500 mt-3 text-center">
-                            Recommended: Square image, at least 400x400px
-                          </p>
-                        </div>
-                      </div>
-                      
-                      {/* Banner Image Upload Section */}
-                      <div className="space-y-4">
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
-                          <span>Banner Image</span>
-                          {!profileData.profile_banner_url ? (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full cursor-help">
-                                    Optional
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent className="p-3 bg-white border shadow-md rounded-md max-w-[300px]">
-                                  <p className="text-sm">A banner image enhances your professional presence and makes your profile stand out.</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                              ✓ Uploaded
-                            </span>
-                          )}
-                        </h3>
-                        
-                        <div className="flex flex-col items-center p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-[#09261E]/30 transition-colors duration-200">
-                          <div className="w-full h-[140px] mb-4 relative rounded-md overflow-hidden">
-                            {profileData.profile_banner_url ? (
-                              <img 
-                                src={profileData.profile_banner_url} 
-                                alt="Profile Banner" 
-                                className="w-full h-full object-cover" 
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gradient-to-r from-gray-200 to-gray-300 flex items-center justify-center">
-                                <div className="text-gray-400 text-sm">No banner image</div>
-                              </div>
-                            )}
-                            
-                            <button 
-                              onClick={() => bannerInputRef.current?.click()}
-                              className="absolute bottom-2 right-2 bg-white p-2 rounded-full border shadow-sm hover:bg-[#09261E]/10 transition-all duration-200"
-                            >
-                              <Camera size={18} className="text-gray-600" />
-                            </button>
-                          </div>
-                          
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="mt-2 transition-all duration-300 hover:bg-gray-200 active:bg-[#09261E]/20 focus:bg-[#09261E]/10"
-                            onClick={() => bannerInputRef.current?.click()}
-                          >
-                            <Upload className="mr-2 h-4 w-4" />
-                            {profileData.profile_banner_url ? "Change Banner" : "Upload Banner"}
-                          </Button>
-                          
-                          <p className="text-xs text-gray-500 mt-3 text-center">
-                            Recommended: 1200x300px, JPG or PNG format
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+
+
+
+
               </>
             )}
             
