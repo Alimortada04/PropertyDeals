@@ -1175,6 +1175,89 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 
+                {/* Profile Uploads Section */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Profile Uploads</h3>
+                  
+                  {/* Profile Picture */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-sm text-gray-700">Profile Picture</h4>
+                      <div className="flex items-start space-x-4">
+                        <Avatar className="h-24 w-24 rounded-md ring-2 ring-offset-2 ring-[#09261E]/20">
+                          <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name} />
+                          <AvatarFallback className="bg-[#09261E] text-white text-lg font-medium">
+                            {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="space-y-2">
+                          <p className="text-xs text-gray-500">Upload a square image for your profile picture. This will be visible on your profile and across the platform.</p>
+                          <Button 
+                            type="button" 
+                            variant="outline" 
+                            size="sm"
+                            className="text-xs"
+                            onClick={() => fileInputRef.current?.click()}
+                          >
+                            <Upload className="h-3 w-3 mr-1" />
+                            {profileData.profile_photo_url ? 'Replace Photo' : 'Upload Photo'}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Banner Image */}
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-sm text-gray-700">Banner Image</h4>
+                      <div className="space-y-3">
+                        {profileData.profile_banner_url ? (
+                          <div className="relative rounded-md overflow-hidden h-24 bg-gray-100">
+                            <img 
+                              src={profileData.profile_banner_url} 
+                              alt="Profile Banner" 
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <Button 
+                                type="button" 
+                                variant="secondary" 
+                                size="sm"
+                                className="text-xs"
+                                onClick={() => bannerInputRef.current?.click()}
+                              >
+                                <Upload className="h-3 w-3 mr-1" />
+                                Replace Banner
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="border-2 border-dashed border-gray-300 rounded-md h-24 flex items-center justify-center bg-gray-50">
+                            <Button 
+                              type="button" 
+                              variant="outline" 
+                              size="sm"
+                              className="text-xs"
+                              onClick={() => bannerInputRef.current?.click()}
+                            >
+                              <Upload className="h-3 w-3 mr-1" />
+                              Upload Banner Image
+                            </Button>
+                          </div>
+                        )}
+                        <p className="text-xs text-gray-500">Recommended dimensions: 1200x300px. This banner will appear at the top of your public profile page.</p>
+                      </div>
+                      
+                      <input 
+                        ref={bannerInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleBannerImageChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+                
                 {/* Profile Stats */}
                 <div className="pt-6 border-t">
                   <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider mb-4">Profile Stats</h3>
