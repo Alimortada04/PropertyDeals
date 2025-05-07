@@ -2747,7 +2747,11 @@ export default function ProfilePage() {
                     </form>
                   </CardContent>
                 </Card>
-
+              </>
+            )}
+            
+            {activeTab === "connections" && (
+              <>
                 {/* Professionals Section */}
                 <Card className="border-gray-200 shadow-sm">
                   <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
