@@ -1396,9 +1396,160 @@ export default function ProfilePage() {
                   </CardContent>
                 </Card>
 
-
-
-
+                {/* Profile Uploads Card */}
+                <Card className="border-gray-200 shadow-sm bg-white mt-6">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <Camera className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Profile Uploads</CardTitle>
+                        <CardDescription>Your profile photo and banner image</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Profile Photo Upload */}
+                      <div>
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center mb-4">
+                          <span>Profile Photo</span>
+                          {!profileData.profile_photo_url ? (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
+                                    ⚠️ Recommended
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="text-sm">Add a profile photo to improve your visibility</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ) : (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              ✓ Complete
+                            </span>
+                          )}
+                        </h3>
+                        
+                        <div className="flex flex-col items-center">
+                          <div 
+                            className="relative mb-4 w-32 h-32 rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center overflow-hidden"
+                          >
+                            {profileData.profile_photo_url ? (
+                              <img 
+                                src={profileData.profile_photo_url} 
+                                alt="Profile" 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <UserCircle className="w-20 h-20 text-gray-400" />
+                            )}
+                          </div>
+                          
+                          <div className="space-y-2 w-full max-w-[200px]">
+                            <Button 
+                              type="button"
+                              variant="outline"
+                              onClick={() => fileInputRef.current?.click()}
+                              className="w-full bg-white hover:bg-gray-100 transition-colors"
+                            >
+                              <Upload className="mr-2 h-4 w-4" />
+                              Upload Photo
+                            </Button>
+                            
+                            <input
+                              type="file"
+                              ref={fileInputRef}
+                              onChange={handleProfilePhotoChange}
+                              className="hidden"
+                              accept="image/*"
+                            />
+                            
+                            {profileData.profile_photo_url && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                                onClick={handleRemoveProfilePhoto}
+                              >
+                                <Trash className="mr-2 h-4 w-4" />
+                                Remove Photo
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Banner Image Upload */}
+                      <div>
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center mb-4">
+                          <span>Banner Image</span>
+                          {!profileData.profile_banner_url ? (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+                              Optional
+                            </span>
+                          ) : (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              ✓ Added
+                            </span>
+                          )}
+                        </h3>
+                        
+                        <div className="flex flex-col items-center">
+                          <div 
+                            className="relative mb-4 w-full h-36 rounded-md bg-gray-100 border-2 border-gray-200 flex items-center justify-center overflow-hidden"
+                          >
+                            {profileData.profile_banner_url ? (
+                              <img 
+                                src={profileData.profile_banner_url} 
+                                alt="Banner" 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <span className="text-gray-400 text-sm">No banner image</span>
+                            )}
+                          </div>
+                          
+                          <div className="space-y-2 w-full max-w-[200px]">
+                            <Button 
+                              type="button"
+                              variant="outline"
+                              onClick={() => bannerInputRef.current?.click()}
+                              className="w-full bg-white hover:bg-gray-100 transition-colors"
+                            >
+                              <Upload className="mr-2 h-4 w-4" />
+                              Upload Banner
+                            </Button>
+                            
+                            <input
+                              type="file"
+                              ref={bannerInputRef}
+                              onChange={handleBannerImageChange}
+                              className="hidden"
+                              accept="image/*"
+                            />
+                            
+                            {profileData.profile_banner_url && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+                                onClick={handleRemoveBannerImage}
+                              >
+                                <Trash className="mr-2 h-4 w-4" />
+                                Remove Banner
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
               </>
             )}
