@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useLocation, Link } from "wouter";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -168,6 +168,9 @@ export default function ProfilePage() {
   const [isProfileSectionModified, setIsProfileSectionModified] = useState(false);
   const [isPropertySectionModified, setIsPropertySectionModified] = useState(false);
   const [isProfessionalSectionModified, setIsProfessionalSectionModified] = useState(false);
+  
+  // Track active settings tab
+  const [activeTab, setActiveTab] = useState("account");
   
   // Default profile data
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -750,67 +753,67 @@ export default function ProfilePage() {
         <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent pb-16">
           {/* Menu Items */}
           <div className="py-2 space-y-1">
-            <button
-              className="w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+            <ProfileMenuItem
+              icon={<UserCircle size={18} />}
+              label="Account"
+              active={activeTab === "account"}
               onClick={() => {
+                setActiveTab("account");
                 // Client-side refresh of current page content
                 queryClient.invalidateQueries({queryKey: ['/api/profile']});
-                toast({
-                  title: "Account settings refreshed",
-                  description: "Your account settings have been refreshed.",
-                });
               }}
-            >
-              <UserCircle size={18} className="mr-3 text-[#09261E]" />
-              <span>Account</span>
-            </button>
+            />
             
             <ProfileMenuItem
               icon={<Bell size={18} />}
               label="Notifications"
               onClick={() => {
+                setActiveTab("notifications");
                 toast({
                   title: "Coming Soon",
                   description: "Notification settings will be available soon.",
                 });
               }}
-              active={false}
+              active={activeTab === "notifications"}
             />
             
             <ProfileMenuItem
               icon={<HelpCircle size={18} />}
               label="Help Center"
               onClick={() => {
+                setActiveTab("help");
                 toast({
                   title: "Coming Soon",
                   description: "Help Center will be available soon.",
                 });
               }}
-              active={false}
+              active={activeTab === "help"}
             />
             
             <ProfileMenuItem
-              icon={<Link size={18} />}
+              icon={<LinkIcon size={18} />}
               label="Connected Accounts"
               onClick={() => {
+                setActiveTab("connected");
                 toast({
                   title: "Coming Soon",
                   description: "Connected Accounts settings will be available soon.",
                 });
               }}
-              active={false}
+              active={activeTab === "connected"}
             />
             
             <ProfileMenuItem
               icon={<CreditCard size={18} />}
               label="Memberships" 
               onClick={() => {
+                setActiveTab("memberships");
                 toast({
                   title: "Coming Soon",
                   description: "Membership settings will be available soon.",
                 });
               }}
-              active={false}
+              active={activeTab === "memberships"}
             />
           </div>
         </div>
@@ -852,6 +855,8 @@ export default function ProfilePage() {
             <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
             <p className="text-gray-500 mt-1">Manage your profile information and preferences</p>
           </div>
+          
+          {/* Tab Content - We'll conditionally show different content based on the active sidebar menu item */}
           
           {/* Profile Section */}
           <Card className="border-gray-200 shadow-sm">
