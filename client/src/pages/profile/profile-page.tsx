@@ -70,7 +70,7 @@ import {
 import { Instagram, Linkedin, Facebook as FacebookIcon } from "lucide-react";
 
 // Import the Help Center components
-import { HelpCenterTabs } from "@/components/help";
+import { HelpFAQ, HelpSuggestions, HelpReport } from "@/components/help";
 
 interface ProfileData {
   id: string;
@@ -198,6 +198,13 @@ export default function ProfilePage() {
   
   // Track active settings tab
   const [activeTab, setActiveTab] = useState(initialTab);
+  
+  // Handle tab change without full page reload
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    // Update the URL without triggering a navigation/reload
+    window.history.pushState({}, '', `/profile/${tab}`);
+  };
   
   // Default profile data
   const [profileData, setProfileData] = useState<ProfileData>({
@@ -748,42 +755,42 @@ export default function ProfilePage() {
                 icon={<User size={18} />}
                 label="Account"
                 active={activeTab === "account"}
-                href="/profile/account"
+                onClick={() => handleTabChange("account")}
               />
               
               <ProfileMenuItem
                 icon={<BellRing size={18} />}
                 label="Notifications"
                 active={activeTab === "notifications"}
-                href="/profile/notifications"
+                onClick={() => handleTabChange("notifications")}
               />
               
               <ProfileMenuItem
                 icon={<LinkIcon size={18} />}
                 label="Integrations"
                 active={activeTab === "connected"}
-                href="/profile/connected"
+                onClick={() => handleTabChange("connected")}
               />
               
               <ProfileMenuItem
                 icon={<CreditCard size={18} />}
                 label="Memberships"
                 active={activeTab === "memberships"}
-                href="/profile/memberships"
+                onClick={() => handleTabChange("memberships")}
               />
               
               <ProfileMenuItem
                 icon={<Shield size={18} />}
                 label="Security & Privacy"
                 active={activeTab === "security"}
-                href="/profile/security"
+                onClick={() => handleTabChange("security")}
               />
               
               <ProfileMenuItem
                 icon={<HelpCircle size={18} />}
                 label="Help Center"
                 active={activeTab === "help"}
-                href="/profile/help"
+                onClick={() => handleTabChange("help")}
               />
             </div>
           </div>
@@ -1247,9 +1254,69 @@ export default function ProfilePage() {
                   <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
                 </div>
                 
-                {/* Import and use the new HelpCenterTabs component */}
-                <div className="mb-8">
-                  <HelpCenterTabs />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  {/* FAQ Card - Entire card is clickable */}
+                  <a 
+                    href="/profile/help/faq" 
+                    className="block cursor-pointer group"
+                  >
+                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
+                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-gray-200 transition-colors">
+                          <HelpCircle className="h-6 w-6 text-[#09261E]" />
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2 group-hover:text-[#09261E] transition-colors">Frequently Asked Questions</h3>
+                        <p className="text-gray-600 text-sm mb-6 flex-grow">
+                          Find answers to common questions about buying, selling, and investing in real estate.
+                        </p>
+                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-[#09261E] transition-colors">
+                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </a>
+
+                  {/* Suggestions Card - Entire card is clickable */}
+                  <a 
+                    href="/profile/help/suggestions" 
+                    className="block cursor-pointer group"
+                  >
+                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-gray-50/80">
+                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-gray-200 transition-colors">
+                          <MessageSquare className="h-6 w-6 text-[#09261E]" />
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2 group-hover:text-[#09261E] transition-colors">Suggestions</h3>
+                        <p className="text-gray-600 text-sm mb-6 flex-grow">
+                          Submit your ideas for new features or improvements to the PropertyDeals platform.
+                        </p>
+                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-[#09261E] transition-colors">
+                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </a>
+
+                  {/* Report a Problem Card - Entire card is clickable with red hover */}
+                  <a 
+                    href="/profile/help/report" 
+                    className="block cursor-pointer group"
+                  >
+                    <Card className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full hover:bg-red-50/50">
+                      <CardContent className="pt-6 px-6 pb-6 flex flex-col items-start h-full">
+                        <div className="p-3 rounded-full bg-gray-100 mb-4 group-hover:bg-red-100/70 transition-colors">
+                          <AlertTriangle className="h-6 w-6 text-[#09261E] group-hover:text-red-600 transition-colors" />
+                        </div>
+                        <h3 className="text-lg font-semibold mb-2 group-hover:text-red-600 transition-colors">Report a Problem</h3>
+                        <p className="text-gray-600 text-sm mb-6 flex-grow">
+                          Encountered an issue? Let us know so we can fix it as quickly as possible.
+                        </p>
+                        <div className="mt-auto flex items-center text-sm font-medium text-gray-600 group-hover:text-red-600 transition-colors">
+                          Visit page <ArrowRight className="h-4 w-4 ml-2" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </a>
                 </div>
 
                 {/* Can't find what you're looking for section - Green hover */}
@@ -1281,6 +1348,72 @@ export default function ProfilePage() {
                     </div>
                   </CardContent>
                 </Card>
+              </>
+            )}
+            
+            {location.includes('/profile/help/faq') && (
+              <>
+                <div className="border-b pb-4 mb-6">
+                  <h1 className="text-2xl font-bold text-gray-900">Help Center</h1>
+                  <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
+                </div>
+                <div className="mb-8">
+                  <HelpFAQ />
+                </div>
+                <div className="flex justify-start mt-8">
+                  <Button
+                    variant="outline"
+                    onClick={() => window.history.pushState({}, '', '/profile/help')}
+                    className="flex items-center"
+                  >
+                    <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
+                    Back to Help Center
+                  </Button>
+                </div>
+              </>
+            )}
+            
+            {location.includes('/profile/help/suggestions') && (
+              <>
+                <div className="border-b pb-4 mb-6">
+                  <h1 className="text-2xl font-bold text-gray-900">Help Center</h1>
+                  <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
+                </div>
+                <div className="mb-8">
+                  <HelpSuggestions />
+                </div>
+                <div className="flex justify-start mt-8">
+                  <Button
+                    variant="outline"
+                    onClick={() => window.history.pushState({}, '', '/profile/help')}
+                    className="flex items-center"
+                  >
+                    <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
+                    Back to Help Center
+                  </Button>
+                </div>
+              </>
+            )}
+            
+            {location.includes('/profile/help/report') && (
+              <>
+                <div className="border-b pb-4 mb-6">
+                  <h1 className="text-2xl font-bold text-gray-900">Help Center</h1>
+                  <p className="text-gray-500 mt-1">Get the support you need with our help resources, submit feedback, or report issues with the platform.</p>
+                </div>
+                <div className="mb-8">
+                  <HelpReport />
+                </div>
+                <div className="flex justify-start mt-8">
+                  <Button
+                    variant="outline"
+                    onClick={() => window.history.pushState({}, '', '/profile/help')}
+                    className="flex items-center"
+                  >
+                    <ArrowRight className="h-4 w-4 mr-2 rotate-180" />
+                    Back to Help Center
+                  </Button>
+                </div>
               </>
             )}
 
