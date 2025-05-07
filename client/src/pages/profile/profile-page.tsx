@@ -188,7 +188,7 @@ export default function ProfilePage() {
   
   // Determine active tab from URL (either from hash or path segments)
   const initialTab = useMemo(() => {
-    const validTabs = ["account", "notifications", "connected", "memberships", "security", "help"];
+    const validTabs = ["account", "property_preferences", "connections", "notifications", "integrations", "connected", "memberships", "security", "help"];
     
     // Check hash-based routing first (#help, #account, etc.)
     if (location.includes('#')) {
@@ -200,6 +200,9 @@ export default function ProfilePage() {
     const pathSegments = location.split('/');
     const lastSegment = pathSegments[pathSegments.length - 1];
     if (validTabs.includes(lastSegment)) return lastSegment;
+    
+    // Map legacy tab names to new ones
+    if (lastSegment === 'connected') return 'integrations';
     
     return "account"; // Default tab
   }, [location]);
@@ -227,7 +230,7 @@ export default function ProfilePage() {
       const path = window.location.pathname;
       const pathSegments = path.split('/');
       const lastSegment = pathSegments[pathSegments.length - 1];
-      const validTabs = ["account", "notifications", "connected", "memberships", "security", "help"];
+      const validTabs = ["account", "property_preferences", "connections", "notifications", "integrations", "memberships", "security", "help"];
       
       if (validTabs.includes(lastSegment)) {
         setActiveTab(lastSegment);

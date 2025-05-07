@@ -246,6 +246,18 @@ function Router() {
           <ProfilePage />
         </AppLayout>
       </Route>
+
+      <Route path="/profile/property_preferences">
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
+
+      <Route path="/profile/connections">
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      </Route>
       
       <Route path="/profile/notifications">
         <AppLayout>
@@ -253,7 +265,7 @@ function Router() {
         </AppLayout>
       </Route>
       
-      <Route path="/profile/connected">
+      <Route path="/profile/integrations">
         <AppLayout>
           <ProfilePage />
         </AppLayout>
