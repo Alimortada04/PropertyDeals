@@ -912,7 +912,65 @@ export default function ProfilePage() {
             {/* Tab Content - We'll conditionally show different content based on the active sidebar menu item */}
             {activeTab === "account" && (
               <>
-
+                {/* Member Information Card */}
+                <Card className="border-gray-200 shadow-sm bg-white mb-6">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <CircleUserRound className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Member Information</CardTitle>
+                        <CardDescription>Your account details and membership status</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6 space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div>
+                        <h3 className="text-sm text-gray-500 mb-1">Member Since</h3>
+                        <p className="text-lg font-medium">May 7, 2025</p>
+                      </div>
+                      <div>
+                        <h3 className="text-sm text-gray-500 mb-1">User #</h3>
+                        <p className="text-lg font-medium">N/A</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-lg font-medium">Profile Completion</h3>
+                          <p className="text-sm text-gray-500">Complete your profile to increase visibility</p>
+                        </div>
+                        <div className="bg-gray-50 px-3 py-1 rounded-full">
+                          <span className="font-semibold">{profileData.profile_completion_score}%</span>
+                        </div>
+                      </div>
+                      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full ${
+                            profileData.profile_completion_score < 40 
+                              ? 'bg-red-500' 
+                              : profileData.profile_completion_score < 70 
+                                ? 'bg-amber-500' 
+                                : 'bg-green-600'
+                          }`}
+                          style={{ width: `${profileData.profile_completion_score}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-green-50 p-4 rounded-md border border-green-100 flex items-start">
+                      <div className="p-1 rounded-full bg-green-100 mr-3 mt-0.5">
+                        <Shield className="h-4 w-4 text-green-600" />
+                      </div>
+                      <p className="text-green-800 text-sm">
+                        PropertyDeals maintains the highest standards of data privacy and security
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
                 
                 {/* Profile Card */}
                 <Card className="border-gray-200 shadow-sm bg-white">
