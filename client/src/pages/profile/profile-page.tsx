@@ -735,7 +735,7 @@ export default function ProfilePage() {
         </div>
         
         {/* Scrollable Menu Section */}
-        <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+        <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent pb-3">
           {/* Menu Items */}
           <div className="py-2 space-y-1">
             <button

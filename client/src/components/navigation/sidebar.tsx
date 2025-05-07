@@ -221,13 +221,13 @@ export default function Sidebar() {
           </Tooltip>
         </TooltipProvider>
         
-        {/* Profile icon - moved to sidebar from bottom dock with consistent hover style */}
+        {/* Profile icon - with profile photo and hover animation */}
         <NavItem 
           href="/profile" 
           icon={
-            <Avatar className="h-8 w-8">
-              <AvatarImage src="" alt={user?.fullName || "User"} />
-              <AvatarFallback className="bg-primary/10 text-primary text-sm">
+            <Avatar className="h-8 w-8 transition-all transform group-hover:scale-110 duration-200">
+              <AvatarImage src={user?.profile_photo_url || ""} alt={user?.fullName || "User"} />
+              <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">
                 {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
               </AvatarFallback>
             </Avatar>
