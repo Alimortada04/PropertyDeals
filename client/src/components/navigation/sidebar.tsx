@@ -243,7 +243,7 @@ export default function Sidebar() {
                 alt={(profileData?.full_name || user?.fullName || "User") as string} 
               />
               <AvatarFallback className="bg-white p-0">
-                <img src="/images/logo.png" alt="PropertyDeals Logo" className="w-full h-full object-contain" />
+                <img src="/images/pdLogo.png" alt="PropertyDeals Logo" className="w-full h-full object-contain" />
               </AvatarFallback>
             </Avatar>
           } 
