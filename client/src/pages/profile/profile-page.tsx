@@ -957,103 +957,103 @@ export default function ProfilePage() {
                         <TabsContent value="general" className="space-y-6">
                           {/* General Information Section */}
                           <div className="space-y-4 mb-8">
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
-                          <span>General Information</span>
-                          {!profileData.full_name || !profileData.username ? (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
-                                    ⚠️ Needs attention
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p className="text-sm">Complete your basic profile info to improve visibility</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                              ✓ Complete
-                            </span>
-                          )}
-                        </h3>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="full_name">
-                              Full Name
-                            </label>
-                            <Input 
-                              id="full_name"
-                              name="full_name"
-                              value={profileData.full_name}
-                              onChange={(e) => handleInputChange(e, 'profile')}
-                              className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                              placeholder="Your full name"
-                            />
-                          </div>
-                          
-                          <div>
-                            <label className="text-sm font-medium mb-2 flex items-center text-gray-700" htmlFor="username">
-                              Username
-                              {isCheckingUsername && (
-                                <span className="ml-2 inline-flex items-center text-xs text-gray-400">
-                                  <span className="h-3 w-3 mr-1 rounded-full border-2 border-t-transparent border-gray-400 animate-spin"></span>
-                                  Checking...
-                                </span>
-                              )}
-                              {!isCheckingUsername && usernameMessage && (
-                                <span className={`ml-2 text-xs ${isUsernameAvailable ? 'text-green-500' : 'text-red-500'}`}>
-                                  {usernameMessage}
-                                </span>
-                              )}
-                            </label>
-                            <Input 
-                              id="username"
-                              name="username"
-                              value={profileData.username}
-                              onChange={(e) => handleInputChange(e, 'profile')}
-                              className={`border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 ${
-                                usernameMessage && !isUsernameAvailable ? 'border-red-300' : ''
-                              }`}
-                              placeholder="Choose a username"
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="email">
-                              Email
-                            </label>
-                            <div className="relative">
-                              <Input 
-                                id="email"
-                                name="email"
-                                type="email"
-                                value={profileData.email}
-                                className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 pr-10"
-                                placeholder="Your email address"
-                                disabled 
-                              />
-                              <span className="absolute right-3 top-1/2 -translate-y-1/2">
+                            <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                              <span>General Information</span>
+                              {!profileData.full_name || !profileData.username ? (
                                 <TooltipProvider>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <Check className="h-4 w-4 text-green-500" />
+                                      <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
+                                        ⚠️ Needs attention
+                                      </span>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      <p className="text-sm">Email verified</p>
+                                      <p className="text-sm">Complete your basic profile info to improve visibility</p>
                                     </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
-                              </span>
+                              ) : (
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                  ✓ Complete
+                                </span>
+                              )}
+                            </h3>
+                        
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="full_name">
+                                  Full Name
+                                </label>
+                                <Input 
+                                  id="full_name"
+                                  name="full_name"
+                                  value={profileData.full_name}
+                                  onChange={(e) => handleInputChange(e, 'profile')}
+                                  className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                                  placeholder="Your full name"
+                                />
+                              </div>
+                              
+                              <div>
+                                <label className="text-sm font-medium mb-2 flex items-center text-gray-700" htmlFor="username">
+                                  Username
+                                  {isCheckingUsername && (
+                                    <span className="ml-2 inline-flex items-center text-xs text-gray-400">
+                                      <span className="h-3 w-3 mr-1 rounded-full border-2 border-t-transparent border-gray-400 animate-spin"></span>
+                                      Checking...
+                                    </span>
+                                  )}
+                                  {!isCheckingUsername && usernameMessage && (
+                                    <span className={`ml-2 text-xs ${isUsernameAvailable ? 'text-green-500' : 'text-red-500'}`}>
+                                      {usernameMessage}
+                                    </span>
+                                  )}
+                                </label>
+                                <Input 
+                                  id="username"
+                                  name="username"
+                                  value={profileData.username}
+                                  onChange={(e) => handleInputChange(e, 'profile')}
+                                  className={`border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 ${
+                                    usernameMessage && !isUsernameAvailable ? 'border-red-300' : ''
+                                  }`}
+                                  placeholder="Choose a username"
+                                />
+                              </div>
                             </div>
-                            <p className="text-xs mt-1 text-gray-500">
-                              Email changes are managed through security settings
-                            </p>
-                          </div>
+                        
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="email">
+                                  Email
+                                </label>
+                                <div className="relative">
+                                  <Input 
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={profileData.email}
+                                    className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 pr-10"
+                                    placeholder="Your email address"
+                                    disabled 
+                                  />
+                                  <span className="absolute right-3 top-1/2 -translate-y-1/2">
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Check className="h-4 w-4 text-green-500" />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p className="text-sm">Email verified</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </span>
+                                </div>
+                                <p className="text-xs mt-1 text-gray-500">
+                                  Email changes are managed through security settings
+                                </p>
+                              </div>
                           
                           <div>
                             <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="phone">
