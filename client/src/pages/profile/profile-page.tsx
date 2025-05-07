@@ -202,24 +202,18 @@ export default function ProfilePage() {
 
   // Fetch profile data on component mount
   const { data: fetchedProfile, isLoading } = useQuery({
-    queryKey: ['/api/profile'],
-    onSuccess: (data) => {
-      // Merge the fetched profile data with the default data
-      if (data) {
-        setProfileData({
-          ...profileData,
-          ...data,
-        });
-      }
-    },
-    onError: (error) => {
-      toast({
-        title: "Error fetching profile",
-        description: error instanceof Error ? error.message : "Failed to fetch profile data",
-        variant: "destructive",
-      });
-    }
+    queryKey: ['/api/profile']
   });
+
+  // Handle profile data when fetched
+  useEffect(() => {
+    if (fetchedProfile) {
+      setProfileData(prev => ({
+        ...prev,
+        ...fetchedProfile
+      }));
+    }
+  }, [fetchedProfile]);
 
   // Debounce username check while user types
   useEffect(() => {
@@ -525,97 +519,6 @@ export default function ProfilePage() {
     }
   };
   
-  // Update property preferences
-  const handlePropertySectionSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!isPropertySectionModified) return;
-    
-    try {
-      setLoading(true);
-      
-      const propertyPayload = {
-        location: profileData.location,
-        markets: profileData.markets,
-        property_types: profileData.property_types,
-        property_conditions: profileData.property_conditions,
-        ideal_budget_min: profileData.ideal_budget_min,
-        ideal_budget_max: profileData.ideal_budget_max,
-        financing_methods: profileData.financing_methods,
-        preferred_financing_method: profileData.preferred_financing_method,
-        closing_timeline: profileData.closing_timeline,
-      };
-      
-      const { error } = await supabase
-        .from('profiles')
-        .update(propertyPayload)
-        .eq('id', user?.id);
-      
-      if (error) throw error;
-      
-      toast({
-        title: "Property preferences updated",
-        description: "Your property preferences have been updated successfully.",
-      });
-      
-      setIsPropertySectionModified(false);
-    } catch (error) {
-      console.error('Error updating property preferences:', error);
-      toast({
-        title: "Error updating property preferences",
-        description: "There was an error updating your property preferences. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  // Update professional information
-  const handleProfessionalSectionSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!isProfessionalSectionModified) return;
-    
-    try {
-      setLoading(true);
-      
-      const professionalPayload = {
-        number_of_deals_last_12_months: profileData.number_of_deals_last_12_months,
-        goal_deals_next_12_months: profileData.goal_deals_next_12_months,
-        total_deals_done: profileData.total_deals_done,
-        current_portfolio_count: profileData.current_portfolio_count,
-        preferred_inspectors: profileData.preferred_inspectors,
-        preferred_agents: profileData.preferred_agents,
-        preferred_contractors: profileData.preferred_contractors,
-        preferred_lenders: profileData.preferred_lenders,
-      };
-      
-      const { error } = await supabase
-        .from('profiles')
-        .update(professionalPayload)
-        .eq('id', user?.id);
-      
-      if (error) throw error;
-      
-      toast({
-        title: "Professional information updated",
-        description: "Your professional information has been updated successfully.",
-      });
-      
-      setIsProfessionalSectionModified(false);
-    } catch (error) {
-      console.error('Error updating professional information:', error);
-      toast({
-        title: "Error updating professional information",
-        description: "There was an error updating your professional information. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-  
   // Handle logout
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -697,282 +600,256 @@ export default function ProfilePage() {
       profileData.total_deals_done, profileData.current_portfolio_count]);
 
   return (
-    <div className="flex bg-gray-50/60 p-6 md:p-10 overflow-y-auto">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="border-b pb-4 mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
-          <p className="text-gray-500 mt-1">Manage your profile information and preferences</p>
+    <div className="flex flex-row">
+      {/* Settings sidebar - Positioned next to main sidebar, flush against it */}
+      <div className="w-[250px] border-r fixed left-[70px] top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-10">
+        {/* Profile info - Sticky top */}
+        <div className="px-6 py-6 mb-2 border-b flex flex-col items-center sticky top-0 bg-white z-10">
+          <div className="relative group">
+            <Avatar className="h-20 w-20 mb-2 ring-2 ring-offset-2 ring-[#09261E]/50 group-hover:ring-[#09261E]">
+              <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
+              <AvatarFallback className="bg-[#09261E] text-white text-xl font-medium">
+                {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div 
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+            >
+              <Upload className="h-5 w-5 text-white" />
+            </div>
+            <input 
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleProfilePhotoChange}
+            />
+          </div>
+          
+          <h2 className="font-bold text-lg">{profileData.full_name || profileData.username}</h2>
+          <p className="text-gray-500 text-sm mb-3">@{profileData.username}</p>
+          
+          <Button 
+            type="button" 
+            variant="outline"
+            size="sm"
+            className="text-xs border border-gray-300 transition-colors hover:bg-gray-50 w-full"
+            onClick={() => window.open(`/user/${profileData.username}`, '_blank')}
+          >
+            <ExternalLink className="h-3 w-3 mr-1" />
+            Preview Public Profile
+          </Button>
         </div>
         
-        {/* Profile Section */}
-        <Card className="border-gray-200 shadow-sm">
-          <CardHeader className="border-b pb-4">
-            <CardTitle className="text-xl">Profile</CardTitle>
-            <CardDescription>Your personal and business information</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6 space-y-8">
-            <form onSubmit={handleProfileSectionSubmit}>
-              {/* Basic Info Section */}
-              <div className="space-y-4 mb-8">
-                <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Basic Information</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="full_name">
-                      Full Name
-                    </label>
-                    <Input 
-                      id="full_name"
-                      name="full_name"
-                      value={profileData.full_name}
-                      onChange={(e) => handleInputChange(e, 'profile')}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="Your full name"
-                    />
+        {/* Scrollable Menu Section */}
+        <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
+          {/* Menu Items */}
+          <div className="py-2 space-y-1">
+            <button
+              className="w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+            >
+              <UserCircle size={18} className="mr-3 text-[#09261E]" />
+              <span>Account</span>
+            </button>
+            
+            <ProfileMenuItem
+              icon={<Shield size={18} />}
+              label="Security & Privacy"
+              href="/profile/security"
+              active={location === "/profile/security"}
+            />
+            
+            <ProfileMenuItem
+              icon={<CreditCard size={18} />}
+              label="Payment Methods"
+              href="/profile/payment"
+              active={location === "/profile/payment"}
+            />
+            
+            <ProfileMenuItem
+              icon={<Bell size={18} />}
+              label="Notifications"
+              href="/profile/notifications"
+              active={location === "/profile/notifications"}
+            />
+            
+            <ProfileMenuItem
+              icon={<HelpCircle size={18} />}
+              label="Help Center"
+              href="/profile/help"
+              active={location === "/profile/help"}
+            />
+          </div>
+        </div>
+        
+        {/* User info and Logout - Sticky bottom */}
+        <div className="px-3 py-3 border-t sticky bottom-0 bg-white mt-auto">
+          <div className="flex items-center px-4 py-2 mb-2">
+            <Avatar className="h-8 w-8 mr-3">
+              <AvatarImage src={profileData.profile_photo_url || ""} alt={profileData.full_name || "User"} />
+              <AvatarFallback className="bg-[#09261E] text-white text-sm font-medium">
+                {profileData.full_name?.charAt(0) || profileData.username?.charAt(0) || "U"}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 truncate">
+              <p className="text-sm font-medium truncate">{profileData.full_name || profileData.username}</p>
+              <p className="text-xs text-gray-500 truncate">@{profileData.username}</p>
+            </div>
+          </div>
+          
+          <ProfileMenuItem
+            icon={<LogOut size={18} />}
+            label="Log out"
+            danger={true}
+            onClick={handleLogout}
+          />
+        </div>
+      </div>
+      
+      {/* Main content area - Adjusted margin-left to account for both sidebars */}
+      <div className="ml-[320px] flex-1 bg-gray-50/60 p-6 md:p-10 overflow-y-auto">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <div className="border-b pb-4 mb-6">
+            <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
+            <p className="text-gray-500 mt-1">Manage your profile information and preferences</p>
+          </div>
+          
+          {/* Profile Section */}
+          <Card className="border-gray-200 shadow-sm">
+            <CardHeader className="border-b pb-4">
+              <CardTitle className="text-xl">Profile</CardTitle>
+              <CardDescription>Your personal and business information</CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6 space-y-8">
+              <form onSubmit={handleProfileSectionSubmit}>
+                {/* Basic Info Section */}
+                <div className="space-y-4 mb-8">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Basic Information</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="full_name">
+                        Full Name
+                      </label>
+                      <Input 
+                        id="full_name"
+                        name="full_name"
+                        value={profileData.full_name}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Your full name"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 flex items-center text-gray-700" htmlFor="username">
+                        Username
+                        {isCheckingUsername && <span className="ml-2 text-xs text-gray-400">Checking availability...</span>}
+                        {!isCheckingUsername && usernameMessage && (
+                          <span className={`ml-2 text-xs ${isUsernameAvailable ? 'text-green-500' : 'text-red-500'}`}>
+                            {usernameMessage}
+                          </span>
+                        )}
+                      </label>
+                      <Input 
+                        id="username"
+                        name="username"
+                        value={profileData.username}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className={`border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 ${
+                          usernameMessage && !isUsernameAvailable ? 'border-red-300' : ''
+                        }`}
+                        placeholder="Choose a username"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="email">
+                        Email
+                      </label>
+                      <Input 
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={profileData.email}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Your email address"
+                        disabled // Email is managed by Supabase auth and can't be changed here
+                      />
+                      <p className="text-xs mt-1 text-gray-500">
+                        Email changes are managed through security settings.
+                      </p>
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="phone">
+                        Phone Number
+                      </label>
+                      <Input 
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={profileData.phone || ""}
+                        onChange={(e) => handleInputChange(e, 'profile')}
+                        className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                        placeholder="Your phone number"
+                      />
+                    </div>
                   </div>
                   
                   <div>
-                    <label className="text-sm font-medium mb-2 flex items-center text-gray-700" htmlFor="username">
-                      Username
-                      {isCheckingUsername && <span className="ml-2 text-xs text-gray-400">Checking availability...</span>}
-                      {!isCheckingUsername && usernameMessage && (
-                        <span className={`ml-2 text-xs ${isUsernameAvailable ? 'text-green-500' : 'text-red-500'}`}>
-                          {usernameMessage}
-                        </span>
-                      )}
+                    <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="bio">
+                      Bio
                     </label>
-                    <Input 
-                      id="username"
-                      name="username"
-                      value={profileData.username}
+                    <Textarea 
+                      id="bio"
+                      name="bio"
+                      value={profileData.bio || ""}
                       onChange={(e) => handleInputChange(e, 'profile')}
-                      className={`border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 ${
-                        usernameMessage && !isUsernameAvailable ? 'border-red-300' : ''
-                      }`}
-                      placeholder="Choose a username"
+                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 min-h-[100px]"
+                      placeholder="Tell us about yourself and your real estate journey..."
                     />
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="email">
-                      Email
-                    </label>
-                    <Input 
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={profileData.email}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="Your email address"
-                      disabled // Email is managed by Supabase auth and can't be changed here
-                    />
-                    <p className="text-xs mt-1 text-gray-500">
-                      Email changes are managed through security settings.
-                    </p>
-                  </div>
+                {/* Profile Visibility */}
+                <div className="space-y-4 mb-8 pt-6 border-t">
+                  <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Profile Visibility</h3>
                   
-                  <div>
-                    <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="phone">
-                      Phone Number
-                    </label>
-                    <Input 
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      value={profileData.phone || ""}
-                      onChange={(e) => handleInputChange(e, 'profile')}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="Your phone number"
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 block mb-1" htmlFor="showProfile">
+                        Show Public Profile
+                      </label>
+                      <p className="text-xs text-gray-500">
+                        When enabled, your profile will be visible to other users.
+                      </p>
+                    </div>
+                    <Switch
+                      id="showProfile"
+                      checked={profileData.showProfile}
+                      onCheckedChange={(checked) => handleCheckboxChange(checked, 'showProfile', 'profile')}
+                      className="data-[state=checked]:bg-[#09261E]"
                     />
                   </div>
                 </div>
                 
-                <div>
-                  <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="bio">
-                    Bio
-                  </label>
-                  <Textarea 
-                    id="bio"
-                    name="bio"
-                    value={profileData.bio || ""}
-                    onChange={(e) => handleInputChange(e, 'profile')}
-                    className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 min-h-[100px]"
-                    placeholder="Tell us about yourself and your real estate journey..."
-                  />
+                <div className="pt-6 flex justify-end border-t">
+                  <Button 
+                    type="submit" 
+                    className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    disabled={loading || !isProfileSectionModified}
+                  >
+                    {loading ? "Saving..." : "Save Profile Changes"}
+                  </Button>
                 </div>
-              </div>
-              
-              {/* Professional Info */}
-              <div className="space-y-4 mb-8 pt-6 border-t">
-                <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Professional Information</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="in_real_estate_since">
-                      In Real Estate Since
-                    </label>
-                    <Input 
-                      id="in_real_estate_since"
-                      name="in_real_estate_since"
-                      type="number"
-                      min="1900"
-                      max={new Date().getFullYear()}
-                      value={profileData.in_real_estate_since || ""}
-                      onChange={(e) => handleInputChange(e, 'profile')}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="Year"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium mb-2 text-gray-700" htmlFor="business_name">
-                      Business Name
-                    </label>
-                    <Input 
-                      id="business_name"
-                      name="business_name"
-                      value={profileData.business_name || ""}
-                      onChange={(e) => handleInputChange(e, 'profile')}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="Your business name"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium mb-2 block text-gray-700">
-                    Type of Buyer
-                  </label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
-                    {buyerTypeOptions.map((option) => (
-                      <div key={option} className="flex items-center">
-                        <Checkbox 
-                          id={`type_${option}`}
-                          checked={profileData.type_of_buyer.includes(option)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              handleMultiSelectChange('type_of_buyer', option, 'profile');
-                            } else {
-                              handleMultiSelectChange('type_of_buyer', option, 'profile');
-                            }
-                          }}
-                          className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
-                        />
-                        <label 
-                          htmlFor={`type_${option}`}
-                          className="ml-2 text-sm text-gray-700"
-                        >
-                          {option}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Social Media */}
-              <div className="space-y-4 mb-8 pt-6 border-t">
-                <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Social Media</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="website">
-                      <Globe className="mr-2 h-4 w-4" />
-                      Website
-                    </label>
-                    <Input 
-                      id="website"
-                      name="website"
-                      value={profileData.website || ""}
-                      onChange={(e) => handleInputChange(e, 'profile')}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="https://yourwebsite.com"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="instagram">
-                      <Instagram className="mr-2 h-4 w-4" />
-                      Instagram
-                    </label>
-                    <Input 
-                      id="instagram"
-                      name="instagram"
-                      value={profileData.instagram || ""}
-                      onChange={(e) => handleInputChange(e, 'profile')}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="@yourusername"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="facebook">
-                      <FacebookIcon className="mr-2 h-4 w-4" />
-                      Facebook
-                    </label>
-                    <Input 
-                      id="facebook"
-                      name="facebook"
-                      value={profileData.facebook || ""}
-                      onChange={(e) => handleInputChange(e, 'profile')}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="facebook.com/yourprofile"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="flex items-center text-sm font-medium mb-2 text-gray-700" htmlFor="linkedin">
-                      <Linkedin className="mr-2 h-4 w-4" />
-                      LinkedIn
-                    </label>
-                    <Input 
-                      id="linkedin"
-                      name="linkedin"
-                      value={profileData.linkedin || ""}
-                      onChange={(e) => handleInputChange(e, 'profile')}
-                      className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
-                      placeholder="linkedin.com/in/yourprofile"
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Profile Visibility */}
-              <div className="space-y-4 mb-8 pt-6 border-t">
-                <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Profile Visibility</h3>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 block mb-1" htmlFor="showProfile">
-                      Show Public Profile
-                    </label>
-                    <p className="text-xs text-gray-500">
-                      When enabled, your profile will be visible to other users.
-                    </p>
-                  </div>
-                  <Switch
-                    id="showProfile"
-                    checked={profileData.showProfile}
-                    onCheckedChange={(checked) => handleCheckboxChange(checked, 'showProfile', 'profile')}
-                    className="data-[state=checked]:bg-[#09261E]"
-                  />
-                </div>
-              </div>
-              
-              <div className="pt-6 flex justify-end border-t">
-                <Button 
-                  type="submit" 
-                  className="bg-[#09261E] hover:bg-[#09261E]/90 text-white"
-                  disabled={loading || !isProfileSectionModified}
-                >
-                  {loading ? "Saving..." : "Save Profile Changes"}
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
