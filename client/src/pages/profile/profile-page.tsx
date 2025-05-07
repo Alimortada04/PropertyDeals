@@ -815,6 +815,20 @@ export default function ProfilePage() {
               />
               
               <ProfileMenuItem
+                icon={<Building size={18} />}
+                label="Property Preferences"
+                active={activeTab === "property_preferences"}
+                onClick={() => handleTabChange("property_preferences")}
+              />
+              
+              <ProfileMenuItem
+                icon={<Users size={18} />}
+                label="Connections"
+                active={activeTab === "connections"}
+                onClick={() => handleTabChange("connections")}
+              />
+              
+              <ProfileMenuItem
                 icon={<BellRing size={18} />}
                 label="Notifications"
                 active={activeTab === "notifications"}
@@ -824,8 +838,8 @@ export default function ProfilePage() {
               <ProfileMenuItem
                 icon={<LinkIcon size={18} />}
                 label="Integrations"
-                active={activeTab === "connected"}
-                onClick={() => handleTabChange("connected")}
+                active={activeTab === "integrations"}
+                onClick={() => handleTabChange("integrations")}
               />
               
               <ProfileMenuItem
@@ -833,13 +847,6 @@ export default function ProfilePage() {
                 label="Memberships"
                 active={activeTab === "memberships"}
                 onClick={() => handleTabChange("memberships")}
-              />
-              
-              <ProfileMenuItem
-                icon={<Shield size={18} />}
-                label="Security & Privacy"
-                active={activeTab === "security"}
-                onClick={() => handleTabChange("security")}
               />
               
               <ProfileMenuItem
@@ -888,6 +895,84 @@ export default function ProfilePage() {
             {/* Tab Content - We'll conditionally show different content based on the active sidebar menu item */}
             {activeTab === "account" && (
               <>
+                {/* Member Information Card */}
+                <Card className="border-gray-200 shadow-sm">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <UserCircle className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Member Information</CardTitle>
+                        <CardDescription>Your account details and membership status</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">Member Since</p>
+                          <p className="font-medium text-gray-900">
+                            {new Date(profileData.created_at).toLocaleDateString('en-US', {
+                              month: 'long',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm text-gray-500 mb-1">User #</p>
+                          <p className="font-medium text-gray-900">
+                            {profileData.join_number || 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="pt-4 border-t">
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <h3 className="font-medium text-gray-800">Profile Completion</h3>
+                            <p className="text-sm text-gray-500">
+                              {profileData.profile_completion_score < 80 
+                                ? "Complete your profile to increase visibility" 
+                                : "Your profile is looking great!"}
+                            </p>
+                          </div>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="px-2 py-1 bg-gray-100 rounded text-sm font-medium cursor-help">
+                                  {profileData.profile_completion_score}%
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-xs">
+                                <p className="text-sm">Complete your profile to unlock matching, trust badges, and public visibility.</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                        
+                        <div className="relative pt-1">
+                          <div className="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                            <div 
+                              style={{ width: `${profileData.profile_completion_score}%` }} 
+                              className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${
+                                profileData.profile_completion_score < 40 
+                                  ? 'bg-red-500' 
+                                  : profileData.profile_completion_score < 70 
+                                    ? 'bg-amber-500' 
+                                    : 'bg-[#09261E]'
+                              }`}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
                 {/* Profile Section */}
                 <Card className="border-gray-200 shadow-sm">
                   <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
@@ -1637,6 +1722,469 @@ export default function ProfilePage() {
                   </CardContent>
                 </Card>
 
+                {/* Profile Uploads Card */}
+                <Card className="border-gray-200 shadow-sm">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <Upload className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Profile Uploads</CardTitle>
+                        <CardDescription>Your profile photo and banner image</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Profile Photo Upload Section */}
+                      <div className="space-y-4">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Profile Photo</h3>
+                        
+                        <div className="flex flex-col items-center p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50">
+                          <div className="mb-4 relative">
+                            <Avatar className="h-28 w-28 border-2 border-gray-200">
+                              {profileData.profile_photo_url ? (
+                                <AvatarImage src={profileData.profile_photo_url} alt="Profile Photo" />
+                              ) : (
+                                <AvatarFallback className="bg-[#09261E] text-white text-xl font-semibold">
+                                  {profileData.full_name ? profileData.full_name.substring(0, 2).toUpperCase() : "PD"}
+                                </AvatarFallback>
+                              )}
+                            </Avatar>
+                            
+                            <button 
+                              onClick={() => fileInputRef.current?.click()}
+                              className="absolute -bottom-1 -right-1 bg-white p-2 rounded-full border shadow-sm hover:bg-gray-50 transition-colors"
+                            >
+                              <Camera size={18} className="text-gray-600" />
+                            </button>
+                          </div>
+                          
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="mt-2"
+                            onClick={() => fileInputRef.current?.click()}
+                          >
+                            <Upload className="mr-2 h-4 w-4" />
+                            {profileData.profile_photo_url ? "Change Photo" : "Upload Photo"}
+                          </Button>
+                          
+                          <p className="text-xs text-gray-500 mt-3 text-center">
+                            Recommended: Square image, at least 400x400px
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Banner Image Upload Section */}
+                      <div className="space-y-4">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Banner Image</h3>
+                        
+                        <div className="flex flex-col items-center p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50">
+                          <div className="w-full h-28 mb-4 relative rounded-md overflow-hidden">
+                            {profileData.profile_banner_url ? (
+                              <img 
+                                src={profileData.profile_banner_url} 
+                                alt="Profile Banner" 
+                                className="w-full h-full object-cover" 
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-r from-gray-200 to-gray-300 flex items-center justify-center">
+                                <div className="text-gray-400 text-sm">No banner image</div>
+                              </div>
+                            )}
+                            
+                            <button 
+                              onClick={() => bannerInputRef.current?.click()}
+                              className="absolute bottom-2 right-2 bg-white p-2 rounded-full border shadow-sm hover:bg-gray-50 transition-colors"
+                            >
+                              <Camera size={18} className="text-gray-600" />
+                            </button>
+                          </div>
+                          
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="mt-2"
+                            onClick={() => bannerInputRef.current?.click()}
+                          >
+                            <Upload className="mr-2 h-4 w-4" />
+                            {profileData.profile_banner_url ? "Change Banner" : "Upload Banner"}
+                          </Button>
+                          
+                          <p className="text-xs text-gray-500 mt-3 text-center">
+                            Recommended: 1200x300px, JPG or PNG format
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+            
+            {activeTab === "connections" && (
+              <>
+                {/* Professionals Section */}
+                <Card className="border-gray-200 shadow-sm">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <Users className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Professionals</CardTitle>
+                        <CardDescription>Your trusted real estate professionals</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6 space-y-8">
+                    <form onSubmit={handleProfileSectionSubmit}>
+
+                      {/* Introduction */}
+                      <div className="mb-6">
+                        <div className="p-4 bg-gray-50/80 rounded-md border border-gray-200">
+                          <p className="text-sm text-gray-700 flex items-start">
+                            <AlertTriangle className="h-4 w-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" />
+                            <span>
+                              Add your trusted real estate professionals to streamline your investments. You'll be able to quickly connect them to new deals and projects.
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Preferred Sellers */}
+                      <div className="space-y-4 mb-8">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Preferred Sellers</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full cursor-help">
+                                  Build Your Network
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-sm">Add sellers you've worked with previously to build your network</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </h3>
+                        
+                        <div className="relative">
+                          <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                            <Search className="h-4 w-4 mr-2 text-gray-400" />
+                            <Input 
+                              id="search_sellers"
+                              className="border-0 focus:ring-0 p-0 h-8"
+                              placeholder="Search for a seller by name or username..."
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            {profileData.preferred_sellers?.length > 0 ? (
+                              profileData.preferred_sellers.map((seller, index) => (
+                                <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                  <Avatar className="h-10 w-10 mr-3">
+                                    <AvatarFallback className="bg-[#135341] text-white">{seller.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-gray-800 truncate">{seller}</p>
+                                    <p className="text-xs text-gray-500 truncate">Seller • PropertyDeals</p>
+                                  </div>
+                                  <button 
+                                    type="button" 
+                                    className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                    onClick={() => handleMultiSelectChange('preferred_sellers', seller, 'professionals')}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="col-span-full p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                <Users className="h-10 w-10 text-gray-400 mb-2" />
+                                <h4 className="text-lg font-medium text-gray-700">No preferred sellers yet</h4>
+                                <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                  Add sellers you've worked with to streamline communication on future deals
+                                </p>
+                                <Button
+                                  type="button"
+                                  className="mt-4 bg-[#135341] hover:bg-[#135341]/90 text-white"
+                                >
+                                  <Plus className="h-4 w-4 mr-2" />
+                                  Add Seller
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Preferred Agents */}
+                      <div className="space-y-4 mb-8 pt-6 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Preferred Agents</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded-full cursor-help">
+                                  Build Your Network
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="text-sm">Add agents you've worked with to streamline your investments</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </h3>
+                        
+                        <div className="relative">
+                          <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                            <Search className="h-4 w-4 mr-2 text-gray-400" />
+                            <Input 
+                              id="search_agents"
+                              className="border-0 focus:ring-0 p-0 h-8"
+                              placeholder="Search for an agent by name or username..."
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                            {profileData.preferred_agents?.length > 0 ? (
+                              profileData.preferred_agents.map((agent, index) => (
+                                <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                  <Avatar className="h-10 w-10 mr-3">
+                                    <AvatarFallback className="bg-[#803344] text-white">{agent.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                  </Avatar>
+                                  <div className="flex-1 min-w-0">
+                                    <p className="font-medium text-gray-800 truncate">{agent}</p>
+                                    <p className="text-xs text-gray-500 truncate">Agent • REP</p>
+                                  </div>
+                                  <button 
+                                    type="button" 
+                                    className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                    onClick={() => handleMultiSelectChange('preferred_agents', agent, 'professionals')}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))
+                            ) : (
+                              <div className="col-span-full p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                <Users className="h-10 w-10 text-gray-400 mb-2" />
+                                <h4 className="text-lg font-medium text-gray-700">No preferred agents yet</h4>
+                                <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                  Add agents you trust to help with your real estate transactions
+                                </p>
+                                <Button
+                                  type="button"
+                                  className="mt-4 bg-[#803344] hover:bg-[#803344]/90 text-white"
+                                >
+                                  <Plus className="h-4 w-4 mr-2" />
+                                  Add Agent
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Other Professionals Tabs */}
+                      <div className="space-y-4 pt-6 border-t">
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Other Professionals</h3>
+                        
+                        <Tabs defaultValue="contractors" className="w-full">
+                          <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="contractors">Contractors</TabsTrigger>
+                            <TabsTrigger value="lenders">Lenders</TabsTrigger>
+                            <TabsTrigger value="inspectors">Inspectors</TabsTrigger>
+                          </TabsList>
+                          
+                          <TabsContent value="contractors" className="mt-6">
+                            <div className="relative">
+                              <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                                <Search className="h-4 w-4 mr-2 text-gray-400" />
+                                <Input 
+                                  id="search_contractors"
+                                  className="border-0 focus:ring-0 p-0 h-8"
+                                  placeholder="Search for a contractor..."
+                                />
+                              </div>
+                              
+                              {profileData.preferred_contractors?.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                  {profileData.preferred_contractors.map((contractor, index) => (
+                                    <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                      <Avatar className="h-10 w-10 mr-3">
+                                        <AvatarFallback className="bg-[#803344] text-white">{contractor.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-gray-800 truncate">{contractor}</p>
+                                        <p className="text-xs text-gray-500 truncate">Contractor • REP</p>
+                                      </div>
+                                      <button 
+                                        type="button" 
+                                        className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                        onClick={() => handleMultiSelectChange('preferred_contractors', contractor, 'professionals')}
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                  <Wrench className="h-10 w-10 text-gray-400 mb-2" />
+                                  <h4 className="text-lg font-medium text-gray-700">No contractors yet</h4>
+                                  <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                    Add contractors you've worked with for renovations and repairs
+                                  </p>
+                                  <Button
+                                    type="button"
+                                    className="mt-4 bg-[#803344] hover:bg-[#803344]/90 text-white"
+                                  >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Contractor
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="lenders" className="mt-6">
+                            <div className="relative">
+                              <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                                <Search className="h-4 w-4 mr-2 text-gray-400" />
+                                <Input 
+                                  id="search_lenders"
+                                  className="border-0 focus:ring-0 p-0 h-8"
+                                  placeholder="Search for a lender..."
+                                />
+                              </div>
+                              
+                              {profileData.preferred_lenders?.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                  {profileData.preferred_lenders.map((lender, index) => (
+                                    <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                      <Avatar className="h-10 w-10 mr-3">
+                                        <AvatarFallback className="bg-[#803344] text-white">{lender.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-gray-800 truncate">{lender}</p>
+                                        <p className="text-xs text-gray-500 truncate">Lender • REP</p>
+                                      </div>
+                                      <button 
+                                        type="button" 
+                                        className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                        onClick={() => handleMultiSelectChange('preferred_lenders', lender, 'professionals')}
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                  <DollarSign className="h-10 w-10 text-gray-400 mb-2" />
+                                  <h4 className="text-lg font-medium text-gray-700">No lenders yet</h4>
+                                  <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                    Add lenders who can help finance your investment properties
+                                  </p>
+                                  <Button
+                                    type="button"
+                                    className="mt-4 bg-[#803344] hover:bg-[#803344]/90 text-white"
+                                  >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Lender
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="inspectors" className="mt-6">
+                            <div className="relative">
+                              <div className="flex items-center border border-gray-300 rounded-md p-2 mb-3 bg-white">
+                                <Search className="h-4 w-4 mr-2 text-gray-400" />
+                                <Input 
+                                  id="search_inspectors"
+                                  className="border-0 focus:ring-0 p-0 h-8"
+                                  placeholder="Search for an inspector..."
+                                />
+                              </div>
+                              
+                              {profileData.preferred_inspectors?.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                  {profileData.preferred_inspectors.map((inspector, index) => (
+                                    <div key={index} className="border border-gray-200 rounded-md p-3 flex items-start hover:shadow-sm transition-shadow bg-white">
+                                      <Avatar className="h-10 w-10 mr-3">
+                                        <AvatarFallback className="bg-[#803344] text-white">{inspector.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="font-medium text-gray-800 truncate">{inspector}</p>
+                                        <p className="text-xs text-gray-500 truncate">Inspector • REP</p>
+                                      </div>
+                                      <button 
+                                        type="button" 
+                                        className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                                        onClick={() => handleMultiSelectChange('preferred_inspectors', inspector, 'professionals')}
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <div className="p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                                  <FileCheck className="h-10 w-10 text-gray-400 mb-2" />
+                                  <h4 className="text-lg font-medium text-gray-700">No inspectors yet</h4>
+                                  <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                                    Add property inspectors you trust to evaluate potential investments
+                                  </p>
+                                  <Button
+                                    type="button"
+                                    className="mt-4 bg-[#803344] hover:bg-[#803344]/90 text-white"
+                                  >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Inspector
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          </TabsContent>
+                        </Tabs>
+                      </div>
+                      
+                      <div className="pt-6 flex justify-end border-t mt-8">
+                        <Button 
+                          type="submit" 
+                          className={`flex items-center transition-all duration-200 ${
+                            loading ? "bg-gray-400" : isProfessionalSectionModified ? "bg-[#09261E] hover:bg-[#09261E]/90" : "bg-gray-200 text-gray-500"
+                          } text-white`}
+                          disabled={loading || !isProfessionalSectionModified}
+                        >
+                          {loading ? (
+                            <>
+                              <span className="h-4 w-4 mr-2 rounded-full border-2 border-t-transparent border-white animate-spin"></span>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="mr-2 h-4 w-4" />
+                              Save Professionals
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {activeTab === "property_preferences" && (
+              <>
                 {/* Property Preferences Section */}
                 <Card className="border-gray-200 shadow-sm">
                   <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
