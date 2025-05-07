@@ -1606,11 +1606,11 @@ export default function ProfilePage() {
                 </Card>
 
                 {/* Profile Uploads Card */}
-                <Card className="border-gray-200 shadow-sm">
+                <Card className="border-gray-200 shadow-sm bg-white">
                   <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
                     <div className="flex items-center">
                       <div className="mr-2 p-1.5 rounded-md bg-green-50">
-                        <Upload className="h-5 w-5 text-[#09261E]" />
+                        <Camera className="h-5 w-5 text-[#09261E]" />
                       </div>
                       <div>
                         <CardTitle className="text-xl">Profile Uploads</CardTitle>
@@ -1622,11 +1622,31 @@ export default function ProfilePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Profile Photo Upload Section */}
                       <div className="space-y-4">
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Profile Photo</h3>
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Profile Photo</span>
+                          {!profileData.profile_photo_url ? (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344]/20 text-[#803344] rounded-full cursor-help">
+                                    Recommended
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent className="p-3 bg-white border shadow-md rounded-md max-w-[300px]">
+                                  <p className="text-sm">Profiles with photos get 11x more engagement and build trust with potential partners.</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ) : (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              ✓ Uploaded
+                            </span>
+                          )}
+                        </h3>
                         
-                        <div className="flex flex-col items-center p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50">
+                        <div className="flex flex-col items-center p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-[#09261E]/30 transition-colors duration-200">
                           <div className="mb-4 relative">
-                            <Avatar className="h-28 w-28 border-2 border-gray-200">
+                            <Avatar className="h-32 w-32 border-2 border-gray-200">
                               {profileData.profile_photo_url ? (
                                 <AvatarImage src={profileData.profile_photo_url} alt="Profile Photo" />
                               ) : (
@@ -1638,7 +1658,7 @@ export default function ProfilePage() {
                             
                             <button 
                               onClick={() => fileInputRef.current?.click()}
-                              className="absolute -bottom-1 -right-1 bg-white p-2 rounded-full border shadow-sm hover:bg-gray-50 transition-colors"
+                              className="absolute -bottom-1 -right-1 bg-white p-2 rounded-full border shadow-sm hover:bg-[#09261E]/10 transition-all duration-200"
                             >
                               <Camera size={18} className="text-gray-600" />
                             </button>
@@ -1647,7 +1667,7 @@ export default function ProfilePage() {
                           <Button
                             type="button"
                             variant="outline"
-                            className="mt-2"
+                            className="mt-2 transition-all duration-300 hover:bg-gray-200 active:bg-[#09261E]/20 focus:bg-[#09261E]/10"
                             onClick={() => fileInputRef.current?.click()}
                           >
                             <Upload className="mr-2 h-4 w-4" />
@@ -1662,10 +1682,30 @@ export default function ProfilePage() {
                       
                       {/* Banner Image Upload Section */}
                       <div className="space-y-4">
-                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider">Banner Image</h3>
+                        <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
+                          <span>Banner Image</span>
+                          {!profileData.profile_banner_url ? (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full cursor-help">
+                                    Optional
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent className="p-3 bg-white border shadow-md rounded-md max-w-[300px]">
+                                  <p className="text-sm">A banner image enhances your professional presence and makes your profile stand out.</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          ) : (
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                              ✓ Uploaded
+                            </span>
+                          )}
+                        </h3>
                         
-                        <div className="flex flex-col items-center p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50">
-                          <div className="w-full h-28 mb-4 relative rounded-md overflow-hidden">
+                        <div className="flex flex-col items-center p-4 border border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-[#09261E]/30 transition-colors duration-200">
+                          <div className="w-full h-[140px] mb-4 relative rounded-md overflow-hidden">
                             {profileData.profile_banner_url ? (
                               <img 
                                 src={profileData.profile_banner_url} 
@@ -1680,7 +1720,7 @@ export default function ProfilePage() {
                             
                             <button 
                               onClick={() => bannerInputRef.current?.click()}
-                              className="absolute bottom-2 right-2 bg-white p-2 rounded-full border shadow-sm hover:bg-gray-50 transition-colors"
+                              className="absolute bottom-2 right-2 bg-white p-2 rounded-full border shadow-sm hover:bg-[#09261E]/10 transition-all duration-200"
                             >
                               <Camera size={18} className="text-gray-600" />
                             </button>
@@ -1689,7 +1729,7 @@ export default function ProfilePage() {
                           <Button
                             type="button"
                             variant="outline"
-                            className="mt-2"
+                            className="mt-2 transition-all duration-300 hover:bg-gray-200 active:bg-[#09261E]/20 focus:bg-[#09261E]/10"
                             onClick={() => bannerInputRef.current?.click()}
                           >
                             <Upload className="mr-2 h-4 w-4" />
