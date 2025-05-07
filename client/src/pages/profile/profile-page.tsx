@@ -818,7 +818,7 @@ export default function ProfilePage() {
       </div>
       
       {/* Main content area - Adjusted margin-left to account for both sidebars */}
-      <div className="ml-[266px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto">
+      <div className="ml-[266px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20">
         <div className="max-w-3xl mx-auto space-y-6">
           <div className="border-b pb-4 mb-6">
             <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>

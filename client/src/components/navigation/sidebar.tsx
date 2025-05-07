@@ -226,7 +226,7 @@ export default function Sidebar() {
           href="/profile" 
           icon={
             <Avatar className="h-8 w-8 transition-all transform group-hover:scale-110 duration-200">
-              <AvatarImage src={user?.profile_photo_url || ""} alt={user?.fullName || "User"} />
+              {/* Use only the fallback since we don't have direct access to the avatar URL */}
               <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">
                 {user?.fullName?.charAt(0) || user?.username?.charAt(0) || "U"}
               </AvatarFallback>
