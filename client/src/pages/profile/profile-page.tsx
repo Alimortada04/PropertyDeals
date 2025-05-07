@@ -48,13 +48,19 @@ const ProfileMenuItem = ({
     <a 
       href={href}
       onClick={onClick}
-      className={`flex items-center px-4 py-2.5 text-sm rounded-md transition-all duration-200 text-${danger ? 'red-500' : 'gray-700'} ${
+      className={`flex items-center px-4 py-2.5 text-sm rounded-md transition-all duration-200 ${
+        danger ? 'text-red-500' : 'text-gray-700'
+      } ${
         active 
-          ? `bg-${danger ? 'red-50/70' : '[#09261E]/10'} text-${danger ? 'red-600' : '[#09261E]'} font-medium shadow-sm` 
-          : `hover:bg-${danger ? 'red-50/80' : 'gray-100/80'} hover:text-${danger ? 'red-600' : 'gray-900'}`
-      } my-0.5 w-full`}
+          ? danger 
+            ? 'bg-red-50/70 text-red-600 font-medium shadow-sm' 
+            : 'bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm' 
+          : danger
+            ? 'hover:bg-red-50/80 hover:text-red-600'
+            : 'hover:bg-gray-100/80 hover:text-gray-900'
+      } w-full`}
     >
-      <span className={`mr-3 text-${danger ? 'red-500/80' : 'gray-500'}`}>{icon}</span>
+      <span className={`mr-3 ${danger ? 'text-red-500/80' : 'text-gray-500'}`}>{icon}</span>
       <span>{label}</span>
       {active && <ChevronRight size={16} className="ml-auto" />}
     </a>
@@ -868,10 +874,10 @@ export default function ProfilePage() {
         
         {/* Scrollable Menu Section */}
         <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
-          {/* Account Settings */}
-          <div className="py-2">
+          {/* Menu Items */}
+          <div className="py-2 space-y-1">
             <button
-              className="w-full flex items-center px-4 py-3 text-left rounded-md transition-all duration-200 my-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
+              className="w-full flex items-center px-4 py-2.5 text-left rounded-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#09261E]/50 bg-[#09261E]/10 text-[#09261E] font-medium shadow-sm"
             >
               <UserCircle size={18} className="mr-3 text-[#09261E]" />
               <span>Account</span>
@@ -922,13 +928,12 @@ export default function ProfilePage() {
             </div>
           </div>
           
-          <button
-            className="flex items-center px-4 py-2.5 text-sm rounded-md transition-all duration-200 text-red-500 hover:bg-red-50/80 hover:text-red-600 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
+          <ProfileMenuItem
+            icon={<LogOut size={18} />}
+            label="Log out"
+            danger={true}
             onClick={handleLogout}
-          >
-            <LogOut size={18} className="mr-3 text-red-500/80" />
-            <span>Log out</span>
-          </button>
+          />
         </div>
       </div>
       
