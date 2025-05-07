@@ -862,12 +862,12 @@ export default function ProfilePage() {
           </div>
           
           {/* Logout Button - Sticky bottom with red text/icon but no red background */}
-          <div className="px-4 py-5 border-t sticky bottom-0 bg-white mt-auto">
+          <div className="px-4 py-2 border-t sticky bottom-0 bg-white mt-auto">
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button 
                   variant="ghost"
-                  className="w-full text-red-600 hover:text-red-700 hover:bg-red-50/50 flex items-center justify-start gap-2 px-4 py-3"
+                  className="w-full text-red-600 hover:text-red-700 hover:bg-red-50/50 flex items-center justify-start gap-2 px-4 py-2"
                 >
                   <LogOut size={18} className="text-red-600 mr-1" />
                   <span className="font-medium text-sm">Log Out</span>
