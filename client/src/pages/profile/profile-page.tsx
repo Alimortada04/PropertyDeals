@@ -13,6 +13,17 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -694,7 +705,7 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-row">
       {/* Settings sidebar - Positioned exactly flush against main sidebar */}
-      <div className="w-[250px] border-r fixed left-16 top-0 bottom-0 flex flex-col bg-white shadow-sm h-screen z-10">
+      <div className="w-[250px] border-r fixed left-16 top-0 bottom-12 flex flex-col bg-white shadow-sm z-10">
         {/* Profile info - Sticky top */}
         <div className="px-6 py-6 mb-2 border-b flex flex-col items-center sticky top-0 bg-white z-10">
           <div className="relative group">
@@ -735,7 +746,7 @@ export default function ProfilePage() {
         </div>
         
         {/* Scrollable Menu Section */}
-        <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent pb-20">
+        <div className="px-3 flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent pb-16">
           {/* Menu Items */}
           <div className="py-2 space-y-1">
             <button
