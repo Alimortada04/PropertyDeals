@@ -971,6 +971,26 @@ export default function ProfilePage() {
                             ></div>
                           </div>
                         </div>
+                        
+                        <div className="flex items-center justify-center mt-4 py-3 px-4 bg-green-50/50 rounded-md border border-green-100">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="mr-2 p-1 rounded-full bg-green-100">
+                                    <Shield className="h-4 w-4 text-green-600" />
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="text-sm">Your profile information is securely stored and only shared according to your privacy settings</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <span>
+                              PropertyDeals maintains the highest standards of data privacy and security
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -1539,26 +1559,7 @@ export default function ProfilePage() {
                         </div>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center justify-center mt-8 mb-4 py-3 px-4 bg-green-50/50 rounded-md border border-green-100">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="mr-2 p-1 rounded-full bg-green-100">
-                                <Shield className="h-4 w-4 text-green-600" />
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="text-sm">Your profile information is securely stored and only shared according to your privacy settings</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                        <span>
-                          PropertyDeals maintains the highest standards of data privacy and security
-                        </span>
-                      </div>
-                    </div>
+
                   </CardContent>
                 </Card>
 
