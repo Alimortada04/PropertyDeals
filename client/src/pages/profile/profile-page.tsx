@@ -673,7 +673,7 @@ export default function ProfilePage() {
       {/* Main content with sidebar */}
       <div className="flex flex-1">
         {/* Settings Menu Sidebar - reduced width to 220px */}
-        <div className="w-[220px] fixed top-16 left-16 bottom-0 bg-white border-r h-[calc(100vh-4rem)] flex flex-col shadow-sm">
+        <div className="w-[220px] fixed top-0 left-16 bottom-0 bg-white border-r h-screen flex flex-col shadow-sm">
           {/* User Profile Section */}
           <div className="px-4 py-5 border-b">
             <div className="flex items-center space-x-3">
@@ -696,10 +696,10 @@ export default function ProfilePage() {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-medium text-gray-900 truncate">
-                  {profileData.full_name || "Update your profile"}
+                  {profileData.full_name || user?.fullName || "User"}
                 </h3>
                 <p className="text-xs text-gray-500 truncate">
-                  {profileData.email}
+                  {profileData.username ? `@${profileData.username}` : "@" + (user?.username || "")}
                 </p>
               </div>
             </div>
