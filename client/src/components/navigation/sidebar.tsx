@@ -1,6 +1,7 @@
 import React, { useState, FC } from "react";
 import { useLocation, Link } from "wouter";
 import { cn } from "@/lib/utils";
+// Import removed - will use inline image
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -150,7 +151,7 @@ export default function Sidebar() {
             icon={
               <div className="w-6 h-6 flex items-center justify-center">
                 <img 
-                  src="/images/real-estate.png" 
+                  src="/images/real-estate.png"
                   alt="Properties" 
                   className="w-5 h-5 object-contain" 
                 />
