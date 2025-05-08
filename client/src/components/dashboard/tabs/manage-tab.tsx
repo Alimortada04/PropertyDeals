@@ -517,7 +517,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 export default function DashboardManageTab() {
   const [, setLocation] = useLocation();
   const [activeView, setActiveView] = useState<string>("pipeline");
-  const [pipelineView, setPipelineView] = useState<"kanban" | "grid">("kanban");
+  const [pipelineView, setPipelineView] = useState<"kanban" | "grid" | "cards">("kanban");
   const [propertyDetailOpen, setPropertyDetailOpen] = useState<boolean>(false);
   const [addPropertyOpen, setAddPropertyOpen] = useState<boolean>(false);
   const [projectDetailOpen, setProjectDetailOpen] = useState<boolean>(false);

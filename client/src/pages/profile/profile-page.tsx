@@ -1564,12 +1564,12 @@ export default function ProfilePage() {
                         <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center mb-4">
                           <span>Banner Image</span>
                           {!profileData.profile_banner_url ? (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
-                              Optional
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344] text-white rounded-full cursor-help">
+                              Recommended
                             </span>
                           ) : (
                             <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
-                              Added
+                              Completed
                             </span>
                           )}
                         </h3>
