@@ -121,7 +121,7 @@ export default function Sidebar() {
           
           <NavItem 
             href="/properties" 
-            icon={<Building size={24} />} 
+            icon={<Home size={24} />} 
             label="Properties"
             active={location.startsWith('/properties')} 
           />

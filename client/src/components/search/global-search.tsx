@@ -154,6 +154,12 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
     setRecentSearches(newRecentSearches);
     localStorage.setItem('recentSearches', JSON.stringify(newRecentSearches));
   };
+  
+  // Clear all recent searches
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    localStorage.removeItem('recentSearches');
+  };
 
   // Handle search
   useEffect(() => {
@@ -227,7 +233,15 @@ export const GlobalSearchInput = ({ onClose }: GlobalSearchInputProps) => {
                 // Show recent searches if no search term
                 recentSearches.length > 0 ? (
                   <div className="p-2">
-                    <h3 className="text-sm font-semibold text-primary/80 px-3 py-2 uppercase tracking-wide">Recent Searches</h3>
+                    <div className="flex items-center justify-between px-3 py-2">
+                      <h3 className="text-sm font-semibold text-primary/80 uppercase tracking-wide">Recent Searches</h3>
+                      <button 
+                        className="text-xs py-1 px-3 bg-white hover:bg-gray-100 hover:text-[#803344] border border-gray-200 rounded-full transition-colors text-gray-500" 
+                        onClick={clearRecentSearches}
+                      >
+                        Clear All
+                      </button>
+                    </div>
                     <div className="space-y-2">
                       {recentSearches.map((term, idx) => (
                         <div 

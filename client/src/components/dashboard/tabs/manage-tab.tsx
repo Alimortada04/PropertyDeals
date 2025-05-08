@@ -687,6 +687,13 @@ export default function DashboardManageTab() {
                     <Table className="h-3.5 w-3.5 mr-1.5" />
                     Sheet
                   </button>
+                  <button 
+                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "cards" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+                    onClick={() => setPipelineView("cards")}
+                  >
+                    <ImageIcon className="h-3.5 w-3.5 mr-1.5" />
+                    Grid
+                  </button>
                 </div>
               </div>
               <Button
@@ -780,14 +787,128 @@ export default function DashboardManageTab() {
                 ))}
               </div>
             </DragDropContext>
-          ) : (
-            /* Grid view */
+          ) : pipelineView === "grid" ? (
+            /* Sheet view */
             <PropertyGrid 
               properties={localProperties} 
               onClickProperty={handleViewProperty}
               onClickManage={handleManageProperty}
               onRemove={handleRemoveProperty}
             />
+          ) : (
+            /* Card Grid view */
+            <div className="mt-4">
+              {/* Filter and stage selector for card view */}
+              <div className="mb-6 flex flex-wrap gap-2 items-center">
+                <div className="flex gap-2 items-center">
+                  <Label htmlFor="stage-filter-cards" className="text-sm whitespace-nowrap">Filter Stage:</Label>
+                  <Select
+                    defaultValue="favorited"
+                    onValueChange={(value) => {}}
+                  >
+                    <SelectTrigger id="stage-filter-cards" className="w-[180px] h-9">
+                      <SelectValue placeholder="Favorites" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Stages</SelectItem>
+                      <SelectItem value="favorited">Favorites</SelectItem>
+                      <SelectItem value="contacted">Contacted</SelectItem>
+                      <SelectItem value="offer_made">Offer Made</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="close_pending">Closing Soon</SelectItem>
+                      <SelectItem value="closed">Closed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="flex gap-2 items-center ml-4">
+                  <Label htmlFor="property-filter" className="text-sm whitespace-nowrap">Property Filter:</Label>
+                  <Select
+                    defaultValue="all"
+                    onValueChange={(value) => {}}
+                  >
+                    <SelectTrigger id="property-filter" className="w-[150px] h-9">
+                      <SelectValue placeholder="All Properties" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Properties</SelectItem>
+                      <SelectItem value="residential">Residential</SelectItem>
+                      <SelectItem value="commercial">Commercial</SelectItem>
+                      <SelectItem value="land">Land</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              {/* Grid of properties */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {localProperties.map((property) => (
+                  <Card key={property.id} className="overflow-hidden transition-all hover:shadow-md">
+                    <div className="relative">
+                      <img 
+                        src={property.imageUrl} 
+                        alt={property.title} 
+                        className="w-full h-44 object-cover"
+                      />
+                      <Badge className={`absolute top-2 right-2 ${
+                        property.priority === 'High' ? 'bg-red-500 text-white' : 
+                        property.priority === 'Medium' ? 'bg-yellow-400 text-white' : 
+                        'bg-blue-500 text-white'
+                      }`}>
+                        {property.priority === 'Medium' ? 'Med' : property.priority || 'Med'}
+                      </Badge>
+                      <Badge className="absolute top-2 left-2 bg-white/80 text-[#09261E] backdrop-blur-sm">
+                        ${property.price.toLocaleString()}
+                      </Badge>
+                    </div>
+                    <CardContent className="p-3">
+                      <h3 className="font-semibold text-[#09261E] truncate">{property.title}</h3>
+                      <p className="text-gray-600 text-sm truncate">{property.address}</p>
+                      <div className="mt-2 flex items-center">
+                        <Badge variant="outline" className="font-normal text-xs mr-2">
+                          {property.stage === 'favorited' ? 'Favorite' : 
+                           property.stage === 'contacted' ? 'Contacted' :
+                           property.stage === 'offer_made' ? 'Offer Made' :
+                           property.stage === 'pending' ? 'Pending' :
+                           property.stage === 'close_pending' ? 'Closing Soon' :
+                           property.stage === 'closed' ? 'Closed' : 'Dropped'}
+                        </Badge>
+                        <Badge variant="outline" className="font-normal text-xs">
+                          {property.type || 'Residential'}
+                        </Badge>
+                      </div>
+                      
+                      <div className="flex gap-2 mt-3">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1 h-8 text-xs"
+                          onClick={() => handleViewProperty(property.id)}
+                        >
+                          <Eye className="h-3.5 w-3.5 mr-1" /> View
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1 h-8 text-xs"
+                          onClick={() => handleManageProperty(property.id)}
+                        >
+                          <ClipboardCheck className="h-3.5 w-3.5 mr-1" /> Manage
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-gray-500 hover:bg-gray-100"
+                          onClick={() => handleRemoveProperty(property.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       )}
