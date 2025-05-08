@@ -150,7 +150,7 @@ export default function Sidebar() {
             icon={
               <div className="w-6 h-6 flex items-center justify-center">
                 <img 
-                  src="/assets/free-houses-icon-2506-thumb.png" 
+                  src="/images/real-estate.png" 
                   alt="Properties" 
                   className="w-5 h-5 object-contain" 
                 />
