@@ -22,6 +22,30 @@ import {
   Compass
 } from "lucide-react";
 
+// Custom TwoHouses icon component
+const TwoHouses: FC<{ size?: number; className?: string }> = ({ size = 24, className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    {/* First house */}
+    <path d="M3 9l4-4 4 4v7h-8V9z" />
+    <path d="M5 12h4" />
+    
+    {/* Second house */}
+    <path d="M13 6l4-4 4 4v12h-8V6z" />
+    <path d="M15 12h4" />
+  </svg>
+);
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -102,7 +126,7 @@ export default function Sidebar() {
   return (
     <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-inner border-r">
       {/* Logo at top - Using pdLogo.png image */}
-      <div className="flex items-center justify-center h-16">
+      <div className="flex items-center justify-center h-16 mb-0">
         <Link href="/dashboard">
           <div className="flex items-center justify-center hover:scale-110 transition-all">
             <img src="/images/pdLogo.png" alt="PropertyDeals" className="h-10 w-auto" />
@@ -112,7 +136,7 @@ export default function Sidebar() {
       
       {/* Main Navigation (Scrollable) */}
       <ScrollArea className="flex-1 pb-12">
-        <div className="space-y-2 flex flex-col items-center">
+        <div className="space-y-2 flex flex-col items-center pt-2 mt-0">
           <NavItem 
             href="/" 
             icon={<Home size={24} />} 
@@ -122,7 +146,7 @@ export default function Sidebar() {
           
           <NavItem 
             href="/properties" 
-            icon={<Building size={24} strokeWidth={1.5} />} 
+            icon={<TwoHouses size={24} />} 
             label="Properties"
             active={location.startsWith('/properties')} 
           />

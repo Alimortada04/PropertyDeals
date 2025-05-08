@@ -34,10 +34,10 @@ export default function DashboardPage() {
   
   return (
     <div className="bg-[#F8F9FA]">
-      <div className="sticky top-0 z-20 bg-white px-4 py-6 shadow-sm">
+      <div className="sticky top-0 z-20 bg-transparent backdrop-blur-md px-4 py-4 shadow-sm">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <div className="flex justify-center w-full">
-            <div className="bg-white border border-neutral-200 rounded-full px-2 py-1 shadow-md overflow-x-auto md:overflow-visible max-w-full">
+            <div className="bg-white border border-neutral-200 rounded-full p-1 shadow-md overflow-x-auto md:overflow-visible max-w-full">
               <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
                 <TabsList className="bg-transparent rounded-full p-0 flex-nowrap gap-1">
                   <TabsTrigger 
@@ -64,9 +64,6 @@ export default function DashboardPage() {
                 </TabsList>
               </Tabs>
             </div>
-          </div>
-          <div className="text-xs text-gray-500 mt-2">
-            You're currently viewing: {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
           </div>
         </div>
       </div>
