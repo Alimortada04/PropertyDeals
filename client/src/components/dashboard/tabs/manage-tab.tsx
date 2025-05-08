@@ -265,7 +265,7 @@ const PropertyGrid = ({ properties, onClickProperty, onClickManage, onRemove }: 
           <Button
             variant="outline"
             size="sm"
-            className="h-9 px-2"
+            className="h-9 px-2 hover:bg-gray-100 hover:text-gray-900 transition-colors"
             onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
           >
             <ArrowUpDown className="h-4 w-4 mr-1" />
@@ -882,15 +882,15 @@ export default function DashboardManageTab() {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="flex-1 h-8 text-xs"
+                          className="flex-1 h-8 text-xs border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
                           onClick={() => handleViewProperty(property.id)}
                         >
                           <Eye className="h-3.5 w-3.5 mr-1" /> View
                         </Button>
                         <Button 
-                          variant="outline" 
+                          variant="default" 
                           size="sm" 
-                          className="flex-1 h-8 text-xs"
+                          className="flex-1 h-8 text-xs bg-[#09261E] hover:bg-[#135341]"
                           onClick={() => handleManageProperty(property.id)}
                         >
                           <ClipboardCheck className="h-3.5 w-3.5 mr-1" /> Manage
