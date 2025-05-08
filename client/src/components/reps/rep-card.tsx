@@ -116,7 +116,7 @@ export default function RepCard({ rep }: RepCardProps) {
             
             <Badge 
               variant="outline" 
-              className="mb-1 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs inline-flex w-auto"
+              className="mb-1 bg-[#E59F9F]/10 text-[#803344] border-[#E59F9F] font-medium text-xs inline-flex w-auto mx-auto justify-center"
             >
               {rep.role}
             </Badge>
