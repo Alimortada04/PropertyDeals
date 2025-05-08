@@ -1099,7 +1099,7 @@ export default function ProfilePage() {
                                   </Tooltip>
                                 </TooltipProvider>
                               ) : (
-                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
                                   ✓ Complete
                                 </span>
                               )}
@@ -1200,7 +1200,7 @@ export default function ProfilePage() {
                                   <TooltipProvider>
                                     <Tooltip>
                                       <TooltipTrigger asChild>
-                                        <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 h-5 px-1.5 cursor-help">
+                                        <Badge className="bg-[#803344] text-white hover:bg-[#803344]/90 h-5 px-1.5 cursor-help">
                                           Verify
                                         </Badge>
                                       </TooltipTrigger>
@@ -1336,29 +1336,30 @@ export default function ProfilePage() {
                           <label className="text-sm font-medium mb-2 block text-gray-700">
                             Type of Buyer
                           </label>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
-                            {buyerTypeOptions.map((option) => (
-                              <div key={option} className="flex items-center">
-                                <Checkbox 
-                                  id={`type_${option}`}
-                                  checked={profileData.type_of_buyer?.includes(option)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked === true) {
-                                      handleMultiSelectChange('type_of_buyer', option, 'profile');
-                                    } else {
-                                      handleMultiSelectChange('type_of_buyer', option, 'profile');
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {buyerTypeOptions.map((option) => {
+                              const isSelected = profileData.type_of_buyer?.includes(option);
+                              return (
+                                <button
+                                  key={option}
+                                  type="button"
+                                  onClick={() => handleMultiSelectChange('type_of_buyer', option, 'profile')}
+                                  className={`
+                                    px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200
+                                    flex items-center group hover:shadow-sm
+                                    ${isSelected 
+                                      ? 'bg-[#09261E] text-white border border-[#09261E]' 
+                                      : 'bg-white text-gray-700 border border-gray-300 hover:border-[#09261E]/30 hover:bg-[#09261E]/5'
                                     }
-                                  }}
-                                  className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
-                                />
-                                <label 
-                                  htmlFor={`type_${option}`}
-                                  className="ml-2 text-sm text-gray-700"
+                                  `}
                                 >
                                   {option}
-                                </label>
-                              </div>
-                            ))}
+                                  {isSelected && (
+                                    <Check className="ml-1 h-3.5 w-3.5 text-white" />
+                                  )}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                       </div>
@@ -1493,8 +1494,8 @@ export default function ProfilePage() {
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
-                                    ⚠️ Recommended
+                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344] text-white rounded-full cursor-help">
+                                    Recommended
                                   </span>
                                 </TooltipTrigger>
                                 <TooltipContent>
@@ -1503,7 +1504,7 @@ export default function ProfilePage() {
                               </Tooltip>
                             </TooltipProvider>
                           ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
                               ✓ Complete
                             </span>
                           )}
@@ -1567,7 +1568,7 @@ export default function ProfilePage() {
                               Optional
                             </span>
                           ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
                               ✓ Added
                             </span>
                           )}
@@ -2022,7 +2023,7 @@ export default function ProfilePage() {
                               </Tooltip>
                             </TooltipProvider>
                           ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
                               ✓ Complete
                             </span>
                           )}
@@ -2419,7 +2420,7 @@ export default function ProfilePage() {
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
+                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344] text-white rounded-full cursor-help">
                                     Recommended
                                   </span>
                                 </TooltipTrigger>
@@ -2429,11 +2430,11 @@ export default function ProfilePage() {
                               </Tooltip>
                             </TooltipProvider>
                           ) : profileData.proof_of_funds_verified ? (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
                               ✓ Verified
                             </span>
                           ) : (
-                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
+                            <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344] text-white rounded-full">
                               ⏳ Pending Verification
                             </span>
                           )}
