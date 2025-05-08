@@ -18,7 +18,8 @@ import {
   Settings,
   Briefcase,
   MessageCircle,
-  Calendar
+  Calendar,
+  Compass
 } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -114,7 +115,7 @@ export default function Sidebar() {
         <div className="space-y-2 flex flex-col items-center">
           <NavItem 
             href="/" 
-            icon={<Home size={24} />} 
+            icon={<Compass size={24} />} 
             label="Home"
             active={location === '/'} 
           />
