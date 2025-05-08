@@ -36,7 +36,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { navigateToHelpSection, navigateToProfileTab, getCurrentHelpSection } from "@/lib/navigation";
 import styles from "./profile-page.module.css";
-import ConnectionsTabContent from "@/components/profile/ConnectionsTabContent";
+import ConnectionsTab from "./connections-tab";
 
 // Import icons
 import {
