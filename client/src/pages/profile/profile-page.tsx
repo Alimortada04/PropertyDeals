@@ -1090,7 +1090,7 @@ export default function ProfilePage() {
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344] text-white rounded-full cursor-help">
-                                        ⚠️ Needs attention
+                                        Needs attention
                                       </span>
                                     </TooltipTrigger>
                                     <TooltipContent>
@@ -1100,7 +1100,7 @@ export default function ProfilePage() {
                                 </TooltipProvider>
                               ) : (
                                 <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
-                                  ✓ Complete
+                                  Complete
                                 </span>
                               )}
                             </h3>
@@ -1505,7 +1505,7 @@ export default function ProfilePage() {
                             </TooltipProvider>
                           ) : (
                             <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
-                              ✓ Complete
+                              Complete
                             </span>
                           )}
                         </h3>
@@ -1569,7 +1569,7 @@ export default function ProfilePage() {
                             </span>
                           ) : (
                             <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
-                              ✓ Added
+                              Added
                             </span>
                           )}
                         </h3>
@@ -2024,7 +2024,7 @@ export default function ProfilePage() {
                             </TooltipProvider>
                           ) : (
                             <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#135341] text-white rounded-full">
-                              ✓ Complete
+                              Complete
                             </span>
                           )}
                         </h3>
