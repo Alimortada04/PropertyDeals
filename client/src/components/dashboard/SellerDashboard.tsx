@@ -54,7 +54,7 @@ import {
   Bell, Share2, ArrowRight, X, MoreHorizontal, History, Calendar, FileCheck, 
   HelpCircle, ArrowUp, ArrowDown, TrendingUp, ChevronDown, Upload as UploadIcon, 
   Paperclip, Map, AlarmCheck, User, ListChecks, Folders, Text, ChevronUp,
-  Zap, PanelLeft, ScreenShare, Info, Megaphone
+  Zap, PanelLeft, ScreenShare, Info, Megaphone, AlertTriangle
 } from 'lucide-react';
 
 // Import custom components
@@ -597,7 +597,10 @@ export default function SellerDashboard() {
                   <FileText className="h-5 w-5 mr-2 text-[#135341]" />
                   Assignment Contract
                 </Label>
-                <Badge variant="outline" className="text-gray-600 border-gray-200 bg-gray-50">Optional</Badge>
+                <Badge className="text-white border-none bg-[#803344] flex items-center gap-1">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  Needs Attention
+                </Badge>
               </div>
               <div className="border-2 border-dashed rounded-lg p-6 text-center bg-gray-50">
                 <UploadIcon className="h-8 w-8 mx-auto text-gray-400 mb-2" />
@@ -614,7 +617,10 @@ export default function SellerDashboard() {
                   <Camera className="h-5 w-5 mr-2 text-[#135341]" />
                   Property Photos / Video
                 </Label>
-                <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50">Recommended</Badge>
+                <Badge className="text-white border-none bg-[#803344] flex items-center gap-1">
+                  <AlertTriangle className="h-3.5 w-3.5" />
+                  Needs Attention
+                </Badge>
               </div>
               <div className="border-2 border-dashed rounded-lg p-6 text-center bg-gray-50">
                 <Camera className="h-8 w-8 mx-auto text-gray-400 mb-2" />
