@@ -1089,7 +1089,7 @@ export default function ProfilePage() {
                                 <TooltipProvider>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
-                                      <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
+                                      <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344] text-white rounded-full cursor-help">
                                         ⚠️ Needs attention
                                       </span>
                                     </TooltipTrigger>
@@ -2012,8 +2012,8 @@ export default function ProfilePage() {
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-amber-100 text-amber-800 rounded-full cursor-help">
-                                    ⚠️ Needs attention
+                                  <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344] text-white rounded-full cursor-help">
+                                    Needs attention
                                   </span>
                                 </TooltipTrigger>
                                 <TooltipContent>
