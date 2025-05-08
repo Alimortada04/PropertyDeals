@@ -2380,7 +2380,7 @@ export default function ProfilePage() {
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344] text-white rounded-full cursor-help">
-                                    Recommended
+                                    Needs Attention
                                   </span>
                                 </TooltipTrigger>
                                 <TooltipContent>
