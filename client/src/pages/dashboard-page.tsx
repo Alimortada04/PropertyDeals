@@ -34,7 +34,7 @@ export default function DashboardPage() {
   
   return (
     <div className="bg-[#F8F9FA]">
-      <div className="sticky top-0 z-20 mb-4 mt-4">
+      <div className="sticky top-0 z-20 mb-4 pt-4">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <div className="flex justify-center">
             <div className="backdrop-blur-lg bg-white/10 shadow-lg border border-white/10 rounded-xl px-4 py-2 inline-flex">

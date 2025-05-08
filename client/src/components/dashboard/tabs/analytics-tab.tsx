@@ -230,97 +230,99 @@ export default function AnalyticsTab() {
   return (
     <div className="space-y-6">
       {/* Header Metrics */}
-      <div className="bg-white pt-3 pb-4 rounded-lg mb-6">
-        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
-          <h3 className="text-xl font-bold text-[#09261E] mb-2 md:mb-0">Portfolio Analytics</h3>
-          
-          <div className="flex flex-wrap items-center gap-2">
-            <Select value={timeFilter} onValueChange={setTimeFilter}>
-              <SelectTrigger className="w-[180px] h-9">
-                <SelectValue placeholder="Select time range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Time</SelectItem>
-                <SelectItem value="30d">Last 30 Days</SelectItem>
-                <SelectItem value="ytd">This Year</SelectItem>
-                <SelectItem value="custom">Custom Range</SelectItem>
-              </SelectContent>
-            </Select>
+      <Card className="mb-6">
+        <CardContent className="pt-3 pb-4">
+          <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mb-4">
+            <h3 className="text-xl font-bold text-[#09261E] mb-2 md:mb-0">Portfolio Analytics</h3>
             
-            <Button variant="outline" size="sm" className="flex items-center gap-1 hover:bg-gray-100 hover:text-[#09261E]">
-              <Download className="h-4 w-4" />
-              Export
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Select value={timeFilter} onValueChange={setTimeFilter}>
+                <SelectTrigger className="w-[180px] h-9">
+                  <SelectValue placeholder="Select time range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Time</SelectItem>
+                  <SelectItem value="30d">Last 30 Days</SelectItem>
+                  <SelectItem value="ytd">This Year</SelectItem>
+                  <SelectItem value="custom">Custom Range</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Button variant="outline" size="sm" className="flex items-center gap-1 hover:bg-gray-100 hover:text-[#09261E]">
+                <Download className="h-4 w-4" />
+                Export
+              </Button>
+            </div>
           </div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Portfolio Value */}
-          <Card className="border shadow-sm rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Portfolio Value</p>
-                  <h3 className="text-2xl font-bold">$3.0M</h3>
-                  <div className="flex items-center mt-2">
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
-                      <ArrowUpRight className="h-3 w-3 mr-1" />
-                      11.2%
-                    </Badge>
-                    <span className="text-xs text-gray-500">Year over Year</span>
-                  </div>
-                </div>
-                <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
-                  <TrendingUp className="h-5 w-5 text-[#09261E]" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
           
-          {/* Monthly Cashflow */}
-          <Card className="border shadow-sm rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Monthly Cashflow</p>
-                  <h3 className="text-2xl font-bold">$24,850</h3>
-                  <div className="flex items-center mt-2">
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
-                      <ArrowUpRight className="h-3 w-3 mr-1" />
-                      3.8%
-                    </Badge>
-                    <span className="text-xs text-gray-500">Month over Month</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Portfolio Value */}
+            <Card className="border shadow-sm rounded-xl overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Portfolio Value</p>
+                    <h3 className="text-2xl font-bold">$3.0M</h3>
+                    <div className="flex items-center mt-2">
+                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
+                        <ArrowUpRight className="h-3 w-3 mr-1" />
+                        11.2%
+                      </Badge>
+                      <span className="text-xs text-gray-500">Year over Year</span>
+                    </div>
+                  </div>
+                  <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-[#09261E]" />
                   </div>
                 </div>
-                <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
-                  <DollarSign className="h-5 w-5 text-[#09261E]" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          {/* Properties Owned */}
-          <Card className="border shadow-sm rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Properties Owned</p>
-                  <h3 className="text-2xl font-bold">5</h3>
-                  <div className="flex items-center mt-2">
-                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
-                      +2
-                    </Badge>
-                    <span className="text-xs text-gray-500">This Year</span>
+              </CardContent>
+            </Card>
+            
+            {/* Monthly Cashflow */}
+            <Card className="border shadow-sm rounded-xl overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Monthly Cashflow</p>
+                    <h3 className="text-2xl font-bold">$24,850</h3>
+                    <div className="flex items-center mt-2">
+                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
+                        <ArrowUpRight className="h-3 w-3 mr-1" />
+                        3.8%
+                      </Badge>
+                      <span className="text-xs text-gray-500">Month over Month</span>
+                    </div>
+                  </div>
+                  <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
+                    <DollarSign className="h-5 w-5 text-[#09261E]" />
                   </div>
                 </div>
-                <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
-                  <Home className="h-5 w-5 text-[#09261E]" />
+              </CardContent>
+            </Card>
+            
+            {/* Properties Owned */}
+            <Card className="border shadow-sm rounded-xl overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Properties Owned</p>
+                    <h3 className="text-2xl font-bold">5</h3>
+                    <div className="flex items-center mt-2">
+                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
+                        +2
+                      </Badge>
+                      <span className="text-xs text-gray-500">This Year</span>
+                    </div>
+                  </div>
+                  <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
+                    <Home className="h-5 w-5 text-[#09261E]" />
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              </CardContent>
+            </Card>
+          </div>
+        </CardContent>
+      </Card>
       
       {/* Tabs System */}
       <Tabs defaultValue="performance" className="w-full">
