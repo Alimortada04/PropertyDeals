@@ -130,6 +130,7 @@ interface ProfileData {
   buyer_verification_tag: string | null;
   proof_of_funds_url: string | null;
   proof_of_funds_verified: boolean;
+  past_properties: string[];
   preferred_inspectors: string[];
   preferred_agents: string[];
   preferred_contractors: string[];
@@ -316,6 +317,7 @@ export default function ProfilePage() {
     buyer_verification_tag: null,
     proof_of_funds_url: null,
     proof_of_funds_verified: false,
+    past_properties: [],
     preferred_inspectors: [],
     preferred_agents: [],
     preferred_contractors: [],
@@ -2414,10 +2416,10 @@ export default function ProfilePage() {
                         </div>
                       </div>
                       
-                      {/* Proof of Funds */}
-                      <div className="space-y-4 mb-8 pt-6 border-t">
+                      {/* Verification Section */}
+                      <div className="space-y-6 mb-8 pt-6 border-t">
                         <h3 className="font-semibold text-gray-800 text-sm uppercase tracking-wider flex items-center">
-                          <span>Proof of Funds</span>
+                          <span>Verification</span>
                           {!profileData.proof_of_funds_url ? (
                             <TooltipProvider>
                               <Tooltip>
@@ -2442,7 +2444,13 @@ export default function ProfilePage() {
                           )}
                         </h3>
                         
+                        {/* Section 1: Proof of Funds Upload */}
                         <div className="bg-gray-50/80 p-4 rounded-md border border-gray-200">
+                          <h4 className="font-medium text-gray-800 text-base mb-3 flex items-center">
+                            <FileCheck className="mr-2 h-5 w-5 text-[#09261E]" />
+                            Proof of Funds Upload
+                          </h4>
+                          
                           <div className="mb-4">
                             <p className="text-sm text-gray-700 mb-2">
                               Uploading proof of funds increases your credibility with sellers and can help you win more deals.
@@ -2500,7 +2508,7 @@ export default function ProfilePage() {
                               <Button
                                 type="button"
                                 onClick={() => {/* Handle proof of funds upload */}}
-                                className="w-full py-6 flex flex-col items-center justify-center bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 rounded-md"
+                                className="w-full py-8 flex flex-col items-center justify-center bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 rounded-md transition-colors duration-200 hover:border-gray-400"
                               >
                                 <Upload className="h-8 w-8 text-gray-400 mb-2" />
                                 <span className="font-medium text-gray-700">Upload Proof of Funds</span>
@@ -2508,19 +2516,112 @@ export default function ProfilePage() {
                               </Button>
                             )}
                           </div>
+                        </div>
+                        
+                        {/* Section 2: Past Properties */}
+                        <div className="bg-gray-50/80 p-4 rounded-md border border-gray-200">
+                          <h4 className="font-medium text-gray-800 text-base mb-3 flex items-center">
+                            <Building className="mr-2 h-5 w-5 text-[#09261E]" />
+                            Past Properties
+                          </h4>
                           
-                          {profileData.buyer_verification_tag && (
-                            <div className="mt-4 bg-[#09261E]/5 border border-[#09261E]/10 rounded-md p-3 flex items-center">
-                              <div className="mr-3 p-1.5 rounded-full bg-[#09261E]/10">
-                                <Shield className="h-4 w-4 text-[#09261E]" />
+                          <p className="text-sm text-gray-700 mb-3">
+                            List up to 5 past properties you've purchased under your name or business entity.
+                            These will be reviewed for verification purposes.
+                          </p>
+                          
+                          <div className="space-y-3">
+                            {profileData.past_properties.map((property, index) => (
+                              <div key={index} className="flex items-center">
+                                <Input
+                                  value={property}
+                                  className="flex-1 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                                  placeholder="Property address"
+                                  onChange={(e) => {
+                                    const updatedProperties = [...profileData.past_properties];
+                                    updatedProperties[index] = e.target.value;
+                                    setProfileData(prev => ({
+                                      ...prev,
+                                      past_properties: updatedProperties
+                                    }));
+                                    setIsPropertySectionModified(true);
+                                  }}
+                                />
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="ml-2 text-gray-500 hover:text-red-600"
+                                  onClick={() => {
+                                    const updatedProperties = [...profileData.past_properties];
+                                    updatedProperties.splice(index, 1);
+                                    setProfileData(prev => ({
+                                      ...prev,
+                                      past_properties: updatedProperties
+                                    }));
+                                    setIsPropertySectionModified(true);
+                                  }}
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ))}
+                            
+                            {profileData.past_properties.length < 5 && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full py-2 text-[#09261E] border-dashed border-gray-300 hover:border-[#09261E] hover:bg-[#09261E]/5"
+                                onClick={() => {
+                                  setProfileData(prev => ({
+                                    ...prev,
+                                    past_properties: [...prev.past_properties, ""]
+                                  }));
+                                  setIsPropertySectionModified(true);
+                                }}
+                              >
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Property
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {/* Section 3: Verified Badge Status */}
+                        <div className="bg-gray-50/80 p-4 rounded-md border border-gray-200">
+                          <h4 className="font-medium text-gray-800 text-base mb-3 flex items-center">
+                            <Shield className="mr-2 h-5 w-5 text-[#09261E]" />
+                            Verification Status
+                          </h4>
+                          
+                          {!profileData.buyer_verification_tag || profileData.buyer_verification_tag === "Not Verified Yet" ? (
+                            <div className="flex items-center p-3 bg-gray-100 rounded-md">
+                              <div className="mr-3 p-1.5 rounded-full bg-gray-200">
+                                <Shield className="h-5 w-5 text-gray-500" />
                               </div>
                               <div>
-                                <p className="text-sm font-medium text-gray-800">
-                                  {profileData.buyer_verification_tag}
-                                </p>
-                                <p className="text-xs text-gray-600">
-                                  Your buyer verification status helps sellers trust your offers
-                                </p>
+                                <p className="text-sm font-medium text-gray-700">Not Verified Yet</p>
+                                <p className="text-xs text-gray-500">Please complete all profile and verification fields.</p>
+                              </div>
+                            </div>
+                          ) : profileData.buyer_verification_tag === "Verification Pending" ? (
+                            <div className="flex items-center p-3 bg-amber-50 rounded-md">
+                              <div className="mr-3 p-1.5 rounded-full bg-amber-100">
+                                <Clock className="h-5 w-5 text-amber-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-amber-800">Verification Pending</p>
+                                <p className="text-xs text-amber-700">Our team is reviewing your details.</p>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="flex items-center p-3 bg-green-50 rounded-md">
+                              <div className="mr-3 p-1.5 rounded-full bg-green-100">
+                                <Check className="h-5 w-5 text-green-600" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-green-800">Verified Buyer</p>
+                                <p className="text-xs text-green-700">Your buyer verification has been approved.</p>
                               </div>
                             </div>
                           )}
