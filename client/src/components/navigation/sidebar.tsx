@@ -22,7 +22,7 @@ import {
   Compass
 } from "lucide-react";
 
-// Custom TwoHouses icon component
+// Custom TwoHouses icon component based on the provided image
 const TwoHouses: FC<{ size?: number; className?: string }> = ({ size = 24, className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -36,13 +36,14 @@ const TwoHouses: FC<{ size?: number; className?: string }> = ({ size = 24, class
     strokeLinejoin="round"
     className={className}
   >
-    {/* First house */}
-    <path d="M3 9l4-4 4 4v7h-8V9z" />
-    <path d="M5 12h4" />
-    
-    {/* Second house */}
-    <path d="M13 6l4-4 4 4v12h-8V6z" />
-    <path d="M15 12h4" />
+    {/* Row of houses */}
+    <path d="M1 9.5l4-3 4 3V18H1V9.5z" />
+    <path d="M9 9.5l4-3 4 3V18H9V9.5z" />
+    <path d="M17 9.5l4-3 1.5 1V18h-5.5V9.5z" />
+    {/* Windows and doors */}
+    <path d="M3 18v-5h2v5" />
+    <path d="M11 18v-5h2v5" />
+    <path d="M19 18v-5h2v5" />
   </svg>
 );
 

@@ -34,29 +34,29 @@ export default function DashboardPage() {
   
   return (
     <div className="bg-[#F8F9FA]">
-      <div className="sticky top-0 z-20 bg-transparent backdrop-blur-md px-4 py-4 shadow-sm">
+      <div className="sticky top-0 z-20 px-4 py-4">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
-          <div className="flex justify-center w-full">
-            <div className="bg-white border border-neutral-200 rounded-full p-1 shadow-md overflow-x-auto md:overflow-visible max-w-full">
-              <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-                <TabsList className="bg-transparent rounded-full p-0 flex-nowrap gap-1">
+          <div className="flex justify-center">
+            <div className="backdrop-blur-md bg-white/20 rounded-xl px-4 py-2 shadow-md inline-flex">
+              <Tabs value={activeTab} onValueChange={handleTabChange}>
+                <TabsList className="bg-transparent p-0 flex-nowrap gap-2 overflow-x-auto">
                   <TabsTrigger 
                     value="discover" 
-                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-[#E6F3EC] px-5 py-2 rounded-full transition-all"
+                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=inactive]:bg-white data-[state=inactive]:border data-[state=inactive]:border-neutral-200 data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-100 rounded-full px-4 py-2 transition-colors duration-150"
                   >
                     <Compass className="w-4 h-4 mr-2" />
                     <span className="font-medium">Discover</span>
                   </TabsTrigger>
                   <TabsTrigger 
                     value="manage" 
-                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-[#E6F3EC] px-5 py-2 rounded-full transition-all"
+                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=inactive]:bg-white data-[state=inactive]:border data-[state=inactive]:border-neutral-200 data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-100 rounded-full px-4 py-2 transition-colors duration-150"
                   >
                     <FileClock className="w-4 h-4 mr-2" />
                     <span className="font-medium">Manage</span>
                   </TabsTrigger>
                   <TabsTrigger 
                     value="analytics" 
-                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-[#E6F3EC] px-5 py-2 rounded-full transition-all"
+                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=active]:shadow-sm data-[state=inactive]:bg-white data-[state=inactive]:border data-[state=inactive]:border-neutral-200 data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-100 rounded-full px-4 py-2 transition-colors duration-150"
                   >
                     <BarChart3 className="w-4 h-4 mr-2" />
                     <span className="font-medium">Analytics</span>
