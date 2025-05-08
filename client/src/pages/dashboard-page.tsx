@@ -34,12 +34,12 @@ export default function DashboardPage() {
   
   return (
     <div className="bg-[#F8F9FA]">
-      <div className="sticky top-0 z-20 px-4 py-4">
+      <div className="sticky top-0 z-20 mb-4">
         <div className="max-w-7xl mx-auto flex flex-col items-center">
           <div className="flex justify-center">
-            <div className="backdrop-blur-lg bg-white/10 shadow-lg border border-white/10 rounded-xl px-4 py-2 inline-flex">
+            <div className="backdrop-blur-lg bg-white/10 shadow-lg border border-white/10 rounded-xl inline-flex">
               <Tabs value={activeTab} onValueChange={handleTabChange}>
-                <TabsList className="bg-transparent p-0 flex-nowrap gap-2 overflow-x-auto">
+                <TabsList className="bg-transparent p-1 flex-nowrap gap-2 overflow-x-auto">
                   <TabsTrigger 
                     value="discover" 
                     className="data-[state=active]:bg-white data-[state=active]:text-[#09261E] data-[state=active]:shadow-sm data-[state=active]:font-semibold data-[state=inactive]:bg-white/70 data-[state=inactive]:border data-[state=inactive]:border-neutral-200 data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-gray-100 rounded-full px-4 py-2 transition-all duration-200 ease-in-out scale-100 hover:scale-[1.02] relative"
