@@ -254,23 +254,23 @@ export default function AnalyticsTab() {
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Portfolio Value */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start">
+          <Card className="border shadow-sm rounded-xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-2">
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Portfolio Value</p>
-                  <h3 className="text-2xl font-bold">${(portfolioMetrics.totalValue / 1000000).toFixed(1)}M</h3>
-                  <div className="flex items-center mt-1">
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs mr-1">
+                  <h3 className="text-2xl font-bold">$3.0M</h3>
+                  <div className="flex items-center mt-2">
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
                       <ArrowUpRight className="h-3 w-3 mr-1" />
-                      {portfolioMetrics.valueGrowthYoY}%
+                      11.2%
                     </Badge>
                     <span className="text-xs text-gray-500">Year over Year</span>
                   </div>
                 </div>
-                <div className="h-10 w-10 bg-[#09261E]/10 rounded-full flex items-center justify-center">
+                <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
                   <TrendingUp className="h-5 w-5 text-[#09261E]" />
                 </div>
               </div>
@@ -278,21 +278,21 @@ export default function AnalyticsTab() {
           </Card>
           
           {/* Monthly Cashflow */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start">
+          <Card className="border shadow-sm rounded-xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-2">
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Monthly Cashflow</p>
-                  <h3 className="text-2xl font-bold">${portfolioMetrics.monthlyCashflow.toLocaleString()}</h3>
-                  <div className="flex items-center mt-1">
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs mr-1">
+                  <h3 className="text-2xl font-bold">$24,850</h3>
+                  <div className="flex items-center mt-2">
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
                       <ArrowUpRight className="h-3 w-3 mr-1" />
-                      {portfolioMetrics.cashflowGrowthMoM}%
+                      3.8%
                     </Badge>
                     <span className="text-xs text-gray-500">Month over Month</span>
                   </div>
                 </div>
-                <div className="h-10 w-10 bg-[#09261E]/10 rounded-full flex items-center justify-center">
+                <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
                   <DollarSign className="h-5 w-5 text-[#09261E]" />
                 </div>
               </div>
@@ -300,20 +300,20 @@ export default function AnalyticsTab() {
           </Card>
           
           {/* Properties Owned */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start">
+          <Card className="border shadow-sm rounded-xl overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-start mb-2">
                 <div>
                   <p className="text-sm text-gray-500 mb-1">Properties Owned</p>
-                  <h3 className="text-2xl font-bold">{portfolioMetrics.propertyCount}</h3>
-                  <div className="flex items-center mt-1">
-                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs mr-1">
-                      +{portfolioMetrics.propertiesAddedThisYear}
+                  <h3 className="text-2xl font-bold">5</h3>
+                  <div className="flex items-center mt-2">
+                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-xs mr-1 px-2 py-1 rounded-md flex items-center">
+                      +2
                     </Badge>
                     <span className="text-xs text-gray-500">This Year</span>
                   </div>
                 </div>
-                <div className="h-10 w-10 bg-[#09261E]/10 rounded-full flex items-center justify-center">
+                <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
                   <Home className="h-5 w-5 text-[#09261E]" />
                 </div>
               </div>

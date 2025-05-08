@@ -147,7 +147,15 @@ export default function Sidebar() {
           
           <NavItem 
             href="/properties" 
-            icon={<TwoHouses size={24} />} 
+            icon={
+              <div className="w-6 h-6 flex items-center justify-center">
+                <img 
+                  src="/assets/free-houses-icon-2506-thumb.png" 
+                  alt="Properties" 
+                  className="w-5 h-5 object-contain" 
+                />
+              </div>
+            } 
             label="Properties"
             active={location.startsWith('/properties')} 
           />
