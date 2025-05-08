@@ -36,7 +36,7 @@ import {
   Calendar, 
   BarChart3, 
   DollarSign, 
-  Home, 
+
   TrendingUp,
   PieChart as PieChartIcon
 } from "lucide-react";
@@ -315,7 +315,7 @@ export default function AnalyticsTab() {
                     </div>
                   </div>
                   <div className="h-10 w-10 bg-[#F5F5F5] rounded-full flex items-center justify-center">
-                    <Home className="h-5 w-5 text-[#09261E]" />
+                    <img src="/images/real-estate.png" alt="Properties" className="h-6 w-6" />
                   </div>
                 </div>
               </CardContent>
@@ -850,7 +850,7 @@ export default function AnalyticsTab() {
                           <CardContent className="p-4">
                             <div className="flex gap-3">
                               <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                                <Home className="h-4 w-4 text-blue-600" />
+                                <img src="/images/real-estate.png" alt="Properties" className="h-4 w-4" />
                               </div>
                               <div>
                                 <h4 className="font-medium text-sm">Maintenance Alert</h4>
@@ -984,7 +984,7 @@ export default function AnalyticsTab() {
                     <CardContent className="p-4">
                       <div className="flex gap-3">
                         <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                          <Home className="h-4 w-4 text-blue-600" />
+                          <img src="/images/real-estate.png" alt="Properties" className="h-4 w-4" />
                         </div>
                         <div>
                           <h4 className="font-medium text-sm">Maintenance Alert</h4>
