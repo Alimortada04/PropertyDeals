@@ -2052,9 +2052,9 @@ export default function ProfilePage() {
                               id="markets"
                               name="markets"
                               className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50 mb-2"
-                              placeholder="Add markets separated by commas (e.g. Dallas TX, Houston TX)"
+                              placeholder="Add markets separated by commas (e.g. Milwaukee WI, Madison WI)"
                               onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
+                                if (e.key === 'Enter' || e.key === ',') {
                                   e.preventDefault();
                                   const input = e.currentTarget;
                                   const value = input.value.trim();
@@ -2075,13 +2075,13 @@ export default function ProfilePage() {
                               {profileData.markets?.map((market) => (
                                 <Badge 
                                   key={market} 
-                                  className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E] pl-2 pr-1 py-1 rounded-md border border-[#09261E]/10"
+                                  className="rounded-full border px-4 py-2 text-sm transition bg-[#09261E] text-white hover:bg-[#09261E]/90"
                                 >
                                   <MapPin className="h-3 w-3 mr-1 inline" />
                                   {market}
                                   <button
                                     type="button"
-                                    className="ml-1 rounded-full hover:bg-[#09261E]/10 p-0.5"
+                                    className="ml-2 rounded-full hover:bg-[#09261E]/80 p-0.5"
                                     onClick={() => handleMultiSelectChange('markets', market, 'property')}
                                   >
                                     <X className="h-3 w-3" />
@@ -2090,7 +2090,7 @@ export default function ProfilePage() {
                               ))}
                             </div>
                             <p className="text-xs mt-2 text-gray-500">
-                              Press Enter to add multiple markets separated by commas
+                              Press Enter or comma to add multiple markets
                             </p>
                           </div>
                         </div>
@@ -2099,35 +2099,20 @@ export default function ProfilePage() {
                           <label className="text-sm font-medium mb-2 block text-gray-700">
                             Property Types
                           </label>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                          <div className="flex flex-wrap gap-2 mt-2">
                             {propertyTypeOptions.map((option) => (
-                              <div 
-                                key={option} 
-                                className={`flex items-center p-2 rounded-md border transition-all ${
-                                  profileData.property_types?.includes(option) 
-                                    ? 'border-[#09261E]/20 bg-[#09261E]/5' 
-                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                              <button
+                                key={option}
+                                type="button"
+                                onClick={() => handleMultiSelectChange('property_types', option, 'property')}
+                                className={`rounded-full border px-4 py-2 text-sm transition ${
+                                  profileData.property_types?.includes(option)
+                                    ? 'bg-[#09261E] text-white hover:bg-[#09261E]/90'
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
                                 }`}
                               >
-                                <Checkbox 
-                                  id={`property_type_${option}`}
-                                  checked={profileData.property_types?.includes(option)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked === true) {
-                                      handleMultiSelectChange('property_types', option, 'property');
-                                    } else {
-                                      handleMultiSelectChange('property_types', option, 'property');
-                                    }
-                                  }}
-                                  className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
-                                />
-                                <label 
-                                  htmlFor={`property_type_${option}`}
-                                  className="ml-2 text-sm text-gray-700 cursor-pointer flex-1"
-                                >
-                                  {option}
-                                </label>
-                              </div>
+                                {option}
+                              </button>
                             ))}
                           </div>
                         </div>
@@ -2136,35 +2121,20 @@ export default function ProfilePage() {
                           <label className="text-sm font-medium mb-2 block text-gray-700">
                             Property Conditions
                           </label>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                          <div className="flex flex-wrap gap-2 mt-2">
                             {propertyConditionOptions.map((option) => (
-                              <div 
-                                key={option} 
-                                className={`flex items-center p-2 rounded-md border transition-all ${
-                                  profileData.property_conditions?.includes(option) 
-                                    ? 'border-[#09261E]/20 bg-[#09261E]/5' 
-                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                              <button
+                                key={option}
+                                type="button"
+                                onClick={() => handleMultiSelectChange('property_conditions', option, 'property')}
+                                className={`rounded-full border px-4 py-2 text-sm transition ${
+                                  profileData.property_conditions?.includes(option)
+                                    ? 'bg-[#09261E] text-white hover:bg-[#09261E]/90'
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
                                 }`}
                               >
-                                <Checkbox 
-                                  id={`property_condition_${option}`}
-                                  checked={profileData.property_conditions?.includes(option)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked === true) {
-                                      handleMultiSelectChange('property_conditions', option, 'property');
-                                    } else {
-                                      handleMultiSelectChange('property_conditions', option, 'property');
-                                    }
-                                  }}
-                                  className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
-                                />
-                                <label 
-                                  htmlFor={`property_condition_${option}`}
-                                  className="ml-2 text-sm text-gray-700 cursor-pointer flex-1"
-                                >
-                                  {option}
-                                </label>
-                              </div>
+                                {option}
+                              </button>
                             ))}
                           </div>
                         </div>
@@ -2258,35 +2228,20 @@ export default function ProfilePage() {
                           <label className="text-sm font-medium mb-2 block text-gray-700">
                             Financing Methods
                           </label>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
+                          <div className="flex flex-wrap gap-2 mt-2">
                             {financingMethodOptions.map((option) => (
-                              <div 
-                                key={option} 
-                                className={`flex items-center p-2 rounded-md border transition-all ${
-                                  profileData.financing_methods?.includes(option) 
-                                    ? 'border-[#09261E]/20 bg-[#09261E]/5' 
-                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                              <button
+                                key={option}
+                                type="button"
+                                onClick={() => handleMultiSelectChange('financing_methods', option, 'property')}
+                                className={`rounded-full border px-4 py-2 text-sm transition ${
+                                  profileData.financing_methods?.includes(option)
+                                    ? 'bg-[#09261E] text-white hover:bg-[#09261E]/90'
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'
                                 }`}
                               >
-                                <Checkbox 
-                                  id={`financing_${option}`}
-                                  checked={profileData.financing_methods?.includes(option)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked === true) {
-                                      handleMultiSelectChange('financing_methods', option, 'property');
-                                    } else {
-                                      handleMultiSelectChange('financing_methods', option, 'property');
-                                    }
-                                  }}
-                                  className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
-                                />
-                                <label 
-                                  htmlFor={`financing_${option}`}
-                                  className="ml-2 text-sm text-gray-700 cursor-pointer flex-1"
-                                >
-                                  {option}
-                                </label>
-                              </div>
+                                {option}
+                              </button>
                             ))}
                           </div>
                         </div>
