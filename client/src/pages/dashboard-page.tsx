@@ -34,27 +34,27 @@ export default function DashboardPage() {
   
   return (
     <div className="bg-[#F8F9FA]">
-      <div className="sticky top-0 z-20 bg-[#F8F9FA] pt-6 pb-4 px-4 shadow-sm">
+      <div className="sticky top-0 z-20 bg-[#09261E]/90 backdrop-blur-sm px-4 py-4 shadow-sm">
         <div className="max-w-7xl mx-auto">
           <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="w-full bg-white rounded-lg h-auto p-1.5 mb-4 shadow-md">
+            <TabsList className="w-full bg-transparent rounded-lg h-auto p-0 mb-0">
               <TabsTrigger 
                 value="discover" 
-                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:hover:bg-gray-100 flex-1 rounded-md py-3 transition-all"
+                className="data-[state=active]:bg-[#803344] data-[state=active]:text-white data-[state=inactive]:hover:bg-white/10 flex-1 rounded-md py-3 transition-all text-white"
               >
                 <Compass className="w-4 h-4 mr-2" />
                 <span className="font-medium">Discover</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="manage" 
-                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:hover:bg-gray-100 flex-1 rounded-md py-3 transition-all"
+                className="data-[state=active]:bg-[#803344] data-[state=active]:text-white data-[state=inactive]:hover:bg-white/10 flex-1 rounded-md py-3 transition-all text-white"
               >
                 <FileClock className="w-4 h-4 mr-2" />
                 <span className="font-medium">Manage</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="analytics" 
-                className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:hover:bg-gray-100 flex-1 rounded-md py-3 transition-all"
+                className="data-[state=active]:bg-[#803344] data-[state=active]:text-white data-[state=inactive]:hover:bg-white/10 flex-1 rounded-md py-3 transition-all text-white"
               >
                 <BarChart3 className="w-4 h-4 mr-2" />
                 <span className="font-medium">Analytics</span>

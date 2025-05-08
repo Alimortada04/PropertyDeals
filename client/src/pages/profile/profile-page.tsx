@@ -1289,6 +1289,7 @@ export default function ProfilePage() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344]/10 text-[#803344] rounded-full cursor-help flex items-center">
+                                  <AlertTriangle className="h-3 w-3 mr-1" />
                                   Needs Attention
                                 </span>
                               </TooltipTrigger>
@@ -1372,6 +1373,7 @@ export default function ProfilePage() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344]/10 text-[#803344] rounded-full cursor-help flex items-center">
+                                  <AlertTriangle className="h-3 w-3 mr-1" />
                                   Needs Attention
                                 </span>
                               </TooltipTrigger>
