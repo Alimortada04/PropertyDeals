@@ -1288,8 +1288,8 @@ export default function ProfilePage() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full cursor-help">
-                                  Optional
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344]/10 text-[#803344] rounded-full cursor-help flex items-center">
+                                  Needs Attention
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
@@ -1371,8 +1371,8 @@ export default function ProfilePage() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full cursor-help">
-                                  Optional
+                                <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-[#803344]/10 text-[#803344] rounded-full cursor-help flex items-center">
+                                  Needs Attention
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
