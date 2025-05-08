@@ -227,6 +227,21 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState(initialTab);
   const [activeHelpSection, setActiveHelpSection] = useState<string>('main');
   
+  // For the Connections tab
+  const [activeConnectionsTab, setActiveConnectionsTab] = useState<'my_connections' | 'find_connections'>('my_connections');
+  const [isConnectionsModalOpen, setIsConnectionsModalOpen] = useState(false);
+  const [connectionsSearchQuery, setConnectionsSearchQuery] = useState('');
+  
+  // Dummy data for connections - in a real app, this would come from an API
+  const [myConnections, setMyConnections] = useState([
+    { id: 1, name: "Jane Smith", type: "Agent", avatar: "", location: "Milwaukee, WI", mutualCount: 3 },
+    { id: 2, name: "John Davis", type: "Seller", avatar: "", location: "Madison, WI", mutualCount: 1 },
+    { id: 3, name: "Alice Johnson", type: "Contractor", avatar: "", location: "Chicago, IL", mutualCount: 0 },
+    { id: 4, name: "Mike Wilson", type: "Buyer", avatar: "", location: "Green Bay, WI", mutualCount: 2 },
+    { id: 5, name: "Sarah Brown", type: "Lender", avatar: "", location: "Milwaukee, WI", mutualCount: 5 },
+    { id: 6, name: "David Lee", type: "Inspector", avatar: "", location: "Madison, WI", mutualCount: 0 },
+  ]);
+  
   // Handle tab change without full page reload
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
