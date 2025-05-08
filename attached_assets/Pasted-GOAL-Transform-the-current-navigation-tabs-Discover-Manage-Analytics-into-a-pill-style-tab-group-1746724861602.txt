@@ -1,0 +1,103 @@
+GOAL
+Transform the current navigation tabs (Discover, Manage, Analytics) into a pill-style tab group that is:
+
+Visually distinct
+
+Sleek and minimal
+
+Easily scannable
+
+Responsive across screen sizes
+
+✅ DESIGN & STRUCTURE INSTRUCTIONS
+🔹 1. Layout
+Wrap the tabs in a single container styled as a soft, elevated pill group:
+
+css
+Copy
+Edit
+bg-white border border-neutral-200 rounded-full px-2 py-1 shadow-md
+Center the group horizontally, and place it with margin above the dashboard content
+
+🔹 2. Tab Design
+Each tab (Discover, Manage, Analytics) should:
+
+Be styled as a pill with:
+
+px-5 py-2 rounded-full transition-all
+
+Slight animation on hover and click
+
+Active Tab:
+
+Background: dark green (#09261E)
+
+Text: white
+
+Inactive Tabs:
+
+Border only (border-neutral-300)
+
+Text: dark gray (#333)
+
+Hover: soft green background (#E6F3EC)
+
+🔹 3. Icon Support (Optional but Recommended)
+Include subtle line-style icons next to tab text:
+
+Discover → magnifying glass (🔍)
+
+Manage → clipboard/list (📋)
+
+Analytics → chart bar (📊)
+
+Icons should:
+
+Be muted in style (stroke icon, 16–20px)
+
+Align inline with the text, spacing via gap-2
+
+🔹 4. Navigation Logic
+Clicking a tab should:
+
+Visually switch the active state
+
+Route to the correct dashboard tab:
+
+/dashboard?tab=discover
+
+/dashboard?tab=manage
+
+/dashboard?tab=analytics
+
+Keep state synced with the active tab query parameter
+
+🔹 5. Breadcrumb/Micro-copy Under Tabs (Optional)
+Below the tab group, add a small contextual label:
+
+text
+Copy
+Edit
+You’re currently viewing: Discover
+This helps orient the user without clutter
+
+✅ INTERACTION & FEEDBACK
+Tabs should have:
+
+Smooth transition animations on click
+
+Active underline (optional): a small green bar animates under the selected tab
+
+Optional micro bounce or color pop on active selection
+
+✅ RESPONSIVENESS
+On smaller screens:
+
+Tabs should collapse horizontally into a scrollable bar (overflow-x-auto)
+
+Use flex-nowrap gap-2 for proper spacing
+
+Ensure each tab is still clearly tappable
+
+✅ SUMMARY
+Final result should feel like a clean, segmented nav component with strong usability and subtle elevation. It should draw attention naturally while staying out of the way once a user is reading page content.

@@ -115,14 +115,14 @@ export default function Sidebar() {
         <div className="space-y-2 flex flex-col items-center">
           <NavItem 
             href="/" 
-            icon={<Compass size={24} />} 
+            icon={<Home size={24} />} 
             label="Home"
             active={location === '/'} 
           />
           
           <NavItem 
             href="/properties" 
-            icon={<Home size={24} />} 
+            icon={<Building size={24} strokeWidth={1.5} />} 
             label="Properties"
             active={location.startsWith('/properties')} 
           />

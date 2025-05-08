@@ -34,33 +34,40 @@ export default function DashboardPage() {
   
   return (
     <div className="bg-[#F8F9FA]">
-      <div className="sticky top-0 z-20 bg-[#09261E]/90 backdrop-blur-sm px-4 py-4 shadow-sm">
-        <div className="max-w-7xl mx-auto">
-          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="w-full bg-transparent rounded-lg h-auto p-0 mb-0">
-              <TabsTrigger 
-                value="discover" 
-                className="data-[state=active]:bg-[#803344] data-[state=active]:text-white data-[state=inactive]:hover:bg-white/10 flex-1 rounded-md py-3 transition-all text-white"
-              >
-                <Compass className="w-4 h-4 mr-2" />
-                <span className="font-medium">Discover</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="manage" 
-                className="data-[state=active]:bg-[#803344] data-[state=active]:text-white data-[state=inactive]:hover:bg-white/10 flex-1 rounded-md py-3 transition-all text-white"
-              >
-                <FileClock className="w-4 h-4 mr-2" />
-                <span className="font-medium">Manage</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="analytics" 
-                className="data-[state=active]:bg-[#803344] data-[state=active]:text-white data-[state=inactive]:hover:bg-white/10 flex-1 rounded-md py-3 transition-all text-white"
-              >
-                <BarChart3 className="w-4 h-4 mr-2" />
-                <span className="font-medium">Analytics</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+      <div className="sticky top-0 z-20 bg-white px-4 py-6 shadow-sm">
+        <div className="max-w-7xl mx-auto flex flex-col items-center">
+          <div className="flex justify-center w-full">
+            <div className="bg-white border border-neutral-200 rounded-full px-2 py-1 shadow-md overflow-x-auto md:overflow-visible max-w-full">
+              <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+                <TabsList className="bg-transparent rounded-full p-0 flex-nowrap gap-1">
+                  <TabsTrigger 
+                    value="discover" 
+                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-[#E6F3EC] px-5 py-2 rounded-full transition-all"
+                  >
+                    <Compass className="w-4 h-4 mr-2" />
+                    <span className="font-medium">Discover</span>
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="manage" 
+                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-[#E6F3EC] px-5 py-2 rounded-full transition-all"
+                  >
+                    <FileClock className="w-4 h-4 mr-2" />
+                    <span className="font-medium">Manage</span>
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="analytics" 
+                    className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white data-[state=inactive]:text-gray-700 data-[state=inactive]:hover:bg-[#E6F3EC] px-5 py-2 rounded-full transition-all"
+                  >
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    <span className="font-medium">Analytics</span>
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+          </div>
+          <div className="text-xs text-gray-500 mt-2">
+            You're currently viewing: {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+          </div>
         </div>
       </div>
       
