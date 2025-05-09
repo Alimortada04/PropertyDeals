@@ -336,12 +336,21 @@ function Router() {
         </AppLayout>
       </Route>
       
-      {/* New seller dashboard with onboarding flow */}
-      <ProtectedRoute path="/sellerdash" component={() => (
+      {/* Seller dashboard landing page - publicly accessible */}
+      <Route path="/sellerdash">
         <AppLayout>
           <SellerDash />
         </AppLayout>
-      )} />
+      </Route>
+      
+      {/* Seller dashboard private route - only for active sellers */}
+      <Route path="/sellerdash/:userId">
+        {params => (
+          <AppLayout>
+            <SellerDash userId={params.userId} />
+          </AppLayout>
+        )}
+      </Route>
       <Route path="/forgot-password">
         <ForgotPasswordPage />
       </Route>

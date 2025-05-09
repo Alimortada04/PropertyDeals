@@ -8,6 +8,8 @@ import {
   Calculator, MessageCircle, UserCircle, Settings, ChevronRight, HelpCircle,
   Menu, X, ListPlus
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -18,12 +20,14 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpanded, toggleSidebar }: SidebarProps) {
-  const { user } = useAuth();
+  const { user, supabaseUser } = useAuth();
+  const { toast } = useToast();
   const [location] = useLocation();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const [showExpandIndicator, setShowExpandIndicator] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [sellerStatus, setSellerStatus] = useState<string>('none');
   
   // Helper function to clean up overflow and re-enable scrolling
   const cleanupScrollLock = () => {
@@ -98,6 +102,41 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
     document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [closeSidebar, isOpen, isMobile]);
+  
+  // Fetch seller status when user changes
+  useEffect(() => {
+    async function fetchSellerStatus() {
+      if (!user || !supabaseUser) {
+        setSellerStatus('none');
+        return;
+      }
+      
+      try {
+        const { data, error } = await supabase
+          .from('sellers')
+          .select('status')
+          .eq('user_id', supabaseUser.id)
+          .single();
+        
+        if (error) {
+          console.error('Error fetching seller status:', error);
+          setSellerStatus('none');
+          return;
+        }
+        
+        if (data) {
+          setSellerStatus(data.status);
+        } else {
+          setSellerStatus('none');
+        }
+      } catch (error) {
+        console.error('Error fetching seller status:', error);
+        setSellerStatus('none');
+      }
+    }
+    
+    fetchSellerStatus();
+  }, [user, supabaseUser]);
 
   // Nav item classes with immediate color change on hover - full width with no rounded corners
   const getNavItemClasses = (path: string) => {
@@ -287,8 +326,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                 </Link>
               </li>
               <li>
+                {/* Dynamic link for List a Property - mobile */}
                 <Link 
-                  href="/sellerdash" 
+                  href={user && user.activeRole === 'seller' && sellerStatus === 'active' 
+                    ? `/sellerdash/${user.id}` 
+                    : '/sellerdash'
+                  }
                   className={getMobileNavItemClasses("/sellerdash")}
                   onClick={() => {
                     const mobileMenu = document.getElementById('mobile-menu');
@@ -516,7 +559,14 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                   </Link>
                 </li>
                 <li>
-                  <Link href="/sellerdash" className={getNavItemClasses("/sellerdash")}>
+                  {/* Dynamic link for List a Property - desktop */}
+                  <Link 
+                    href={user && user.activeRole === 'seller' && sellerStatus === 'active' 
+                      ? `/sellerdash/${user.id}` 
+                      : '/sellerdash'
+                    } 
+                    className={getNavItemClasses("/sellerdash")}
+                  >
                     <ListPlus className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>List a Property</span>
                   </Link>
