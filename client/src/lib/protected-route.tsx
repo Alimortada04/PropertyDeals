@@ -32,10 +32,11 @@ export function ProtectedRoute({
     return publicRoutes.some(route => path.startsWith(route));
   };
 
-  // Handle modal closing
+  // Handle modal closing - this is now a no-op function since we're removing the close button
+  // and requiring explicit authentication
   const handleCloseModal = () => {
-    // Only close the modal without redirecting
-    setShowAuthModal(false);
+    // Do nothing - user must explicitly sign in or register
+    // The modal will be closed automatically once authentication is successful
   };
 
   useEffect(() => {
@@ -80,7 +81,7 @@ export function ProtectedRoute({
           <AuthModal 
             isOpen={showAuthModal} 
             onClose={handleCloseModal}
-            hideCloseButton={false}
+            hideCloseButton={true}
             title={modalTitle}
             description={modalDescription}
           />
@@ -96,7 +97,7 @@ export function ProtectedRoute({
       <AuthModal 
         isOpen={showAuthModal} 
         onClose={handleCloseModal}
-        hideCloseButton={false}
+        hideCloseButton={true}
         title={modalTitle}
         description={modalDescription}
       />
