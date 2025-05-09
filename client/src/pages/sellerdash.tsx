@@ -45,7 +45,7 @@ interface SellerOnboardingData {
   usesTitleCompany: boolean;
 }
 
-export default function SellerDashboard() {
+export default function SellerDash() {
   const { user, isLoading } = useAuth();
   const [location, setLocation] = useLocation();
   const { toast } = useToast();
