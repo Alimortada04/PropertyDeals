@@ -528,32 +528,34 @@ export default function SellerDash({ userId }: { userId?: string }) {
             {!user && !supabaseUser && (
               <Card className="mb-6">
                 <CardHeader>
-                  <CardTitle>Access PropertyDeals Seller Tools</CardTitle>
+                  <CardTitle>Become a PropertyDeals Seller</CardTitle>
                   <CardDescription>
-                    You need to sign in or create an account to access seller features
+                    List your properties and connect with motivated buyers
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col items-center py-6 text-center">
-                    <UserX className="h-16 w-16 text-gray-400 mb-4" />
-                    <h3 className="text-xl font-medium mb-3">Authentication Required</h3>
+                    <img 
+                      src="/images/seller-badge.svg" 
+                      alt="Seller Badge" 
+                      className="h-32 w-32 mb-6" 
+                      onError={(e) => {
+                        e.currentTarget.src = "/images/pdLogo.png";
+                        e.currentTarget.className = "h-24 w-24 mb-6 rounded-full bg-gray-100 p-4 object-contain";
+                      }}
+                    />
+                    <h3 className="text-xl font-medium mb-3">Ready to List Your Properties?</h3>
                     <p className="text-gray-600 max-w-md mb-6">
-                      To list properties, apply for seller verification, or browse buyer requests,
-                      you'll need to sign in to your PropertyDeals account.
+                      Join our network of verified sellers and connect with motivated buyers. 
+                      Create an account to start your seller application today.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-3">
+                    <div className="flex justify-center">
                       <Button 
-                        variant="outline"
                         onClick={() => setLocation('/register')}
-                        className="w-full sm:w-auto"
+                        className="bg-[#135341] hover:bg-[#09261E] min-w-[200px]"
+                        size="lg"
                       >
-                        Create Account
-                      </Button>
-                      <Button
-                        onClick={() => setLocation('/signin')}
-                        className="w-full sm:w-auto"
-                      >
-                        Sign In
+                        Become a Seller
                       </Button>
                     </div>
                   </div>

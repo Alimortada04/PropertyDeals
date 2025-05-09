@@ -189,11 +189,11 @@ function Router() {
       </Route>
       
       {/* Community routes */}
-      <Route path="/community">
+      <ProtectedRoute path="/community" component={() => (
         <AppLayout>
           <CommunityPage />
         </AppLayout>
-      </Route>
+      )} />
       
       <Route path="/community/:slug">
         {params => (
@@ -202,11 +202,11 @@ function Router() {
           </AppLayout>
         )}
       </Route>
-      <Route path="/dashboard">
+      <ProtectedRoute path="/dashboard" component={() => (
         <AppLayout>
           <DashboardPage />
         </AppLayout>
-      </Route>
+      )} />
       
       {/* Legacy dashboard route */}
       <Route path="/dashboard-old">
@@ -224,22 +224,22 @@ function Router() {
           <FlipPage />
         </AppLayout>
       </Route>
-      <Route path="/playbook">
+      <ProtectedRoute path="/playbook" component={() => (
         <AppLayout>
           <PlaybookPage />
         </AppLayout>
-      </Route>
+      )} />
       <Route path="/playbook/property-dictionary">
         <AppLayout>
           <PropertyDictionaryPage />
         </AppLayout>
       </Route>
-      {/* Profile routes - temporarily allow access without authentication */}
-      <Route path="/profile">
+      {/* Profile routes with authentication required */}
+      <ProtectedRoute path="/profile" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
       
       {/* New URL-based profile tab routes */}
       <Route path="/profile/account">
