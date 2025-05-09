@@ -24,9 +24,8 @@ export default function ProtectedRoute({
 
   // Handle modal closing
   const handleCloseModal = () => {
-    // Redirect to home page when modal is closed
+    // Only close the modal without redirecting
     setShowAuthModal(false);
-    setLocation('/');
   };
   
   useEffect(() => {
