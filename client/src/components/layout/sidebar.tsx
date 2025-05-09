@@ -286,6 +286,21 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                   <span>Dashboard</span>
                 </Link>
               </li>
+              <li>
+                <Link 
+                  href="/sellerdash" 
+                  className={getMobileNavItemClasses("/sellerdash")}
+                  onClick={() => {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const overlay = document.getElementById('mobile-menu-overlay');
+                    if (mobileMenu) mobileMenu.classList.add('-translate-x-full');
+                    if (overlay) overlay.classList.add('hidden');
+                  }}
+                >
+                  <ListPlus className={getMobileIconClasses("/sellerdash")} />
+                  <span>List a Property</span>
+                </Link>
+              </li>
             </ul>
             
             <h3 className="text-sm uppercase text-gray-500 font-medium tracking-wider mb-3 mt-8">Resources</h3>
@@ -498,6 +513,12 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
                   <Link href="/dashboard" className={getNavItemClasses("/dashboard")}>
                     <LayoutDashboard className="w-6 h-6 flex-shrink-0" />
                     <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>Dashboard</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/sellerdash" className={getNavItemClasses("/sellerdash")}>
+                    <ListPlus className="w-6 h-6 flex-shrink-0" />
+                    <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${isExpanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>List a Property</span>
                   </Link>
                 </li>
               </ul>

@@ -9,6 +9,7 @@ import HomePage from "@/pages/home-page";
 import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
+import SellerDash from "@/pages/sellerdash";
 import DashboardNewPage from "@/pages/dashboard";
 import DashboardPage from "@/pages/dashboard-page";
 import ProfilePage from "@/pages/profile/profile-page";
@@ -332,6 +333,13 @@ function Router() {
       <Route path="/seller-dashboard">
         <AppLayout>
           <SellerDashboard />
+        </AppLayout>
+      </Route>
+      
+      {/* New seller dashboard with onboarding flow */}
+      <Route path="/sellerdash">
+        <AppLayout>
+          <SellerDash />
         </AppLayout>
       </Route>
       <Route path="/forgot-password">
