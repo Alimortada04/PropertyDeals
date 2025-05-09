@@ -27,7 +27,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import MultiSelectItem from '@/components/ui/multi-select-item';
+// Import MultiSelectItem component
+import MultiSelectItem from '../components/ui/multi-select-item';
 
 // Icons
 import { 
@@ -103,7 +104,7 @@ const dealVolumeOptions = [
  * @param {string} [props.userId] - Optional userId for private dashboard route
  */
 export default function SellerDash({ userId }: { userId?: string }) {
-  const [setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { user, supabaseUser, isLoading: isAuthLoading } = useAuth();
   const { toast } = useToast();
   

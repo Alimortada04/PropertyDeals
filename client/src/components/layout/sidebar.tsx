@@ -115,7 +115,7 @@ export default function Sidebar({ isOpen, closeSidebar, isExpanded, setIsExpande
         const { data, error } = await supabase
           .from('sellers')
           .select('status')
-          .eq('user_id', supabaseUser.id)
+          .eq('id', supabaseUser.id)
           .single();
         
         if (error) {
