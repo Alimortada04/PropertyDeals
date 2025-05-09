@@ -241,54 +241,54 @@ function Router() {
         </AppLayout>
       )} />
       
-      {/* New URL-based profile tab routes */}
-      <Route path="/profile/account">
+      {/* New URL-based profile tab routes - all protected */}
+      <ProtectedRoute path="/profile/account" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
 
-      <Route path="/profile/property_preferences">
+      <ProtectedRoute path="/profile/property_preferences" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
 
-      <Route path="/profile/connections">
+      <ProtectedRoute path="/profile/connections" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
       
-      <Route path="/profile/notifications">
+      <ProtectedRoute path="/profile/notifications" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
       
-      <Route path="/profile/integrations">
+      <ProtectedRoute path="/profile/integrations" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
       
-      <Route path="/profile/memberships">
+      <ProtectedRoute path="/profile/memberships" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
       
-      <Route path="/profile/security">
+      <ProtectedRoute path="/profile/security" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
       
-      <Route path="/profile/help">
+      <ProtectedRoute path="/profile/help" component={() => (
         <AppLayout>
           <ProfilePage />
         </AppLayout>
-      </Route>
+      )} />
       
       {/* Legacy profile routes - keep for backwards compatibility */}
       <Route path="/profile/connected-accounts">
