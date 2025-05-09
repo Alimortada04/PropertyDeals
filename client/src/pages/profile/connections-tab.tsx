@@ -1,260 +1,48 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import React from 'react';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Users,
-  UserPlus,
   Search,
-  MoreVertical,
+  UserPlus,
+  X,
+  Briefcase,
   MessageSquare,
   UserMinus,
-  Ban,
-  User,
-  UserCircle,
-  Home,
-  Building,
-  Wrench,
-  CreditCard,
-  FileCheck,
-  Plus,
+  MoreVertical,
+  AlertTriangle,
+  Save,
 } from "lucide-react";
 
-interface ProfileData {
-  id?: string;
-  full_name?: string;
-  bio?: string | null;
-  username?: string;
-  profile_photo_url?: string | null;
-  [key: string]: any;
-}
-
 interface ConnectionsTabProps {
-  profileData?: ProfileData;
+  // Optional props that could be passed from the profile page
+  profileData?: any;
   loading?: boolean;
 }
 
-const MyConnectionCard = ({ connection }: { connection: any }) => {
-  const getAvatarFallback = (name: string) => {
-    return name.split(" ").map(n => n[0]).join("").toUpperCase();
-  };
-
-  const getTypeBadgeColor = (type: string) => {
-    const typeColors: Record<string, { bg: string, text: string }> = {
-      "Seller": { bg: "bg-[#135341]/10", text: "text-[#135341]" },
-      "Agent": { bg: "bg-[#803344]/10", text: "text-[#803344]" },
-      "Buyer": { bg: "bg-[#09261E]/10", text: "text-[#09261E]" },
-      "Lender": { bg: "bg-[#333994]/10", text: "text-[#333994]" },
-      "Contractor": { bg: "bg-[#994833]/10", text: "text-[#994833]" },
-      "Inspector": { bg: "bg-[#339470]/10", text: "text-[#339470]" },
-    };
-    
-    return typeColors[type] || { bg: "bg-gray-100", text: "text-gray-600" };
-  };
-
-  return (
-    <div className="rounded-lg border border-gray-200 bg-white shadow-sm p-4 transition hover:shadow-md">
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center">
-          <Avatar className="h-12 w-12 mr-3">
-            {connection.avatar ? (
-              <AvatarImage src={connection.avatar} alt={connection.name} />
-            ) : (
-              <AvatarFallback className="bg-[#09261E] text-white">
-                {getAvatarFallback(connection.name)}
-              </AvatarFallback>
-            )}
-          </Avatar>
-          <div>
-            <h3 className="font-medium text-gray-900">{connection.name}</h3>
-            <div className="flex items-center">
-              {connection.type && (
-                <Badge variant="outline" className={`${getTypeBadgeColor(connection.type).bg} ${getTypeBadgeColor(connection.type).text} border-0 mr-2 mt-1`}>
-                  {connection.type}
-                </Badge>
-              )}
-            </div>
-          </div>
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreVertical className="h-4 w-4" />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem className="cursor-pointer">
-              <MessageSquare className="mr-2 h-4 w-4" />
-              <span>Message</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
-              <UserCircle className="mr-2 h-4 w-4" />
-              <span>View Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer text-red-600">
-              <UserMinus className="mr-2 h-4 w-4" />
-              <span>Remove Connection</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer text-red-600">
-              <Ban className="mr-2 h-4 w-4" />
-              <span>Block</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="text-sm text-gray-500">
-        <div className="flex items-center mb-1">
-          <Home className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-          <span>{connection.location}</span>
-        </div>
-        {connection.mutualCount > 0 && (
-          <div className="flex items-center">
-            <Users className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-            <span>{connection.mutualCount} mutual connection{connection.mutualCount !== 1 ? 's' : ''}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const SuggestedConnectionCard = ({ connection }: { connection: any }) => {
-  const getAvatarFallback = (name: string) => {
-    return name.split(" ").map(n => n[0]).join("").toUpperCase();
-  };
-
-  const getTypeBadgeColor = (type: string) => {
-    const typeColors: Record<string, { bg: string, text: string }> = {
-      "Seller": { bg: "bg-[#135341]/10", text: "text-[#135341]" },
-      "Agent": { bg: "bg-[#803344]/10", text: "text-[#803344]" },
-      "Buyer": { bg: "bg-[#09261E]/10", text: "text-[#09261E]" },
-      "Lender": { bg: "bg-[#333994]/10", text: "text-[#333994]" },
-      "Contractor": { bg: "bg-[#994833]/10", text: "text-[#994833]" },
-      "Inspector": { bg: "bg-[#339470]/10", text: "text-[#339470]" },
-    };
-    
-    return typeColors[type] || { bg: "bg-gray-100", text: "text-gray-600" };
-  };
-
-  return (
-    <div className="rounded-lg border border-gray-200 bg-white shadow-sm p-4 transition hover:shadow-md">
-      <div className="flex justify-between items-start mb-3">
-        <div className="flex items-center">
-          <Avatar className="h-12 w-12 mr-3">
-            {connection.avatar ? (
-              <AvatarImage src={connection.avatar} alt={connection.name} />
-            ) : (
-              <AvatarFallback className="bg-[#09261E] text-white">
-                {getAvatarFallback(connection.name)}
-              </AvatarFallback>
-            )}
-          </Avatar>
-          <div>
-            <h3 className="font-medium text-gray-900">{connection.name}</h3>
-            <div className="flex items-center">
-              {connection.type && (
-                <Badge variant="outline" className={`${getTypeBadgeColor(connection.type).bg} ${getTypeBadgeColor(connection.type).text} border-0 mr-2 mt-1`}>
-                  {connection.type}
-                </Badge>
-              )}
-              <span className="text-sm text-gray-500 mt-1">{connection.location}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="text-sm text-gray-500 mb-3">
-        {connection.mutualCount > 0 && (
-          <div className="flex items-center">
-            <Users className="h-3.5 w-3.5 mr-1.5 flex-shrink-0" />
-            <span>{connection.mutualCount} mutual connection{connection.mutualCount !== 1 ? 's' : ''}</span>
-          </div>
-        )}
-      </div>
-      <Button variant="outline" size="sm" className="w-full">
-        <UserPlus className="h-3.5 w-3.5 mr-1.5" />
-        Connect
-      </Button>
-    </div>
-  );
-};
-
-const CategoryFindCard = ({ category, icon, count }: { category: string, icon: React.ReactNode, count?: number }) => {
-  return (
-    <div className="rounded-lg border border-gray-200 bg-white shadow-sm p-4 transition hover:shadow-md text-center">
-      <div className="h-12 w-12 rounded-full bg-[#09261E]/10 flex items-center justify-center mx-auto mb-3">
-        {icon}
-      </div>
-      <h3 className="font-medium text-gray-900 mb-1">Find {category}</h3>
-      <p className="text-sm text-gray-500 mb-3">
-        {count 
-          ? `${count} ${category.toLowerCase()} on PropertyDeals` 
-          : `Connect with ${category.toLowerCase()} on PropertyDeals`}
-      </p>
-      <Button variant="outline" size="sm" className="w-full">
-        <Search className="h-3.5 w-3.5 mr-1.5" />
-        Browse {category}
-      </Button>
-    </div>
-  );
-};
-
-const ProfessionalEmptyState = ({ type }: { type: string }) => {
-  return (
-    <div className="text-center py-8">
-      <div className="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
-        {type === "Seller" && <Building className="h-8 w-8 text-gray-400" />}
-        {type === "Agent" && <UserCircle className="h-8 w-8 text-gray-400" />}
-        {type === "Contractor" && <Wrench className="h-8 w-8 text-gray-400" />}
-        {type === "Lender" && <CreditCard className="h-8 w-8 text-gray-400" />}
-        {type === "Inspector" && <FileCheck className="h-8 w-8 text-gray-400" />}
-      </div>
-      <h3 className="text-lg font-medium text-gray-900 mb-2">No {type}s Added Yet</h3>
-      <p className="text-gray-500 mb-4 max-w-md mx-auto">
-        You haven't added any {type.toLowerCase()}s to your preferred professionals list yet.
-      </p>
-      <Button variant="outline">
-        <Plus className="h-4 w-4 mr-2" />
-        Add {type}
-      </Button>
-    </div>
-  );
-};
-
 export default function ConnectionsTab({ profileData, loading = false }: ConnectionsTabProps) {
-  // State for network tab selection
-  const [networkTab, setNetworkTab] = useState("my_connections");
+  // State for connections tabs
+  const [activeConnectionsTab, setActiveConnectionsTab] = React.useState<'my_connections' | 'find_connections'>('my_connections');
+  const [activeProTab, setActiveProTab] = React.useState('sellers');
+  const [connectionsSearchQuery, setConnectionsSearchQuery] = React.useState('');
+  const [isProfessionalSectionModified, setIsProfessionalSectionModified] = React.useState(false);
   
-  // State for professionals tab selection
-  const [professionalTab, setProfessionalTab] = useState("Seller");
-  
-  // State for search queries
-  const [connectionSearchQuery, setConnectionSearchQuery] = useState("");
-  const [professionalSearchQuery, setProfessionalSearchQuery] = useState("");
-  
-  // State for displaying the view all connections modal
-  const [viewAllModalOpen, setViewAllModalOpen] = useState(false);
-  
-  // Dummy data for connections - in a real app, this would come from an API
+  // Dummy data for connections
   const myConnections = [
     { id: 1, name: "Jane Smith", type: "Agent", avatar: "", location: "Milwaukee, WI", mutualCount: 3 },
     { id: 2, name: "John Davis", type: "Seller", avatar: "", location: "Madison, WI", mutualCount: 1 },
@@ -264,216 +52,419 @@ export default function ConnectionsTab({ profileData, loading = false }: Connect
     { id: 6, name: "David Lee", type: "Inspector", avatar: "", location: "Madison, WI", mutualCount: 0 },
   ];
   
-  // Dummy data for suggested connections
-  const suggestedConnections = [
-    { id: 7, name: "Robert Chen", type: "Agent", avatar: "", location: "Madison, WI", mutualCount: 2 },
-    { id: 8, name: "Emily Clark", type: "Seller", avatar: "", location: "Chicago, IL", mutualCount: 1 },
-    { id: 9, name: "Tom Jackson", type: "Contractor", avatar: "", location: "Milwaukee, WI", mutualCount: 3 },
-    { id: 10, name: "Laura Miller", type: "Lender", avatar: "", location: "Green Bay, WI", mutualCount: 0 },
-  ];
-  
-  // Dummy data for professionals counts
+  // Professional categories with counts
   const professionalCounts = {
-    "Seller": 3,
-    "Agent": 2,
-    "Contractor": 1,
-    "Lender": 2,
-    "Inspector": 0
+    sellers: profileData?.preferred_sellers?.length || 3,
+    agents: profileData?.preferred_agents?.length || 2,
+    contractors: profileData?.preferred_contractors?.length || 4,
+    lenders: profileData?.preferred_lenders?.length || 1,
+    inspectors: profileData?.preferred_inspectors?.length || 2
   };
-
-  // Filter connections based on search query
-  const filteredConnections = myConnections.filter(connection => {
-    if (!connectionSearchQuery) return true;
-    
-    const searchLower = connectionSearchQuery.toLowerCase();
-    return (
-      connection.name.toLowerCase().includes(searchLower) ||
-      connection.type.toLowerCase().includes(searchLower) ||
-      connection.location.toLowerCase().includes(searchLower)
-    );
-  });
+  
+  // Handle form submit
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsProfessionalSectionModified(false);
+    // In a real app, you would save the data here
+  };
 
   return (
     <div className="space-y-6">
-      {/* My Network Card */}
-      <Card className="border-gray-200 shadow-sm">
-        <CardHeader className="pb-3">
+      {/* My Network Section */}
+      <Card className="border-gray-200 shadow-sm mb-6">
+        <CardHeader className="border-b pb-4">
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-xl font-bold">My Network</CardTitle>
-              <CardDescription>Manage your connections within PropertyDeals</CardDescription>
+            <div className="flex items-center">
+              <Users className="h-5 w-5 text-[#09261E] mr-2" />
+              <div>
+                <CardTitle className="text-xl">My Network</CardTitle>
+                <CardDescription>Manage your connections within PropertyDeals</CardDescription>
+              </div>
             </div>
-            <Button size="sm" className="bg-[#09261E] hover:bg-[#09261E]/90 text-white">
-              <UserPlus className="h-4 w-4 mr-2" />
-              Add Connection
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="flex items-center gap-1 border border-gray-300 hover:bg-gray-100 transition-colors"
+            >
+              <UserPlus className="h-4 w-4" />
+              <span>Add Connection</span>
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="my_connections" value={networkTab} onValueChange={setNetworkTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="my_connections" className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
-                My Connections ({myConnections.length})
-              </TabsTrigger>
-              <TabsTrigger value="find_connections" className="data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
-                Find New Connections
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="my_connections">
-              <div className="space-y-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input 
-                    placeholder="Search connections by name, type, or location..." 
-                    className="pl-10 bg-white"
-                    value={connectionSearchQuery}
-                    onChange={(e) => setConnectionSearchQuery(e.target.value)}
-                  />
-                </div>
-                
-                {filteredConnections.length > 0 ? (
-                  <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {filteredConnections.slice(0, 6).map(connection => (
-                        <MyConnectionCard key={connection.id} connection={connection} />
-                      ))}
+        <CardContent className="pt-6">
+          {/* Pill-style Tab Navigation */}
+          <div className="flex space-x-2 mb-6 border-b border-gray-200 pb-2">
+            <Button
+              onClick={() => setActiveConnectionsTab('my_connections')}
+              variant={activeConnectionsTab === 'my_connections' ? "default" : "outline"}
+              className={`rounded-full px-4 py-2 text-sm font-medium ${
+                activeConnectionsTab === 'my_connections'
+                  ? 'bg-[#09261E] text-white'
+                  : 'text-gray-700 hover:bg-gray-100 border border-gray-300'
+              }`}
+            >
+              My Connections ({myConnections.length})
+            </Button>
+            <Button
+              onClick={() => setActiveConnectionsTab('find_connections')}
+              variant={activeConnectionsTab === 'find_connections' ? "default" : "outline"}
+              className={`rounded-full px-4 py-2 text-sm font-medium ${
+                activeConnectionsTab === 'find_connections'
+                  ? 'bg-[#09261E] text-white'
+                  : 'text-gray-700 hover:bg-gray-100 border border-gray-300'
+              }`}
+            >
+              Find New Connections
+            </Button>
+          </div>
+          
+          {/* Search bar */}
+          <div className="relative mb-6">
+            <div className="flex items-center border border-gray-300 rounded-md p-2 bg-white">
+              <Search className="h-4 w-4 mr-2 text-gray-400" />
+              <Input 
+                className="border-0 focus:ring-0 p-0 h-8"
+                placeholder="Search connections by name, type, or location..."
+                value={connectionsSearchQuery}
+                onChange={(e) => setConnectionsSearchQuery(e.target.value)}
+              />
+              {connectionsSearchQuery && (
+                <button
+                  onClick={() => setConnectionsSearchQuery('')}
+                  className="p-1 rounded-full hover:bg-gray-100"
+                >
+                  <X className="h-4 w-4 text-gray-400" />
+                </button>
+              )}
+            </div>
+          </div>
+          
+          {/* Content based on active tab */}
+          {activeConnectionsTab === 'my_connections' ? (
+            // My Connections Tab Content
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {myConnections
+                .filter(connection => 
+                  connectionsSearchQuery === '' || 
+                  connection.name.toLowerCase().includes(connectionsSearchQuery.toLowerCase()) ||
+                  connection.type.toLowerCase().includes(connectionsSearchQuery.toLowerCase()) ||
+                  connection.location.toLowerCase().includes(connectionsSearchQuery.toLowerCase())
+                )
+                .map((connection) => (
+                <div key={connection.id} className="border border-gray-200 rounded-md p-4 hover:shadow-sm transition-shadow bg-white flex items-center">
+                  <Avatar className="h-12 w-12 mr-3">
+                    <AvatarFallback className={`${
+                      connection.type === "Seller" ? "bg-[#135341]" : 
+                      connection.type === "Agent" ? "bg-[#803344]" : 
+                      "bg-[#09261E]"
+                    } text-white`}>
+                      {connection.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-800 truncate">{connection.name}</p>
+                    <div className="flex items-center text-xs text-gray-500 truncate">
+                      <span className={`inline-block h-2 w-2 rounded-full mr-1 ${
+                        connection.type === "Seller" ? "bg-[#135341]" : 
+                        connection.type === "Agent" ? "bg-[#803344]" : 
+                        "bg-[#09261E]"
+                      }`}></span>
+                      <span>{connection.type}</span> 
+                      <span className="mx-1">•</span>
+                      <span>{connection.location}</span>
                     </div>
-                    
-                    {filteredConnections.length > 6 && (
-                      <div className="text-center mt-4">
-                        <Dialog open={viewAllModalOpen} onOpenChange={setViewAllModalOpen}>
-                          <DialogTrigger asChild>
-                            <Button variant="outline">View All Connections</Button>
-                          </DialogTrigger>
-                          <DialogContent className="max-w-4xl">
-                            <DialogHeader>
-                              <DialogTitle>All Connections</DialogTitle>
-                              <DialogDescription>
-                                You have {filteredConnections.length} connections on PropertyDeals
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto p-1">
-                              {filteredConnections.map(connection => (
-                                <MyConnectionCard key={connection.id} connection={connection} />
-                              ))}
-                            </div>
-                          </DialogContent>
-                        </Dialog>
+                    {connection.mutualCount > 0 && (
+                      <div className="mt-1 flex items-center">
+                        <Badge variant="outline" className="text-xs bg-gray-50 hover:bg-gray-50 text-gray-700 border-gray-200">
+                          <Users className="h-3 w-3 mr-1 text-gray-400" />
+                          {connection.mutualCount} mutual connection{connection.mutualCount !== 1 ? 's' : ''}
+                        </Badge>
                       </div>
                     )}
-                  </>
-                ) : (
-                  <div className="text-center py-8">
-                    <Users className="h-12 w-12 mx-auto text-gray-300 mb-3" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No Connections Found</h3>
-                    <p className="text-gray-500 mb-4">
-                      {connectionSearchQuery 
-                        ? "No connections match your search criteria. Try a different search term."
-                        : "You haven't connected with anyone yet. Start building your network!"}
-                    </p>
-                    <Button variant="outline">Find People to Connect With</Button>
                   </div>
-                )}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <MessageSquare className="h-4 w-4 mr-2" />
+                        <span>Message</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <UserMinus className="h-4 w-4 mr-2" />
+                        <span>Remove Connection</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              ))}
+              
+              {/* Empty state if filtered results are empty */}
+              {myConnections.filter(c => 
+                connectionsSearchQuery === '' || 
+                c.name.toLowerCase().includes(connectionsSearchQuery.toLowerCase()) ||
+                c.type.toLowerCase().includes(connectionsSearchQuery.toLowerCase()) ||
+                c.location.toLowerCase().includes(connectionsSearchQuery.toLowerCase())
+              ).length === 0 && connectionsSearchQuery !== '' && (
+                <div className="col-span-full p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                  <Search className="h-10 w-10 text-gray-400 mb-2" />
+                  <h4 className="text-lg font-medium text-gray-700">No matching connections</h4>
+                  <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                    Try adjusting your search terms or clear the filter
+                  </p>
+                  <Button
+                    className="mt-4 bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    onClick={() => setConnectionsSearchQuery('')}
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Clear Search
+                  </Button>
+                </div>
+              )}
+              
+              {/* Empty state if no connections at all */}
+              {myConnections.length === 0 && (
+                <div className="col-span-full p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+                  <Users className="h-10 w-10 text-gray-400 mb-2" />
+                  <h4 className="text-lg font-medium text-gray-700">No connections yet</h4>
+                  <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+                    Connect with other real estate professionals to expand your network
+                  </p>
+                  <Button
+                    className="mt-4 bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+                    onClick={() => setActiveConnectionsTab('find_connections')}
+                  >
+                    <Search className="h-4 w-4 mr-2" />
+                    Find Connections
+                  </Button>
+                </div>
+              )}
+            </div>
+          ) : (
+            // Find New Connections Tab Content
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Categories Cards */}
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="font-medium text-gray-800 mb-2">Sellers</h3>
+                  <p className="text-sm text-gray-500 mb-3">Connect with property sellers in your area</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full hover:bg-gray-100 transition-colors"
+                  >
+                    <Search className="h-3.5 w-3.5 mr-1.5" />
+                    Find Sellers
+                  </Button>
+                </div>
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="font-medium text-gray-800 mb-2">Agents</h3>
+                  <p className="text-sm text-gray-500 mb-3">Build relationships with real estate agents</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full hover:bg-gray-100 transition-colors"
+                  >
+                    <Search className="h-3.5 w-3.5 mr-1.5" />
+                    Find Agents
+                  </Button>
+                </div>
+                <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="font-medium text-gray-800 mb-2">Contractors</h3>
+                  <p className="text-sm text-gray-500 mb-3">Find reliable contractors for your projects</p>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full hover:bg-gray-100 transition-colors"
+                  >
+                    <Search className="h-3.5 w-3.5 mr-1.5" />
+                    Find Contractors
+                  </Button>
+                </div>
               </div>
-            </TabsContent>
-            
-            <TabsContent value="find_connections">
-              <div className="space-y-6">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input 
-                    placeholder="Search for people by name, role, or location..."
-                    className="pl-10 bg-white"
-                  />
-                </div>
+              
+              {/* Suggested Connections */}
+              <div className="bg-white rounded-lg p-4 border border-gray-200">
+                <h3 className="font-medium text-gray-800 mb-2">Suggested Connections</h3>
+                <p className="text-sm text-gray-500 mb-4">People you might want to connect with based on your profile</p>
                 
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-3">Find People by Category</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <CategoryFindCard 
-                      category="Sellers" 
-                      icon={<Building className="h-6 w-6 text-[#135341]" />}
-                      count={24}
-                    />
-                    <CategoryFindCard 
-                      category="Agents" 
-                      icon={<UserCircle className="h-6 w-6 text-[#803344]" />}
-                      count={18}
-                    />
-                    <CategoryFindCard 
-                      category="Contractors" 
-                      icon={<Wrench className="h-6 w-6 text-[#994833]" />}
-                      count={15}
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* First suggested connection */}
+                  <div className="border border-gray-200 rounded-md p-4 bg-white flex items-center">
+                    <Avatar className="h-12 w-12 mr-3">
+                      <AvatarFallback className="bg-[#803344] text-white">TR</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-800">Thomas Rodriguez</p>
+                      <div className="flex items-center text-xs text-gray-500">
+                        <span className="inline-block h-2 w-2 rounded-full mr-1 bg-[#803344]"></span>
+                        <span>Agent</span>
+                        <span className="mx-1">•</span>
+                        <span>Milwaukee, WI</span>
+                      </div>
+                      <div className="mt-1">
+                        <Badge variant="outline" className="text-xs bg-gray-50 text-gray-700 border-gray-200">
+                          <Users className="h-3 w-3 mr-1 text-gray-400" />
+                          4 mutual connections
+                        </Badge>
+                      </div>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="ml-2 whitespace-nowrap hover:bg-gray-100 transition-colors"
+                    >
+                      <UserPlus className="h-3 w-3 mr-1" />
+                      Connect
+                    </Button>
                   </div>
-                </div>
-                
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-3">People you might want to connect with based on your profile</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {suggestedConnections.slice(0, 4).map(connection => (
-                      <SuggestedConnectionCard key={connection.id} connection={connection} />
-                    ))}
+                  
+                  {/* Second suggested connection */}
+                  <div className="border border-gray-200 rounded-md p-4 bg-white flex items-center">
+                    <Avatar className="h-12 w-12 mr-3">
+                      <AvatarFallback className="bg-[#135341] text-white">LW</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-800">Lisa Wong</p>
+                      <div className="flex items-center text-xs text-gray-500">
+                        <span className="inline-block h-2 w-2 rounded-full mr-1 bg-[#135341]"></span>
+                        <span>Seller</span>
+                        <span className="mx-1">•</span>
+                        <span>Chicago, IL</span>
+                      </div>
+                      <div className="mt-1">
+                        <Badge variant="outline" className="text-xs bg-gray-50 text-gray-700 border-gray-200">
+                          <Users className="h-3 w-3 mr-1 text-gray-400" />
+                          2 mutual connections
+                        </Badge>
+                      </div>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="ml-2 whitespace-nowrap hover:bg-gray-100 transition-colors"
+                    >
+                      <UserPlus className="h-3 w-3 mr-1" />
+                      Connect
+                    </Button>
                   </div>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
+            </div>
+          )}
         </CardContent>
       </Card>
       
-      {/* My Professionals Card */}
+      {/* My Professionals Section */}
       <Card className="border-gray-200 shadow-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-xl font-bold">My Professionals</CardTitle>
-          <CardDescription>Your trusted real estate professionals by category</CardDescription>
+        <CardHeader className="border-b pb-4">
+          <div className="flex items-center">
+            <Briefcase className="h-5 w-5 text-[#09261E] mr-2" />
+            <div>
+              <CardTitle className="text-xl">My Professionals</CardTitle>
+              <CardDescription>Your trusted real estate professionals by category</CardDescription>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="Seller" value={professionalTab} onValueChange={setProfessionalTab} className="w-full">
-            <TabsList className="mb-6 bg-transparent border-b border-gray-200 pb-0 justify-start">
-              {["Seller", "Agent", "Contractor", "Lender", "Inspector"].map((type) => (
-                <TabsTrigger
-                  key={type}
-                  value={type}
-                  className="px-4 py-2 rounded-full mr-2 mb-2 data-[state=active]:bg-[#09261E] data-[state=active]:text-white hover:bg-gray-100 data-[state=active]:hover:bg-[#09261E]/90"
-                >
-                  {type}s
-                  <Badge variant="outline" className="ml-2 bg-white/80 border-0 text-gray-700 text-xs min-w-[20px] h-5">
-                    {professionalCounts[type as keyof typeof professionalCounts]}
-                  </Badge>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            
-            {["Seller", "Agent", "Contractor", "Lender", "Inspector"].map((type) => (
-              <TabsContent key={type} value={type}>
-                <div className="space-y-4">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input 
-                      placeholder={`Search for a ${type.toLowerCase()} by name...`}
-                      className="pl-10 bg-white"
-                      value={professionalSearchQuery}
-                      onChange={(e) => setProfessionalSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  
-                  {professionalCounts[type as keyof typeof professionalCounts] > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {myConnections
-                        .filter(connection => connection.type === type)
-                        .map(connection => (
-                          <MyConnectionCard key={connection.id} connection={connection} />
-                        ))}
-                    </div>
-                  ) : (
-                    <ProfessionalEmptyState type={type} />
-                  )}
-                </div>
-              </TabsContent>
+        <CardContent className="pt-6">
+          {/* Alert message */}
+          <div className="mb-6">
+            <div className="p-4 bg-gray-50 rounded-md border border-gray-200">
+              <p className="text-sm text-gray-700 flex items-start">
+                <AlertTriangle className="h-4 w-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" />
+                <span>
+                  Add your trusted real estate professionals to streamline your investments. You'll be able to quickly connect them to new deals and projects.
+                </span>
+              </p>
+            </div>
+          </div>
+          
+          {/* Professional Categories - Pill-style tabs */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-2 mb-6">
+            {[
+              { key: 'sellers', name: 'Sellers', count: professionalCounts.sellers, color: 'bg-[#135341]' },
+              { key: 'agents', name: 'Agents', count: professionalCounts.agents, color: 'bg-[#803344]' },
+              { key: 'contractors', name: 'Contractors', count: professionalCounts.contractors, color: '' },
+              { key: 'lenders', name: 'Lenders', count: professionalCounts.lenders, color: '' },
+              { key: 'inspectors', name: 'Inspectors', count: professionalCounts.inspectors, color: '' }
+            ].map((category) => (
+              <Button
+                key={category.key}
+                type="button"
+                variant={activeProTab === category.key ? "default" : "outline"}
+                className={`flex flex-col h-auto py-3 justify-center items-center
+                  ${activeProTab === category.key 
+                    ? 'bg-[#09261E] text-white' 
+                    : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200'
+                  }`}
+                onClick={() => setActiveProTab(category.key)}
+              >
+                <span className="text-sm font-medium">{category.name}</span>
+                <Badge className={`mt-1 ${
+                  activeProTab === category.key 
+                    ? 'bg-white text-[#09261E]' 
+                    : category.color || 'bg-gray-200'
+                }`}>
+                  {category.count}
+                </Badge>
+              </Button>
             ))}
-          </Tabs>
+          </div>
+          
+          {/* Search bar for the selected professional category */}
+          <div className="relative mb-6">
+            <div className="flex items-center border border-gray-300 rounded-md p-2 bg-white">
+              <Search className="h-4 w-4 mr-2 text-gray-400" />
+              <Input 
+                className="border-0 focus:ring-0 p-0 h-8"
+                placeholder={`Search for a ${activeProTab.slice(0, -1)} by name...`}
+              />
+            </div>
+          </div>
+          
+          {/* Empty state for professionals */}
+          <div className="p-6 border border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center bg-gray-50">
+            <Users className="h-10 w-10 text-gray-400 mb-2" />
+            <h4 className="text-lg font-medium text-gray-700">No {activeProTab} added yet</h4>
+            <p className="text-sm text-gray-500 text-center max-w-md mt-1">
+              Add {activeProTab} you've worked with to streamline your future deals
+            </p>
+            <Button
+              type="button"
+              className="mt-4 bg-[#09261E] hover:bg-[#09261E]/90 text-white"
+              onClick={() => setIsProfessionalSectionModified(true)}
+            >
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add {activeProTab.slice(0, -1)}
+            </Button>
+          </div>
+          
+          {/* Save button */}
+          <div className="flex justify-end mt-8">
+            <Button
+              type="submit"
+              className={`${
+                loading ? "bg-gray-400" : isProfessionalSectionModified ? "bg-[#09261E] hover:bg-[#09261E]/90" : "bg-gray-200 text-gray-500"
+              } text-white`}
+              disabled={loading || !isProfessionalSectionModified}
+              onClick={handleFormSubmit}
+            >
+              {loading ? (
+                <>
+                  <span className="h-4 w-4 mr-2 rounded-full border-2 border-t-transparent border-white animate-spin"></span>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4" />
+                  Save Professionals
+                </>
+              )}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
