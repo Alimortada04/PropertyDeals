@@ -176,6 +176,57 @@ export type InsertRep = z.infer<typeof insertRepSchema>;
 export type Rep = typeof reps.$inferSelect;
 
 // System logs for admin activity tracking
+// Seller profiles and application data
+export const sellers = pgTable("sellers", {
+  id: serial("id").primaryKey(),
+  userId: integer("userId").notNull().unique(), // Links to auth.users.id
+  fullName: text("fullName").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
+  businessName: text("businessName"),
+  yearsInRealEstate: text("yearsInRealEstate").notNull(),
+  businessType: text("businessType").notNull(),
+  
+  // Step 2 data
+  targetMarkets: text("targetMarkets").array().notNull(),
+  dealTypes: text("dealTypes").array().notNull(),
+  maxDealVolume: text("maxDealVolume").notNull(),
+  hasBuyerList: boolean("hasBuyerList").default(false).notNull(),
+  isDirectToSeller: boolean("isDirectToSeller").default(false).notNull(),
+  
+  // Step 3 data
+  purchaseAgreements: jsonb("purchaseAgreements"), // File metadata
+  assignmentContracts: jsonb("assignmentContracts"), // File metadata
+  notes: text("notes"),
+  websiteUrl: text("websiteUrl"),
+  socialFacebook: text("socialFacebook"),
+  socialInstagram: text("socialInstagram"),
+  socialLinkedin: text("socialLinkedin"),
+  hasProofOfFunds: boolean("hasProofOfFunds").default(false).notNull(),
+  usesTitleCompany: boolean("usesTitleCompany").default(false).notNull(),
+  
+  // Application state
+  isDraft: boolean("isDraft").default(true).notNull(),
+  status: text("status").default("pending").notNull(), // pending, active, paused, banned, rejected
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  reviewedAt: timestamp("reviewedAt"),
+  reviewedBy: integer("reviewedBy"), // Admin who reviewed the application
+  adminNotes: text("adminNotes"),
+});
+
+export const insertSellerSchema = createInsertSchema(sellers).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  reviewedAt: true,
+  reviewedBy: true,
+  adminNotes: true,
+});
+
+export type InsertSeller = z.infer<typeof insertSellerSchema>;
+export type Seller = typeof sellers.$inferSelect;
+
 export const systemLogs = pgTable("systemLogs", {
   id: serial("id").primaryKey(),
   userId: integer("userId").notNull(),

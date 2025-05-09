@@ -241,3 +241,179 @@ export function onAuthStateChange(callback: (user: any) => void) {
     callback(session?.user || null);
   });
 }
+
+// Seller profile functions
+export type SellerStatus = 'none' | 'pending' | 'rejected' | 'paused' | 'banned' | 'active';
+
+export interface SellerOnboardingData {
+  fullName: string;
+  email: string;
+  phone: string;
+  businessName: string;
+  yearsInRealEstate: string;
+  businessType: string;
+  
+  // Step 2
+  targetMarkets: string[];
+  dealTypes: string[];
+  maxDealVolume: string;
+  hasBuyerList: boolean;
+  isDirectToSeller: boolean;
+  
+  // Step 3
+  purchaseAgreements: File[] | null;
+  assignmentContracts: File[] | null;
+  notes: string;
+  websiteUrl: string;
+  socialFacebook: string;
+  socialInstagram: string;
+  socialLinkedin: string;
+  hasProofOfFunds: boolean;
+  usesTitleCompany: boolean;
+  
+  // Application state
+  isDraft: boolean;
+  status: SellerStatus;
+}
+
+// Function to get seller status for current user
+export async function getSellerStatus(): Promise<SellerStatus> {
+  try {
+    const authUser = await getCurrentUser();
+    if (!authUser) return 'none';
+    
+    const { data: seller, error } = await supabase
+      .from('sellers')
+      .select('status')
+      .eq('userId', authUser.id)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Error fetching seller status:', error);
+      return 'none';
+    }
+    
+    return seller?.status as SellerStatus || 'none';
+  } catch (error) {
+    console.error('Error in getSellerStatus:', error);
+    return 'none';
+  }
+}
+
+// Function to get seller profile data
+export async function getSellerProfile(): Promise<SellerOnboardingData | null> {
+  try {
+    const authUser = await getCurrentUser();
+    if (!authUser) return null;
+    
+    const { data: seller, error } = await supabase
+      .from('sellers')
+      .select('*')
+      .eq('userId', authUser.id)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Error fetching seller profile:', error);
+      return null;
+    }
+    
+    if (!seller) return null;
+    
+    // Convert from database format to application format
+    return {
+      fullName: seller.fullName,
+      email: seller.email,
+      phone: seller.phone,
+      businessName: seller.businessName || '',
+      yearsInRealEstate: seller.yearsInRealEstate,
+      businessType: seller.businessType,
+      
+      targetMarkets: seller.targetMarkets || [],
+      dealTypes: seller.dealTypes || [],
+      maxDealVolume: seller.maxDealVolume,
+      hasBuyerList: seller.hasBuyerList || false,
+      isDirectToSeller: seller.isDirectToSeller || false,
+      
+      purchaseAgreements: null, // Files can't be retrieved this way
+      assignmentContracts: null, // Files can't be retrieved this way
+      notes: seller.notes || '',
+      websiteUrl: seller.websiteUrl || '',
+      socialFacebook: seller.socialFacebook || '',
+      socialInstagram: seller.socialInstagram || '',
+      socialLinkedin: seller.socialLinkedin || '',
+      hasProofOfFunds: seller.hasProofOfFunds || false,
+      usesTitleCompany: seller.usesTitleCompany || false,
+      
+      isDraft: seller.isDraft || true,
+      status: seller.status as SellerStatus || 'none'
+    };
+  } catch (error) {
+    console.error('Error in getSellerProfile:', error);
+    return null;
+  }
+}
+
+// Function to save seller profile data (create or update)
+export async function saveSellerProfile(data: Partial<SellerOnboardingData>, isDraft = true): Promise<boolean> {
+  try {
+    const authUser = await getCurrentUser();
+    if (!authUser) return false;
+    
+    // Check if seller profile already exists
+    const { data: existingSeller } = await supabase
+      .from('sellers')
+      .select('id')
+      .eq('userId', authUser.id)
+      .maybeSingle();
+    
+    // Prepare data for database (omit file objects)
+    const dbData = {
+      ...data,
+      userId: authUser.id,
+      isDraft,
+      purchaseAgreements: null, // Handle file uploads separately
+      assignmentContracts: null // Handle file uploads separately
+    };
+    
+    let result;
+    if (existingSeller) {
+      // Update existing record
+      result = await supabase
+        .from('sellers')
+        .update(dbData)
+        .eq('userId', authUser.id);
+    } else {
+      // Create new record
+      result = await supabase
+        .from('sellers')
+        .insert({
+          ...dbData,
+          userId: authUser.id,
+          status: 'pending'
+        });
+    }
+    
+    if (result.error) {
+      console.error('Error saving seller profile:', result.error);
+      return false;
+    }
+    
+    // TODO: Handle file uploads for purchase agreements and assignment contracts
+    // This would use supabase.storage.from('files').upload()
+    
+    return true;
+  } catch (error) {
+    console.error('Error in saveSellerProfile:', error);
+    return false;
+  }
+}
+
+// Function to submit the final application
+export async function submitSellerApplication(data: SellerOnboardingData): Promise<boolean> {
+  try {
+    return saveSellerProfile(data, false);
+  } catch (error) {
+    console.error('Error in submitSellerApplication:', error);
+    return false;
+  }
+}
