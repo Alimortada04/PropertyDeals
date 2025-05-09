@@ -19,7 +19,6 @@ import {
   BarChart3,
   Settings
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 /**
  * SellerDash - Public seller landing page
@@ -27,7 +26,6 @@ import { supabase } from '@/lib/supabase';
 export default function SellerDash() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
-  const supabaseUser = supabase.auth.user?.();
   
   return (
     <div className="container mx-auto px-4 py-8">
@@ -170,7 +168,7 @@ export default function SellerDash() {
               </CardContent>
               
               <CardFooter className="flex justify-center pt-2 pb-6">
-                {!user && !supabaseUser ? (
+                {!user ? (
                   // Not logged in - will redirect to auth
                   <Button 
                     size="lg"
