@@ -190,10 +190,10 @@ export default function Sidebar() {
           />
           
           <NavItem 
-            href="/list-property" 
+            href="/sellerdash" 
             icon={<PlusCircle size={24} />} 
             label="List a Property"
-            active={location.startsWith('/list-property')} 
+            active={location.startsWith('/sellerdash')} 
           />
           
           {activeRole === 'seller' && (
