@@ -2626,9 +2626,7 @@ export default function ProfilePage() {
               </>
             )}
             
-            {activeTab === "connections" {activeTab === "connections" && ({activeTab === "connections" && ( (
-              <ConnectionsTab profileData={profileData} loading={loading} />
-            )}
+            {activeTab === "connections" && (
               <>
                 {/* Professionals Section */}
                 <Card className="border-gray-200 shadow-sm">
