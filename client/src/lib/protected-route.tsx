@@ -1,8 +1,9 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
-import { Redirect, Route } from "wouter";
+import { Route } from "wouter";
 import { User } from "@shared/schema";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import AuthModal from "@/components/auth/auth-modal";
 
 type ProtectedRouteProps = {
   path?: string;
@@ -10,6 +11,7 @@ type ProtectedRouteProps = {
   condition?: (user: User | null) => boolean;
   redirectTo?: string;
   children?: React.ReactNode;
+  publicRoutes?: string[];
 };
 
 export function ProtectedRoute({
@@ -17,9 +19,35 @@ export function ProtectedRoute({
   component: Component,
   condition,
   redirectTo = "/auth",
-  children
+  children,
+  publicRoutes = ['/p/', '/reps/']
 }: ProtectedRouteProps) {
   const { user, supabaseUser, isLoading } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  
+  // Check if the current path is in the public routes
+  const isPublicRoute = () => {
+    if (!path) return false;
+    return publicRoutes.some(route => path.startsWith(route));
+  };
+
+  useEffect(() => {
+    // Don't show modal during loading or if the route is public
+    if (isLoading || isPublicRoute()) {
+      setShowAuthModal(false);
+      return;
+    }
+    
+    // Show auth modal if user is not authenticated
+    if (!user && !supabaseUser) {
+      setShowAuthModal(true);
+    } else if (condition && !condition(user)) {
+      // If there's a custom condition and it's not met
+      setShowAuthModal(true);
+    } else {
+      setShowAuthModal(false);
+    }
+  }, [user, supabaseUser, isLoading, condition, path]);
 
   // Show loading state while authenticating
   if (isLoading) {
@@ -32,23 +60,35 @@ export function ProtectedRoute({
     return path ? <Route path={path}>{content}</Route> : content;
   }
 
-  // Check if user is authenticated
-  if (!user && !supabaseUser) {
-    const redirect = <Redirect to={redirectTo} />;
-    return path ? <Route path={path}>{redirect}</Route> : redirect;
-  }
-
-  // If there's a custom condition, check it
-  if (condition && !condition(user)) {
-    const redirect = <Redirect to={redirectTo} />;
-    return path ? <Route path={path}>{redirect}</Route> : redirect;
-  }
-
-  // User is authenticated and meets conditions
+  // For path-based routes (using wouter's <Route>)
   if (path && Component) {
-    return <Route path={path} component={Component} />;
+    return (
+      <Route path={path}>
+        <>
+          <Component />
+          <AuthModal 
+            isOpen={showAuthModal} 
+            onClose={() => {}} 
+            hideCloseButton={true}
+            title="Authentication Required"
+            description="Please log in or create an account to access this page."
+          />
+        </>
+      </Route>
+    );
   }
   
   // For use as a wrapper component
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => {}} 
+        hideCloseButton={true}
+        title="Authentication Required"
+        description="Please log in or create an account to access this page."
+      />
+    </>
+  );
 }

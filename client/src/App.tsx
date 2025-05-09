@@ -134,11 +134,11 @@ function Router() {
       <Route path="/landingpage">
         <Redirect to="/" />
       </Route>
-      <Route path="/properties">
+      <ProtectedRoute path="/properties" component={() => (
         <AppLayout>
           <PropertiesPage />
         </AppLayout>
-      </Route>
+      )} />
       <Route path="/p/:id">
         {params => (
           <AppLayout>
@@ -146,11 +146,11 @@ function Router() {
           </AppLayout>
         )}
       </Route>
-      <Route path="/reps">
+      <ProtectedRoute path="/reps" component={() => (
         <AppLayout>
           <RepsPage />
         </AppLayout>
-      </Route>
+      )} />
       
       <Route path="/reps/:id">
         {params => (
@@ -167,11 +167,11 @@ function Router() {
           </AppLayout>
         )}
       </Route>
-      <Route path="/inbox">
+      <ProtectedRoute path="/inbox" component={() => (
         <AppLayout>
           <InboxPage />
         </AppLayout>
-      </Route>
+      )} />
       
       {/* Redirect discussions to inbox */}
       <Route path="/discussions">
