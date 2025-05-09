@@ -8,7 +8,8 @@ import {
   saveSellerProfile, 
   submitSellerApplication,
   type SellerStatus,
-  type SellerOnboardingData
+  type SellerOnboardingData,
+  supabase
 } from '@/lib/supabase';
 
 // UI Components
@@ -399,7 +400,7 @@ const FileUploadArea = ({
 
 export default function SellerDash() {
   const [location, setLocation] = useLocation();
-  const { user } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const { toast } = useToast();
   
   // Application state
@@ -440,25 +441,87 @@ export default function SellerDash() {
     status: 'none'
   });
   
-  // Load seller status and profile data
+  // Load seller status and profile data with improved error handling
   useEffect(() => {
     const loadSellerData = async () => {
       try {
         setIsLoading(true);
+        console.log("Starting to load seller data");
         
-        // Fetch seller status
-        const status = await getSellerStatus();
-        setSellerStatus(status);
-        console.log(`Seller status: ${status}`);
+        // Direct query to check if we're authenticated first
+        const { data: userData, error: userError } = await supabase.auth.getUser();
+        if (userError || !userData.user) {
+          console.log("User not authenticated:", userError?.message || "No user found");
+          // Set a default state for unauthenticated users
+          setSellerStatus('none');
+          setIsLoading(false);
+          setIsModalOpen(true); // Show modal for unauthenticated users too
+          return;
+        }
+
+        console.log("Authenticated user:", userData.user.id);
         
-        // If seller has a profile, load it
-        if (status !== 'none') {
-          const profile = await getSellerProfile();
-          if (profile) {
-            setOnboardingData(profile);
-            console.log('Loaded seller profile:', profile);
+        // Direct Supabase query to get seller status
+        const { data: sellerData, error: sellerError } = await supabase
+          .from('sellers')
+          .select('*')
+          .eq('userId', userData.user.id)
+          .maybeSingle();
+        
+        if (sellerError) {
+          console.error('Error fetching seller data:', sellerError);
+          toast({
+            title: "Database Error",
+            description: "Could not fetch your seller profile. " + sellerError.message,
+            variant: "destructive"
+          });
+          // Don't get stuck - set a default state
+          setSellerStatus('none');
+          setIsModalOpen(true);
+        } else if (sellerData) {
+          // We have a seller record
+          console.log("Seller data found:", sellerData);
+          const status = sellerData.status as SellerStatus;
+          setSellerStatus(status);
+          
+          // Convert from database format to application format
+          setOnboardingData({
+            fullName: sellerData.fullName || '',
+            email: sellerData.email || '',
+            phone: sellerData.phone || '',
+            businessName: sellerData.businessName || '',
+            yearsInRealEstate: sellerData.yearsInRealEstate || '',
+            businessType: sellerData.businessType || '',
+            
+            targetMarkets: sellerData.targetMarkets || [],
+            dealTypes: sellerData.dealTypes || [],
+            maxDealVolume: sellerData.maxDealVolume || '',
+            hasBuyerList: sellerData.hasBuyerList || false,
+            isDirectToSeller: sellerData.isDirectToSeller || false,
+            
+            purchaseAgreements: null, // Files can't be retrieved this way
+            assignmentContracts: null, // Files can't be retrieved this way
+            notes: sellerData.notes || '',
+            websiteUrl: sellerData.websiteUrl || '',
+            socialFacebook: sellerData.socialFacebook || '',
+            socialInstagram: sellerData.socialInstagram || '',
+            socialLinkedin: sellerData.socialLinkedin || '',
+            hasProofOfFunds: sellerData.hasProofOfFunds || false,
+            usesTitleCompany: sellerData.usesTitleCompany || false,
+            
+            isDraft: sellerData.isDraft || true,
+            status: status
+          });
+          
+          // Display appropriate UI based on status
+          if (status === 'rejected') {
+            setIsModalOpen(true);
           }
         } else {
+          // No seller record found - new user
+          console.log("No seller data found - new user");
+          setSellerStatus('none');
+          
           // Pre-populate with user data if available
           if (user) {
             setOnboardingData(prev => ({
@@ -467,28 +530,28 @@ export default function SellerDash() {
               email: user.email || ''
             }));
           }
+          
+          // Show the modal for new users
+          setIsModalOpen(true);
         }
-        
-        // Open modal automatically if status requires application
-        if (status === 'none' || status === 'rejected') {
-          setTimeout(() => setIsModalOpen(true), 500);
-        }
-        
       } catch (error) {
-        console.error('Error loading seller data:', error);
+        console.error('Unexpected error loading seller data:', error);
         toast({
           title: "Error",
-          description: "Failed to load your seller profile. Please try again.",
+          description: "Something went wrong while loading your profile. Please try again.",
           variant: "destructive"
         });
+        // Set fallback state to prevent UI from getting stuck
+        setSellerStatus('none');
+        setIsModalOpen(true);
       } finally {
+        // Always exit loading state, even on error
         setIsLoading(false);
       }
     };
     
-    if (user) {
-      loadSellerData();
-    }
+    // Start loading immediately, but handle case if user is not available
+    loadSellerData();
   }, [user, toast]);
   
   // Handle form data change
@@ -1419,16 +1482,59 @@ export default function SellerDash() {
     );
   };
   
-  // Show loading skeleton while fetching status
-  if (isLoading) {
+  // Handle both auth loading and seller profile loading states
+  if (isAuthLoading || isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <div className="h-8 w-64 bg-gray-200 rounded-md animate-pulse mb-2"></div>
-          <div className="h-4 w-96 bg-gray-200 rounded-md animate-pulse"></div>
+      <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[50vh]">
+        <div className="flex flex-col items-center text-center">
+          <Loader2 className="h-12 w-12 text-[#135341] animate-spin mb-4" />
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">
+            {isAuthLoading ? "Checking Authentication..." : "Loading Seller Dashboard"}
+          </h2>
+          <p className="text-gray-600 max-w-md mb-8">
+            {isAuthLoading 
+              ? "Please wait while we verify your account."
+              : "We're checking your seller account status..."}
+          </p>
+          {/* Show an escape option if it takes too long */}
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => {
+              setIsLoading(false); 
+              setSellerStatus('none');
+              setIsModalOpen(true);
+            }}
+          >
+            Continue without waiting
+          </Button>
         </div>
-        <div className="max-w-3xl mx-auto">
-          <div className="h-64 bg-gray-200 rounded-lg animate-pulse"></div>
+      </div>
+    );
+  }
+  
+  // Check if we're not authenticated
+  if (!user && !isAuthLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[50vh]">
+        <div className="flex flex-col items-center text-center max-w-md">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Authentication Required</h2>
+          <p className="text-gray-600 mb-8">
+            You need to sign in or create an account to access the seller dashboard.
+          </p>
+          <div className="flex gap-4">
+            <Button
+              variant="outline"
+              onClick={() => setLocation('/')}
+            >
+              Return Home
+            </Button>
+            <Button
+              onClick={() => setLocation('/auth')}
+            >
+              Sign In
+            </Button>
+          </div>
         </div>
       </div>
     );
