@@ -721,8 +721,16 @@ export default function SellerDash({ userId }: { userId?: string }) {
                     alt="Seller"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      e.currentTarget.src = "";
-                      e.currentTarget.parentElement!.innerHTML = "JD";
+                      // Safer error handling that doesn't manipulate innerHTML
+                      e.currentTarget.style.display = "none";
+                      // Create and add fallback content
+                      const parent = e.currentTarget.parentElement;
+                      if (parent) {
+                        const fallback = document.createElement("div");
+                        fallback.textContent = "JD";
+                        fallback.className = "flex items-center justify-center w-full h-full bg-[#09261E] text-white";
+                        parent.appendChild(fallback);
+                      }
                     }}
                   />
                 </div>
