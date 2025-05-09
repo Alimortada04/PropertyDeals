@@ -72,15 +72,15 @@ export default function AuthModal({
 
   // Custom modal implementation to have more control over positioning and z-index
   return (
-    <div className="fixed inset-0 z-[40] overflow-y-auto">
-      {/* Backdrop with lower z-index to go behind sidebar/nav */}
+    <div className="fixed inset-0 z-[40] overflow-y-auto pointer-events-none">
+      {/* Backdrop with lower z-index that only covers content area, not sidebar */}
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+        className="fixed md:left-[240px] top-0 right-0 bottom-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 pointer-events-auto"
         onClick={!hideCloseButton ? onClose : undefined}
       />
       
-      {/* Modal container positioned to be centered in the content area */}
-      <div className="flex min-h-full items-center justify-center p-4 text-center">
+      {/* Modal container positioned to be centered in the content area, with sidebar offset */}
+      <div className="flex min-h-full items-center justify-center p-4 text-center md:ml-[240px] pointer-events-auto">
         <div 
           className={cn(
             "relative w-full max-w-md transform overflow-hidden rounded-xl bg-white p-6 text-left shadow-xl transition-all duration-300",
