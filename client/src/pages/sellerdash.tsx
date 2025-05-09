@@ -470,8 +470,8 @@ export default function SellerDash() {
     const progressPercent = currentStep * 25;
     
     return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full p-6">
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-semibold">Seller Application</h2>
             <div className="flex items-center gap-2">
@@ -502,7 +502,7 @@ export default function SellerDash() {
             </div>
           </div>
           
-          <div className="py-4">
+          <div className="py-4 flex-1 overflow-y-auto px-2">
             {currentStep === 1 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Step 1: Basic Information</h3>
@@ -833,7 +833,7 @@ export default function SellerDash() {
             )}
           </div>
           
-          <div className="flex justify-between pt-4 border-t">
+          <div className="flex justify-between p-4 border-t bg-gray-50 rounded-b-xl mt-auto">
             {currentStep > 1 ? (
               <Button 
                 onClick={handlePrevStep}
