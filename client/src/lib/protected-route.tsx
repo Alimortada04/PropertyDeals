@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
-import { Route } from "wouter";
+import { Route, useLocation } from "wouter";
 import { User } from "@shared/schema";
 import React, { useState, useEffect } from "react";
 import AuthModal from "@/components/auth/auth-modal";
@@ -18,10 +18,11 @@ export function ProtectedRoute({
   path,
   component: Component,
   condition,
-  redirectTo = "/auth",
+  redirectTo = "/signin",
   children,
   publicRoutes = ['/p/', '/reps/']
 }: ProtectedRouteProps) {
+  const [location, setLocation] = useLocation();
   const { user, supabaseUser, isLoading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   
@@ -29,6 +30,13 @@ export function ProtectedRoute({
   const isPublicRoute = () => {
     if (!path) return false;
     return publicRoutes.some(route => path.startsWith(route));
+  };
+
+  // Handle modal closing
+  const handleCloseModal = () => {
+    // Redirect to home page when modal is closed
+    setShowAuthModal(false);
+    setLocation('/');
   };
 
   useEffect(() => {
@@ -47,18 +55,22 @@ export function ProtectedRoute({
     } else {
       setShowAuthModal(false);
     }
-  }, [user, supabaseUser, isLoading, condition, path]);
+  }, [user, supabaseUser, isLoading, condition, path, location]);
 
   // Show loading state while authenticating
   if (isLoading) {
     const content = (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-border" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#135341]" />
       </div>
     );
     
     return path ? <Route path={path}>{content}</Route> : content;
   }
+
+  // Enhanced modal title and description
+  const modalTitle = "Authentication Required";
+  const modalDescription = "You need to sign in or create an account to access this area of PropertyDeals.";
 
   // For path-based routes (using wouter's <Route>)
   if (path && Component) {
@@ -68,10 +80,10 @@ export function ProtectedRoute({
           <Component />
           <AuthModal 
             isOpen={showAuthModal} 
-            onClose={() => {}} 
-            hideCloseButton={true}
-            title="Authentication Required"
-            description="Please log in or create an account to access this page."
+            onClose={handleCloseModal}
+            hideCloseButton={false}
+            title={modalTitle}
+            description={modalDescription}
           />
         </>
       </Route>
@@ -84,10 +96,10 @@ export function ProtectedRoute({
       {children}
       <AuthModal 
         isOpen={showAuthModal} 
-        onClose={() => {}} 
-        hideCloseButton={true}
-        title="Authentication Required"
-        description="Please log in or create an account to access this page."
+        onClose={handleCloseModal}
+        hideCloseButton={false}
+        title={modalTitle}
+        description={modalDescription}
       />
     </>
   );

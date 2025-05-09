@@ -13,24 +13,32 @@ export default function ProtectedRoute({
   children, 
   publicRoutes = ['/p/', '/reps/'] 
 }: ProtectedRouteProps) {
-  const [location] = useLocation();
-  const { user, isLoading } = useAuth();
+  const [location, setLocation] = useLocation();
+  const { user, supabaseUser, isLoading } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   
   // Check if current path is in the public routes list
   const isPublicRoute = () => {
     return publicRoutes.some(route => location.startsWith(route));
   };
+
+  // Handle modal closing
+  const handleCloseModal = () => {
+    // Redirect to home page when modal is closed
+    setShowAuthModal(false);
+    setLocation('/');
+  };
   
   useEffect(() => {
     // Don't show modal during loading or if route is public
     if (isLoading || isPublicRoute()) {
+      setShowAuthModal(false);
       return;
     }
     
     // Show auth modal if user is not authenticated
-    setShowAuthModal(!user);
-  }, [user, isLoading, location]);
+    setShowAuthModal(!user && !supabaseUser);
+  }, [user, supabaseUser, isLoading, location]);
   
   // Show loading spinner while checking authentication
   if (isLoading) {
@@ -41,14 +49,20 @@ export default function ProtectedRoute({
     );
   }
   
+  // Enhanced modal title and description
+  const modalTitle = "Authentication Required";
+  const modalDescription = "You need to sign in or create an account to access this area of PropertyDeals.";
+  
   return (
     <>
       {children}
       
       <AuthModal 
         isOpen={showAuthModal} 
-        onClose={() => {}} 
-        hideCloseButton={true}
+        onClose={handleCloseModal} 
+        hideCloseButton={false}
+        title={modalTitle}
+        description={modalDescription}
       />
     </>
   );
