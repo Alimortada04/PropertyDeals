@@ -337,11 +337,11 @@ function Router() {
       </Route>
       
       {/* New seller dashboard with onboarding flow */}
-      <Route path="/sellerdash">
+      <ProtectedRoute path="/sellerdash" component={() => (
         <AppLayout>
           <SellerDash />
         </AppLayout>
-      </Route>
+      )} />
       <Route path="/forgot-password">
         <ForgotPasswordPage />
       </Route>

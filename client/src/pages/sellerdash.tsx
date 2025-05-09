@@ -441,39 +441,25 @@ export default function SellerDash() {
     status: 'none'
   });
   
-  // Load seller status and profile data with improved error handling
+  // Load seller status and profile data - improved for proper seller application flow
   useEffect(() => {
     const loadSellerData = async () => {
       try {
         setIsLoading(true);
-        console.log("Starting to load seller data");
         
-        // Check for empty Supabase URL/key
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        // If there's no authenticated user, the ProtectedRoute will handle redirection
+        // (The page should always have access to a user from useAuth(), or else
+        // ProtectedRoute in App.tsx would redirect to /auth)
         
-        if (!supabaseUrl || !supabaseKey) {
-          console.error('Supabase URL or Anon Key is missing. Cannot connect to Supabase.');
-          toast({
-            title: "Configuration Error",
-            description: "Supabase connection details are missing. Please check your environment variables.",
-            variant: "destructive"
-          });
-          setIsLoading(false);
-          return;
-        }
-        
-        // Use the user from useAuth() hook if available instead of a new query
         if (!user) {
-          console.log("No authenticated user from useAuth hook");
-          setSellerStatus('none');
+          console.log("No authenticated user from useAuth hook - this should be handled by ProtectedRoute");
           setIsLoading(false);
           return;
         }
-
-        console.log("Authenticated user:", user.id);
         
-        // Direct Supabase query to get seller status
+        console.log("Authenticated user detected:", user.id);
+        
+        // Fetch seller profile
         const { data: sellerData, error: sellerError } = await supabase
           .from('sellers')
           .select('*')
@@ -487,11 +473,11 @@ export default function SellerDash() {
             description: "Could not fetch your seller profile. " + sellerError.message,
             variant: "destructive"
           });
-          // Don't get stuck - set a default state
+          // Set default state with application modal
           setSellerStatus('none');
           setIsModalOpen(true);
         } else if (sellerData) {
-          // We have a seller record
+          // Existing seller record found
           console.log("Seller data found:", sellerData);
           const status = sellerData.status as SellerStatus;
           setSellerStatus(status);
@@ -525,25 +511,23 @@ export default function SellerDash() {
             status: status
           });
           
-          // Display appropriate UI based on status
+          // Show application modal for rejected applications
           if (status === 'rejected') {
             setIsModalOpen(true);
           }
         } else {
-          // No seller record found - new user
-          console.log("No seller data found - new user");
+          // No seller record - show application flow
+          console.log("No seller profile found - showing seller application");
           setSellerStatus('none');
           
-          // Pre-populate with user data if available
-          if (user) {
-            setOnboardingData(prev => ({
-              ...prev,
-              fullName: user.fullName || '',
-              email: user.email || ''
-            }));
-          }
+          // Pre-populate with user data
+          setOnboardingData(prev => ({
+            ...prev,
+            fullName: user.fullName || '',
+            email: user.email || ''
+          }));
           
-          // Show the modal for new users
+          // Automatically open the application modal
           setIsModalOpen(true);
         }
       } catch (error) {
@@ -1494,63 +1478,45 @@ export default function SellerDash() {
     );
   };
   
-  // Handle both auth loading and seller profile loading states
-  if (isAuthLoading || isLoading) {
+  // Improved loading state with better UI
+  if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[50vh]">
-        <div className="flex flex-col items-center text-center">
-          <Loader2 className="h-12 w-12 text-[#135341] animate-spin mb-4" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">
-            {isAuthLoading ? "Checking Authentication..." : "Loading Seller Dashboard"}
-          </h2>
-          <p className="text-gray-600 max-w-md mb-8">
-            {isAuthLoading 
-              ? "Please wait while we verify your account."
-              : "We're checking your seller account status..."}
-          </p>
-          {/* Show an escape option if it takes too long */}
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => {
-              setIsLoading(false); 
-              setSellerStatus('none');
-              setIsModalOpen(true);
-            }}
-          >
-            Continue without waiting
-          </Button>
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Seller Dashboard</h1>
+          <p className="text-gray-600 mt-2">Loading your seller profile...</p>
         </div>
+        
+        <Card className="max-w-xl mx-auto">
+          <CardContent className="pt-6">
+            <div className="flex flex-col items-center py-8 text-center">
+              <Loader2 className="h-16 w-16 text-[#135341] animate-spin mb-4" />
+              <h3 className="text-xl font-medium mb-2">Checking seller status</h3>
+              <p className="text-gray-600 max-w-md mb-8">
+                We're verifying your seller profile. This will only take a moment.
+              </p>
+              
+              {/* Show an escape option if it takes too long */}
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  setIsLoading(false); 
+                  setSellerStatus('none');
+                  setIsModalOpen(true);
+                }}
+              >
+                Continue without waiting
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
   
-  // Check if we're not authenticated
-  if (!user && !isAuthLoading) {
-    return (
-      <div className="container mx-auto px-4 py-8 flex flex-col items-center justify-center min-h-[50vh]">
-        <div className="flex flex-col items-center text-center max-w-md">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Authentication Required</h2>
-          <p className="text-gray-600 mb-8">
-            You need to sign in or create an account to access the seller dashboard.
-          </p>
-          <div className="flex gap-4">
-            <Button
-              variant="outline"
-              onClick={() => setLocation('/')}
-            >
-              Return Home
-            </Button>
-            <Button
-              onClick={() => setLocation('/auth')}
-            >
-              Sign In
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // For unauthenticated users, redirect to /auth via the ProtectedRoute component
+  // This component shouldn't handle auth redirect itself
   
   return (
     <>
