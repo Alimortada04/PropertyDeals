@@ -345,11 +345,36 @@ function Router() {
       
       {/* Seller dashboard private route - only for active sellers */}
       <Route path="/sellerdash/:userId">
-        {params => (
-          <AppLayout>
-            <SellerDash userId={params.userId} />
-          </AppLayout>
-        )}
+        {params => {
+          // Create a condition function with proper typing
+          const checkSellerAccess = (user: any) => {
+            if (!user) return false;
+            
+            // Convert userId to number for comparison
+            const numUserId = Number(params.userId);
+            
+            return (
+              user.id === numUserId && 
+              user.activeRole === 'seller' && 
+              user.roles && 
+              typeof user.roles === 'object' &&
+              'seller' in user.roles &&
+              user.roles.seller && 
+              user.roles.seller.status === 'active'
+            );
+          };
+          
+          return (
+            <ProtectedRoute
+              condition={checkSellerAccess}
+              redirectTo="/sellerdash"
+            >
+              <AppLayout>
+                <SellerDash userId={params.userId} />
+              </AppLayout>
+            </ProtectedRoute>
+          );
+        }}
       </Route>
       <Route path="/forgot-password">
         <ForgotPasswordPage />
