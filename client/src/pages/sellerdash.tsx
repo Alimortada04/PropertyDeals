@@ -448,24 +448,36 @@ export default function SellerDash() {
         setIsLoading(true);
         console.log("Starting to load seller data");
         
-        // Direct query to check if we're authenticated first
-        const { data: userData, error: userError } = await supabase.auth.getUser();
-        if (userError || !userData.user) {
-          console.log("User not authenticated:", userError?.message || "No user found");
-          // Set a default state for unauthenticated users
+        // Check for empty Supabase URL/key
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        
+        if (!supabaseUrl || !supabaseKey) {
+          console.error('Supabase URL or Anon Key is missing. Cannot connect to Supabase.');
+          toast({
+            title: "Configuration Error",
+            description: "Supabase connection details are missing. Please check your environment variables.",
+            variant: "destructive"
+          });
+          setIsLoading(false);
+          return;
+        }
+        
+        // Use the user from useAuth() hook if available instead of a new query
+        if (!user) {
+          console.log("No authenticated user from useAuth hook");
           setSellerStatus('none');
           setIsLoading(false);
-          setIsModalOpen(true); // Show modal for unauthenticated users too
           return;
         }
 
-        console.log("Authenticated user:", userData.user.id);
+        console.log("Authenticated user:", user.id);
         
         // Direct Supabase query to get seller status
         const { data: sellerData, error: sellerError } = await supabase
           .from('sellers')
           .select('*')
-          .eq('userId', userData.user.id)
+          .eq('userId', user.id)
           .maybeSingle();
         
         if (sellerError) {
