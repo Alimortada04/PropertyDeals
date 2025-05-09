@@ -6,7 +6,7 @@ import { useLocation } from "wouter";
 import { 
   Home, Building, Users, LayoutDashboard, Book, 
   Calculator, MessageCircle, UserCircle, Settings, ChevronRight, HelpCircle,
-  Menu, X
+  Menu, X, ListPlus
 } from "lucide-react";
 
 interface SidebarProps {
