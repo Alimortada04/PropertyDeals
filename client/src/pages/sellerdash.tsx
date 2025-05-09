@@ -186,7 +186,7 @@ export default function SellerDash({ userId }: { userId?: string }) {
         const { data: sellerData, error: sellerError } = await supabase
           .from('sellers')
           .select('*')
-          .eq('userId', authUserId)
+          .eq('id', authUserId)
           .maybeSingle();
         
         if (sellerError) {

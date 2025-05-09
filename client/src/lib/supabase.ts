@@ -285,7 +285,7 @@ export async function getSellerStatus(): Promise<SellerStatus> {
     const { data: seller, error } = await supabase
       .from('sellers')
       .select('status')
-      .eq('userId', authUser.id)
+      .eq('id', authUser.id)
       .maybeSingle();
     
     if (error) {
@@ -309,7 +309,7 @@ export async function getSellerProfile(): Promise<SellerOnboardingData | null> {
     const { data: seller, error } = await supabase
       .from('sellers')
       .select('*')
-      .eq('userId', authUser.id)
+      .eq('id', authUser.id)
       .maybeSingle();
     
     if (error) {
@@ -363,13 +363,14 @@ export async function saveSellerProfile(data: Partial<SellerOnboardingData>, isD
     const { data: existingSeller } = await supabase
       .from('sellers')
       .select('id')
-      .eq('userId', authUser.id)
+      .eq('id', authUser.id)
       .maybeSingle();
     
     // Prepare data for database (omit file objects)
     const dbData = {
       ...data,
-      userId: authUser.id,
+      // Use id instead of userId as the primary key
+      id: authUser.id,
       isDraft,
       purchaseAgreements: null, // Handle file uploads separately
       assignmentContracts: null // Handle file uploads separately
@@ -381,14 +382,14 @@ export async function saveSellerProfile(data: Partial<SellerOnboardingData>, isD
       result = await supabase
         .from('sellers')
         .update(dbData)
-        .eq('userId', authUser.id);
+        .eq('id', authUser.id);
     } else {
       // Create new record
       result = await supabase
         .from('sellers')
         .insert({
           ...dbData,
-          userId: authUser.id,
+          // id is already included in dbData above, so no need to add here
           status: 'pending'
         });
     }
