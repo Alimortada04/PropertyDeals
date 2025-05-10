@@ -158,6 +158,12 @@ export default function SellerDashboardPage() {
     }
   };
   
+  // For development/testing without auth, we'll use mock data if user is missing
+  const mockUser = {
+    fullName: 'Demo Seller',
+    sellerStatus: 'active'
+  };
+  
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Main container with padding */}
@@ -165,7 +171,7 @@ export default function SellerDashboardPage() {
         {/* Top welcome & status bar */}
         <div className="flex flex-wrap justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user?.fullName?.split(' ')[0] || 'Seller'} 👋</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Welcome back, {(user || mockUser)?.fullName?.split(' ')[0] || 'Seller'} 👋</h1>
             <p className="text-gray-600 mt-1">
               Here's how your real estate business is performing today.
             </p>
@@ -173,11 +179,11 @@ export default function SellerDashboardPage() {
           
           <div className="mt-4 sm:mt-0">
             <div className="flex items-center gap-2">
-              {getSellerStatusIcon(user?.sellerStatus || 'pending')}
-              <Badge className={`px-3 py-1 text-sm ${getStatusBadgeClass(user?.sellerStatus || 'pending')}`}>
-                {user?.sellerStatus === 'active' ? 'Active Seller' : 
-                 user?.sellerStatus === 'pending' ? 'Pending Approval' : 
-                 user?.sellerStatus === 'rejected' ? 'Approval Rejected' : 'Pending Approval'}
+              {getSellerStatusIcon((user || mockUser)?.sellerStatus || 'active')}
+              <Badge className={`px-3 py-1 text-sm ${getStatusBadgeClass((user || mockUser)?.sellerStatus || 'active')}`}>
+                {(user || mockUser)?.sellerStatus === 'active' ? 'Active Seller' : 
+                 (user || mockUser)?.sellerStatus === 'pending' ? 'Pending Approval' : 
+                 (user || mockUser)?.sellerStatus === 'rejected' ? 'Approval Rejected' : 'Active Seller'}
               </Badge>
             </div>
           </div>

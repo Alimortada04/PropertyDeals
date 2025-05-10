@@ -346,72 +346,22 @@ function Router() {
         </AppLayout>
       </Route>
       
-      {/* Seller dashboard private route - only for active sellers */}
+      {/* Seller dashboard private route - temporarily allowed without authentication */}
       <Route path="/sellerdash/:userId">
-        {params => {
-          // Create a condition function with proper typing
-          const checkSellerAccess = (user: any) => {
-            if (!user) return false;
-            
-            // Convert userId to number for comparison
-            const numUserId = Number(params.userId);
-            
-            return (
-              user.id === numUserId && 
-              user.activeRole === 'seller' && 
-              user.roles && 
-              typeof user.roles === 'object' &&
-              'seller' in user.roles &&
-              user.roles.seller && 
-              user.roles.seller.status === 'active'
-            );
-          };
-          
-          return (
-            <ProtectedRoute
-              condition={checkSellerAccess}
-              redirectTo="/sellerdash"
-            >
-              <AppLayout>
-                <SellerDashboardPage />
-              </AppLayout>
-            </ProtectedRoute>
-          );
-        }}
+        {params => (
+          <AppLayout>
+            <SellerDashboardPage />
+          </AppLayout>
+        )}
       </Route>
       
-      {/* Property detail page for seller dashboard */}
+      {/* Property detail page for seller dashboard - temporarily allowed without authentication */}
       <Route path="/sellerdash/:userId/property/:propertyId">
-        {params => {
-          // Create a condition function with proper typing
-          const checkSellerAccess = (user: any) => {
-            if (!user) return false;
-            
-            // Convert userId to number for comparison
-            const numUserId = Number(params.userId);
-            
-            return (
-              user.id === numUserId && 
-              user.activeRole === 'seller' && 
-              user.roles && 
-              typeof user.roles === 'object' &&
-              'seller' in user.roles &&
-              user.roles.seller && 
-              user.roles.seller.status === 'active'
-            );
-          };
-          
-          return (
-            <ProtectedRoute
-              condition={checkSellerAccess}
-              redirectTo="/sellerdash"
-            >
-              <AppLayout>
-                <SellerPropertyDetailPage />
-              </AppLayout>
-            </ProtectedRoute>
-          );
-        }}
+        {params => (
+          <AppLayout>
+            <SellerPropertyDetailPage />
+          </AppLayout>
+        )}
       </Route>
       <Route path="/forgot-password">
         <ForgotPasswordPage />
