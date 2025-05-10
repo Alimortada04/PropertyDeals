@@ -10,6 +10,9 @@ import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
 import SellerDash from "@/pages/sellerdash";
+// Note: Dynamic route import will be used within the route definition
+import SellerDashboardPage from "@/pages/sellerdash/[userId]";
+import SellerPropertyDetailPage from "@/pages/sellerdash/property/[propertyId]";
 import DashboardNewPage from "@/pages/dashboard";
 import DashboardPage from "@/pages/dashboard-page";
 import ProfilePage from "@/pages/profile/profile-page";
@@ -370,7 +373,41 @@ function Router() {
               redirectTo="/sellerdash"
             >
               <AppLayout>
-                <SellerDash userId={params.userId} />
+                <SellerDashboardPage />
+              </AppLayout>
+            </ProtectedRoute>
+          );
+        }}
+      </Route>
+      
+      {/* Property detail page for seller dashboard */}
+      <Route path="/sellerdash/:userId/property/:propertyId">
+        {params => {
+          // Create a condition function with proper typing
+          const checkSellerAccess = (user: any) => {
+            if (!user) return false;
+            
+            // Convert userId to number for comparison
+            const numUserId = Number(params.userId);
+            
+            return (
+              user.id === numUserId && 
+              user.activeRole === 'seller' && 
+              user.roles && 
+              typeof user.roles === 'object' &&
+              'seller' in user.roles &&
+              user.roles.seller && 
+              user.roles.seller.status === 'active'
+            );
+          };
+          
+          return (
+            <ProtectedRoute
+              condition={checkSellerAccess}
+              redirectTo="/sellerdash"
+            >
+              <AppLayout>
+                <SellerPropertyDetailPage />
               </AppLayout>
             </ProtectedRoute>
           );
