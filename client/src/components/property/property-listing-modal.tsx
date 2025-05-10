@@ -33,7 +33,7 @@ import {
   DollarSign,
   Bed,
   Bath,
-  SquareIcon,
+  Square,
   Calendar,
   Upload,
   Image,
@@ -490,7 +490,7 @@ export function PropertyListingModal({ isOpen, onClose }: PropertyListingModalPr
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center gap-2">
-                    <SquareIcon className="h-4 w-4 text-muted-foreground" />
+                    <Square className="h-4 w-4 text-muted-foreground" />
                     Square Footage
                   </FormLabel>
                   <FormControl>
@@ -516,7 +516,7 @@ export function PropertyListingModal({ isOpen, onClose }: PropertyListingModalPr
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
-                      <SquareFootage className="h-4 w-4 text-muted-foreground" />
+                      <Square className="h-4 w-4 text-muted-foreground" />
                       Lot Size (optional)
                     </FormLabel>
                     <FormControl>
