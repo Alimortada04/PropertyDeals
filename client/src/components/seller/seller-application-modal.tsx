@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
-import { createUser } from '@/lib/supabase';
+import { createUser, submitSellerApplication } from '@/lib/supabase';
+import { useToast } from '@/hooks/use-toast';
 
 import {
   Dialog,
@@ -367,17 +368,64 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         });
       }
       
-      // Simulate API call to save the seller application
-      console.log('Submitting seller application', sellerApplicationData);
+      // Save seller application to Supabase
+      console.log('Submitting seller application to Supabase', sellerApplicationData);
       
-      // Display success message and close modal
-      setIsSubmitting(false);
-      onClose();
+      // Map the form data to match the SellerOnboardingData interface
+      const sellerData = {
+        fullName: sellerApplicationData.fullName,
+        email: sellerApplicationData.email,
+        phone: sellerApplicationData.phoneNumber,
+        businessName: "", // Not collected in our form, but required by interface
+        yearsInRealEstate: sellerApplicationData.realEstateSince,
+        businessType: sellerApplicationData.businessTypes.join(', '), // Converting array to string
+        
+        targetMarkets: sellerApplicationData.targetMarkets,
+        dealTypes: sellerApplicationData.dealTypes,
+        maxDealVolume: sellerApplicationData.maxDealVolume,
+        hasBuyerList: sellerApplicationData.hasBuyerList,
+        isDirectToSeller: sellerApplicationData.isDirectToSeller,
+        
+        // Files will be handled separately in the supabase function
+        purchaseAgreements: null,
+        assignmentContracts: null,
+        notes: sellerApplicationData.notes,
+        websiteUrl: sellerApplicationData.websiteUrl,
+        socialFacebook: sellerApplicationData.facebookProfile,
+        socialInstagram: sellerApplicationData.instagramProfile,
+        socialLinkedin: sellerApplicationData.linkedinProfile,
+        hasProofOfFunds: sellerApplicationData.hasProofOfFunds,
+        usesTitleCompany: sellerApplicationData.usesTitleCompany,
+        
+        isDraft: false,
+        status: 'pending' as const,
+      };
       
-      // Redirect to seller dashboard
-      setTimeout(() => {
-        setLocation('/sellerdash');
-      }, 500);
+      const success = await submitSellerApplication(sellerData);
+      
+      if (success) {
+        // Display success message and close modal
+        setIsSubmitting(false);
+        toast({
+          title: "Application Submitted",
+          description: "Your seller application has been successfully submitted for review.",
+          variant: "default",
+        });
+        onClose();
+        
+        // Redirect to seller dashboard
+        setTimeout(() => {
+          setLocation('/sellerdash');
+        }, 1000);
+      } else {
+        // Show error message
+        setIsSubmitting(false);
+        toast({
+          title: "Submission Failed",
+          description: "There was an error submitting your application. Please try again.",
+          variant: "destructive",
+        });
+      }
       
     } catch (error) {
       console.error('Error submitting application:', error);
