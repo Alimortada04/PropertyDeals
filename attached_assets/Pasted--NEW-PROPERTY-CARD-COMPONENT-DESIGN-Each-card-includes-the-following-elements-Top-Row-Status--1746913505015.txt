@@ -1,0 +1,113 @@
+✅ NEW PROPERTY CARD COMPONENT DESIGN
+Each card includes the following elements:
+
+🔝 Top Row:
+Status Badge (e.g., Live, Under Contract, Closed, Assigned) – bold color-coded pill
+
+Views badge in top-right (e.g., "Views: 42")
+
+🏡 Property Overview
+Photo Thumbnail
+
+Title: (e.g., "Colonial Revival")
+
+Address: (e.g., "123 Main St, Chicago, IL")
+
+Specs (displayed as pill tags):
+
+Bed / Bath (e.g., "3 bed", "2 bath")
+
+Sqft (e.g., "2,400 sqft")
+
+ARV (e.g., "ARV: $700,000")
+
+📊 Stats Footer:
+👁️ Views count
+
+👥 Leads count
+
+🕒 Days on market
+
+📦 Action Buttons:
+Actions (dropdown: Preview, Share, View Pipeline, Edit)
+
+Details / Manage (routes to /sellerdash/[userId]/property/[propertyId])
+
+Offers (shows number of offers; routes to Offers tab inside that property)
+
+Contract or Edit Listing depending on deal stage
+
+🎨 STYLE GUIDELINES TO APPLY
+Use rounded corners, card shadows, and white background
+
+Pill badges should use platform accent colors:
+
+Green for Live
+
+Blue for Assigned
+
+Yellow/Orange for Under Contract
+
+Gray for Closed
+
+Add hover effects: card lift + subtle shadow glow
+
+Responsive: 1 column mobile → 2 on tablet → 3 on desktop+
+
+✅ AGENT UPDATE PROMPT
+Prompt:
+Update the “Your Properties” section on /sellerdash/[userId] to match the style seen in the final screenshot reference.
+
+Replace current cards with the following layout:
+
+Property Card Redesign:
+Top Left: Status badge (Live, Under Contract, Closed, Assigned) – bold color-coded pill
+
+Top Right: Views badge (e.g., “Views: 42”)
+
+Center: Property thumbnail
+
+Below image:
+
+Title (bold)
+
+Address (smaller font)
+
+Tags (bed, bath, sqft, ARV) in pill format
+
+Bottom Footer: Show 3 icons with values:
+
+Views
+
+Leads
+
+Days on Market
+
+Buttons:
+
+“Actions” dropdown
+
+“Details” or “Manage” (routes to /sellerdash/[userId]/property/[propertyId])
+
+“Offers (#)” (routes to property offers tab)
+
+“Contract” (if Under Contract or higher)
+
+Design & UX:
+White card background with soft drop shadow
+
+Rounded corners and subtle padding
+
+Pill colors:
+
+Green for “Live”
+
+Blue for “Assigned”
+
+Orange for “Under Contract”
+
+Gray for “Closed”
+
+Responsive: 1 column on mobile, 2 tablet, 3 desktop
+
+Include hover interaction on entire card (slight scale and shadow intensify)

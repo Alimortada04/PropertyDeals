@@ -28,6 +28,7 @@ import {
   MoreHorizontal,
   Share2
 } from 'lucide-react';
+import { PropertyCard } from '@/components/property/property-card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
@@ -36,36 +37,51 @@ import { Badge } from '@/components/ui/badge';
 const MOCK_PROPERTIES = [
   {
     id: 'prop1',
-    title: '3-Bed Single Family Home',
-    address: '123 Main St, Milwaukee, WI',
-    price: '$235,000',
-    status: 'Listed',
-    thumbnail: '/images/property1.jpg',
-    views: 24,
-    leads: 3,
-    daysListed: 7,
+    title: 'Colonial Revival',
+    address: '123 Main St, Milwaukee, WI 53201',
+    price: 625000,
+    status: 'Live',
+    thumbnail: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2670&auto=format&fit=crop',
+    views: 42,
+    leads: 8,
+    daysListed: 12,
+    beds: 5,
+    baths: 3.5,
+    sqft: 3200,
+    arv: 725000,
+    offers: 3
   },
   {
     id: 'prop2',
-    title: 'Duplex Investment Property',
-    address: '456 Oak Ave, Madison, WI',
-    price: '$320,000',
+    title: 'Modern Farmhouse',
+    address: '456 Oak St, Madison, WI 53703',
+    price: 459000,
     status: 'Under Contract',
-    thumbnail: '/images/property2.jpg',
-    views: 42,
-    leads: 5,
-    daysListed: 14,
+    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2670&auto=format&fit=crop',
+    views: 68,
+    leads: 12,
+    daysListed: 5,
+    beds: 4,
+    baths: 3,
+    sqft: 2800,
+    arv: 550000,
+    offers: 2
   },
   {
     id: 'prop3',
-    title: 'Vacant Land for Development',
-    address: '789 Pine Rd, Green Bay, WI',
-    price: '$150,000',
+    title: 'Suburban Ranch',
+    address: '789 Pine Rd, Green Bay, WI 54301',
+    price: 385000,
     status: 'Closed',
-    thumbnail: '/images/property3.jpg',
-    views: 31,
-    leads: 2,
+    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2675&auto=format&fit=crop',
+    views: 37,
+    leads: 3,
     daysListed: 30,
+    beds: 3,
+    baths: 2,
+    sqft: 2200,
+    arv: 420000,
+    offers: 4
   },
 ];
 
