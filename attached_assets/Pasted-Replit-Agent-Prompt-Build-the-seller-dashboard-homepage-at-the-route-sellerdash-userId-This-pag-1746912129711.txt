@@ -1,0 +1,119 @@
+Replit Agent Prompt:
+Build the seller dashboard homepage at the route /sellerdash/[userId]. This page should use the platform’s global layout: a sticky left sidebar and a scrollable main panel to the right. The goal is to make this page immediately valuable for sellers, summarizing their portfolio, stats, and allowing quick actions.
+
+🧾 ROUTING DETAILS:
+The full dashboard lives at /sellerdash/[userId]
+
+Future pages (for navigation setup) will include:
+
+/sellerdash/[userId]/manage
+
+/sellerdash/[userId]/property/[propertyId]
+
+/sellerdash/[userId]/offers
+
+/sellerdash/[userId]/marketing
+
+/sellerdash/[userId]/analytics
+
+/sellerdash/[userId]/calendar
+
+/sellerdash/[userId]/documents
+
+🖥️ CONTENT BLOCKS:
+1. Top Welcome Bar
+Left Side:
+
+Heading: Welcome back, [FirstName] 👋
+
+Subtext: Here’s how your real estate business is performing today.
+
+Right Side:
+
+Seller Status Badge: Active Seller, Pending Approval, or Rejected (color-coded)
+
+2. Quick Stats Cards (4-column responsive grid)
+Each card contains:
+
+Icon (top left)
+
+Large Metric
+
+Label below
+
+Cards:
+
+🏠 Active Listings
+
+📩 Offers Pending
+
+💵 Assignment Revenue (past 30 days)
+
+⏱️ Avg. Days on Market
+
+Add tooltips on hover for explanation
+
+Use brand colors: dark green and wine accent
+
+3. Recently Touched (Max 3 Cards)
+Show 3 most recent properties or actions
+
+Each card includes:
+
+Thumbnail
+
+Property title
+
+“Last touched X mins ago”
+
+“Resume” button → routes to /sellerdash/[userId]/property/[propertyId]
+
+Cards can scroll horizontally if needed on mobile
+
+4. Your Properties Section
+Top Row Controls:
+
+Button: Add New Property → Opens modal (placeholder for now)
+
+Search bar: filter by address or title
+
+Dropdown: filter by status (e.g., Listed, Under Contract, Closed)
+
+Grid Display (responsive):
+
+Each card shows:
+
+Thumbnail
+
+Property title + price
+
+Status badge (color-coded)
+
+Stats: views, leads, days listed
+
+Two Buttons:
+
+Actions (Dropdown): Preview public page, Share, View in Pipeline, Edit Listing
+
+Manage → routes to /sellerdash/[userId]/property/[propertyId]
+
+Empty State:
+
+Headline: “You haven’t listed any properties yet.”
+
+Subtext: “Get started by adding your first deal.”
+
+CTA: “Add New Property”
+
+5. Floating Quick List Button (Global Across SellerDash)
+Floating action button (FAB) in bottom-right corner of screen across all /sellerdash/* routes
+
+Appears as: ➕ or 🏡 icon
+
+Tooltip on hover: “Quick List Property”
+
+On click: Opens modal (placeholder for now)
+
+Sticky and mobile-optimized
+
+Style with drop shadow and wine hover color

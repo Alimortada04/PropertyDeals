@@ -91,11 +91,16 @@ export default function SellerDash() {
     if (user) {
       getSellerStatus().then(status => {
         setSellerStatus(status);
+        
+        // Redirect to seller dashboard if user is an active seller
+        if (status === 'active') {
+          setLocation(`/sellerdash/${user.id}`);
+        }
       });
     } else {
       setSellerStatus('none');
     }
-  }, [user]);
+  }, [user, setLocation]);
   
   // Handle next step in application
   const handleNextStep = () => {
