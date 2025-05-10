@@ -184,42 +184,44 @@ export function PropertyCard({
                 Actions
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+            <DropdownMenuContent align="start" className="min-w-[180px]">
+              <DropdownMenuItem 
+                onClick={(e) => e.stopPropagation()}
+                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+              >
                 <Eye className="h-4 w-4 mr-2" />
                 Preview
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+              <DropdownMenuItem 
+                onClick={(e) => e.stopPropagation()}
+                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+              >
                 <Send className="h-4 w-4 mr-2" />
                 Share
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+              <DropdownMenuItem 
+                onClick={(e) => e.stopPropagation()}
+                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+              >
                 <FileText className="h-4 w-4 mr-2" />
                 View Pipeline
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+              <DropdownMenuItem 
+                onClick={(e) => e.stopPropagation()}
+                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+              >
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Manage
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+              <DropdownMenuItem 
+                onClick={(e) => e.stopPropagation()}
+                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+              >
                 <Edit className="h-4 w-4 mr-2" />
                 Edit
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          
-          {/* Primary button: Offers */}
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
-            onClick={(e) => {
-              e.stopPropagation();
-              setLocation(`${propertyDetailUrl}?tab=offers`);
-            }}
-          >
-            Offers ({offers})
-          </Button>
           
           {/* Wine-colored Market button */}
           <Button 
@@ -233,6 +235,19 @@ export function PropertyCard({
           >
             <Globe className="h-4 w-4 mr-1" />
             Market
+          </Button>
+          
+          {/* Primary button: Offers */}
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLocation(`${propertyDetailUrl}?tab=offers`);
+            }}
+          >
+            Offers ({offers})
           </Button>
         </div>
       </CardFooter>
