@@ -622,7 +622,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                 </div>
               </div>
               
-              {/* Row 3: Year and Business Types */}
+              {/* Row 3: Real Estate Since and Business Name */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* In Real Estate Since */}
                 <div className="space-y-2">
@@ -643,91 +643,91 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                       {errors.realEstateSince}
                     </p>
                   )}
-                  
-                  {/* Business Name (Optional) */}
-                  <div className="mt-4">
-                    <Label htmlFor="businessName">Business Name <span className="text-gray-500 text-xs">(Optional)</span></Label>
-                    <Input 
-                      id="businessName" 
-                      value={formData.businessName}
-                      onChange={(e) => handleChange('businessName', e.target.value)}
-                      placeholder="Your business or company name"
-                    />
-                  </div>
                 </div>
                 
-                {/* Business Types */}
+                {/* Business Name (Optional) */}
                 <div className="space-y-2">
-                  <Label htmlFor="businessTypes">Business Type <span className="text-red-500">*</span></Label>
-                  
-                  {/* Display selected business types as chips */}
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {formData.businessTypes.map((type) => (
-                      <div 
-                        key={type} 
-                        className="bg-[#135341] text-white text-xs px-2 py-1 rounded-full flex items-center"
-                      >
-                        <span>{type}</span>
-                        <X 
-                          className="h-3 w-3 ml-1 cursor-pointer hover:text-gray-200" 
-                          onClick={() => handleChange(
-                            'businessTypes', 
-                            formData.businessTypes.filter(t => t !== type)
-                          )}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="flex gap-2">
-                    <Input 
-                      value={newBusinessType}
-                      onChange={(e) => setNewBusinessType(e.target.value)}
-                      placeholder="Add business type..."
-                      className={errors.businessTypes ? "border-red-500" : ""}
-                    />
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      className="hover:bg-gray-100"
+                  <Label htmlFor="businessName">Business Name <span className="text-gray-500 text-xs">(Optional)</span></Label>
+                  <Input 
+                    id="businessName" 
+                    value={formData.businessName}
+                    onChange={(e) => handleChange('businessName', e.target.value)}
+                    placeholder="Your business or company name"
+                  />
+                </div>
+              </div>
+              
+              {/* Row 4: Business Types - Always last regardless of screen size */}
+              <div className="space-y-2 mt-4">
+                <Label htmlFor="businessTypes">Business Type <span className="text-red-500">*</span></Label>
+                
+                {/* Display selected business types as chips */}
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {formData.businessTypes.map((type) => (
+                    <div 
+                      key={type} 
+                      className="bg-[#135341] text-white text-xs px-2 py-1 rounded-full flex items-center"
+                    >
+                      <span>{type}</span>
+                      <X 
+                        className="h-3 w-3 ml-1 cursor-pointer hover:text-gray-200" 
+                        onClick={() => handleChange(
+                          'businessTypes', 
+                          formData.businessTypes.filter(t => t !== type)
+                        )}
+                      />
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="flex gap-2">
+                  <Input 
+                    value={newBusinessType}
+                    onChange={(e) => setNewBusinessType(e.target.value)}
+                    placeholder="Add business type..."
+                    className={errors.businessTypes ? "border-red-500" : ""}
+                  />
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    className="hover:bg-gray-100"
+                    onClick={() => {
+                      if (newBusinessType.trim()) {
+                        if (!formData.businessTypes.includes(newBusinessType.trim())) {
+                          handleChange('businessTypes', [...formData.businessTypes, newBusinessType.trim()]);
+                        }
+                        setNewBusinessType('');
+                      }
+                    }}
+                  >
+                    Add
+                  </Button>
+                </div>
+                
+                {/* Quick select common business types */}
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {['Wholesaler', 'Agent', 'Flipper', 'Developer', 'Investor'].map((type) => (
+                    <button
+                      key={type}
+                      type="button"
+                      className="text-xs px-2 py-1 border border-gray-200 rounded-full hover:bg-gray-50"
                       onClick={() => {
-                        if (newBusinessType.trim()) {
-                          if (!formData.businessTypes.includes(newBusinessType.trim())) {
-                            handleChange('businessTypes', [...formData.businessTypes, newBusinessType.trim()]);
-                          }
-                          setNewBusinessType('');
+                        if (!formData.businessTypes.includes(type)) {
+                          handleChange('businessTypes', [...formData.businessTypes, type]);
                         }
                       }}
                     >
-                      Add
-                    </Button>
-                  </div>
-                  
-                  {/* Quick select common business types */}
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {['Wholesaler', 'Agent', 'Flipper', 'Developer', 'Investor'].map((type) => (
-                      <button
-                        key={type}
-                        type="button"
-                        className="text-xs px-2 py-1 border border-gray-200 rounded-full hover:bg-gray-50"
-                        onClick={() => {
-                          if (!formData.businessTypes.includes(type)) {
-                            handleChange('businessTypes', [...formData.businessTypes, type]);
-                          }
-                        }}
-                      >
-                        {type}
-                      </button>
-                    ))}
-                  </div>
-                  
-                  {errors.businessTypes && (
-                    <p className="text-xs text-red-500 flex items-center gap-1">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.businessTypes}
-                    </p>
-                  )}
+                      {type}
+                    </button>
+                  ))}
                 </div>
+                
+                {errors.businessTypes && (
+                  <p className="text-xs text-red-500 flex items-center gap-1">
+                    <AlertCircle className="h-3 w-3" />
+                    {errors.businessTypes}
+                  </p>
+                )}
               </div>
               
               {/* Note: Password fields have been removed as requested */}
