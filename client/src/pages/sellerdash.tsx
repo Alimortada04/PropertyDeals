@@ -85,48 +85,16 @@ export default function SellerDash() {
     }
   }, [isModalOpen]);
   
-  // Check if user becomes authenticated after auth modal closes
-  useEffect(() => {
-    if (!isAuthModalOpen && user) {
-      // If auth modal just closed and user is now authenticated, check seller status
-      checkSellerStatus();
-    }
-  }, [isAuthModalOpen, user]);
-  
-  // Check seller status whenever user changes
+  // Check seller status when component mounts or user changes
   useEffect(() => {
     if (user) {
-      checkSellerStatus();
+      getSellerStatus().then(status => {
+        setSellerStatus(status);
+      });
     } else {
       setSellerStatus('none');
     }
   }, [user]);
-  
-  // Function to check seller status
-  const checkSellerStatus = async () => {
-    if (!user) return;
-    
-    setIsLoading(true);
-    try {
-      const status = await getSellerStatus();
-      setSellerStatus(status);
-      
-      // If seller is active, redirect to their dashboard
-      if (status === 'active') {
-        setLocation(`/sellerdash/${user.id}`);
-      } else if (status !== 'none') {
-        // If they have a profile but not active, show the application modal
-        setIsModalOpen(true);
-      } else {
-        // If no profile, show the application modal for a new application
-        setIsModalOpen(true);
-      }
-    } catch (error) {
-      console.error('Error checking seller status:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
   
   // Handle next step in application
   const handleNextStep = () => {
@@ -156,45 +124,14 @@ export default function SellerDash() {
     }
   };
   
-  // Open seller application modal, handling all three cases
-  const openSellerApplication = async () => {
-    // Case 1: User is not logged in - show auth modal
-    if (!user) {
-      setIsAuthModalOpen(true);
-      return;
-    }
-    
-    // Case 2 and 3: User is logged in - check their seller status
-    setIsLoading(true);
-    try {
-      const status = await getSellerStatus();
-      setSellerStatus(status);
-      
-      // Case 3: User is already an active seller - redirect to dashboard
-      if (status === 'active') {
-        setLocation(`/sellerdash/${user.id}`);
-      } 
-      // Case 2: User has profile but not active, or no profile - show application modal
-      else {
-        setIsModalOpen(true);
-      }
-    } catch (error) {
-      console.error('Error in openSellerApplication:', error);
-      // If error, default to showing the application modal
-      setIsModalOpen(true);
-    } finally {
-      setIsLoading(false);
-    }
+  // Simplified: Always open the seller application modal
+  const openSellerApplication = () => {
+    setIsModalOpen(true);
   };
   
-  // Handle auth modal close
+  // Simple handler to close auth modal
   const handleAuthModalClose = () => {
     setIsAuthModalOpen(false);
-    
-    // If user is now authenticated after modal closes, check seller status
-    if (user) {
-      checkSellerStatus();
-    }
   };
   
   return (
@@ -324,6 +261,11 @@ export default function SellerDash() {
               </Button>
             )}
           </DialogFooter>
+          
+          {/* Small text prompt for active sellers */}
+          <p className="text-xs text-gray-500 mt-6 text-center">
+            Already a seller? <a href={`/sellerdash/${user?.id}`} className="text-green-700 font-medium underline">Log in to your dashboard here</a>
+          </p>
         </DialogContent>
       </Dialog>
       
@@ -483,19 +425,9 @@ export default function SellerDash() {
                       size="lg"
                       className="w-full bg-[#135341] hover:bg-[#09261E] text-white py-6 text-lg group transition-all hover:scale-105 duration-300"
                       onClick={openSellerApplication}
-                      disabled={isLoading}
                     >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          Become a Seller
-                          <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
-                        </>
-                      )}
+                      Become a Seller
+                      <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
                     </Button>
                   ) : (
                     // Logged in user - open application modal
@@ -503,19 +435,9 @@ export default function SellerDash() {
                       size="lg"
                       className="w-full bg-[#135341] hover:bg-[#09261E] text-white py-6 text-lg group transition-all hover:scale-105 duration-300"
                       onClick={openSellerApplication}
-                      disabled={isLoading}
                     >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          Apply Now
-                          <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
-                        </>
-                      )}
+                      Apply Now
+                      <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
                     </Button>
                   )}
                 </CardFooter>
