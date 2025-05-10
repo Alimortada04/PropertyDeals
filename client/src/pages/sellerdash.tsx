@@ -17,7 +17,15 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { 
   UserIcon, 
   BadgeCheck, 
@@ -25,7 +33,12 @@ import {
   ListPlus,
   BarChart3,
   Settings,
-  ChevronUp
+  ChevronUp,
+  ArrowRight,
+  ChevronRight,
+  Building2,
+  UserCircle2,
+  FileText
 } from 'lucide-react';
 
 /**
@@ -37,6 +50,8 @@ export default function SellerDash() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [activeTab, setActiveTab] = useState("profile");
   
   // Track scroll position to show/hide back to top button
   useEffect(() => {
@@ -61,49 +76,181 @@ export default function SellerDash() {
     }
   };
   
+  // Reset modal state when it closes
+  useEffect(() => {
+    if (!isModalOpen) {
+      setCurrentStep(1);
+      setActiveTab("profile");
+    }
+  }, [isModalOpen]);
+  
+  // Handle next step in application
+  const handleNextStep = () => {
+    if (currentStep < 3) {
+      setCurrentStep(prev => prev + 1);
+      
+      // Update the active tab based on current step
+      if (currentStep === 1) {
+        setActiveTab("business");
+      } else if (currentStep === 2) {
+        setActiveTab("documents");
+      }
+    }
+  };
+  
+  // Handle going back in the application
+  const handlePrevStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(prev => prev - 1);
+      
+      // Update the active tab based on current step
+      if (currentStep === 3) {
+        setActiveTab("business");
+      } else if (currentStep === 2) {
+        setActiveTab("profile");
+      }
+    }
+  };
+  
   // Open seller application modal
   const openSellerApplication = () => {
+    // If user is not logged in, redirect to auth page
+    if (!user) {
+      setLocation('/auth');
+      return;
+    }
+    
     setIsModalOpen(true);
   };
   
   return (
     <>
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold">Apply to become a seller</DialogTitle>
+            <DialogTitle className="text-xl font-semibold">Seller Application</DialogTitle>
             <DialogDescription>
-              Fill out this form to apply for seller verification. Once approved, you'll have access
-              to all PropertyDeals selling tools.
+              Complete this application to become a verified PropertyDeals seller.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="py-4">
-            <p className="text-sm text-gray-600 mb-4">
-              Our seller verification process ensures that all properties on our platform are listed
-              by trusted professionals. We'll review your application within 2 business days.
-            </p>
-            
-            <div className="space-y-3">
-              <Button className="w-full bg-[#135341]" onClick={() => setLocation('/auth')}>
-                Login to continue
-              </Button>
-              
-              <Button variant="outline" className="w-full" onClick={() => setIsModalOpen(false)}>
-                Come back later
-              </Button>
+          {/* Progress indicator */}
+          <div className="pt-1 pb-4">
+            <div className="flex justify-between text-sm text-gray-500 mb-1">
+              <span>Step {currentStep} of 3</span>
+              <span>{Math.round((currentStep / 3) * 100)}% Complete</span>
             </div>
+            <Progress value={(currentStep / 3) * 100} className="h-2" />
           </div>
+          
+          <Tabs value={activeTab} className="w-full">
+            <TabsList className="grid grid-cols-3 mb-6">
+              <TabsTrigger 
+                value="profile" 
+                onClick={() => currentStep >= 1 && setCurrentStep(1)}
+                className={currentStep >= 1 ? "cursor-pointer" : "cursor-not-allowed opacity-50"}
+              >
+                <UserCircle2 className="h-4 w-4 mr-2" />
+                Profile
+              </TabsTrigger>
+              <TabsTrigger 
+                value="business" 
+                onClick={() => currentStep >= 2 && setCurrentStep(2)}
+                className={currentStep >= 2 ? "cursor-pointer" : "cursor-not-allowed opacity-50"}
+              >
+                <Building2 className="h-4 w-4 mr-2" />
+                Business
+              </TabsTrigger>
+              <TabsTrigger 
+                value="documents" 
+                onClick={() => currentStep >= 3 && setCurrentStep(3)}
+                className={currentStep >= 3 ? "cursor-pointer" : "cursor-not-allowed opacity-50"}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Documents
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="profile" className="space-y-4">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Personal Information</h3>
+                <p className="text-sm text-gray-600">
+                  We need this information to verify your identity as a real estate professional.
+                </p>
+                
+                {/* Demo content for profile tab - would be replaced with form fields */}
+                <div className="border rounded-md p-4 bg-gray-50">
+                  <p className="text-center text-sm text-gray-500 italic">
+                    Form fields for personal information would go here in a production environment.
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="business" className="space-y-4">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Business Details</h3>
+                <p className="text-sm text-gray-600">
+                  Tell us about your real estate business and experience.
+                </p>
+                
+                {/* Demo content for business tab */}
+                <div className="border rounded-md p-4 bg-gray-50">
+                  <p className="text-center text-sm text-gray-500 italic">
+                    Form fields for business information would go here in a production environment.
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="documents" className="space-y-4">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Verification Documents</h3>
+                <p className="text-sm text-gray-600">
+                  Upload required documentation to complete your seller verification.
+                </p>
+                
+                {/* Demo content for documents tab */}
+                <div className="border rounded-md p-4 bg-gray-50">
+                  <p className="text-center text-sm text-gray-500 italic">
+                    Document upload fields would go here in a production environment.
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+          
+          <DialogFooter className="flex justify-between mt-6 gap-2">
+            {currentStep > 1 ? (
+              <Button variant="outline" onClick={handlePrevStep}>
+                Back
+              </Button>
+            ) : (
+              <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </Button>
+            )}
+            
+            {currentStep < 3 ? (
+              <Button onClick={handleNextStep} className="bg-[#135341]">
+                Continue <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            ) : (
+              <Button className="bg-[#135341]">
+                Submit Application
+              </Button>
+            )}
+          </DialogFooter>
         </DialogContent>
       </Dialog>
       
-      <div className="container mx-auto px-4 py-6 min-h-[calc(100vh-100px)] overflow-hidden">
-        <div className="mb-8">
+      <div className="container mx-auto px-4 py-6 h-screen max-h-screen overflow-hidden flex flex-col">
+        <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Become a PropertyDeals Seller</h1>
           <p className="text-gray-600 mt-2">List, market, and sell your off-market properties</p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 h-[calc(100vh-180px)]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 flex-1 overflow-hidden">
           {/* Left column: Scrolling features with animations */}
           <div 
             ref={scrollContainerRef}
@@ -120,10 +267,7 @@ export default function SellerDash() {
               </button>
             )}
             
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-800">Why Sell on PropertyDeals?</h2>
-              <p className="text-gray-600 mt-1">Powerful tools and real results, built for modern dealmakers.</p>
-            </div>
+
             
             <div className="space-y-24">
               {/* Feature 1 - List Deals That Get Seen */}
@@ -222,8 +366,8 @@ export default function SellerDash() {
           
           {/* Right column: Sticky CTA Card */}
           <div className="relative flex h-full items-center justify-center">
-            <div className="sticky top-1/4 mx-auto">
-              <Card className="w-[360px] max-w-sm shadow-xl border border-neutral-200">
+            <div className="sticky top-1/3 flex justify-center lg:justify-start">
+              <Card className="w-[360px] shadow-xl border border-neutral-200">
                 <CardHeader className="text-center p-8 space-y-3">
                   <div className="w-16 h-16 mx-auto mb-2 bg-[#09261E] rounded-full flex items-center justify-center">
                     <BadgeCheck className="h-8 w-8 text-white" />
@@ -257,23 +401,23 @@ export default function SellerDash() {
                 
                 <CardFooter className="flex justify-center px-8 pb-8">
                   {!user ? (
-                    // Not logged in - open seller application modal
+                    // Not logged in - direct to auth page
                     <Button 
                       size="lg"
                       className="w-full bg-[#135341] hover:bg-[#09261E] text-white py-6 text-lg group transition-all hover:scale-105 duration-300"
-                      onClick={openSellerApplication}
+                      onClick={() => setLocation('/auth')}
                     >
                       Become a Seller 
                       <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
                     </Button>
                   ) : (
-                    // Logged in user - could be enhanced with seller status checks
+                    // Logged in user - open application modal
                     <Button 
                       size="lg"
                       className="w-full bg-[#135341] hover:bg-[#09261E] text-white py-6 text-lg group transition-all hover:scale-105 duration-300"
-                      onClick={() => setLocation('/dashboard')}
+                      onClick={openSellerApplication}
                     >
-                      View Dashboard
+                      Apply Now
                       <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
                     </Button>
                   )}
