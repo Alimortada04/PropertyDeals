@@ -53,27 +53,22 @@ export default function SellerDash() {
   const [currentStep, setCurrentStep] = useState(1);
   const [activeTab, setActiveTab] = useState("profile");
   
-  // Track scroll position to show/hide back to top button
+  // Track window scroll position to show/hide back to top button
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
-    
     const handleScroll = () => {
-      setShowScrollTop(scrollContainer.scrollTop > 300);
+      setShowScrollTop(window.scrollY > 300);
     };
     
-    scrollContainer.addEventListener('scroll', handleScroll);
-    return () => scrollContainer.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
   // Scroll to top function
   const scrollToTop = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
   
   // Reset modal state when it closes
@@ -244,17 +239,17 @@ export default function SellerDash() {
         </DialogContent>
       </Dialog>
       
-      <div className="container mx-auto px-6 py-8 h-screen max-h-screen overflow-hidden flex flex-col">
+      <div className="container mx-auto px-6 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Become a PropertyDeals Seller</h1>
           <p className="text-gray-600 mt-2">List, market, and sell your off-market properties</p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 flex-1 overflow-hidden">
-          {/* Left column: Scrolling features with animations */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          {/* Left column: Main content - 8 columns on large screens */}
           <div 
             ref={scrollContainerRef}
-            className="relative h-full overflow-y-auto scroll-smooth scroll-pt-6 pr-6 pb-20"
+            className="lg:col-span-8 pr-6 pb-20"
           >
             {/* Back to top button */}
             {showScrollTop && (
@@ -362,10 +357,10 @@ export default function SellerDash() {
             </div>
           </div>
           
-          {/* Right column: Sticky CTA Card */}
-          <div className="relative flex h-full items-start justify-center">
+          {/* Right column: Sticky CTA Card - 4 columns on large screens */}
+          <div className="lg:col-span-4">
             <div className="sticky top-16 flex justify-center lg:justify-start">
-              <Card className="w-[360px] shadow-xl border border-neutral-200">
+              <Card className="w-full max-w-sm shadow-xl border border-neutral-200">
                 <CardHeader className="text-center p-8 space-y-3">
                   <div className="w-16 h-16 mx-auto mb-2 bg-[#09261E] rounded-full flex items-center justify-center">
                     <BadgeCheck className="h-8 w-8 text-white" />
