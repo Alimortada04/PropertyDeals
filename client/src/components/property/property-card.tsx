@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Users, Clock, MoreHorizontal, FileText, Send } from "lucide-react";
+import { Eye, Users, Clock, MoreHorizontal, FileText, Send, Edit, ExternalLink, Globe } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { formatCurrency } from "@/lib/utils";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 // Define property status types
 type PropertyStatus = 'Live' | 'Under Contract' | 'Closed' | 'Assigned';
@@ -55,6 +55,9 @@ export function PropertyCard({
   daysOnMarket,
   offers
 }: PropertyCardProps) {
+  // For navigation
+  const [, setLocation] = useLocation();
+  
   // Define status badge color function
   const getStatusBadgeClass = (status: PropertyStatus) => {
     switch (status) {
@@ -78,9 +81,23 @@ export function PropertyCard({
 
   // Define link to property detail page
   const propertyDetailUrl = `/sellerdash/${userId}/property/${id}`;
+  
+  // Handle card click to navigate to property detail page
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Only navigate if the click wasn't on a button or dropdown
+    if (
+      !(e.target as HTMLElement).closest('button') && 
+      !(e.target as HTMLElement).closest('[role="menu"]')
+    ) {
+      setLocation(propertyDetailUrl);
+    }
+  };
 
   return (
-    <Card className="overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.01] bg-white border border-gray-200">
+    <Card 
+      className="overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.01] bg-white border border-gray-200 cursor-pointer"
+      onClick={handleCardClick}
+    >
       <div className="relative">
         {/* Property image */}
         <img 
@@ -152,69 +169,72 @@ export function PropertyCard({
         </div>
       </div>
       
-      <CardFooter className="flex flex-wrap gap-2 pt-2 pb-4 px-6">
-        {/* Action buttons */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-0 transition-colors"
-            >
-              <MoreHorizontal className="h-4 w-4 mr-1" />
-              Actions
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem>
-              <Eye className="h-4 w-4 mr-2" />
-              Preview
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Send className="h-4 w-4 mr-2" />
-              Share
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <FileText className="h-4 w-4 mr-2" />
-              View Pipeline
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <MoreHorizontal className="h-4 w-4 mr-2" />
-              Edit
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        
-        <Link href={propertyDetailUrl}>
+      <CardFooter className="flex items-center justify-between gap-2 pt-2 pb-4 px-6">
+        {/* Action buttons - now full width with 3 buttons */}
+        <div className="grid grid-cols-3 gap-2 w-full">
+          {/* Actions dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-0 transition-colors"
+              >
+                <MoreHorizontal className="h-4 w-4 mr-1" />
+                Actions
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                <Eye className="h-4 w-4 mr-2" />
+                Preview
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                <Send className="h-4 w-4 mr-2" />
+                Share
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                <FileText className="h-4 w-4 mr-2" />
+                View Pipeline
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Manage
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          {/* Primary button: Offers */}
           <Button 
-            variant="outline" 
+            variant="default" 
             size="sm" 
-            className="text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-0 transition-colors"
-          >
-            Details
-          </Button>
-        </Link>
-        
-        <Link href={`${propertyDetailUrl}?tab=offers`}>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-0 transition-colors"
+            className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLocation(`${propertyDetailUrl}?tab=offers`);
+            }}
           >
             Offers ({offers})
           </Button>
-        </Link>
-        
-        {/* Show Contract button for Under Contract or Closed properties */}
-        {(status === 'Under Contract' || status === 'Closed') && (
+          
+          {/* Wine-colored Market button */}
           <Button 
             variant="outline" 
             size="sm" 
-            className="bg-orange-100 text-orange-700 hover:bg-orange-200 hover:text-orange-800 focus:ring-0 border-orange-200 transition-colors"
+            className="w-full text-[#803344] border-[#803344] bg-white hover:bg-[#803344] hover:text-white transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLocation(`${propertyDetailUrl}?tab=marketing`);
+            }}
           >
-            Contract
+            <Globe className="h-4 w-4 mr-1" />
+            Market
           </Button>
-        )}
+        </div>
       </CardFooter>
     </Card>
   );
