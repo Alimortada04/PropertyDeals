@@ -363,8 +363,8 @@ export default function SellerDash() {
           </div>
           
           {/* Right column: Sticky CTA Card */}
-          <div className="relative flex h-full items-start justify-center pt-10">
-            <div className="sticky top-24 flex justify-center lg:justify-start">
+          <div className="relative flex h-full items-start justify-center">
+            <div className="sticky top-16 flex justify-center lg:justify-start">
               <Card className="w-[360px] shadow-xl border border-neutral-200">
                 <CardHeader className="text-center p-8 space-y-3">
                   <div className="w-16 h-16 mx-auto mb-2 bg-[#09261E] rounded-full flex items-center justify-center">
