@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
+import AuthModal from '@/components/auth/auth-modal';
 import { 
   Card, 
   CardContent, 
@@ -50,6 +51,7 @@ export default function SellerDash() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [activeTab, setActiveTab] = useState("profile");
   
@@ -78,6 +80,14 @@ export default function SellerDash() {
       setActiveTab("profile");
     }
   }, [isModalOpen]);
+  
+  // Check if user becomes authenticated after auth modal closes
+  useEffect(() => {
+    if (!isAuthModalOpen && user) {
+      // If auth modal just closed and user is now authenticated, open seller application
+      setIsModalOpen(true);
+    }
+  }, [isAuthModalOpen, user]);
   
   // Handle next step in application
   const handleNextStep = () => {
@@ -109,17 +119,37 @@ export default function SellerDash() {
   
   // Open seller application modal
   const openSellerApplication = () => {
-    // If user is not logged in, redirect to auth page
+    // If user is not logged in, show the auth modal
     if (!user) {
-      setLocation('/auth');
+      setIsAuthModalOpen(true);
       return;
     }
     
+    // User is logged in, open the seller application modal
     setIsModalOpen(true);
+  };
+  
+  // Handle auth modal close
+  const handleAuthModalClose = () => {
+    setIsAuthModalOpen(false);
+    
+    // If user is now authenticated after modal closes, open the seller application
+    if (user) {
+      setIsModalOpen(true);
+    }
   };
   
   return (
     <>
+      {/* Authentication Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen}
+        onClose={handleAuthModalClose}
+        title="Sign In to Continue"
+        description="Please sign in or create an account to apply as a PropertyDeals seller."
+      />
+      
+      {/* Seller Application Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -245,7 +275,7 @@ export default function SellerDash() {
           <p className="text-gray-600 mt-2">List, market, and sell your off-market properties</p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
           {/* Left column: Main content - 8 columns on large screens */}
           <div 
             ref={scrollContainerRef}
@@ -398,7 +428,7 @@ export default function SellerDash() {
                     <Button 
                       size="lg"
                       className="w-full bg-[#135341] hover:bg-[#09261E] text-white py-6 text-lg group transition-all hover:scale-105 duration-300"
-                      onClick={() => setLocation('/auth')}
+                      onClick={openSellerApplication}
                     >
                       Become a Seller 
                       <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
