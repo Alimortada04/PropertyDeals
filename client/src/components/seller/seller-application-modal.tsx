@@ -67,6 +67,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     email: user?.email || '',
     phoneNumber: '',
     realEstateSince: '',
+    businessName: '',
     businessTypes: [] as string[],
     
     // Activity & Preferences (Step 2)
@@ -335,6 +336,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         fullName: formData.fullName,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
+        businessName: formData.businessName,
         realEstateSince: formData.realEstateSince,
         businessTypes: formData.businessTypes,
         isDraft: false,
@@ -401,7 +403,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         fullName: sellerApplicationData.fullName,
         email: sellerApplicationData.email,
         phone: sellerApplicationData.phoneNumber,
-        businessName: sellerApplicationData.fullName + " Properties", // Fallback business name based on name
+        businessName: sellerApplicationData.businessName || (sellerApplicationData.fullName + " Properties"), // Use provided business name or fallback
         yearsInRealEstate: sellerApplicationData.realEstateSince,
         businessType: sellerApplicationData.businessTypes.join(', '), // Converting array to string
         
@@ -427,7 +429,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         status: 'pending' as SellerStatus,
       };
       
-      const success = await submitSellerApplication(sellerData);
+      // Type assertion to match the expected interface
+      const success = await submitSellerApplication(sellerData as any);
       
       if (success) {
         // Display success message and close modal
@@ -640,6 +643,17 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                       {errors.realEstateSince}
                     </p>
                   )}
+                  
+                  {/* Business Name (Optional) */}
+                  <div className="mt-4">
+                    <Label htmlFor="businessName">Business Name <span className="text-gray-500 text-xs">(Optional)</span></Label>
+                    <Input 
+                      id="businessName" 
+                      value={formData.businessName}
+                      onChange={(e) => handleChange('businessName', e.target.value)}
+                      placeholder="Your business or company name"
+                    />
+                  </div>
                 </div>
                 
                 {/* Business Types */}
