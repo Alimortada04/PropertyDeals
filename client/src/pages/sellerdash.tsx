@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
 import AuthModal from '@/components/auth/auth-modal';
+import { getSellerStatus, SellerStatus } from '@/lib/supabase';
 import { 
   Card, 
   CardContent, 
@@ -39,14 +40,15 @@ import {
   ChevronRight,
   Building2,
   UserCircle2,
-  FileText
+  FileText,
+  Loader2
 } from 'lucide-react';
 
 /**
  * SellerDash - Public seller landing page
  */
 export default function SellerDash() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const { user } = useAuth();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -54,6 +56,8 @@ export default function SellerDash() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [activeTab, setActiveTab] = useState("profile");
+  const [sellerStatus, setSellerStatus] = useState<SellerStatus>('none');
+  const [isLoading, setIsLoading] = useState(false);
   
   // Track window scroll position to show/hide back to top button
   useEffect(() => {
@@ -84,10 +88,45 @@ export default function SellerDash() {
   // Check if user becomes authenticated after auth modal closes
   useEffect(() => {
     if (!isAuthModalOpen && user) {
-      // If auth modal just closed and user is now authenticated, open seller application
-      setIsModalOpen(true);
+      // If auth modal just closed and user is now authenticated, check seller status
+      checkSellerStatus();
     }
   }, [isAuthModalOpen, user]);
+  
+  // Check seller status whenever user changes
+  useEffect(() => {
+    if (user) {
+      checkSellerStatus();
+    } else {
+      setSellerStatus('none');
+    }
+  }, [user]);
+  
+  // Function to check seller status
+  const checkSellerStatus = async () => {
+    if (!user) return;
+    
+    setIsLoading(true);
+    try {
+      const status = await getSellerStatus();
+      setSellerStatus(status);
+      
+      // If seller is active, redirect to their dashboard
+      if (status === 'active') {
+        setLocation(`/sellerdash/${user.id}`);
+      } else if (status !== 'none') {
+        // If they have a profile but not active, show the application modal
+        setIsModalOpen(true);
+      } else {
+        // If no profile, show the application modal for a new application
+        setIsModalOpen(true);
+      }
+    } catch (error) {
+      console.error('Error checking seller status:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   // Handle next step in application
   const handleNextStep = () => {
@@ -117,25 +156,44 @@ export default function SellerDash() {
     }
   };
   
-  // Open seller application modal
-  const openSellerApplication = () => {
-    // If user is not logged in, show the auth modal
+  // Open seller application modal, handling all three cases
+  const openSellerApplication = async () => {
+    // Case 1: User is not logged in - show auth modal
     if (!user) {
       setIsAuthModalOpen(true);
       return;
     }
     
-    // User is logged in, open the seller application modal
-    setIsModalOpen(true);
+    // Case 2 and 3: User is logged in - check their seller status
+    setIsLoading(true);
+    try {
+      const status = await getSellerStatus();
+      setSellerStatus(status);
+      
+      // Case 3: User is already an active seller - redirect to dashboard
+      if (status === 'active') {
+        setLocation(`/sellerdash/${user.id}`);
+      } 
+      // Case 2: User has profile but not active, or no profile - show application modal
+      else {
+        setIsModalOpen(true);
+      }
+    } catch (error) {
+      console.error('Error in openSellerApplication:', error);
+      // If error, default to showing the application modal
+      setIsModalOpen(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   // Handle auth modal close
   const handleAuthModalClose = () => {
     setIsAuthModalOpen(false);
     
-    // If user is now authenticated after modal closes, open the seller application
+    // If user is now authenticated after modal closes, check seller status
     if (user) {
-      setIsModalOpen(true);
+      checkSellerStatus();
     }
   };
   
@@ -425,9 +483,19 @@ export default function SellerDash() {
                       size="lg"
                       className="w-full bg-[#135341] hover:bg-[#09261E] text-white py-6 text-lg group transition-all hover:scale-105 duration-300"
                       onClick={openSellerApplication}
+                      disabled={isLoading}
                     >
-                      Become a Seller 
-                      <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Become a Seller
+                          <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
+                        </>
+                      )}
                     </Button>
                   ) : (
                     // Logged in user - open application modal
@@ -435,9 +503,19 @@ export default function SellerDash() {
                       size="lg"
                       className="w-full bg-[#135341] hover:bg-[#09261E] text-white py-6 text-lg group transition-all hover:scale-105 duration-300"
                       onClick={openSellerApplication}
+                      disabled={isLoading}
                     >
-                      Apply Now
-                      <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          Apply Now
+                          <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 ml-1">→</span>
+                        </>
+                      )}
                     </Button>
                   )}
                 </CardFooter>
