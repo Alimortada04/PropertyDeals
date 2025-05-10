@@ -972,21 +972,47 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                   "border-2 border-dashed rounded-lg p-6 text-center",
                   errors.assignmentContracts ? "border-red-300" : "border-gray-200"
                 )}>
-                  {formData.assignmentContracts ? (
-                    <div className="flex flex-col items-center gap-2">
-                      <FileIcon className="h-10 w-10 text-blue-600" />
-                      <div className="text-sm font-medium">{formData.assignmentContracts.name}</div>
-                      <div className="text-xs text-gray-500">
-                        {Math.round(formData.assignmentContracts.size / 1024)} KB
+                  {formData.assignmentContracts.length > 0 ? (
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <div className="text-sm font-medium">
+                          {formData.assignmentContracts.length} file(s) uploaded
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => document.getElementById('assignmentContractsInput')?.click()}
+                          className="h-7 px-2 text-xs"
+                        >
+                          Add More
+                        </Button>
                       </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleChange('assignmentContracts', null)}
-                        className="mt-2 text-xs h-7 px-2"
-                      >
-                        <X className="h-3 w-3 mr-1" /> Remove
-                      </Button>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {Array.from(formData.assignmentContracts).map((file: any, index: number) => (
+                          <div key={index} className="flex items-start p-2 border rounded bg-gray-50 gap-2">
+                            <FileIcon className="h-10 w-10 flex-shrink-0 text-blue-600" />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium truncate">{file.name}</div>
+                              <div className="text-xs text-gray-500">
+                                {Math.round(file.size / 1024)} KB
+                              </div>
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => {
+                                const newFiles = Array.from(formData.assignmentContracts);
+                                newFiles.splice(index, 1);
+                                handleChange('assignmentContracts', newFiles);
+                              }}
+                              className="h-6 w-6 p-0 rounded-full"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ) : (
                     <div 
@@ -995,16 +1021,21 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                     >
                       <Upload className="h-10 w-10 text-gray-400" />
                       <div className="text-sm font-medium">Click to upload or drag & drop</div>
-                      <div className="text-xs text-gray-500">PDF (Max. 5MB)</div>
+                      <div className="text-xs text-gray-500">PDF, DOC, DOCX (Max. 10MB each)</div>
                       
                       <input 
                         id="assignmentContractsInput"
-                        type="file" 
-                        accept=".pdf"
+                        type="file"
+                        multiple
+                        accept=".pdf,.doc,.docx"
                         className="hidden"
                         onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) {
-                            handleChange('assignmentContracts', e.target.files[0]);
+                          if (e.target.files && e.target.files.length > 0) {
+                            const newFiles = [...Array.from(formData.assignmentContracts)];
+                            Array.from(e.target.files).forEach(file => {
+                              newFiles.push(file);
+                            });
+                            handleChange('assignmentContracts', newFiles);
                           }
                         }}
                       />
