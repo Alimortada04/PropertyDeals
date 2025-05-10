@@ -631,47 +631,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                 </div>
               </div>
               
-              {/* Row 4: Password fields (only if user is not logged in) */}
-              {!user && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                  {/* Password */}
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
-                    <Input 
-                      id="password" 
-                      type="password"
-                      value={formData.password}
-                      onChange={(e) => handleChange('password', e.target.value)}
-                      className={errors.password ? "border-red-500" : ""}
-                    />
-                    <p className="text-xs text-gray-500">Must be at least 8 characters</p>
-                    {errors.password && (
-                      <p className="text-xs text-red-500 flex items-center gap-1">
-                        <AlertCircle className="h-3 w-3" />
-                        {errors.password}
-                      </p>
-                    )}
-                  </div>
-                  
-                  {/* Confirm Password */}
-                  <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
-                    <Input 
-                      id="confirmPassword" 
-                      type="password"
-                      value={formData.confirmPassword}
-                      onChange={(e) => handleChange('confirmPassword', e.target.value)}
-                      className={errors.confirmPassword ? "border-red-500" : ""}
-                    />
-                    {errors.confirmPassword && (
-                      <p className="text-xs text-red-500 flex items-center gap-1">
-                        <AlertCircle className="h-3 w-3" />
-                        {errors.confirmPassword}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
+              {/* Note: Password fields have been removed as requested */}
             </div>
           </div>
         )}
@@ -1051,6 +1011,65 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                   placeholder="Add any additional context about your business or deals..."
                   className="min-h-[100px]"
                 />
+              </div>
+              
+              {/* Title Companies */}
+              <div className="space-y-3">
+                <Label htmlFor="titleCompanies">Title Companies You Work With <span className="text-gray-500 text-xs">(Optional)</span></Label>
+                
+                {/* Existing title companies */}
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {formData.titleCompanies.map((company, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="px-3 py-1 bg-gray-100 text-gray-800 hover:bg-gray-200 gap-1"
+                    >
+                      {company}
+                      <X 
+                        className="h-3 w-3 cursor-pointer ml-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const newCompanies = [...formData.titleCompanies];
+                          newCompanies.splice(index, 1);
+                          handleChange('titleCompanies', newCompanies);
+                        }}
+                      />
+                    </Badge>
+                  ))}
+                </div>
+                
+                {/* Add new title company */}
+                <div className="flex gap-2 items-center">
+                  <Input
+                    value={newTitleCompany}
+                    onChange={(e) => setNewTitleCompany(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && newTitleCompany.trim()) {
+                        e.preventDefault();
+                        if (!formData.titleCompanies.includes(newTitleCompany.trim())) {
+                          handleChange('titleCompanies', [...formData.titleCompanies, newTitleCompany.trim()]);
+                        }
+                        setNewTitleCompany('');
+                      }
+                    }}
+                    placeholder="Add title company you work with..."
+                    className="flex-1"
+                  />
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={() => {
+                      if (newTitleCompany.trim() && !formData.titleCompanies.includes(newTitleCompany.trim())) {
+                        handleChange('titleCompanies', [...formData.titleCompanies, newTitleCompany.trim()]);
+                        setNewTitleCompany('');
+                      }
+                    }}
+                    disabled={!newTitleCompany.trim() || formData.titleCompanies.includes(newTitleCompany.trim())}
+                  >
+                    Add
+                  </Button>
+                </div>
               </div>
               
               {/* URLs */}
