@@ -405,19 +405,15 @@ export default function SellerDash() {
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
                       <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-600">Verified seller badge increases buyer trust and response rates</p>
+                      <p className="text-gray-600">Get More Eyes on Your Deals</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-600">Premium placement in property search results</p>
+                      <p className="text-gray-600">Track Deal Analytics & Performance</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-600">Deal analytics and performance tracking dashboard</p>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Check className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-600">Direct messaging with active buyers</p>
+                      <p className="text-gray-600">Faster, Smarter Buyer Outreach</p>
                     </div>
                   </div>
                 </CardContent>
