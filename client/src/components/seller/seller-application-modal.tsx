@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
+import { createUser } from '@/lib/supabase';
 
 import {
   Dialog,
@@ -50,9 +51,10 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     username: user?.username || '',
     email: user?.email || '',
     phoneNumber: '',
-    businessName: '',
-    yearsInRealEstate: '',
-    businessType: '',
+    realEstateSince: '',
+    businessTypes: [] as string[],
+    password: '',
+    confirmPassword: '',
     
     // Activity & Preferences (Step 2)
     targetMarkets: [] as string[],
@@ -71,14 +73,19 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     usesTitleCompany: false
   });
   
+  // Custom business type input
+  const [newBusinessType, setNewBusinessType] = useState('');
+  
   // Error state
   const [errors, setErrors] = useState({
     fullName: '',
     username: '',
     email: '',
     phoneNumber: '',
-    businessType: '',
-    yearsInRealEstate: '',
+    realEstateSince: '',
+    businessTypes: '',
+    password: '',
+    confirmPassword: '',
     targetMarkets: '',
     dealTypes: '',
     maxDealVolume: '',
@@ -140,6 +147,9 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       if (!formData.email.trim()) {
         newErrors.email = 'Email is required';
         isValid = false;
+      } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email address';
+        isValid = false;
       }
       
       if (!formData.phoneNumber.trim()) {
@@ -147,14 +157,40 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         isValid = false;
       }
       
-      if (!formData.businessType) {
-        newErrors.businessType = 'Business type is required';
+      if (!formData.realEstateSince) {
+        newErrors.realEstateSince = 'Please indicate when you started in real estate';
+        isValid = false;
+      } else {
+        const year = parseInt(formData.realEstateSince);
+        const currentYear = new Date().getFullYear();
+        if (isNaN(year) || year < (currentYear - 100) || year > currentYear) {
+          newErrors.realEstateSince = `Please enter a valid year (${currentYear-100}-${currentYear})`;
+          isValid = false;
+        }
+      }
+      
+      if (formData.businessTypes.length === 0) {
+        newErrors.businessTypes = 'Please select at least one business type';
         isValid = false;
       }
       
-      if (!formData.yearsInRealEstate) {
-        newErrors.yearsInRealEstate = 'Experience level is required';
-        isValid = false;
+      // Only validate password fields if user is not logged in
+      if (!user) {
+        if (!formData.password) {
+          newErrors.password = 'Password is required';
+          isValid = false;
+        } else if (formData.password.length < 8) {
+          newErrors.password = 'Password must be at least 8 characters';
+          isValid = false;
+        }
+        
+        if (!formData.confirmPassword) {
+          newErrors.confirmPassword = 'Please confirm your password';
+          isValid = false;
+        } else if (formData.password !== formData.confirmPassword) {
+          newErrors.confirmPassword = 'Passwords do not match';
+          isValid = false;
+        }
       }
     } 
     else if (step === 2) {
@@ -217,7 +253,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   };
   
   // Handle submit application
-  const handleSubmitApplication = () => {
+  const handleSubmitApplication = async () => {
     if (!acceptedTerms) {
       setErrors(prev => ({
         ...prev,
@@ -228,13 +264,69 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      // Here we would save the form data with isDraft = false and status = 'pending'
-      console.log('Submitting application', formData);
+    try {
+      // For users who aren't logged in, first create an account
+      if (!user) {
+        // Process account creation
+        const createUserResult = await createUser({
+          email: formData.email,
+          password: formData.password,
+          username: formData.username,
+          fullName: formData.fullName
+        });
+        
+        if (createUserResult.error) {
+          throw new Error(createUserResult.error.message);
+        }
+        
+        // Auto-login is handled by supabase after signup
+        console.log('Created new user account', createUserResult.user);
+      }
+      
+      // Prepare seller application data
+      const sellerApplicationData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        realEstateSince: formData.realEstateSince,
+        businessTypes: formData.businessTypes,
+        isDraft: false,
+        status: 'pending',
+        // Include other necessary fields from steps 2 and 3
+        targetMarkets: formData.targetMarkets,
+        dealTypes: formData.dealTypes,
+        maxDealVolume: formData.maxDealVolume,
+        hasBuyerList: formData.hasBuyerList,
+        isDirectToSeller: formData.isDirectToSeller,
+        hasProofOfFunds: formData.hasProofOfFunds,
+        usesTitleCompany: formData.usesTitleCompany,
+        notes: formData.notes,
+        websiteUrl: formData.websiteUrl,
+        facebookProfile: formData.facebookProfile
+        // Would include user_id from supabase auth
+      };
+      
+      // In a real implementation, we would upload the files and save their URLs
+      if (formData.purchaseAgreements) {
+        console.log('Would upload purchase agreements:', formData.purchaseAgreements.name);
+      }
+      
+      if (formData.assignmentContracts) {
+        console.log('Would upload assignment contracts:', formData.assignmentContracts.name);
+      }
+      
+      // Simulate API call to save the seller application
+      console.log('Submitting seller application', sellerApplicationData);
+      
+      // Display success message and close modal
       setIsSubmitting(false);
       onClose();
-    }, 1500);
+      
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      setIsSubmitting(false);
+      // Would set appropriate error message here
+    }
   };
   
   return (
@@ -282,9 +374,9 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Left column */}
-              <div className="space-y-4">
+            <div className="space-y-4">
+              {/* Row 1: Full Name and Username */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Full Name */}
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name <span className="text-red-500">*</span></Label>
@@ -320,7 +412,10 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                     </p>
                   )}
                 </div>
-                
+              </div>
+              
+              {/* Row 2: Email and Phone */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
@@ -361,76 +456,144 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                 </div>
               </div>
               
-              {/* Right column */}
-              <div className="space-y-4">
-                {/* Business Name */}
+              {/* Row 3: Year and Business Types */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* In Real Estate Since */}
                 <div className="space-y-2">
-                  <Label htmlFor="businessName">Business Name <span className="text-gray-500 text-xs">(Optional)</span></Label>
+                  <Label htmlFor="realEstateSince">In Real Estate Since <span className="text-red-500">*</span></Label>
                   <Input 
-                    id="businessName" 
-                    value={formData.businessName}
-                    onChange={(e) => handleChange('businessName', e.target.value)}
-                    placeholder="ABC Properties LLC"
+                    id="realEstateSince" 
+                    value={formData.realEstateSince}
+                    onChange={(e) => handleChange('realEstateSince', e.target.value)}
+                    placeholder={new Date().getFullYear().toString()}
+                    className={errors.realEstateSince ? "border-red-500" : ""}
+                    type="number"
+                    min={new Date().getFullYear() - 50}
+                    max={new Date().getFullYear()}
                   />
-                </div>
-                
-                {/* Years in Real Estate */}
-                <div className="space-y-2">
-                  <Label htmlFor="yearsInRealEstate">Years in Real Estate <span className="text-red-500">*</span></Label>
-                  <Select
-                    value={formData.yearsInRealEstate}
-                    onValueChange={(value) => handleChange('yearsInRealEstate', value)}
-                  >
-                    <SelectTrigger 
-                      id="yearsInRealEstate"
-                      className={errors.yearsInRealEstate ? "border-red-500" : ""}
-                    >
-                      <SelectValue placeholder="Select experience level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0-1">0-1 years</SelectItem>
-                      <SelectItem value="2-5">2-5 years</SelectItem>
-                      <SelectItem value="6-10">6-10 years</SelectItem>
-                      <SelectItem value="10+">10+ years</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.yearsInRealEstate && (
+                  {errors.realEstateSince && (
                     <p className="text-xs text-red-500 flex items-center gap-1">
                       <AlertCircle className="h-3 w-3" />
-                      {errors.yearsInRealEstate}
+                      {errors.realEstateSince}
                     </p>
                   )}
                 </div>
                 
-                {/* Business Type */}
+                {/* Business Types */}
                 <div className="space-y-2">
-                  <Label htmlFor="businessType">Business Type <span className="text-red-500">*</span></Label>
-                  <Select
-                    value={formData.businessType}
-                    onValueChange={(value) => handleChange('businessType', value)}
-                  >
-                    <SelectTrigger 
-                      id="businessType"
-                      className={errors.businessType ? "border-red-500" : ""}
+                  <Label htmlFor="businessTypes">Business Type <span className="text-red-500">*</span></Label>
+                  
+                  {/* Display selected business types as chips */}
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {formData.businessTypes.map((type) => (
+                      <div 
+                        key={type} 
+                        className="bg-[#135341] text-white text-xs px-2 py-1 rounded-full flex items-center"
+                      >
+                        <span>{type}</span>
+                        <X 
+                          className="h-3 w-3 ml-1 cursor-pointer hover:text-gray-200" 
+                          onClick={() => handleChange(
+                            'businessTypes', 
+                            formData.businessTypes.filter(t => t !== type)
+                          )}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Input 
+                      value={newBusinessType}
+                      onChange={(e) => setNewBusinessType(e.target.value)}
+                      placeholder="Add business type..."
+                      className={errors.businessTypes ? "border-red-500" : ""}
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline"
+                      className="hover:bg-gray-100"
+                      onClick={() => {
+                        if (newBusinessType.trim()) {
+                          if (!formData.businessTypes.includes(newBusinessType.trim())) {
+                            handleChange('businessTypes', [...formData.businessTypes, newBusinessType.trim()]);
+                          }
+                          setNewBusinessType('');
+                        }
+                      }}
                     >
-                      <SelectValue placeholder="Select business type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="wholesaler">Wholesaler</SelectItem>
-                      <SelectItem value="agent">Real Estate Agent</SelectItem>
-                      <SelectItem value="flipper">Flipper</SelectItem>
-                      <SelectItem value="developer">Developer</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.businessType && (
+                      Add
+                    </Button>
+                  </div>
+                  
+                  {/* Quick select common business types */}
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {['Wholesaler', 'Agent', 'Flipper', 'Developer', 'Investor'].map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        className="text-xs px-2 py-1 border border-gray-200 rounded-full hover:bg-gray-50"
+                        onClick={() => {
+                          if (!formData.businessTypes.includes(type)) {
+                            handleChange('businessTypes', [...formData.businessTypes, type]);
+                          }
+                        }}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {errors.businessTypes && (
                     <p className="text-xs text-red-500 flex items-center gap-1">
                       <AlertCircle className="h-3 w-3" />
-                      {errors.businessType}
+                      {errors.businessTypes}
                     </p>
                   )}
                 </div>
               </div>
+              
+              {/* Row 4: Password fields (only if user is not logged in) */}
+              {!user && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                  {/* Password */}
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password <span className="text-red-500">*</span></Label>
+                    <Input 
+                      id="password" 
+                      type="password"
+                      value={formData.password}
+                      onChange={(e) => handleChange('password', e.target.value)}
+                      className={errors.password ? "border-red-500" : ""}
+                    />
+                    <p className="text-xs text-gray-500">Must be at least 8 characters</p>
+                    {errors.password && (
+                      <p className="text-xs text-red-500 flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        {errors.password}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Confirm Password */}
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password <span className="text-red-500">*</span></Label>
+                    <Input 
+                      id="confirmPassword" 
+                      type="password"
+                      value={formData.confirmPassword}
+                      onChange={(e) => handleChange('confirmPassword', e.target.value)}
+                      className={errors.confirmPassword ? "border-red-500" : ""}
+                    />
+                    {errors.confirmPassword && (
+                      <p className="text-xs text-red-500 flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
+                        {errors.confirmPassword}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -822,14 +985,15 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                     <div className="text-gray-500">Phone:</div>
                     <div>{formData.phoneNumber}</div>
                     
-                    <div className="text-gray-500">Business:</div>
-                    <div>{formData.businessName || 'N/A'}</div>
+                    <div className="text-gray-500">Started in Real Estate:</div>
+                    <div>{formData.realEstateSince}</div>
                     
-                    <div className="text-gray-500">Experience:</div>
-                    <div>{formData.yearsInRealEstate} years</div>
-                    
-                    <div className="text-gray-500">Business Type:</div>
-                    <div>{formData.businessType}</div>
+                    <div className="text-gray-500">Business Types:</div>
+                    <div>
+                      {formData.businessTypes.length > 0 
+                        ? formData.businessTypes.join(', ') 
+                        : 'Not specified'}
+                    </div>
                   </div>
                 </div>
               </div>

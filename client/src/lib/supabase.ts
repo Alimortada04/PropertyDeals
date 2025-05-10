@@ -126,6 +126,74 @@ export async function signUpWithEmail(email: string, password: string, fullName?
   return data;
 }
 
+// Function to create a new user with full registration data
+export async function createUser({
+  email,
+  password,
+  username,
+  fullName
+}: {
+  email: string;
+  password: string;
+  username: string;
+  fullName: string;
+}) {
+  console.log("Creating new user:", { email, passwordLength: password?.length, username, fullName });
+  
+  try {
+    // First check if email already exists
+    const emailExists = await checkEmailExists(email, true);
+    if (emailExists) {
+      return {
+        error: { message: "Email already exists" },
+        user: null
+      };
+    }
+    
+    // Sign up with Supabase Auth
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
+        data: {
+          full_name: fullName,
+          username: username
+        }
+      }
+    });
+    
+    if (error) {
+      console.error("Supabase signup error:", error);
+      return { error, user: null };
+    }
+    
+    // Insert user metadata into our users table
+    if (data.user) {
+      const { error: userInsertError } = await supabase
+        .from('users')
+        .insert({
+          id: data.user.id,
+          email: email,
+          username: username,
+          fullName: fullName,
+          created_at: new Date().toISOString()
+        });
+      
+      if (userInsertError) {
+        console.error("Error inserting user metadata:", userInsertError);
+        // We don't fail the whole function for this, since the auth user was created
+      }
+    }
+    
+    console.log("User creation successful:", data);
+    return { user: data.user, error: null };
+  } catch (error) {
+    console.error("Error in createUser:", error);
+    return { error, user: null };
+  }
+}
+
 export async function signInWithEmail(email: string, password: string) {
   console.log("Attempting to sign in with email and password");
   
