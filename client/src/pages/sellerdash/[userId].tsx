@@ -362,76 +362,28 @@ export default function SellerDashboardPage() {
           {filteredProperties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredProperties.map(property => (
-                <Card key={property.id} className="overflow-hidden hover:shadow-md transition-shadow duration-200">
-                  <div className="relative h-48 bg-gray-200">
-                    <img 
-                      src={property.thumbnail} 
-                      alt={property.title}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        // Fallback if image fails to load
-                        (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/e2e8f0/1e293b?text=Property+Image';
-                      }}
-                    />
-                    <Badge className={`absolute top-3 right-3 ${getStatusBadgeClass(property.status)}`}>
-                      {property.status}
-                    </Badge>
-                  </div>
-                  
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-lg mb-1">{property.title}</h3>
-                    <p className="text-gray-600 text-sm mb-3">{property.address}</p>
-                    <p className="font-bold text-[#09261E] text-xl mb-3">{property.price}</p>
-                    
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                      <div className="flex items-center gap-1">
-                        <Eye className="h-4 w-4" />
-                        <span>{property.views} views</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Users className="h-4 w-4" />
-                        <span>{property.leads} leads</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{property.daysListed} days</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm" className="flex-1">
-                            <MoreHorizontal className="h-4 w-4 mr-2" />
-                            Actions
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            Preview public page
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Share2 className="h-4 w-4 mr-2" />
-                            Share
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            View in Pipeline
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Edit Listing
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                      
-                      <Button 
-                        className="flex-1 bg-[#135341] hover:bg-[#09261E] text-white"
-                        onClick={() => setLocation(`/sellerdash/${userId}/property/${property.id}`)}
-                      >
-                        Manage
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <PropertyCard
+                  key={property.id}
+                  id={property.id}
+                  userId={userId}
+                  title={property.title}
+                  address={property.address}
+                  status={property.status as any}
+                  image={property.thumbnail}
+                  price={typeof property.price === 'string' ? 
+                    parseInt(property.price.replace(/[^0-9]/g, '')) : 
+                    property.price}
+                  beds={property.beds || 3}
+                  baths={property.baths || 2}
+                  sqft={property.sqft || 2000}
+                  arv={property.arv || (typeof property.price === 'string' ? 
+                    parseInt(property.price.replace(/[^0-9]/g, '')) * 1.2 : 
+                    property.price * 1.2)}
+                  views={property.views}
+                  leads={property.leads}
+                  daysOnMarket={property.daysListed}
+                  offers={property.offers || 0}
+                />
               ))}
             </div>
           ) : (
