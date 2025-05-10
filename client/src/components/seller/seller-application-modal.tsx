@@ -825,11 +825,18 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                         )}
                       >
                         <span>{dealType.label}</span>
-                        <span title={dealType.tooltip}>
-                          <Info 
-                            className="h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help" 
-                          />
-                        </span>
+                        <TooltipProvider delayDuration={150}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span>
+                                <Info className="h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help" />
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-[200px] text-xs">
+                              {dealType.tooltip}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                     </div>
                   ))}
@@ -907,40 +914,71 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
               {/* Upload Purchase Agreements */}
               <div className="space-y-3">
                 <Label htmlFor="purchaseAgreements">Upload Purchase Agreements <span className="text-gray-500 text-xs">(Optional, but recommended)</span></Label>
-                <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center">
-                  {formData.purchaseAgreements ? (
-                    <div className="flex flex-col items-center gap-2">
-                      <FileIcon className="h-10 w-10 text-blue-600" />
-                      <div className="text-sm font-medium">{formData.purchaseAgreements.name}</div>
-                      <div className="text-xs text-gray-500">
-                        {Math.round(formData.purchaseAgreements.size / 1024)} KB
+                <div className="border-2 border-dashed border-gray-200 rounded-lg p-6">
+                  {formData.purchaseAgreements.length > 0 ? (
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <h4 className="text-sm font-medium">Uploaded documents ({formData.purchaseAgreements.length})</h4>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => {
+                            document.getElementById('purchaseAgreementsInput')?.click();
+                          }}
+                          className="h-7 px-2 text-xs"
+                        >
+                          Add More
+                        </Button>
                       </div>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleChange('purchaseAgreements', null)}
-                        className="mt-2 text-xs h-7 px-2"
-                      >
-                        <X className="h-3 w-3 mr-1" /> Remove
-                      </Button>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {Array.from(formData.purchaseAgreements).map((file: any, index: number) => (
+                          <div key={index} className="flex items-start p-2 border rounded bg-gray-50 gap-2">
+                            <FileIcon className="h-10 w-10 flex-shrink-0 text-blue-600" />
+                            <div className="flex-1 min-w-0">
+                              <div className="text-sm font-medium truncate">{file.name}</div>
+                              <div className="text-xs text-gray-500">
+                                {Math.round(file.size / 1024)} KB
+                              </div>
+                            </div>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => {
+                                const newFiles = Array.from(formData.purchaseAgreements);
+                                newFiles.splice(index, 1);
+                                handleChange('purchaseAgreements', newFiles);
+                              }}
+                              className="h-6 w-6 p-0 rounded-full"
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ) : (
                     <div 
-                      className="flex flex-col items-center gap-2 cursor-pointer hover:opacity-80"
+                      className="flex flex-col items-center gap-2 cursor-pointer hover:opacity-80 text-center"
                       onClick={() => document.getElementById('purchaseAgreementsInput')?.click()}
                     >
                       <Upload className="h-10 w-10 text-gray-400" />
                       <div className="text-sm font-medium">Click to upload or drag & drop</div>
-                      <div className="text-xs text-gray-500">PDF (Max. 5MB)</div>
+                      <div className="text-xs text-gray-500">PDF, DOC, DOCX (Max. 10MB each)</div>
                       
                       <input 
                         id="purchaseAgreementsInput"
                         type="file" 
-                        accept=".pdf"
+                        multiple
+                        accept=".pdf,.doc,.docx"
                         className="hidden"
                         onChange={(e) => {
-                          if (e.target.files && e.target.files[0]) {
-                            handleChange('purchaseAgreements', e.target.files[0]);
+                          if (e.target.files && e.target.files.length > 0) {
+                            const newFiles = [...Array.from(formData.purchaseAgreements)];
+                            Array.from(e.target.files).forEach(file => {
+                              newFiles.push(file);
+                            });
+                            handleChange('purchaseAgreements', newFiles);
                           }
                         }}
                       />
