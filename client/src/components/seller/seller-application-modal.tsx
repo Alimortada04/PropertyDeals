@@ -27,8 +27,17 @@ import {
   X,
   FileIcon,
   CheckIcon,
-  AlertCircle
+  AlertCircle,
+  CheckCircle,
+  XCircle
 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface SellerApplicationModalProps {
@@ -113,6 +122,21 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       }
     }
   }, [isOpen, user]);
+  
+  // Get business type description for tooltips
+  const getBusinessTypeDescription = (type: string): string => {
+    const descriptions: Record<string, string> = {
+      'Wholesaler': 'Finds deals and assigns contracts to other investors without taking ownership',
+      'Flipper': 'Buys properties, renovates them, and sells for profit',
+      'Buy & Hold': 'Purchases properties for long-term rental income and appreciation',
+      'Agent': 'Licensed real estate professional representing buyers or sellers',
+      'Contractor': 'Renovates and repairs properties for investors',
+      'Lender': 'Provides financing for real estate transactions',
+      'Property Manager': 'Manages rental properties for property owners'
+    };
+    
+    return descriptions[type] || `${type} real estate professional`;
+  };
   
   // Handle form field changes
   const handleChange = (field: string, value: any) => {
@@ -420,17 +444,49 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                 {/* Username */}
                 <div className="space-y-2">
                   <Label htmlFor="username">Username <span className="text-red-500">*</span></Label>
-                  <Input 
-                    id="username" 
-                    value={formData.username}
-                    onChange={(e) => handleChange('username', e.target.value)}
-                    placeholder="johnsmith"
-                    className={errors.username ? "border-red-500" : ""}
-                  />
+                  <div className="relative">
+                    <Input 
+                      id="username" 
+                      value={formData.username}
+                      onChange={(e) => handleChange('username', e.target.value)}
+                      placeholder="johnsmith"
+                      className={`${errors.username ? "border-red-500" : ""} ${
+                        usernameAvailable === true ? "border-green-500 pr-10" : 
+                        usernameAvailable === false ? "border-red-500 pr-10" : ""
+                      }`}
+                    />
+                    {checkingUsername && (
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      </div>
+                    )}
+                    {usernameAvailable === true && !checkingUsername && formData.username.trim() && (
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                      </div>
+                    )}
+                    {usernameAvailable === false && !checkingUsername && (
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                        <XCircle className="h-4 w-4 text-red-500" />
+                      </div>
+                    )}
+                  </div>
                   {errors.username && (
                     <p className="text-xs text-red-500 flex items-center gap-1">
                       <AlertCircle className="h-3 w-3" />
                       {errors.username}
+                    </p>
+                  )}
+                  {usernameAvailable === false && !errors.username && (
+                    <p className="text-xs text-red-500 flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      Username already taken
+                    </p>
+                  )}
+                  {usernameAvailable === true && !errors.username && formData.username.trim().length >= 3 && (
+                    <p className="text-xs text-green-500 flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3" />
+                      Username available
                     </p>
                   )}
                 </div>
@@ -468,7 +524,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                     placeholder="(123) 456-7890"
                     className={errors.phoneNumber ? "border-red-500" : ""}
                   />
-                  <p className="text-xs text-gray-500">Format: (123) 456-7890</p>
+
                   {errors.phoneNumber && (
                     <p className="text-xs text-red-500 flex items-center gap-1">
                       <AlertCircle className="h-3 w-3" />
