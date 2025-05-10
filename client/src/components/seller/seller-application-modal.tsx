@@ -53,28 +53,31 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     phoneNumber: '',
     realEstateSince: '',
     businessTypes: [] as string[],
-    password: '',
-    confirmPassword: '',
     
     // Activity & Preferences (Step 2)
-    targetMarkets: [] as string[],
+    targetMarkets: ['Milwaukee', 'Madison', 'Green Bay'] as string[],
     dealTypes: [] as string[],
     maxDealVolume: '',
     hasBuyerList: false,
     isDirectToSeller: false,
     
     // Trust & Credibility (Step 3)
-    purchaseAgreements: null as File | null,
-    assignmentContracts: null as File | null,
+    purchaseAgreements: [] as File[],
+    assignmentContracts: [] as File[],
     notes: '',
     websiteUrl: '',
     facebookProfile: '',
-    hasProofOfFunds: false,
-    usesTitleCompany: false
+    instagramProfile: '',
+    linkedinProfile: '',
+    titleCompanies: [] as string[]
   });
   
-  // Custom business type input
+  // Custom input states
   const [newBusinessType, setNewBusinessType] = useState('');
+  const [newTargetMarket, setNewTargetMarket] = useState('');
+  const [newTitleCompany, setNewTitleCompany] = useState('');
+  const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [checkingUsername, setCheckingUsername] = useState(false);
   
   // Error state
   const [errors, setErrors] = useState({
@@ -84,12 +87,12 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     phoneNumber: '',
     realEstateSince: '',
     businessTypes: '',
-    password: '',
-    confirmPassword: '',
     targetMarkets: '',
     dealTypes: '',
     maxDealVolume: '',
+    purchaseAgreements: '',
     assignmentContracts: '',
+    titleCompanies: '',
     terms: ''
   });
   
@@ -127,6 +130,39 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     }
   };
   
+  // Check username availability
+  useEffect(() => {
+    // Skip empty usernames or if currently checking
+    if (!formData.username.trim() || checkingUsername) return;
+    
+    // Debounce to avoid too many API calls
+    const timeoutId = setTimeout(async () => {
+      if (formData.username.trim().length < 3) {
+        setUsernameAvailable(null);
+        return;
+      }
+      
+      setCheckingUsername(true);
+      
+      try {
+        // Here you would check against the actual API
+        // Simulating API call for now
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Determine if username is available (mock logic for demo)
+        const isAvailable = !['admin', 'test', 'user'].includes(formData.username.toLowerCase());
+        setUsernameAvailable(isAvailable);
+      } catch (error) {
+        console.error('Error checking username availability:', error);
+        setUsernameAvailable(null);
+      } finally {
+        setCheckingUsername(false);
+      }
+    }, 500);
+    
+    return () => clearTimeout(timeoutId);
+  }, [formData.username]);
+  
   // Validate current step
   const validateStep = (step: number): boolean => {
     let isValid = true;
@@ -141,6 +177,12 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       
       if (!formData.username.trim()) {
         newErrors.username = 'Username is required';
+        isValid = false;
+      } else if (formData.username.trim().length < 3) {
+        newErrors.username = 'Username must be at least 3 characters';
+        isValid = false;
+      } else if (usernameAvailable === false) {
+        newErrors.username = 'Username is already taken';
         isValid = false;
       }
       
@@ -173,25 +215,6 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         newErrors.businessTypes = 'Please select at least one business type';
         isValid = false;
       }
-      
-      // Only validate password fields if user is not logged in
-      if (!user) {
-        if (!formData.password) {
-          newErrors.password = 'Password is required';
-          isValid = false;
-        } else if (formData.password.length < 8) {
-          newErrors.password = 'Password must be at least 8 characters';
-          isValid = false;
-        }
-        
-        if (!formData.confirmPassword) {
-          newErrors.confirmPassword = 'Please confirm your password';
-          isValid = false;
-        } else if (formData.password !== formData.confirmPassword) {
-          newErrors.confirmPassword = 'Passwords do not match';
-          isValid = false;
-        }
-      }
     } 
     else if (step === 2) {
       // Validate Step 2: Activity & Preferences
@@ -212,8 +235,13 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     }
     else if (step === 3) {
       // Validate Step 3: Trust & Credibility
-      if (!formData.assignmentContracts) {
-        newErrors.assignmentContracts = 'Assignment contract is required';
+      if (formData.purchaseAgreements.length === 0) {
+        newErrors.purchaseAgreements = 'Please upload at least one purchase agreement';
+        isValid = false;
+      }
+      
+      if (formData.assignmentContracts.length === 0) {
+        newErrors.assignmentContracts = 'Please upload at least one assignment contract';
         isValid = false;
       }
     }
@@ -265,24 +293,6 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     setIsSubmitting(true);
     
     try {
-      // For users who aren't logged in, first create an account
-      if (!user) {
-        // Process account creation
-        const createUserResult = await createUser({
-          email: formData.email,
-          password: formData.password,
-          username: formData.username,
-          fullName: formData.fullName
-        });
-        
-        if (createUserResult.error) {
-          throw new Error(createUserResult.error.message);
-        }
-        
-        // Auto-login is handled by supabase after signup
-        console.log('Created new user account', createUserResult.user);
-      }
-      
       // Prepare seller application data
       const sellerApplicationData = {
         fullName: formData.fullName,
@@ -298,21 +308,28 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         maxDealVolume: formData.maxDealVolume,
         hasBuyerList: formData.hasBuyerList,
         isDirectToSeller: formData.isDirectToSeller,
-        hasProofOfFunds: formData.hasProofOfFunds,
-        usesTitleCompany: formData.usesTitleCompany,
         notes: formData.notes,
+        titleCompanies: formData.titleCompanies,
         websiteUrl: formData.websiteUrl,
-        facebookProfile: formData.facebookProfile
+        facebookProfile: formData.facebookProfile,
+        instagramProfile: formData.instagramProfile,
+        linkedinProfile: formData.linkedinProfile
         // Would include user_id from supabase auth
       };
       
       // In a real implementation, we would upload the files and save their URLs
-      if (formData.purchaseAgreements) {
-        console.log('Would upload purchase agreements:', formData.purchaseAgreements.name);
+      if (formData.purchaseAgreements.length > 0) {
+        console.log(`Would upload ${formData.purchaseAgreements.length} purchase agreements`);
+        formData.purchaseAgreements.forEach((file, index) => {
+          console.log(`Purchase agreement ${index + 1}:`, file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
+        });
       }
       
-      if (formData.assignmentContracts) {
-        console.log('Would upload assignment contracts:', formData.assignmentContracts.name);
+      if (formData.assignmentContracts.length > 0) {
+        console.log(`Would upload ${formData.assignmentContracts.length} assignment contracts`);
+        formData.assignmentContracts.forEach((file, index) => {
+          console.log(`Assignment contract ${index + 1}:`, file.name, `(${(file.size / 1024).toFixed(2)} KB)`);
+        });
       }
       
       // Simulate API call to save the seller application
@@ -321,6 +338,11 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       // Display success message and close modal
       setIsSubmitting(false);
       onClose();
+      
+      // Redirect to seller dashboard
+      setTimeout(() => {
+        navigate('/sellerdash');
+      }, 500);
       
     } catch (error) {
       console.error('Error submitting application:', error);
