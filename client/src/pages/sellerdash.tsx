@@ -98,15 +98,8 @@ export default function SellerDash() {
   
   // Handle next step in application
   const handleNextStep = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(prev => prev + 1);
-      
-      // Update the active tab based on current step
-      if (currentStep === 1) {
-        setActiveTab("business");
-      } else if (currentStep === 2) {
-        setActiveTab("documents");
-      }
     }
   };
   
@@ -114,13 +107,6 @@ export default function SellerDash() {
   const handlePrevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(prev => prev - 1);
-      
-      // Update the active tab based on current step
-      if (currentStep === 3) {
-        setActiveTab("business");
-      } else if (currentStep === 2) {
-        setActiveTab("profile");
-      }
     }
   };
   
@@ -157,110 +143,177 @@ export default function SellerDash() {
           {/* Progress indicator */}
           <div className="pt-1 pb-4">
             <div className="flex justify-between text-sm text-gray-500 mb-1">
-              <span>Step {currentStep} of 3</span>
-              <span>{Math.round((currentStep / 3) * 100)}% Complete</span>
+              <span>Step {currentStep} of 4</span>
+              <span>{Math.round((currentStep / 4) * 100)}% Complete</span>
             </div>
-            <Progress value={(currentStep / 3) * 100} className="h-2" />
+            <Progress value={(currentStep / 4) * 100} className="h-2" />
           </div>
           
-          <Tabs value={activeTab} className="w-full">
-            <TabsList className="grid grid-cols-3 mb-6">
-              <TabsTrigger 
-                value="profile" 
-                onClick={() => currentStep >= 1 && setCurrentStep(1)}
-                className={currentStep >= 1 ? "cursor-pointer" : "cursor-not-allowed opacity-50"}
-              >
-                <UserCircle2 className="h-4 w-4 mr-2" />
-                Profile
-              </TabsTrigger>
-              <TabsTrigger 
-                value="business" 
-                onClick={() => currentStep >= 2 && setCurrentStep(2)}
-                className={currentStep >= 2 ? "cursor-pointer" : "cursor-not-allowed opacity-50"}
-              >
-                <Building2 className="h-4 w-4 mr-2" />
-                Business
-              </TabsTrigger>
-              <TabsTrigger 
-                value="documents" 
-                onClick={() => currentStep >= 3 && setCurrentStep(3)}
-                className={currentStep >= 3 ? "cursor-pointer" : "cursor-not-allowed opacity-50"}
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                Documents
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="profile" className="space-y-4">
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Personal Information</h3>
-                <p className="text-sm text-gray-600">
-                  We need this information to verify your identity as a real estate professional.
-                </p>
-                
-                {/* Demo content for profile tab - would be replaced with form fields */}
-                <div className="border rounded-md p-4 bg-gray-50">
-                  <p className="text-center text-sm text-gray-500 italic">
-                    Form fields for personal information would go here in a production environment.
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="business" className="space-y-4">
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Business Details</h3>
-                <p className="text-sm text-gray-600">
-                  Tell us about your real estate business and experience.
-                </p>
-                
-                {/* Demo content for business tab */}
-                <div className="border rounded-md p-4 bg-gray-50">
-                  <p className="text-center text-sm text-gray-500 italic">
-                    Form fields for business information would go here in a production environment.
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="documents" className="space-y-4">
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Verification Documents</h3>
-                <p className="text-sm text-gray-600">
-                  Upload required documentation to complete your seller verification.
-                </p>
-                
-                {/* Demo content for documents tab */}
-                <div className="border rounded-md p-4 bg-gray-50">
-                  <p className="text-center text-sm text-gray-500 italic">
-                    Document upload fields would go here in a production environment.
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+          {/* Step labels */}
+          <div className="grid grid-cols-4 mb-6 text-xs text-center">
+            <div className={`transition-colors ${currentStep >= 1 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
+              Basic Info
+            </div>
+            <div className={`transition-colors ${currentStep >= 2 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
+              Activity
+            </div>
+            <div className={`transition-colors ${currentStep >= 3 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
+              Trust
+            </div>
+            <div className={`transition-colors ${currentStep >= 4 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
+              Review
+            </div>
+          </div>
           
-          <DialogFooter className="flex justify-between mt-6 gap-2">
-            {currentStep > 1 ? (
-              <Button variant="outline" onClick={handlePrevStep}>
-                Back
-              </Button>
-            ) : (
-              <Button variant="outline" onClick={() => setIsModalOpen(false)}>
-                Cancel
-              </Button>
-            )}
+          {/* Step 1: Basic Information */}
+          {currentStep === 1 && (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium">Basic Information</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Tell us about yourself and your business
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Form fields will go here */}
+                <div className="p-4 border border-gray-200 rounded-md bg-gray-50 h-40 flex items-center justify-center">
+                  <p className="text-sm text-gray-500">
+                    Basic information form fields
+                  </p>
+                </div>
+                <div className="p-4 border border-gray-200 rounded-md bg-gray-50 h-40 flex items-center justify-center">
+                  <p className="text-sm text-gray-500">
+                    Additional fields
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Step 2: Seller Activity & Preferences */}
+          {currentStep === 2 && (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium">Seller Activity & Preferences</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Tell us about your markets and deal preferences
+                </p>
+              </div>
+              
+              <div className="p-4 border border-gray-200 rounded-md bg-gray-50 h-40 flex items-center justify-center">
+                <p className="text-sm text-gray-500">
+                  Activity & preferences form fields
+                </p>
+              </div>
+            </div>
+          )}
+          
+          {/* Step 3: Trust & Credibility */}
+          {currentStep === 3 && (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium">Trust & Credibility</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Upload documents and provide additional verification information
+                </p>
+              </div>
+              
+              <div className="p-4 border border-gray-200 rounded-md bg-gray-50 h-40 flex items-center justify-center">
+                <p className="text-sm text-gray-500">
+                  Trust & credibility form fields
+                </p>
+              </div>
+            </div>
+          )}
+          
+          {/* Step 4: Review & Submit */}
+          {currentStep === 4 && (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium">Review & Submit</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  Review your information before submitting your application
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium">Basic Information</h4>
+                    <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                      Edit
+                    </Button>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Summary of basic information
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium">Activity & Preferences</h4>
+                    <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                      Edit
+                    </Button>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Summary of activity & preferences
+                  </div>
+                </div>
+                
+                <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium">Trust & Credibility</h4>
+                    <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                      Edit
+                    </Button>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    Summary of trust & credibility information
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-2 mt-4">
+                  <input type="checkbox" id="certify" className="mt-1" />
+                  <label htmlFor="certify" className="text-sm">
+                    I certify that the information provided is accurate and complete
+                  </label>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {/* Action buttons */}
+          <div className="flex flex-col sm:flex-row justify-between mt-6 gap-4">
+            <div>
+              {currentStep > 1 ? (
+                <Button variant="outline" onClick={handlePrevStep}>
+                  Back
+                </Button>
+              ) : (
+                <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                  Cancel
+                </Button>
+              )}
+            </div>
             
-            {currentStep < 3 ? (
-              <Button onClick={handleNextStep} className="bg-[#135341]">
-                Continue <ChevronRight className="ml-1 h-4 w-4" />
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setIsModalOpen(false)}>
+                Save & Finish Later
               </Button>
-            ) : (
-              <Button className="bg-[#135341]">
-                Submit Application
-              </Button>
-            )}
-          </DialogFooter>
+              
+              {currentStep < 4 ? (
+                <Button onClick={handleNextStep} className="bg-[#135341]">
+                  Continue <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              ) : (
+                <Button className="bg-[#135341]">
+                  Submit Application
+                </Button>
+              )}
+            </div>
+          </div>
           
           {/* Small text prompt for active sellers */}
           <p className="text-xs text-gray-500 mt-6 text-center">
