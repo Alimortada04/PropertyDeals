@@ -29,7 +29,11 @@ import {
   CheckIcon,
   AlertCircle,
   CheckCircle,
-  XCircle
+  XCircle,
+  Globe,
+  Facebook,
+  Instagram,
+  Linkedin
 } from 'lucide-react';
 import {
   Tooltip,
@@ -64,7 +68,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     businessTypes: [] as string[],
     
     // Activity & Preferences (Step 2)
-    targetMarkets: ['Milwaukee', 'Madison', 'Green Bay'] as string[],
+    targetMarkets: [] as string[], // Empty by default as requested
     dealTypes: [] as string[],
     maxDealVolume: '',
     hasBuyerList: false,
@@ -78,7 +82,9 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
     facebookProfile: '',
     instagramProfile: '',
     linkedinProfile: '',
-    titleCompanies: [] as string[]
+    titleCompanies: [] as string[],
+    hasProofOfFunds: false,
+    usesTitleCompany: false
   });
   
   // Custom input states
@@ -266,6 +272,11 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       
       if (formData.assignmentContracts.length === 0) {
         newErrors.assignmentContracts = 'Please upload at least one assignment contract';
+        isValid = false;
+      }
+      
+      if (formData.titleCompanies.length === 0) {
+        newErrors.titleCompanies = 'Please add at least one title company or enter "None"';
         isValid = false;
       }
     }
@@ -688,7 +699,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                 <div className="mb-3">
                   <p className="text-xs text-gray-500 mb-2">Default markets:</p>
                   <div className="grid grid-cols-3 gap-2">
-                    {['Milwaukee', 'Madison', 'Green Bay'].map((market) => (
+                    {['Milwaukee WI', 'Madison WI', 'Green Bay WI'].map((market) => (
                       <div 
                         key={market}
                         onClick={() => {
@@ -873,7 +884,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
             <div className="space-y-5">
               {/* Upload Purchase Agreements */}
               <div className="space-y-3">
-                <Label htmlFor="purchaseAgreements">Upload Purchase Agreements <span className="text-gray-500 text-xs">(Optional, but recommended)</span></Label>
+                <Label htmlFor="purchaseAgreements">Upload Purchase Agreements <span className="text-red-500">*</span></Label>
+                <p className="text-xs text-gray-600 mb-2">(Please upload the purchase agreement for any recently closed properties.)</p>
                 <div className="border-2 border-dashed border-gray-200 rounded-lg p-6">
                   {formData.purchaseAgreements.length > 0 ? (
                     <div className="space-y-4">
@@ -1015,7 +1027,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
               
               {/* Title Companies */}
               <div className="space-y-3">
-                <Label htmlFor="titleCompanies">Title Companies You Work With <span className="text-gray-500 text-xs">(Optional)</span></Label>
+                <Label htmlFor="titleCompanies">Title Companies You Work With <span className="text-red-500">*</span></Label>
+                <p className="text-xs text-gray-600 mb-2">(Add "None" if you don't work with any title companies)</p>
                 
                 {/* Existing title companies */}
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -1072,26 +1085,66 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                 </div>
               </div>
               
-              {/* URLs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="websiteUrl">Website URL <span className="text-gray-500 text-xs">(Optional)</span></Label>
-                  <Input 
-                    id="websiteUrl"
-                    value={formData.websiteUrl}
-                    onChange={(e) => handleChange('websiteUrl', e.target.value)}
-                    placeholder="https://example.com"
-                  />
-                </div>
+              {/* Social Media & Web Presence */}
+              <div className="space-y-3">
+                <Label className="text-base">Social Media & Web Presence <span className="text-gray-500 text-xs">(Optional)</span></Label>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="facebookProfile">Facebook Profile <span className="text-gray-500 text-xs">(Optional)</span></Label>
-                  <Input 
-                    id="facebookProfile"
-                    value={formData.facebookProfile}
-                    onChange={(e) => handleChange('facebookProfile', e.target.value)}
-                    placeholder="https://facebook.com/username"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Website URL */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-4 w-4 text-gray-500" />
+                      <Label htmlFor="websiteUrl" className="text-sm font-normal">Website</Label>
+                    </div>
+                    <Input 
+                      id="websiteUrl"
+                      value={formData.websiteUrl}
+                      onChange={(e) => handleChange('websiteUrl', e.target.value)}
+                      placeholder="https://example.com"
+                    />
+                  </div>
+                  
+                  {/* Facebook Profile */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Facebook className="h-4 w-4 text-blue-600" />
+                      <Label htmlFor="facebookProfile" className="text-sm font-normal">Facebook</Label>
+                    </div>
+                    <Input 
+                      id="facebookProfile"
+                      value={formData.facebookProfile}
+                      onChange={(e) => handleChange('facebookProfile', e.target.value)}
+                      placeholder="https://facebook.com/username"
+                    />
+                  </div>
+                  
+                  {/* Instagram Profile */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Instagram className="h-4 w-4 text-pink-600" />
+                      <Label htmlFor="instagramProfile" className="text-sm font-normal">Instagram</Label>
+                    </div>
+                    <Input 
+                      id="instagramProfile"
+                      value={formData.instagramProfile}
+                      onChange={(e) => handleChange('instagramProfile', e.target.value)}
+                      placeholder="https://instagram.com/username"
+                    />
+                  </div>
+                  
+                  {/* LinkedIn Profile */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Linkedin className="h-4 w-4 text-blue-700" />
+                      <Label htmlFor="linkedinProfile" className="text-sm font-normal">LinkedIn</Label>
+                    </div>
+                    <Input 
+                      id="linkedinProfile"
+                      value={formData.linkedinProfile}
+                      onChange={(e) => handleChange('linkedinProfile', e.target.value)}
+                      placeholder="https://linkedin.com/in/username"
+                    />
+                  </div>
                 </div>
               </div>
               
