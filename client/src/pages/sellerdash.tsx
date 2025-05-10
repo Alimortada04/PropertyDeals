@@ -244,8 +244,8 @@ export default function SellerDash() {
         </DialogContent>
       </Dialog>
       
-      <div className="container mx-auto px-4 py-6 h-screen max-h-screen overflow-hidden flex flex-col">
-        <div className="mb-6">
+      <div className="container mx-auto px-6 py-8 h-screen max-h-screen overflow-hidden flex flex-col">
+        <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Become a PropertyDeals Seller</h1>
           <p className="text-gray-600 mt-2">List, market, and sell your off-market properties</p>
         </div>
@@ -260,16 +260,14 @@ export default function SellerDash() {
             {showScrollTop && (
               <button 
                 onClick={scrollToTop}
-                className="sticky top-6 left-full ml-4 z-10 bg-[#135341] hover:bg-[#09261E] text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 opacity-90 hover:opacity-100 flex items-center justify-center"
+                className="fixed bottom-8 right-8 z-20 bg-[#135341] hover:bg-[#09261E] text-white p-4 rounded-full shadow-xl transition-all duration-300 hover:scale-110 opacity-90 hover:opacity-100 flex items-center justify-center"
                 aria-label="Back to top"
               >
-                <ChevronUp className="h-5 w-5" />
+                <ChevronUp className="h-6 w-6" />
               </button>
             )}
             
-
-            
-            <div className="space-y-24">
+            <div className="space-y-20 pt-4">
               {/* Feature 1 - List Deals That Get Seen */}
               <div className="transform transition duration-700 ease-in-out hover:-translate-y-1">
                 <div className="relative">
@@ -365,8 +363,8 @@ export default function SellerDash() {
           </div>
           
           {/* Right column: Sticky CTA Card */}
-          <div className="relative flex h-full items-center justify-center">
-            <div className="sticky top-1/3 flex justify-center lg:justify-start">
+          <div className="relative flex h-full items-start justify-center pt-10">
+            <div className="sticky top-24 flex justify-center lg:justify-start">
               <Card className="w-[360px] shadow-xl border border-neutral-200">
                 <CardHeader className="text-center p-8 space-y-3">
                   <div className="w-16 h-16 mx-auto mb-2 bg-[#09261E] rounded-full flex items-center justify-center">
