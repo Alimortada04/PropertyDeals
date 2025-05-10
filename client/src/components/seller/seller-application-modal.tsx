@@ -1267,30 +1267,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                 </div>
               </div>
               
-              {/* Additional Checkboxes */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="hasProofOfFunds" 
-                    checked={formData.hasProofOfFunds}
-                    onCheckedChange={(checked) => handleChange('hasProofOfFunds', Boolean(checked))}
-                  />
-                  <Label htmlFor="hasProofOfFunds" className="text-sm font-normal">
-                    I have proof of funds access
-                  </Label>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="usesTitleCompany" 
-                    checked={formData.usesTitleCompany}
-                    onCheckedChange={(checked) => handleChange('usesTitleCompany', Boolean(checked))}
-                  />
-                  <Label htmlFor="usesTitleCompany" className="text-sm font-normal">
-                    I use a title company for my transactions
-                  </Label>
-                </div>
-              </div>
+              {/* Spacing after social profiles */}
+              <div className="pt-2"></div>
             </div>
           </div>
         )}
