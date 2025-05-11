@@ -416,6 +416,12 @@ export default function SellerDashboardPage() {
           <span className="sr-only">Quick List Property</span>
         </Button>
       </div>
+      
+      {/* Property Listing Modal */}
+      <PropertyListingModal
+        isOpen={isAddPropertyModalOpen}
+        onClose={() => setIsAddPropertyModalOpen(false)}
+      />
     </div>
   );
 }
