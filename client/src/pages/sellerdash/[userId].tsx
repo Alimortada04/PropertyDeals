@@ -32,7 +32,7 @@ import { PropertyCard } from '@/components/property/property-card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { PropertyListingModal } from '@/components/property/property-listing-modal';
+import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
 
 // Placeholder data for demonstration - in production this would come from your API
 const MOCK_PROPERTIES = [
@@ -417,8 +417,8 @@ export default function SellerDashboardPage() {
         </Button>
       </div>
       
-      {/* Property Listing Modal */}
-      <PropertyListingModal
+      {/* Enhanced Property Listing Modal */}
+      <EnhancedPropertyListingModal
         isOpen={isAddPropertyModalOpen}
         onClose={() => setIsAddPropertyModalOpen(false)}
       />
