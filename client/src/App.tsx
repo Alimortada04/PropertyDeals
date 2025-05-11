@@ -73,15 +73,8 @@ const checkEnvironmentVariables = () => {
 checkEnvironmentVariables();
 
 // Keep track of scroll position
-function ScrollToTop() {
-  const [location] = useLocation();
-  
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location]);
-  
-  return null;
-}
+// ScrollToTop component moved to @/components/common/scroll-to-top.tsx
+// Using imported version instead
 
 function Router() {
   // Check for auth-related hash fragments
@@ -525,7 +518,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ScrollToTop />
+        <ScrollToTopHOC behavior="auto" />
         <Router />
         <Toaster />
       </AuthProvider>
