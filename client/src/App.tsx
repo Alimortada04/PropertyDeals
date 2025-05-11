@@ -57,7 +57,7 @@ import MainLayout from "@/components/layout/main-layout";
 import AppLayout from "@/components/layout/app-layout";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
-import { ScrollToTop as ScrollToTopHOC } from "@/components/common/scroll-to-top";
+import { ScrollToTop } from "@/components/common/scroll-to-top";
 
 // Check if Supabase environment variables are set
 const checkEnvironmentVariables = () => {
@@ -518,7 +518,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ScrollToTopHOC behavior="auto" />
+        <ScrollToTop behavior="auto" />
         <Router />
         <Toaster />
       </AuthProvider>
