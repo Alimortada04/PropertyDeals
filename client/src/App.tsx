@@ -348,6 +348,57 @@ function Router() {
         )}
       </Route>
       
+      {/* Seller dashboard manage route */}
+      <Route path="/sellerdash/:userId/manage">
+        {params => (
+          <AppLayout>
+            {/* Using dynamic import to resolve at runtime */}
+            {(() => {
+              const ManagePage = React.lazy(() => import('./pages/sellerdash/[userId]/manage'));
+              return (
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  <ManagePage />
+                </React.Suspense>
+              );
+            })()}
+          </AppLayout>
+        )}
+      </Route>
+      
+      {/* Seller dashboard engagement route */}
+      <Route path="/sellerdash/:userId/engagement">
+        {params => (
+          <AppLayout>
+            {/* Using dynamic import to resolve at runtime */}
+            {(() => {
+              const EngagementPage = React.lazy(() => import('./pages/sellerdash/[userId]/engagement'));
+              return (
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  <EngagementPage />
+                </React.Suspense>
+              );
+            })()}
+          </AppLayout>
+        )}
+      </Route>
+      
+      {/* Seller dashboard analytics route */}
+      <Route path="/sellerdash/:userId/analytics">
+        {params => (
+          <AppLayout>
+            {/* Using dynamic import to resolve at runtime */}
+            {(() => {
+              const AnalyticsPage = React.lazy(() => import('./pages/sellerdash/[userId]/analytics'));
+              return (
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  <AnalyticsPage />
+                </React.Suspense>
+              );
+            })()}
+          </AppLayout>
+        )}
+      </Route>
+      
       {/* Property detail page for seller dashboard - temporarily allowed without authentication */}
       <Route path="/sellerdash/:userId/property/:propertyId">
         {params => (

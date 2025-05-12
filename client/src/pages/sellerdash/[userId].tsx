@@ -6,7 +6,8 @@ import {
   Card, 
   CardContent, 
   CardHeader, 
-  CardTitle 
+  CardTitle,
+  CardDescription 
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +28,9 @@ import {
   DollarSign,
   Building,
   MoreHorizontal,
-  Share2
+  Share2,
+  File,
+  FileText
 } from 'lucide-react';
 import { PropertyCard } from '@/components/property/property-card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -262,6 +265,85 @@ export default function SellerDashboardPage() {
           </Card>
         </div>
         
+        {/* Additional Resources Section */}
+        <div className="mb-10">
+          <h2 className="text-xl font-semibold mb-4">Resources & Upcoming</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Upcoming Walkthroughs Card */}
+            <Card className="overflow-hidden hover:shadow-md transition-shadow duration-200">
+              <CardHeader className="bg-blue-50 border-b pb-3">
+                <CardTitle className="flex items-center text-lg">
+                  <Calendar className="h-5 w-5 mr-2 text-blue-600" />
+                  Upcoming Walkthroughs
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-5">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center pb-2 border-b border-dashed">
+                    <div>
+                      <p className="font-medium">Colonial Revival</p>
+                      <p className="text-sm text-gray-500">May 15, 2025 • 2:00 PM</p>
+                    </div>
+                    <Badge variant="outline" className="bg-blue-50">Confirmed</Badge>
+                  </div>
+                  <div className="flex justify-between items-center pb-2 border-b border-dashed">
+                    <div>
+                      <p className="font-medium">Modern Farmhouse</p>
+                      <p className="text-sm text-gray-500">May 18, 2025 • 10:30 AM</p>
+                    </div>
+                    <Badge variant="outline" className="bg-yellow-50">Pending</Badge>
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-4"
+                  onClick={() => setLocation(`/sellerdash/${userId}/calendar`)}
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  View Full Calendar
+                </Button>
+              </CardContent>
+            </Card>
+            
+            {/* Document Hub Card */}
+            <Card className="overflow-hidden hover:shadow-md transition-shadow duration-200">
+              <CardHeader className="bg-purple-50 border-b pb-3">
+                <CardTitle className="flex items-center text-lg">
+                  <File className="h-5 w-5 mr-2 text-purple-600" />
+                  Document Hub
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-5">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center pb-2 border-b border-dashed">
+                    <div className="flex items-center">
+                      <FileText className="h-4 w-4 mr-2 text-gray-500" />
+                      <p>Property Disclosures</p>
+                    </div>
+                    <Badge variant="outline" className="bg-green-50">10 Files</Badge>
+                  </div>
+                  <div className="flex justify-between items-center pb-2 border-b border-dashed">
+                    <div className="flex items-center">
+                      <FileText className="h-4 w-4 mr-2 text-gray-500" />
+                      <p>Offer Documents</p>
+                    </div>
+                    <Badge variant="outline" className="bg-green-50">5 Files</Badge>
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  className="w-full mt-4"
+                  onClick={() => setLocation(`/sellerdash/${userId}/documents`)}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add or View Documents
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+        
         {/* Recently Touched Section */}
         <div className="mb-10">
           <h2 className="text-xl font-semibold mb-4">Recently Touched</h2>
@@ -312,7 +394,7 @@ export default function SellerDashboardPage() {
         {/* Your Properties Section */}
         <div>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-            <h2 className="text-xl font-semibold">Your Properties</h2>
+            <h2 className="text-xl font-semibold">My Properties</h2>
             
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
               <Button 
