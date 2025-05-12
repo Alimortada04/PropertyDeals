@@ -7,6 +7,21 @@ import "./google-places-custom-styles.css";
 // to prevent unnecessary re-renders
 const libraries: Libraries = ["places"];
 
+// Global state to track if places autocomplete is active
+// Used to prevent modal closing when interacting with places dropdown
+export const placesAutocompleteState = {
+  isActive: false,
+  setActive: (active: boolean) => {
+    placesAutocompleteState.isActive = active;
+    // Set a data attribute on document for DOM-based detection
+    if (active) {
+      document.documentElement.setAttribute('data-places-active', 'true');
+    } else {
+      document.documentElement.removeAttribute('data-places-active');
+    }
+  }
+};
+
 export interface PlaceData {
   address: string;
   latitude: number;
@@ -83,9 +98,29 @@ export default function GooglePlacesAutocomplete({
       options
     );
 
+    // Set up a global mutation observer to detect when the pac-container is added to DOM
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length) {
+          for (const node of mutation.addedNodes) {
+            if ((node as HTMLElement).classList?.contains('pac-container')) {
+              // Set active state to true when dropdown appears
+              placesAutocompleteState.setActive(true);
+            }
+          }
+        }
+      }
+    });
+    
+    // Start observing the document body for added/removed nodes
+    observer.observe(document.body, { childList: true, subtree: false });
+
     autocompleteRef.current.addListener("place_changed", () => {
       // Place selection is handled without access to the raw event
       // We'll apply our custom handling to prevent modal closure
+      
+      // Set active state to false when place is selected
+      placesAutocompleteState.setActive(false);
       
       if (!autocompleteRef.current) return;
       
