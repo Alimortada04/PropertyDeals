@@ -2,16 +2,28 @@
 
 /* Main container for predictions - elevated above all modal content */
 .pac-container {
+  /* Styling */
   box-shadow: none !important;
   border: 1px solid #ccc !important;
-  margin-top: 2px !important;
   border-radius: 6px !important;
   font-family: inherit !important;
   background-color: white !important;
   padding: 4px 0;
-  /* Make sure the dropdown appears above the modal */
+  
+  /* Positioning */
+  margin-top: 1px !important;
   z-index: 99999 !important;
-  position: fixed !important;
+  
+  /* Fix positioning relative to input */
+  width: calc(100% - 16px) !important; /* Account for modal padding */
+  margin-left: -1px !important;
+  top: 36px !important;
+  left: 8px !important;
+  
+  /* Fix for styling inside the modal */
+  margin-bottom: 8px !important;
+  max-height: 220px !important;
+  overflow-y: auto !important;
 }
 
 /* Fix pointer events to ensure clickability */
@@ -75,33 +87,30 @@
   color: #718096;
 }
 
-/* Add global style to ensure proper positioning */
-body .pac-container {
-  position: fixed !important;
-  overflow: visible !important;
-  width: auto !important;
-  left: initial !important;
-  right: initial !important;
-  /* Ensure the dropdown gets maximum priority for visibility */
-  z-index: 9999999 !important;
-}
-
-/* Adjust positioning to match the input field */
-.google-places-input {
-  z-index: 1;
+/* Ensure the dropdown appears with proper positioning */
+.places-autocomplete-wrapper {
   position: relative;
+  z-index: 1;
 }
 
-/* Ensure dropdown appears directly below the input */
-.google-places-input:focus + .pac-container,
-.google-places-input:focus-within + .pac-container {
-  width: calc(100% - 2px) !important;
+/* Set placeholder for dropdown positioning */
+.places-autocomplete-dropdown-anchor {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  z-index: 9999999;
+  pointer-events: none;
 }
 
-/* Ensure dropdown is not clipped or hidden by modal */
-.fixed, 
-.absolute,
-[role="dialog"],
-[data-state="open"] {
-  transform-style: preserve-3d;
+/* Make sure dropdowns in dialog modals appear correctly */
+[role="dialog"] {
+  overflow: visible !important;
+}
+
+/* Force inputs to have the correct positioning context */
+.google-places-input {
+  position: relative;
+  z-index: 1;
 }

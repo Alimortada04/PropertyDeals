@@ -69,6 +69,52 @@ export default function GooglePlacesAutocomplete({
     }
   }, [autoFocus]);
   
+  // Add effect to position the pac-container correctly inside modal
+  useEffect(() => {
+    if (!isLoaded) return;
+    
+    // Function to position the pac-container relative to our input
+    const positionDropdown = () => {
+      const pacContainer = document.querySelector('.pac-container');
+      const inputElement = inputRef.current;
+      
+      if (pacContainer && inputElement) {
+        // Get input rect
+        const inputRect = inputElement.getBoundingClientRect();
+        
+        // Get modal content element (searches up the DOM)
+        let modalContent = inputElement.closest('[role="dialog"]');
+        
+        if (modalContent) {
+          // Find the closest form group that contains our input
+          const formGroup = inputElement.closest('.places-autocomplete-wrapper');
+          
+          if (formGroup) {
+            const formGroupRect = formGroup.getBoundingClientRect();
+            
+            // Apply positioning
+            pacContainer.style.width = `${formGroupRect.width}px`;
+            pacContainer.style.left = `${formGroupRect.left}px`;
+            pacContainer.style.top = `${formGroupRect.bottom + 2}px`;
+          }
+        }
+      }
+    };
+    
+    // Call once on mount
+    setTimeout(positionDropdown, 100);
+    
+    // Add event listeners
+    window.addEventListener('resize', positionDropdown);
+    document.addEventListener('scroll', positionDropdown, true);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', positionDropdown);
+      document.removeEventListener('scroll', positionDropdown, true);
+    };
+  }, [isLoaded]);
+  
   // Fix click handling on dropdown - this ensures that dropdown clicks are properly captured
   useEffect(() => {
     // Handle click events on the dropdown to ensure proper interaction
@@ -99,7 +145,8 @@ export default function GooglePlacesAutocomplete({
       const pacContainer = document.querySelector('.pac-container');
       if (pacContainer && !pacContainer.hasAttribute('data-event-attached')) {
         pacContainer.setAttribute('data-event-attached', 'true');
-        pacContainer.addEventListener('click', handlePacContainerClick, true);
+        // Add event listener with correct type
+        pacContainer.addEventListener('click', handlePacContainerClick as EventListener, true);
         setDropdownOpen(true);
       } else if (!pacContainer && dropdownOpen) {
         setDropdownOpen(false);
@@ -117,7 +164,7 @@ export default function GooglePlacesAutocomplete({
       observer.disconnect();
       const pacContainer = document.querySelector('.pac-container');
       if (pacContainer) {
-        pacContainer.removeEventListener('click', handlePacContainerClick, true);
+        pacContainer.removeEventListener('click', handlePacContainerClick as EventListener, true);
       }
     };
   }, [dropdownOpen]);
@@ -232,7 +279,7 @@ export default function GooglePlacesAutocomplete({
       libraries={libraries}
       onLoad={() => setIsLoaded(true)}
     >
-      <div className="relative w-full" style={{ zIndex: 1 }}>
+      <div className="places-autocomplete-wrapper relative w-full">
         <Input
           id={id}
           ref={inputRef}
@@ -242,17 +289,17 @@ export default function GooglePlacesAutocomplete({
           required={required}
           value={inputValue}
           onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           autoComplete="off" /* Disable browser autocomplete to prevent conflicts */
           autoCorrect="off"
           autoCapitalize="off"
           spellCheck="false"
           autoFocus={autoFocus}
           aria-label="Address search"
-          // Add data attribute to help with styling and identification
           data-address-input="true"
         />
-        {/* Add helper element to ensure dropdown positioning */}
-        <div id="google-places-autocomplete-container" className="absolute -z-10 opacity-0 pointer-events-none"></div>
+        {/* Add anchor element to help position the dropdown */}
+        <div className="places-autocomplete-dropdown-anchor" id="pac-dropdown-anchor"></div>
       </div>
     </LoadScript>
   );
