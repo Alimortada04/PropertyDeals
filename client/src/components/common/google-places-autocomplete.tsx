@@ -127,6 +127,7 @@ export default function GooglePlacesAutocomplete({
     observer.observe(document.body, { childList: true, subtree: false });
 
     autocompleteRef.current.addListener("place_changed", () => {
+      console.log("Place changed event triggered");
       // Place selection is handled without access to the raw event
       // We'll apply our custom handling to prevent modal closure
       
@@ -136,10 +137,63 @@ export default function GooglePlacesAutocomplete({
       if (!autocompleteRef.current) return;
       
       const place = autocompleteRef.current.getPlace();
+      console.log("Place selected:", place);
       
       if (!place.geometry || !place.geometry.location) {
         // User entered the name of a place that was not suggested and
         // pressed the Enter key, or the Place Details request failed
+        console.warn("Missing geometry in selected place, attempting to recover...");
+        
+        // Try to recover by searching for the current input value
+        const searchValue = inputRef.current?.value || '';
+        if (searchValue.length > 3) {
+          // Set up a geocoder to try to get the place data
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ address: searchValue }, (results, status) => {
+            if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
+              const result = results[0];
+              console.log("Recovered place from geocoder:", result);
+              
+              // Extract place data manually since the helper function isn't available yet
+              let extractedData: PlaceData = {
+                address: result.formatted_address,
+                latitude: result.geometry.location.lat(),
+                longitude: result.geometry.location.lng(),
+                placeId: result.place_id,
+                city: '',
+                state: '',
+                zipCode: '',
+                county: '',
+                neighborhood: '',
+                streetNumber: '',
+                streetName: '',
+              };
+              
+              // Extract address components
+              for (const component of result.address_components) {
+                const types = component.types;
+                
+                if (types.includes('street_number')) {
+                  extractedData.streetNumber = component.long_name;
+                } else if (types.includes('route')) {
+                  extractedData.streetName = component.long_name;
+                } else if (types.includes('locality')) {
+                  extractedData.city = component.long_name;
+                } else if (types.includes('administrative_area_level_1')) {
+                  extractedData.state = component.short_name;
+                } else if (types.includes('postal_code')) {
+                  extractedData.zipCode = component.long_name;
+                } else if (types.includes('administrative_area_level_2')) {
+                  extractedData.county = component.long_name;
+                } else if (types.includes('neighborhood')) {
+                  extractedData.neighborhood = component.long_name;
+                }
+              }
+              
+              onPlaceSelect(extractedData);
+            }
+          });
+        }
         return;
       }
 
@@ -305,7 +359,7 @@ export default function GooglePlacesAutocomplete({
     };
   }, [isLoaded]);
   
-  // Fix click handling on dropdown items and prevent modal from closing
+  // Fix click handling on dropdown items and ensure consistent behavior between mouse and keyboard
   useEffect(() => {
     const handlePacClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -322,6 +376,54 @@ export default function GooglePlacesAutocomplete({
         
         // The click will still be handled by Google's internal handlers,
         // but won't bubble up to close the modal
+        
+        // If click is directly on a pac-item, manually trigger the place selection
+        // This ensures mouse clicks behave identically to keyboard selection
+        if (target.classList.contains('pac-item') || target.parentElement?.classList.contains('pac-item')) {
+          // Get the item that was clicked
+          const itemToSelect = target.classList.contains('pac-item') ? target : target.parentElement;
+          
+          if (itemToSelect) {
+            // Use our custom function to trigger selection in a consistent way
+            triggerPlaceSelection(itemToSelect as HTMLElement);
+            
+            // Set the active state to ensure the modal doesn't close
+            placesAutocompleteState.setActive(true);
+          }
+        }
+      }
+    };
+    
+    // Handle mouseover to apply the same visual styling as keyboard navigation
+    const handlePacMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const pacItem = target.classList.contains('pac-item') ? target : target.closest('.pac-item');
+      
+      if (pacItem) {
+        // Remove selected class from any previously selected items
+        const selectedItems = document.querySelectorAll('.pac-item-selected');
+        selectedItems.forEach(item => {
+          if (item !== pacItem) {
+            item.classList.remove('pac-item-selected');
+          }
+        });
+        
+        // Add selected class to the hovered item
+        pacItem.classList.add('pac-item-selected');
+      }
+    };
+    
+    // Handle mouseout to remove selected class when not hovering
+    const handlePacMouseOut = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const pacItem = target.classList.contains('pac-item') ? target : target.closest('.pac-item');
+      
+      if (pacItem) {
+        // Only remove if we're leaving this specific item
+        // and not just moving to a child element
+        if (!pacItem.contains(e.relatedTarget as Node)) {
+          pacItem.classList.remove('pac-item-selected');
+        }
       }
     };
     
@@ -329,11 +431,15 @@ export default function GooglePlacesAutocomplete({
     document.addEventListener('click', handlePacClick, true);
     document.addEventListener('mousedown', handlePacClick, true);
     document.addEventListener('mouseup', handlePacClick, true);
+    document.addEventListener('mouseover', handlePacMouseOver, true);
+    document.addEventListener('mouseout', handlePacMouseOut, true);
     
     return () => {
       document.removeEventListener('click', handlePacClick, true);
       document.removeEventListener('mousedown', handlePacClick, true);
       document.removeEventListener('mouseup', handlePacClick, true);
+      document.removeEventListener('mouseover', handlePacMouseOver, true);
+      document.removeEventListener('mouseout', handlePacMouseOut, true);
     };
   }, []);
 
@@ -375,13 +481,14 @@ export default function GooglePlacesAutocomplete({
       e.stopPropagation();
       e.preventDefault(); // Prevent form submission
       
-      // First active item in the dropdown
-      const firstItem = document.querySelector('.pac-item');
-      if (firstItem) {
+      // Get the currently selected item or the first item in the dropdown
+      const selectedItem = document.querySelector('.pac-item-selected') || document.querySelector('.pac-item');
+      
+      if (selectedItem) {
         try {
-          // Simulate a click on the first item - but with our custom handling 
+          // Simulate a click on the selected item with our custom handling
           // that stops event propagation
-          (firstItem as HTMLElement).dispatchEvent(new MouseEvent('mousedown', {
+          (selectedItem as HTMLElement).dispatchEvent(new MouseEvent('mousedown', {
             bubbles: false,
             cancelable: true,
             view: window,
@@ -393,6 +500,88 @@ export default function GooglePlacesAutocomplete({
           console.error('Error when selecting address suggestion:', err);
         }
       }
+    }
+  };
+  
+  // Helper function to extract place data from geocoder result
+  const extractPlaceDataFromGeocoder = (result: google.maps.GeocoderResult): PlaceData => {
+    let streetNumber = '';
+    let streetName = '';
+    let city = '';
+    let state = '';
+    let zipCode = '';
+    let county = '';
+    let neighborhood = '';
+    
+    // Extract address components
+    for (const component of result.address_components) {
+      const types = component.types;
+      
+      if (types.includes('street_number')) {
+        streetNumber = component.long_name;
+      } else if (types.includes('route')) {
+        streetName = component.long_name;
+      } else if (types.includes('locality')) {
+        city = component.long_name;
+      } else if (types.includes('administrative_area_level_1')) {
+        state = component.short_name;
+      } else if (types.includes('postal_code')) {
+        zipCode = component.long_name;
+      } else if (types.includes('administrative_area_level_2')) {
+        county = component.long_name;
+      } else if (types.includes('neighborhood')) {
+        neighborhood = component.long_name;
+      }
+    }
+    
+    return {
+      address: result.formatted_address,
+      latitude: result.geometry.location.lat(),
+      longitude: result.geometry.location.lng(),
+      placeId: result.place_id,
+      city,
+      state,
+      zipCode,
+      county,
+      neighborhood,
+      streetNumber,
+      streetName,
+    };
+  };
+  
+  // Function to manually trigger place selection from a pac-item
+  // This ensures both mouse and keyboard trigger the same behavior
+  const triggerPlaceSelection = (item: HTMLElement) => {
+    // First make sure this item is visually selected
+    const allItems = document.querySelectorAll('.pac-item');
+    allItems.forEach(el => el.classList.remove('pac-item-selected'));
+    item.classList.add('pac-item-selected');
+    
+    // We need to extract the place description from the item
+    // and set it as the input value to trigger Google's internal selection
+    const description = item.textContent || '';
+    
+    if (inputRef.current) {
+      // Set the input value to trigger Google's internal place selection
+      inputRef.current.value = description;
+      const event = new Event('input', { bubbles: true });
+      inputRef.current.dispatchEvent(event);
+      
+      // Force focus on the input to ensure the place_changed event fires
+      inputRef.current.focus();
+      
+      // Programmatically trigger the selection after a brief delay
+      setTimeout(() => {
+        // Trigger Enter key press to select the currently highlighted suggestion
+        const enterKeyEvent = new KeyboardEvent('keydown', {
+          key: 'Enter',
+          code: 'Enter',
+          keyCode: 13,
+          which: 13,
+          bubbles: true
+        });
+        inputRef.current?.dispatchEvent(enterKeyEvent);
+      }, 100);
     }
   };
 

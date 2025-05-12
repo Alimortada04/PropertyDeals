@@ -51,8 +51,23 @@
 
 /* Hover state for prediction items */
 .pac-item:hover, .pac-item-selected {
-  background-color: #f7fafc;
-  color: #135341;
+  background-color: #f1f9f6 !important;
+  color: #135341 !important;
+  border-left: 3px solid #135341 !important;
+  padding-left: 9px !important;
+}
+
+/* Ensure the icon changes color to match the theme */
+.pac-item:hover .pac-icon, .pac-item-selected .pac-icon {
+  color: #135341 !important;
+  background-position: 0 -1px !important;
+}
+
+/* Add more emphasis to the matched text */
+.pac-item:hover .pac-item-query, .pac-item-selected .pac-item-query,
+.pac-item:hover .pac-matched, .pac-item-selected .pac-matched {
+  color: #135341 !important;
+  font-weight: 600 !important;
 }
 
 /* Match first part of item text */
