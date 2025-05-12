@@ -1,329 +1,427 @@
-import React from 'react';
-import { useParams } from 'wouter';
-import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import React, { useState } from 'react';
+import { useParams, useLocation } from 'wouter';
+import { useAuth } from '@/hooks/use-auth';
 import { 
-  Building, 
-  Calendar, 
-  FileText, 
+  Card, 
+  CardContent, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { 
+  LayoutDashboard, 
+  Home, 
   Plus, 
-  ArrowRight, 
-  Home,
-  TrendingUp,
-  Users,
-  MessageSquare,
-  Clock,
-  Eye
+  Search, 
+  Filter, 
+  Clock, 
+  Eye, 
+  Users, 
+  Calendar, 
+  ChevronRight,
+  BadgeCheck,
+  BadgeAlert,
+  Clock3,
+  DollarSign,
+  Building,
+  MoreHorizontal,
+  Share2
 } from 'lucide-react';
+import { PropertyCard } from '@/components/property/property-card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
 
-export default function SellerDashboardHomePage() {
+// Placeholder data for demonstration - in production this would come from your API
+const MOCK_PROPERTIES = [
+  {
+    id: 'prop1',
+    title: 'Colonial Revival',
+    address: '123 Main St, Milwaukee, WI 53201',
+    price: 625000,
+    status: 'Live',
+    thumbnail: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2670&auto=format&fit=crop',
+    views: 42,
+    leads: 8,
+    daysListed: 12,
+    beds: 5,
+    baths: 3.5,
+    sqft: 3200,
+    arv: 725000,
+    offers: 3
+  },
+  {
+    id: 'prop2',
+    title: 'Modern Farmhouse',
+    address: '456 Oak St, Madison, WI 53703',
+    price: 459000,
+    status: 'Under Contract',
+    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2670&auto=format&fit=crop',
+    views: 68,
+    leads: 12,
+    daysListed: 5,
+    beds: 4,
+    baths: 3,
+    sqft: 2800,
+    arv: 550000,
+    offers: 2
+  },
+  {
+    id: 'prop3',
+    title: 'Suburban Ranch',
+    address: '789 Pine Rd, Green Bay, WI 54301',
+    price: 385000,
+    status: 'Closed',
+    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2675&auto=format&fit=crop',
+    views: 37,
+    leads: 3,
+    daysListed: 30,
+    beds: 3,
+    baths: 2,
+    sqft: 2200,
+    arv: 420000,
+    offers: 4
+  },
+];
+
+// Sample recent activity data
+const RECENT_ACTIVITY = [
+  {
+    id: 'act1',
+    propertyId: 'prop1',
+    propertyTitle: '3-Bed Single Family Home',
+    thumbnail: '/images/property1.jpg',
+    timeAgo: '2 hours',
+    action: 'Updated listing details'
+  },
+  {
+    id: 'act2',
+    propertyId: 'prop2',
+    propertyTitle: 'Duplex Investment Property',
+    thumbnail: '/images/property2.jpg',
+    timeAgo: '1 day',
+    action: 'Received new offer'
+  }
+];
+
+/**
+ * SellerDashboardPage - Main dashboard for sellers
+ */
+export default function SellerDashboardPage() {
   const params = useParams();
-  const userId = params.userId;
+  const { user } = useAuth();
+  const [, setLocation] = useLocation();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
   
-  // Mock data for properties
-  const properties = [
-    {
-      id: 1,
-      address: "123 Main Street",
-      image: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-      status: "Listed",
-      price: "$450,000",
-      beds: 3,
-      baths: 2,
-      sqft: 1800,
-      views: 42,
-      offers: 2,
-      daysListed: 5
-    },
-    {
-      id: 2,
-      address: "456 Oak Avenue",
-      image: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-      status: "Offer Made",
-      price: "$625,000",
-      beds: 4,
-      baths: 3,
-      sqft: 2400,
-      views: 68,
-      offers: 3,
-      daysListed: 8
-    },
-    {
-      id: 3,
-      address: "789 Pine Boulevard",
-      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-      status: "Draft",
-      price: "$375,000",
-      beds: 2,
-      baths: 2,
-      sqft: 1500,
-      views: 0,
-      offers: 0,
-      daysListed: 0
+  // In real implementation, check if the current user matches the userId param
+  // If not, redirect to their own dashboard or show an authorization error
+  const userId = params.userId || '';
+  
+  // Get seller stats for the top cards
+  const stats = {
+    activeListings: 2,
+    offersPending: 3,
+    assignmentRevenue: '$12,500',
+    avgDaysOnMarket: 15
+  };
+  
+  // Filter properties based on search and status
+  const filteredProperties = MOCK_PROPERTIES.filter(property => {
+    const matchesSearch = 
+      !searchQuery || 
+      property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      property.address.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = statusFilter === 'All' || property.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+  
+  // Get status badge style based on status
+  const getStatusBadgeClass = (status: string) => {
+    switch(status) {
+      case 'Listed':
+        return 'bg-green-100 text-green-800 hover:bg-green-200';
+      case 'Under Contract':
+        return 'bg-blue-100 text-blue-800 hover:bg-blue-200';
+      case 'Closed':
+        return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
+      case 'rejected':
+        return 'bg-red-100 text-red-800 hover:bg-red-200';
+      case 'active':
+        return 'bg-green-100 text-green-800 hover:bg-green-200';
+      default:
+        return 'bg-gray-100 text-gray-800 hover:bg-gray-200';
     }
-  ];
-
-  // Mock upcoming events
-  const upcomingEvents = [
-    {
-      id: 1,
-      title: "Property Walkthrough",
-      address: "123 Main Street",
-      date: "May 14, 2025",
-      time: "10:00 AM"
-    },
-    {
-      id: 2,
-      title: "Offer Review Meeting",
-      address: "456 Oak Avenue",
-      date: "May 15, 2025",
-      time: "2:00 PM"
+  };
+  
+  // Function to get seller status icon
+  const getSellerStatusIcon = (status: string) => {
+    switch(status) {
+      case 'active':
+        return <BadgeCheck className="h-5 w-5 text-green-600" />;
+      case 'pending':
+        return <Clock3 className="h-5 w-5 text-yellow-600" />;
+      case 'rejected':
+        return <BadgeAlert className="h-5 w-5 text-red-600" />;
+      default:
+        return <Clock3 className="h-5 w-5 text-gray-400" />;
     }
-  ];
+  };
+  
+  // For development/testing without auth, we'll use mock data if user is missing
+  const mockUser = {
+    fullName: 'Demo Seller',
+    sellerStatus: 'active'
+  };
   
   return (
-    <SellerDashboardLayout userId={userId}>
-      {/* Page title and welcome */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-[#135341]">Seller Dashboard</h1>
-        <p className="text-gray-600 mt-1">Manage your listings, offers, and seller activity</p>
-      </div>
-      
-      {/* Stats overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Active Listings</p>
-                <p className="text-2xl font-bold">3</p>
-              </div>
-              <div className="h-12 w-12 bg-[#135341]/10 rounded-full flex items-center justify-center">
-                <Building className="h-6 w-6 text-[#135341]" />
-              </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Main container with padding */}
+      <div className="container py-8 px-4 mx-auto max-w-7xl">
+        {/* Top welcome & status bar */}
+        <div className="flex flex-wrap justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Welcome back, {(user || mockUser)?.fullName?.split(' ')[0] || 'Seller'} 👋</h1>
+            <p className="text-gray-600 mt-1">
+              Here's how your real estate business is performing today.
+            </p>
+          </div>
+          
+          <div className="mt-4 sm:mt-0">
+            <div className="flex items-center gap-2">
+              {getSellerStatusIcon((user || mockUser)?.sellerStatus || 'active')}
+              <Badge className={`px-3 py-1 text-sm ${getStatusBadgeClass((user || mockUser)?.sellerStatus || 'active')}`}>
+                {(user || mockUser)?.sellerStatus === 'active' ? 'Active Seller' : 
+                 (user || mockUser)?.sellerStatus === 'pending' ? 'Pending Approval' : 
+                 (user || mockUser)?.sellerStatus === 'rejected' ? 'Approval Rejected' : 'Active Seller'}
+              </Badge>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Total Views</p>
-                <p className="text-2xl font-bold">110</p>
-              </div>
-              <div className="h-12 w-12 bg-[#135341]/10 rounded-full flex items-center justify-center">
-                <Eye className="h-6 w-6 text-[#135341]" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Open Offers</p>
-                <p className="text-2xl font-bold">5</p>
-              </div>
-              <div className="h-12 w-12 bg-[#135341]/10 rounded-full flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-[#135341]" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Messages</p>
-                <p className="text-2xl font-bold">12</p>
-              </div>
-              <div className="h-12 w-12 bg-[#135341]/10 rounded-full flex items-center justify-center">
-                <MessageSquare className="h-6 w-6 text-[#135341]" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      {/* My Properties Section */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-[#135341]">My Properties</h2>
-          <Button 
-            variant="outline" 
-            className="border-[#135341] text-[#135341] hover:bg-[#135341] hover:text-white"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Property
-          </Button>
+          </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
-            <Card key={property.id} className="overflow-hidden hover:shadow-md transition-shadow">
-              <div className="relative h-48 w-full">
-                <img 
-                  src={property.image} 
-                  alt={property.address}
-                  className="h-full w-full object-cover" 
-                />
-                <Badge 
-                  className={`absolute top-3 left-3 ${
-                    property.status === 'Listed' 
-                      ? 'bg-green-500' 
-                      : property.status === 'Offer Made' 
-                        ? 'bg-blue-500' 
-                        : 'bg-gray-500'
-                  }`}
-                >
-                  {property.status}
-                </Badge>
+        {/* Quick Stats 4-column grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          {/* Active Listings */}
+          <Card className="border-l-4 border-l-[#135341] hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <Building className="h-7 w-7 text-[#135341]" />
+                <span className="text-3xl font-bold">{stats.activeListings}</span>
               </div>
-              
-              <CardContent className="pt-4">
-                <h3 className="font-bold text-lg mb-1">{property.address}</h3>
-                <div className="flex items-center justify-between mb-3">
-                  <p className="font-semibold text-[#135341]">{property.price}</p>
-                  <div className="flex space-x-2">
-                    <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{property.beds} beds</span>
-                    <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{property.baths} baths</span>
-                    <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{property.sqft} sqft</span>
+            </CardHeader>
+            <CardContent>
+              <CardTitle className="text-base font-medium text-gray-600">Active Listings</CardTitle>
+            </CardContent>
+          </Card>
+          
+          {/* Offers Pending */}
+          <Card className="border-l-4 border-l-[#803344] hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <Users className="h-7 w-7 text-[#803344]" />
+                <span className="text-3xl font-bold">{stats.offersPending}</span>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <CardTitle className="text-base font-medium text-gray-600">Offers Pending</CardTitle>
+            </CardContent>
+          </Card>
+          
+          {/* Assignment Revenue */}
+          <Card className="border-l-4 border-l-green-600 hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <DollarSign className="h-7 w-7 text-green-600" />
+                <span className="text-3xl font-bold">{stats.assignmentRevenue}</span>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <CardTitle className="text-base font-medium text-gray-600">Assignment Revenue</CardTitle>
+            </CardContent>
+          </Card>
+          
+          {/* Avg Days on Market */}
+          <Card className="border-l-4 border-l-blue-600 hover:shadow-md transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                <Calendar className="h-7 w-7 text-blue-600" />
+                <span className="text-3xl font-bold">{stats.avgDaysOnMarket}</span>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <CardTitle className="text-base font-medium text-gray-600">Avg. Days on Market</CardTitle>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Recently Touched Section */}
+        <div className="mb-10">
+          <h2 className="text-xl font-semibold mb-4">Recently Touched</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {RECENT_ACTIVITY.length > 0 ? (
+              RECENT_ACTIVITY.map(activity => (
+                <Card key={activity.id} className="overflow-hidden hover:shadow-md transition-shadow duration-200">
+                  <div className="relative h-32 bg-gray-200">
+                    <img 
+                      src={activity.thumbnail} 
+                      alt={activity.propertyTitle}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // Fallback if image fails to load
+                        (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/e2e8f0/1e293b?text=Property+Image';
+                      }}
+                    />
                   </div>
+                  <CardContent className="p-4">
+                    <div className="mb-2">
+                      <h3 className="font-semibold text-gray-900 mb-1">{activity.propertyTitle}</h3>
+                      <p className="text-sm text-gray-500 flex items-center gap-1">
+                        <Clock className="h-3 w-3" /> 
+                        Last touched {activity.timeAgo} ago - {activity.action}
+                      </p>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="w-full bg-white hover:bg-gray-50 border-gray-200"
+                      onClick={() => setLocation(`/sellerdash/${userId}/property/${activity.propertyId}`)}
+                    >
+                      Resume
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-3 py-8 text-center bg-white rounded-lg border border-dashed border-gray-300">
+                <p className="text-gray-500">No recent activity found</p>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        {/* Your Properties Section */}
+        <div>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+            <h2 className="text-xl font-semibold">Your Properties</h2>
+            
+            <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              <Button 
+                className="bg-[#135341] hover:bg-[#09261E] text-white"
+                onClick={() => setIsAddPropertyModalOpen(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add New Property
+              </Button>
+              
+              <div className="flex gap-2 flex-1">
+                <div className="relative flex-1">
+                  <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                  <Input
+                    placeholder="Search properties..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
                 </div>
                 
-                <div className="flex items-center text-sm text-gray-500 border-t pt-3 mt-2 justify-between">
-                  <div className="flex items-center">
-                    <Eye className="h-4 w-4 mr-1" />
-                    <span>{property.views} views</span>
-                  </div>
-                  <div className="flex items-center">
-                    <TrendingUp className="h-4 w-4 mr-1" />
-                    <span>{property.offers} offers</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span>{property.daysListed} days</span>
-                  </div>
-                </div>
-              </CardContent>
-              
-              <CardFooter className="pt-0 flex justify-end">
-                <Button variant="link" className="text-[#135341]">
-                  View Details <ArrowRight className="ml-1 h-4 w-4" />
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="gap-2">
+                      <Filter className="h-4 w-4" />
+                      <span className="hidden sm:inline">Status: {statusFilter}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setStatusFilter('All')}>
+                      All
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setStatusFilter('Listed')}>
+                      Listed
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setStatusFilter('Under Contract')}>
+                      Under Contract
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setStatusFilter('Closed')}>
+                      Closed
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </div>
+          
+          {/* Properties Grid */}
+          {filteredProperties.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProperties.map(property => (
+                <PropertyCard
+                  key={property.id}
+                  id={property.id}
+                  userId={userId}
+                  title={property.title}
+                  address={property.address}
+                  status={property.status as any}
+                  image={property.thumbnail}
+                  price={typeof property.price === 'string' ? 
+                    parseInt(property.price.replace(/[^0-9]/g, '')) : 
+                    property.price}
+                  beds={property.beds || 3}
+                  baths={property.baths || 2}
+                  sqft={property.sqft || 2000}
+                  arv={property.arv || (typeof property.price === 'string' ? 
+                    parseInt(property.price.replace(/[^0-9]/g, '')) * 1.2 : 
+                    property.price * 1.2)}
+                  views={property.views}
+                  leads={property.leads}
+                  daysOnMarket={property.daysListed}
+                  offers={property.offers || 0}
+                />
+              ))}
+            </div>
+          ) : (
+            // Empty state
+            <div className="py-16 text-center bg-white rounded-lg border border-dashed border-gray-300">
+              <Building className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+              <h3 className="text-xl font-medium text-gray-900 mb-2">You haven't listed any properties yet.</h3>
+              <p className="text-gray-500 mb-6">Get started by adding your first deal.</p>
+              <Button 
+                className="bg-[#135341] hover:bg-[#09261E] text-white"
+                onClick={() => setIsAddPropertyModalOpen(true)}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add New Property
+              </Button>
+            </div>
+          )}
         </div>
       </div>
       
-      {/* Quick Links Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {/* Upcoming Walkthroughs Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-[#135341]" />
-              Upcoming Walkthroughs
-            </CardTitle>
-            <CardDescription>Your scheduled property showings</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {upcomingEvents.length > 0 ? (
-              <div className="space-y-3">
-                {upcomingEvents.map((event) => (
-                  <div key={event.id} className="flex items-start p-3 border rounded-lg">
-                    <div className="bg-[#135341]/10 p-2 rounded-lg mr-3">
-                      <Calendar className="h-5 w-5 text-[#135341]" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">{event.title}</h4>
-                      <p className="text-sm text-gray-500">{event.address}</p>
-                      <p className="text-sm text-gray-500">{event.date} at {event.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 py-6 text-center">No upcoming walkthroughs</p>
-            )}
-          </CardContent>
-          <CardFooter>
-            <Button variant="outline" className="w-full border-[#135341] text-[#135341] hover:bg-[#135341] hover:text-white">
-              View Calendar
-            </Button>
-          </CardFooter>
-        </Card>
-        
-        {/* Document Hub Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center">
-              <FileText className="h-5 w-5 mr-2 text-[#135341]" />
-              Document Hub
-            </CardTitle>
-            <CardDescription>Manage all your property documents</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="p-3 border rounded-lg flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="bg-[#135341]/10 p-2 rounded-lg mr-3">
-                    <FileText className="h-5 w-5 text-[#135341]" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Listing Agreements</h4>
-                    <p className="text-sm text-gray-500">3 documents</p>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm">
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </div>
-              
-              <div className="p-3 border rounded-lg flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="bg-[#135341]/10 p-2 rounded-lg mr-3">
-                    <FileText className="h-5 w-5 text-[#135341]" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Offer Documents</h4>
-                    <p className="text-sm text-gray-500">5 documents</p>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm">
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </div>
-              
-              <div className="p-3 border rounded-lg flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="bg-[#135341]/10 p-2 rounded-lg mr-3">
-                    <FileText className="h-5 w-5 text-[#135341]" />
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Property Disclosures</h4>
-                    <p className="text-sm text-gray-500">2 documents</p>
-                  </div>
-                </div>
-                <Button variant="ghost" size="sm">
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button variant="outline" className="w-full border-[#135341] text-[#135341] hover:bg-[#135341] hover:text-white">
-              View Document Hub
-            </Button>
-          </CardFooter>
-        </Card>
+      {/* Floating Quick List Button */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <Button 
+          size="lg"
+          className="h-14 w-14 rounded-full bg-[#803344] hover:bg-[#6a2a38] text-white shadow-lg hover:shadow-xl transition-all duration-300"
+          onClick={() => setIsAddPropertyModalOpen(true)}
+        >
+          <Plus className="h-6 w-6" />
+          <span className="sr-only">Quick List Property</span>
+        </Button>
       </div>
-    </SellerDashboardLayout>
+      
+      {/* Enhanced Property Listing Modal */}
+      <EnhancedPropertyListingModal
+        isOpen={isAddPropertyModalOpen}
+        onClose={() => setIsAddPropertyModalOpen(false)}
+      />
+    </div>
   );
 }

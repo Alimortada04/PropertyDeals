@@ -10,11 +10,8 @@ import PropertiesPage from "@/pages/properties-page";
 import PropertyDetailPage from "@/pages/property-detail-page";
 import SellerDashboard from "@/pages/seller-dashboard";
 import SellerDash from "@/pages/sellerdash";
-// Dynamic route imports for the seller dashboard
+// Note: Dynamic route import will be used within the route definition
 import SellerDashboardPage from "@/pages/sellerdash/[userId]";
-import SellerDashboardManagePage from "@/pages/sellerdash/[userId]/manage";
-import SellerDashboardEngagementPage from "@/pages/sellerdash/[userId]/engagement";
-import SellerDashboardAnalyticsPage from "@/pages/sellerdash/[userId]/analytics";
 import SellerPropertyDetailPage from "@/pages/sellerdash/property/[propertyId]";
 import DashboardNewPage from "@/pages/dashboard";
 import DashboardPage from "@/pages/dashboard-page";
@@ -347,33 +344,6 @@ function Router() {
         {params => (
           <AppLayout>
             <SellerDashboardPage />
-          </AppLayout>
-        )}
-      </Route>
-      
-      {/* Seller dashboard - Manage page */}
-      <Route path="/sellerdash/:userId/manage">
-        {params => (
-          <AppLayout>
-            <SellerDashboardManagePage />
-          </AppLayout>
-        )}
-      </Route>
-      
-      {/* Seller dashboard - Engagement page */}
-      <Route path="/sellerdash/:userId/engagement">
-        {params => (
-          <AppLayout>
-            <SellerDashboardEngagementPage />
-          </AppLayout>
-        )}
-      </Route>
-      
-      {/* Seller dashboard - Analytics page */}
-      <Route path="/sellerdash/:userId/analytics">
-        {params => (
-          <AppLayout>
-            <SellerDashboardAnalyticsPage />
           </AppLayout>
         )}
       </Route>
