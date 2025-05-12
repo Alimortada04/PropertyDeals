@@ -12,6 +12,10 @@ export interface PlaceData {
   city?: string;
   state?: string;
   zipCode?: string;
+  county?: string;
+  neighborhood?: string;
+  streetNumber?: string;
+  streetName?: string;
 }
 
 interface GooglePlacesAutocompleteProps {
@@ -23,6 +27,7 @@ interface GooglePlacesAutocompleteProps {
   placeholder?: string;
   className?: string;
   required?: boolean;
+  autoFocus?: boolean;
 }
 
 export default function GooglePlacesAutocomplete({
@@ -34,10 +39,29 @@ export default function GooglePlacesAutocomplete({
   placeholder = "Enter an address",
   className = "",
   required = false,
+  autoFocus = false,
 }: GooglePlacesAutocompleteProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [inputValue, setInputValue] = useState(value || "");
+
+  // Update internal value when external value changes
+  useEffect(() => {
+    if (value !== undefined) {
+      setInputValue(value);
+    }
+  }, [value]);
+
+  // Focus the input when component mounts if autoFocus is true
+  useEffect(() => {
+    if (inputRef.current && autoFocus) {
+      // Small delay to ensure modal has rendered
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [autoFocus]);
 
   useEffect(() => {
     if (!isLoaded || !inputRef.current) return;
@@ -63,10 +87,14 @@ export default function GooglePlacesAutocomplete({
         return;
       }
 
-      // Get address components
+      // Get detailed address components
       let city = "";
       let state = "";
       let zipCode = "";
+      let county = "";
+      let neighborhood = "";
+      let streetNumber = "";
+      let streetName = "";
       
       place.address_components?.forEach((component) => {
         const types = component.types;
@@ -77,6 +105,14 @@ export default function GooglePlacesAutocomplete({
           state = component.short_name;
         } else if (types.includes("postal_code")) {
           zipCode = component.long_name;
+        } else if (types.includes("administrative_area_level_2")) {
+          county = component.long_name;
+        } else if (types.includes("neighborhood")) {
+          neighborhood = component.long_name;
+        } else if (types.includes("street_number")) {
+          streetNumber = component.long_name;
+        } else if (types.includes("route")) {
+          streetName = component.long_name;
         }
       });
 
@@ -87,9 +123,14 @@ export default function GooglePlacesAutocomplete({
         placeId: place.place_id || "",
         city,
         state,
-        zipCode
+        zipCode,
+        county,
+        neighborhood,
+        streetNumber,
+        streetName
       };
 
+      setInputValue(placeData.address);
       onChange(placeData.address);
       onPlaceSelect(placeData);
     });
@@ -101,6 +142,13 @@ export default function GooglePlacesAutocomplete({
       }
     };
   }, [isLoaded, onChange, onPlaceSelect]);
+
+  // Handle input change directly to ensure input is always controlled
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    onChange(newValue);
+  };
 
   return (
     <LoadScript
@@ -115,8 +163,9 @@ export default function GooglePlacesAutocomplete({
         placeholder={placeholder}
         className={className}
         required={required}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
+        value={inputValue}
+        onChange={handleInputChange}
+        autoFocus={autoFocus}
       />
     </LoadScript>
   );
