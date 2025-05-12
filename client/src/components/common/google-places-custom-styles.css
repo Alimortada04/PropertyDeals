@@ -1,26 +1,40 @@
 /* Google Places Autocomplete custom styles */
 
-/* Main container for predictions */
+/* Main container for predictions - elevated above all modal content */
 .pac-container {
-  border-radius: 0.5rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  background-color: white;
-  font-family: inherit;
-  margin-top: 2px;
-  z-index: 9999 !important;
+  box-shadow: none !important;
+  border: 1px solid #ccc !important;
+  margin-top: 2px !important;
+  border-radius: 6px !important;
+  font-family: inherit !important;
+  background-color: white !important;
   padding: 4px 0;
+  /* Make sure the dropdown appears above the modal */
+  z-index: 99999 !important;
+  position: fixed !important;
+}
+
+/* Fix pointer events to ensure clickability */
+.pac-container::after {
+  background-image: none !important;
+  height: 0;
 }
 
 /* Each prediction item */
 .pac-item {
-  padding: 8px 12px;
+  padding: 8px 12px !important;
   font-size: 0.9rem;
   cursor: pointer;
   border-top: none;
+  border-bottom: 1px solid #eee !important;
   color: #4a5568;
   display: flex;
   align-items: center;
+}
+
+/* Remove border from last item */
+.pac-item:last-child {
+  border-bottom: none !important;
 }
 
 /* Hover state for prediction items */
@@ -59,4 +73,35 @@
   padding: 4px 12px;
   text-align: right;
   color: #718096;
+}
+
+/* Add global style to ensure proper positioning */
+body .pac-container {
+  position: fixed !important;
+  overflow: visible !important;
+  width: auto !important;
+  left: initial !important;
+  right: initial !important;
+  /* Ensure the dropdown gets maximum priority for visibility */
+  z-index: 9999999 !important;
+}
+
+/* Adjust positioning to match the input field */
+.google-places-input {
+  z-index: 1;
+  position: relative;
+}
+
+/* Ensure dropdown appears directly below the input */
+.google-places-input:focus + .pac-container,
+.google-places-input:focus-within + .pac-container {
+  width: calc(100% - 2px) !important;
+}
+
+/* Ensure dropdown is not clipped or hidden by modal */
+.fixed, 
+.absolute,
+[role="dialog"],
+[data-state="open"] {
+  transform-style: preserve-3d;
 }

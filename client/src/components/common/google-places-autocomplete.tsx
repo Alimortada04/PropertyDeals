@@ -48,6 +48,9 @@ export default function GooglePlacesAutocomplete({
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
+  
+  // Track whether dropdown is open
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Update internal value when external value changes
   useEffect(() => {
@@ -65,16 +68,68 @@ export default function GooglePlacesAutocomplete({
       }, 100);
     }
   }, [autoFocus]);
+  
+  // Fix click handling on dropdown - this ensures that dropdown clicks are properly captured
+  useEffect(() => {
+    // Handle click events on the dropdown to ensure proper interaction
+    const handlePacContainerClick = (e: Event) => {
+      const target = e.target as HTMLElement;
+      
+      // Check if click is on a PAC item
+      if (target && (
+        target.className.includes('pac-item') || 
+        target.parentElement?.className.includes('pac-item'))
+      ) {
+        // Prevent default behavior to avoid closing prematurely
+        e.stopPropagation();
+        
+        // Small delay to allow Google's internal handler to process the selection
+        setTimeout(() => {
+          if (inputRef.current) {
+            // This forces the autocomplete to process the selected item
+            const event = new Event('change', { bubbles: true });
+            inputRef.current.dispatchEvent(event);
+          }
+        }, 100);
+      }
+    };
+    
+    // When component mounts, listen for pac-container in the DOM
+    const observer = new MutationObserver((mutations) => {
+      const pacContainer = document.querySelector('.pac-container');
+      if (pacContainer && !pacContainer.hasAttribute('data-event-attached')) {
+        pacContainer.setAttribute('data-event-attached', 'true');
+        pacContainer.addEventListener('click', handlePacContainerClick, true);
+        setDropdownOpen(true);
+      } else if (!pacContainer && dropdownOpen) {
+        setDropdownOpen(false);
+      }
+    });
+    
+    // Start observing the document body for pac-container
+    observer.observe(document.body, { 
+      childList: true,
+      subtree: true
+    });
+    
+    return () => {
+      // Cleanup
+      observer.disconnect();
+      const pacContainer = document.querySelector('.pac-container');
+      if (pacContainer) {
+        pacContainer.removeEventListener('click', handlePacContainerClick, true);
+      }
+    };
+  }, [dropdownOpen]);
 
   useEffect(() => {
     if (!isLoaded || !inputRef.current) return;
 
+    // Configure autocomplete with optimal options for visibility and positioning
     const options = {
       componentRestrictions: { country: "us" },
       fields: ["address_components", "geometry", "formatted_address", "place_id"],
       types: ["address"],
-      // Setting a higher z-index to ensure dropdown appears above other elements
-      zIndex: 9999,
     };
 
     autocompleteRef.current = new google.maps.places.Autocomplete(
@@ -155,6 +210,21 @@ export default function GooglePlacesAutocomplete({
     setInputValue(newValue);
     onChange(newValue);
   };
+  
+  // Handle keyboard interactions for improved accessibility
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Special case for Enter key with dropdown visible
+    if (e.key === 'Enter' && dropdownOpen) {
+      e.preventDefault(); // Prevent form submission
+      
+      // First active item in the dropdown
+      const firstItem = document.querySelector('.pac-item');
+      if (firstItem) {
+        // Simulate a click on the first item
+        (firstItem as HTMLElement).click();
+      }
+    }
+  };
 
   return (
     <LoadScript
@@ -162,13 +232,13 @@ export default function GooglePlacesAutocomplete({
       libraries={libraries}
       onLoad={() => setIsLoaded(true)}
     >
-      <div className="relative w-full">
+      <div className="relative w-full" style={{ zIndex: 1 }}>
         <Input
           id={id}
           ref={inputRef}
           type="text"
           placeholder={placeholder}
-          className={className}
+          className={`${className} google-places-input`}
           required={required}
           value={inputValue}
           onChange={handleInputChange}
@@ -178,7 +248,11 @@ export default function GooglePlacesAutocomplete({
           spellCheck="false"
           autoFocus={autoFocus}
           aria-label="Address search"
+          // Add data attribute to help with styling and identification
+          data-address-input="true"
         />
+        {/* Add helper element to ensure dropdown positioning */}
+        <div id="google-places-autocomplete-container" className="absolute -z-10 opacity-0 pointer-events-none"></div>
       </div>
     </LoadScript>
   );
