@@ -69,51 +69,8 @@ export default function GooglePlacesAutocomplete({
     }
   }, [autoFocus]);
   
-  // Add effect to position the pac-container correctly inside modal
-  useEffect(() => {
-    if (!isLoaded) return;
-    
-    // Function to position the pac-container relative to our input
-    const positionDropdown = () => {
-      const pacContainer = document.querySelector('.pac-container');
-      const inputElement = inputRef.current;
-      
-      if (pacContainer && inputElement) {
-        // Get input rect
-        const inputRect = inputElement.getBoundingClientRect();
-        
-        // Get modal content element (searches up the DOM)
-        let modalContent = inputElement.closest('[role="dialog"]');
-        
-        if (modalContent) {
-          // Find the closest form group that contains our input
-          const formGroup = inputElement.closest('.places-autocomplete-wrapper');
-          
-          if (formGroup) {
-            const formGroupRect = formGroup.getBoundingClientRect();
-            
-            // Apply positioning
-            pacContainer.style.width = `${formGroupRect.width}px`;
-            pacContainer.style.left = `${formGroupRect.left}px`;
-            pacContainer.style.top = `${formGroupRect.bottom + 2}px`;
-          }
-        }
-      }
-    };
-    
-    // Call once on mount
-    setTimeout(positionDropdown, 100);
-    
-    // Add event listeners
-    window.addEventListener('resize', positionDropdown);
-    document.addEventListener('scroll', positionDropdown, true);
-    
-    // Cleanup
-    return () => {
-      window.removeEventListener('resize', positionDropdown);
-      document.removeEventListener('scroll', positionDropdown, true);
-    };
-  }, [isLoaded]);
+  // We don't need the manual positioning effect anymore as we'll use 
+  // CSS to position the dropdown relative to our input wrapper
   
   // Fix click handling on dropdown - this ensures that dropdown clicks are properly captured
   useEffect(() => {
@@ -177,6 +134,8 @@ export default function GooglePlacesAutocomplete({
       componentRestrictions: { country: "us" },
       fields: ["address_components", "geometry", "formatted_address", "place_id"],
       types: ["address"],
+      // Attach to our input element rather than to the document body
+      container: inputRef.current.parentElement
     };
 
     autocompleteRef.current = new google.maps.places.Autocomplete(
@@ -279,7 +238,8 @@ export default function GooglePlacesAutocomplete({
       libraries={libraries}
       onLoad={() => setIsLoaded(true)}
     >
-      <div className="places-autocomplete-wrapper relative w-full">
+      {/* This wrapper establishes the positioning context for the dropdown */}
+      <div className="relative" style={{ position: 'relative', zIndex: 0 }}>
         <Input
           id={id}
           ref={inputRef}
@@ -298,8 +258,6 @@ export default function GooglePlacesAutocomplete({
           aria-label="Address search"
           data-address-input="true"
         />
-        {/* Add anchor element to help position the dropdown */}
-        <div className="places-autocomplete-dropdown-anchor" id="pac-dropdown-anchor"></div>
       </div>
     </LoadScript>
   );
