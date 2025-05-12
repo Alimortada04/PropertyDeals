@@ -199,6 +199,8 @@ export default function GooglePlacesAutocomplete({
                 }
                 
                 console.log("Calling onPlaceSelect with geocoded data:", extractedData);
+                setInputValue(extractedData.address);
+                onChange(extractedData.address);
                 onPlaceSelect(extractedData);
                 
                 // Also update the input value to match the formatted address
@@ -219,15 +221,8 @@ export default function GooglePlacesAutocomplete({
         
         // If we get here, we have a valid place with geometry
         console.log("Valid place object with geometry received", place);
-      } catch (error) {
-        console.error("Error in place_changed event handler:", error);
-      }
-
-      // Get the place data from the autocomplete object
-      const place = autocompleteRef.current.getPlace();
-      
-      // Ensure we have a valid place object with geometry
-      if (place && place.geometry && place.geometry.location) {
+        
+        // Process the valid place data
         // Get detailed address components
         let city = "";
         let state = "";
@@ -279,11 +274,9 @@ export default function GooglePlacesAutocomplete({
         setInputValue(placeData.address);
         onChange(placeData.address);
         onPlaceSelect(placeData);
+      } catch (error) {
+        console.error("Error in place_changed event handler:", error);
       }
-
-      setInputValue(placeData.address);
-      onChange(placeData.address);
-      onPlaceSelect(placeData);
     });
 
     return () => {
@@ -543,6 +536,8 @@ export default function GooglePlacesAutocomplete({
     document.addEventListener('mouseover', handlePacMouseOver, true);
     document.addEventListener('mouseout', handlePacMouseOut, true);
     
+    // We now handle the item-selected event with dedicated handler below
+    
     // Special direct handler for pac-item clicks
     const setupPacItemClickHandlers = () => {
       console.log("Setting up direct pac-item click handlers");
@@ -555,14 +550,34 @@ export default function GooglePlacesAutocomplete({
           handleItemClick(evt as unknown as MouseEvent);
         };
         
+        // Create a mousedown handler - this seems to be more reliable than click
+        const mouseDownHandler = (evt: Event) => {
+          console.log('Custom mousedown on pac-item');
+          evt.stopPropagation();
+          evt.preventDefault();
+          
+          // Force focus back to input field
+          setTimeout(() => {
+            inputRef.current?.focus();
+          }, 10);
+          
+          // Simulate a click
+          setTimeout(() => {
+            handleItemClick(evt as unknown as MouseEvent);
+          }, 50);
+        };
+        
         // Remove any existing handlers first
         item.removeEventListener('click', typedHandler, true);
-        // Add the click handler directly to the item
+        item.removeEventListener('mousedown', mouseDownHandler as EventListener, true);
+        
+        // Add handlers directly to the item
         item.addEventListener('click', typedHandler, true);
+        item.addEventListener('mousedown', mouseDownHandler as EventListener, true);
         
         // Also add a data attribute to track that we've added a handler
         (item as HTMLElement).setAttribute('data-has-custom-click', 'true');
-        console.log("Added click handler to pac-item");
+        console.log("Added click and mousedown handlers to pac-item");
       });
     };
     
@@ -582,12 +597,28 @@ export default function GooglePlacesAutocomplete({
     // Start observing document for pac-container
     pacObserver.observe(document.body, { childList: true, subtree: false });
     
+    // Handler for the custom item-selected event
+    const handleItemSelected = (e: Event) => {
+      if (e instanceof CustomEvent && e.detail && e.detail.element) {
+        console.log('Custom item-selected event received');
+        handleItemClick({
+          target: e.detail.element,
+          preventDefault: () => {},
+          stopPropagation: () => {}
+        } as unknown as MouseEvent);
+      }
+    };
+    
+    // Add the listener
+    document.addEventListener('item-selected', handleItemSelected);
+    
     return () => {
       document.removeEventListener('click', handlePacClick, true);
       document.removeEventListener('mousedown', handlePacClick, true);
       document.removeEventListener('mouseup', handlePacClick, true);
       document.removeEventListener('mouseover', handlePacMouseOver, true);
       document.removeEventListener('mouseout', handlePacMouseOut, true);
+      document.removeEventListener('item-selected', handleItemSelected);
       pacObserver.disconnect();
       
       // Remove any direct handlers we added
@@ -644,13 +675,27 @@ export default function GooglePlacesAutocomplete({
       
       if (selectedItem) {
         try {
-          // Simulate a click on the selected item with our custom handling
-          // that stops event propagation
-          (selectedItem as HTMLElement).dispatchEvent(new MouseEvent('mousedown', {
-            bubbles: false,
-            cancelable: true,
-            view: window,
-          }));
+          console.log('Enter key pressed with pac suggestion visible');
+          
+          // Instead of simulating a mousedown, use our custom handler directly
+          // for consistency between keyboard and mouse interactions
+          if (selectedItem instanceof HTMLElement) {
+            const customEvent = new CustomEvent('item-selected', {
+              bubbles: true,
+              cancelable: true,
+              detail: { element: selectedItem }
+            });
+            
+            // Dispatch our custom event that our handler will pick up
+            document.dispatchEvent(customEvent);
+            
+            // Focus the input after a brief delay
+            setTimeout(() => {
+              if (inputRef.current) {
+                inputRef.current.focus();
+              }
+            }, 50);
+          }
           
           // Stop any further propagation
           e.nativeEvent.stopImmediatePropagation();
