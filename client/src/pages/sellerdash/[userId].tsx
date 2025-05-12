@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
+import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
 import { 
   Card, 
   CardContent, 
@@ -182,9 +183,9 @@ export default function SellerDashboardPage() {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Main container with padding */}
-      <div className="container py-8 px-4 mx-auto max-w-7xl">
+    <SellerDashboardLayout userId={userId}>
+      {/* Main content container */}
+      <div className="bg-gray-50 -mt-6 -mx-4 p-4 rounded-lg">
         {/* Top welcome & status bar */}
         <div className="flex flex-wrap justify-between items-center mb-8">
           <div>
@@ -422,6 +423,6 @@ export default function SellerDashboardPage() {
         isOpen={isAddPropertyModalOpen}
         onClose={() => setIsAddPropertyModalOpen(false)}
       />
-    </div>
+    </SellerDashboardLayout>
   );
 }
