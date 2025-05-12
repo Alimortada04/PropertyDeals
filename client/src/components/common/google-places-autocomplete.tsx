@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { LoadScript, Libraries } from "@react-google-maps/api";
 import "./google-places-custom-styles.css";
@@ -45,13 +45,11 @@ export default function GooglePlacesAutocomplete({
   autoFocus = false,
 }: GooglePlacesAutocompleteProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
   
-  // Track whether dropdown is open
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
   // Update internal value when external value changes
   useEffect(() => {
     if (value !== undefined) {
@@ -69,72 +67,15 @@ export default function GooglePlacesAutocomplete({
     }
   }, [autoFocus]);
   
-
-  
-  // Fix click handling on dropdown - this ensures that dropdown clicks are properly captured
+  // Set up the autocomplete instance
   useEffect(() => {
-    // Handle click events on the dropdown to ensure proper interaction
-    const handlePacContainerClick = (e: Event) => {
-      const target = e.target as HTMLElement;
-      
-      // Check if click is on a PAC item
-      if (target && (
-        target.className.includes('pac-item') || 
-        target.parentElement?.className.includes('pac-item'))
-      ) {
-        // Prevent default behavior to avoid closing prematurely
-        e.stopPropagation();
-        
-        // Small delay to allow Google's internal handler to process the selection
-        setTimeout(() => {
-          if (inputRef.current) {
-            // This forces the autocomplete to process the selected item
-            const event = new Event('change', { bubbles: true });
-            inputRef.current.dispatchEvent(event);
-          }
-        }, 100);
-      }
-    };
-    
-    // When component mounts, listen for pac-container in the DOM
-    const observer = new MutationObserver((mutations) => {
-      const pacContainer = document.querySelector('.pac-container');
-      if (pacContainer && !pacContainer.hasAttribute('data-event-attached')) {
-        pacContainer.setAttribute('data-event-attached', 'true');
-        // Add event listener with correct type
-        pacContainer.addEventListener('click', handlePacContainerClick as EventListener, true);
-        setDropdownOpen(true);
-      } else if (!pacContainer && dropdownOpen) {
-        setDropdownOpen(false);
-      }
-    });
-    
-    // Start observing the document body for pac-container
-    observer.observe(document.body, { 
-      childList: true,
-      subtree: true
-    });
-    
-    return () => {
-      // Cleanup
-      observer.disconnect();
-      const pacContainer = document.querySelector('.pac-container');
-      if (pacContainer) {
-        pacContainer.removeEventListener('click', handlePacContainerClick as EventListener, true);
-      }
-    };
-  }, [dropdownOpen]);
+    if (!isLoaded || !inputRef.current) return;
 
-  useEffect(() => {
-    if (!isLoaded || !inputRef.current || !containerRef.current) return;
-
-    // Configure autocomplete with optimal options for visibility and positioning
+    // Configure autocomplete with optimal options
     const options = {
       componentRestrictions: { country: "us" },
       fields: ["address_components", "geometry", "formatted_address", "place_id"],
-      types: ["address"],
-      // Attach to our container instead of document.body
-      container: containerRef.current
+      types: ["address"]
     };
 
     autocompleteRef.current = new google.maps.places.Autocomplete(
@@ -203,11 +144,86 @@ export default function GooglePlacesAutocomplete({
 
     return () => {
       if (autocompleteRef.current) {
-        // Clean up listener (though Google doesn't provide a clear way to do this)
         google.maps.event.clearInstanceListeners(autocompleteRef.current);
       }
     };
   }, [isLoaded, onChange, onPlaceSelect]);
+
+  // This effect helps ensure the pac-container is properly positioned
+  useEffect(() => {
+    if (!isLoaded) return;
+    
+    // Function to fix positioning and styling of the autocomplete dropdown
+    const fixPacContainer = () => {
+      const pacContainer = document.querySelector('.pac-container');
+      
+      if (pacContainer && containerRef.current) {
+        // Ensure the pac-container has our desired styles for better positioning
+        const pacContainerEl = pacContainer as HTMLElement;
+        
+        // Set essential positioning styles
+        pacContainerEl.style.width = `${containerRef.current.offsetWidth}px`;
+        pacContainerEl.style.position = 'fixed';
+        pacContainerEl.style.zIndex = '9999';
+        
+        // Calculate position based on input field
+        if (inputRef.current) {
+          const rect = inputRef.current.getBoundingClientRect();
+          pacContainerEl.style.left = `${rect.left}px`;
+          pacContainerEl.style.top = `${rect.bottom + 2}px`;
+        }
+      }
+    };
+    
+    // Create observer to detect when pac-container is added to DOM
+    const observer = new MutationObserver((mutations) => {
+      if (document.querySelector('.pac-container')) {
+        fixPacContainer();
+      }
+    });
+    
+    // Start observing additions to the document body
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+    
+    // Add scroll and resize handlers to update position
+    const handlePositionUpdate = () => {
+      fixPacContainer();
+    };
+    
+    document.addEventListener('scroll', handlePositionUpdate, true);
+    window.addEventListener('resize', handlePositionUpdate);
+    
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('scroll', handlePositionUpdate, true);
+      window.removeEventListener('resize', handlePositionUpdate);
+    };
+  }, [isLoaded]);
+  
+  // Fix click handling on dropdown items
+  useEffect(() => {
+    const handlePacClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // Check if click is on a pac-item
+      if (target && (
+        target.classList.contains('pac-item') || 
+        target.parentElement?.classList.contains('pac-item')
+      )) {
+        // Prevent event propagation to avoid closing modals
+        e.stopPropagation();
+      }
+    };
+    
+    document.addEventListener('click', handlePacClick, true);
+    
+    return () => {
+      document.removeEventListener('click', handlePacClick, true);
+    };
+  }, []);
 
   // Handle input change directly to ensure input is always controlled
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -218,8 +234,8 @@ export default function GooglePlacesAutocomplete({
   
   // Handle keyboard interactions for improved accessibility
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Special case for Enter key with dropdown visible
-    if (e.key === 'Enter' && dropdownOpen) {
+    // Special case for Enter key with pac-container visible
+    if (e.key === 'Enter' && document.querySelector('.pac-container')) {
       e.preventDefault(); // Prevent form submission
       
       // First active item in the dropdown
@@ -231,9 +247,6 @@ export default function GooglePlacesAutocomplete({
     }
   };
 
-  // Create a memoized reference to our positioning container
-  const containerRef = useRef<HTMLDivElement>(null);
-
   return (
     <LoadScript
       googleMapsApiKey={apiKey}
@@ -243,12 +256,7 @@ export default function GooglePlacesAutocomplete({
       {/* This wrapper establishes the positioning context for the dropdown */}
       <div 
         ref={containerRef}
-        className="places-autocomplete-wrapper" 
-        style={{ 
-          position: 'relative',
-          width: '100%',
-          zIndex: 50
-        }}
+        className="places-autocomplete-wrapper"
       >
         <Input
           id={id}
