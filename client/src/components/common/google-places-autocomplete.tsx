@@ -128,155 +128,121 @@ export default function GooglePlacesAutocomplete({
 
     autocompleteRef.current.addListener("place_changed", () => {
       console.log("Place changed event triggered");
-      // Log for debugging
-      const timestamp = new Date().toISOString();
-      console.log(`[${timestamp}] place_changed event triggered`);
+      // Place selection is handled without access to the raw event
+      // We'll apply our custom handling to prevent modal closure
       
       // Set active state to false when place is selected
       placesAutocompleteState.setActive(false);
       
-      if (!autocompleteRef.current) {
-        console.warn("Autocomplete ref is not available");
-        return;
-      }
+      if (!autocompleteRef.current) return;
       
-      try {
-        const place = autocompleteRef.current.getPlace();
-        console.log("Place object received:", place);
+      const place = autocompleteRef.current.getPlace();
+      console.log("Place selected:", place);
+      
+      if (!place.geometry || !place.geometry.location) {
+        // User entered the name of a place that was not suggested and
+        // pressed the Enter key, or the Place Details request failed
+        console.warn("Missing geometry in selected place, attempting to recover...");
         
-        // Check if we got a valid place with geometry 
-        if (!place || !place.geometry || !place.geometry.location) {
-          console.warn("Missing geometry in selected place, attempting to recover...");
-          
-          // Try to recover by searching for the current input value
-          const searchValue = inputRef.current?.value || '';
-          if (searchValue.length > 3) {
-            console.log(`Attempting geocode lookup for: "${searchValue}"`);
-            
-            // Set up a geocoder to try to get the place data
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ address: searchValue }, (results, status) => {
-              console.log(`Geocode result status: ${status}`, results);
+        // Try to recover by searching for the current input value
+        const searchValue = inputRef.current?.value || '';
+        if (searchValue.length > 3) {
+          // Set up a geocoder to try to get the place data
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ address: searchValue }, (results, status) => {
+            if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
+              const result = results[0];
+              console.log("Recovered place from geocoder:", result);
               
-              if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
-                const result = results[0];
-                console.log("Recovered place from geocoder:", result);
+              // Extract place data manually since the helper function isn't available yet
+              let extractedData: PlaceData = {
+                address: result.formatted_address,
+                latitude: result.geometry.location.lat(),
+                longitude: result.geometry.location.lng(),
+                placeId: result.place_id,
+                city: '',
+                state: '',
+                zipCode: '',
+                county: '',
+                neighborhood: '',
+                streetNumber: '',
+                streetName: '',
+              };
+              
+              // Extract address components
+              for (const component of result.address_components) {
+                const types = component.types;
                 
-                // Extract place data manually
-                let extractedData: PlaceData = {
-                  address: result.formatted_address,
-                  latitude: result.geometry.location.lat(),
-                  longitude: result.geometry.location.lng(),
-                  placeId: result.place_id,
-                  city: '',
-                  state: '',
-                  zipCode: '',
-                  county: '',
-                  neighborhood: '',
-                  streetNumber: '',
-                  streetName: '',
-                };
-                
-                // Extract address components
-                for (const component of result.address_components) {
-                  const types = component.types;
-                  
-                  if (types.includes('street_number')) {
-                    extractedData.streetNumber = component.long_name;
-                  } else if (types.includes('route')) {
-                    extractedData.streetName = component.long_name;
-                  } else if (types.includes('locality')) {
-                    extractedData.city = component.long_name;
-                  } else if (types.includes('administrative_area_level_1')) {
-                    extractedData.state = component.short_name;
-                  } else if (types.includes('postal_code')) {
-                    extractedData.zipCode = component.long_name;
-                  } else if (types.includes('administrative_area_level_2')) {
-                    extractedData.county = component.long_name;
-                  } else if (types.includes('neighborhood')) {
-                    extractedData.neighborhood = component.long_name;
-                  }
+                if (types.includes('street_number')) {
+                  extractedData.streetNumber = component.long_name;
+                } else if (types.includes('route')) {
+                  extractedData.streetName = component.long_name;
+                } else if (types.includes('locality')) {
+                  extractedData.city = component.long_name;
+                } else if (types.includes('administrative_area_level_1')) {
+                  extractedData.state = component.short_name;
+                } else if (types.includes('postal_code')) {
+                  extractedData.zipCode = component.long_name;
+                } else if (types.includes('administrative_area_level_2')) {
+                  extractedData.county = component.long_name;
+                } else if (types.includes('neighborhood')) {
+                  extractedData.neighborhood = component.long_name;
                 }
-                
-                console.log("Calling onPlaceSelect with geocoded data:", extractedData);
-                setInputValue(extractedData.address);
-                onChange(extractedData.address);
-                onPlaceSelect(extractedData);
-                
-                // Also update the input value to match the formatted address
-                if (inputRef.current) {
-                  inputRef.current.value = result.formatted_address;
-                  // Update the internal value state
-                  setInputValue(result.formatted_address);
-                }
-              } else {
-                console.error(`Geocode failed with status: ${status}`);
               }
-            });
-          } else {
-            console.warn(`Input value too short for geocoding: "${searchValue}"`);
-          }
-          return;
-        }
-        
-        // If we get here, we have a valid place with geometry
-        console.log("Valid place object with geometry received", place);
-        
-        // Process the valid place data
-        // Get detailed address components
-        let city = "";
-        let state = "";
-        let zipCode = "";
-        let county = "";
-        let neighborhood = "";
-        let streetNumber = "";
-        let streetName = "";
-        
-        // Type-safe processing of address components
-        if (place.address_components) {
-          place.address_components.forEach((component: any) => {
-            const types = component.types;
-            
-            if (types.includes("locality")) {
-              city = component.long_name;
-            } else if (types.includes("administrative_area_level_1")) {
-              state = component.short_name;
-            } else if (types.includes("postal_code")) {
-              zipCode = component.long_name;
-            } else if (types.includes("administrative_area_level_2")) {
-              county = component.long_name;
-            } else if (types.includes("neighborhood")) {
-              neighborhood = component.long_name;
-            } else if (types.includes("street_number")) {
-              streetNumber = component.long_name;
-            } else if (types.includes("route")) {
-              streetName = component.long_name;
+              
+              onPlaceSelect(extractedData);
             }
           });
         }
-
-        // Construct the place data object with all components
-        const placeData: PlaceData = {
-          address: place.formatted_address || "",
-          latitude: place.geometry.location.lat(),
-          longitude: place.geometry.location.lng(),
-          placeId: place.place_id || "",
-          city,
-          state,
-          zipCode,
-          county,
-          neighborhood,
-          streetNumber,
-          streetName
-        };
-        
-        console.log("Constructed place data:", placeData);
-        setInputValue(placeData.address);
-        onChange(placeData.address);
-        onPlaceSelect(placeData);
-      } catch (error) {
-        console.error("Error in place_changed event handler:", error);
+        return;
       }
+
+      // Get detailed address components
+      let city = "";
+      let state = "";
+      let zipCode = "";
+      let county = "";
+      let neighborhood = "";
+      let streetNumber = "";
+      let streetName = "";
+      
+      place.address_components?.forEach((component) => {
+        const types = component.types;
+        
+        if (types.includes("locality")) {
+          city = component.long_name;
+        } else if (types.includes("administrative_area_level_1")) {
+          state = component.short_name;
+        } else if (types.includes("postal_code")) {
+          zipCode = component.long_name;
+        } else if (types.includes("administrative_area_level_2")) {
+          county = component.long_name;
+        } else if (types.includes("neighborhood")) {
+          neighborhood = component.long_name;
+        } else if (types.includes("street_number")) {
+          streetNumber = component.long_name;
+        } else if (types.includes("route")) {
+          streetName = component.long_name;
+        }
+      });
+
+      const placeData: PlaceData = {
+        address: place.formatted_address || "",
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng(),
+        placeId: place.place_id || "",
+        city,
+        state,
+        zipCode,
+        county,
+        neighborhood,
+        streetNumber,
+        streetName
+      };
+
+      setInputValue(placeData.address);
+      onChange(placeData.address);
+      onPlaceSelect(placeData);
     });
 
     return () => {
@@ -395,103 +361,89 @@ export default function GooglePlacesAutocomplete({
   
   // Fix click handling on dropdown items and ensure consistent behavior between mouse and keyboard
   useEffect(() => {
-    // Direct handler for clicks on pac-items to trigger place selection
-    const handleItemClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const pacItem = target.closest('.pac-item') as HTMLElement;
+    // Create a flag to track if we're handling a pac-item click
+    let processingPacItemClick = false;
+    
+    // Direct click handler for pac-item elements
+    const handleDirectPacItemClick = (e: Event) => {
+      console.log("Direct pac-item click detected");
       
-      if (pacItem) {
-        console.log('Direct click on pac-item detected');
-        
-        // Prevent default Google handling which may not work consistently
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Get the main text content from the item
-        // We need to be very careful about extracting the text correctly
-        let mainText = '';
-        const mainSpan = pacItem.querySelector('.pac-item-query');
-        
-        if (mainSpan) {
-          mainText = mainSpan.textContent || '';
-          const matchedSpans = mainSpan.querySelectorAll('.pac-matched');
-          // Add any matched spans content
-          if (matchedSpans.length > 0) {
-            mainText = '';
-            for (let i = 0; i < mainSpan.childNodes.length; i++) {
-              const node = mainSpan.childNodes[i];
-              if (node.nodeType === Node.TEXT_NODE) {
-                mainText += node.textContent || '';
-              } else if (node.nodeType === Node.ELEMENT_NODE) {
-                mainText += node.textContent || '';
-              }
-            }
-          }
-        }
-        
-        // Get the secondary text (typically state/country)
-        const secondaryText = Array.from(pacItem.childNodes)
-          .filter(node => 
-            node.nodeType === Node.TEXT_NODE || 
-            (node.nodeType === Node.ELEMENT_NODE && 
-             !(node as HTMLElement).classList.contains('pac-item-query') && 
-             !(node as HTMLElement).classList.contains('pac-icon'))
-          )
-          .map(node => node.textContent || '')
-          .join('');
-        
-        // Combine for full address
-        const fullAddress = `${mainText} ${secondaryText}`.trim();
-        console.log('Extracted address text:', fullAddress);
-        
-        // Set input value and maintain focus
-        if (inputRef.current && fullAddress) {
-          // Set value first
-          inputRef.current.value = fullAddress;
-          inputRef.current.focus();
-          
-          // Dispatch input event to notify Google's autocomplete
-          inputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
-          
-          // Set the active state
-          placesAutocompleteState.setActive(true);
-          
-          // Force enter key event after a short delay
-          setTimeout(() => {
-            if (document.activeElement === inputRef.current) {
-              // Explicitly trigger enter key
-              const enterEvent = new KeyboardEvent('keydown', {
-                key: 'Enter',
-                code: 'Enter',
-                keyCode: 13,
-                bubbles: true,
-                cancelable: true
-              });
-              
-              inputRef.current?.dispatchEvent(enterEvent);
-              console.log('Simulated Enter key press');
-            }
-          }, 50);
-        }
-      }
+      // Mark that we're processing a click to prevent other handlers from interfering
+      processingPacItemClick = true;
+      
+      // Stop event from bubbling up immediately
+      e.stopPropagation();
+      e.preventDefault();
+      
+      // Get the clicked element
+      const clickedItem = e.currentTarget as HTMLElement;
+      console.log("Clicked item:", clickedItem);
+      
+      // Use our custom function to trigger place selection
+      triggerPlaceSelection(clickedItem);
+      
+      // Set a timeout to reset the processing flag
+      setTimeout(() => {
+        processingPacItemClick = false;
+      }, 200);
     };
     
-    // General handler for all events in the pac-container
+    // Add direct event listeners to pac-items as they appear
+    const addDirectClickHandlers = () => {
+      const pacItems = document.querySelectorAll('.pac-item');
+      pacItems.forEach(item => {
+        // Remove any existing handler to prevent duplicates
+        item.removeEventListener('mousedown', handleDirectPacItemClick);
+        // Add the click handler directly to each item
+        item.addEventListener('mousedown', handleDirectPacItemClick);
+      });
+    };
+    
+    // Set up a mutation observer to watch for pac-items being added to the DOM
+    const pacObserver = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+        if (mutation.addedNodes.length) {
+          // Run on a slight delay to ensure items are fully added
+          setTimeout(addDirectClickHandlers, 50);
+        }
+      });
+    });
+    
+    // Start observing the document body for added nodes
+    pacObserver.observe(document.body, { childList: true, subtree: true });
+    
+    // Backup global event handler
     const handlePacClick = (e: MouseEvent) => {
+      // Skip if we're already processing a click via the direct handler
+      if (processingPacItemClick) return;
+      
       const target = e.target as HTMLElement;
       
       // Check if click is on any part of the pac-container or its children
-      const isPacContainer = target.closest('.pac-container');
-      const isPacItem = target.classList.contains('pac-item') || target.closest('.pac-item');
+      const isPacElement = target.closest('.pac-container') || 
+                          target.classList.contains('pac-item') || 
+                          target.parentElement?.classList.contains('pac-item');
       
-      if (isPacContainer) {
+      if (isPacElement) {
+        console.log("Global pac click handler activated");
         // Completely stop the event from propagating to prevent modal closing
+        e.preventDefault();
         e.stopPropagation();
         
-        // Apply our special handling only for pac items
-        if (isPacItem) {
-          // Let our specialized handler do the work
-          handleItemClick(e);
+        // If click is directly on a pac-item, manually trigger the place selection
+        // This ensures mouse clicks behave identically to keyboard selection
+        if (target.classList.contains('pac-item') || target.parentElement?.classList.contains('pac-item')) {
+          // Get the item that was clicked
+          const itemToSelect = target.classList.contains('pac-item') ? target : target.parentElement;
+          
+          if (itemToSelect) {
+            console.log("Triggering place selection from global handler");
+            // Use our custom function to trigger selection in a consistent way
+            triggerPlaceSelection(itemToSelect as HTMLElement);
+            
+            // Set the active state to ensure the modal doesn't close
+            placesAutocompleteState.setActive(true);
+          }
         }
       }
     };
@@ -529,6 +481,20 @@ export default function GooglePlacesAutocomplete({
       }
     };
     
+    // Immediately add direct handlers to any existing pac-items
+    addDirectClickHandlers();
+    
+    // Add event handler to check for pac-container and add click handlers
+    const checkForPacContainer = () => {
+      const pacContainer = document.querySelector('.pac-container');
+      if (pacContainer) {
+        addDirectClickHandlers();
+      }
+    };
+    
+    // Run the check periodically
+    const checkInterval = setInterval(checkForPacContainer, 300);
+    
     // This must use capture phase (true) to intercept events before modal handlers
     document.addEventListener('click', handlePacClick, true);
     document.addEventListener('mousedown', handlePacClick, true);
@@ -536,99 +502,24 @@ export default function GooglePlacesAutocomplete({
     document.addEventListener('mouseover', handlePacMouseOver, true);
     document.addEventListener('mouseout', handlePacMouseOut, true);
     
-    // We now handle the item-selected event with dedicated handler below
-    
-    // Special direct handler for pac-item clicks
-    const setupPacItemClickHandlers = () => {
-      console.log("Setting up direct pac-item click handlers");
-      const pacItems = document.querySelectorAll('.pac-item');
-      
-      pacItems.forEach(item => {
-        // Fix TypeScript error by creating a type-compatible event handler
-        const typedHandler = (evt: Event) => {
-          // Cast the event to any for compatibility
-          handleItemClick(evt as unknown as MouseEvent);
-        };
-        
-        // Create a mousedown handler - this seems to be more reliable than click
-        const mouseDownHandler = (evt: Event) => {
-          console.log('Custom mousedown on pac-item');
-          evt.stopPropagation();
-          evt.preventDefault();
-          
-          // Force focus back to input field
-          setTimeout(() => {
-            inputRef.current?.focus();
-          }, 10);
-          
-          // Simulate a click
-          setTimeout(() => {
-            handleItemClick(evt as unknown as MouseEvent);
-          }, 50);
-        };
-        
-        // Remove any existing handlers first
-        item.removeEventListener('click', typedHandler, true);
-        item.removeEventListener('mousedown', mouseDownHandler as EventListener, true);
-        
-        // Add handlers directly to the item
-        item.addEventListener('click', typedHandler, true);
-        item.addEventListener('mousedown', mouseDownHandler as EventListener, true);
-        
-        // Also add a data attribute to track that we've added a handler
-        (item as HTMLElement).setAttribute('data-has-custom-click', 'true');
-        console.log("Added click and mousedown handlers to pac-item");
-      });
-    };
-    
-    // Set up a MutationObserver to watch for when pac-container is added
-    const pacObserver = new MutationObserver(() => {
-      const pacContainer = document.querySelector('.pac-container');
-      if (pacContainer) {
-        // When pac-container appears, set up handlers for its items
-        setupPacItemClickHandlers();
-        
-        // Also set up handlers whenever pac-container content changes
-        const itemsObserver = new MutationObserver(setupPacItemClickHandlers);
-        itemsObserver.observe(pacContainer, { childList: true, subtree: true });
-      }
-    });
-    
-    // Start observing document for pac-container
-    pacObserver.observe(document.body, { childList: true, subtree: false });
-    
-    // Handler for the custom item-selected event
-    const handleItemSelected = (e: Event) => {
-      if (e instanceof CustomEvent && e.detail && e.detail.element) {
-        console.log('Custom item-selected event received');
-        handleItemClick({
-          target: e.detail.element,
-          preventDefault: () => {},
-          stopPropagation: () => {}
-        } as unknown as MouseEvent);
-      }
-    };
-    
-    // Add the listener
-    document.addEventListener('item-selected', handleItemSelected);
-    
     return () => {
+      // Clean up interval
+      clearInterval(checkInterval);
+      
+      // Clean up observers
+      pacObserver.disconnect();
+      
+      // Remove direct handlers from any existing pac-items
+      document.querySelectorAll('.pac-item').forEach(item => {
+        item.removeEventListener('mousedown', handleDirectPacItemClick);
+      });
+      
+      // Remove global handlers
       document.removeEventListener('click', handlePacClick, true);
       document.removeEventListener('mousedown', handlePacClick, true);
       document.removeEventListener('mouseup', handlePacClick, true);
       document.removeEventListener('mouseover', handlePacMouseOver, true);
       document.removeEventListener('mouseout', handlePacMouseOut, true);
-      document.removeEventListener('item-selected', handleItemSelected);
-      pacObserver.disconnect();
-      
-      // Remove any direct handlers we added
-      const pacItems = document.querySelectorAll('.pac-item[data-has-custom-click="true"]');
-      pacItems.forEach(item => {
-        // We can't reference the original handler, but we can remove listeners by type
-        // This is a bit of a sledgehammer approach but works for cleanup
-        const clone = item.cloneNode(true);
-        item.parentNode?.replaceChild(clone, item);
-      });
     };
   }, []);
 
@@ -675,27 +566,13 @@ export default function GooglePlacesAutocomplete({
       
       if (selectedItem) {
         try {
-          console.log('Enter key pressed with pac suggestion visible');
-          
-          // Instead of simulating a mousedown, use our custom handler directly
-          // for consistency between keyboard and mouse interactions
-          if (selectedItem instanceof HTMLElement) {
-            const customEvent = new CustomEvent('item-selected', {
-              bubbles: true,
-              cancelable: true,
-              detail: { element: selectedItem }
-            });
-            
-            // Dispatch our custom event that our handler will pick up
-            document.dispatchEvent(customEvent);
-            
-            // Focus the input after a brief delay
-            setTimeout(() => {
-              if (inputRef.current) {
-                inputRef.current.focus();
-              }
-            }, 50);
-          }
+          // Simulate a click on the selected item with our custom handling
+          // that stops event propagation
+          (selectedItem as HTMLElement).dispatchEvent(new MouseEvent('mousedown', {
+            bubbles: false,
+            cancelable: true,
+            view: window,
+          }));
           
           // Stop any further propagation
           e.nativeEvent.stopImmediatePropagation();
