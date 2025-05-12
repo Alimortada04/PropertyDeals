@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { LoadScript } from "@react-google-maps/api";
+import { LoadScript, Libraries } from "@react-google-maps/api";
+import "./google-places-custom-styles.css";
 
 // The libraries array should be defined outside the component and memoized
 // to prevent unnecessary re-renders
-const libraries = ["places"];
+const libraries: Libraries = ["places"];
 
 export interface PlaceData {
   address: string;
@@ -71,6 +72,9 @@ export default function GooglePlacesAutocomplete({
     const options = {
       componentRestrictions: { country: "us" },
       fields: ["address_components", "geometry", "formatted_address", "place_id"],
+      types: ["address"],
+      // Setting a higher z-index to ensure dropdown appears above other elements
+      zIndex: 9999,
     };
 
     autocompleteRef.current = new google.maps.places.Autocomplete(
@@ -158,17 +162,24 @@ export default function GooglePlacesAutocomplete({
       libraries={libraries}
       onLoad={() => setIsLoaded(true)}
     >
-      <Input
-        id={id}
-        ref={inputRef}
-        type="text"
-        placeholder={placeholder}
-        className={className}
-        required={required}
-        value={inputValue}
-        onChange={handleInputChange}
-        autoFocus={autoFocus}
-      />
+      <div className="relative w-full">
+        <Input
+          id={id}
+          ref={inputRef}
+          type="text"
+          placeholder={placeholder}
+          className={className}
+          required={required}
+          value={inputValue}
+          onChange={handleInputChange}
+          autoComplete="off" /* Disable browser autocomplete to prevent conflicts */
+          autoCorrect="off"
+          autoCapitalize="off"
+          spellCheck="false"
+          autoFocus={autoFocus}
+          aria-label="Address search"
+        />
+      </div>
     </LoadScript>
   );
 }
