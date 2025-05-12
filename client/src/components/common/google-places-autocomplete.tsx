@@ -100,15 +100,26 @@ export default function GooglePlacesAutocomplete({
 
     // Set up a global mutation observer to detect when the pac-container is added to DOM
     const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
+      // Check if any mutation added the pac-container
+      let pacContainerAdded = false;
+      
+      for (let i = 0; i < mutations.length; i++) {
+        const mutation = mutations[i];
         if (mutation.type === 'childList' && mutation.addedNodes.length) {
-          for (const node of mutation.addedNodes) {
-            if ((node as HTMLElement).classList?.contains('pac-container')) {
-              // Set active state to true when dropdown appears
-              placesAutocompleteState.setActive(true);
+          for (let j = 0; j < mutation.addedNodes.length; j++) {
+            const node = mutation.addedNodes[j] as HTMLElement;
+            if (node.classList && node.classList.contains('pac-container')) {
+              pacContainerAdded = true;
+              break;
             }
           }
         }
+        if (pacContainerAdded) break;
+      }
+      
+      // If the pac-container was added, set active state
+      if (pacContainerAdded) {
+        placesAutocompleteState.setActive(true);
       }
     });
     
@@ -331,6 +342,29 @@ export default function GooglePlacesAutocomplete({
     const newValue = e.target.value;
     setInputValue(newValue);
     onChange(newValue);
+    
+    // Mark as active when typing to prevent modal closing
+    if (newValue.length > 1) {
+      placesAutocompleteState.setActive(true);
+    }
+  };
+  
+  // Handle focus event
+  const handleInputFocus = () => {
+    // Mark as active when focused to prevent modal closing
+    placesAutocompleteState.setActive(true);
+  };
+  
+  // Handle blur with delay to allow click events to process
+  const handleInputBlur = () => {
+    // Delay setting inactive state to allow dropdown selection to process first
+    setTimeout(() => {
+      const pacContainer = document.querySelector('.pac-container');
+      // Only set inactive if dropdown isn't visible
+      if (!pacContainer || window.getComputedStyle(pacContainer).display === 'none') {
+        placesAutocompleteState.setActive(false);
+      }
+    }, 300);
   };
   
   // Handle keyboard interactions for improved accessibility
@@ -382,6 +416,8 @@ export default function GooglePlacesAutocomplete({
           required={required}
           value={inputValue}
           onChange={handleInputChange}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
           onKeyDown={handleKeyDown}
           autoComplete="off" /* Disable browser autocomplete to prevent conflicts */
           autoCorrect="off"
