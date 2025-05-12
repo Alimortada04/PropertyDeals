@@ -361,62 +361,7 @@ export default function GooglePlacesAutocomplete({
   
   // Fix click handling on dropdown items and ensure consistent behavior between mouse and keyboard
   useEffect(() => {
-    // Create a flag to track if we're handling a pac-item click
-    let processingPacItemClick = false;
-    
-    // Direct click handler for pac-item elements
-    const handleDirectPacItemClick = (e: Event) => {
-      console.log("Direct pac-item click detected");
-      
-      // Mark that we're processing a click to prevent other handlers from interfering
-      processingPacItemClick = true;
-      
-      // Stop event from bubbling up immediately
-      e.stopPropagation();
-      e.preventDefault();
-      
-      // Get the clicked element
-      const clickedItem = e.currentTarget as HTMLElement;
-      console.log("Clicked item:", clickedItem);
-      
-      // Use our custom function to trigger place selection
-      triggerPlaceSelection(clickedItem);
-      
-      // Set a timeout to reset the processing flag
-      setTimeout(() => {
-        processingPacItemClick = false;
-      }, 200);
-    };
-    
-    // Add direct event listeners to pac-items as they appear
-    const addDirectClickHandlers = () => {
-      const pacItems = document.querySelectorAll('.pac-item');
-      pacItems.forEach(item => {
-        // Remove any existing handler to prevent duplicates
-        item.removeEventListener('mousedown', handleDirectPacItemClick);
-        // Add the click handler directly to each item
-        item.addEventListener('mousedown', handleDirectPacItemClick);
-      });
-    };
-    
-    // Set up a mutation observer to watch for pac-items being added to the DOM
-    const pacObserver = new MutationObserver((mutations) => {
-      mutations.forEach(mutation => {
-        if (mutation.addedNodes.length) {
-          // Run on a slight delay to ensure items are fully added
-          setTimeout(addDirectClickHandlers, 50);
-        }
-      });
-    });
-    
-    // Start observing the document body for added nodes
-    pacObserver.observe(document.body, { childList: true, subtree: true });
-    
-    // Backup global event handler
     const handlePacClick = (e: MouseEvent) => {
-      // Skip if we're already processing a click via the direct handler
-      if (processingPacItemClick) return;
-      
       const target = e.target as HTMLElement;
       
       // Check if click is on any part of the pac-container or its children
@@ -425,10 +370,12 @@ export default function GooglePlacesAutocomplete({
                           target.parentElement?.classList.contains('pac-item');
       
       if (isPacElement) {
-        console.log("Global pac click handler activated");
         // Completely stop the event from propagating to prevent modal closing
         e.preventDefault();
         e.stopPropagation();
+        
+        // The click will still be handled by Google's internal handlers,
+        // but won't bubble up to close the modal
         
         // If click is directly on a pac-item, manually trigger the place selection
         // This ensures mouse clicks behave identically to keyboard selection
@@ -437,7 +384,6 @@ export default function GooglePlacesAutocomplete({
           const itemToSelect = target.classList.contains('pac-item') ? target : target.parentElement;
           
           if (itemToSelect) {
-            console.log("Triggering place selection from global handler");
             // Use our custom function to trigger selection in a consistent way
             triggerPlaceSelection(itemToSelect as HTMLElement);
             
@@ -481,20 +427,6 @@ export default function GooglePlacesAutocomplete({
       }
     };
     
-    // Immediately add direct handlers to any existing pac-items
-    addDirectClickHandlers();
-    
-    // Add event handler to check for pac-container and add click handlers
-    const checkForPacContainer = () => {
-      const pacContainer = document.querySelector('.pac-container');
-      if (pacContainer) {
-        addDirectClickHandlers();
-      }
-    };
-    
-    // Run the check periodically
-    const checkInterval = setInterval(checkForPacContainer, 300);
-    
     // This must use capture phase (true) to intercept events before modal handlers
     document.addEventListener('click', handlePacClick, true);
     document.addEventListener('mousedown', handlePacClick, true);
@@ -503,18 +435,6 @@ export default function GooglePlacesAutocomplete({
     document.addEventListener('mouseout', handlePacMouseOut, true);
     
     return () => {
-      // Clean up interval
-      clearInterval(checkInterval);
-      
-      // Clean up observers
-      pacObserver.disconnect();
-      
-      // Remove direct handlers from any existing pac-items
-      document.querySelectorAll('.pac-item').forEach(item => {
-        item.removeEventListener('mousedown', handleDirectPacItemClick);
-      });
-      
-      // Remove global handlers
       document.removeEventListener('click', handlePacClick, true);
       document.removeEventListener('mousedown', handlePacClick, true);
       document.removeEventListener('mouseup', handlePacClick, true);
