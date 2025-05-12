@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { LoadScript, Libraries } from "@react-google-maps/api";
 import "./google-places-custom-styles.css";
@@ -69,8 +69,7 @@ export default function GooglePlacesAutocomplete({
     }
   }, [autoFocus]);
   
-  // We don't need the manual positioning effect anymore as we'll use 
-  // CSS to position the dropdown relative to our input wrapper
+
   
   // Fix click handling on dropdown - this ensures that dropdown clicks are properly captured
   useEffect(() => {
@@ -127,15 +126,15 @@ export default function GooglePlacesAutocomplete({
   }, [dropdownOpen]);
 
   useEffect(() => {
-    if (!isLoaded || !inputRef.current) return;
+    if (!isLoaded || !inputRef.current || !containerRef.current) return;
 
     // Configure autocomplete with optimal options for visibility and positioning
     const options = {
       componentRestrictions: { country: "us" },
       fields: ["address_components", "geometry", "formatted_address", "place_id"],
       types: ["address"],
-      // Attach to our input element rather than to the document body
-      container: inputRef.current.parentElement
+      // Attach to our container instead of document.body
+      container: containerRef.current
     };
 
     autocompleteRef.current = new google.maps.places.Autocomplete(
@@ -232,6 +231,9 @@ export default function GooglePlacesAutocomplete({
     }
   };
 
+  // Create a memoized reference to our positioning container
+  const containerRef = useRef<HTMLDivElement>(null);
+
   return (
     <LoadScript
       googleMapsApiKey={apiKey}
@@ -239,7 +241,15 @@ export default function GooglePlacesAutocomplete({
       onLoad={() => setIsLoaded(true)}
     >
       {/* This wrapper establishes the positioning context for the dropdown */}
-      <div className="relative" style={{ position: 'relative', zIndex: 0 }}>
+      <div 
+        ref={containerRef}
+        className="places-autocomplete-wrapper" 
+        style={{ 
+          position: 'relative',
+          width: '100%',
+          zIndex: 50
+        }}
+      >
         <Input
           id={id}
           ref={inputRef}

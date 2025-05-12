@@ -1,5 +1,12 @@
 /* Google Places Autocomplete custom styles */
 
+/* Wrapper for the autocomplete input and dropdown to establish proper positioning context */
+.places-autocomplete-wrapper {
+  position: relative !important;
+  z-index: 50 !important;
+  width: 100% !important;
+}
+
 /* Main container for predictions - elevated above all modal content */
 .pac-container {
   position: absolute !important;
@@ -11,14 +18,18 @@
   margin-top: 2px !important;
   font-family: inherit !important;
   
-  /* Additional positioning refinements */
-  width: 100% !important;
+  /* Position directly below input */
+  top: 100% !important;
   left: 0 !important;
   right: 0 !important;
+  width: 100% !important;
   
   /* Maximum height with scrolling */
   max-height: 200px !important;
   overflow-y: auto !important;
+  
+  /* Ensure interactivity */
+  pointer-events: auto !important;
 }
 
 /* Fix pointer events to ensure clickability */
