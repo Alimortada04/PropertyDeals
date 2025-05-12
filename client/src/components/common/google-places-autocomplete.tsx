@@ -84,6 +84,9 @@ export default function GooglePlacesAutocomplete({
     );
 
     autocompleteRef.current.addListener("place_changed", () => {
+      // Place selection is handled without access to the raw event
+      // We'll apply our custom handling to prevent modal closure
+      
       if (!autocompleteRef.current) return;
       
       const place = autocompleteRef.current.getPlace();
@@ -172,13 +175,60 @@ export default function GooglePlacesAutocomplete({
           pacContainerEl.style.left = `${rect.left}px`;
           pacContainerEl.style.top = `${rect.bottom + 2}px`;
         }
+        
+        // Add a data attribute to mark the container as styled
+        if (!pacContainerEl.hasAttribute('data-styled')) {
+          pacContainerEl.setAttribute('data-styled', 'true');
+          
+          // Modify all pac-items to stop propagation on click events
+          const pacItems = pacContainer.querySelectorAll('.pac-item');
+          pacItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              
+              // Instead of letting the click bubble up, we'll manually trigger the selection
+              // by simulating a keypress on the input element (Enter key after a small delay)
+              setTimeout(() => {
+                if (inputRef.current) {
+                  const event = new KeyboardEvent('keydown', {
+                    key: 'Enter',
+                    code: 'Enter',
+                    keyCode: 13,
+                    which: 13,
+                    bubbles: true
+                  });
+                  inputRef.current.dispatchEvent(event);
+                }
+              }, 50);
+            }, true);
+          });
+        }
       }
     };
     
     // Create observer to detect when pac-container is added to DOM
     const observer = new MutationObserver((mutations) => {
-      if (document.querySelector('.pac-container')) {
-        fixPacContainer();
+      for (const mutation of mutations) {
+        if (mutation.type === 'childList') {
+          const pacContainer = document.querySelector('.pac-container');
+          if (pacContainer) {
+            fixPacContainer();
+            
+            // Specifically intercept any potential click handlers on the pac-container
+            if (!pacContainer.hasAttribute('data-click-intercepted')) {
+              pacContainer.setAttribute('data-click-intercepted', 'true');
+              
+              pacContainer.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+              }, true);
+              
+              pacContainer.addEventListener('click', (e) => {
+                e.stopPropagation();
+              }, true);
+            }
+          }
+        }
       }
     });
     
@@ -196,32 +246,48 @@ export default function GooglePlacesAutocomplete({
     document.addEventListener('scroll', handlePositionUpdate, true);
     window.addEventListener('resize', handlePositionUpdate);
     
+    // Also run on initial load and a short interval to ensure proper positioning during animations
+    fixPacContainer();
+    const interval = setInterval(fixPacContainer, 100);
+    setTimeout(() => clearInterval(interval), 1000);
+    
     return () => {
       observer.disconnect();
       document.removeEventListener('scroll', handlePositionUpdate, true);
       window.removeEventListener('resize', handlePositionUpdate);
+      clearInterval(interval);
     };
   }, [isLoaded]);
   
-  // Fix click handling on dropdown items
+  // Fix click handling on dropdown items and prevent modal from closing
   useEffect(() => {
     const handlePacClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       
-      // Check if click is on a pac-item
-      if (target && (
-        target.classList.contains('pac-item') || 
-        target.parentElement?.classList.contains('pac-item')
-      )) {
-        // Prevent event propagation to avoid closing modals
+      // Check if click is on any part of the pac-container or its children
+      const isPacElement = target.closest('.pac-container') || 
+                          target.classList.contains('pac-item') || 
+                          target.parentElement?.classList.contains('pac-item');
+      
+      if (isPacElement) {
+        // Completely stop the event from propagating to prevent modal closing
+        e.preventDefault();
         e.stopPropagation();
+        
+        // The click will still be handled by Google's internal handlers,
+        // but won't bubble up to close the modal
       }
     };
     
+    // This must use capture phase (true) to intercept events before modal handlers
     document.addEventListener('click', handlePacClick, true);
+    document.addEventListener('mousedown', handlePacClick, true);
+    document.addEventListener('mouseup', handlePacClick, true);
     
     return () => {
       document.removeEventListener('click', handlePacClick, true);
+      document.removeEventListener('mousedown', handlePacClick, true);
+      document.removeEventListener('mouseup', handlePacClick, true);
     };
   }, []);
 
@@ -236,13 +302,27 @@ export default function GooglePlacesAutocomplete({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // Special case for Enter key with pac-container visible
     if (e.key === 'Enter' && document.querySelector('.pac-container')) {
+      // Important: Stop event propagation to prevent modal from closing
+      e.stopPropagation();
       e.preventDefault(); // Prevent form submission
       
       // First active item in the dropdown
       const firstItem = document.querySelector('.pac-item');
       if (firstItem) {
-        // Simulate a click on the first item
-        (firstItem as HTMLElement).click();
+        try {
+          // Simulate a click on the first item - but with our custom handling 
+          // that stops event propagation
+          (firstItem as HTMLElement).dispatchEvent(new MouseEvent('mousedown', {
+            bubbles: false,
+            cancelable: true,
+            view: window,
+          }));
+          
+          // Stop any further propagation
+          e.nativeEvent.stopImmediatePropagation();
+        } catch (err) {
+          console.error('Error when selecting address suggestion:', err);
+        }
       }
     }
   };
