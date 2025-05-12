@@ -128,117 +128,158 @@ export default function GooglePlacesAutocomplete({
 
     autocompleteRef.current.addListener("place_changed", () => {
       console.log("Place changed event triggered");
-      // Place selection is handled without access to the raw event
-      // We'll apply our custom handling to prevent modal closure
+      // Log for debugging
+      const timestamp = new Date().toISOString();
+      console.log(`[${timestamp}] place_changed event triggered`);
       
       // Set active state to false when place is selected
       placesAutocompleteState.setActive(false);
       
-      if (!autocompleteRef.current) return;
+      if (!autocompleteRef.current) {
+        console.warn("Autocomplete ref is not available");
+        return;
+      }
       
-      const place = autocompleteRef.current.getPlace();
-      console.log("Place selected:", place);
-      
-      if (!place.geometry || !place.geometry.location) {
-        // User entered the name of a place that was not suggested and
-        // pressed the Enter key, or the Place Details request failed
-        console.warn("Missing geometry in selected place, attempting to recover...");
+      try {
+        const place = autocompleteRef.current.getPlace();
+        console.log("Place object received:", place);
         
-        // Try to recover by searching for the current input value
-        const searchValue = inputRef.current?.value || '';
-        if (searchValue.length > 3) {
-          // Set up a geocoder to try to get the place data
-          const geocoder = new google.maps.Geocoder();
-          geocoder.geocode({ address: searchValue }, (results, status) => {
-            if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
-              const result = results[0];
-              console.log("Recovered place from geocoder:", result);
+        // Check if we got a valid place with geometry 
+        if (!place || !place.geometry || !place.geometry.location) {
+          console.warn("Missing geometry in selected place, attempting to recover...");
+          
+          // Try to recover by searching for the current input value
+          const searchValue = inputRef.current?.value || '';
+          if (searchValue.length > 3) {
+            console.log(`Attempting geocode lookup for: "${searchValue}"`);
+            
+            // Set up a geocoder to try to get the place data
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: searchValue }, (results, status) => {
+              console.log(`Geocode result status: ${status}`, results);
               
-              // Extract place data manually since the helper function isn't available yet
-              let extractedData: PlaceData = {
-                address: result.formatted_address,
-                latitude: result.geometry.location.lat(),
-                longitude: result.geometry.location.lng(),
-                placeId: result.place_id,
-                city: '',
-                state: '',
-                zipCode: '',
-                county: '',
-                neighborhood: '',
-                streetNumber: '',
-                streetName: '',
-              };
-              
-              // Extract address components
-              for (const component of result.address_components) {
-                const types = component.types;
+              if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
+                const result = results[0];
+                console.log("Recovered place from geocoder:", result);
                 
-                if (types.includes('street_number')) {
-                  extractedData.streetNumber = component.long_name;
-                } else if (types.includes('route')) {
-                  extractedData.streetName = component.long_name;
-                } else if (types.includes('locality')) {
-                  extractedData.city = component.long_name;
-                } else if (types.includes('administrative_area_level_1')) {
-                  extractedData.state = component.short_name;
-                } else if (types.includes('postal_code')) {
-                  extractedData.zipCode = component.long_name;
-                } else if (types.includes('administrative_area_level_2')) {
-                  extractedData.county = component.long_name;
-                } else if (types.includes('neighborhood')) {
-                  extractedData.neighborhood = component.long_name;
+                // Extract place data manually
+                let extractedData: PlaceData = {
+                  address: result.formatted_address,
+                  latitude: result.geometry.location.lat(),
+                  longitude: result.geometry.location.lng(),
+                  placeId: result.place_id,
+                  city: '',
+                  state: '',
+                  zipCode: '',
+                  county: '',
+                  neighborhood: '',
+                  streetNumber: '',
+                  streetName: '',
+                };
+                
+                // Extract address components
+                for (const component of result.address_components) {
+                  const types = component.types;
+                  
+                  if (types.includes('street_number')) {
+                    extractedData.streetNumber = component.long_name;
+                  } else if (types.includes('route')) {
+                    extractedData.streetName = component.long_name;
+                  } else if (types.includes('locality')) {
+                    extractedData.city = component.long_name;
+                  } else if (types.includes('administrative_area_level_1')) {
+                    extractedData.state = component.short_name;
+                  } else if (types.includes('postal_code')) {
+                    extractedData.zipCode = component.long_name;
+                  } else if (types.includes('administrative_area_level_2')) {
+                    extractedData.county = component.long_name;
+                  } else if (types.includes('neighborhood')) {
+                    extractedData.neighborhood = component.long_name;
+                  }
                 }
+                
+                console.log("Calling onPlaceSelect with geocoded data:", extractedData);
+                onPlaceSelect(extractedData);
+                
+                // Also update the input value to match the formatted address
+                if (inputRef.current) {
+                  inputRef.current.value = result.formatted_address;
+                  // Update the internal value state
+                  setInputValue(result.formatted_address);
+                }
+              } else {
+                console.error(`Geocode failed with status: ${status}`);
               }
-              
-              onPlaceSelect(extractedData);
+            });
+          } else {
+            console.warn(`Input value too short for geocoding: "${searchValue}"`);
+          }
+          return;
+        }
+        
+        // If we get here, we have a valid place with geometry
+        console.log("Valid place object with geometry received", place);
+      } catch (error) {
+        console.error("Error in place_changed event handler:", error);
+      }
+
+      // Get the place data from the autocomplete object
+      const place = autocompleteRef.current.getPlace();
+      
+      // Ensure we have a valid place object with geometry
+      if (place && place.geometry && place.geometry.location) {
+        // Get detailed address components
+        let city = "";
+        let state = "";
+        let zipCode = "";
+        let county = "";
+        let neighborhood = "";
+        let streetNumber = "";
+        let streetName = "";
+        
+        // Type-safe processing of address components
+        if (place.address_components) {
+          place.address_components.forEach((component: any) => {
+            const types = component.types;
+            
+            if (types.includes("locality")) {
+              city = component.long_name;
+            } else if (types.includes("administrative_area_level_1")) {
+              state = component.short_name;
+            } else if (types.includes("postal_code")) {
+              zipCode = component.long_name;
+            } else if (types.includes("administrative_area_level_2")) {
+              county = component.long_name;
+            } else if (types.includes("neighborhood")) {
+              neighborhood = component.long_name;
+            } else if (types.includes("street_number")) {
+              streetNumber = component.long_name;
+            } else if (types.includes("route")) {
+              streetName = component.long_name;
             }
           });
         }
-        return;
-      }
 
-      // Get detailed address components
-      let city = "";
-      let state = "";
-      let zipCode = "";
-      let county = "";
-      let neighborhood = "";
-      let streetNumber = "";
-      let streetName = "";
-      
-      place.address_components?.forEach((component) => {
-        const types = component.types;
+        // Construct the place data object with all components
+        const placeData: PlaceData = {
+          address: place.formatted_address || "",
+          latitude: place.geometry.location.lat(),
+          longitude: place.geometry.location.lng(),
+          placeId: place.place_id || "",
+          city,
+          state,
+          zipCode,
+          county,
+          neighborhood,
+          streetNumber,
+          streetName
+        };
         
-        if (types.includes("locality")) {
-          city = component.long_name;
-        } else if (types.includes("administrative_area_level_1")) {
-          state = component.short_name;
-        } else if (types.includes("postal_code")) {
-          zipCode = component.long_name;
-        } else if (types.includes("administrative_area_level_2")) {
-          county = component.long_name;
-        } else if (types.includes("neighborhood")) {
-          neighborhood = component.long_name;
-        } else if (types.includes("street_number")) {
-          streetNumber = component.long_name;
-        } else if (types.includes("route")) {
-          streetName = component.long_name;
-        }
-      });
-
-      const placeData: PlaceData = {
-        address: place.formatted_address || "",
-        latitude: place.geometry.location.lat(),
-        longitude: place.geometry.location.lng(),
-        placeId: place.place_id || "",
-        city,
-        state,
-        zipCode,
-        county,
-        neighborhood,
-        streetNumber,
-        streetName
-      };
+        console.log("Constructed place data:", placeData);
+        setInputValue(placeData.address);
+        onChange(placeData.address);
+        onPlaceSelect(placeData);
+      }
 
       setInputValue(placeData.address);
       onChange(placeData.address);
@@ -361,35 +402,103 @@ export default function GooglePlacesAutocomplete({
   
   // Fix click handling on dropdown items and ensure consistent behavior between mouse and keyboard
   useEffect(() => {
+    // Direct handler for clicks on pac-items to trigger place selection
+    const handleItemClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const pacItem = target.closest('.pac-item') as HTMLElement;
+      
+      if (pacItem) {
+        console.log('Direct click on pac-item detected');
+        
+        // Prevent default Google handling which may not work consistently
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Get the main text content from the item
+        // We need to be very careful about extracting the text correctly
+        let mainText = '';
+        const mainSpan = pacItem.querySelector('.pac-item-query');
+        
+        if (mainSpan) {
+          mainText = mainSpan.textContent || '';
+          const matchedSpans = mainSpan.querySelectorAll('.pac-matched');
+          // Add any matched spans content
+          if (matchedSpans.length > 0) {
+            mainText = '';
+            for (let i = 0; i < mainSpan.childNodes.length; i++) {
+              const node = mainSpan.childNodes[i];
+              if (node.nodeType === Node.TEXT_NODE) {
+                mainText += node.textContent || '';
+              } else if (node.nodeType === Node.ELEMENT_NODE) {
+                mainText += node.textContent || '';
+              }
+            }
+          }
+        }
+        
+        // Get the secondary text (typically state/country)
+        const secondaryText = Array.from(pacItem.childNodes)
+          .filter(node => 
+            node.nodeType === Node.TEXT_NODE || 
+            (node.nodeType === Node.ELEMENT_NODE && 
+             !(node as HTMLElement).classList.contains('pac-item-query') && 
+             !(node as HTMLElement).classList.contains('pac-icon'))
+          )
+          .map(node => node.textContent || '')
+          .join('');
+        
+        // Combine for full address
+        const fullAddress = `${mainText} ${secondaryText}`.trim();
+        console.log('Extracted address text:', fullAddress);
+        
+        // Set input value and maintain focus
+        if (inputRef.current && fullAddress) {
+          // Set value first
+          inputRef.current.value = fullAddress;
+          inputRef.current.focus();
+          
+          // Dispatch input event to notify Google's autocomplete
+          inputRef.current.dispatchEvent(new Event('input', { bubbles: true }));
+          
+          // Set the active state
+          placesAutocompleteState.setActive(true);
+          
+          // Force enter key event after a short delay
+          setTimeout(() => {
+            if (document.activeElement === inputRef.current) {
+              // Explicitly trigger enter key
+              const enterEvent = new KeyboardEvent('keydown', {
+                key: 'Enter',
+                code: 'Enter',
+                keyCode: 13,
+                bubbles: true,
+                cancelable: true
+              });
+              
+              inputRef.current?.dispatchEvent(enterEvent);
+              console.log('Simulated Enter key press');
+            }
+          }, 50);
+        }
+      }
+    };
+    
+    // General handler for all events in the pac-container
     const handlePacClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       
       // Check if click is on any part of the pac-container or its children
-      const isPacElement = target.closest('.pac-container') || 
-                          target.classList.contains('pac-item') || 
-                          target.parentElement?.classList.contains('pac-item');
+      const isPacContainer = target.closest('.pac-container');
+      const isPacItem = target.classList.contains('pac-item') || target.closest('.pac-item');
       
-      if (isPacElement) {
+      if (isPacContainer) {
         // Completely stop the event from propagating to prevent modal closing
-        e.preventDefault();
         e.stopPropagation();
         
-        // The click will still be handled by Google's internal handlers,
-        // but won't bubble up to close the modal
-        
-        // If click is directly on a pac-item, manually trigger the place selection
-        // This ensures mouse clicks behave identically to keyboard selection
-        if (target.classList.contains('pac-item') || target.parentElement?.classList.contains('pac-item')) {
-          // Get the item that was clicked
-          const itemToSelect = target.classList.contains('pac-item') ? target : target.parentElement;
-          
-          if (itemToSelect) {
-            // Use our custom function to trigger selection in a consistent way
-            triggerPlaceSelection(itemToSelect as HTMLElement);
-            
-            // Set the active state to ensure the modal doesn't close
-            placesAutocompleteState.setActive(true);
-          }
+        // Apply our special handling only for pac items
+        if (isPacItem) {
+          // Let our specialized handler do the work
+          handleItemClick(e);
         }
       }
     };
@@ -434,12 +543,61 @@ export default function GooglePlacesAutocomplete({
     document.addEventListener('mouseover', handlePacMouseOver, true);
     document.addEventListener('mouseout', handlePacMouseOut, true);
     
+    // Special direct handler for pac-item clicks
+    const setupPacItemClickHandlers = () => {
+      console.log("Setting up direct pac-item click handlers");
+      const pacItems = document.querySelectorAll('.pac-item');
+      
+      pacItems.forEach(item => {
+        // Fix TypeScript error by creating a type-compatible event handler
+        const typedHandler = (evt: Event) => {
+          // Cast the event to any for compatibility
+          handleItemClick(evt as unknown as MouseEvent);
+        };
+        
+        // Remove any existing handlers first
+        item.removeEventListener('click', typedHandler, true);
+        // Add the click handler directly to the item
+        item.addEventListener('click', typedHandler, true);
+        
+        // Also add a data attribute to track that we've added a handler
+        (item as HTMLElement).setAttribute('data-has-custom-click', 'true');
+        console.log("Added click handler to pac-item");
+      });
+    };
+    
+    // Set up a MutationObserver to watch for when pac-container is added
+    const pacObserver = new MutationObserver(() => {
+      const pacContainer = document.querySelector('.pac-container');
+      if (pacContainer) {
+        // When pac-container appears, set up handlers for its items
+        setupPacItemClickHandlers();
+        
+        // Also set up handlers whenever pac-container content changes
+        const itemsObserver = new MutationObserver(setupPacItemClickHandlers);
+        itemsObserver.observe(pacContainer, { childList: true, subtree: true });
+      }
+    });
+    
+    // Start observing document for pac-container
+    pacObserver.observe(document.body, { childList: true, subtree: false });
+    
     return () => {
       document.removeEventListener('click', handlePacClick, true);
       document.removeEventListener('mousedown', handlePacClick, true);
       document.removeEventListener('mouseup', handlePacClick, true);
       document.removeEventListener('mouseover', handlePacMouseOver, true);
       document.removeEventListener('mouseout', handlePacMouseOut, true);
+      pacObserver.disconnect();
+      
+      // Remove any direct handlers we added
+      const pacItems = document.querySelectorAll('.pac-item[data-has-custom-click="true"]');
+      pacItems.forEach(item => {
+        // We can't reference the original handler, but we can remove listeners by type
+        // This is a bit of a sledgehammer approach but works for cleanup
+        const clone = item.cloneNode(true);
+        item.parentNode?.replaceChild(clone, item);
+      });
     };
   }, []);
 
