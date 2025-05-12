@@ -4,7 +4,7 @@ import { LoadScript } from "@react-google-maps/api";
 
 const libraries: ("places")[] = ["places"];
 
-interface PlaceData {
+export interface PlaceData {
   address: string;
   latitude: number;
   longitude: number;
