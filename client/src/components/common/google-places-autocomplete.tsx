@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { LoadScript } from "@react-google-maps/api";
 
-const libraries: ("places")[] = ["places"];
+// The libraries array should be defined outside the component and memoized
+// to prevent unnecessary re-renders
+const libraries = ["places"];
 
 export interface PlaceData {
   address: string;
