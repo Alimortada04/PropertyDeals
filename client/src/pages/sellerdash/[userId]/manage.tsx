@@ -402,10 +402,12 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                 <TooltipContent 
                   side="bottom" 
                   sideOffset={5} 
-                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
+                  collisionPadding={20}
+                  forceMount
                 >
-                  <div className="p-1">
+                  <div className="p-1 max-w-[220px]">
                     <p className="font-medium">New offer received today</p>
                     <p className="text-sm text-gray-600">$395,000 from John Smith</p>
                   </div>
@@ -432,10 +434,12 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                 <TooltipContent 
                   side="bottom" 
                   sideOffset={5} 
-                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
+                  collisionPadding={20}
+                  forceMount
                 >
-                  <div className="p-1">
+                  <div className="p-1 max-w-[220px]">
                     <p className="font-medium">{property.priority} Priority Deal</p>
                     <p className="text-sm text-gray-600">
                       {property.priority === 'High' && 'Close within 30 days'}
@@ -502,38 +506,28 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
         )}
       </div>
       
-      <CardContent className="pt-4">
-        {/* Property title and address - with tooltips for truncated text */}
-        <div className="mb-3">
+      <CardContent className="pt-3 pb-2">
+        {/* Only address as header with map pin icon */}
+        <div className="mb-2">
           <TooltipProvider delayDuration={200}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <h3 className="text-lg font-bold text-gray-900 line-clamp-1 cursor-default">{property.title}</h3>
+                <p className="text-base font-semibold text-gray-900 line-clamp-1 cursor-default flex items-center">
+                  <MapPin className="h-3.5 w-3.5 text-red-500 mr-1.5 flex-shrink-0" />
+                  {property.address}
+                </p>
               </TooltipTrigger>
               <TooltipContent 
                 side="top" 
-                sideOffset={5} 
-                className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                sideOffset={5}
+                align="start"
+                className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                 avoidCollisions={true}
+                collisionPadding={20}
+                forceMount
               >
-                <p>{property.title}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider delayDuration={200}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <p className="text-sm text-gray-600 line-clamp-1 cursor-default">{property.address}</p>
-              </TooltipTrigger>
-              <TooltipContent 
-                side="top" 
-                sideOffset={5} 
-                className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200 max-w-sm"
-                avoidCollisions={true}
-              >
-                <div className="flex items-start gap-2">
-                  <MapPin className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                <div className="p-1 flex items-start gap-2">
+                  <MapPin className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
                   <p>{property.address}</p>
                 </div>
               </TooltipContent>
@@ -541,43 +535,45 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
           </TooltipProvider>
         </div>
         
-        {/* Financial info - styled as pills */}
-        <div className="flex flex-wrap gap-2 mb-4 mt-2">
-          {/* Listing Price - black rounded pill */}
-          <Badge className="bg-gray-800 hover:bg-gray-800 text-white px-3 py-1.5 rounded-full font-medium">
-            Listed: {formatCurrency(property.listPrice)}
+        {/* Compact financial info - horizontal layout */}
+        <div className="flex items-center gap-1.5 mb-2">
+          {/* Listing Price - black compact badge */}
+          <Badge className="bg-gray-800 hover:bg-gray-800 text-white px-2 py-1 text-xs font-medium">
+            {formatCurrency(property.listPrice)}
           </Badge>
           
-          {/* Assignment Profit - green rounded pill */}
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-100 px-3 py-1.5 rounded-full font-medium">
-            Profit: {formatCurrency(property.assignmentProfit)}
+          {/* Assignment Profit - green compact badge */}
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100 px-2 py-1 text-xs font-medium">
+            +{formatCurrency(property.assignmentProfit)}
           </Badge>
           
-          {/* Highest Offer - blue pill with tooltip - only if there are offers */}
+          {/* Highest Offer - blue badge with tooltip - only if there are offers */}
           {property.offers > 0 && (
             <TooltipProvider delayDuration={200}>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <Badge 
-                    className="bg-blue-100 text-blue-800 hover:bg-blue-100 px-3 py-1.5 rounded-full font-medium cursor-pointer"
+                    className="bg-blue-100 text-blue-800 hover:bg-blue-100 px-2 py-1 text-xs font-medium cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       setLocation(`/sellerdash/${userId}/property/${property.id}?tab=offers`);
                     }}
                   >
-                    Best Offer: {formatCurrency(395000)}
+                    ↑{formatCurrency(395000)}
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent 
                   side="top" 
                   sideOffset={5} 
-                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
+                  forceMount
+                  portalled
                 >
-                  <div className="p-1">
-                    <p className="font-medium">Highest offer received today from John Smith</p>
-                    <p className="text-sm text-gray-600">Click to view in Roadmap</p>
+                  <div className="p-1 max-w-[220px]">
+                    <p className="font-medium">Highest offer: {formatCurrency(395000)}</p>
+                    <p className="text-sm text-gray-600">Received today from John Smith</p>
                   </div>
                 </TooltipContent>
               </Tooltip>
