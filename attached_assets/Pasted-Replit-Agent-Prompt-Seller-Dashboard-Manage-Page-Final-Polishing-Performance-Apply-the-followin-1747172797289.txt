@@ -1,0 +1,61 @@
+Replit Agent Prompt: Seller Dashboard – Manage Page Final Polishing & Performance
+Apply the following refinements to the Seller Dashboard Manage Page (/sellerdash/[userId]/manage) to fully align it with the Buyer Dashboard’s styling, load speed, and professional-grade experience:
+
+🧠 Tooltip Behavior
+Fix all tooltip positioning so they are not restricted by the card boundaries.
+
+Tooltips must be able to overflow the card if necessary.
+
+Apply to:
+
+Priority badges (e.g., High/Medium/Low)
+
+New Offer / New Message status tags
+
+Document icons
+
+Any truncated property text
+
+Use z-index, overflow: visible, and position: absolute on parents as needed.
+
+🎨 Property Card Design Updates
+✅ Remove the “bed / bath / sqft” tags — they are no longer needed.
+
+✅ Refactor the price section:
+
+Listing Price → black rounded pill
+
+Assignment Profit → green rounded pill
+
+Highest Offer (if available) → blue pill with hover tooltip
+
+Purchase Price → remove completely
+
+✅ Tooltip on Highest Offer should say:
+“Highest offer received today from [Buyer Name]. Click to view in Roadmap.”
+
+✅ Highest Offer pill should link directly to the Offers tab in Property Roadmap (/sellerdash/[userId]/property/[propertyId]#offers)
+
+Ensure visual spacing under the image and title remains clean and uncluttered.
+
+🧩 Column Layout Improvements
+✅ Increase the width of each Kanban column to better fit full-size property cards, buttons, and content without feeling cramped.
+
+✅ Keep independent vertical scrolling for each column.
+
+✅ Maintain clean horizontal scrolling across the whole board on smaller screens.
+
+🚫 Status Badge Behavior Fix
+Fix the hover state on status badges like New Offer, New Message, Priority Tags — they should not change color or style on hover.
+
+Maintain consistent visual weight and behavior across all interaction states.
+
+⚡ Performance Optimization
+Improve route performance so switching between Seller Dashboard pages (/home, /manage, /engagement, /analytics) is instant with no loading delay.
+
+Match the transition behavior and load speed of the Buyer Dashboard:
+
+Use layout caching, preloading logic, or route transitions
+
+Ensure no unnecessary reloads or flickers
+
