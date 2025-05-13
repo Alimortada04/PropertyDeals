@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { Home, LayoutGrid, Users, BarChart3 } from "lucide-react";
+import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home } from "lucide-react";
 import Navbar from "./navbar";
 
 interface SellerDashboardLayoutProps {
@@ -21,17 +21,17 @@ export default function SellerDashboardLayout({
     setSidebarOpen(!sidebarOpen);
   };
   
-  // Define navigation items
+  // Define navigation items - Matching main dashboard
   const navItems = [
     {
-      label: "Home",
-      icon: Home,
+      label: "Discover",
+      icon: Compass,
       href: `/sellerdash/${userId}`,
       exact: true, // Only match exact path
     },
     {
       label: "Manage",
-      icon: LayoutGrid,
+      icon: FileClock,
       href: `/sellerdash/${userId}/manage`,
     },
     {
@@ -58,30 +58,31 @@ export default function SellerDashboardLayout({
     <div className="flex flex-col min-h-screen bg-white">
       <Navbar toggleSidebar={toggleSidebar} />
       
-      {/* Pill-style navigation */}
-      <div className="sticky top-16 z-10 bg-white border-b border-slate-200 shadow-sm">
+      {/* Pill-style navigation - Matching the general dashboard exactly */}
+      <div className="sticky top-16 z-10 bg-white shadow-sm py-4">
         <div className="container max-w-7xl mx-auto px-4">
-          <div className="flex items-center py-2 overflow-x-auto hide-scrollbar">
-            <nav className="flex space-x-2 py-2">
-              {navItems.map((item) => {
-                const active = isActive(item.href, item.exact);
-                return (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200",
-                      active
-                        ? "bg-primary text-white"
-                        : "text-gray-600 hover:bg-gray-100"
-                    )}
-                  >
-                    <item.icon className={cn("h-4 w-4 mr-2", active ? "text-white" : "text-gray-500")} />
-                    <span>{item.label}</span>
-                  </a>
-                );
-              })}
-            </nav>
+          <div className="flex items-center justify-center md:justify-start">
+            <div className="backdrop-blur-lg bg-white/10 shadow-lg border border-white/10 rounded-xl px-4 py-2 inline-flex">
+              <div className="bg-transparent p-1 flex-nowrap gap-2 overflow-x-auto flex">
+                {navItems.map((item) => {
+                  const active = isActive(item.href, item.exact);
+                  return (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "data-[active=true]:bg-[#09261E] data-[active=true]:text-white data-[active=true]:shadow-sm data-[active=true]:font-semibold data-[active=false]:bg-white/70 data-[active=false]:border data-[active=false]:border-neutral-200 data-[active=false]:text-gray-700 data-[active=false]:hover:bg-gray-100 rounded-full px-4 py-2 transition-all duration-200 ease-in-out scale-100 hover:scale-[1.02] relative flex items-center",
+                      )}
+                      data-active={active}
+                    >
+                      <item.icon className="w-4 h-4 mr-2" />
+                      <span className="font-medium">{item.label}</span>
+                      <div className={cn("absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full mb-0.5", active ? "bg-[#09261E]" : "hidden")}></div>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </div>
