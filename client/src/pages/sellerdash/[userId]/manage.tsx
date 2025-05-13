@@ -478,7 +478,7 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   sticky="always"
                 >
                   <div className="flex items-center gap-1.5 max-w-[220px]">
-                    <Paperclip className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                    <FileText className="h-4 w-4 text-purple-600 flex-shrink-0" />
                     <p className="font-medium">Purchase Agreement uploaded</p>
                   </div>
                 </TooltipContent>
@@ -498,13 +498,13 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="bottom-start" 
+                  side="top" 
                   sideOffset={5}
-                  align="start"
-                  alignOffset={10}
+                  align="end"
+                  alignOffset={-5}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
-                  collisionPadding={20}
+                  collisionPadding={10}
                 >
                   <div className="flex items-center gap-1.5 max-w-[220px]">
                     <MessageCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
@@ -1098,7 +1098,7 @@ export default function ManagePage() {
                 onClick={() => setViewMode('kanban')}
                 className={`rounded-full px-3 ${
                   viewMode === 'kanban' 
-                    ? 'bg-[#135341] text-white font-bold' 
+                    ? 'bg-[#135341] text-white font-bold hover:bg-[#135341]/90' 
                     : 'text-gray-600 hover:bg-gray-100'
                 } transition-all duration-200`}
               >
@@ -1111,7 +1111,7 @@ export default function ManagePage() {
                 onClick={() => setViewMode('grid')}
                 className={`rounded-full px-3 ${
                   viewMode === 'grid' 
-                    ? 'bg-[#135341] text-white font-bold' 
+                    ? 'bg-[#135341] text-white font-bold hover:bg-[#135341]/90' 
                     : 'text-gray-600 hover:bg-gray-100'
                 } transition-all duration-200`}
               >
@@ -1124,7 +1124,7 @@ export default function ManagePage() {
                 onClick={() => setViewMode('sheet')}
                 className={`rounded-full px-3 ${
                   viewMode === 'sheet' 
-                    ? 'bg-[#135341] text-white font-bold' 
+                    ? 'bg-[#135341] text-white font-bold hover:bg-[#135341]/90' 
                     : 'text-gray-600 hover:bg-gray-100'
                 } transition-all duration-200`}
               >
