@@ -405,7 +405,6 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
-                  forceMount
                 >
                   <div className="p-1 max-w-[220px]">
                     <p className="font-medium">New offer received today</p>
@@ -437,7 +436,6 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
-                  forceMount
                 >
                   <div className="p-1 max-w-[220px]">
                     <p className="font-medium">{property.priority} Priority Deal</p>
@@ -528,7 +526,6 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                 className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                 avoidCollisions={true}
                 collisionPadding={20}
-                forceMount
               >
                 <div className="p-1 flex items-start gap-2">
                   <MapPin className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
