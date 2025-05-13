@@ -303,10 +303,11 @@ const formatCurrency = (amount: number) => {
 };
 
 // Enhanced Property card component with the same style as Discover view
-const PropertyCard = ({ property, onDragStart, onDrop }: { 
+const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: { 
   property: any; 
   onDragStart: (e: React.DragEvent, propertyId: string, currentStatus: string) => void;
   onDrop: (propertyId: string, newStatus: string) => void;
+  onDragEnd?: () => void;
 }) => {
   const [, setLocation] = useLocation();
   const params = useParams();
@@ -373,6 +374,7 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
       onClick={handleCardClick}
       draggable={true}
       onDragStart={(e) => onDragStart(e, property.id, property.status)}
+      onDragEnd={onDragEnd}
       data-property-id={property.id}
       data-status={property.status}
       style={{ 
@@ -1013,7 +1015,7 @@ export default function ManagePage() {
     // Show toast notification
     toast({
       title: 'Property Status Updated',
-      description: `Moved ${property.title} to ${newStatus}`,
+      description: `Moved "${property.title}" from ${property.status} to ${newStatus}`,
       action: (
         <ToastAction altText="Undo" onClick={() => handleUndoMove(propertyId, property.status)}>
           Undo
@@ -1380,6 +1382,7 @@ export default function ManagePage() {
                           property={property} 
                           onDragStart={handleDragStart}
                           onDrop={handlePropertyMove}
+                          onDragEnd={handleDragEnd}
                         />
                       ))}
                     </div>
