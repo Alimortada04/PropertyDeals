@@ -59,7 +59,7 @@ export default function SellerDashboardLayout({
       {/* Pill-style navigation - Sticky to top and transparent */}
       <div className="sticky top-0 z-40 pt-4 pb-2 bg-transparent">
         <div className="container max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-center md:justify-start">
+          <div className="flex items-center justify-center">
             <div className="backdrop-blur-lg bg-white/10 shadow-lg border border-white/10 rounded-xl px-4 py-2 inline-flex">
               <div className="bg-transparent p-1 flex-nowrap gap-2 overflow-x-auto flex">
                 {navItems.map((item) => {
