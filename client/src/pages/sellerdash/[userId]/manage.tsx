@@ -901,6 +901,23 @@ export default function ManagePage() {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
+    
+    // Add visual feedback for the drop zone
+    const column = e.currentTarget as HTMLElement;
+    
+    // Highlight the column when dragging over it
+    if (isDragging && draggedPropertyId) {
+      // Add a highlight class to the column
+      column.classList.add('drop-zone-active');
+      
+      // Remove the highlight class when leaving the column
+      const handleDragLeave = () => {
+        column.classList.remove('drop-zone-active');
+        column.removeEventListener('dragleave', handleDragLeave);
+      };
+      
+      column.addEventListener('dragleave', handleDragLeave);
+    }
   };
   
   // Handle column drop for reordering
@@ -931,6 +948,24 @@ export default function ManagePage() {
     setDraggedColumnId(null);
   };
   
+  // Handle drag end to clean up
+  const handleDragEnd = () => {
+    // Reset opacity of all property cards
+    document.querySelectorAll('.property-card').forEach(card => {
+      (card as HTMLElement).style.opacity = '1';
+    });
+    
+    // Remove active drop zone styling from all columns
+    document.querySelectorAll('.drop-zone-active').forEach(dropZone => {
+      dropZone.classList.remove('drop-zone-active');
+    });
+    
+    // Reset drag state
+    setIsDragging(false);
+    setDraggedPropertyId(null);
+    setDraggedPropertyStatus(null);
+  };
+  
   // Handle property drop
   const handlePropertyDrop = (e: React.DragEvent, columnId: string) => {
     e.preventDefault();
@@ -939,11 +974,6 @@ export default function ManagePage() {
     
     if (dragType === 'property') {
       const propertyId = e.dataTransfer.getData('property-id');
-      
-      // Reset opacity of the dragged card
-      document.querySelectorAll('.property-card').forEach(card => {
-        (card as HTMLElement).style.opacity = '1';
-      });
       
       if (draggedPropertyId && draggedPropertyStatus) {
         // Convert columnId to status label

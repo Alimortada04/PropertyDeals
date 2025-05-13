@@ -89,6 +89,11 @@ html {
   .dropdown-trigger svg {
     @apply hover:text-[#803344] transition-colors;
   }
+  
+  /* Active drop zone styling for drag and drop */
+  .drop-zone-active {
+    @apply ring-2 ring-[#135341] ring-opacity-50 bg-[#135341]/5 transition-all duration-200;
+  }
 }
 
 @layer utilities {
