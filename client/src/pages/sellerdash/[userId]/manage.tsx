@@ -592,7 +592,7 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
                 sticky="always"
               >
                 <div className="p-1 max-w-[180px]">
-                  <p className="font-medium">Assignment Fee</p>
+                  <p className="font-medium">My Fee</p>
                   <p className="text-sm text-gray-600">Your profit when assigning this contract to a buyer</p>
                 </div>
               </TooltipContent>
@@ -623,8 +623,8 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
                   sticky="always"
                 >
                   <div className="p-1 max-w-[220px]">
-                    <p className="font-medium">Highest offer: {formatCurrency(395000)}</p>
-                    <p className="text-sm text-gray-600">Received today from John Smith</p>
+                    <p className="font-medium">Highest Offer</p>
+                    <p className="text-sm text-gray-600">Highest offer of {formatCurrency(395000)} received today</p>
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -1199,8 +1199,9 @@ export default function ManagePage() {
             style={{ 
               paddingBottom: '0', 
               height: 'auto', 
-              marginBottom: '0' 
-            }} /* Removed height constraint to prevent scroll */
+              marginBottom: '0',
+              overflowY: 'hidden' /* Prevent vertical scrolling */
+            }}
           >
             {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
