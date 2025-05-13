@@ -55,13 +55,13 @@ export default function SellerDashboardLayout({
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-[#F5F5F5]">
       {/* Pill-style navigation - Sticky to top and transparent */}
-      <div className="sticky top-0 z-40 pt-4 pb-2 bg-transparent">
+      <div className="sticky top-0 z-40 pt-4 pb-2">
         <div className="container max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-center">
-            <div className="backdrop-blur-lg bg-white/10 shadow-lg border border-white/10 rounded-xl px-4 py-2 inline-flex">
-              <div className="bg-transparent p-1 flex-nowrap gap-2 overflow-x-auto flex">
+            <div className="shadow-lg border border-white/20 rounded-xl px-4 py-2 inline-flex">
+              <div className="p-1 flex-nowrap gap-2 overflow-x-auto flex">
                 {navItems.map((item) => {
                   const active = isActive(item.href, item.exact);
                   return (
@@ -86,7 +86,7 @@ export default function SellerDashboardLayout({
       </div>
 
       {/* Main content */}
-      <div className="flex-1 bg-[#F5F5F5]">
+      <div className="flex-1">
         <div className="container max-w-7xl mx-auto px-4 py-6">
           {children}
         </div>
