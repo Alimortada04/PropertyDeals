@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { useLocation } from "wouter";
+import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from "react";
+import { useLocation, Link } from "wouter";
 import { cn } from "@/lib/utils";
-import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home } from "lucide-react";
+import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home, Loader2 } from "lucide-react";
 import Navbar from "./navbar";
+import { useQueryClient } from '@tanstack/react-query';
 
 interface SellerDashboardLayoutProps {
   children: React.ReactNode;
@@ -15,36 +16,86 @@ export default function SellerDashboardLayout({
 }: SellerDashboardLayoutProps) {
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
-  // Toggle sidebar function to pass to Navbar
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [cachedPages, setCachedPages] = useState<{[key: string]: React.ReactNode}>({});
+  const pageTransitionRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
   
   // Define navigation items - Matching main dashboard
-  const navItems = [
+  // Define navigation items with their associated API queries for prefetching
+  const navItems = useMemo(() => [
     {
       label: "Discover",
       icon: Compass,
       href: `/sellerdash/${userId}`,
       exact: true, // Only match exact path
+      queries: ['/api/properties'],
     },
     {
       label: "Manage",
       icon: FileClock,
       href: `/sellerdash/${userId}/manage`,
+      queries: ['/api/properties'],
     },
     {
       label: "Engagement",
       icon: Users,
       href: `/sellerdash/${userId}/engagement`,
+      queries: ['/api/users', '/api/inquiries'],
     },
     {
       label: "Analytics",
       icon: BarChart3,
       href: `/sellerdash/${userId}/analytics`,
+      queries: ['/api/properties', '/api/analytics'],
     },
-  ];
+  ] as const, [userId]);
+
+  // Preload associated data for faster page transitions
+  useEffect(() => {
+    // For initial page load optimization
+    const timer = setTimeout(() => {
+      setIsInitialLoad(false);
+    }, 300);
+    
+    // Prefetch data for all nav sections
+    navItems.forEach(item => {
+      if (item.queries) {
+        item.queries.forEach(query => {
+          queryClient.prefetchQuery({
+            queryKey: [query],
+            staleTime: 1000 * 60 * 5 // 5 minutes
+          });
+        });
+      }
+    });
+    
+    return () => clearTimeout(timer);
+  }, [navItems, queryClient]);
+  
+  // Handle route transition animations
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (pageTransitionRef.current) {
+        // Add transition animation classes
+        pageTransitionRef.current.classList.add('opacity-100');
+        pageTransitionRef.current.classList.remove('opacity-0');
+      }
+    };
+    
+    handleRouteChange();
+    
+    // Cache the current page content
+    setCachedPages(prev => ({
+      ...prev,
+      [location]: children
+    }));
+  }, [location, children]);
+  
+  // Toggle sidebar function to pass to Navbar
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   // Check if a nav item is active
   const isActive = (href: string, exact = false) => {
@@ -52,6 +103,17 @@ export default function SellerDashboardLayout({
       return location === href;
     }
     return location.startsWith(href);
+  };
+  
+  // Prefetch on hover
+  const handleNavHover = (item: typeof navItems[0]) => {
+    if (item.queries) {
+      item.queries.forEach(query => {
+        queryClient.prefetchQuery({
+          queryKey: [query]
+        });
+      });
+    }
   };
 
   return (
@@ -65,9 +127,10 @@ export default function SellerDashboardLayout({
                 {navItems.map((item) => {
                   const active = isActive(item.href, item.exact);
                   return (
-                    <a
+                    <Link
                       key={item.href}
                       href={item.href}
+                      onMouseEnter={() => handleNavHover(item)}
                       className={cn(
                         "data-[active=true]:bg-[#09261E] data-[active=true]:text-white data-[active=true]:shadow-sm data-[active=true]:font-semibold data-[active=false]:bg-white/70 data-[active=false]:border data-[active=false]:border-neutral-200 data-[active=false]:text-gray-700 data-[active=false]:hover:bg-gray-100 rounded-full px-4 py-2 transition-all duration-200 ease-in-out scale-100 hover:scale-[1.02] relative flex items-center",
                       )}
@@ -76,7 +139,7 @@ export default function SellerDashboardLayout({
                       <item.icon className="w-4 h-4 mr-2" />
                       <span className="font-medium">{item.label}</span>
                       <div className={cn("absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full mb-0.5", active ? "bg-[#09261E]" : "hidden")}></div>
-                    </a>
+                    </Link>
                   );
                 })}
               </div>
@@ -85,11 +148,34 @@ export default function SellerDashboardLayout({
         </div>
       </div>
 
-      {/* Main content */}
+      {/* Main content with transition effects */}
       <div className="flex-1">
-        <div className="container max-w-7xl mx-auto px-4 py-6">
-          {children}
+        <div 
+          className="container max-w-7xl mx-auto px-4 py-6 transition-opacity duration-200 ease-out"
+          ref={pageTransitionRef}
+          style={{ opacity: isInitialLoad ? '0' : '1' }}
+        >
+          {/* Suspense fallback for smoother transitions */}
+          <Suspense fallback={
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          }>
+            {/* Show cached page content when available for instant transitions */}
+            {cachedPages[location] || children}
+          </Suspense>
         </div>
+      </div>
+      
+      {/* Preload other dashboard pages for instant navigation */}
+      <div className="hidden">
+        {Object.entries(cachedPages)
+          .filter(([path]) => path !== location)
+          .map(([path, content]) => (
+            <div key={path} aria-hidden="true">
+              {content}
+            </div>
+          ))}
       </div>
     </div>
   );
