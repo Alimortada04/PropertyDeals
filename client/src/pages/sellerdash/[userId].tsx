@@ -440,7 +440,7 @@ export default function SellerDashboardPage() {
                 </div>
                 <Button 
                   variant="outline" 
-                  className="w-full mt-4"
+                  className="w-full mt-4 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-colors"
                   onClick={() => setLocation(`/sellerdash/${userId}/calendar`)}
                 >
                   <Calendar className="h-4 w-4 mr-2" />
@@ -476,7 +476,7 @@ export default function SellerDashboardPage() {
                 </div>
                 <Button 
                   variant="outline" 
-                  className="w-full mt-4"
+                  className="w-full mt-4 hover:bg-purple-50 hover:border-purple-200 hover:text-purple-600 transition-colors"
                   onClick={() => setLocation(`/sellerdash/${userId}/documents`)}
                 >
                   <Plus className="h-4 w-4 mr-2" />
