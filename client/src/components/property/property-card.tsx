@@ -144,9 +144,27 @@ export function PropertyCard({
           <Badge variant="outline" className="bg-gray-50 font-normal">
             {formatNumber(sqft)} sqft
           </Badge>
-          <Badge variant="outline" className="bg-gray-50 font-normal">
-            ARV: {formatCurrency(arv)}
-          </Badge>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="outline" className="bg-gray-50 font-normal cursor-help">
+                  ARV: {formatCurrency(arv)}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent 
+                side="top" 
+                sideOffset={5}
+                align="center"
+                className="z-[100] shadow-lg bg-white border border-gray-200"
+                forceMount
+              >
+                <div className="p-2.5 min-w-[200px]">
+                  <p className="font-medium">After Repair Value</p>
+                  <p className="text-sm text-gray-600">Estimated value of the property after renovations</p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         
         {/* Property price */}
@@ -165,7 +183,7 @@ export function PropertyCard({
                 className="z-[100] shadow-lg bg-white border border-gray-200"
                 forceMount
               >
-                <div className="p-2">
+                <div className="p-2.5 min-w-[200px]">
                   <p className="font-medium">Listing Price</p>
                   <p className="text-sm text-gray-600">Current asking price for this property</p>
                 </div>

@@ -619,7 +619,7 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
                   className="z-[100] shadow-lg bg-white border border-gray-200"
                   forceMount
                 >
-                  <div className="p-2">
+                  <div className="p-2.5 min-w-[200px]">
                     <p className="font-medium">Highest Offer</p>
                     <p className="text-sm text-gray-600">Highest offer of {formatCurrency(395000)} received today</p>
                   </div>
