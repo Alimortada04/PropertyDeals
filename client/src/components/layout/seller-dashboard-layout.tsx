@@ -86,7 +86,7 @@ export default function SellerDashboardLayout({
       </div>
 
       {/* Main content */}
-      <div className="flex-1">
+      <div className="flex-1 bg-[#F5F5F5]">
         <div className="container max-w-7xl mx-auto px-4 py-6">
           {children}
         </div>
