@@ -861,17 +861,21 @@ export default function ManagePage() {
     setDraggedPropertyId(propertyId);
     setDraggedPropertyStatus(currentStatus);
     
-    // Make the drag image transparent
-    const dragImage = document.createElement('div');
-    dragImage.style.width = '1px';
-    dragImage.style.height = '1px';
-    document.body.appendChild(dragImage);
-    e.dataTransfer.setDragImage(dragImage, 0, 0);
+    // Use the actual card as the drag image for better visual feedback
+    const propertyCard = e.currentTarget as HTMLElement;
+    const rect = propertyCard.getBoundingClientRect();
+    
+    e.dataTransfer.setDragImage(propertyCard, rect.width / 2, 10);
     
     // Set data transfer
     e.dataTransfer.setData('property-id', propertyId);
     e.dataTransfer.setData('drag-type', 'property');
     e.dataTransfer.effectAllowed = 'move';
+    
+    // Add opacity to the card being dragged
+    setTimeout(() => {
+      propertyCard.style.opacity = '0.6';
+    }, 0);
   };
   
   // Handle drag start for columns
@@ -934,6 +938,11 @@ export default function ManagePage() {
     
     if (dragType === 'property') {
       const propertyId = e.dataTransfer.getData('property-id');
+      
+      // Reset opacity of the dragged card
+      document.querySelectorAll('.property-card').forEach(card => {
+        (card as HTMLElement).style.opacity = '1';
+      });
       
       if (draggedPropertyId && draggedPropertyStatus) {
         // Convert columnId to status label
@@ -1148,9 +1157,13 @@ export default function ManagePage() {
         {/* Kanban board view */}
         {viewMode === 'kanban' && (
           <div 
-            className="flex space-x-5 overflow-x-auto -mx-6 px-6" 
+            className="flex space-x-5 overflow-x-auto -mx-6 px-6 no-scrollbar" 
             ref={columnsRef}
-            style={{ paddingBottom: '0', height: 'auto', maxHeight: 'calc(100vh - 200px)', marginBottom: '20px' }} /* Fixed: No scroll in container, only in columns */
+            style={{ 
+              paddingBottom: '0', 
+              height: 'auto', 
+              marginBottom: '0' 
+            }} /* Removed height constraint to prevent scroll */
           >
             {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
@@ -1168,10 +1181,10 @@ export default function ManagePage() {
                     boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08)',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 'calc(100vh - 210px)',
+                    height: 'calc(100vh - 220px)',
                     minHeight: '500px',
-                    maxHeight: 'calc(100vh - 210px)',
-                    marginBottom: '20px'
+                    marginBottom: '10px',
+                    overflowY: 'hidden'
                   }}
                 >
                   {/* Column header - sticky */}
@@ -1308,12 +1321,11 @@ export default function ManagePage() {
                   
                   {/* Column content area - scrollable */}
                   <div 
-                    className="p-3 overflow-y-auto flex-1"
+                    className="p-3 overflow-y-auto flex-1 no-scrollbar"
                     style={{ 
-                      height: 'calc(100% - 90px)',
-                      scrollbarWidth: 'thin',
-                      scrollbarColor: '#e5e7eb #ffffff',
-                      borderRadius: '0 0 12px 12px'
+                      height: 'calc(100% - 85px)',
+                      borderRadius: '0 0 12px 12px',
+                      paddingBottom: '10px'
                     }}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handlePropertyDrop(e, column.id)}
@@ -1443,18 +1455,18 @@ export default function ManagePage() {
         </DropdownMenu>
       </div>
       
-      {/* Drag indicators */}
+      {/* Drag indicators - more subtle and less intrusive */}
       {isDragging && (
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none bg-[#135341]/90 text-white px-4 py-2 rounded-lg shadow-lg animate-pulse flex items-center">
-          <Loader2 className="animate-spin h-4 w-4 mr-2" />
-          Moving property...
+        <div className="fixed bottom-10 right-10 z-50 pointer-events-none bg-white/90 backdrop-blur-sm text-[#135341] px-3 py-1.5 rounded-lg shadow-md flex items-center border border-[#135341]/20 transition-opacity">
+          <Loader2 className="animate-spin h-3.5 w-3.5 mr-2 text-[#135341]/70" />
+          <span className="text-sm font-medium">Moving property</span>
         </div>
       )}
       
       {isDraggingColumn && (
-        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none bg-[#135341]/90 text-white px-4 py-2 rounded-lg shadow-lg animate-pulse flex items-center">
-          <Loader2 className="animate-spin h-4 w-4 mr-2" />
-          Reordering columns...
+        <div className="fixed bottom-10 right-10 z-50 pointer-events-none bg-white/90 backdrop-blur-sm text-[#135341] px-3 py-1.5 rounded-lg shadow-md flex items-center border border-[#135341]/20 transition-opacity">
+          <Loader2 className="animate-spin h-3.5 w-3.5 mr-2 text-[#135341]/70" />
+          <span className="text-sm font-medium">Reordering column</span>
         </div>
       )}
       
