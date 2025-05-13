@@ -18,6 +18,7 @@ import {
   MoreHorizontal, 
   FileText,
   AlertCircle,
+  File,
   CheckCircle,
   Eye,
   Globe,
@@ -405,7 +406,7 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="top" 
+                  side="right" 
                   sideOffset={5}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
@@ -437,13 +438,12 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="bottom-start" 
-                  sideOffset={5} 
-                  align="start"
-                  alignOffset={-20}
+                  side="left" 
+                  sideOffset={5}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
-                  collisionPadding={20}
+                  collisionPadding={5}
+                  sticky="always"
                 >
                   <div className="p-1 max-w-[220px]">
                     <p className="font-medium">{property.priority} Priority Deal</p>
@@ -466,7 +466,7 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="bg-white rounded-full p-1.5 shadow-md hover:scale-110 transition-transform">
-                    <Paperclip className="h-4 w-4 text-purple-600" />
+                    <FileText className="h-4 w-4 text-purple-600" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
