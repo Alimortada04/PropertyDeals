@@ -1492,8 +1492,11 @@ export default function ManagePage() {
         </SheetContent>
       </Sheet>
       
-      {/* Property add/edit modal would be included here */}
-      {/* For now, we're just using the state to track when it should be open */}
+      {/* Enhanced Property Listing Modal */}
+      <EnhancedPropertyListingModal
+        isOpen={isAddPropertyModalOpen}
+        onClose={() => setIsAddPropertyModalOpen(false)}
+      />
     </SellerDashboardLayout>
   );
 }
