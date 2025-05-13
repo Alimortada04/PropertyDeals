@@ -367,7 +367,7 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
   
   return (
     <Card 
-      className="overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.01] bg-white border border-gray-200 cursor-pointer mb-3"
+      className="overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.01] bg-white border border-gray-200 cursor-pointer mb-2"
       onClick={handleCardClick}
       draggable={true}
       onDragStart={(e) => onDragStart(e, property.id, property.status)}
@@ -378,8 +378,8 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
         {/* Property image */}
         <img 
           src={property.thumbnail} 
-          alt={property.title}
-          className="w-full h-48 object-cover" 
+          alt={property.address}
+          className="w-full h-40 object-cover" 
           onError={(e) => {
             (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/e2e8f0/1e293b?text=Property+Image';
           }}
@@ -466,11 +466,13 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                 <TooltipContent 
                   side="left" 
                   sideOffset={5} 
-                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
+                  collisionPadding={20}
+                  forceMount
                 >
-                  <div className="flex items-center gap-1.5">
-                    <Paperclip className="h-4 w-4 text-purple-600" />
+                  <div className="flex items-center gap-1.5 max-w-[220px]">
+                    <Paperclip className="h-4 w-4 text-purple-600 flex-shrink-0" />
                     <p className="font-medium">Purchase Agreement uploaded</p>
                   </div>
                 </TooltipContent>
@@ -492,11 +494,13 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                 <TooltipContent 
                   side="right" 
                   sideOffset={5} 
-                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
+                  collisionPadding={20}
+                  forceMount
                 >
-                  <div className="flex items-center gap-1.5">
-                    <MessageCircle className="h-4 w-4 text-blue-600" />
+                  <div className="flex items-center gap-1.5 max-w-[220px]">
+                    <MessageCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
                     <p className="font-medium">2 new messages from potential buyers</p>
                   </div>
                 </TooltipContent>
@@ -569,7 +573,6 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   avoidCollisions={true}
                   collisionPadding={20}
                   forceMount
-                  portalled
                 >
                   <div className="p-1 max-w-[220px]">
                     <p className="font-medium">Highest offer: {formatCurrency(395000)}</p>
@@ -1102,7 +1105,7 @@ export default function ManagePage() {
           <div 
             className="flex space-x-5 overflow-x-auto pb-6 -mx-6 px-6 overflow-visible" 
             ref={columnsRef}
-            style={{ paddingBottom: '100px' }} /* Extra padding to prevent cut-off tooltips */
+            style={{ paddingBottom: '150px', height: 'calc(100vh - 200px)' }} /* Increased height and padding for better visibility */
           >
             {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
@@ -1116,7 +1119,12 @@ export default function ManagePage() {
                   onDragStart={(e) => handleColumnDragStart(e, column.id)}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleColumnDrop(e, column.id)}
-                  style={{ overflow: 'visible' }} /* Ensure tooltips can overflow */
+                  style={{ 
+                    overflow: 'visible', 
+                    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    display: 'flex',
+                    flexDirection: 'column'
+                  }}
                 >
                   {/* Column header - sticky */}
                   <div className="sticky top-0 bg-white z-20 p-3 border-b border-gray-100">
@@ -1253,11 +1261,16 @@ export default function ManagePage() {
                   {/* Column content area - scrollable */}
                   <div 
                     className="p-3 overflow-y-auto"
-                    style={{ maxHeight: 'calc(100% - 80px)' }}
+                    style={{ 
+                      height: 'calc(100vh - 280px)',
+                      minHeight: '500px',
+                      scrollbarWidth: 'thin',
+                      scrollbarColor: '#e5e7eb #ffffff'
+                    }}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handlePropertyDrop(e, column.id)}
                   >
-                    <div className="space-y-4 min-h-[50px]">
+                    <div className="space-y-3 min-h-[50px]">
                       {/* If column is empty */}
                       {(!propertiesByStatus[column.id] || propertiesByStatus[column.id].length === 0) && (
                         column.id === 'listed' 
