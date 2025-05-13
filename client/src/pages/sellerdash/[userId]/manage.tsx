@@ -405,8 +405,10 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="bottom" 
-                  sideOffset={5} 
+                  side="bottom-end" 
+                  sideOffset={5}
+                  align="end" 
+                  alignOffset={20}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
@@ -469,8 +471,10 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="left" 
-                  sideOffset={5} 
+                  side="bottom-end" 
+                  sideOffset={5}
+                  align="end"
+                  alignOffset={-10}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
@@ -496,8 +500,10 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="right" 
-                  sideOffset={5} 
+                  side="bottom-start" 
+                  sideOffset={5}
+                  align="start"
+                  alignOffset={10}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
@@ -569,8 +575,10 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="top" 
-                  sideOffset={5} 
+                  side="bottom-end" 
+                  sideOffset={5}
+                  align="end"
+                  alignOffset={20}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
