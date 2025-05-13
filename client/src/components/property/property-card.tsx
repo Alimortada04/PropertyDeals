@@ -178,10 +178,10 @@ export function PropertyCard({
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="w-full text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-0 transition-all group relative overflow-hidden"
+                className="w-full text-gray-700 hover:bg-gray-100 focus:ring-0 transition-all group relative overflow-hidden"
               >
-                <MoreHorizontal className="h-4 w-4 mr-1 group-hover:rotate-90 transition-transform duration-300" />
-                <span className="relative z-10">Actions</span>
+                <MoreHorizontal className="h-4 w-4 mr-1 text-gray-700 group-hover:rotate-90 transition-transform duration-300" />
+                <span className="relative z-10 text-gray-700">Actions</span>
                 <span className="absolute inset-0 bg-gray-100 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300"></span>
               </Button>
             </DropdownMenuTrigger>

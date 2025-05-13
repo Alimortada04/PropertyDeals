@@ -57,10 +57,10 @@ export default function SellerDashboardLayout({
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F5]">
       {/* Pill-style navigation - Sticky to top and transparent */}
-      <div className="sticky top-0 z-40 pt-4 pb-2">
+      <div className="sticky top-0 z-40 pt-4 pb-2 backdrop-blur-md">
         <div className="container max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-center">
-            <div className="shadow-lg border border-white/20 rounded-xl px-4 py-2 inline-flex">
+            <div className="backdrop-blur-lg shadow-lg border border-white/20 rounded-xl px-4 py-2 inline-flex">
               <div className="p-1 flex-nowrap gap-2 overflow-x-auto flex">
                 {navItems.map((item) => {
                   const active = isActive(item.href, item.exact);
