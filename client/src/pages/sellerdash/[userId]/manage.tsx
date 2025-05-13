@@ -1104,9 +1104,9 @@ export default function ManagePage() {
         {/* Kanban board view */}
         {viewMode === 'kanban' && (
           <div 
-            className="flex space-x-5 overflow-x-auto pb-6 -mx-6 px-6" 
+            className="flex space-x-5 overflow-x-auto pb-4 -mx-6 px-6" 
             ref={columnsRef}
-            style={{ paddingBottom: '200px', height: 'calc(100vh - 140px)' }} /* Increased height and padding for better visibility */
+            style={{ paddingBottom: '0', height: 'calc(100vh - 180px)' }} /* Adjusted to fit just above bottom bar */
           >
             {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
@@ -1124,8 +1124,8 @@ export default function ManagePage() {
                     boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08)',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 'calc(100vh - 150px)',
-                    minHeight: '700px'
+                    height: 'calc(100vh - 190px)',
+                    maxHeight: '100%'
                   }}
                 >
                   {/* Column header - sticky */}
@@ -1264,7 +1264,7 @@ export default function ManagePage() {
                   <div 
                     className="p-3 overflow-y-auto flex-1"
                     style={{ 
-                      minHeight: '650px',
+                      height: 'calc(100% - 90px)',
                       scrollbarWidth: 'thin',
                       scrollbarColor: '#e5e7eb #ffffff',
                       borderRadius: '0 0 12px 12px'
