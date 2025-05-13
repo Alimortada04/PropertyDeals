@@ -387,15 +387,15 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
         
         {/* Top badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          <Badge className={`px-3 py-1 font-medium ${getStatusBadgeClass(property.status)}`}>
+          <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${getStatusBadgeClass(property.status)}`}>
             {property.status}
-          </Badge>
+          </span>
           
           {property.newOffer && (
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger>
-                  <div className="bg-blue-500 text-white px-3 py-1 font-medium cursor-help rounded-full text-xs">
+                  <div className="bg-blue-500 hover:bg-blue-500 text-white px-3 py-1 font-medium cursor-help rounded-full text-xs shadow-sm">
                     New Offer
                   </div>
                 </TooltipTrigger>
@@ -420,7 +420,12 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
             <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger>
-                  <div className={`px-3 py-1 font-medium rounded-full text-xs ${getPriorityBadgeClass(property.priority)} cursor-help`}>
+                  <div className={`px-3 py-1 font-medium rounded-full text-xs ${getPriorityBadgeClass(property.priority)} cursor-help shadow-sm`}
+                       style={{ 
+                         transition: 'none',
+                         transform: 'none'
+                       }}
+                  >
                     {property.priority}
                   </div>
                 </TooltipTrigger>
@@ -536,33 +541,48 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
           </TooltipProvider>
         </div>
         
-        {/* Property specs */}
-        <div className="flex flex-wrap gap-2 mb-3">
-          <Badge variant="outline" className="bg-gray-50 font-normal">
-            {property.beds} bed
+        {/* Financial info - styled as pills */}
+        <div className="flex flex-wrap gap-2 mb-4 mt-2">
+          {/* Listing Price - black rounded pill */}
+          <Badge className="bg-gray-800 hover:bg-gray-800 text-white px-3 py-1.5 rounded-full font-medium">
+            Listed: {formatCurrency(property.listPrice)}
           </Badge>
-          <Badge variant="outline" className="bg-gray-50 font-normal">
-            {property.baths} bath
+          
+          {/* Assignment Profit - green rounded pill */}
+          <Badge className="bg-green-100 text-green-800 hover:bg-green-100 px-3 py-1.5 rounded-full font-medium">
+            Profit: {formatCurrency(property.assignmentProfit)}
           </Badge>
-          <Badge variant="outline" className="bg-gray-50 font-normal">
-            {formatNumber(property.sqft)} sqft
-          </Badge>
-        </div>
-        
-        {/* Financial info */}
-        <div className="grid grid-cols-3 gap-2 mb-3 text-sm">
-          <div>
-            <div className="text-gray-500">List Price</div>
-            <div className="font-semibold">{formatCurrency(property.listPrice)}</div>
-          </div>
-          <div>
-            <div className="text-gray-500">Purchase</div>
-            <div className="font-semibold">{formatCurrency(property.purchasePrice)}</div>
-          </div>
-          <div>
-            <div className="text-gray-500">Profit</div>
-            <div className="font-semibold text-green-600">{formatCurrency(property.assignmentProfit)}</div>
-          </div>
+          
+          {/* Highest Offer - blue pill with tooltip - only if there are offers */}
+          {property.offers > 0 && (
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Badge 
+                    className="bg-blue-100 text-blue-800 hover:bg-blue-100 px-3 py-1.5 rounded-full font-medium cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setLocation(`/sellerdash/${userId}/property/${property.id}?tab=offers`);
+                    }}
+                  >
+                    Best Offer: {formatCurrency(395000)}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent 
+                  side="top" 
+                  sideOffset={5} 
+                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  avoidCollisions={true}
+                  collisionPadding={20}
+                >
+                  <div className="p-1">
+                    <p className="font-medium">Highest offer received today from John Smith</p>
+                    <p className="text-sm text-gray-600">Click to view in Roadmap</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       </CardContent>
       
@@ -1084,8 +1104,9 @@ export default function ManagePage() {
         {/* Kanban board view */}
         {viewMode === 'kanban' && (
           <div 
-            className="flex space-x-4 overflow-x-auto pb-6 -mx-6 px-6" 
+            className="flex space-x-5 overflow-x-auto pb-6 -mx-6 px-6 overflow-visible" 
             ref={columnsRef}
+            style={{ paddingBottom: '100px' }} /* Extra padding to prevent cut-off tooltips */
           >
             {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
@@ -1093,12 +1114,13 @@ export default function ManagePage() {
               return (
                 <div 
                   key={column.id} 
-                  className={`flex-none w-[320px] bg-white rounded-xl border ${column.color} border-l-4 shadow-sm overflow-visible`}
+                  className={`flex-none w-[350px] bg-white rounded-xl border ${column.color} border-l-4 shadow-sm overflow-visible h-full`}
                   data-column-id={column.id}
                   draggable={column.canReorder}
                   onDragStart={(e) => handleColumnDragStart(e, column.id)}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleColumnDrop(e, column.id)}
+                  style={{ overflow: 'visible' }} /* Ensure tooltips can overflow */
                 >
                   {/* Column header - sticky */}
                   <div className="sticky top-0 bg-white z-20 p-3 border-b border-gray-100">
@@ -1112,8 +1134,17 @@ export default function ManagePage() {
                                   <GripVertical className="h-4 w-4 text-gray-400" />
                                 </div>
                               </TooltipTrigger>
-                              <TooltipContent side="top" sideOffset={5} className="z-[100]">
-                                <p>Drag to reorder column</p>
+                              <TooltipContent 
+                                side="top" 
+                                sideOffset={5} 
+                                className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                                avoidCollisions={true}
+                                collisionPadding={20}
+                              >
+                                <div className="flex items-center gap-1.5">
+                                  <GripVertical className="h-4 w-4 text-gray-500" />
+                                  <p className="font-medium">Drag to reorder column</p>
+                                </div>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -1194,8 +1225,17 @@ export default function ManagePage() {
                                   <X className="h-3.5 w-3.5" />
                                 </Button>
                               </TooltipTrigger>
-                              <TooltipContent side="top" sideOffset={5} className="z-[100]">
-                                <p>Delete column</p>
+                              <TooltipContent 
+                                side="top" 
+                                sideOffset={5} 
+                                className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                                avoidCollisions={true}
+                                collisionPadding={20}
+                              >
+                                <div className="flex items-center gap-1.5">
+                                  <X className="h-4 w-4 text-red-500" />
+                                  <p className="font-medium">Delete column</p>
+                                </div>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
