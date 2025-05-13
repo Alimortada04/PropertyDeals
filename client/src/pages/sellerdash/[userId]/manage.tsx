@@ -405,13 +405,12 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="bottom-end" 
+                  side="top" 
                   sideOffset={5}
-                  align="end" 
-                  alignOffset={20}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
-                  collisionPadding={20}
+                  collisionPadding={5}
+                  sticky="always"
                 >
                   <div className="p-1 max-w-[220px]">
                     <p className="font-medium">New offer received today</p>
@@ -471,13 +470,12 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="bottom-end" 
+                  side="left" 
                   sideOffset={5}
-                  align="end"
-                  alignOffset={-10}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
-                  collisionPadding={20}
+                  collisionPadding={5}
+                  sticky="always"
                 >
                   <div className="flex items-center gap-1.5 max-w-[220px]">
                     <Paperclip className="h-4 w-4 text-purple-600 flex-shrink-0" />
@@ -550,14 +548,52 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
         {/* Compact financial info - horizontal layout */}
         <div className="flex items-center gap-1.5 mb-2">
           {/* Listing Price - black compact badge */}
-          <Badge className="bg-gray-800 hover:bg-gray-800 text-white px-2 py-1 text-xs font-medium">
-            {formatCurrency(property.listPrice)}
-          </Badge>
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge className="bg-gray-800 hover:bg-gray-800 text-white px-2 py-1 text-xs font-medium cursor-help">
+                  {formatCurrency(property.listPrice)}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent 
+                side="top" 
+                sideOffset={5}
+                className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                avoidCollisions={true}
+                collisionPadding={5}
+                sticky="always"
+              >
+                <div className="p-1 max-w-[180px]">
+                  <p className="font-medium">Listing Price</p>
+                  <p className="text-sm text-gray-600">Current asking price for this property</p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           
           {/* Assignment Profit - green compact badge */}
-          <Badge className="bg-green-100 text-green-800 hover:bg-green-100 px-2 py-1 text-xs font-medium">
-            +{formatCurrency(property.assignmentProfit)}
-          </Badge>
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge className="bg-green-100 text-green-800 hover:bg-green-100 px-2 py-1 text-xs font-medium cursor-help">
+                  +{formatCurrency(property.assignmentProfit)}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent 
+                side="top" 
+                sideOffset={5}
+                className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                avoidCollisions={true}
+                collisionPadding={5}
+                sticky="always"
+              >
+                <div className="p-1 max-w-[180px]">
+                  <p className="font-medium">Assignment Fee</p>
+                  <p className="text-sm text-gray-600">Your profit when assigning this contract to a buyer</p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           
           {/* Highest Offer - blue badge with tooltip - only if there are offers */}
           {property.offers > 0 && (
@@ -575,13 +611,12 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="bottom-end" 
+                  side="top" 
                   sideOffset={5}
-                  align="end"
-                  alignOffset={20}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
-                  collisionPadding={20}
+                  collisionPadding={5}
+                  sticky="always"
                 >
                   <div className="p-1 max-w-[220px]">
                     <p className="font-medium">Highest offer: {formatCurrency(395000)}</p>
