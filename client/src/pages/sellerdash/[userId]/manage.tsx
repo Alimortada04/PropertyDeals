@@ -31,7 +31,8 @@ import {
   GripVertical,
   ArrowUpDown,
   X,
-  Pencil
+  Pencil,
+  MapPin
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Toast, ToastAction } from '@/components/ui/toast';
@@ -391,32 +392,78 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
           </Badge>
           
           {property.newOffer && (
-            <Badge className="bg-blue-500 text-white px-3 py-1 font-medium">
-              New Offer
-            </Badge>
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className="bg-blue-500 text-white px-3 py-1 font-medium cursor-help rounded-full text-xs">
+                    New Offer
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent 
+                  side="bottom" 
+                  sideOffset={5} 
+                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  avoidCollisions={true}
+                >
+                  <div className="p-1">
+                    <p className="font-medium">New offer received today</p>
+                    <p className="text-sm text-gray-600">$395,000 from John Smith</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
         </div>
         
         <div className="absolute top-3 right-3">
           {property.priority && (
-            <Badge className={`px-3 py-1 font-medium ${getPriorityBadgeClass(property.priority)}`}>
-              {property.priority}
-            </Badge>
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger>
+                  <div className={`px-3 py-1 font-medium rounded-full text-xs ${getPriorityBadgeClass(property.priority)} cursor-help`}>
+                    {property.priority}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent 
+                  side="bottom" 
+                  sideOffset={5} 
+                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  avoidCollisions={true}
+                >
+                  <div className="p-1">
+                    <p className="font-medium">{property.priority} Priority Deal</p>
+                    <p className="text-sm text-gray-600">
+                      {property.priority === 'High' && 'Close within 30 days'}
+                      {property.priority === 'Medium' && 'Target for this quarter'}
+                      {property.priority === 'Low' && 'No timeline pressure'}
+                    </p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
         </div>
         
         {/* Document indicator */}
         {property.hasPADocument && (
           <div className="absolute bottom-3 right-3">
-            <TooltipProvider>
+            <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="bg-white rounded-full p-1.5 shadow-md">
+                  <div className="bg-white rounded-full p-1.5 shadow-md hover:scale-110 transition-transform">
                     <Paperclip className="h-4 w-4 text-purple-600" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="left">
-                  <p>Purchase Agreement uploaded</p>
+                <TooltipContent 
+                  side="left" 
+                  sideOffset={5} 
+                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  avoidCollisions={true}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <Paperclip className="h-4 w-4 text-purple-600" />
+                    <p className="font-medium">Purchase Agreement uploaded</p>
+                  </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -426,15 +473,23 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
         {/* New message indicator */}
         {property.hasNewMessage && (
           <div className="absolute bottom-3 left-3">
-            <TooltipProvider>
+            <TooltipProvider delayDuration={200}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div className="bg-blue-500 rounded-full p-1.5 shadow-md">
+                  <div className="bg-blue-500 rounded-full p-1.5 shadow-md hover:scale-110 transition-transform cursor-pointer animate-pulse">
                     <MessageCircle className="h-4 w-4 text-white" />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent side="right">
-                  <p>New message</p>
+                <TooltipContent 
+                  side="right" 
+                  sideOffset={5} 
+                  className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                  avoidCollisions={true}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <MessageCircle className="h-4 w-4 text-blue-600" />
+                    <p className="font-medium">2 new messages from potential buyers</p>
+                  </div>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -443,10 +498,42 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
       </div>
       
       <CardContent className="pt-4">
-        {/* Property title and address */}
+        {/* Property title and address - with tooltips for truncated text */}
         <div className="mb-3">
-          <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{property.title}</h3>
-          <p className="text-sm text-gray-600 line-clamp-1">{property.address}</p>
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <h3 className="text-lg font-bold text-gray-900 line-clamp-1 cursor-default">{property.title}</h3>
+              </TooltipTrigger>
+              <TooltipContent 
+                side="top" 
+                sideOffset={5} 
+                className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
+                avoidCollisions={true}
+              >
+                <p>{property.title}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <p className="text-sm text-gray-600 line-clamp-1 cursor-default">{property.address}</p>
+              </TooltipTrigger>
+              <TooltipContent 
+                side="top" 
+                sideOffset={5} 
+                className="z-[100] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200 max-w-sm"
+                avoidCollisions={true}
+              >
+                <div className="flex items-start gap-2">
+                  <MapPin className="h-4 w-4 text-gray-500 mt-0.5 flex-shrink-0" />
+                  <p>{property.address}</p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
         
         {/* Property specs */}
@@ -506,47 +593,49 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="w-full text-gray-700 hover:bg-gray-100 focus:ring-0 transition-all group relative overflow-hidden"
+                className="w-full text-gray-600 bg-white hover:bg-gray-100 focus:ring-0 transition-all group border border-gray-200"
               >
-                <div className="flex items-center relative z-20">
-                  <MoreHorizontal className="h-4 w-4 mr-1 text-gray-700 group-hover:rotate-90 transition-transform duration-300" />
-                  <span className="text-gray-700">Actions</span>
+                <div className="flex items-center justify-center">
+                  <MoreHorizontal className="h-4 w-4 mr-1.5 group-hover:text-gray-900 transition-colors" />
+                  <span className="group-hover:text-gray-900 transition-colors font-medium">Actions</span>
                 </div>
-                <span className="absolute inset-0 bg-gray-100 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 z-10"></span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="min-w-[180px]">
+            <DropdownMenuContent 
+              align="start" 
+              className="min-w-[200px] p-1 border border-gray-200 shadow-lg bg-white/95 backdrop-blur-sm"
+            >
               <DropdownMenuItem 
                 onClick={(e) => e.stopPropagation()}
-                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+                className="px-3 py-2 rounded-md hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
               >
                 <Eye className="h-4 w-4 mr-2" />
                 Preview
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={(e) => e.stopPropagation()}
-                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+                className="px-3 py-2 rounded-md hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
               >
                 <Share className="h-4 w-4 mr-2" />
                 Share
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={(e) => e.stopPropagation()}
-                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+                className="px-3 py-2 rounded-md hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
               >
                 <FileText className="h-4 w-4 mr-2" />
                 View Pipeline
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={(e) => e.stopPropagation()}
-                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+                className="px-3 py-2 rounded-md hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
               >
                 <ExternalLink className="h-4 w-4 mr-2" />
                 Manage
               </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={(e) => e.stopPropagation()}
-                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+                className="px-3 py-2 rounded-md hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
               >
                 <Edit className="h-4 w-4 mr-2" />
                 Edit
@@ -558,13 +647,13 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
           <Button 
             variant="outline" 
             size="sm" 
-            className="w-full text-[#803344] border-[#803344] bg-white hover:bg-[#803344] hover:text-white transition-colors"
+            className="w-full text-[#803344] border border-gray-200 bg-white hover:bg-[#803344]/10 hover:border-[#803344]/30 hover:text-[#803344] transition-colors font-medium"
             onClick={(e) => {
               e.stopPropagation();
               setLocation(`/sellerdash/${userId}/property/${property.id}?tab=marketing`);
             }}
           >
-            <Globe className="h-4 w-4 mr-1" />
+            <Globe className="h-4 w-4 mr-1.5" />
             Market
           </Button>
           
@@ -572,7 +661,7 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
           <Button 
             variant="default" 
             size="sm" 
-            className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
+            className="w-full bg-[#135341]/90 hover:bg-[#135341] text-white font-medium shadow-sm"
             onClick={(e) => {
               e.stopPropagation();
               setLocation(`/sellerdash/${userId}/property/${property.id}?tab=offers`);
