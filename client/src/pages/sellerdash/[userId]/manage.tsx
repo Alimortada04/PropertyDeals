@@ -499,10 +499,10 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="top" 
+                  side="right" 
                   sideOffset={5}
-                  align="end"
-                  alignOffset={-5}
+                  align="start"
+                  alignOffset={0}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={10}
@@ -1148,9 +1148,9 @@ export default function ManagePage() {
         {/* Kanban board view */}
         {viewMode === 'kanban' && (
           <div 
-            className="flex space-x-5 overflow-x-auto pb-4 -mx-6 px-6" 
+            className="flex space-x-5 overflow-x-auto -mx-6 px-6" 
             ref={columnsRef}
-            style={{ paddingBottom: '0', height: 'calc(100vh - 200px)', marginBottom: '20px' }} /* Adjusted to fit just above bottom bar */
+            style={{ paddingBottom: '0', height: 'auto', maxHeight: 'calc(100vh - 200px)', marginBottom: '20px' }} /* Fixed: No scroll in container, only in columns */
           >
             {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
@@ -1169,7 +1169,8 @@ export default function ManagePage() {
                     display: 'flex',
                     flexDirection: 'column',
                     height: 'calc(100vh - 210px)',
-                    maxHeight: '100%',
+                    minHeight: '500px',
+                    maxHeight: 'calc(100vh - 210px)',
                     marginBottom: '20px'
                   }}
                 >
