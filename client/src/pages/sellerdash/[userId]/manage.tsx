@@ -369,7 +369,7 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
   
   return (
     <Card 
-      className="overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.01] bg-white border border-gray-200 cursor-pointer mb-2"
+      className="property-card overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.01] bg-white border border-gray-200 cursor-pointer mb-2"
       onClick={handleCardClick}
       draggable={true}
       onDragStart={(e) => onDragStart(e, property.id, property.status)}
@@ -378,7 +378,8 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
       style={{ 
         maxWidth: "100%", 
         width: "100%",
-        position: "relative"
+        position: "relative",
+        transition: "opacity 0.2s ease"
       }}
     >
       <div className="relative">
@@ -971,6 +972,10 @@ export default function ManagePage() {
       }
       return p;
     });
+    
+    // When connected to backend, this is where we'll make the API call to update status
+    // TODO: Add API call to update property status, e.g.:
+    // await apiRequest('PATCH', `/api/properties/${propertyId}`, { status: newStatus });
     
     // Update state
     setProperties(updatedProperties);
