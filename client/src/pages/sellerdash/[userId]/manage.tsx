@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
 import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -27,11 +27,27 @@ import {
   Paperclip,
   MessageCircle,
   MailCheck,
-  Loader2
+  Loader2,
+  GripVertical,
+  ArrowUpDown,
+  X,
+  Pencil
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Toast, ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle
+} from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 // Mock property data for visualization
 const MOCK_PROPERTIES = [
@@ -208,41 +224,69 @@ const MOCK_PROPERTIES = [
 ];
 
 // Kanban columns definition with descriptions
-const COLUMNS = [
+const INITIAL_COLUMNS = [
   { 
     id: 'drafts', 
     label: 'Drafts', 
-    description: 'Incomplete listings' 
+    description: 'Incomplete listings',
+    color: 'border-l-gray-300',
+    canRename: false,
+    canDelete: false,
+    canReorder: true
   },
   { 
     id: 'listed', 
     label: 'Listed', 
-    description: 'Active on market' 
+    description: 'Active on market',
+    color: 'border-l-green-500',
+    canRename: false,
+    canDelete: false,
+    canReorder: true
   },
   { 
     id: 'offerMade', 
     label: 'Offer Made', 
-    description: 'In negotiation' 
+    description: 'In negotiation',
+    color: 'border-l-blue-500',
+    canRename: false,
+    canDelete: false,
+    canReorder: true
   },
   { 
     id: 'offerAccepted', 
     label: 'Offer Accepted', 
-    description: 'Moving to closing' 
+    description: 'Moving to closing',
+    color: 'border-l-purple-500',
+    canRename: false,
+    canDelete: false,
+    canReorder: true
   },
   { 
     id: 'closePending', 
     label: 'Close Pending', 
-    description: 'Final paperwork' 
+    description: 'Final paperwork',
+    color: 'border-l-orange-500',
+    canRename: false,
+    canDelete: false,
+    canReorder: true
   },
   { 
     id: 'closed', 
     label: 'Closed', 
-    description: 'Deal completed' 
+    description: 'Deal completed',
+    color: 'border-l-gray-500',
+    canRename: false,
+    canDelete: false,
+    canReorder: true
   },
   { 
     id: 'dropped', 
     label: 'Dropped', 
-    description: 'No longer active' 
+    description: 'No longer active',
+    color: 'border-l-red-500',
+    canRename: false,
+    canDelete: false,
+    canReorder: true
   }
 ];
 
@@ -578,16 +622,59 @@ export default function ManagePage() {
   const [viewMode, setViewMode] = useState<'kanban' | 'grid' | 'sheet'>('kanban');
   const [, setLocation] = useLocation();
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
+  const [isAddColumnOpen, setIsAddColumnOpen] = useState(false);
+  const [newColumnName, setNewColumnName] = useState('');
+  const [editColumnId, setEditColumnId] = useState<string | null>(null);
+  const [editColumnName, setEditColumnName] = useState('');
+  
+  // Drag state
   const [isDragging, setIsDragging] = useState(false);
+  const [isDraggingColumn, setIsDraggingColumn] = useState(false);
   const [draggedPropertyId, setDraggedPropertyId] = useState<string | null>(null);
   const [draggedPropertyStatus, setDraggedPropertyStatus] = useState<string | null>(null);
+  const [draggedColumnId, setDraggedColumnId] = useState<string | null>(null);
+  
+  // Data state
   const [properties, setProperties] = useState(MOCK_PROPERTIES);
+  const [columns, setColumns] = useState(INITIAL_COLUMNS);
+  
+  // Tooltips
+  const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
+  
+  // Page ref for constraint measurements
+  const pageRef = useRef<HTMLDivElement>(null);
+  const columnsRef = useRef<HTMLDivElement>(null);
+  
+  // Toast
   const { toast } = useToast();
+  
+  // Adjust the container height for vertical scrolling
+  useEffect(() => {
+    const adjustHeight = () => {
+      if (pageRef.current && columnsRef.current) {
+        const viewportHeight = window.innerHeight;
+        const pageTop = pageRef.current.getBoundingClientRect().top;
+        // Allow space for bottom margin and floating button
+        const bottomSpace = 100;
+        
+        // Set the height for the columns container
+        const availableHeight = viewportHeight - pageTop - bottomSpace;
+        columnsRef.current.style.height = `${availableHeight}px`;
+      }
+    };
+    
+    adjustHeight();
+    window.addEventListener('resize', adjustHeight);
+    
+    return () => {
+      window.removeEventListener('resize', adjustHeight);
+    };
+  }, []);
   
   // Group properties by status for Kanban view
   const propertiesByStatus = properties.reduce((acc, property) => {
     const status = property.status.replace(/\s+/g, '') || 'Drafts';
-    const column = COLUMNS.find(col => 
+    const column = columns.find(col => 
       col.label.toLowerCase() === status.toLowerCase()
     )?.id || 'drafts';
     
@@ -615,7 +702,7 @@ export default function ManagePage() {
     };
   };
   
-  // Handle drag start
+  // Handle drag start for properties
   const handleDragStart = (e: React.DragEvent, propertyId: string, currentStatus: string) => {
     setIsDragging(true);
     setDraggedPropertyId(propertyId);
@@ -629,26 +716,78 @@ export default function ManagePage() {
     e.dataTransfer.setDragImage(dragImage, 0, 0);
     
     // Set data transfer
-    e.dataTransfer.setData('text/plain', propertyId);
+    e.dataTransfer.setData('property-id', propertyId);
+    e.dataTransfer.setData('drag-type', 'property');
+    e.dataTransfer.effectAllowed = 'move';
+  };
+  
+  // Handle drag start for columns
+  const handleColumnDragStart = (e: React.DragEvent, columnId: string) => {
+    setIsDraggingColumn(true);
+    setDraggedColumnId(columnId);
+    
+    // Make the drag image transparent
+    const dragImage = document.createElement('div');
+    dragImage.style.width = '1px';
+    dragImage.style.height = '1px';
+    document.body.appendChild(dragImage);
+    e.dataTransfer.setDragImage(dragImage, 0, 0);
+    
+    // Set data transfer
+    e.dataTransfer.setData('column-id', columnId);
+    e.dataTransfer.setData('drag-type', 'column');
     e.dataTransfer.effectAllowed = 'move';
   };
   
   // Handle drag over
-  const handleDragOver = (e: React.DragEvent, columnId: string) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
   
-  // Handle drop
-  const handleDrop = (e: React.DragEvent, columnId: string) => {
+  // Handle column drop for reordering
+  const handleColumnDrop = (e: React.DragEvent, targetColumnId: string) => {
     e.preventDefault();
-    const propertyId = e.dataTransfer.getData('text/plain');
+    e.stopPropagation();
     
-    if (draggedPropertyId && draggedPropertyStatus) {
-      // Convert columnId to status label
-      const newStatusColumn = COLUMNS.find(col => col.id === columnId);
-      if (newStatusColumn) {
-        handlePropertyMove(propertyId, newStatusColumn.label);
+    const dragType = e.dataTransfer.getData('drag-type');
+    
+    if (dragType === 'column' && draggedColumnId && draggedColumnId !== targetColumnId) {
+      // Reorder columns
+      const columnToMove = columns.find(col => col.id === draggedColumnId);
+      const targetIndex = columns.findIndex(col => col.id === targetColumnId);
+      
+      if (columnToMove && targetIndex !== -1) {
+        const newColumns = [...columns.filter(col => col.id !== draggedColumnId)];
+        newColumns.splice(targetIndex, 0, columnToMove);
+        setColumns(newColumns);
+        
+        toast({
+          title: 'Column Reordered',
+          description: `Moved ${columnToMove.label} column to a new position`,
+        });
+      }
+    }
+    
+    setIsDraggingColumn(false);
+    setDraggedColumnId(null);
+  };
+  
+  // Handle property drop
+  const handlePropertyDrop = (e: React.DragEvent, columnId: string) => {
+    e.preventDefault();
+    
+    const dragType = e.dataTransfer.getData('drag-type');
+    
+    if (dragType === 'property') {
+      const propertyId = e.dataTransfer.getData('property-id');
+      
+      if (draggedPropertyId && draggedPropertyStatus) {
+        // Convert columnId to status label
+        const newStatusColumn = columns.find(col => col.id === columnId);
+        if (newStatusColumn) {
+          handlePropertyMove(propertyId, newStatusColumn.label);
+        }
       }
     }
     
@@ -705,48 +844,146 @@ export default function ManagePage() {
     });
   };
   
+  // Add new column
+  const handleAddColumn = () => {
+    if (!newColumnName.trim()) return;
+    
+    // Create column ID from name
+    const columnId = newColumnName.toLowerCase().replace(/\s+/g, '');
+    
+    // Check if column with this ID already exists
+    if (columns.some(col => col.id === columnId)) {
+      toast({
+        title: 'Error',
+        description: 'A column with this name already exists',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    // Add new column
+    const newColumn = {
+      id: columnId,
+      label: newColumnName,
+      description: 'Custom stage',
+      color: 'border-l-gray-500', // Default color
+      canRename: true,
+      canDelete: true,
+      canReorder: true
+    };
+    
+    setColumns([...columns, newColumn]);
+    setNewColumnName('');
+    setIsAddColumnOpen(false);
+    
+    toast({
+      title: 'Column Added',
+      description: `Added new ${newColumnName} column`,
+    });
+  };
+  
+  // Edit column name
+  const handleEditColumn = () => {
+    if (!editColumnId || !editColumnName.trim()) return;
+    
+    // Update column name
+    const updatedColumns = columns.map(col => {
+      if (col.id === editColumnId) {
+        return { ...col, label: editColumnName };
+      }
+      return col;
+    });
+    
+    setColumns(updatedColumns);
+    setEditColumnId(null);
+    setEditColumnName('');
+    
+    toast({
+      title: 'Column Updated',
+      description: 'Column name has been updated',
+    });
+  };
+  
+  // Delete column
+  const handleDeleteColumn = (columnId: string) => {
+    // Check if column can be deleted
+    const column = columns.find(col => col.id === columnId);
+    if (!column || !column.canDelete) return;
+    
+    // Check if column has properties
+    const hasProperties = propertiesByStatus[columnId]?.length > 0;
+    if (hasProperties) {
+      toast({
+        title: 'Cannot Delete',
+        description: 'Move all properties out of this column first',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    // Remove column
+    setColumns(columns.filter(col => col.id !== columnId));
+    
+    toast({
+      title: 'Column Deleted',
+      description: `Deleted ${column.label} column`,
+    });
+  };
+  
   return (
     <SellerDashboardLayout userId={userId}>
-      <div className="space-y-6">
-        {/* Page header */}
+      <div className="space-y-6" ref={pageRef}>
+        {/* Page header with pill tabs like buyer dashboard */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <h1 className="text-2xl font-bold text-[#135341]">Manage Properties</h1>
           
           <div className="flex items-center gap-2 self-end sm:self-auto">
-            {/* View mode toggle */}
-            <div className="bg-white p-1 rounded-full border shadow-sm flex">
+            {/* View mode toggle - match buyer dashboard exactly */}
+            <div className="bg-white p-1.5 rounded-full border border-gray-200 shadow-sm flex">
               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => setViewMode('kanban')}
-                className={`rounded-full px-3 ${viewMode === 'kanban' ? 'bg-[#135341] text-white' : 'hover:bg-gray-100'}`}
+                className={`rounded-full px-3 ${
+                  viewMode === 'kanban' 
+                    ? 'bg-[#135341] text-white font-bold' 
+                    : 'text-gray-600 hover:bg-gray-100'
+                } transition-all duration-200`}
               >
-                <KanbanSquare className="h-4 w-4 mr-1.5" />
+                <KanbanSquare className={`h-4 w-4 mr-1.5 ${viewMode === 'kanban' ? 'text-white' : 'text-gray-500'}`} />
                 Kanban
               </Button>
               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => setViewMode('grid')}
-                className={`rounded-full px-3 ${viewMode === 'grid' ? 'bg-[#135341] text-white' : 'hover:bg-gray-100'}`}
+                className={`rounded-full px-3 ${
+                  viewMode === 'grid' 
+                    ? 'bg-[#135341] text-white font-bold' 
+                    : 'text-gray-600 hover:bg-gray-100'
+                } transition-all duration-200`}
               >
-                <LayoutGrid className="h-4 w-4 mr-1.5" />
+                <LayoutGrid className={`h-4 w-4 mr-1.5 ${viewMode === 'grid' ? 'text-white' : 'text-gray-500'}`} />
                 Grid
               </Button>
               <Button 
                 variant="ghost"
                 size="sm"
                 onClick={() => setViewMode('sheet')}
-                className={`rounded-full px-3 ${viewMode === 'sheet' ? 'bg-[#135341] text-white' : 'hover:bg-gray-100'}`}
+                className={`rounded-full px-3 ${
+                  viewMode === 'sheet' 
+                    ? 'bg-[#135341] text-white font-bold' 
+                    : 'text-gray-600 hover:bg-gray-100'
+                } transition-all duration-200`}
               >
-                <ListIcon className="h-4 w-4 mr-1.5" />
+                <ListIcon className={`h-4 w-4 mr-1.5 ${viewMode === 'sheet' ? 'text-white' : 'text-gray-500'}`} />
                 Sheet
               </Button>
             </div>
             
             {/* Add Property button */}
             <Button 
-              className="bg-[#135341] hover:bg-[#09261E] text-white"
+              className="bg-[#135341] hover:bg-[#09261E] text-white font-medium px-4"
               onClick={() => setIsAddPropertyModalOpen(true)}
             >
               <Plus className="h-4 w-4 mr-1.5" />
@@ -757,29 +994,128 @@ export default function ManagePage() {
         
         {/* Kanban board view */}
         {viewMode === 'kanban' && (
-          <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
-            {COLUMNS.map(column => {
+          <div 
+            className="flex space-x-4 overflow-x-auto pb-6 -mx-6 px-6" 
+            ref={columnsRef}
+          >
+            {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
               
               return (
                 <div 
                   key={column.id} 
-                  className={`bg-white rounded-xl border shadow-sm p-4 overflow-y-auto max-h-[calc(100vh-200px)]`}
+                  className={`flex-none w-[320px] bg-white rounded-xl border ${column.color} border-l-4 shadow-sm overflow-visible`}
                   data-column-id={column.id}
-                  onDragOver={(e) => handleDragOver(e, column.id)}
-                  onDrop={(e) => handleDrop(e, column.id)}
+                  draggable={column.canReorder}
+                  onDragStart={(e) => handleColumnDragStart(e, column.id)}
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleColumnDrop(e, column.id)}
                 >
-                  <div className="mb-3 sticky top-0 bg-white z-10 pb-2">
-                    {/* Column header */}
+                  {/* Column header - sticky */}
+                  <div className="sticky top-0 bg-white z-20 p-3 border-b border-gray-100">
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="font-semibold text-gray-800">{column.label}</h3>
-                      <Badge variant="outline" className="bg-white">
-                        {stats.count}
-                      </Badge>
+                      <div className="flex items-center gap-1.5">
+                        {column.canReorder && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="cursor-grab p-0.5 hover:bg-gray-100 rounded">
+                                  <GripVertical className="h-4 w-4 text-gray-400" />
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" sideOffset={5} className="z-[100]">
+                                <p>Drag to reorder column</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                        
+                        {/* Column title with inline edit */}
+                        {editColumnId === column.id ? (
+                          <div className="flex items-center">
+                            <Input
+                              value={editColumnName}
+                              onChange={(e) => setEditColumnName(e.target.value)}
+                              className="h-7 py-0 text-sm font-medium w-[140px]"
+                              autoFocus
+                              onBlur={handleEditColumn}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleEditColumn();
+                                if (e.key === 'Escape') {
+                                  setEditColumnId(null);
+                                  setEditColumnName('');
+                                }
+                              }}
+                            />
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 p-0 ml-1"
+                              onClick={handleEditColumn}
+                            >
+                              <CheckCircle className="h-4 w-4 text-green-600" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 p-0"
+                              onClick={() => {
+                                setEditColumnId(null);
+                                setEditColumnName('');
+                              }}
+                            >
+                              <X className="h-4 w-4 text-red-600" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center">
+                            <h3 className="font-semibold text-gray-800">{column.label}</h3>
+                            {column.canRename && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => {
+                                  setEditColumnId(column.id);
+                                  setEditColumnName(column.label);
+                                }}
+                              >
+                                <Pencil className="h-3 w-3 text-gray-500" />
+                              </Button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-1">
+                        <Badge variant="outline" className="bg-white/90 backdrop-blur-sm font-medium">
+                          {stats.count}
+                        </Badge>
+                        
+                        {column.canDelete && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-6 w-6 p-0 rounded-full hover:bg-red-50 hover:text-red-600"
+                                  onClick={() => handleDeleteColumn(column.id)}
+                                >
+                                  <X className="h-3.5 w-3.5" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" sideOffset={5} className="z-[100]">
+                                <p>Delete column</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                      </div>
                     </div>
                     
                     {/* Column description and stats */}
-                    <div className="flex justify-between items-center mb-3 text-sm">
+                    <div className="flex justify-between items-center mb-2 text-sm">
                       <p className="text-xs text-gray-600">{column.description}</p>
                       {stats.count > 0 && (
                         <p className="text-xs font-medium text-gray-700">
@@ -787,32 +1123,84 @@ export default function ManagePage() {
                         </p>
                       )}
                     </div>
-                    
-                    {/* Column divider */}
-                    <div className="h-px bg-gray-100 w-full"></div>
                   </div>
                   
-                  <div className="space-y-4">
-                    {/* If column is empty */}
-                    {(!propertiesByStatus[column.id] || propertiesByStatus[column.id].length === 0) && (
-                      column.id === 'listed' 
-                        ? <AddPropertyCard onClick={() => setIsAddPropertyModalOpen(true)} />
-                        : <EmptyColumnPlaceholder />
-                    )}
-                    
-                    {/* Show properties in this column */}
-                    {propertiesByStatus[column.id]?.map(property => (
-                      <PropertyCard 
-                        key={property.id} 
-                        property={property} 
-                        onDragStart={handleDragStart}
-                        onDrop={(propertyId, newStatus) => handlePropertyMove(propertyId, newStatus)}
-                      />
-                    ))}
+                  {/* Column content area - scrollable */}
+                  <div 
+                    className="p-3 overflow-y-auto"
+                    style={{ maxHeight: 'calc(100% - 80px)' }}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handlePropertyDrop(e, column.id)}
+                  >
+                    <div className="space-y-4 min-h-[50px]">
+                      {/* If column is empty */}
+                      {(!propertiesByStatus[column.id] || propertiesByStatus[column.id].length === 0) && (
+                        column.id === 'listed' 
+                          ? <AddPropertyCard onClick={() => setIsAddPropertyModalOpen(true)} />
+                          : <EmptyColumnPlaceholder />
+                      )}
+                      
+                      {/* Show properties in this column */}
+                      {propertiesByStatus[column.id]?.map(property => (
+                        <PropertyCard 
+                          key={property.id} 
+                          property={property} 
+                          onDragStart={handleDragStart}
+                          onDrop={handlePropertyMove}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               );
             })}
+            
+            {/* Add Column button */}
+            <div className="flex-none w-[100px] flex items-start pt-3">
+              {isAddColumnOpen ? (
+                <Card className="w-[320px] border-dashed border-2 p-3">
+                  <div className="space-y-3">
+                    <Label htmlFor="new-column-name">Column Name</Label>
+                    <Input
+                      id="new-column-name"
+                      value={newColumnName}
+                      onChange={(e) => setNewColumnName(e.target.value)}
+                      placeholder="Enter column name"
+                      className="h-9"
+                      autoFocus
+                    />
+                    <div className="flex justify-end space-x-2 pt-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          setIsAddColumnOpen(false);
+                          setNewColumnName('');
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        size="sm"
+                        onClick={handleAddColumn}
+                        disabled={!newColumnName.trim()}
+                      >
+                        Add Column
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ) : (
+                <Button
+                  variant="outline"
+                  className="border-dashed border-2 h-10 px-3 bg-white hover:bg-gray-50"
+                  onClick={() => setIsAddColumnOpen(true)}
+                >
+                  <Plus className="h-4 w-4 mr-1.5" />
+                  Add Column
+                </Button>
+              )}
+            </div>
           </div>
         )}
         
@@ -845,19 +1233,23 @@ export default function ManagePage() {
               <span className="sr-only">Actions</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" sideOffset={5}>
+          <DropdownMenuContent className="w-60 p-1" align="end" sideOffset={5}>
             <DropdownMenuItem 
-              className="cursor-pointer py-2"
+              className="cursor-pointer py-2.5 pl-3 rounded-md focus:bg-[#135341]/10 focus:text-[#135341]"
               onClick={() => setIsAddPropertyModalOpen(true)}
             >
               <DollarSign className="h-4 w-4 mr-2" />
               <span>Add Deal</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer py-2">
+            <DropdownMenuItem 
+              className="cursor-pointer py-2.5 pl-3 rounded-md focus:bg-[#135341]/10 focus:text-[#135341]"
+            >
               <MailCheck className="h-4 w-4 mr-2" />
               <span>Launch Campaign</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer py-2">
+            <DropdownMenuItem 
+              className="cursor-pointer py-2.5 pl-3 rounded-md focus:bg-[#135341]/10 focus:text-[#135341]"
+            >
               <Database className="h-4 w-4 mr-2" />
               <span>Run Deal Analysis</span>
             </DropdownMenuItem>
@@ -865,13 +1257,55 @@ export default function ManagePage() {
         </DropdownMenu>
       </div>
       
-      {/* Drag indicator */}
+      {/* Drag indicators */}
       {isDragging && (
         <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none bg-[#135341]/90 text-white px-4 py-2 rounded-lg shadow-lg animate-pulse flex items-center">
           <Loader2 className="animate-spin h-4 w-4 mr-2" />
           Moving property...
         </div>
       )}
+      
+      {isDraggingColumn && (
+        <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none bg-[#135341]/90 text-white px-4 py-2 rounded-lg shadow-lg animate-pulse flex items-center">
+          <Loader2 className="animate-spin h-4 w-4 mr-2" />
+          Reordering columns...
+        </div>
+      )}
+      
+      {/* Add Column Sheet */}
+      <Sheet open={isAddColumnOpen} onOpenChange={setIsAddColumnOpen}>
+        <SheetContent side="right" className="sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>Add New Column</SheetTitle>
+            <SheetDescription>
+              Create a new column for your custom deal stage.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="column-name">Column Name</Label>
+              <Input 
+                id="column-name" 
+                value={newColumnName}
+                onChange={(e) => setNewColumnName(e.target.value)}
+                placeholder="e.g., Due Diligence"
+                className="col-span-3" 
+              />
+            </div>
+          </div>
+          <SheetFooter>
+            <SheetClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </SheetClose>
+            <Button 
+              onClick={handleAddColumn}
+              disabled={!newColumnName.trim()}
+            >
+              Add Column
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
       
       {/* Property add/edit modal would be included here */}
       {/* For now, we're just using the state to track when it should be open */}
