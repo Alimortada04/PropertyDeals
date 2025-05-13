@@ -373,6 +373,11 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
       onDragStart={(e) => onDragStart(e, property.id, property.status)}
       data-property-id={property.id}
       data-status={property.status}
+      style={{ 
+        maxWidth: "100%", 
+        width: "100%",
+        position: "relative"
+      }}
     >
       <div className="relative">
         {/* Property image */}
@@ -467,7 +472,6 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
-                  forceMount
                 >
                   <div className="flex items-center gap-1.5 max-w-[220px]">
                     <Paperclip className="h-4 w-4 text-purple-600 flex-shrink-0" />
@@ -495,7 +499,6 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
-                  forceMount
                 >
                   <div className="flex items-center gap-1.5 max-w-[220px]">
                     <MessageCircle className="h-4 w-4 text-blue-600 flex-shrink-0" />
@@ -569,7 +572,6 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
-                  forceMount
                 >
                   <div className="p-1 max-w-[220px]">
                     <p className="font-medium">Highest offer: {formatCurrency(395000)}</p>
@@ -1100,9 +1102,9 @@ export default function ManagePage() {
         {/* Kanban board view */}
         {viewMode === 'kanban' && (
           <div 
-            className="flex space-x-5 overflow-x-auto pb-6 -mx-6 px-6 overflow-visible" 
+            className="flex space-x-5 overflow-x-auto pb-6 -mx-6 px-6" 
             ref={columnsRef}
-            style={{ paddingBottom: '150px', height: 'calc(100vh - 200px)' }} /* Increased height and padding for better visibility */
+            style={{ paddingBottom: '200px', height: 'calc(100vh - 140px)' }} /* Increased height and padding for better visibility */
           >
             {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
@@ -1110,17 +1112,17 @@ export default function ManagePage() {
               return (
                 <div 
                   key={column.id} 
-                  className={`flex-none w-[350px] bg-white rounded-xl border ${column.color} border-l-4 shadow-sm overflow-visible h-full`}
+                  className={`flex-none w-[360px] bg-white rounded-xl border ${column.color} border-l-4 shadow-sm h-full`}
                   data-column-id={column.id}
                   draggable={column.canReorder}
                   onDragStart={(e) => handleColumnDragStart(e, column.id)}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleColumnDrop(e, column.id)}
                   style={{ 
-                    overflow: 'visible', 
-                    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    maxHeight: 'calc(100vh - 180px)',
                   }}
                 >
                   {/* Column header - sticky */}
@@ -1259,10 +1261,11 @@ export default function ManagePage() {
                   <div 
                     className="p-3 overflow-y-auto"
                     style={{ 
-                      height: 'calc(100vh - 280px)',
-                      minHeight: '500px',
+                      height: 'calc(100vh - 240px)',
+                      minHeight: '600px',
                       scrollbarWidth: 'thin',
-                      scrollbarColor: '#e5e7eb #ffffff'
+                      scrollbarColor: '#e5e7eb #ffffff',
+                      borderRadius: '0 0 12px 12px'
                     }}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handlePropertyDrop(e, column.id)}
