@@ -56,10 +56,8 @@ export default function SellerDashboardLayout({
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <Navbar toggleSidebar={toggleSidebar} />
-      
-      {/* Pill-style navigation - Matching the general dashboard exactly */}
-      <div className="sticky top-16 z-10 bg-white shadow-sm py-4">
+      {/* Pill-style navigation - Sticky to top and transparent */}
+      <div className="sticky top-0 z-40 pt-4 pb-2 bg-transparent">
         <div className="container max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-center md:justify-start">
             <div className="backdrop-blur-lg bg-white/10 shadow-lg border border-white/10 rounded-xl px-4 py-2 inline-flex">
