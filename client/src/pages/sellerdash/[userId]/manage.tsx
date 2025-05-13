@@ -1114,7 +1114,7 @@ export default function ManagePage() {
           <div 
             className="flex space-x-5 overflow-x-auto pb-4 -mx-6 px-6" 
             ref={columnsRef}
-            style={{ paddingBottom: '0', height: 'calc(100vh - 180px)' }} /* Adjusted to fit just above bottom bar */
+            style={{ paddingBottom: '0', height: 'calc(100vh - 200px)', marginBottom: '20px' }} /* Adjusted to fit just above bottom bar */
           >
             {columns.map((column, columnIndex) => {
               const stats = getColumnStats(column.id);
@@ -1132,8 +1132,9 @@ export default function ManagePage() {
                     boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08)',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 'calc(100vh - 190px)',
-                    maxHeight: '100%'
+                    height: 'calc(100vh - 210px)',
+                    maxHeight: '100%',
+                    marginBottom: '20px'
                   }}
                 >
                   {/* Column header - sticky */}
