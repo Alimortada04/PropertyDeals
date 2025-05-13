@@ -50,6 +50,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
 
 // Mock property data for visualization
 const MOCK_PROPERTIES = [
