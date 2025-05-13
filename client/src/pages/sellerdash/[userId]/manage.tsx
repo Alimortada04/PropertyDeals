@@ -552,22 +552,21 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
         {/* Compact financial info - horizontal layout */}
         <div className="flex items-center gap-1.5 mb-2">
           {/* Listing Price - black compact badge */}
-          <TooltipProvider delayDuration={200}>
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge className="bg-gray-800 hover:bg-gray-800 text-white px-2 py-1 text-xs font-medium cursor-help">
+                <Badge className="bg-gray-800 hover:bg-gray-900 text-white px-2 py-1 text-xs font-medium cursor-help">
                   {formatCurrency(property.listPrice)}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent 
                 side="top" 
                 sideOffset={5}
-                className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
-                avoidCollisions={true}
-                collisionPadding={5}
-                sticky="always"
+                align="center"
+                className="z-[100] shadow-lg bg-white border border-gray-200"
+                forceMount
               >
-                <div className="p-1 max-w-[180px]">
+                <div className="p-2">
                   <p className="font-medium">Listing Price</p>
                   <p className="text-sm text-gray-600">Current asking price for this property</p>
                 </div>
@@ -576,22 +575,21 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
           </TooltipProvider>
           
           {/* Assignment Profit - green compact badge */}
-          <TooltipProvider delayDuration={200}>
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-100 px-2 py-1 text-xs font-medium cursor-help">
+                <Badge className="bg-green-100 text-green-800 hover:bg-green-200 px-2 py-1 text-xs font-medium cursor-help">
                   +{formatCurrency(property.assignmentProfit)}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent 
                 side="top" 
                 sideOffset={5}
-                className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
-                avoidCollisions={true}
-                collisionPadding={5}
-                sticky="always"
+                align="center"
+                className="z-[100] shadow-lg bg-white border border-gray-200"
+                forceMount
               >
-                <div className="p-1 max-w-[180px]">
+                <div className="p-2">
                   <p className="font-medium">My Fee</p>
                   <p className="text-sm text-gray-600">Your profit when assigning this contract to a buyer</p>
                 </div>
@@ -601,11 +599,11 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
           
           {/* Highest Offer - blue badge with tooltip - only if there are offers */}
           {property.offers > 0 && (
-            <TooltipProvider delayDuration={200}>
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Badge 
-                    className="bg-blue-100 text-blue-800 hover:bg-blue-100 px-2 py-1 text-xs font-medium cursor-pointer"
+                    className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-2 py-1 text-xs font-medium cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       setLocation(`/sellerdash/${userId}/property/${property.id}?tab=offers`);
@@ -617,12 +615,11 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
                 <TooltipContent 
                   side="top" 
                   sideOffset={5}
-                  className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
-                  avoidCollisions={true}
-                  collisionPadding={5}
-                  sticky="always"
+                  align="center"
+                  className="z-[100] shadow-lg bg-white border border-gray-200"
+                  forceMount
                 >
-                  <div className="p-1 max-w-[220px]">
+                  <div className="p-2">
                     <p className="font-medium">Highest Offer</p>
                     <p className="text-sm text-gray-600">Highest offer of {formatCurrency(395000)} received today</p>
                   </div>
@@ -1197,7 +1194,8 @@ export default function ManagePage() {
             className="flex space-x-5 overflow-x-auto -mx-6 px-6 no-scrollbar" 
             ref={columnsRef}
             style={{ 
-              paddingBottom: '0', 
+              paddingBottom: '20px', 
+              paddingTop: '10px',
               height: 'auto', 
               marginBottom: '0',
               overflowY: 'hidden' /* Prevent vertical scrolling */
@@ -1219,9 +1217,10 @@ export default function ManagePage() {
                     boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08)',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 'calc(100vh - 220px)',
-                    minHeight: '500px',
+                    height: 'calc(100vh - 180px)',
+                    minHeight: '550px',
                     marginBottom: '10px',
+                    marginTop: '5px',
                     overflowY: 'hidden'
                   }}
                 >
