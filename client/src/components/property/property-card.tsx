@@ -13,6 +13,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { formatCurrency } from "@/lib/utils";
 import { Link, useLocation } from "wouter";
 
@@ -145,9 +151,27 @@ export function PropertyCard({
         
         {/* Property price */}
         <div className="flex justify-end mb-2">
-          <Badge variant="outline" className="bg-gray-50 font-medium text-green-700">
-            {formatCurrency(price)}
-          </Badge>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="outline" className="bg-gray-50 font-medium text-green-700 cursor-help">
+                  {formatCurrency(price)}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent 
+                side="top" 
+                sideOffset={5}
+                align="center"
+                className="z-[100] shadow-lg bg-white border border-gray-200"
+                forceMount
+              >
+                <div className="p-2">
+                  <p className="font-medium">Listing Price</p>
+                  <p className="text-sm text-gray-600">Current asking price for this property</p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </CardContent>
       

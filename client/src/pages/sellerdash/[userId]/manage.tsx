@@ -566,7 +566,7 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
                 className="z-[100] shadow-lg bg-white border border-gray-200"
                 forceMount
               >
-                <div className="p-2">
+                <div className="p-2.5 min-w-[200px]">
                   <p className="font-medium">Listing Price</p>
                   <p className="text-sm text-gray-600">Current asking price for this property</p>
                 </div>
@@ -589,7 +589,7 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
                 className="z-[100] shadow-lg bg-white border border-gray-200"
                 forceMount
               >
-                <div className="p-2">
+                <div className="p-2.5 min-w-[200px]">
                   <p className="font-medium">My Fee</p>
                   <p className="text-sm text-gray-600">Your profit when assigning this contract to a buyer</p>
                 </div>
@@ -1362,7 +1362,7 @@ export default function ManagePage() {
                     style={{ 
                       height: 'calc(100% - 85px)',
                       borderRadius: '0 0 12px 12px',
-                      paddingBottom: '10px'
+                      paddingBottom: '40px' /* Add generous bottom padding to prevent content being cut off */
                     }}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handlePropertyDrop(e, column.id)}
