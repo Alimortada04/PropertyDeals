@@ -436,8 +436,10 @@ const PropertyCard = ({ property, onDragStart, onDrop }: {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent 
-                  side="bottom" 
+                  side="bottom-start" 
                   sideOffset={5} 
+                  align="start"
+                  alignOffset={-20}
                   className="z-[9999] shadow-lg bg-white/95 backdrop-blur-sm border border-gray-200"
                   avoidCollisions={true}
                   collisionPadding={20}
@@ -1112,17 +1114,18 @@ export default function ManagePage() {
               return (
                 <div 
                   key={column.id} 
-                  className={`flex-none w-[360px] bg-white rounded-xl border ${column.color} border-l-4 shadow-sm h-full`}
+                  className={`flex-none w-[370px] bg-white rounded-xl border ${column.color} border-l-4 shadow-md h-full`}
                   data-column-id={column.id}
                   draggable={column.canReorder}
                   onDragStart={(e) => handleColumnDragStart(e, column.id)}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleColumnDrop(e, column.id)}
                   style={{ 
-                    boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                    boxShadow: '0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08)',
                     display: 'flex',
                     flexDirection: 'column',
-                    maxHeight: 'calc(100vh - 180px)',
+                    height: 'calc(100vh - 150px)',
+                    minHeight: '700px'
                   }}
                 >
                   {/* Column header - sticky */}
@@ -1259,10 +1262,9 @@ export default function ManagePage() {
                   
                   {/* Column content area - scrollable */}
                   <div 
-                    className="p-3 overflow-y-auto"
+                    className="p-3 overflow-y-auto flex-1"
                     style={{ 
-                      height: 'calc(100vh - 240px)',
-                      minHeight: '600px',
+                      minHeight: '650px',
                       scrollbarWidth: 'thin',
                       scrollbarColor: '#e5e7eb #ffffff',
                       borderRadius: '0 0 12px 12px'
