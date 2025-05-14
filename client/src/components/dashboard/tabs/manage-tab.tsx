@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -561,11 +562,27 @@ export default function DashboardManageTab() {
   };
   
   // Handle drag and drop
+  const { toast } = useToast();
+  
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
     
     const { source, destination, draggableId } = result;
-    if (source.droppableId === destination.droppableId) return;
+    
+    // Only handle card drag between columns, not same column reordering
+    if (source.droppableId === destination.droppableId) {
+      // We could implement card reordering within a column here if needed
+      return;
+    }
+    
+    // Visual feedback for successful drop
+    const columnTitle = columns.find(col => col.id === destination.droppableId)?.title || 'new stage';
+    const toastMessage = `Property moved to ${columnTitle}`;
+    toast({
+      title: "Stage Updated",
+      description: toastMessage,
+      variant: "default",
+    });
     
     // In a real app, this would call an API to update the database
     const propertyId = parseInt(draggableId);
@@ -747,7 +764,7 @@ export default function DashboardManageTab() {
                     <Droppable droppableId={column.id}>
                       {(provided) => (
                         <div 
-                          className="h-[calc(100vh-280px)] overflow-y-auto bg-gray-50 border border-gray-200 rounded-b-lg p-3"
+                          className="h-[calc(100vh-300px)] overflow-y-auto bg-gray-50 border border-gray-200 rounded-b-lg p-3"
                           ref={provided.innerRef}
                           {...provided.droppableProps}
                         >
