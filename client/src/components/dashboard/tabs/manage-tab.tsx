@@ -516,6 +516,7 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
 
 // Main Manage Tab component implementation
 export default function DashboardManageTab() {
+  const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [activeView, setActiveView] = useState<string>("pipeline");
   const [pipelineView, setPipelineView] = useState<"kanban" | "grid" | "cards">("kanban");
@@ -562,8 +563,6 @@ export default function DashboardManageTab() {
   };
   
   // Handle drag and drop
-  const { toast } = useToast();
-  
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
     
