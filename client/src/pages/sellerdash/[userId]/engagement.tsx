@@ -43,7 +43,8 @@ import {
   FileCheck,
   Zap,
   ListFilter,
-  ChevronRight
+  ChevronRight,
+  X
 } from "lucide-react";
 import { SellerDashboardLayout } from "@/components/layout/seller-dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -1880,15 +1881,24 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
     </Card>
   );
 };
-};
 
 // Main Engagement Page Component
 export default function EngagementPage() {
   const { userId } = useParams();
+  const [location, setLocation] = useLocation();
   const [activeTab, setActiveTab] = useState<"active" | "proactive">("active");
   const [selectedProperty, setSelectedProperty] = useState<string | "all">("all");
   const [engagementType, setEngagementType] = useState<string | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedEngagement, setSelectedEngagement] = useState<string | null>(null);
+  const [selectedLeads, setSelectedLeads] = useState<string[]>([]);
+  const [showActivityLog, setShowActivityLog] = useState(false);
+  const [showBuyerStats, setShowBuyerStats] = useState<string | null>(null);
+  const [showAIAssist, setShowAIAssist] = useState(false);
+  const { toast } = useToast();
+  
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(min-width: 769px) and (max-width: 1024px)');
   
   // Filter engagements based on filters
   const filteredEngagements = mockEngagements.filter(engagement => {
@@ -1903,7 +1913,26 @@ export default function EngagementPage() {
       const lowerQuery = searchQuery.toLowerCase();
       const matchesBuyer = engagement.buyerName.toLowerCase().includes(lowerQuery);
       const matchesMessage = engagement.message?.toLowerCase().includes(lowerQuery) || false;
-      if (!matchesBuyer && !matchesMessage) return false;
+      const matchesProperty = getPropertyById(engagement.propertyId)?.address.toLowerCase().includes(lowerQuery) || false;
+      if (!matchesBuyer && !matchesMessage && !matchesProperty) return false;
+    }
+    
+    return true;
+  });
+  
+  // Filter leads based on filters
+  const filteredLeads = mockLeads.filter(lead => {
+    // Filter by property if selected
+    if (selectedProperty !== "all" && !lead.propertiesOfInterest.includes(selectedProperty)) return false;
+    
+    // Search by name, email, or phone
+    if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
+      const matchesName = lead.name.toLowerCase().includes(lowerQuery);
+      const matchesEmail = lead.email.toLowerCase().includes(lowerQuery);
+      const matchesPhone = lead.phone.toLowerCase().includes(lowerQuery);
+      const matchesTags = lead.tags.some(tag => tag.toLowerCase().includes(lowerQuery));
+      if (!matchesName && !matchesEmail && !matchesPhone && !matchesTags) return false;
     }
     
     return true;
@@ -1912,45 +1941,162 @@ export default function EngagementPage() {
   // Count stats
   const unreadOffers = mockEngagements.filter(e => e.type === "offer" && e.status === "new").length;
   const newMessages = mockEngagements.filter(e => e.type === "message" && e.status === "new").length;
+  const newRequests = mockEngagements.filter(e => e.type === "request" && e.status === "new").length;
+  
+  // Handle selecting engagement card
+  const handleSelectEngagement = (id: string) => {
+    setSelectedEngagement(prevId => prevId === id ? null : id);
+    
+    // If we're selecting a card, show the buyer stats automatically
+    const engagement = mockEngagements.find(e => e.id === id);
+    if (engagement && id !== selectedEngagement) {
+      setShowBuyerStats(engagement.buyerId);
+    } else {
+      setShowBuyerStats(null);
+    }
+  };
+  
+  // Handle toggling lead selection
+  const handleToggleLeadSelection = (id: string) => {
+    setSelectedLeads(prev => 
+      prev.includes(id) 
+        ? prev.filter(leadId => leadId !== id) 
+        : [...prev, id]
+    );
+  };
+  
+  // Handle bulk actions
+  const handleBulkAction = (action: string) => {
+    if (selectedLeads.length === 0) {
+      toast({
+        title: "No leads selected",
+        description: "Please select at least one lead to perform this action.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    toast({
+      title: `${action} ${selectedLeads.length} lead${selectedLeads.length > 1 ? 's' : ''}`,
+      description: `Action will be applied to the selected leads.`,
+    });
+    
+    // Clear selection after action
+    setSelectedLeads([]);
+  };
+  
+  // Handle viewing buyer profile
+  const handleViewBuyerProfile = (buyerId: string) => {
+    setShowBuyerStats(buyerId);
+  };
   
   return (
     <SellerDashboardLayout>
       <div className="py-6">
         <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between">
+          {/* Header with title and summary statistics */}
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <h1 className="text-2xl font-bold text-gray-800">Engagement</h1>
             
-            {/* Summary bar */}
-            <div className="flex items-center space-x-2">
+            {/* Summary badges for unread items */}
+            <div className="flex items-center flex-wrap gap-2">
               {unreadOffers > 0 && (
-                <Badge className="bg-green-600 text-white px-2.5 py-1">
+                <Badge className="bg-green-600 text-white border border-green-700 px-2.5 py-1">
                   <DollarSign className="h-3.5 w-3.5 mr-1" />
                   <span>{unreadOffers} unread {unreadOffers === 1 ? 'offer' : 'offers'}</span>
                 </Badge>
               )}
               
               {newMessages > 0 && (
-                <Badge className="bg-blue-600 text-white px-2.5 py-1">
+                <Badge className="bg-blue-600 text-white border border-blue-700 px-2.5 py-1">
                   <MessageCircle className="h-3.5 w-3.5 mr-1" />
                   <span>{newMessages} new {newMessages === 1 ? 'message' : 'messages'}</span>
                 </Badge>
               )}
               
-              <Button variant="outline" className="ml-2">
-                <Filter className="h-4 w-4 mr-1.5" />
-                <span>Activity Log</span>
-              </Button>
+              {newRequests > 0 && (
+                <Badge className="bg-amber-600 text-white border border-amber-700 px-2.5 py-1">
+                  <FileCheck className="h-3.5 w-3.5 mr-1" />
+                  <span>{newRequests} new {newRequests === 1 ? 'request' : 'requests'}</span>
+                </Badge>
+              )}
+              
+              <Dialog open={showActivityLog} onOpenChange={setShowActivityLog}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="ml-2 h-9">
+                    <Activity className="h-4 w-4 mr-1.5" />
+                    <span>Activity Log</span>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-3xl">
+                  <DialogHeader>
+                    <DialogTitle>Activity Log</DialogTitle>
+                    <DialogDescription>
+                      Recent buyer interactions across all your properties
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="max-h-[500px] overflow-y-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Buyer</TableHead>
+                          <TableHead>Property</TableHead>
+                          <TableHead>Action</TableHead>
+                          <TableHead>Date/Time</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {mockEngagements.flatMap(engagement => 
+                          engagement.activityHistory.map((activity, i) => (
+                            <TableRow key={`${engagement.id}-${i}`}>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <Avatar className="h-6 w-6">
+                                    <AvatarFallback>{engagement.buyerName[0]}</AvatarFallback>
+                                  </Avatar>
+                                  <span className="font-medium">{engagement.buyerName}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {getPropertyById(engagement.propertyId)?.address.split(',')[0]}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <div className="rounded-full p-1 bg-gray-100 text-gray-600">
+                                    {getActivityIcon(activity.action)}
+                                  </div>
+                                  <span>{activity.action}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {format(activity.timestamp, 'MMM d, yyyy h:mm a')}
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        ).sort((a, b) => b.key.localeCompare(a.key))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           
-          {/* Tabs navigation */}
+          {/* Main tabs navigation */}
           <Tabs 
             defaultValue="active" 
             value={activeTab} 
-            onValueChange={(value: string) => setActiveTab(value as "active" | "proactive")}
+            onValueChange={(value: string) => {
+              setActiveTab(value as "active" | "proactive");
+              // Reset selections when changing tabs
+              setSelectedEngagement(null);
+              setShowBuyerStats(null);
+              setSelectedLeads([]);
+            }}
             className="w-full"
           >
-            <TabsList className="grid w-[400px] grid-cols-2 mb-6">
+            <TabsList className="grid w-full max-w-md grid-cols-2 mb-6 mx-auto">
               <TabsTrigger value="active" className="rounded-full">
                 <MessageCircle className="h-4 w-4 mr-1.5" />
                 <span>Active Engagement</span>
@@ -1962,7 +2108,7 @@ export default function EngagementPage() {
             </TabsList>
             
             {/* Filter bar */}
-            <div className="flex items-center space-x-3 mb-4">
+            <div className="flex items-center flex-wrap gap-3 mb-4">
               <Select
                 value={selectedProperty}
                 onValueChange={setSelectedProperty}
@@ -1980,6 +2126,7 @@ export default function EngagementPage() {
                 </SelectContent>
               </Select>
               
+              {/* Show engagement type filter only for active tab */}
               {activeTab === "active" && (
                 <Select
                   value={engagementType}
@@ -1994,10 +2141,12 @@ export default function EngagementPage() {
                     <SelectItem value="message">Messages</SelectItem>
                     <SelectItem value="save">Saved</SelectItem>
                     <SelectItem value="view">Views</SelectItem>
+                    <SelectItem value="request">Requests</SelectItem>
                   </SelectContent>
                 </Select>
               )}
               
+              {/* Search box */}
               <div className="relative flex-grow max-w-md">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
                 <Input
@@ -2007,117 +2156,650 @@ export default function EngagementPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
+              
+              {/* Additional filters - shown on click */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="gap-1">
+                    <ListFilter className="h-4 w-4" />
+                    <span>Filters</span>
+                    <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[280px] p-4">
+                  <div className="space-y-4">
+                    <h4 className="font-medium text-sm">Advanced Filters</h4>
+                    
+                    {activeTab === "active" && (
+                      <>
+                        <div className="space-y-2">
+                          <label className="text-sm">Status</label>
+                          <Select defaultValue="all">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Status</SelectItem>
+                              <SelectItem value="new">New</SelectItem>
+                              <SelectItem value="replied">Replied</SelectItem>
+                              <SelectItem value="viewed">Viewed</SelectItem>
+                              <SelectItem value="accepted">Accepted</SelectItem>
+                              <SelectItem value="declined">Declined</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <label className="text-sm">Buyer Type</label>
+                          <Select defaultValue="all">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select buyer type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Types</SelectItem>
+                              <SelectItem value="investor">Investors</SelectItem>
+                              <SelectItem value="agent">Agents</SelectItem>
+                              <SelectItem value="homebuyer">Home Buyers</SelectItem>
+                              <SelectItem value="verified">Verified Only</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <label className="text-sm">Time Period</label>
+                          <Select defaultValue="all">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select time period" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Time</SelectItem>
+                              <SelectItem value="today">Today</SelectItem>
+                              <SelectItem value="week">This Week</SelectItem>
+                              <SelectItem value="month">This Month</SelectItem>
+                              <SelectItem value="custom">Custom Range</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </>
+                    )}
+                    
+                    {activeTab === "proactive" && (
+                      <>
+                        <div className="space-y-2">
+                          <label className="text-sm">Lead Status</label>
+                          <Select defaultValue="all">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select lead status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Status</SelectItem>
+                              <SelectItem value="new lead">New Leads</SelectItem>
+                              <SelectItem value="contacted">Contacted</SelectItem>
+                              <SelectItem value="nurturing">Nurturing</SelectItem>
+                              <SelectItem value="followed up">Followed Up</SelectItem>
+                              <SelectItem value="dead">Dead</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <label className="text-sm">Assigned REP</label>
+                          <Select defaultValue="all">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Filter by REP" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All REPs</SelectItem>
+                              <SelectItem value="none">Unassigned</SelectItem>
+                              <SelectItem value="rep1">David Johnson</SelectItem>
+                              <SelectItem value="rep2">Sarah Williams</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <label className="text-sm">Lead Source</label>
+                          <Select defaultValue="all">
+                            <SelectTrigger>
+                              <SelectValue placeholder="Filter by source" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Sources</SelectItem>
+                              <SelectItem value="Website Form">Website Form</SelectItem>
+                              <SelectItem value="Referral">Referral</SelectItem>
+                              <SelectItem value="Social Media">Social Media</SelectItem>
+                              <SelectItem value="Property Listing">Property Listing</SelectItem>
+                              <SelectItem value="Networking Event">Networking Event</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </>
+                    )}
+                    
+                    <div className="flex justify-between pt-2">
+                      <Button variant="outline" size="sm">Reset</Button>
+                      <Button size="sm" className="bg-[#135341] hover:bg-[#09261E]">Apply Filters</Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             
-            {/* Tab content */}
-            <TabsContent value="active" className="mt-0">
-              {/* Active engagement tab content */}
-              <div className="space-y-3">
-                {filteredEngagements.length === 0 ? (
-                  <div className="text-center py-10">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 mb-4">
-                      <MessageCircle className="h-6 w-6 text-gray-600" />
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-1">No engagements found</h3>
-                    <p className="text-gray-500 max-w-md mx-auto">
-                      There are no engagements matching your current filters. Try adjusting your search or filters.
-                    </p>
-                  </div>
-                ) : (
-                  filteredEngagements.map((engagement) => (
-                    <EngagementCard key={engagement.id} engagement={engagement} />
-                  ))
-                )}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="proactive" className="mt-0">
-              <Tabs defaultValue="crm">
-                <TabsList className="mb-4">
-                  <TabsTrigger value="crm">
-                    <Users className="h-4 w-4 mr-1.5" />
-                    <span>Lead Management</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="templates">
-                    <Mail className="h-4 w-4 mr-1.5" />
-                    <span>Email Templates</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="scheduling">
-                    <CalendarClock className="h-4 w-4 mr-1.5" />
-                    <span>Follow-up Scheduling</span>
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="crm" className="mt-0">
-                  {/* CRM Table */}
-                  <div className="bg-white rounded-lg border overflow-hidden">
-                    <div className="p-4 border-b flex justify-between items-center">
-                      <h3 className="font-medium">Lead Management</h3>
-                      <Button size="sm" className="bg-[#135341] hover:bg-[#09261E]">
-                        <Plus className="h-4 w-4 mr-1.5" />
-                        <span>Add Lead</span>
-                      </Button>
-                    </div>
-                    <div className="overflow-x-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Contact</TableHead>
-                            <TableHead>Phone</TableHead>
-                            <TableHead>Properties</TableHead>
-                            <TableHead>Last Activity</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Tags</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {mockLeads.map((lead) => (
-                            <LeadCard key={lead.id} lead={lead} />
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="templates" className="mt-0">
-                  {/* Email Templates */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {mockTemplates.map((template) => (
-                      <TemplateCard key={template.id} template={template} />
-                    ))}
-                    
-                    {/* Add new template card */}
-                    <Card className="mb-4 border-dashed border-2 hover:bg-gray-50 transition-colors flex items-center justify-center cursor-pointer">
-                      <CardContent className="flex flex-col items-center justify-center py-8">
-                        <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-                          <Plus className="h-6 w-6 text-gray-500" />
+            {/* Main content area - Two column layout on desktop */}
+            <div className={cn(
+              "grid gap-6",
+              showBuyerStats || showAIAssist 
+                ? "grid-cols-1 md:grid-cols-3" 
+                : "grid-cols-1"
+            )}>
+              {/* Main content column */}
+              <div className={cn(
+                "space-y-4",
+                showBuyerStats || showAIAssist ? "md:col-span-2" : ""
+              )}>
+                {/* Tab content */}
+                <TabsContent value="active" className="mt-0">
+                  {/* Active engagement tab content */}
+                  <div className="space-y-3">
+                    {filteredEngagements.length === 0 ? (
+                      <div className="text-center py-10 bg-white rounded-lg border">
+                        <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 mb-4">
+                          <MessageCircle className="h-6 w-6 text-gray-600" />
                         </div>
-                        <p className="font-medium text-gray-600">Create New Template</p>
-                      </CardContent>
-                    </Card>
+                        <h3 className="text-lg font-medium text-gray-900 mb-1">No engagements found</h3>
+                        <p className="text-gray-500 max-w-md mx-auto">
+                          There are no engagements matching your current filters. Try adjusting your search or filters.
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Checkbox for bulk actions */}
+                        <div className="flex justify-between items-center">
+                          <div className="flex items-center gap-2">
+                            <Checkbox id="selectAll" />
+                            <label 
+                              htmlFor="selectAll" 
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                              Select All
+                            </label>
+                          </div>
+                          
+                          <Button variant="outline" size="sm" className="text-sm">
+                            <ChevronDown className="h-3.5 w-3.5 mr-1.5" />
+                            <span>Bulk Actions</span>
+                          </Button>
+                        </div>
+                      
+                        {/* Engagement cards */}
+                        {filteredEngagements.map((engagement) => (
+                          <EngagementCard 
+                            key={engagement.id} 
+                            engagement={engagement} 
+                            isSelected={selectedEngagement === engagement.id}
+                            onSelect={handleSelectEngagement}
+                          />
+                        ))}
+                      </>
+                    )}
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="scheduling" className="mt-0">
-                  {/* Follow-up Scheduling (placeholder) */}
-                  <div className="bg-white rounded-lg border p-8 text-center">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 mb-4">
-                      <CalendarClock className="h-6 w-6 text-gray-600" />
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-1">Follow-up Scheduling</h3>
-                    <p className="text-gray-500 max-w-md mx-auto mb-6">
-                      Schedule automated follow-ups and reminders for your leads and properties.
-                    </p>
-                    <Button className="bg-[#135341] hover:bg-[#09261E]">
-                      <CalendarClock className="h-4 w-4 mr-1.5" />
-                      <span>Coming Soon</span>
-                    </Button>
-                  </div>
+                <TabsContent value="proactive" className="mt-0">
+                  <Tabs defaultValue="crm">
+                    <TabsList className="mb-4">
+                      <TabsTrigger value="crm">
+                        <Users className="h-4 w-4 mr-1.5" />
+                        <span>Lead Management</span>
+                      </TabsTrigger>
+                      <TabsTrigger value="templates">
+                        <Mail className="h-4 w-4 mr-1.5" />
+                        <span>Email Templates</span>
+                      </TabsTrigger>
+                      <TabsTrigger value="scheduling">
+                        <CalendarClock className="h-4 w-4 mr-1.5" />
+                        <span>Follow-up Scheduling</span>
+                      </TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="crm" className="mt-0">
+                      {/* CRM Table */}
+                      <div className="bg-white rounded-lg border overflow-hidden">
+                        <div className="p-4 border-b flex justify-between items-center">
+                          <h3 className="font-medium">Lead Management</h3>
+                          <div className="flex items-center gap-2">
+                            {selectedLeads.length > 0 && (
+                              <div className="flex items-center gap-2 mr-2">
+                                <span className="text-sm">{selectedLeads.length} selected</span>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="sm" className="h-8">
+                                      <span>Actions</span>
+                                      <ChevronDown className="ml-1.5 h-3.5 w-3.5" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => handleBulkAction("Assign")}>
+                                      <Users className="mr-2 h-4 w-4" />
+                                      <span>Assign to REP</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleBulkAction("Tag")}>
+                                      <Tag className="mr-2 h-4 w-4" />
+                                      <span>Add Tags</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => handleBulkAction("Email")}>
+                                      <Mail className="mr-2 h-4 w-4" />
+                                      <span>Send Email</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => handleBulkAction("Delete")} className="text-red-600">
+                                      <Trash className="mr-2 h-4 w-4" />
+                                      <span>Delete</span>
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            )}
+                            <Button size="sm" className="bg-[#135341] hover:bg-[#09261E]">
+                              <Plus className="h-4 w-4 mr-1.5" />
+                              <span>Add Lead</span>
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="overflow-x-auto">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                <TableHead className="w-[30px]">
+                                  <Checkbox 
+                                    checked={
+                                      filteredLeads.length > 0 && 
+                                      selectedLeads.length === filteredLeads.length
+                                    }
+                                    onCheckedChange={(checked) => {
+                                      if (checked) {
+                                        setSelectedLeads(filteredLeads.map(lead => lead.id));
+                                      } else {
+                                        setSelectedLeads([]);
+                                      }
+                                    }}
+                                  />
+                                </TableHead>
+                                <TableHead>Contact</TableHead>
+                                <TableHead>Phone</TableHead>
+                                <TableHead>Properties</TableHead>
+                                <TableHead>Last Activity</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Tags</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {filteredLeads.length === 0 ? (
+                                <TableRow>
+                                  <TableCell colSpan={8} className="h-24 text-center">
+                                    <div className="flex flex-col items-center justify-center">
+                                      <Users className="h-8 w-8 text-gray-400 mb-2" />
+                                      <p className="text-gray-500">No leads found matching your criteria</p>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
+                              ) : (
+                                filteredLeads.map((lead) => (
+                                  <TableRow 
+                                    key={lead.id} 
+                                    className="hover:bg-gray-50 cursor-pointer"
+                                    onClick={() => handleViewBuyerProfile(lead.id)}
+                                  >
+                                    <TableCell onClick={(e) => e.stopPropagation()}>
+                                      <Checkbox 
+                                        checked={selectedLeads.includes(lead.id)}
+                                        onCheckedChange={() => handleToggleLeadSelection(lead.id)}
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Avatar className="h-8 w-8">
+                                          <AvatarFallback className="bg-gray-200">{lead.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                          <p className="font-medium text-sm">{lead.name}</p>
+                                          <p className="text-xs text-gray-500">{lead.email}</p>
+                                        </div>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="text-sm">
+                                        <p>{lead.phone}</p>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="flex flex-wrap gap-1">
+                                        {lead.propertiesOfInterest.map((propId: string) => {
+                                          const property = getPropertyById(propId);
+                                          return (
+                                            <Badge 
+                                              key={propId} 
+                                              variant="outline" 
+                                              className="text-xs cursor-pointer hover:bg-gray-100"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setLocation(`/sellerdash/${userId}/property/${propId}`);
+                                              }}
+                                            >
+                                              {property?.address.split(',')[0]}
+                                            </Badge>
+                                          );
+                                        })}
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="text-sm text-gray-600">
+                                        {timeAgo(lead.lastActivity)}
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>
+                                      <Badge className={getLeadStatusBadge(lead.status).color + " px-2 py-0.5 text-xs"}>
+                                        {getLeadStatusBadge(lead.status).text}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="flex flex-wrap gap-1">
+                                        {lead.tags.slice(0, 2).map((tag: string, index: number) => (
+                                          <Badge key={index} variant="outline" className="bg-gray-100 text-gray-700 text-xs">
+                                            {tag}
+                                          </Badge>
+                                        ))}
+                                        {lead.tags.length > 2 && (
+                                          <Badge variant="outline" className="bg-gray-100 text-gray-700 text-xs">
+                                            +{lead.tags.length - 2}
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    </TableCell>
+                                    <TableCell onClick={(e) => e.stopPropagation()}>
+                                      <div className="flex items-center justify-end gap-2">
+                                        <TooltipProvider delayDuration={0}>
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                                <Mail className="h-4 w-4 text-blue-600" />
+                                              </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent side="bottom" className="bg-black/90 text-white border-0">
+                                              Email
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </TooltipProvider>
+                                        
+                                        <TooltipProvider delayDuration={0}>
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                                <Phone className="h-4 w-4 text-green-600" />
+                                              </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent side="bottom" className="bg-black/90 text-white border-0">
+                                              Call
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </TooltipProvider>
+                                        
+                                        <TooltipProvider delayDuration={0}>
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                                <BarChart3 className="h-4 w-4 text-purple-600" />
+                                              </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent side="bottom" className="bg-black/90 text-white border-0">
+                                              Analytics
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </TooltipProvider>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                ))
+                              )}
+                            </TableBody>
+                          </Table>
+                        </div>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="templates" className="mt-0">
+                      {/* Email Templates */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {mockTemplates.map((template) => (
+                          <TemplateCard key={template.id} template={template} />
+                        ))}
+                        
+                        {/* Add new template card */}
+                        <Card className="mb-4 border-dashed border-2 hover:bg-gray-50 transition-colors flex items-center justify-center cursor-pointer">
+                          <CardContent className="flex flex-col items-center justify-center py-8">
+                            <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                              <Plus className="h-6 w-6 text-gray-500" />
+                            </div>
+                            <p className="font-medium text-gray-600">Create New Template</p>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabsContent>
+                    
+                    <TabsContent value="scheduling" className="mt-0">
+                      {/* Follow-up Scheduling */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="md:col-span-2">
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Follow-up Schedule</CardTitle>
+                              <CardDescription>Plan and automate your follow-up activities</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                              <Table>
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead>Lead</TableHead>
+                                    <TableHead>Property</TableHead>
+                                    <TableHead>Action</TableHead>
+                                    <TableHead>Due Date</TableHead>
+                                    <TableHead>Status</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  <TableRow>
+                                    <TableCell>
+                                      <div className="font-medium">Thomas Wilson</div>
+                                    </TableCell>
+                                    <TableCell>456 Oak St</TableCell>
+                                    <TableCell>Follow-up call</TableCell>
+                                    <TableCell>
+                                      {format(mockLeads[0].nextFollowUp!, 'MMM d, yyyy')}
+                                    </TableCell>
+                                    <TableCell>
+                                      <Badge className="bg-green-600 text-white">Upcoming</Badge>
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell>
+                                      <div className="font-medium">Emily Davis</div>
+                                    </TableCell>
+                                    <TableCell>123 Main St</TableCell>
+                                    <TableCell>Send comps</TableCell>
+                                    <TableCell>
+                                      {format(mockLeads[1].nextFollowUp!, 'MMM d, yyyy')}
+                                    </TableCell>
+                                    <TableCell>
+                                      <Badge className="bg-amber-600 text-white">Tomorrow</Badge>
+                                    </TableCell>
+                                  </TableRow>
+                                  <TableRow>
+                                    <TableCell>
+                                      <div className="font-medium">Amanda Wilson</div>
+                                    </TableCell>
+                                    <TableCell>742 Lakeside Dr</TableCell>
+                                    <TableCell>Check in</TableCell>
+                                    <TableCell>
+                                      {format(mockLeads[5].nextFollowUp!, 'MMM d, yyyy')}
+                                    </TableCell>
+                                    <TableCell>
+                                      <Badge className="bg-blue-600 text-white">Scheduled</Badge>
+                                    </TableCell>
+                                  </TableRow>
+                                </TableBody>
+                              </Table>
+                            </CardContent>
+                            <CardFooter className="flex justify-between">
+                              <Button variant="outline">View All</Button>
+                              <Button className="bg-[#135341] hover:bg-[#09261E]">
+                                <Plus className="h-4 w-4 mr-1.5" />
+                                <span>New Follow-up</span>
+                              </Button>
+                            </CardFooter>
+                          </Card>
+                        </div>
+                        
+                        <div>
+                          <Card>
+                            <CardHeader>
+                              <CardTitle>Schedule a Follow-up</CardTitle>
+                              <CardDescription>
+                                Create a new follow-up reminder
+                              </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                              <form className="space-y-4">
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Lead</label>
+                                  <Select>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select lead" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {mockLeads.map(lead => (
+                                        <SelectItem key={lead.id} value={lead.id}>
+                                          {lead.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Property</label>
+                                  <Select>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select property" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {mockProperties.map(property => (
+                                        <SelectItem key={property.id} value={property.id}>
+                                          {property.address.split(',')[0]}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Action Type</label>
+                                  <Select>
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Select action" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="call">Call</SelectItem>
+                                      <SelectItem value="email">Email</SelectItem>
+                                      <SelectItem value="message">Message</SelectItem>
+                                      <SelectItem value="meeting">Meeting</SelectItem>
+                                      <SelectItem value="other">Other</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Due Date</label>
+                                  <Input type="date" />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                  <label className="text-sm font-medium">Notes</label>
+                                  <Textarea placeholder="Add notes or context..." />
+                                </div>
+                                
+                                <div className="space-y-2">
+                                  <div className="flex items-center">
+                                    <Checkbox id="recurring" />
+                                    <label htmlFor="recurring" className="ml-2 text-sm">
+                                      Make this a recurring follow-up
+                                    </label>
+                                  </div>
+                                </div>
+                              </form>
+                            </CardContent>
+                            <CardFooter>
+                              <Button className="w-full bg-[#135341] hover:bg-[#09261E]">
+                                <Repeat className="h-4 w-4 mr-1.5" />
+                                <span>Schedule Follow-up</span>
+                              </Button>
+                            </CardFooter>
+                          </Card>
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
                 </TabsContent>
-              </Tabs>
-            </TabsContent>
+              </div>
+              
+              {/* Side panel - Conditionally shown */}
+              {(showBuyerStats || showAIAssist) && (
+                <div className="md:col-span-1">
+                  <div className="space-y-4">
+                    {/* Stats panel */}
+                    {showBuyerStats && (
+                      <Card>
+                        <CardHeader className="pb-2">
+                          <div className="flex justify-between items-center">
+                            <CardTitle className="text-base">Buyer Activity</CardTitle>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="h-8 w-8 p-0"
+                              onClick={() => setShowBuyerStats(null)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <BuyerActivityStats buyer={mockBuyers.find(b => b.id === showBuyerStats)} />
+                        </CardContent>
+                      </Card>
+                    )}
+                    
+                    {/* AI suggestions panel */}
+                    {selectedEngagement && (
+                      <Card>
+                        <CardHeader className="pb-2">
+                          <div className="flex justify-between items-center">
+                            <CardTitle className="text-base flex items-center">
+                              <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" />
+                              <span>AI Assistant</span>
+                            </CardTitle>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <AIMessageSuggestions 
+                            engagement={mockEngagements.find(e => e.id === selectedEngagement)} 
+                          />
+                        </CardContent>
+                      </Card>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </Tabs>
         </div>
       </div>
