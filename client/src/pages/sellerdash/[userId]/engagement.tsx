@@ -1035,13 +1035,25 @@ interface BuyerBadgeProps {
 }
 
 const BuyerBadge: React.FC<BuyerBadgeProps> = ({ type, reputation, verified }) => {
-  const { text, color, icon: Icon } = getBuyerTypeBadge(type);
+  const { text, color, icon } = getBuyerTypeBadge(type);
   const { text: repText, color: repColor } = getBuyerReputationBadge(reputation);
+  
+  // Create a component dynamically
+  let IconComponent;
+  if (icon === User) {
+    IconComponent = <User className="h-3 w-3" />;
+  } else if (icon === Users) {
+    IconComponent = <Users className="h-3 w-3" />;
+  } else if (icon === Coins) {
+    IconComponent = <Coins className="h-3 w-3" />;
+  } else {
+    IconComponent = <User className="h-3 w-3" />;
+  }
   
   return (
     <div className="flex items-center gap-1.5">
       <Badge variant="outline" className={color + " text-xs flex items-center gap-1 whitespace-nowrap"}>
-        <Icon className="h-3 w-3" />
+        {IconComponent}
         <span>{text}</span>
       </Badge>
       
