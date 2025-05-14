@@ -151,7 +151,7 @@ import {
   AlertTitle,
 } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import { MoreHorizontal, ChevronUp } from "lucide-react";
+// Remove redundant imports that are already included at the top
 import { Sparkline } from '@/components/ui/sparkline';
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -1907,20 +1907,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
   );
 };
 
-// Get activity icon for specific actions
-function getActivityIcon(action: string) {
-  switch (action) {
-    case "Viewed property": return <Eye className="h-3 w-3" />;
-    case "Saved property": return <Bookmark className="h-3 w-3" />;
-    case "Made offer": return <DollarSign className="h-3 w-3" />;
-    case "Sent message": return <MessageCircle className="h-3 w-3" />;
-    case "Downloaded disclosures": return <FileText className="h-3 w-3" />;
-    case "Viewed floor plan": return <Layout className="h-3 w-3" />;
-    case "Requested info": return <HelpCircle className="h-3 w-3" />;
-    case "Check in": return <CheckCircle className="h-3 w-3" />;
-    default: return <Activity className="h-3 w-3" />;
-  }
-}
+// This function is already defined above - removed duplicate
 
 // Helper function for offer status badge
 function getOfferStatusBadge(status: string) {
