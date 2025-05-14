@@ -1,16 +1,39 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from "react";
-import { useLocation, Link } from "wouter";
+import { useLocation, Link, useParams } from "wouter";
 import { cn } from "@/lib/utils";
-import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home, Loader2 } from "lucide-react";
+import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home, Loader2, MessageSquare } from "lucide-react";
 import Navbar from "./navbar";
 import { useQueryClient } from '@tanstack/react-query';
 
 interface SellerDashboardLayoutProps {
   children: React.ReactNode;
-  userId: string;
+  userId?: string;
 }
 
-export default function SellerDashboardLayout({
+// Main Layout Component
+export function SellerDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { userId } = useParams();
+  
+  if (!userId) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 animate-spin text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-500">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  return <SellerDashboardLayoutWithUserId userId={userId}>{children}</SellerDashboardLayoutWithUserId>;
+}
+
+// Original Layout Component with userId prop
+export function SellerDashboardLayoutWithUserId({
   children,
   userId,
 }: SellerDashboardLayoutProps) {
@@ -39,7 +62,7 @@ export default function SellerDashboardLayout({
     },
     {
       label: "Engagement",
-      icon: Users,
+      icon: MessageSquare,
       href: `/sellerdash/${userId}/engagement`,
       queries: ['/api/users', '/api/inquiries'],
     },
@@ -180,3 +203,6 @@ export default function SellerDashboardLayout({
     </div>
   );
 }
+
+// Default export for backward compatibility
+export default SellerDashboardLayout;
