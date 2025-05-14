@@ -2144,9 +2144,11 @@ function PropertyEngagementBlock({
   // Get unique buyers
   const uniqueBuyerIds = new Set();
   engagements.forEach(e => uniqueBuyerIds.add(e.buyerId));
-  const uniqueBuyers = Array.from(uniqueBuyerIds).map(id => 
-    getBuyerById(id as string)
-  ).filter(Boolean);
+  
+  // Get buyer objects and ensure they're valid
+  const uniqueBuyers = Array.from(uniqueBuyerIds)
+    .map(id => getBuyerById(id as string))
+    .filter(buyer => buyer !== null && buyer !== undefined);
   
   // Check for recent activity
   const hasRecentActivity = engagements.some(e => {
@@ -2455,42 +2457,22 @@ function PropertyEngagementBlock({
                   <div>
                     <h3 className="text-sm font-medium mb-2">Engaged Buyers ({uniqueBuyers.length})</h3>
                     <div className="flex flex-wrap gap-2 items-center mb-2">
-                      {uniqueBuyers.slice(0, 8).map((buyer) => (
-                        <TooltipProvider key={buyer!.id}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Avatar 
-                                className="h-9 w-9 border-2 border-white cursor-pointer hover:ring-2 hover:ring-gray-200 transition-all"
-                                onClick={() => onViewBuyer(buyer!.id)}
-                              >
-                                <AvatarFallback className="bg-blue-100 text-blue-800 text-xs">
-                                  {buyer!.name.charAt(0)}
-                                </AvatarFallback>
-                              </Avatar>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom" className="bg-black/90 text-white border-0 p-3">
-                              <div className="space-y-1">
-                                <p className="font-medium">{buyer!.name}</p>
-                                <div className="flex items-center gap-1.5 text-xs">
-                                  <div className="rounded-full bg-blue-100 p-1">
-                                    <Eye className="h-3 w-3 text-blue-600" />
-                                  </div>
-                                  <span>{buyer!.viewHistory?.length || 0} views</span>
-                                </div>
-                                {buyer!.interests && buyer!.interests.length > 0 && (
-                                  <div className="flex flex-wrap gap-1 mt-1">
-                                    {buyer!.interests.slice(0, 2).map((tag, i) => (
-                                      <Badge key={i} variant="outline" className="bg-gray-800/90 text-gray-200 border-gray-700 text-[10px] px-1 py-0">
-                                        {tag}
-                                      </Badge>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      ))}
+                      {/* Temporarily simplify this part to locate the error */}
+                      {uniqueBuyers.slice(0, 8).map((buyer) => {
+                        if (!buyer) return null;
+                        
+                        return (
+                          <Avatar 
+                            key={buyer.id}
+                            className="h-9 w-9 border-2 border-white cursor-pointer hover:ring-2 hover:ring-gray-200 transition-all"
+                            onClick={() => onViewBuyer(buyer.id)}
+                          >
+                            <AvatarFallback className="bg-blue-100 text-blue-800 text-xs">
+                              {buyer.name ? buyer.name.charAt(0) : '?'}
+                            </AvatarFallback>
+                          </Avatar>
+                        );
+                      })}
                       
                       {uniqueBuyers.length > 8 && (
                         <Avatar className="h-9 w-9 border-2 border-white cursor-pointer hover:scale-105 transition-all" onClick={() => {}}>
