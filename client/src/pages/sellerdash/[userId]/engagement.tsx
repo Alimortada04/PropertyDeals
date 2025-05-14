@@ -1008,20 +1008,7 @@ const getBuyerTypeBadge = (type: string) => {
   }
 };
 
-// Get appropriate icon for an activity
-const getActivityIcon = (activity: string): React.ReactNode => {
-  if (activity.includes("View")) return <Eye className="h-3.5 w-3.5" />;
-  if (activity.includes("Save")) return <Bookmark className="h-3.5 w-3.5" />;
-  if (activity.includes("Download")) return <FileText className="h-3.5 w-3.5" />;
-  if (activity.includes("message") || activity.includes("Message")) return <MessageCircle className="h-3.5 w-3.5" />;
-  if (activity.includes("offer") || activity.includes("Offer")) return <DollarSign className="h-3.5 w-3.5" />;
-  if (activity.includes("CRM") || activity.includes("Added")) return <Plus className="h-3.5 w-3.5" />;
-  if (activity.includes("call") || activity.includes("Call")) return <Phone className="h-3.5 w-3.5" />;
-  if (activity.includes("email") || activity.includes("Email")) return <Mail className="h-3.5 w-3.5" />;
-  if (activity.includes("Follow")) return <CornerDownRight className="h-3.5 w-3.5" />;
-  
-  return <Clock className="h-3.5 w-3.5" />;
-};
+// We've replaced getActivityIcon with inline code in the components
 
 // ======================================
 // REUSABLE COMPONENTS
@@ -1081,7 +1068,19 @@ const ActivityTimeline: React.FC<ActivityTimelineProps> = ({ activities, limit =
       {displayActivities.map((activity, index) => (
         <div key={index} className="flex items-center gap-1.5 text-gray-600">
           <div className="rounded-full p-0.5 bg-gray-100 text-gray-600 flex items-center justify-center">
-            {getActivityIcon(activity.action)}
+            {/* Use the component icon safely */}
+            {(() => {
+              if (activity.action.includes("View")) return <Eye className="h-3.5 w-3.5" />;
+              if (activity.action.includes("Save")) return <Bookmark className="h-3.5 w-3.5" />;
+              if (activity.action.includes("Download")) return <FileText className="h-3.5 w-3.5" />;
+              if (activity.action.includes("message") || activity.action.includes("Message")) return <MessageCircle className="h-3.5 w-3.5" />;
+              if (activity.action.includes("offer") || activity.action.includes("Offer")) return <DollarSign className="h-3.5 w-3.5" />;
+              if (activity.action.includes("CRM") || activity.action.includes("Added")) return <Plus className="h-3.5 w-3.5" />;
+              if (activity.action.includes("call") || activity.action.includes("Call")) return <Phone className="h-3.5 w-3.5" />;
+              if (activity.action.includes("email") || activity.action.includes("Email")) return <Mail className="h-3.5 w-3.5" />;
+              if (activity.action.includes("Follow")) return <CornerDownRight className="h-3.5 w-3.5" />;
+              return <Clock className="h-3.5 w-3.5" />;
+            })()}
           </div>
           <span className="flex-1 truncate">{activity.action}</span>
           <span className="text-gray-400">{timeAgo(activity.timestamp)}</span>
@@ -2901,7 +2900,19 @@ export default function EngagementPage() {
                                 <TableCell>
                                   <div className="flex items-center gap-2">
                                     <div className="rounded-full p-1 bg-gray-100 text-gray-600">
-                                      {getActivityIcon(activity.action)}
+                                      {/* Use the component icon directly */}
+                                      {(() => {
+                                        if (activity.action.includes("View")) return <Eye className="h-3.5 w-3.5" />;
+                                        if (activity.action.includes("Save")) return <Bookmark className="h-3.5 w-3.5" />;
+                                        if (activity.action.includes("Download")) return <FileText className="h-3.5 w-3.5" />;
+                                        if (activity.action.includes("message") || activity.action.includes("Message")) return <MessageCircle className="h-3.5 w-3.5" />;
+                                        if (activity.action.includes("offer") || activity.action.includes("Offer")) return <DollarSign className="h-3.5 w-3.5" />;
+                                        if (activity.action.includes("CRM") || activity.action.includes("Added")) return <Plus className="h-3.5 w-3.5" />;
+                                        if (activity.action.includes("call") || activity.action.includes("Call")) return <Phone className="h-3.5 w-3.5" />;
+                                        if (activity.action.includes("email") || activity.action.includes("Email")) return <Mail className="h-3.5 w-3.5" />;
+                                        if (activity.action.includes("Follow")) return <CornerDownRight className="h-3.5 w-3.5" />;
+                                        return <Clock className="h-3.5 w-3.5" />;
+                                      })()}
                                     </div>
                                     <span>{activity.action}</span>
                                   </div>
