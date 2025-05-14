@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from "react";
 import { useLocation, Link, useParams } from "wouter";
 import { cn } from "@/lib/utils";
-import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home, Loader2, MessageSquare } from "lucide-react";
+import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home, Loader2, MessageSquare, Megaphone } from "lucide-react";
 import Navbar from "./navbar";
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -74,6 +74,13 @@ export function SellerDashboardLayoutWithUserId({
       href: `/sellerdash/${userId}/engagement`,
       exact: false,
       queries: ['/api/users', '/api/inquiries'],
+    },
+    {
+      label: "Marketing",
+      icon: Megaphone,
+      href: `/sellerdash/${userId}/marketing`,
+      exact: false,
+      queries: ['/api/users', '/api/campaigns'],
     },
     {
       label: "Analytics",
