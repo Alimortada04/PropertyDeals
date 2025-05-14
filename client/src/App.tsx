@@ -369,12 +369,12 @@ function Router() {
       <Route path="/sellerdash/:userId/engagement">
         {params => (
           <AppLayout>
-            {/* Using new fixed version */}
+            {/* Using Zillow-style split-screen layout */}
             {(() => {
-              const EngagementPage = React.lazy(() => import('./pages/sellerdash/[userId]/engagement.new'));
+              const EngagementZillowPage = React.lazy(() => import('./pages/sellerdash/[userId]/engagement.zillow'));
               return (
                 <React.Suspense fallback={<div>Loading...</div>}>
-                  <EngagementPage />
+                  <EngagementZillowPage />
                 </React.Suspense>
               );
             })()}
