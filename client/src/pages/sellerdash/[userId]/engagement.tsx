@@ -52,7 +52,9 @@ import {
   Building2,
   Timer,
   AlertTriangle as AlertIcon,
-  Lightbulb
+  Lightbulb,
+  Layout,
+  HelpCircle
 } from "lucide-react";
 import { SellerDashboardLayout } from "@/components/layout/seller-dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -149,6 +151,7 @@ import {
   AlertTitle,
 } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
+import { MoreHorizontal, ChevronUp } from "lucide-react";
 import { Sparkline } from '@/components/ui/sparkline';
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -1904,6 +1907,33 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
   );
 };
 
+// Get activity icon for specific actions
+function getActivityIcon(action: string) {
+  switch (action) {
+    case "Viewed property": return <Eye className="h-3 w-3" />;
+    case "Saved property": return <Bookmark className="h-3 w-3" />;
+    case "Made offer": return <DollarSign className="h-3 w-3" />;
+    case "Sent message": return <MessageCircle className="h-3 w-3" />;
+    case "Downloaded disclosures": return <FileText className="h-3 w-3" />;
+    case "Viewed floor plan": return <Layout className="h-3 w-3" />;
+    case "Requested info": return <HelpCircle className="h-3 w-3" />;
+    case "Check in": return <CheckCircle className="h-3 w-3" />;
+    default: return <Activity className="h-3 w-3" />;
+  }
+}
+
+// Helper function for offer status badge
+function getOfferStatusBadge(status: string) {
+  switch (status) {
+    case "new": return { label: "New", className: "bg-green-100 text-green-800 border-green-200" };
+    case "accepted": return { label: "Accepted", className: "bg-blue-100 text-blue-800 border-blue-200" };
+    case "declined": return { label: "Declined", className: "bg-red-100 text-red-800 border-red-200" };
+    case "replied": return { label: "Replied", className: "bg-purple-100 text-purple-800 border-purple-200" };
+    case "viewed": return { label: "Viewed", className: "bg-gray-100 text-gray-800 border-gray-200" };
+    default: return { label: status, className: "bg-gray-100 text-gray-800 border-gray-200" };
+  }
+}
+
 // Calculate response rate from engagements
 function calculateResponseRate(engagements: typeof mockEngagements): number {
   const messages = engagements.filter(e => e.type === "message");
@@ -2054,7 +2084,7 @@ function AIBuyerInsights({ buyerId }: AIBuyerInsightsProps) {
       },
       {
         type: "communication",
-        icon: <MessageSquare className="h-4 w-4 text-green-600" />,
+        icon: <MessageCircle className="h-4 w-4 text-green-600" />,
         title: "Communication Style",
         content: "Responds well to direct, concise messages focusing on ROI and investment potential rather than aesthetic features."
       }
@@ -2297,7 +2327,7 @@ function PropertyEngagementBlock({
                                 size="sm" 
                                 className="h-7 w-7 p-0"
                               >
-                                <MessageSquare className="h-4 w-4 text-gray-600" />
+                                <MessageCircle className="h-4 w-4 text-gray-600" />
                               </Button>
                               <Button 
                                 variant="ghost" 
@@ -2712,7 +2742,7 @@ export default function EngagementPage() {
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-9 border-dashed">
-                      <MessageSquare className="mr-2 h-4 w-4" />
+                      <MessageCircle className="mr-2 h-4 w-4" />
                       Engagement
                       {selectedEngagementTypes.length > 0 && 
                         <Badge className="ml-2 bg-blue-100 text-blue-800 hover:bg-blue-200 border-blue-200" variant="outline">
