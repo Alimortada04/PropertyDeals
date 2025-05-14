@@ -369,12 +369,12 @@ function Router() {
       <Route path="/sellerdash/:userId/engagement">
         {params => (
           <AppLayout>
-            {/* Using simple version to debug */}
+            {/* Using new fixed version */}
             {(() => {
-              const EngagementPageSimple = React.lazy(() => import('./pages/sellerdash/[userId]/engagement.simple'));
+              const EngagementPage = React.lazy(() => import('./pages/sellerdash/[userId]/engagement.new'));
               return (
                 <React.Suspense fallback={<div>Loading...</div>}>
-                  <EngagementPageSimple />
+                  <EngagementPage />
                 </React.Suspense>
               );
             })()}
