@@ -60,6 +60,7 @@ import {
   RefreshCw,
   LayoutGrid,
   List,
+  ArrowRight,
 } from "lucide-react";
 import { SellerDashboardLayout } from "@/components/layout/seller-dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
