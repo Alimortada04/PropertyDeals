@@ -552,46 +552,44 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
         {/* Compact financial info - horizontal layout */}
         <div className="flex items-center gap-1.5 mb-2">
           {/* Listing Price - black compact badge */}
-          <TooltipProvider>
-            <Tooltip>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip defaultOpen={false}>
               <TooltipTrigger asChild>
-                <Badge className="bg-gray-800 hover:bg-gray-900 text-white px-2 py-1 text-xs font-medium cursor-help">
+                <Badge className="bg-gray-800 hover:bg-gray-900 text-white px-2 py-1 text-xs font-medium cursor-help relative">
                   {formatCurrency(property.listPrice)}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent 
                 side="top" 
-                sideOffset={5}
+                sideOffset={10}
                 align="center"
-                className="z-[100] shadow-lg bg-white border border-gray-200"
-                forceMount
+                className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
               >
-                <div className="p-2.5 min-w-[200px]">
-                  <p className="font-medium">Listing Price</p>
-                  <p className="text-sm text-gray-600">Current asking price for this property</p>
+                <div className="p-3 min-w-[220px]">
+                  <p className="font-medium text-white">Listing Price</p>
+                  <p className="text-sm text-gray-200">Current asking price for this property</p>
                 </div>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
           
           {/* Assignment Profit - green compact badge */}
-          <TooltipProvider>
-            <Tooltip>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip defaultOpen={false}>
               <TooltipTrigger asChild>
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-200 px-2 py-1 text-xs font-medium cursor-help">
+                <Badge className="bg-green-100 text-green-800 hover:bg-green-200 px-2 py-1 text-xs font-medium cursor-help relative">
                   +{formatCurrency(property.assignmentProfit)}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent 
                 side="top" 
-                sideOffset={5}
+                sideOffset={10}
                 align="center"
-                className="z-[100] shadow-lg bg-white border border-gray-200"
-                forceMount
+                className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
               >
-                <div className="p-2.5 min-w-[200px]">
-                  <p className="font-medium">My Fee</p>
-                  <p className="text-sm text-gray-600">Your profit when assigning this contract to a buyer</p>
+                <div className="p-3 min-w-[220px]">
+                  <p className="font-medium text-white">My Fee</p>
+                  <p className="text-sm text-gray-200">Your profit when assigning this contract to a buyer</p>
                 </div>
               </TooltipContent>
             </Tooltip>
@@ -599,11 +597,11 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
           
           {/* Highest Offer - blue badge with tooltip - only if there are offers */}
           {property.offers > 0 && (
-            <TooltipProvider>
-              <Tooltip>
+            <TooltipProvider delayDuration={0}>
+              <Tooltip defaultOpen={false}>
                 <TooltipTrigger asChild>
                   <Badge 
-                    className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-2 py-1 text-xs font-medium cursor-pointer"
+                    className="bg-blue-100 text-blue-800 hover:bg-blue-200 px-2 py-1 text-xs font-medium cursor-pointer relative"
                     onClick={(e) => {
                       e.stopPropagation();
                       setLocation(`/sellerdash/${userId}/property/${property.id}?tab=offers`);
@@ -614,14 +612,13 @@ const PropertyCard = ({ property, onDragStart, onDrop, onDragEnd }: {
                 </TooltipTrigger>
                 <TooltipContent 
                   side="top" 
-                  sideOffset={5}
+                  sideOffset={10}
                   align="center"
-                  className="z-[100] shadow-lg bg-white border border-gray-200"
-                  forceMount
+                  className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
                 >
-                  <div className="p-2.5 min-w-[200px]">
-                    <p className="font-medium">Highest Offer</p>
-                    <p className="text-sm text-gray-600">Highest offer of {formatCurrency(395000)} received today</p>
+                  <div className="p-3 min-w-[220px]">
+                    <p className="font-medium text-white">Highest Offer</p>
+                    <p className="text-sm text-gray-200">Highest offer of {formatCurrency(395000)} received today</p>
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -1362,7 +1359,7 @@ export default function ManagePage() {
                     style={{ 
                       height: 'calc(100% - 85px)',
                       borderRadius: '0 0 12px 12px',
-                      paddingBottom: '40px' /* Add generous bottom padding to prevent content being cut off */
+                      paddingBottom: '80px' /* Increased bottom padding to prevent content being cut off */
                     }}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handlePropertyDrop(e, column.id)}

@@ -144,23 +144,22 @@ export function PropertyCard({
           <Badge variant="outline" className="bg-gray-50 font-normal">
             {formatNumber(sqft)} sqft
           </Badge>
-          <TooltipProvider>
-            <Tooltip>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip defaultOpen={false}>
               <TooltipTrigger asChild>
-                <Badge variant="outline" className="bg-gray-50 font-normal cursor-help">
+                <Badge variant="outline" className="bg-gray-50 font-normal cursor-help relative">
                   ARV: {formatCurrency(arv)}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent 
                 side="top" 
-                sideOffset={5}
+                sideOffset={10}
                 align="center"
-                className="z-[100] shadow-lg bg-white border border-gray-200"
-                forceMount
+                className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
               >
-                <div className="p-2.5 min-w-[200px]">
-                  <p className="font-medium">After Repair Value</p>
-                  <p className="text-sm text-gray-600">Estimated value of the property after renovations</p>
+                <div className="p-3 min-w-[220px]">
+                  <p className="font-medium text-white">After Repair Value</p>
+                  <p className="text-sm text-gray-200">Estimated value of the property after renovations</p>
                 </div>
               </TooltipContent>
             </Tooltip>
@@ -169,23 +168,22 @@ export function PropertyCard({
         
         {/* Property price */}
         <div className="flex justify-end mb-2">
-          <TooltipProvider>
-            <Tooltip>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip defaultOpen={false}>
               <TooltipTrigger asChild>
-                <Badge variant="outline" className="bg-gray-50 font-medium text-green-700 cursor-help">
+                <Badge variant="outline" className="bg-gray-50 font-medium text-green-700 cursor-help relative">
                   {formatCurrency(price)}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent 
                 side="top" 
-                sideOffset={5}
+                sideOffset={10}
                 align="center"
-                className="z-[100] shadow-lg bg-white border border-gray-200"
-                forceMount
+                className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
               >
-                <div className="p-2.5 min-w-[200px]">
-                  <p className="font-medium">Listing Price</p>
-                  <p className="text-sm text-gray-600">Current asking price for this property</p>
+                <div className="p-3 min-w-[220px]">
+                  <p className="font-medium text-white">Listing Price</p>
+                  <p className="text-sm text-gray-200">Current asking price for this property</p>
                 </div>
               </TooltipContent>
             </Tooltip>
