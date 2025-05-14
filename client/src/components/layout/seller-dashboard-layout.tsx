@@ -44,9 +44,16 @@ export function SellerDashboardLayoutWithUserId({
   const pageTransitionRef = useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   
-  // Define navigation items - Matching main dashboard
   // Define navigation items with their associated API queries for prefetching
-  const navItems = useMemo(() => [
+  interface NavItem {
+    label: string;
+    icon: React.ForwardRefExoticComponent<any>;
+    href: string;
+    exact?: boolean;
+    queries: string[];
+  }
+  
+  const navItems = useMemo<NavItem[]>(() => [
     {
       label: "Discover",
       icon: Compass,
@@ -58,21 +65,24 @@ export function SellerDashboardLayoutWithUserId({
       label: "Manage",
       icon: FileClock,
       href: `/sellerdash/${userId}/manage`,
+      exact: false,
       queries: ['/api/properties'],
     },
     {
       label: "Engagement",
       icon: MessageSquare,
       href: `/sellerdash/${userId}/engagement`,
+      exact: false,
       queries: ['/api/users', '/api/inquiries'],
     },
     {
       label: "Analytics",
       icon: BarChart3,
       href: `/sellerdash/${userId}/analytics`,
+      exact: false,
       queries: ['/api/properties', '/api/analytics'],
     },
-  ] as const, [userId]);
+  ], [userId]);
 
   // Preload associated data for faster page transitions
   useEffect(() => {
@@ -121,7 +131,7 @@ export function SellerDashboardLayoutWithUserId({
   };
 
   // Check if a nav item is active
-  const isActive = (href: string, exact = false) => {
+  const isActive = (href: string, exact: boolean = false) => {
     if (exact) {
       return location === href;
     }
