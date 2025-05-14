@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { useParams, useLocation } from "wouter";
 import { 
   MessageCircle, 
@@ -44,7 +44,15 @@ import {
   Zap,
   ListFilter,
   ChevronRight,
-  X
+  X,
+  Home,
+  Percent,
+  ChevronUp,
+  MoreHorizontal,
+  Building2,
+  Timer,
+  AlertTriangle as AlertIcon,
+  Lightbulb
 } from "lucide-react";
 import { SellerDashboardLayout } from "@/components/layout/seller-dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -126,7 +134,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { format, formatDistanceToNow, isAfter, subDays } from 'date-fns';
+import { format, formatDistanceToNow, isAfter, subDays, isWithinInterval, startOfWeek, endOfWeek, differenceInHours } from 'date-fns';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
 import { Sparkline } from '@/components/ui/sparkline';
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -1881,6 +1903,613 @@ const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
     </Card>
   );
 };
+
+// Calculate response rate from engagements
+function calculateResponseRate(engagements: typeof mockEngagements): number {
+  const messages = engagements.filter(e => e.type === "message");
+  const responded = messages.filter(e => e.status === "replied" || e.status === "accepted" || e.status === "declined");
+  
+  if (messages.length === 0) return 0;
+  return Math.round((responded.length / messages.length) * 100);
+}
+
+// BuyerProfile component
+interface BuyerProfileProps {
+  buyer?: typeof mockBuyers[0];
+}
+
+function BuyerProfile({ buyer }: BuyerProfileProps) {
+  if (!buyer) return null;
+  
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <Avatar className="h-14 w-14 border-2 border-white shadow-sm">
+          <AvatarFallback className="bg-blue-100 text-blue-800 font-semibold">
+            {buyer.name.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
+        <div>
+          <h3 className="font-semibold text-base">{buyer.name}</h3>
+          <div className="flex items-center gap-1 mt-0.5">
+            <CheckCircle className="h-3.5 w-3.5 text-blue-600" />
+            <span className="text-xs text-blue-700">Verified Buyer</span>
+          </div>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2 pt-2">
+        <div className="bg-gray-50 rounded-md p-2">
+          <p className="text-xs text-gray-500">Engagement</p>
+          <p className="font-medium">{buyer.engagementScore || 'N/A'}</p>
+        </div>
+        <div className="bg-gray-50 rounded-md p-2">
+          <p className="text-xs text-gray-500">Last Active</p>
+          <p className="font-medium">{timeAgo(buyer.lastActive)}</p>
+        </div>
+        <div className="bg-gray-50 rounded-md p-2">
+          <p className="text-xs text-gray-500">Budget Range</p>
+          <p className="font-medium">${formatNumber(buyer.fundsAvailable / 2)} - ${formatNumber(buyer.fundsAvailable)}</p>
+        </div>
+        <div className="bg-gray-50 rounded-md p-2">
+          <p className="text-xs text-gray-500">Response Rate</p>
+          <p className="font-medium">85%</p>
+        </div>
+      </div>
+      
+      <div className="pt-2">
+        <h4 className="text-sm font-medium mb-2">Buyer Tags</h4>
+        <div className="flex flex-wrap gap-1.5">
+          {buyer.interests?.map((tag, i) => (
+            <Badge 
+              key={i} 
+              variant="outline" 
+              className="bg-gray-100 text-gray-800 hover:bg-gray-200 px-2 py-0.5"
+            >
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      </div>
+      
+      <div className="pt-2">
+        <h4 className="text-sm font-medium mb-2">Properties Interested In</h4>
+        <div className="space-y-2">
+          {buyer.viewHistory?.map((view) => {
+            const property = getPropertyById(view.propertyId);
+            if (!property) return null;
+            
+            return (
+              <div key={view.propertyId} className="flex items-center justify-between gap-2 p-2 rounded-md border">
+                <div className="flex items-center gap-2">
+                  <div className="h-8 w-8 bg-gray-100 rounded-md overflow-hidden">
+                    <img 
+                      src={property.image} 
+                      alt={property.title} 
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">{property.address.split(',')[0]}</p>
+                    <p className="text-xs text-gray-500">${formatNumber(property.price)}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-1">
+                  <Badge variant="outline" className="text-xs">{view.count} views</Badge>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      
+      <div className="pt-3 flex justify-between border-t mt-4">
+        <Button variant="outline" size="sm" className="gap-1.5">
+          <Mail className="h-3.5 w-3.5" />
+          <span>Email</span>
+        </Button>
+        <Button variant="outline" size="sm" className="gap-1.5">
+          <Phone className="h-3.5 w-3.5" />
+          <span>Call</span>
+        </Button>
+        <Button variant="outline" size="sm" className="gap-1.5">
+          <FileText className="h-3.5 w-3.5" />
+          <span>Notes</span>
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// AI Buyer Insights Component
+interface AIBuyerInsightsProps {
+  buyerId: string;
+}
+
+function AIBuyerInsights({ buyerId }: AIBuyerInsightsProps) {
+  const buyer = mockBuyers.find(b => b.id === buyerId);
+  if (!buyer) return null;
+  
+  // Get AI-generated insights based on buyer behavior
+  const getInsights = () => {
+    return [
+      {
+        type: "preference",
+        icon: <Home className="h-4 w-4 text-blue-600" />,
+        title: "Property Preferences",
+        content: "Shows strong interest in properties with rental potential. Tends to engage more with properties in urban locations and under $450,000."
+      },
+      {
+        type: "behavior",
+        icon: <BarChart3 className="h-4 w-4 text-purple-600" />,
+        title: "Engagement Pattern",
+        content: "Typically views properties multiple times before saving or making an offer. Most active during evenings and weekends."
+      },
+      {
+        type: "opportunities",
+        icon: <Zap className="h-4 w-4 text-amber-600" />,
+        title: "Opportunity Signals",
+        content: "Has viewed '123 Main St' multiple times but hasn't made an offer. Consider sending additional information or a personalized message."
+      },
+      {
+        type: "communication",
+        icon: <MessageSquare className="h-4 w-4 text-green-600" />,
+        title: "Communication Style",
+        content: "Responds well to direct, concise messages focusing on ROI and investment potential rather than aesthetic features."
+      }
+    ];
+  };
+  
+  const insights = getInsights();
+  
+  return (
+    <div className="space-y-4">
+      {insights.map((insight, i) => (
+        <div key={i} className="mb-3 pb-3 border-b last:border-0 last:mb-0 last:pb-0">
+          <div className="flex items-center gap-2 mb-1.5">
+            {insight.icon}
+            <h4 className="text-sm font-medium">{insight.title}</h4>
+          </div>
+          <p className="text-sm text-gray-600 pl-6">{insight.content}</p>
+        </div>
+      ))}
+      
+      <Button className="w-full bg-[#135341] hover:bg-[#09261E] gap-1.5">
+        <Sparkles className="h-4 w-4" />
+        <span>Generate Action Plan</span>
+      </Button>
+    </div>
+  );
+}
+
+// PropertyEngagementBlock Component
+interface PropertyEngagementBlockProps {
+  property: typeof mockProperties[0];
+  engagements: typeof mockEngagements;
+  onViewBuyer: (buyerId: string) => void;
+  onUseAI: (engagementId: string) => void;
+  saveToOfferRate: number;
+}
+
+function PropertyEngagementBlock({ 
+  property, 
+  engagements,
+  onViewBuyer,
+  onUseAI,
+  saveToOfferRate
+}: PropertyEngagementBlockProps) {
+  const [isExpanded, setIsExpanded] = useState(true);
+  
+  // Group engagements by type
+  const offers = engagements.filter(e => e.type === "offer");
+  const messages = engagements.filter(e => e.type === "message");
+  const views = engagements.filter(e => e.type === "view");
+  const saves = engagements.filter(e => e.type === "save");
+  
+  // Get stats
+  const viewCount = views.length;
+  const saveCount = saves.length;
+  const messageCount = messages.length;
+  const offerCount = offers.length;
+  
+  // Get unique buyers
+  const uniqueBuyerIds = new Set();
+  engagements.forEach(e => uniqueBuyerIds.add(e.buyerId));
+  const uniqueBuyers = Array.from(uniqueBuyerIds).map(id => 
+    getBuyerById(id as string)
+  ).filter(Boolean);
+  
+  // Check for recent activity
+  const hasRecentActivity = engagements.some(e => {
+    const activityTime = new Date(e.timestamp);
+    const hoursDiff = Math.floor((new Date().getTime() - activityTime.getTime()) / (1000 * 60 * 60));
+    return hoursDiff < 24;
+  });
+  
+  // Check for save without offer
+  const saveWithoutOffer = saves.some(save => 
+    !offers.some(offer => offer.buyerId === save.buyerId)
+  );
+  
+  return (
+    <Card className={cn(
+      "overflow-hidden transition-all duration-200",
+      hasRecentActivity && "border-l-4 border-l-blue-500"
+    )}>
+      <CardHeader className="pb-3 px-4 pt-4">
+        <div className="flex justify-between items-start">
+          {/* Property info */}
+          <div className="flex items-center gap-3">
+            <div className="h-16 w-20 bg-gray-100 rounded-md overflow-hidden">
+              <img 
+                src={property.image} 
+                alt={property.title} 
+                className="h-full w-full object-cover"
+              />
+            </div>
+            
+            <div>
+              <CardTitle className="text-lg flex items-center">
+                {property.address.split(',')[0]}
+              </CardTitle>
+              <div className="flex flex-wrap items-center gap-2 mt-1">
+                <Badge className={getStatusBadge(property.status).color}>
+                  {property.status}
+                </Badge>
+                <span className="text-sm text-gray-600">${formatNumber(property.price)}</span>
+                <span className="text-xs text-gray-500">
+                  {property.beds} bed • {property.baths} bath • {property.sqft} sqft
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Toggle expand/collapse */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="h-8 w-8 p-0" 
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {isExpanded ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
+      </CardHeader>
+      
+      {isExpanded && (
+        <>
+          <CardContent className="px-4 pb-3 pt-0">
+            <div className="space-y-4">
+              {/* Engagement snapshot */}
+              <div className="flex flex-wrap gap-3">
+                <div className="bg-purple-50 rounded-lg p-2 flex items-center">
+                  <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center mr-2">
+                    <Eye className="h-4 w-4 text-purple-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-purple-600">Views</p>
+                    <p className="font-medium">{viewCount}</p>
+                  </div>
+                </div>
+                
+                <div className="bg-amber-50 rounded-lg p-2 flex items-center">
+                  <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center mr-2">
+                    <Bookmark className="h-4 w-4 text-amber-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-amber-600">Saves</p>
+                    <p className="font-medium">{saveCount}</p>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 rounded-lg p-2 flex items-center">
+                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-2">
+                    <MessageCircle className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-blue-600">Messages</p>
+                    <p className="font-medium">{messageCount}</p>
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 rounded-lg p-2 flex items-center">
+                  <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center mr-2">
+                    <DollarSign className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-green-600">Offers</p>
+                    <p className="font-medium">{offerCount}</p>
+                  </div>
+                </div>
+                
+                {saveToOfferRate > 0 && (
+                  <div className="bg-indigo-50 rounded-lg p-2 flex items-center">
+                    <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center mr-2">
+                      <Percent className="h-4 w-4 text-indigo-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-indigo-600">Save to Offer</p>
+                      <p className="font-medium">{saveToOfferRate.toFixed(0)}%</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Opportunity indicator */}
+              {saveWithoutOffer && (
+                <Alert variant="outline" className="bg-amber-50 border-amber-200">
+                  <Zap className="h-4 w-4 text-amber-600" />
+                  <AlertTitle className="text-sm font-medium text-amber-800">Opportunity</AlertTitle>
+                  <AlertDescription className="text-xs text-amber-700">
+                    {saves.length - offers.length} buyer{saves.length - offers.length > 1 ? 's' : ''} saved this property but haven't made an offer yet.
+                  </AlertDescription>
+                </Alert>
+              )}
+              
+              {/* Engagement sections */}
+              <div className="space-y-4">
+                {/* Latest offers */}
+                {offers.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-medium mb-2">Latest Offers</h3>
+                    <div className="space-y-2">
+                      {offers.slice(0, 3).map((offer) => (
+                        <div 
+                          key={offer.id} 
+                          className={cn(
+                            "border rounded-lg p-3 hover:bg-gray-50 transition-colors",
+                            offer.status === "new" && "border-l-4 border-l-green-500"
+                          )}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-7 w-7">
+                                <AvatarFallback>{offer.buyerName[0]}</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <p className="font-medium text-sm">{offer.buyerName}</p>
+                                <p className="text-xs text-gray-500">{timeAgo(offer.timestamp)}</p>
+                              </div>
+                            </div>
+                            <Badge className={getStatusBadge(offer.status).color}>
+                              {offer.status}
+                            </Badge>
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <p className="text-base font-semibold text-green-700">${formatNumber(offer.offerAmount || 0)}</p>
+                            <div className="flex items-center gap-1">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 w-7 p-0"
+                                onClick={() => onViewBuyer(offer.buyerId)}
+                              >
+                                <User className="h-4 w-4 text-gray-600" />
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 w-7 p-0"
+                              >
+                                <MessageSquare className="h-4 w-4 text-gray-600" />
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 w-7 p-0"
+                              >
+                                <MoreHorizontal className="h-4 w-4 text-gray-600" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {offers.length > 3 && (
+                        <Button variant="ghost" size="sm" className="w-full text-xs">
+                          View {offers.length - 3} more offers
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Latest messages */}
+                {messages.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-medium mb-2">Latest Messages</h3>
+                    <div className="space-y-2">
+                      {messages.slice(0, 3).map((message) => (
+                        <div 
+                          key={message.id} 
+                          className={cn(
+                            "border rounded-lg p-3 hover:bg-gray-50 transition-colors",
+                            message.status === "new" && "border-l-4 border-l-blue-500"
+                          )}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-7 w-7">
+                                <AvatarFallback>{message.buyerName[0]}</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <p className="font-medium text-sm">{message.buyerName}</p>
+                                <p className="text-xs text-gray-500">{timeAgo(message.timestamp)}</p>
+                              </div>
+                            </div>
+                            {message.status === "new" ? (
+                              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">New</Badge>
+                            ) : (
+                              <Badge variant="outline" className="bg-gray-100 text-gray-800">Replied</Badge>
+                            )}
+                          </div>
+                          
+                          <p className="text-sm text-gray-700 mb-2">{message.message}</p>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1.5">
+                              {message.aiSentiment && (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger>
+                                      <div className={cn(
+                                        "rounded-full p-1",
+                                        message.aiSentiment === "positive" && "bg-green-100",
+                                        message.aiSentiment === "neutral" && "bg-gray-100",
+                                        message.aiSentiment === "negative" && "bg-red-100"
+                                      )}>
+                                        {getSentimentIndicator(message.aiSentiment).icon}
+                                      </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="bottom" className="bg-black/90 text-white border-0">
+                                      {getSentimentIndicator(message.aiSentiment).text}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
+                              
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 gap-1 text-xs text-blue-600"
+                                onClick={() => onUseAI(message.id)}
+                              >
+                                <Sparkles className="h-3.5 w-3.5" />
+                                <span>AI Respond</span>
+                              </Button>
+                            </div>
+                            
+                            <div className="flex items-center gap-1">
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 w-7 p-0"
+                                onClick={() => onViewBuyer(message.buyerId)}
+                              >
+                                <User className="h-4 w-4 text-gray-600" />
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 w-7 p-0"
+                              >
+                                <ArrowUpRight className="h-4 w-4 text-gray-600" />
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 w-7 p-0"
+                              >
+                                <MoreHorizontal className="h-4 w-4 text-gray-600" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {messages.length > 3 && (
+                        <Button variant="ghost" size="sm" className="w-full text-xs">
+                          View {messages.length - 3} more messages
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Buyers */}
+                {uniqueBuyers.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-medium mb-2">Engaged Buyers ({uniqueBuyers.length})</h3>
+                    <div className="flex flex-wrap gap-2 items-center mb-2">
+                      {uniqueBuyers.slice(0, 8).map((buyer) => (
+                        <TooltipProvider key={buyer!.id}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Avatar 
+                                className="h-9 w-9 border-2 border-white cursor-pointer hover:ring-2 hover:ring-gray-200 transition-all"
+                                onClick={() => onViewBuyer(buyer!.id)}
+                              >
+                                <AvatarFallback className="bg-blue-100 text-blue-800 text-xs">
+                                  {buyer!.name.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="bg-black/90 text-white border-0 p-3">
+                              <div className="space-y-1">
+                                <p className="font-medium">{buyer!.name}</p>
+                                <div className="flex items-center gap-1.5 text-xs">
+                                  <div className="rounded-full bg-blue-100 p-1">
+                                    <Eye className="h-3 w-3 text-blue-600" />
+                                  </div>
+                                  <span>{buyer!.viewHistory?.length || 0} views</span>
+                                </div>
+                                {buyer!.interests && buyer!.interests.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 mt-1">
+                                    {buyer!.interests.slice(0, 2).map((tag, i) => (
+                                      <Badge key={i} variant="outline" className="bg-gray-800/90 text-gray-200 border-gray-700 text-[10px] px-1 py-0">
+                                        {tag}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ))}
+                      
+                      {uniqueBuyers.length > 8 && (
+                        <Avatar className="h-9 w-9 border-2 border-white cursor-pointer hover:scale-105 transition-all" onClick={() => {}}>
+                          <AvatarFallback className="bg-gray-100 text-gray-800 text-xs">
+                            +{uniqueBuyers.length - 8}
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+          
+          <CardFooter className="px-4 py-3 flex justify-between border-t">
+            <Button variant="outline" size="sm" onClick={() => {}}>
+              <Eye className="h-4 w-4 mr-1.5" />
+              <span>View Activity</span>
+            </Button>
+            
+            <div className="flex items-center gap-2">
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-1.5">
+                      <Sparkles className="h-4 w-4 text-purple-600" />
+                      <span>AI Assist</span>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="bg-black/90 text-white border-0">
+                    Get AI insights and response suggestions
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              
+              <Button className="bg-[#135341] hover:bg-[#09261E]" size="sm">
+                <MessageCircle className="h-4 w-4 mr-1.5" />
+                <span>Respond</span>
+              </Button>
+            </div>
+          </CardFooter>
+        </>
+      )}
+    </Card>
+  );
+}
 
 // Main Engagement Page Component
 export default function EngagementPage() {
