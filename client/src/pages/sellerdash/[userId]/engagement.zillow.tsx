@@ -1297,25 +1297,22 @@ export default function EngagementZillowPage() {
             {/* Response Rate Card */}
             <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 relative">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
+                  <MailCheck className="h-7 w-7 text-indigo-400 opacity-70" />
+                </div>
                 
                 <div className="relative">
-                  <div className="flex items-center mb-3">
-                    <div className="bg-indigo-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
-                      <MailCheck className="h-5 w-5 text-indigo-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Response Rate</p>
-                      <div className="flex items-center">
-                        <span className="text-2xl font-bold">{responseRate}%</span>
-                        <div className="flex items-center ml-2 text-amber-600">
-                          <span className="text-xs">Avg: 2.5h</span>
-                        </div>
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-500">Response Rate</p>
+                    <div className="flex items-center">
+                      <span className="text-2xl font-bold">{responseRate}%</span>
+                      <div className="flex items-center ml-2 text-amber-600">
+                        <span className="text-xs">Avg: 2.5h</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="pl-12 pr-2">
+                  <div className="pr-2">
                     <div className="relative">
                       <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                         <div 
@@ -1341,22 +1338,66 @@ export default function EngagementZillowPage() {
         <div className="flex-grow flex overflow-hidden">
           {/* Left Column - Property List */}
           <div className="w-1/3 border-r overflow-y-auto p-4">
+            {/* Search and Filter Bar */}
+            <div className="mb-4 space-y-3">
+              {/* Search Bar */}
+              <div className="relative">
+                <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search property address..." 
+                  className="w-full h-9 pl-9 pr-3 text-sm rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#135341] focus:border-transparent"
+                />
+              </div>
+              
+              {/* Filters Row */}
+              <div className="flex gap-2">
+                {/* Status Filter Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="flex items-center gap-1 h-9 text-sm">
+                      <Filter className="h-3.5 w-3.5 text-gray-500" />
+                      <span>Filter</span>
+                      <ChevronDown className="h-3.5 w-3.5 text-gray-500" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-40">
+                    <DropdownMenuLabel>Status</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-green-500"></span>
+                      New
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-blue-500"></span>
+                      Replied
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex items-center gap-2">
+                      <span className="h-2 w-2 rounded-full bg-amber-500"></span>
+                      Unread
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                
+                {/* Sort Dropdown */}
+                <Select value="recent" onValueChange={() => {}}>
+                  <SelectTrigger className="h-9 text-sm flex-grow">
+                    <SelectValue placeholder="Sort by: Most Recent" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="recent">Most Recent Activity</SelectItem>
+                    <SelectItem value="priority">Priority</SelectItem>
+                    <SelectItem value="needs-response">Needs Response</SelectItem>
+                    <SelectItem value="price_high">Price (High to Low)</SelectItem>
+                    <SelectItem value="price_low">Price (Low to High)</SelectItem>
+                    <SelectItem value="views">Most Views</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-base font-medium">Properties ({filteredProperties.length})</h2>
-              <Select 
-                value="recent" 
-                onValueChange={() => {}}
-              >
-                <SelectTrigger className="h-8 text-xs w-[130px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="recent">Most Recent Activity</SelectItem>
-                  <SelectItem value="price_high">Price (High to Low)</SelectItem>
-                  <SelectItem value="price_low">Price (Low to High)</SelectItem>
-                  <SelectItem value="views">Most Views</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
             
             {filteredProperties.map((property) => (
