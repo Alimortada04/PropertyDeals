@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { useParams } from "wouter";
 import { 
   MessageCircle, 
@@ -28,6 +28,8 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Sparkles,
+  ChevronLeft,
+  ChevronRight,
   ExternalLink,
   Trash,
   Activity,
@@ -45,7 +47,6 @@ import {
   Zap,
   ThumbsUp,
   ListFilter,
-  ChevronRight,
   X,
   Home,
   Percent,
@@ -1244,19 +1245,24 @@ function PropertyDetailView({
         </CardContent>
       </Card>
       
-      {/* Property Timeline */}
+      {/* Property Timeline - Horizontal Carousel */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-base font-medium">Property Timeline</h3>
+          <div className="flex gap-1">
+            <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
         
         <Card className="border rounded-lg overflow-hidden">
           <CardContent className="p-4">
             {/* Timeline visualization */}
             <div className="relative">
-              {/* Timeline bar */}
-              <div className="absolute left-0 right-0 h-2 bg-gray-100 top-[28px] z-0"></div>
-              
               {/* Determine current stage */}
               {(() => {
                 let currentStage = 0; // 0: Listed
@@ -1292,7 +1298,7 @@ function PropertyDetailView({
                     date: engagements
                       .filter(e => e.type === "save")
                       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
-                    color: "rgb(180, 83, 9)", // amber-700
+                    color: "rgb(234, 179, 8)", // yellow-500
                     active: currentStage >= 2,
                     completed: currentStage > 2
                   },
@@ -1302,7 +1308,7 @@ function PropertyDetailView({
                     date: engagements
                       .filter(e => e.type === "message")
                       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
-                    color: "rgb(29, 78, 216)", // blue-700
+                    color: "rgb(59, 130, 246)", // blue-500
                     active: currentStage >= 3,
                     completed: currentStage > 3
                   },
@@ -1312,7 +1318,7 @@ function PropertyDetailView({
                     date: engagements
                       .filter(e => e.type === "offer")
                       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
-                    color: "rgb(21, 128, 61)", // green-700
+                    color: "rgb(34, 197, 94)", // green-500
                     active: currentStage >= 4,
                     completed: currentStage > 4
                   },
@@ -1320,7 +1326,7 @@ function PropertyDetailView({
                     name: "Offer Accepted",
                     icon: <ThumbsUp className="h-4 w-4" />,
                     date: null, // We don't have this in mock data yet
-                    color: "rgb(202, 138, 4)", // yellow-600
+                    color: "rgb(245, 158, 11)", // amber-500
                     active: currentStage >= 5,
                     completed: currentStage > 5
                   },
@@ -1344,52 +1350,50 @@ function PropertyDetailView({
                 
                 return (
                   <>
-                    {/* Progress bar */}
-                    <div className="absolute left-0 h-2 bg-gradient-to-r from-[#135341] to-green-500 top-[28px] z-[1] rounded-r-full" style={{ width: `${progressPercentage}%` }}></div>
+                    {/* Horizontal Carousel Timeline */}
+                    <div className="relative">
+                      {/* Timeline bar */}
+                      <div className="absolute left-0 right-0 h-2 bg-gray-100 top-[28px] z-0"></div>
+                      
+                      {/* Progress bar */}
+                      <div className="absolute left-0 h-2 bg-gradient-to-r from-[#135341] to-green-500 top-[28px] z-[1] rounded-r-full" style={{ width: `${progressPercentage}%` }}></div>
                     
-                    {/* Timeline stages */}
-                    <div className="flex justify-between relative z-10 px-2">
-                      {visibleStages.map((stage, index) => (
-                        <div key={index} className="flex flex-col items-center gap-1 w-20">
-                          <div 
-                            className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
-                              stage.active 
-                                ? `bg-${stage.color} text-white` 
-                                : `bg-gray-100 text-gray-400 border-2 border-dashed border-gray-300`
-                            }`}
-                            style={{ backgroundColor: stage.active ? stage.color : undefined }}
-                          >
-                            {stage.icon}
-                          </div>
-                          <p className={`text-xs font-medium ${stage.active ? 'text-gray-800' : 'text-gray-400'}`}>
-                            {stage.name}
-                          </p>
-                          {stage.date && (
-                            <p className="text-[10px] text-gray-500">
-                              {formatDate(stage.date)}
-                            </p>
-                          )}
+                      {/* Timeline stages - Scrollable Horizontal Carousel */}
+                      <div className="relative z-10 pb-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                        <div className="flex min-w-max px-2 pb-2 pt-1 space-x-6">
+                          {visibleStages.map((stage, index) => (
+                            <div key={index} className="flex flex-col items-center gap-1 min-w-[80px] transition-all hover:scale-105">
+                              <div 
+                                className={`h-10 w-10 rounded-full flex items-center justify-center transition-all shadow-sm ${
+                                  stage.active 
+                                    ? 'text-white' 
+                                    : 'bg-gray-100 text-gray-400 border-2 border-dashed border-gray-300'
+                                }`}
+                                style={{ backgroundColor: stage.active ? stage.color : undefined }}
+                              >
+                                {stage.icon}
+                              </div>
+                              <p className={`text-xs font-semibold mt-1 ${stage.active ? 'text-gray-800' : 'text-gray-400'}`}>
+                                {stage.name}
+                              </p>
+                              {stage.date && (
+                                <p className="text-[10px] text-gray-500">
+                                  {formatDate(stage.date)}
+                                </p>
+                              )}
+                              {stage.active && currentStage === index && (
+                                <div className="mt-1 bg-white shadow-sm border border-gray-200 rounded-full px-2 py-0.5 text-[10px] font-medium text-[#135341]">
+                                  Current
+                                </div>
+                              )}
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                    
-                    {/* Current stage marker */}
-                    <div 
-                      className="absolute flex flex-col items-center mt-1" 
-                      style={{ 
-                        left: `${(currentStage / (visibleStages.length - 1)) * 100}%`, 
-                        transform: 'translateX(-50%)',
-                        top: '42px'
-                      }}
-                    >
-                      <div className="h-4 w-1 bg-gray-200 mb-1"></div>
-                      <div className="bg-white shadow-md border border-gray-200 rounded-full px-2 py-0.5 text-[10px] font-medium text-gray-600">
-                        Current Stage
                       </div>
                     </div>
                     
                     {/* Current status */}
-                    <div className="bg-gray-50 p-3 mt-12 rounded-lg border border-gray-100">
+                    <div className="bg-gray-50 p-3 mt-4 rounded-lg border border-gray-100">
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
                           <div className="p-1.5 rounded-full bg-[#135341]/10">
