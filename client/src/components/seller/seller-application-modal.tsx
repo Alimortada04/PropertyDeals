@@ -465,8 +465,9 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[550px] max-h-[85vh] h-auto overflow-hidden p-0 flex flex-col">
-        <DialogHeader className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-10">
+      <DialogContent className="sm:max-w-[550px] max-h-[85vh] h-auto w-[95vw] overflow-hidden p-0 flex flex-col">
+        {/* Fixed Header */}
+        <div className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-10">
           <DialogTitle className="text-xl font-semibold">Seller Application</DialogTitle>
           <DialogDescription>
             Complete this application to become a verified PropertyDeals seller.
@@ -480,7 +481,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
             </div>
             <Progress value={(currentStep / 4) * 100} className="h-2" />
           </div>
-        </DialogHeader>
+        </div>
         
         {/* Scrollable content area */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
@@ -1451,7 +1452,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         </div>
         
         {/* Action buttons - positioned outside of scrollable area */}
-        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4 mt-0 px-6 py-4 border-t">
+        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4 mt-0 px-6 py-4 border-t bg-white sticky bottom-0">
           <div>
             {currentStep > 1 ? (
               <Button 
