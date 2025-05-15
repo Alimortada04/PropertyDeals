@@ -750,7 +750,7 @@ export default function DashboardManageTab() {
           {pipelineView === "kanban" ? (
             /* Kanban board with drag and drop */
             <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
+              <div className="flex gap-4 overflow-x-auto pb-1 hide-scrollbar">
                 {columns.map((column) => (
                   <div key={column.id} className="flex-shrink-0 w-[280px]">
                     <div className="bg-white rounded-t-lg border border-gray-200 p-3 mb-2">
@@ -771,7 +771,7 @@ export default function DashboardManageTab() {
                     <Droppable droppableId={column.id}>
                       {(provided, snapshot) => (
                         <div 
-                          className={`h-[calc(100vh-300px)] overflow-y-auto border border-gray-200 rounded-b-lg p-3 transition-colors duration-200 ${
+                          className={`h-[calc(100vh-320px)] overflow-y-auto border border-gray-200 rounded-b-lg p-3 transition-colors duration-200 ${
                             snapshot.isDraggingOver 
                               ? 'bg-green-50 border-green-300' 
                               : 'bg-gray-50'
@@ -908,7 +908,7 @@ export default function DashboardManageTab() {
                            property.stage === 'closed' ? 'Closed' : 'Dropped'}
                         </Badge>
                         <Badge variant="outline" className="font-normal text-xs">
-                          {property.type || 'Residential'}
+                          {property.propertyType || 'Residential'}
                         </Badge>
                       </div>
                       

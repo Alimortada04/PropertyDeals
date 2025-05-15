@@ -191,7 +191,7 @@ export function SellerDashboardLayoutWithUserId({
       {/* Main content with transition effects */}
       <div className="flex-1">
         <div 
-          className="container max-w-7xl mx-auto px-4 pt-6 transition-opacity duration-200 ease-out"
+          className="container max-w-7xl mx-auto px-4 pt-6 pb-6 transition-opacity duration-200 ease-out"
           ref={pageTransitionRef}
           style={{ opacity: isInitialLoad ? '0' : '1' }}
         >
