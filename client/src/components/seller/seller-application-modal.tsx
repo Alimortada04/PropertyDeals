@@ -465,17 +465,17 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[550px] max-h-[90vh] md:max-h-[85vh] h-[90vh] w-[92vw] overflow-hidden p-0 flex flex-col rounded-lg border-0">
-        {/* HEADER: Fixed at top */}
-        <div className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-30 shadow-sm flex-shrink-0">
-          <DialogTitle className="text-xl font-semibold">Seller Application</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-[550px] h-auto max-h-[85vh] w-[92vw] p-0 flex flex-col rounded-lg border-0 overflow-hidden">
+        {/* HEADER: Fixed header section */}
+        <div className="p-6 pb-4 border-b bg-white flex-none">
+          <DialogTitle className="text-xl font-semibold mb-1.5">Seller Application</DialogTitle>
+          <DialogDescription className="text-gray-600">
             Complete this application to become a verified PropertyDeals seller.
           </DialogDescription>
           
-          {/* Progress indicator - Always visible */}
-          <div className="pt-2 pb-2">
-            <div className="flex justify-between text-sm text-gray-500 mb-1">
+          {/* Progress indicator */}
+          <div className="mt-4 mb-1">
+            <div className="flex justify-between text-sm text-gray-500 mb-2">
               <span>Step {currentStep} of 4</span>
               <span>{Math.round((currentStep / 4) * 100)}% Complete</span>
             </div>
@@ -483,23 +483,23 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
           </div>
         </div>
         
-        {/* CONTENT: Middle scrollable section */}
+        {/* CONTENT: Scrollable content area */}
         <div className="flex-1 overflow-y-auto px-6 py-4">
           {/* Step labels */}
           <div className="grid grid-cols-4 mb-6 text-xs text-center">
-          <div className={`transition-colors ${currentStep >= 1 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
-            Basic Info
+            <div className={`transition-colors ${currentStep >= 1 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
+              Basic Info
+            </div>
+            <div className={`transition-colors ${currentStep >= 2 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
+              Activity
+            </div>
+            <div className={`transition-colors ${currentStep >= 3 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
+              Trust
+            </div>
+            <div className={`transition-colors ${currentStep >= 4 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
+              Review
+            </div>
           </div>
-          <div className={`transition-colors ${currentStep >= 2 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
-            Activity
-          </div>
-          <div className={`transition-colors ${currentStep >= 3 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
-            Trust
-          </div>
-          <div className={`transition-colors ${currentStep >= 4 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
-            Review
-          </div>
-        </div>
         
         {/* Step 1: Basic Information */}
         {currentStep === 1 && (
@@ -1451,16 +1451,16 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         )}
         </div>
         
-        {/* FOOTER: Fixed at bottom */}
-        <DialogFooter className="flex flex-col px-6 py-4 border-t bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] sticky bottom-0 z-30 w-full flex-shrink-0">
-          {/* Action buttons row */}
-          <div className="flex flex-col sm:flex-row justify-between w-full">
+        {/* FOOTER: Action buttons and login link */}
+        <div className="border-t bg-white flex-none">
+          {/* Main action buttons */}
+          <div className="p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div>
               {currentStep > 1 ? (
                 <Button 
                   variant="outline" 
                   onClick={handlePrevStep}
-                  className="hover:bg-gray-100 transition-colors font-medium"
+                  className="w-full sm:w-auto hover:bg-gray-100 transition-colors"
                 >
                   Back
                 </Button>
@@ -1468,18 +1468,18 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                 <Button 
                   variant="outline" 
                   onClick={onClose}
-                  className="hover:bg-gray-100 transition-colors font-medium"
+                  className="w-full sm:w-auto hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </Button>
               )}
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-2 mt-3 sm:mt-0">
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Button 
                 variant="outline" 
                 onClick={handleSaveDraft}
-                className="hover:bg-gray-100 transition-colors font-medium"
+                className="hover:bg-gray-100 transition-colors"
                 disabled={isSaving}
               >
                 {isSaving ? (
@@ -1495,14 +1495,14 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
               {currentStep < 4 ? (
                 <Button 
                   onClick={handleNextStep} 
-                  className="bg-[#135341] hover:bg-[#09261E] text-white font-medium shadow-sm transition-colors"
+                  className="bg-[#135341] hover:bg-[#09261E] text-white shadow-sm transition-colors"
                 >
                   Continue <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               ) : (
                 <Button 
                   onClick={handleSubmitApplication} 
-                  className="bg-[#135341] hover:bg-[#09261E] text-white font-medium shadow-sm transition-colors"
+                  className="bg-[#135341] hover:bg-[#09261E] text-white shadow-sm transition-colors"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -1518,13 +1518,13 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
             </div>
           </div>
           
-          {/* Login text - at the very bottom and centered */}
-          <div className="mt-4 w-full border-t pt-3 -mx-6 px-6 flex justify-center">
-            <p className="text-xs text-gray-500 text-center">
-              Already a seller? <a href={`/sellerdash/${user?.id}`} className="text-green-700 font-medium underline">Log in to your dashboard here</a>
+          {/* Login link - in its own section */}
+          <div className="text-center py-3 bg-gray-50 w-full border-t">
+            <p className="text-xs text-gray-500">
+              Already a seller? <a href={`/sellerdash/${user?.id}`} className="text-green-700 font-medium hover:underline">Log in to your dashboard here</a>
             </p>
           </div>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
