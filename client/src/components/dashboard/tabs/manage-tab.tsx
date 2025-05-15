@@ -568,31 +568,39 @@ export default function DashboardManageTab() {
     
     const { source, destination, draggableId } = result;
     
+    // We're not implementing column reordering in this version
     // Only handle card drag between columns, not same column reordering
     if (source.droppableId === destination.droppableId) {
       // We could implement card reordering within a column here if needed
+      // For now, we'll skip same-column reordering
       return;
     }
     
+    // Property cards can be dragged between columns to change their stage
     // Visual feedback for successful drop
-    const columnTitle = columns.find(col => col.id === destination.droppableId)?.title || 'new stage';
-    const toastMessage = `Property moved to ${columnTitle}`;
-    toast({
-      title: "Stage Updated",
-      description: toastMessage,
-      variant: "default",
-    });
+    const sourceColumn = columns.find(col => col.id === source.droppableId);
+    const destColumn = columns.find(col => col.id === destination.droppableId);
     
-    // In a real app, this would call an API to update the database
-    const propertyId = parseInt(draggableId);
-    const updatedProperties = localProperties.map(p => {
-      if (p.id === propertyId) {
-        return { ...p, stage: destination.droppableId };
-      }
-      return p;
-    });
-    
-    setLocalProperties(updatedProperties);
+    if (sourceColumn && destColumn) {
+      const columnTitle = destColumn.title || 'new stage';
+      const toastMessage = `Property moved from "${sourceColumn.title}" to "${columnTitle}"`;
+      toast({
+        title: "Stage Updated",
+        description: toastMessage,
+        variant: "default",
+      });
+      
+      // In a real app, this would call an API to update the database
+      const propertyId = parseInt(draggableId);
+      const updatedProperties = localProperties.map(p => {
+        if (p.id === propertyId) {
+          return { ...p, stage: destination.droppableId };
+        }
+        return p;
+      });
+      
+      setLocalProperties(updatedProperties);
+    }
   };
   
   // Generate propertiesByStage based on localProperties
@@ -761,9 +769,13 @@ export default function DashboardManageTab() {
                     </div>
                     
                     <Droppable droppableId={column.id}>
-                      {(provided) => (
+                      {(provided, snapshot) => (
                         <div 
-                          className="h-[calc(100vh-300px)] overflow-y-auto bg-gray-50 border border-gray-200 rounded-b-lg p-3"
+                          className={`h-[calc(100vh-300px)] overflow-y-auto border border-gray-200 rounded-b-lg p-3 transition-colors duration-200 ${
+                            snapshot.isDraggingOver 
+                              ? 'bg-green-50 border-green-300' 
+                              : 'bg-gray-50'
+                          }`}
                           ref={provided.innerRef}
                           {...provided.droppableProps}
                         >
@@ -778,11 +790,17 @@ export default function DashboardManageTab() {
                                 draggableId={property.id.toString()} 
                                 index={index}
                               >
-                                {(provided) => (
+                                {(provided, snapshot) => (
                                   <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
+                                    style={{
+                                      ...provided.draggableProps.style,
+                                      transform: snapshot.isDragging ? provided.draggableProps.style?.transform : "none",
+                                      opacity: snapshot.isDragging ? "0.8" : "1",
+                                    }}
+                                    className={`transition-shadow ${snapshot.isDragging ? "shadow-lg ring-2 ring-[#135341]/30" : ""}`}
                                   >
                                     <KanbanPropertyCard 
                                       property={property} 
