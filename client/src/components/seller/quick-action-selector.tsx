@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { 
-  PlusCircle, 
+  Plus, 
   X, 
-  HomeIcon, 
-  MessageSquare, 
+  Home, 
+  DollarSign, 
   Megaphone
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -19,6 +19,38 @@ export function QuickActionSelector() {
   const offersInboxModal = useOffersInboxModal();
   const campaignModal = useCampaignModal();
 
+  // Colors based on the brand palette
+  const WINE_COLOR = "#803344";
+  const LIGHT_GREEN = "#135341";
+  const DARK_GREEN = "#09261E";
+
+  // Close when ESC key is pressed
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    // Close when clicked outside
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isOpen && event.target instanceof HTMLElement) {
+        const fabElement = document.getElementById('quick-action-fab');
+        if (fabElement && !fabElement.contains(event.target)) {
+          setIsOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleEscKey);
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -28,64 +60,104 @@ export function QuickActionSelector() {
     setIsOpen(false);
   };
 
+  // Orbital animation variants
+  const orbitVariants = {
+    hidden: { 
+      opacity: 0, 
+      scale: 0,
+      y: 0,
+      x: 0
+    },
+    visible: (i: number) => ({
+      opacity: 1,
+      scale: 1,
+      y: Math.sin((i * Math.PI) / 3) * -80,
+      x: Math.cos((i * Math.PI) / 3) * -60,
+      transition: {
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
+        delay: i * 0.1
+      }
+    }),
+    exit: (i: number) => ({
+      opacity: 0,
+      scale: 0,
+      y: 0,
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
+        delay: (3 - i) * 0.05
+      }
+    })
+  };
+
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div id="quick-action-fab" className="fixed bottom-16 sm:bottom-10 right-6 z-50">
       <AnimatePresence>
         {isOpen && (
-          <div className="flex flex-col-reverse gap-3 mb-3">
-            {/* Campaign Creation */}
+          <div className="absolute bottom-16 right-0">
+            {/* Property Creation - Wine colored */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.2, delay: 0.2 }}
+              className="absolute"
+              custom={1}
+              variants={orbitVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
               <Button
-                onClick={() => handleAction(campaignModal.onOpen)}
-                className="group relative h-12 w-12 rounded-full bg-purple-600 hover:bg-purple-700 shadow-lg transition-transform transform hover:scale-105"
-                aria-label="Start Campaign"
+                onClick={() => handleAction(propertyModal.onOpen)}
+                className="group relative h-12 w-12 rounded-full bg-[#803344] hover:bg-[#803344]/90 shadow-lg transition-transform transform hover:scale-110"
+                aria-label="New Listing"
               >
-                <Megaphone className="h-5 w-5" />
-                <span className="absolute right-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  Start Campaign
+                <Plus className="h-5 w-5" />
+                <span className="absolute right-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  New Listing
                 </span>
               </Button>
             </motion.div>
             
-            {/* Offers Inbox */}
+            {/* Offers Inbox - Light Green */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.2, delay: 0.1 }}
+              className="absolute"
+              custom={2}
+              variants={orbitVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
               <Button
                 onClick={() => handleAction(offersInboxModal.onOpen)}
-                className="group relative h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg transition-transform transform hover:scale-105"
+                className="group relative h-12 w-12 rounded-full bg-[#135341] hover:bg-[#135341]/90 shadow-lg transition-transform transform hover:scale-110"
                 aria-label="Offers Inbox"
               >
-                <MessageSquare className="h-5 w-5" />
-                <span className="absolute right-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <DollarSign className="h-5 w-5" />
+                <span className="absolute right-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Offers Inbox
                 </span>
               </Button>
             </motion.div>
             
-            {/* Property Creation */}
+            {/* Campaign Creation - Dark Green */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.2 }}
+              className="absolute"
+              custom={3}
+              variants={orbitVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
               <Button
-                onClick={() => handleAction(propertyModal.onOpen)}
-                className="group relative h-12 w-12 rounded-full bg-[#803344] hover:bg-[#803344]/90 shadow-lg transition-transform transform hover:scale-105"
-                aria-label="List a Property"
+                onClick={() => handleAction(campaignModal.onOpen)}
+                className="group relative h-12 w-12 rounded-full bg-[#09261E] hover:bg-[#09261E]/90 shadow-lg transition-transform transform hover:scale-110"
+                aria-label="Market a Deal"
               >
-                <HomeIcon className="h-5 w-5" />
-                <span className="absolute right-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  List a Property
+                <Megaphone className="h-5 w-5" />
+                <span className="absolute right-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Market a Deal
                 </span>
               </Button>
             </motion.div>
@@ -93,20 +165,31 @@ export function QuickActionSelector() {
         )}
       </AnimatePresence>
       
-      {/* Main Trigger Button - Wine colored for REPs */}
+      {/* Main Trigger Button - Wine colored */}
       <div className="relative">
-        {/* Pulse animation for the button */}
-        <span className={`absolute inset-0 rounded-full ${isOpen ? '' : 'animate-ping'} bg-[#803344]/30`}></span>
+        {/* Continuous pulse animation */}
+        <span className={`absolute inset-0 rounded-full ${isOpen ? 'opacity-0' : 'animate-pulse opacity-70'} bg-[#803344]/30`}></span>
         
-        <Button
-          onClick={toggleMenu}
-          className={`relative h-14 w-14 rounded-full shadow-lg transition-all duration-300 ${
-            isOpen ? 'bg-red-500 hover:bg-red-600 rotate-45' : 'bg-[#803344] hover:bg-[#803344]/90'
-          }`}
-          aria-label={isOpen ? 'Close menu' : 'Open actions menu'}
+        <motion.div
+          animate={{
+            scale: isOpen ? 1.1 : 1
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 260,
+            damping: 20
+          }}
         >
-          {isOpen ? <X className="h-6 w-6" /> : <PlusCircle className="h-6 w-6" />}
-        </Button>
+          <Button
+            onClick={toggleMenu}
+            className={`relative h-14 w-14 rounded-full shadow-lg transition-all duration-300 ${
+              isOpen ? 'bg-red-500 hover:bg-red-600 rotate-45' : 'bg-[#803344] hover:bg-[#803344]/90'
+            }`}
+            aria-label={isOpen ? 'Close menu' : 'Open actions menu'}
+          >
+            {isOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
+          </Button>
+        </motion.div>
       </div>
     </div>
   );

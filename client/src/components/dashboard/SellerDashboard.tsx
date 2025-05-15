@@ -1045,29 +1045,9 @@ export default function SellerDashboard() {
       {/* Quick Action Selector - Wine colored FAB */}
       <QuickActionSelector />
       
-      {/* Original Floating Action Menu - can be removed once testing is complete */}
-      <FloatingActionMenu 
-        onAddDeal={handleAddDeal}
-        onShare={handleShareProperty}
-        onMessages={handleOpenMessages}
-        onResources={handleOpenResources}
-      />
+      {/* Original Floating Action Menu removed - using QuickActionSelector instead */}
       
-      {/* Floating toolbar for quick actions */}
-      <div className="fixed top-[80px] md:top-[70px] right-4 z-20 hidden md:flex items-center gap-2 bg-white px-2 py-1 rounded-full shadow-md border">
-        <Button variant="ghost" size="sm" className="h-8 rounded-full" onClick={() => setWizardOpen(true)}>
-          <Plus className="h-4 w-4 mr-1 text-[#135341]" /> Add Deal
-        </Button>
-        <Button variant="ghost" size="sm" className="h-8 rounded-full">
-          <FileText className="h-4 w-4 mr-1 text-[#135341]" /> Property Packet
-        </Button>
-        <Button variant="ghost" size="sm" className="h-8 rounded-full">
-          <Users className="h-4 w-4 mr-1 text-[#135341]" /> REP Connect
-        </Button>
-        <Button variant="ghost" size="sm" className="h-8 rounded-full">
-          <Share2 className="h-4 w-4 mr-1 text-[#135341]" /> Quick Share
-        </Button>
-      </div>
+      {/* Removed old floating toolbar as requested */}
   
       {/* Main tabs design with green active state and grey hover - mobile responsive with sticky positioning */}
       <Tabs defaultValue="mydeals" className="mb-6">
