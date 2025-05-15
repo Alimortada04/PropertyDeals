@@ -1,179 +1,113 @@
 import { useState } from "react";
-import { PlusIcon, MessageSquareIcon, MegaphoneIcon, HomeIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { 
+  PlusCircle, 
+  X, 
+  HomeIcon, 
+  MessageSquare, 
+  Megaphone
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { usePropertyModal } from "@/hooks/use-property-modal";
 import { useOffersInboxModal } from "@/hooks/use-offers-inbox-modal";
 import { useCampaignModal } from "@/hooks/use-campaign-modal";
 
-interface QuickActionSelectorProps {
-  className?: string;
-}
-
-export function QuickActionSelector({ className }: QuickActionSelectorProps) {
+export function QuickActionSelector() {
   const [isOpen, setIsOpen] = useState(false);
+  
   const propertyModal = usePropertyModal();
   const offersInboxModal = useOffersInboxModal();
   const campaignModal = useCampaignModal();
 
-  // Animation variants
-  const buttonVariants = {
-    closed: { scale: 1 },
-    open: { scale: 1.1, transition: { duration: 0.2 } },
-  };
-
-  const itemVariants = {
-    closed: (i: number) => ({
-      opacity: 0,
-      y: 0,
-      x: 0,
-      transition: {
-        duration: 0.2,
-      },
-    }),
-    open: (i: number) => ({
-      opacity: 1,
-      // Position items in an arc
-      y: i === 0 ? -70 : i === 1 ? -50 : -20,
-      x: i === 0 ? -30 : i === 1 ? -60 : -70,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 24,
-        delay: i * 0.05,
-      },
-    }),
-  };
-
-  // Action handlers
-  const handleAddProperty = () => {
-    setIsOpen(false);
-    propertyModal.onOpen();
-  };
-
-  const handleOffersInbox = () => {
-    setIsOpen(false);
-    offersInboxModal.onOpen();
-  };
-  
-  const handleStartCampaign = () => {
-    setIsOpen(false);
-    campaignModal.onOpen();
-  };
-
-  // Toggle menu
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  return (
-    <div className={cn("fixed bottom-8 right-8 z-50", className)}>
-      {/* Main FAB Button with pulse animation */}
-      <motion.button
-        className="w-14 h-14 rounded-full bg-[#803344] text-white shadow-lg flex items-center justify-center relative"
-        onClick={toggleMenu}
-        variants={buttonVariants}
-        animate={isOpen ? "open" : "closed"}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <PlusIcon size={24} />
-        {/* Pulse animation */}
-        <motion.div
-          className="absolute w-full h-full rounded-full bg-[#803344] z-[-1]"
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.7, 0, 0.7],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            repeatType: "loop",
-          }}
-        />
-      </motion.button>
+  const handleAction = (callback: () => void) => {
+    callback();
+    setIsOpen(false);
+  };
 
-      {/* Sub-action buttons */}
+  return (
+    <div className="fixed bottom-6 right-6 z-50">
       <AnimatePresence>
         {isOpen && (
-          <>
-            {/* Background overlay to capture clicks outside */}
+          <div className="flex flex-col-reverse gap-3 mb-3">
+            {/* Campaign Creation */}
             <motion.div
-              className="fixed inset-0 z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
-            />
-
-            {/* List a Property button */}
-            <motion.div
-              className="absolute bottom-0 right-0 z-50"
-              custom={0}
-              variants={itemVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2, delay: 0.2 }}
             >
-              <div className="relative group">
-                <button
-                  className="w-12 h-12 rounded-full bg-[#803344] text-white shadow-md flex items-center justify-center hover:bg-[#9a3e52] transition-colors"
-                  onClick={handleAddProperty}
-                >
-                  <HomeIcon size={20} />
-                </button>
-                <div className="absolute right-full mr-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  List a Property
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Offers Inbox button */}
-            <motion.div
-              className="absolute bottom-0 right-0 z-50"
-              custom={1}
-              variants={itemVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
-            >
-              <div className="relative group">
-                <button
-                  className="w-12 h-12 rounded-full bg-[#135341] text-white shadow-md flex items-center justify-center hover:bg-[#0d3f30] transition-colors"
-                  onClick={handleOffersInbox}
-                >
-                  <MessageSquareIcon size={20} />
-                </button>
-                <div className="absolute right-full mr-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  Offers Inbox
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Start Campaign button */}
-            <motion.div
-              className="absolute bottom-0 right-0 z-50"
-              custom={2}
-              variants={itemVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
-            >
-              <div className="relative group">
-                <button
-                  className="w-12 h-12 rounded-full bg-[#1a73e8] text-white shadow-md flex items-center justify-center hover:bg-[#1665d0] transition-colors"
-                  onClick={handleStartCampaign}
-                >
-                  <MegaphoneIcon size={20} />
-                </button>
-                <div className="absolute right-full mr-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              <Button
+                onClick={() => handleAction(campaignModal.onOpen)}
+                className="group relative h-12 w-12 rounded-full bg-purple-600 hover:bg-purple-700 shadow-lg transition-transform transform hover:scale-105"
+                aria-label="Start Campaign"
+              >
+                <Megaphone className="h-5 w-5" />
+                <span className="absolute right-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Start Campaign
-                </div>
-              </div>
+                </span>
+              </Button>
             </motion.div>
-          </>
+            
+            {/* Offers Inbox */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2, delay: 0.1 }}
+            >
+              <Button
+                onClick={() => handleAction(offersInboxModal.onOpen)}
+                className="group relative h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-700 shadow-lg transition-transform transform hover:scale-105"
+                aria-label="Offers Inbox"
+              >
+                <MessageSquare className="h-5 w-5" />
+                <span className="absolute right-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Offers Inbox
+                </span>
+              </Button>
+            </motion.div>
+            
+            {/* Property Creation */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Button
+                onClick={() => handleAction(propertyModal.onOpen)}
+                className="group relative h-12 w-12 rounded-full bg-[#803344] hover:bg-[#803344]/90 shadow-lg transition-transform transform hover:scale-105"
+                aria-label="List a Property"
+              >
+                <HomeIcon className="h-5 w-5" />
+                <span className="absolute right-14 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  List a Property
+                </span>
+              </Button>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
+      
+      {/* Main Trigger Button - Wine colored for REPs */}
+      <div className="relative">
+        {/* Pulse animation for the button */}
+        <span className={`absolute inset-0 rounded-full ${isOpen ? '' : 'animate-ping'} bg-[#803344]/30`}></span>
+        
+        <Button
+          onClick={toggleMenu}
+          className={`relative h-14 w-14 rounded-full shadow-lg transition-all duration-300 ${
+            isOpen ? 'bg-red-500 hover:bg-red-600 rotate-45' : 'bg-[#803344] hover:bg-[#803344]/90'
+          }`}
+          aria-label={isOpen ? 'Close menu' : 'Open actions menu'}
+        >
+          {isOpen ? <X className="h-6 w-6" /> : <PlusCircle className="h-6 w-6" />}
+        </Button>
+      </div>
     </div>
   );
 }

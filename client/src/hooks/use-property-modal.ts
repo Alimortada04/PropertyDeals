@@ -1,15 +1,13 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface PropertyModalStore {
   isOpen: boolean;
-  propertyId?: string;
-  onOpen: (propertyId?: string) => void;
+  onOpen: () => void;
   onClose: () => void;
 }
 
 export const usePropertyModal = create<PropertyModalStore>((set) => ({
   isOpen: false,
-  propertyId: undefined,
-  onOpen: (propertyId) => set({ isOpen: true, propertyId }),
+  onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
 }));
