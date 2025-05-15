@@ -95,18 +95,24 @@ export function QuickActionSelector() {
       // Position buttons with specified angles
       let xPos, yPos;
       
+      // Calculate equal distances using radius and angles
+      const radius = 90; // Equal distance for all buttons
+      
       if (i === 1) {
         // List Property - diagonal top-left at ~315°
-        xPos = -65;
-        yPos = -65;
+        const angle = 315 * (Math.PI / 180);
+        xPos = Math.cos(angle) * radius;
+        yPos = Math.sin(angle) * radius;
       } else if (i === 2) {
         // Offers Inbox - directly above at ~0°/360°
-        xPos = 0;
-        yPos = -90;
+        const angle = 0 * (Math.PI / 180);
+        xPos = Math.cos(angle) * radius;
+        yPos = Math.sin(angle) * radius;
       } else {
         // Campaign - directly left at ~275°
-        xPos = -90;
-        yPos = -10;
+        const angle = 275 * (Math.PI / 180);
+        xPos = Math.cos(angle) * radius;
+        yPos = Math.sin(angle) * radius;
       }
       
       return {
@@ -140,7 +146,7 @@ export function QuickActionSelector() {
     <div 
       id="quick-action-fab" 
       ref={fabRef}
-      className="fixed bottom-16 sm:bottom-12 right-6 z-50"
+      className="fixed bottom-20 sm:bottom-16 right-6 z-50"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
