@@ -100,8 +100,8 @@ export function QuickActionSelector() {
         xPos = -65;
         yPos = -65;
       } else if (i === 2) {
-        // Offers Inbox - directly above at ~0°/360°
-        xPos = 0;
+        // Offers Inbox - slightly to the left and above at ~350°
+        xPos = -15;
         yPos = -90;
       } else {
         // Campaign - directly left at ~275°
@@ -140,7 +140,7 @@ export function QuickActionSelector() {
     <div 
       id="quick-action-fab" 
       ref={fabRef}
-      className="fixed bottom-16 sm:bottom-12 right-6 z-50"
+      className="fixed bottom-20 sm:bottom-16 right-6 z-50"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -183,7 +183,7 @@ export function QuickActionSelector() {
                 aria-label="Offers Inbox"
               >
                 <DollarSign className="h-5 w-5" />
-                <span className="absolute bottom-14 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="absolute bottom-14 left-1/4 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Offers Inbox
                 </span>
               </Button>
@@ -225,7 +225,8 @@ export function QuickActionSelector() {
         <motion.div
           animate={{
             scale: isOpen ? 1.1 : 1,
-            rotate: isOpen ? 45 : 0
+            rotate: isOpen ? 45 : 0,
+            x: isOpen ? -5 : 0
           }}
           transition={{
             type: "spring",
