@@ -1250,10 +1250,20 @@ function PropertyDetailView({
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-base font-medium">Property Timeline</h3>
           <div className="flex gap-1">
-            <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-[#135341] transition-colors"
+              onClick={() => scrollTimeline('left')}
+            >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-[#135341] transition-colors"
+              onClick={() => scrollTimeline('right')}
+            >
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
@@ -1359,7 +1369,7 @@ function PropertyDetailView({
                       <div className="absolute left-0 h-2 bg-gradient-to-r from-[#135341] to-green-500 top-[28px] z-[1] rounded-r-full" style={{ width: `${progressPercentage}%` }}></div>
                     
                       {/* Timeline stages - Scrollable Horizontal Carousel */}
-                      <div className="relative z-10 pb-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                      <div ref={timelineRef} className="relative z-10 pb-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                         <div className="flex min-w-max px-2 pb-2 pt-1 space-x-6">
                           {visibleStages.map((stage, index) => (
                             <div key={index} className="flex flex-col items-center gap-1 min-w-[80px] transition-all hover:scale-105">
@@ -1610,6 +1620,23 @@ export default function EngagementZillowPage() {
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
+  const timelineRef = useRef<HTMLDivElement>(null);
+  
+  // Timeline scroll function
+  const scrollTimeline = (direction: 'left' | 'right') => {
+    if (!timelineRef.current) return;
+    
+    const scrollAmount = 200; // Adjust as needed
+    const currentScroll = timelineRef.current.scrollLeft;
+    const newScroll = direction === 'left' 
+      ? currentScroll - scrollAmount 
+      : currentScroll + scrollAmount;
+    
+    timelineRef.current.scrollTo({
+      left: newScroll,
+      behavior: 'smooth'
+    });
+  };
   
   // Get all properties and engagements
   const allProperties = mockProperties;
