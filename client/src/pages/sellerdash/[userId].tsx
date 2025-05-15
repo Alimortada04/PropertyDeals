@@ -211,8 +211,38 @@ export default function SellerDashboardPage() {
           </div>
         </div>
         
-        {/* Quick Stats 4-column grid - removed Add Property CTA as requested */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+        {/* Quick Stats grid with List a Property CTA */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+          
+          {/* List a Property CTA Card */}
+          <div 
+            onClick={() => setIsAddPropertyModalOpen(true)}
+            className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
+          >
+            {/* Background with gradient and animation */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#135341] group-hover:from-[#803344] group-hover:to-[#803344]/90 transition-colors duration-500 ease-in-out"></div>
+            
+            {/* Animated decoration elements */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            
+            {/* Content with vertical centering */}
+            <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
+              {/* Icon with animation */}
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                <Plus className="h-6 w-6 text-white" />
+              </div>
+              
+              <h3 className="text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
+                List a Property
+              </h3>
+              
+              <div className="mt-2 text-sm text-white/80 group-hover:text-white transition-colors duration-300 flex items-center">
+                <span>Get Started</span>
+                <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              </div>
+            </div>
+          </div>
           
           {/* Active Listings */}
           <Card className="border-l-4 border-l-[#135341] hover:shadow-md transition-shadow duration-200">
@@ -361,41 +391,6 @@ export default function SellerDashboardPage() {
           {/* Properties Grid */}
           {filteredProperties.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* List a Property CTA Card - Animated and Interactive */}
-              <div 
-                onClick={() => setIsAddPropertyModalOpen(true)}
-                className="group cursor-pointer relative overflow-hidden rounded-xl border transition-all duration-300 hover:shadow-lg"
-              >
-                {/* Background with gradient and animation */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#135341] group-hover:from-[#803344] group-hover:to-[#803344]/90 transition-colors duration-500 ease-in-out"></div>
-                
-                {/* Animated decoration circles */}
-                <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
-                <div className="absolute -left-8 -bottom-8 h-24 w-24 rounded-full bg-white opacity-10 group-hover:scale-125 transition-transform duration-700 delay-100"></div>
-                
-                {/* Content with vertical centering */}
-                <div className="relative h-full flex flex-col items-center justify-center text-center py-10 px-6 z-10">
-                  {/* Animated plus icon */}
-                  <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Plus className="h-8 w-8 text-white" />
-                  </div>
-                  
-                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:scale-105 transition-transform duration-300">
-                    List a Property
-                  </h3>
-                  <p className="text-white/80 text-sm mb-4">
-                    Add a new off-market deal to your listings
-                  </p>
-                  
-                  {/* Animated button/indicator */}
-                  <div className="inline-flex items-center justify-center rounded-full bg-white/20 px-4 py-1.5 text-sm text-white mt-2 group-hover:bg-white group-hover:text-[#803344] transition-all duration-300">
-                    <span className="mr-1.5">Get Started</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Regular Property Cards */}
               {filteredProperties.map(property => (
                 <PropertyCard
                   key={property.id}
