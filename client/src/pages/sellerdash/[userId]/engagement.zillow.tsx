@@ -334,7 +334,9 @@ function PropertyCard({
       className={`border rounded-lg overflow-hidden mb-4 transition-all ${
         isSelected 
           ? 'border-[#135341] ring-1 ring-[#135341] bg-white shadow-md' 
-          : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
+          : hasNewActivity 
+            ? 'border-[#803344] ring-1 ring-[#803344] bg-white hover:shadow-md' 
+            : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
       }`}
       onClick={onSelect}
     >
@@ -345,8 +347,13 @@ function PropertyCard({
           alt={property.title} 
           className="w-full h-full object-cover"
         />
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 text-white">
-          <p className="font-semibold">{formatCurrency(property.price)}</p>
+        {/* Full gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+        
+        {/* Bottom content overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-2 text-white flex justify-between items-end">
+          <p className="font-medium text-sm line-clamp-1 max-w-[60%]">{property.address.split(',')[0]}</p>
+          <p className="font-semibold text-sm">{formatCurrency(property.price)}</p>
         </div>
         
         {hasNewActivity && (
@@ -363,54 +370,60 @@ function PropertyCard({
           </p>
         </div>
         
-        {/* Metrics in Light Pills */}
-        <div className="flex flex-wrap gap-1.5 mb-2">
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs font-normal">
-            <Eye className="h-3 w-3 mr-1" />
-            {views} Views
-          </Badge>
+        {/* Mini Metric Boxes */}
+        <div className="grid grid-cols-4 gap-1.5 mb-2">
+          <div className="flex flex-col items-center p-1.5 bg-blue-50 rounded-md">
+            <div className="h-5 w-5 flex items-center justify-center bg-blue-100 rounded-full mb-1">
+              <Eye className="h-3 w-3 text-blue-700" />
+            </div>
+            <span className="text-xs font-medium text-blue-800">{views}</span>
+          </div>
           
-          <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 text-xs font-normal">
-            <Bookmark className="h-3 w-3 mr-1" />
-            {saves} Saves
-          </Badge>
+          <div className="flex flex-col items-center p-1.5 bg-amber-50 rounded-md">
+            <div className="h-5 w-5 flex items-center justify-center bg-amber-100 rounded-full mb-1">
+              <Bookmark className="h-3 w-3 text-amber-700" />
+            </div>
+            <span className="text-xs font-medium text-amber-800">{saves}</span>
+          </div>
           
-          <Badge 
-            variant="outline" 
-            className={`${
-              newMessages > 0 
-                ? 'bg-green-100 text-green-800 border-green-300 font-medium' 
-                : 'bg-green-50 text-green-700 border-green-200 font-normal'
-            } text-xs cursor-pointer`}
-          >
-            <MessageCircle className="h-3 w-3 mr-1" />
-            {messages} {newMessages > 0 && `(${newMessages})`}
-          </Badge>
+          <div className={`flex flex-col items-center p-1.5 rounded-md ${
+            newMessages > 0 ? 'bg-green-100' : 'bg-green-50'
+          } cursor-pointer`}>
+            <div className={`h-5 w-5 flex items-center justify-center rounded-full mb-1 ${
+              newMessages > 0 ? 'bg-green-200' : 'bg-green-100'
+            }`}>
+              <MessageCircle className="h-3 w-3 text-green-700" />
+            </div>
+            <span className="text-xs font-medium text-green-800">
+              {messages}{newMessages > 0 && <span className="font-bold">*</span>}
+            </span>
+          </div>
           
-          <Badge 
-            variant="outline" 
-            className={`${
-              newOffers > 0 
-                ? 'bg-purple-100 text-purple-800 border-purple-300 font-medium' 
-                : 'bg-purple-50 text-purple-700 border-purple-200 font-normal'
-            } text-xs cursor-pointer`}
-          >
-            <DollarSign className="h-3 w-3 mr-1" />
-            {offers} {newOffers > 0 && `(${newOffers})`}
-          </Badge>
+          <div className={`flex flex-col items-center p-1.5 rounded-md ${
+            newOffers > 0 ? 'bg-purple-100' : 'bg-purple-50'
+          } cursor-pointer`}>
+            <div className={`h-5 w-5 flex items-center justify-center rounded-full mb-1 ${
+              newOffers > 0 ? 'bg-purple-200' : 'bg-purple-100'
+            }`}>
+              <DollarSign className="h-3 w-3 text-purple-700" />
+            </div>
+            <span className="text-xs font-medium text-purple-800">
+              {offers}{newOffers > 0 && <span className="font-bold">*</span>}
+            </span>
+          </div>
         </div>
       </div>
       
       {/* Needs Attention Warning */}
       {hasNewActivity && (
-        <div className="bg-amber-50 px-3 py-2 text-xs border-t border-amber-100 flex items-center">
-          <AlertTriangle className="h-3.5 w-3.5 text-amber-500 mr-1.5" />
-          <span className="font-medium text-amber-800">Needs attention</span>
+        <div className="bg-[#803344] px-3 py-2 text-xs border-t border-[#803344]/80 flex items-center">
+          <AlertTriangle className="h-3.5 w-3.5 text-white mr-1.5" />
+          <span className="font-medium text-white">Needs attention</span>
           {newMessages > 0 && (
-            <span className="text-amber-700 ml-1"> • {newMessages} unread message{newMessages > 1 ? 's' : ''}</span>
+            <span className="text-white/90 ml-1"> • {newMessages} unread message{newMessages > 1 ? 's' : ''}</span>
           )}
           {newOffers > 0 && (
-            <span className="text-amber-700 ml-1"> • {newOffers} new offer{newOffers > 1 ? 's' : ''}</span>
+            <span className="text-white/90 ml-1"> • {newOffers} new offer{newOffers > 1 ? 's' : ''}</span>
           )}
         </div>
       )}

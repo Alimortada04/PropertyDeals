@@ -144,50 +144,51 @@ export function PropertyCard({
           <Badge variant="outline" className="bg-gray-50 font-normal">
             {formatNumber(sqft)} sqft
           </Badge>
-          <TooltipProvider delayDuration={0}>
-            <Tooltip defaultOpen={false}>
-              <TooltipTrigger asChild>
-                <Badge variant="outline" className="bg-gray-50 font-normal cursor-help relative">
-                  ARV: {formatCurrency(arv)}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent 
-                side="top" 
-                sideOffset={10}
-                align="center"
-                className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
-              >
-                <div className="p-3 min-w-[220px]">
-                  <p className="font-medium text-white">After Repair Value</p>
-                  <p className="text-sm text-gray-200">Estimated value of the property after renovations</p>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-        
-        {/* Property price */}
-        <div className="flex justify-end mb-2">
-          <TooltipProvider delayDuration={0}>
-            <Tooltip defaultOpen={false}>
-              <TooltipTrigger asChild>
-                <Badge variant="outline" className="bg-gray-50 font-medium text-green-700 cursor-help relative">
-                  {formatCurrency(price)}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent 
-                side="top" 
-                sideOffset={10}
-                align="center"
-                className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
-              >
-                <div className="p-3 min-w-[220px]">
-                  <p className="font-medium text-white">Listing Price</p>
-                  <p className="text-sm text-gray-200">Current asking price for this property</p>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          
+          {/* Listing Price and Deal Value (Assignment Fee) on the same line */}
+          <div className="flex gap-2 w-full">
+            <TooltipProvider delayDuration={0}>
+              <Tooltip defaultOpen={false}>
+                <TooltipTrigger asChild>
+                  <Badge variant="outline" className="bg-gray-50 font-medium text-green-700 cursor-help relative">
+                    {formatCurrency(price)}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent 
+                  side="top" 
+                  sideOffset={10}
+                  align="center"
+                  className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
+                >
+                  <div className="p-3 min-w-[220px]">
+                    <p className="font-medium text-white">Listing Price</p>
+                    <p className="text-sm text-gray-200">Current asking price for this property</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            
+            <TooltipProvider delayDuration={0}>
+              <Tooltip defaultOpen={false}>
+                <TooltipTrigger asChild>
+                  <Badge variant="outline" className="bg-gray-50 font-medium text-purple-700 cursor-help relative">
+                    +{formatCurrency(arv - price)}
+                  </Badge>
+                </TooltipTrigger>
+                <TooltipContent 
+                  side="top" 
+                  sideOffset={10}
+                  align="center"
+                  className="z-[100] shadow-md bg-black/90 text-white border-0 backdrop-blur-md"
+                >
+                  <div className="p-3 min-w-[220px]">
+                    <p className="font-medium text-white">Deal Value</p>
+                    <p className="text-sm text-gray-200">Assignment fee / profit potential</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       </CardContent>
       
