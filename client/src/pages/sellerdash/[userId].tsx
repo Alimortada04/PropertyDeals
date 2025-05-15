@@ -210,20 +210,8 @@ export default function SellerDashboardPage() {
           </div>
         </div>
         
-        {/* Quick Stats 4-column grid with Add Property CTA */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
-          {/* Add Property CTA Card */}
-          <Card 
-            className="bg-[#135341] hover:bg-[#803344] text-white cursor-pointer transition-colors duration-300 border-none flex flex-col items-center justify-center h-full"
-            onClick={() => setIsAddPropertyModalOpen(true)}
-          >
-            <CardContent className="p-6 flex flex-col items-center justify-center h-full">
-              <div className="rounded-full bg-white/20 p-3 mb-3">
-                <Plus className="h-7 w-7 text-white" />
-              </div>
-              <CardTitle className="text-base font-medium text-white text-center">Add a New Property</CardTitle>
-            </CardContent>
-          </Card>
+        {/* Quick Stats 4-column grid - removed Add Property CTA as requested */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
           
           {/* Active Listings */}
           <Card className="border-l-4 border-l-[#135341] hover:shadow-md transition-shadow duration-200">
@@ -331,14 +319,7 @@ export default function SellerDashboardPage() {
             <h2 className="text-xl font-semibold">My Properties</h2>
             
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-              <Button 
-                className="bg-[#135341] hover:bg-[#09261E] text-white"
-                onClick={() => setIsAddPropertyModalOpen(true)}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add New Property
-              </Button>
-              
+              {/* Removed "Add New Property" button as requested */}
               <div className="flex gap-2 flex-1">
                 <div className="relative flex-1">
                   <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
