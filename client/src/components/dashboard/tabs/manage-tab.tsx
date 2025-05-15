@@ -562,45 +562,123 @@ export default function DashboardManageTab() {
     setProjectDetailOpen(true);
   };
   
-  // Handle drag and drop
-  const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
+  // State for direct HTML drag and drop
+  const [isDragging, setIsDragging] = useState(false);
+  const [draggedPropertyId, setDraggedPropertyId] = useState<number | null>(null);
+  const [draggedPropertyStage, setDraggedPropertyStage] = useState<string | null>(null);
+  
+  // Handle property drag start
+  const handlePropertyDragStart = (e: React.DragEvent, propertyId: number, currentStage: string) => {
+    setIsDragging(true);
+    setDraggedPropertyId(propertyId);
+    setDraggedPropertyStage(currentStage);
     
-    const { source, destination, draggableId } = result;
+    // Use the actual card as the drag image for better visual feedback
+    const propertyCard = e.currentTarget as HTMLElement;
+    const rect = propertyCard.getBoundingClientRect();
     
-    // We're not implementing column reordering in this version
-    // Only handle card drag between columns, not same column reordering
-    if (source.droppableId === destination.droppableId) {
-      // We could implement card reordering within a column here if needed
-      // For now, we'll skip same-column reordering
-      return;
-    }
+    e.dataTransfer.setDragImage(propertyCard, rect.width / 2, 10);
     
-    // Property cards can be dragged between columns to change their stage
-    // Visual feedback for successful drop
-    const sourceColumn = columns.find(col => col.id === source.droppableId);
-    const destColumn = columns.find(col => col.id === destination.droppableId);
+    // Set data transfer
+    e.dataTransfer.setData('property-id', propertyId.toString());
+    e.dataTransfer.setData('drag-type', 'property');
+    e.dataTransfer.effectAllowed = 'move';
     
-    if (sourceColumn && destColumn) {
-      const columnTitle = destColumn.title || 'new stage';
-      const toastMessage = `Property moved from "${sourceColumn.title}" to "${columnTitle}"`;
-      toast({
-        title: "Stage Updated",
-        description: toastMessage,
-        variant: "default",
-      });
+    // Add opacity to the card being dragged
+    setTimeout(() => {
+      propertyCard.style.opacity = '0.6';
+    }, 0);
+  };
+  
+  // Handle drag over
+  const handleDragOver = (e: React.DragEvent, columnId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    // Add visual feedback for the drop zone
+    const column = e.currentTarget as HTMLElement;
+    
+    // Highlight the column when dragging over it
+    if (isDragging && draggedPropertyId) {
+      // Add a highlight class to the column
+      column.classList.add('bg-green-50');
+      column.classList.add('border-green-300');
       
-      // In a real app, this would call an API to update the database
-      const propertyId = parseInt(draggableId);
-      const updatedProperties = localProperties.map(p => {
-        if (p.id === propertyId) {
-          return { ...p, stage: destination.droppableId };
+      // Remove the highlight class when leaving the column
+      const handleDragLeave = () => {
+        column.classList.remove('bg-green-50');
+        column.classList.remove('border-green-300');
+        column.removeEventListener('dragleave', handleDragLeave);
+      };
+      
+      column.addEventListener('dragleave', handleDragLeave);
+    }
+  };
+  
+  // Handle property drop
+  const handlePropertyDrop = (e: React.DragEvent, columnId: string) => {
+    e.preventDefault();
+    
+    const dragType = e.dataTransfer.getData('drag-type');
+    
+    if (dragType === 'property') {
+      const propertyId = parseInt(e.dataTransfer.getData('property-id'));
+      
+      if (draggedPropertyId && draggedPropertyStage && draggedPropertyStage !== columnId) {
+        // Get column details for toast message
+        const sourceColumn = columns.find(col => col.id === draggedPropertyStage);
+        const destColumn = columns.find(col => col.id === columnId);
+        
+        if (sourceColumn && destColumn) {
+          const toastMessage = `Property moved from "${sourceColumn.title}" to "${destColumn.title}"`;
+          toast({
+            title: "Stage Updated",
+            description: toastMessage,
+            variant: "default",
+          });
+          
+          // Update property stage
+          const updatedProperties = localProperties.map(p => {
+            if (p.id === propertyId) {
+              return { ...p, stage: columnId };
+            }
+            return p;
+          });
+          
+          setLocalProperties(updatedProperties);
         }
-        return p;
-      });
-      
-      setLocalProperties(updatedProperties);
+      }
     }
+    
+    // Reset drag state
+    handleDragEnd();
+  };
+  
+  // Handle drag end to clean up
+  const handleDragEnd = () => {
+    // Reset opacity of all property cards
+    document.querySelectorAll('.property-card').forEach(card => {
+      (card as HTMLElement).style.opacity = '1';
+    });
+    
+    // Remove active drop zone styling from all columns
+    document.querySelectorAll('.drop-zone-active').forEach(dropZone => {
+      dropZone.classList.remove('drop-zone-active');
+    });
+    
+    // Reset highlight classes
+    document.querySelectorAll('.bg-green-50').forEach(element => {
+      element.classList.remove('bg-green-50');
+    });
+    
+    document.querySelectorAll('.border-green-300').forEach(element => {
+      element.classList.remove('border-green-300');
+    });
+    
+    // Reset drag state
+    setIsDragging(false);
+    setDraggedPropertyId(null);
+    setDraggedPropertyStage(null);
   };
   
   // Generate propertiesByStage based on localProperties
@@ -749,78 +827,55 @@ export default function DashboardManageTab() {
         <div>
           {pipelineView === "kanban" ? (
             /* Kanban board with drag and drop */
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <div className="flex gap-4 overflow-x-auto pb-1 hide-scrollbar">
-                {columns.map((column) => (
-                  <div key={column.id} className="flex-shrink-0 w-[280px]">
-                    <div className="bg-white rounded-t-lg border border-gray-200 p-3 mb-2">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className="font-semibold text-[#09261E] flex items-center">
-                            <div className={`w-3 h-3 rounded-full ${column.color} mr-2`}></div>
-                            {column.title}
-                            <Badge className="ml-2 bg-gray-200 text-gray-700 font-normal text-xs">
-                              {column.properties.length}
-                            </Badge>
-                          </h3>
-                          <p className="text-xs text-gray-500">{column.description}</p>
-                        </div>
+            <div className="flex gap-4 overflow-x-auto pb-1 hide-scrollbar">
+              {columns.map((column) => (
+                <div key={column.id} className="flex-shrink-0 w-[280px]">
+                  <div className="bg-white rounded-t-lg border border-gray-200 p-3 mb-2">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold text-[#09261E] flex items-center">
+                          <div className={`w-3 h-3 rounded-full ${column.color} mr-2`}></div>
+                          {column.title}
+                          <Badge className="ml-2 bg-gray-200 text-gray-700 font-normal text-xs">
+                            {column.properties.length}
+                          </Badge>
+                        </h3>
+                        <p className="text-xs text-gray-500">{column.description}</p>
                       </div>
                     </div>
-                    
-                    <Droppable droppableId={column.id}>
-                      {(provided, snapshot) => (
-                        <div 
-                          className={`h-[calc(100vh-320px)] overflow-y-auto border border-gray-200 rounded-b-lg p-3 transition-colors duration-200 ${
-                            snapshot.isDraggingOver 
-                              ? 'bg-green-50 border-green-300' 
-                              : 'bg-gray-50'
-                          }`}
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                        >
-                          {column.properties.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center h-24 border border-dashed border-gray-300 rounded-lg bg-gray-50 p-4 text-center text-gray-500">
-                              <p className="text-sm">No properties in this stage</p>
-                            </div>
-                          ) : (
-                            column.properties.map((property, index) => (
-                              <Draggable 
-                                key={property.id.toString()} 
-                                draggableId={property.id.toString()} 
-                                index={index}
-                              >
-                                {(provided, snapshot) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    style={{
-                                      ...provided.draggableProps.style,
-                                      transform: snapshot.isDragging ? provided.draggableProps.style?.transform : "none",
-                                      opacity: snapshot.isDragging ? "0.8" : "1",
-                                    }}
-                                    className={`transition-shadow ${snapshot.isDragging ? "shadow-lg ring-2 ring-[#135341]/30" : ""}`}
-                                  >
-                                    <KanbanPropertyCard 
-                                      property={property} 
-                                      onClickProperty={handleViewProperty}
-                                      onClickManage={handleManageProperty}
-                                      onRemove={handleRemoveProperty}
-                                    />
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))
-                          )}
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
                   </div>
-                ))}
-              </div>
-            </DragDropContext>
+                  
+                  <div 
+                    className="h-[calc(100vh-320px)] overflow-y-auto border border-gray-200 rounded-b-lg p-3 transition-colors duration-200 bg-gray-50"
+                    onDragOver={(e) => handleDragOver(e, column.id)}
+                    onDrop={(e) => handlePropertyDrop(e, column.id)}
+                  >
+                    {column.properties.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center h-24 border border-dashed border-gray-300 rounded-lg bg-gray-50 p-4 text-center text-gray-500">
+                        <p className="text-sm">No properties in this stage</p>
+                      </div>
+                    ) : (
+                      column.properties.map((property, index) => (
+                        <div
+                          key={property.id.toString()}
+                          className="property-card transition-shadow mb-3"
+                          draggable="true"
+                          onDragStart={(e) => handlePropertyDragStart(e, property.id, column.id)}
+                          onDragEnd={handleDragEnd}
+                        >
+                          <KanbanPropertyCard 
+                            property={property} 
+                            onClickProperty={handleViewProperty}
+                            onClickManage={handleManageProperty}
+                            onRemove={handleRemoveProperty}
+                          />
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : pipelineView === "grid" ? (
             /* Sheet view */
             <PropertyGrid 
