@@ -461,29 +461,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
           <TabsContent value="deals" className="mt-0">
             <div className="overflow-x-auto pb-4 hide-scrollbar">
               <div className="flex space-x-4">
-                {/* List a Property CTA Card as an empty property card */}
-                <Card 
-                  className="w-72 flex-shrink-0 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group border border-dashed border-gray-300 bg-gray-50/50"
-                  onClick={() => setLocation("/sellerdash/seller123?addProperty=true")}
-                >
-                  <div className="h-40 relative flex items-center justify-center bg-gradient-to-tr from-[#09261E]/5 to-[#135341]/10 group-hover:from-[#803344]/10 group-hover:to-[#803344]/20 transition-colors duration-300">
-                    <div className="text-center">
-                      <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center mx-auto mb-2 shadow-sm group-hover:scale-110 transition-transform duration-300">
-                        <Plus className="h-6 w-6 text-[#135341] group-hover:text-[#803344] transition-colors duration-300" />
-                      </div>
-                    </div>
-                  </div>
-                  <CardContent className="p-4">
-                    <h4 className="font-medium text-center text-[#09261E] group-hover:text-[#803344] transition-colors duration-300">List a Property</h4>
-                    <p className="text-xs text-center text-gray-500 mt-1">Add a new off-market deal to your listings</p>
-                    
-                    <div className="mt-4 flex justify-center">
-                      <Button size="sm" className="bg-[#09261E] hover:bg-[#135341] text-white group-hover:bg-[#803344] group-hover:hover:bg-[#803344]/90 transition-colors duration-300">
-                        Get Started
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* List Property CTA removed from here and placed in the My Properties section */}
                 
                 {recentProperties.map((property) => (
                   <Card 
@@ -754,8 +732,74 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
         </Tabs>
       </div>
       
+      {/* My Properties Section */}
+      <div className="mb-10">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-[#09261E]">My Properties</h3>
+          
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-1 hover:bg-gray-100 hover:text-[#09261E]"
+            onClick={() => setLocation("/sellerdash/seller123/manage")}
+          >
+            View All <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* List a Property CTA Card as an empty property card */}
+          <Card 
+            className="hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group border border-dashed border-gray-300 bg-gray-50/50"
+            onClick={() => setLocation("/sellerdash/seller123?addProperty=true")}
+          >
+            <div className="h-40 relative flex items-center justify-center bg-gradient-to-tr from-[#09261E]/5 to-[#135341]/10 group-hover:from-[#803344]/10 group-hover:to-[#803344]/20 transition-colors duration-300">
+              <div className="text-center">
+                <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center mx-auto mb-2 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                  <Plus className="h-6 w-6 text-[#135341] group-hover:text-[#803344] transition-colors duration-300" />
+                </div>
+              </div>
+            </div>
+            <CardContent className="p-4">
+              <h4 className="font-medium text-center text-[#09261E] group-hover:text-[#803344] transition-colors duration-300">List a Property</h4>
+              <p className="text-xs text-center text-gray-500 mt-1">Add a new off-market deal to your listings</p>
+              
+              <div className="mt-4 flex justify-center">
+                <Button size="sm" className="bg-[#09261E] hover:bg-[#135341] text-white group-hover:bg-[#803344] group-hover:hover:bg-[#803344]/90 transition-colors duration-300">
+                  Get Started
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+          
+          {/* Display first two properties from recentProperties */}
+          {recentProperties.slice(0, 2).map((property) => (
+            <Card 
+              key={property.id} 
+              className="hover:shadow-md transition-all duration-200 cursor-pointer overflow-hidden"
+              onClick={() => setLocation(`/properties/${property.id}`)}
+            >
+              <div className="h-40 relative">
+                <img 
+                  src={property.image} 
+                  alt={property.title}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white">
+                  <p className="font-bold text-lg">{property.price}</p>
+                </div>
+              </div>
+              <CardContent className="p-4">
+                <h4 className="font-medium text-[#09261E] truncate">{property.title}</h4>
+                <p className="text-sm text-gray-500 truncate">{property.address}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+      
       {/* Priority Buyer CTA */}
-      <div className="mt-12 mb-6">
+      <div className="mt-8 mb-6">
         <Card className="bg-gradient-to-r from-[#09261E] to-[#135341] text-white border-0 shadow-md">
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row items-center justify-between">

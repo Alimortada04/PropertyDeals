@@ -1346,70 +1346,7 @@ export default function EngagementZillowPage() {
             </Card>
           </div>
           
-          {/* Filters */}
-          <div className="flex flex-wrap gap-2">
-            <Select
-              value={filterProperty || "all"}
-              onValueChange={(value) => setFilterProperty(value === "all" ? null : value)}
-            >
-              <SelectTrigger className="w-full md:w-[180px] h-9 text-sm">
-                <SelectValue placeholder="All Properties" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Properties</SelectItem>
-                {allProperties.map((property) => (
-                  <SelectItem key={property.id} value={property.id}>
-                    {property.address.split(',')[0]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Select
-              value={filterType || "all"}
-              onValueChange={(value) => setFilterType(value === "all" ? null : value)}
-            >
-              <SelectTrigger className="w-full md:w-[160px] h-9 text-sm">
-                <SelectValue placeholder="All Engagements" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Engagements</SelectItem>
-                <SelectItem value="view">Views</SelectItem>
-                <SelectItem value="save">Saves</SelectItem>
-                <SelectItem value="message">Messages</SelectItem>
-                <SelectItem value="offer">Offers</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Select
-              value={filterStatus || "all"}
-              onValueChange={(value) => setFilterStatus(value === "all" ? null : value)}
-            >
-              <SelectTrigger className="w-full md:w-[160px] h-9 text-sm">
-                <SelectValue placeholder="All Statuses" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="replied">Replied</SelectItem>
-                <SelectItem value="accepted">Accepted</SelectItem>
-                <SelectItem value="declined">Declined</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <Button 
-              variant="outline" 
-              className="h-9 gap-1.5 text-sm ml-auto" 
-              onClick={() => {
-                setFilterProperty(null);
-                setFilterStatus(null);
-                setFilterType(null);
-              }}
-            >
-              <XCircle className="h-3.5 w-3.5" />
-              <span>Clear Filters</span>
-            </Button>
-          </div>
+          {/* Filters section removed - will be built separately */}
         </div>
         
         {/* Main Content - Split View */}
