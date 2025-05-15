@@ -43,6 +43,7 @@ import {
   Coins,
   FileCheck,
   Zap,
+  ThumbsUp,
   ListFilter,
   ChevronRight,
   X,
@@ -365,7 +366,7 @@ function PropertyCard({
         isSelected 
           ? 'border-gray-300 bg-gray-50 shadow-md' 
           : hasNewActivity 
-            ? 'border-[#803344] ring-1 ring-[#803344] bg-white hover:bg-gray-50 hover:shadow-md' 
+            ? 'border-gray-300 bg-white hover:bg-gray-50 hover:shadow-md' 
             : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 hover:shadow-md'
       }`}
       onClick={onSelect}
@@ -806,48 +807,47 @@ function PropertyDetailView({
         </div>
       </div>
       
-      {/* Save to offer conversion */}
-      <Card className="mb-6">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-base">Save to Offer Conversion</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-between items-center mb-2">
-            <div className="flex items-center">
-              <Bookmark className="h-4 w-4 text-amber-500 mr-1.5" />
-              <span className="text-sm text-gray-600">{saves} saves</span>
-              <ArrowRight className="h-3 w-3 mx-1.5 text-gray-400" />
-              <DollarSign className="h-4 w-4 text-green-500 mr-1.5" />
-              <span className="text-sm text-gray-600">{offers} offers</span>
-            </div>
-            <Badge variant={saveToOfferRate >= 30 ? "default" : "secondary"} className="text-xs">
-              {saveToOfferRate}%
-            </Badge>
-          </div>
-          
-          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-3">
-            <div 
-              className="h-full bg-gradient-to-r from-amber-500 to-green-500" 
-              style={{ width: `${saveToOfferRate}%` }}
-            ></div>
-          </div>
-          
-          {saves > offers && (
-            <Alert variant="default" className="bg-[#803344] border-[#803344]/80 mt-3">
-              <Zap className="h-4 w-4 text-white" />
-              <AlertTitle className="text-sm font-medium text-white">Opportunity</AlertTitle>
-              <AlertDescription className="text-xs text-white/90">
-                {saves - offers} buyer{saves - offers > 1 ? 's' : ''} saved this property but haven't made an offer yet — consider following up.
-              </AlertDescription>
-            </Alert>
-          )}
-        </CardContent>
-      </Card>
-      
       {/* Activity Timeline */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-base font-medium">Activity Timeline</h3>
+          
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center bg-gray-100 rounded-md p-0.5">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 px-2 text-xs rounded-sm data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                data-state="active"
+              >
+                All
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 px-2 text-xs rounded-sm data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <Bookmark className="h-3 w-3 mr-1" />
+                Saves
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 px-2 text-xs rounded-sm data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <MessageCircle className="h-3 w-3 mr-1" />
+                Messages
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-7 px-2 text-xs rounded-sm data-[state=active]:bg-white data-[state=active]:shadow-sm"
+              >
+                <DollarSign className="h-3 w-3 mr-1" />
+                Offers
+              </Button>
+            </div>
+          </div>
         </div>
         
         <div className="border rounded-lg bg-white overflow-hidden">
@@ -855,6 +855,8 @@ function PropertyDetailView({
             {sortedEngagements.map((engagement) => {
               const buyer = getBuyerById(engagement.buyerId);
               if (!buyer) return null;
+              
+              const isNew = engagement.status === "new";
               
               return (
                 <div key={engagement.id} className="flex gap-3">
@@ -899,6 +901,11 @@ function PropertyDetailView({
                               {tag}
                             </Badge>
                           ))}
+                          {isNew && (
+                            <Badge className="bg-blue-100 text-blue-800 px-1.5 text-[10px] h-4">
+                              New
+                            </Badge>
+                          )}
                         </div>
                         
                         <p className="text-xs text-gray-500 mt-0.5">
@@ -911,14 +918,30 @@ function PropertyDetailView({
                     </div>
                     
                     {engagement.type === "message" && engagement.data.text && (
-                      <div className="mt-2 text-sm bg-gray-50 p-2 rounded-lg">
-                        {engagement.data.text}
+                      <div className="mt-2 text-sm bg-gray-50 p-3 rounded-lg">
+                        <p className="text-gray-800">{engagement.data.text}</p>
                         
-                        <div className="flex gap-2 mt-2">
-                          <Button variant="outline" size="sm" className="h-7 text-xs">
+                        <div className="flex gap-2 mt-3">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-7 text-xs bg-white"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Reply functionality
+                            }}
+                          >
                             Reply
                           </Button>
-                          <Button variant="outline" size="sm" className="h-7 text-xs flex items-center gap-1">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-7 text-xs flex items-center gap-1 bg-white"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onViewBuyer(buyer.id);
+                            }}
+                          >
                             <Sparkles className="h-3 w-3" />
                             <span>AI Respond</span>
                           </Button>
@@ -927,13 +950,46 @@ function PropertyDetailView({
                     )}
                     
                     {engagement.type === "offer" && engagement.data.amount && (
-                      <div className="mt-1.5">
-                        <Badge className="bg-green-100 text-green-800">
-                          {formatCurrency(engagement.data.amount)}
-                        </Badge>
+                      <div className="mt-2 bg-gray-50 p-3 rounded-lg">
+                        <div className="flex items-center justify-between mb-1">
+                          <Badge className="bg-green-100 text-green-800 text-xs">
+                            {formatCurrency(engagement.data.amount)}
+                          </Badge>
+                          {isNew && (
+                            <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200 text-[10px]">
+                              New
+                            </Badge>
+                          )}
+                        </div>
                         {engagement.data.note && (
-                          <p className="text-sm mt-1">{engagement.data.note}</p>
+                          <p className="text-sm text-gray-700 mt-1">{engagement.data.note}</p>
                         )}
+                        
+                        <div className="flex gap-2 mt-3">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-7 text-xs bg-white"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // Reply functionality
+                            }}
+                          >
+                            Respond
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-7 text-xs flex items-center gap-1 bg-white"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // AI Suggest functionality
+                            }}
+                          >
+                            <Sparkles className="h-3 w-3" />
+                            <span>AI Suggest</span>
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -950,8 +1006,8 @@ function PropertyDetailView({
           <CardHeader className="pb-2">
             <CardTitle className="text-base">Engaged Buyers ({uniqueBuyers.length})</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
+          <CardContent className="p-0">
+            <div className="divide-y">
               {uniqueBuyers.map(buyer => {
                 if (!buyer) return null;
                 
@@ -960,13 +1016,16 @@ function PropertyDetailView({
                   .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
                 
                 const latestEngagement = buyerEngagements[0];
+                const hasNewActivity = buyerEngagements.some(e => e.status === "new");
                 
                 return (
-                  <div key={buyer.id} className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => onViewBuyer(buyer.id)}>
+                  <div 
+                    key={buyer.id} 
+                    className="flex items-center justify-between p-3 hover:bg-gray-50 transition-colors cursor-pointer" 
+                    onClick={() => onViewBuyer(buyer.id)}
+                  >
                     <div className="flex items-center">
-                      <Avatar 
-                        className="h-10 w-10 mr-3 cursor-pointer"
-                      >
+                      <Avatar className="h-10 w-10 mr-3 cursor-pointer">
                         <AvatarFallback className="bg-blue-100 text-blue-800">
                           {buyer.name ? buyer.name.charAt(0) : '?'}
                         </AvatarFallback>
@@ -981,32 +1040,43 @@ function PropertyDetailView({
                                 {tag}
                               </Badge>
                             ))}
+                            {hasNewActivity && (
+                              <Badge className="bg-blue-100 text-blue-800 px-1.5 text-[10px] h-4">
+                                New
+                              </Badge>
+                            )}
                           </div>
                         </div>
                         
                         <div className="flex items-center text-xs text-gray-500 mt-0.5">
+                          <span className="mr-2">{buyer.location || "Unknown location"}</span>
+                          <span>•</span>
+                          <span className="ml-2">{buyer.budget ? `Budget: ${formatCurrency(buyer.budget)}` : ''}</span>
+                        </div>
+                        
+                        <div className="flex items-center text-xs text-gray-500 mt-1">
                           {latestEngagement.type === "view" && (
                             <>
                               <Eye className="h-3 w-3 text-purple-700 mr-1" />
-                              <span>Viewed {formatDate(latestEngagement.timestamp)}</span>
+                              <span>Viewed {formatTimeAgo(latestEngagement.timestamp)}</span>
                             </>
                           )}
                           {latestEngagement.type === "save" && (
                             <>
                               <Bookmark className="h-3 w-3 text-amber-700 mr-1" />
-                              <span>Saved {formatDate(latestEngagement.timestamp)}</span>
+                              <span>Saved {formatTimeAgo(latestEngagement.timestamp)}</span>
                             </>
                           )}
                           {latestEngagement.type === "message" && (
                             <>
                               <MessageCircle className="h-3 w-3 text-blue-700 mr-1" />
-                              <span>Messaged {formatDate(latestEngagement.timestamp)}</span>
+                              <span>Messaged {formatTimeAgo(latestEngagement.timestamp)}</span>
                             </>
                           )}
                           {latestEngagement.type === "offer" && (
                             <>
                               <DollarSign className="h-3 w-3 text-green-700 mr-1" />
-                              <span>Offered {formatCurrency(latestEngagement.data.amount)} on {formatDate(latestEngagement.timestamp)}</span>
+                              <span>Offered {formatCurrency(latestEngagement.data.amount)} {formatTimeAgo(latestEngagement.timestamp)}</span>
                             </>
                           )}
                         </div>
@@ -1029,6 +1099,48 @@ function PropertyDetailView({
         </Card>
       )}
       
+      {/* Save to offer conversion */}
+      <Card className="mb-6">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Save to Offer Conversion</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center">
+              <Bookmark className="h-4 w-4 text-amber-500 mr-1.5" />
+              <span className="text-sm text-gray-600">{saves} saves</span>
+              <ArrowRight className="h-3 w-3 mx-1.5 text-gray-400" />
+              <DollarSign className="h-4 w-4 text-green-500 mr-1.5" />
+              <span className="text-sm text-gray-600">{offers} offers</span>
+            </div>
+            <Badge variant={saveToOfferRate >= 30 ? "default" : "secondary"} className="text-xs">
+              {saveToOfferRate}%
+            </Badge>
+          </div>
+          
+          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-3">
+            <div 
+              className="h-full bg-gradient-to-r from-amber-500 to-green-500" 
+              style={{ width: `${saveToOfferRate}%` }}
+            ></div>
+          </div>
+          
+          {saves > offers && (
+            <Alert variant="default" className="bg-green-50 border-green-200 mt-3 text-gray-800">
+              <div className="flex gap-2 items-start">
+                <HelpCircle className="h-4 w-4 text-green-600 mt-0.5" />
+                <div>
+                  <AlertTitle className="text-sm font-medium text-gray-800">Opportunity</AlertTitle>
+                  <AlertDescription className="text-xs text-gray-700">
+                    {saves - offers} buyer{saves - offers > 1 ? 's' : ''} saved this property but haven't made an offer yet — consider following up.
+                  </AlertDescription>
+                </div>
+              </div>
+            </Alert>
+          )}
+        </CardContent>
+      </Card>
+      
       {/* Property Timeline */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
@@ -1036,112 +1148,170 @@ function PropertyDetailView({
         </div>
         
         <Card className="border rounded-lg overflow-hidden">
-          <CardContent className="pt-4">
+          <CardContent className="p-4">
             {/* Timeline visualization */}
             <div className="relative">
               {/* Timeline bar */}
-              <div className="absolute left-0 right-0 h-1.5 bg-gray-100 top-10 z-0"></div>
+              <div className="absolute left-0 right-0 h-2 bg-gray-100 top-[28px] z-0"></div>
               
-              {/* Timeline stages */}
-              <div className="flex justify-between relative z-10 px-4">
-                {/* Listing */}
-                <div className="flex flex-col items-center gap-1 w-24">
-                  <div className="h-8 w-8 rounded-full bg-[#135341] text-white flex items-center justify-center">
-                    <FileText className="h-4 w-4" />
-                  </div>
-                  <p className="text-xs font-medium">Listing</p>
-                  <p className="text-[10px] text-gray-500">{formatDate(property.listed)}</p>
-                </div>
+              {/* Determine current stage */}
+              {(() => {
+                let currentStage = 0; // 0: Listed
+                if (views > 0) currentStage = 1; // 1: First View
+                if (saves > 0) currentStage = 2; // 2: First Save
+                if (messages > 0) currentStage = 3; // 3: First Message
+                if (offers > 0) currentStage = 4; // 4: First Offer
+                // 5: Offer Accepted (we don't have this status in the mock data yet)
+                // 6: Target Close
                 
-                {/* First View */}
-                {views > 0 && (
-                  <div className="flex flex-col items-center gap-1 w-24">
-                    <div className="h-8 w-8 rounded-full bg-purple-100 border-2 border-purple-300 text-purple-700 flex items-center justify-center">
-                      <Eye className="h-4 w-4" />
-                    </div>
-                    <p className="text-xs font-medium">First View</p>
-                    <p className="text-[10px] text-gray-500">
-                      {formatDate(
-                        engagements
-                          .filter(e => e.type === "view")
-                          .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp || ''
-                      )}
-                    </p>
-                  </div>
-                )}
+                const stages = [
+                  {
+                    name: "Listed",
+                    icon: <FileText className="h-4 w-4" />,
+                    date: property.listed,
+                    color: "#135341",
+                    active: currentStage >= 0,
+                    completed: currentStage > 0
+                  },
+                  {
+                    name: "First View",
+                    icon: <Eye className="h-4 w-4" />,
+                    date: engagements
+                      .filter(e => e.type === "view")
+                      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
+                    color: "rgb(126, 34, 206)", // purple-700
+                    active: currentStage >= 1,
+                    completed: currentStage > 1
+                  },
+                  {
+                    name: "First Save",
+                    icon: <Bookmark className="h-4 w-4" />,
+                    date: engagements
+                      .filter(e => e.type === "save")
+                      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
+                    color: "rgb(180, 83, 9)", // amber-700
+                    active: currentStage >= 2,
+                    completed: currentStage > 2
+                  },
+                  {
+                    name: "First Message",
+                    icon: <MessageCircle className="h-4 w-4" />,
+                    date: engagements
+                      .filter(e => e.type === "message")
+                      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
+                    color: "rgb(29, 78, 216)", // blue-700
+                    active: currentStage >= 3,
+                    completed: currentStage > 3
+                  },
+                  {
+                    name: "First Offer",
+                    icon: <DollarSign className="h-4 w-4" />,
+                    date: engagements
+                      .filter(e => e.type === "offer")
+                      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
+                    color: "rgb(21, 128, 61)", // green-700
+                    active: currentStage >= 4,
+                    completed: currentStage > 4
+                  },
+                  {
+                    name: "Offer Accepted",
+                    icon: <ThumbsUp className="h-4 w-4" />,
+                    date: null, // We don't have this in mock data yet
+                    color: "rgb(202, 138, 4)", // yellow-600
+                    active: currentStage >= 5,
+                    completed: currentStage > 5
+                  },
+                  {
+                    name: "Target Close",
+                    icon: <CheckCircle className="h-4 w-4" />,
+                    date: new Date(new Date(property.listed).getTime() + 60 * 24 * 60 * 60 * 1000).toString(),
+                    color: currentStage >= 6 ? "#135341" : "rgb(156, 163, 175)", // green-800 or gray-400
+                    active: currentStage >= 6,
+                    completed: false
+                  }
+                ];
                 
-                {/* First Message */}
-                {messages > 0 && (
-                  <div className="flex flex-col items-center gap-1 w-24">
-                    <div className="h-8 w-8 rounded-full bg-blue-100 border-2 border-blue-300 text-blue-700 flex items-center justify-center">
-                      <MessageCircle className="h-4 w-4" />
-                    </div>
-                    <p className="text-xs font-medium">First Message</p>
-                    <p className="text-[10px] text-gray-500">
-                      {formatDate(
-                        engagements
-                          .filter(e => e.type === "message")
-                          .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp || ''
-                      )}
-                    </p>
-                  </div>
-                )}
+                // Filter out stages with no date (except for Target Close which always shows)
+                const visibleStages = stages.filter((stage, index) => 
+                  stage.date || index === 0 || index === stages.length - 1
+                );
                 
-                {/* First Offer */}
-                {offers > 0 && (
-                  <div className="flex flex-col items-center gap-1 w-24">
-                    <div className="h-8 w-8 rounded-full bg-green-100 border-2 border-green-300 text-green-700 flex items-center justify-center">
-                      <DollarSign className="h-4 w-4" />
-                    </div>
-                    <p className="text-xs font-medium">First Offer</p>
-                    <p className="text-[10px] text-gray-500">
-                      {formatDate(
-                        engagements
-                          .filter(e => e.type === "offer")
-                          .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp || ''
-                      )}
-                    </p>
-                  </div>
-                )}
+                // Calculate progress percentage for the progress bar
+                const progressPercentage = Math.min(100, Math.round((currentStage / (stages.length - 1)) * 100));
                 
-                {/* Target Close */}
-                <div className="flex flex-col items-center gap-1 w-24">
-                  <div className="h-8 w-8 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 text-gray-400 flex items-center justify-center">
-                    <CheckCircle className="h-4 w-4" />
-                  </div>
-                  <p className="text-xs font-medium">Target Close</p>
-                  <p className="text-[10px] text-gray-500">
-                    {formatDate(new Date(new Date(property.listed).getTime() + 60 * 24 * 60 * 60 * 1000).toString())}
-                  </p>
-                </div>
-              </div>
-              
-              {/* Current stage marker */}
-              <div className="w-full flex justify-start pl-12 mt-4">
-                <div className="flex flex-col items-center">
-                  <div className="h-2 w-2 rounded-full bg-[#135341]"></div>
-                  <p className="text-[10px] text-gray-500 mt-1 font-medium">Current Stage</p>
-                </div>
-              </div>
-              
-              {/* Current status */}
-              <div className="bg-gray-50 p-3 mt-4 rounded-lg">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <div className="p-1.5 rounded-full bg-[#135341]/10">
-                      <Activity className="h-4 w-4 text-[#135341]" />
+                return (
+                  <>
+                    {/* Progress bar */}
+                    <div className="absolute left-0 h-2 bg-gradient-to-r from-[#135341] to-green-500 top-[28px] z-[1] rounded-r-full" style={{ width: `${progressPercentage}%` }}></div>
+                    
+                    {/* Timeline stages */}
+                    <div className="flex justify-between relative z-10 px-2">
+                      {visibleStages.map((stage, index) => (
+                        <div key={index} className="flex flex-col items-center gap-1 w-20">
+                          <div 
+                            className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
+                              stage.active 
+                                ? `bg-${stage.color} text-white` 
+                                : `bg-gray-100 text-gray-400 border-2 border-dashed border-gray-300`
+                            }`}
+                            style={{ backgroundColor: stage.active ? stage.color : undefined }}
+                          >
+                            {stage.icon}
+                          </div>
+                          <p className={`text-xs font-medium ${stage.active ? 'text-gray-800' : 'text-gray-400'}`}>
+                            {stage.name}
+                          </p>
+                          {stage.date && (
+                            <p className="text-[10px] text-gray-500">
+                              {formatDate(stage.date)}
+                            </p>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                    <div>
-                      <p className="text-sm font-medium">Current Status</p>
-                      <p className="text-xs text-gray-500">Active Listing - {offers > 0 ? 'Reviewing Offers' : 'Accepting Offers'}</p>
+                    
+                    {/* Current stage marker */}
+                    <div 
+                      className="absolute flex flex-col items-center mt-1" 
+                      style={{ 
+                        left: `${(currentStage / (visibleStages.length - 1)) * 100}%`, 
+                        transform: 'translateX(-50%)',
+                        top: '42px'
+                      }}
+                    >
+                      <div className="h-4 w-1 bg-gray-200 mb-1"></div>
+                      <div className="bg-white shadow-md border border-gray-200 rounded-full px-2 py-0.5 text-[10px] font-medium text-gray-600">
+                        Current Stage
+                      </div>
                     </div>
-                  </div>
-                  
-                  <Badge variant={offers > 0 ? "default" : "outline"} className="text-xs">
-                    {engagements.length > 0 ? formatTimeAgo(sortedEngagements[0].timestamp) : 'No activity'}
-                  </Badge>
-                </div>
-              </div>
+                    
+                    {/* Current status */}
+                    <div className="bg-gray-50 p-3 mt-12 rounded-lg border border-gray-100">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <div className="p-1.5 rounded-full bg-[#135341]/10">
+                            <Activity className="h-4 w-4 text-[#135341]" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium">Current Status</p>
+                            <p className="text-xs text-gray-500">
+                              {offers > 0 
+                                ? 'Active Listing - Reviewing Offers' 
+                                : saves > 0 
+                                  ? 'Active Listing - Buyers Showing Interest' 
+                                  : 'Active Listing - Accepting Offers'}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <Badge variant={offers > 0 ? "default" : "outline"} className="text-xs">
+                          {engagements.length > 0 ? formatTimeAgo(sortedEngagements[0].timestamp) : 'No activity'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </CardContent>
         </Card>

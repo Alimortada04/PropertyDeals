@@ -1,0 +1,100 @@
+🔁 LEFT COLUMN (Property List)
+Remove the wine-colored mini outline from property cards
+
+Keep alert banner ("Needs Attention") at the bottom, but ensure styling is consistent with the rest of the design
+
+📄 RIGHT COLUMN (Engagement Content Panel)
+🧾 Reorder Sections:
+Move Activity Timeline and Engaged Buyers above the Save-to-Offer Conversion section
+
+🕒 Activity Timeline Fixes
+Show activity in chronological order (newest at top)
+
+Display views, saves, messages, and offers
+
+Add filter controls to switch between:
+
+All
+
+Saves
+
+Messages
+
+Offers
+
+✉️ Messages
+Show message preview + buyer name + REP tags
+
+If message is new, display “New” badge on the right side
+
+💰 Offers
+Show offer amount + timestamp
+
+If offer is new/unresponded, display “New” tag
+
+🔄 Responding
+Bring back the AI Response Drawer:
+
+Triggered when clicking “AI Respond” next to message or offer
+
+Drawer should slide in from the right and include:
+
+Original message
+
+AI-suggested replies
+
+Buttons: Edit / Use
+
+Suggestions: “Send follow-up”, “Request POF”, “Ask about timeline”
+
+Allow sending inline replies or follow-ups directly from the timeline card
+
+👤 Engaged Buyers Section
+Show buyer cards with:
+
+REP status, tags, engagement level, budget, location
+
+Last action date (e.g., “Viewed 2 days ago”)
+
+Profile button → opens buyer drawer (if not already open)
+
+Remove external spacing between buyer cards — use internal padding for separation
+
+Add “New” badge next to any buyers with new engagement (e.g. offer, save, message)
+
+💡 Save-to-Offer Conversion
+Style alert section with:
+
+Very light transparent green background
+
+Revert text color to default (dark text on light background)
+
+Add a subtle info icon if helpful
+
+Example alert: “1 buyer saved this property but hasn’t made an offer yet — consider following up.”
+
+🕓 Property Timeline Design Fix
+Improve layout to be more visual and linear
+
+Timeline markers:
+
+Listed
+
+First View
+
+First Save
+
+First Message
+
+First Offer
+
+Offer Accepted
+
+Target Close
+
+Add visual progress indicator showing current stage
+
+Label current status (e.g., "Reviewing Offers")
+
+Style timeline with clean horizontal markers and spacing — icons and color-coded stages
+
