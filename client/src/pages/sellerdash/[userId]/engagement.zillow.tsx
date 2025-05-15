@@ -86,6 +86,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { 
   Tooltip,
   TooltipContent,
@@ -1186,64 +1187,157 @@ export default function EngagementZillowPage() {
             </div>
           </div>
           
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-            <Card className="shadow-none border">
-              <CardContent className="p-3">
-                <div className="flex items-center">
-                  <div className="bg-purple-100 p-2 rounded-full mr-3">
-                    <Eye className="h-4 w-4 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Total Views</p>
-                    <p className="text-lg font-bold">{totalViews}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-none border">
-              <CardContent className="p-3">
-                <div className="flex items-center">
-                  <div className="bg-amber-100 p-2 rounded-full mr-3">
-                    <Bookmark className="h-4 w-4 text-amber-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Saves</p>
-                    <p className="text-lg font-bold">{totalSaves}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-none border">
-              <CardContent className="p-3">
-                <div className="flex items-center">
-                  <div className="bg-blue-100 p-2 rounded-full mr-3">
-                    <MessageCircle className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Unread Messages</p>
-                    <div className="flex items-center">
-                      <p className="text-lg font-bold">{totalUnreadMessages}</p>
-                      {totalUnreadMessages > 0 && (
-                        <Badge className="ml-2 text-xs">New</Badge>
-                      )}
+          {/* Stats Cards - 5 animated metric cards with insights */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
+            {/* Views Card */}
+            <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 relative">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                
+                <div className="relative">
+                  <div className="flex items-center mb-3">
+                    <div className="bg-blue-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
+                      <Eye className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Views</p>
+                      <div className="flex items-center">
+                        <span className="text-2xl font-bold">{totalViews}</span>
+                        <div className="flex items-center ml-2 text-emerald-600">
+                          <ArrowUpRight className="h-4 w-4" />
+                          <span className="text-xs">12%</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                  
+                  <div className="text-xs text-gray-500 pl-12">
+                    <p>Average 4 views per property</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="shadow-none border">
-              <CardContent className="p-3">
-                <div className="flex items-center">
-                  <div className="bg-green-100 p-2 rounded-full mr-3">
-                    <Percent className="h-4 w-4 text-green-600" />
+            {/* Saves Card */}
+            <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 relative">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                
+                <div className="relative">
+                  <div className="flex items-center mb-3">
+                    <div className="bg-amber-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
+                      <Bookmark className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Saves</p>
+                      <div className="flex items-center">
+                        <span className="text-2xl font-bold">{totalSaves}</span>
+                        <div className="flex items-center ml-2 text-emerald-600">
+                          <ArrowUpRight className="h-4 w-4" />
+                          <span className="text-xs">5%</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Response Rate</p>
-                    <p className="text-lg font-bold">{responseRate}%</p>
+                  
+                  <div className="text-xs text-gray-500 pl-12">
+                    <p>Average 2 saves per property</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Offers Card */}
+            <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 relative">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                
+                <div className="relative">
+                  <div className="flex items-center mb-3">
+                    <div className="bg-green-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
+                      <DollarSign className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Offers</p>
+                      <div className="flex items-center">
+                        <span className="text-2xl font-bold">{totalOffers}</span>
+                        <div className="flex items-center ml-2 text-emerald-600">
+                          <ArrowUpRight className="h-4 w-4" />
+                          <span className="text-xs">20%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center pl-12">
+                    <Button variant="link" className="text-xs p-0 h-5 text-blue-600">
+                      View in Offers Inbox
+                      <ChevronRight className="h-3 w-3 ml-1" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Unread Messages Card */}
+            <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 relative">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                
+                <div className="relative">
+                  <div className="flex items-center mb-3">
+                    <div className="bg-purple-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
+                      <MessageCircle className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Unread Messages</p>
+                      <div className="flex items-center">
+                        <span className="text-2xl font-bold">{totalUnreadMessages}</span>
+                        {totalUnreadMessages > 0 && (
+                          <Badge className="ml-2 text-[10px] bg-red-500 text-white">New</Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-xs text-gray-500 pl-12">
+                    <p>Respond to improve conversion</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Response Rate Card */}
+            <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
+              <CardContent className="p-4 relative">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                
+                <div className="relative">
+                  <div className="flex items-center mb-3">
+                    <div className="bg-indigo-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
+                      <MailCheck className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Response Rate</p>
+                      <div className="flex items-center">
+                        <span className="text-2xl font-bold">{responseRate}%</span>
+                        <div className="flex items-center ml-2 text-amber-600">
+                          <span className="text-xs">Avg: 2.5h</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="pl-12 pr-2">
+                    <div className="relative">
+                      <Progress value={responseRate} className="h-1.5 bg-gray-100">
+                        <div className="h-full bg-indigo-600 rounded-full group-hover:bg-indigo-500 transition-colors duration-300"></div>
+                      </Progress>
+                      <div className="text-[10px] text-gray-500 flex justify-between mt-1">
+                        <span>Industry avg: 35%</span>
+                        <span>Goal: 80%</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
