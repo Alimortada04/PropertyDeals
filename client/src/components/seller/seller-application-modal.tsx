@@ -465,19 +465,18 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto p-6">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[550px] max-h-[85vh] h-auto overflow-hidden p-0 flex flex-col">
+        <DialogHeader className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-10">
           <DialogTitle className="text-xl font-semibold">Seller Application</DialogTitle>
           <DialogDescription>
             Complete this application to become a verified PropertyDeals seller.
           </DialogDescription>
-        </DialogHeader>
-        
-        {/* Progress indicator */}
-        <div className="pt-1 pb-4">
-          <div className="flex justify-between text-sm text-gray-500 mb-1">
-            <span>Step {currentStep} of 4</span>
-            <span>{Math.round((currentStep / 4) * 100)}% Complete</span>
+          
+          {/* Progress indicator */}
+          <div className="pt-2 pb-2">
+            <div className="flex justify-between text-sm text-gray-500 mb-1">
+              <span>Step {currentStep} of 4</span>
+              <span>{Math.round((currentStep / 4) * 100)}% Complete</span>
           </div>
           <Progress value={(currentStep / 4) * 100} className="h-2" />
         </div>
