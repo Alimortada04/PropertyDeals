@@ -1210,26 +1210,23 @@ export default function EngagementZillowPage() {
             {/* Saves Card */}
             <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 relative">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
+                  <Bookmark className="h-7 w-7 text-amber-400 opacity-70" />
+                </div>
                 
                 <div className="relative">
-                  <div className="flex items-center mb-3">
-                    <div className="bg-amber-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
-                      <Bookmark className="h-5 w-5 text-amber-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Saves</p>
-                      <div className="flex items-center">
-                        <span className="text-2xl font-bold">{totalSaves}</span>
-                        <div className="flex items-center ml-2 text-emerald-600">
-                          <ArrowUpRight className="h-4 w-4" />
-                          <span className="text-xs">5%</span>
-                        </div>
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-500">Saves</p>
+                    <div className="flex items-center">
+                      <span className="text-2xl font-bold">{totalSaves}</span>
+                      <div className="flex items-center ml-2 text-emerald-600">
+                        <ArrowUpRight className="h-4 w-4" />
+                        <span className="text-xs">5%</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="text-xs text-gray-500 pl-12">
+                  <div className="text-xs text-gray-500">
                     <p>Average 2 saves per property</p>
                   </div>
                 </div>
@@ -1249,26 +1246,23 @@ export default function EngagementZillowPage() {
               }}
             >
               <CardContent className="p-4 relative">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
+                  <DollarSign className="h-7 w-7 text-green-400 opacity-70" />
+                </div>
                 
                 <div className="relative">
-                  <div className="flex items-center mb-3">
-                    <div className="bg-green-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
-                      <DollarSign className="h-5 w-5 text-green-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Offers</p>
-                      <div className="flex items-center">
-                        <span className="text-2xl font-bold">{totalOffers}</span>
-                        <div className="flex items-center ml-2 text-emerald-600">
-                          <ArrowUpRight className="h-4 w-4" />
-                          <span className="text-xs">20%</span>
-                        </div>
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-500">Offers</p>
+                    <div className="flex items-center">
+                      <span className="text-2xl font-bold">{totalOffers}</span>
+                      <div className="flex items-center ml-2 text-emerald-600">
+                        <ArrowUpRight className="h-4 w-4" />
+                        <span className="text-xs">20%</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-center pl-12">
+                  <div className="flex items-center justify-center">
                     <span className="text-xs text-gray-500">Click to open Offers Inbox</span>
                   </div>
                 </div>
@@ -1278,25 +1272,22 @@ export default function EngagementZillowPage() {
             {/* Unread Messages Card */}
             <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 relative">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
+                  <MessageCircle className="h-7 w-7 text-purple-400 opacity-70" />
+                </div>
                 
                 <div className="relative">
-                  <div className="flex items-center mb-3">
-                    <div className="bg-purple-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
-                      <MessageCircle className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Unread Messages</p>
-                      <div className="flex items-center">
-                        <span className="text-2xl font-bold">{totalUnreadMessages}</span>
-                        {totalUnreadMessages > 0 && (
-                          <Badge className="ml-2 text-[10px] bg-red-500 text-white">New</Badge>
-                        )}
-                      </div>
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-500">Unread Messages</p>
+                    <div className="flex items-center">
+                      <span className="text-2xl font-bold">{totalUnreadMessages}</span>
+                      {totalUnreadMessages > 0 && (
+                        <Badge className="ml-2 text-[10px] bg-red-500 text-white">New</Badge>
+                      )}
                     </div>
                   </div>
                   
-                  <div className="text-xs text-gray-500 pl-12">
+                  <div className="text-xs text-gray-500">
                     <p>Respond to improve conversion</p>
                   </div>
                 </div>
