@@ -466,8 +466,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[550px] max-h-[90vh] md:max-h-[85vh] min-h-[50vh] h-auto w-[92vw] overflow-hidden p-0 flex flex-col rounded-lg border-0">
-        {/* Fixed Header - Stays visible at all times */}
-        <div className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-30 shadow-sm">
+        {/* HEADER: Fixed at top */}
+        <div className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-30 shadow-sm flex-shrink-0">
           <DialogTitle className="text-xl font-semibold">Seller Application</DialogTitle>
           <DialogDescription>
             Complete this application to become a verified PropertyDeals seller.
@@ -483,8 +483,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
           </div>
         </div>
         
-        {/* Scrollable content area with extra padding to prevent footer overlap */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 pb-32">
+        {/* CONTENT: Middle scrollable section */}
+        <div className="flex-1 overflow-y-auto px-6 py-4">
           {/* Step labels */}
           <div className="grid grid-cols-4 mb-6 text-xs text-center">
           <div className={`transition-colors ${currentStep >= 1 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
@@ -1451,8 +1451,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         )}
         </div>
         
-        {/* Action buttons - fixed at the absolute bottom of the modal */}
-        <DialogFooter className="flex flex-col px-6 py-4 border-t bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] sticky bottom-0 z-30 w-full">
+        {/* FOOTER: Fixed at bottom */}
+        <DialogFooter className="flex flex-col px-6 py-4 border-t bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] sticky bottom-0 z-30 w-full flex-shrink-0">
           {/* Action buttons row */}
           <div className="flex flex-col sm:flex-row justify-between w-full">
             <div>
