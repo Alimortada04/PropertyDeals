@@ -33,7 +33,8 @@ import {
   ChevronDown,
   Info,
   CheckSquare,
-  ListTodo
+  ListTodo,
+  Plus
 } from "lucide-react";
 import { useLocation } from "wouter";
 
@@ -460,6 +461,30 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
           <TabsContent value="deals" className="mt-0">
             <div className="overflow-x-auto pb-4 hide-scrollbar">
               <div className="flex space-x-4">
+                {/* List a Property CTA Card as an empty property card */}
+                <Card 
+                  className="w-72 flex-shrink-0 hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group border border-dashed border-gray-300 bg-gray-50/50"
+                  onClick={() => setLocation("/sellerdash/seller123?addProperty=true")}
+                >
+                  <div className="h-40 relative flex items-center justify-center bg-gradient-to-tr from-[#09261E]/5 to-[#135341]/10 group-hover:from-[#803344]/10 group-hover:to-[#803344]/20 transition-colors duration-300">
+                    <div className="text-center">
+                      <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center mx-auto mb-2 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                        <Plus className="h-6 w-6 text-[#135341] group-hover:text-[#803344] transition-colors duration-300" />
+                      </div>
+                    </div>
+                  </div>
+                  <CardContent className="p-4">
+                    <h4 className="font-medium text-center text-[#09261E] group-hover:text-[#803344] transition-colors duration-300">List a Property</h4>
+                    <p className="text-xs text-center text-gray-500 mt-1">Add a new off-market deal to your listings</p>
+                    
+                    <div className="mt-4 flex justify-center">
+                      <Button size="sm" className="bg-[#09261E] hover:bg-[#135341] text-white group-hover:bg-[#803344] group-hover:hover:bg-[#803344]/90 transition-colors duration-300">
+                        Get Started
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+                
                 {recentProperties.map((property) => (
                   <Card 
                     key={property.id} 
