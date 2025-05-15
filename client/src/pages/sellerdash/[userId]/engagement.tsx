@@ -3161,27 +3161,522 @@ export default function EngagementPage() {
             </Card>
           </div>
           
-          {/* Main content area - Property-based sections with engagements */}
-          <div className={cn(
-            "grid gap-6",
-            showBuyerStats ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"
-          )}>
-            {/* Main content column */}
-            <div className={cn(
-              "space-y-6",
-              showBuyerStats ? "lg:col-span-2" : ""
-            )}>
-              {propertiesWithEngagements.length === 0 ? (
-                <div className="text-center py-10 bg-white rounded-lg border">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 mb-4">
-                    <MessageCircle className="h-6 w-6 text-gray-600" />
+          {/* Main content area - Two-panel layout for Property List and Engagement View */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Panel - Property List with engagement metrics */}
+            <div className="lg:col-span-1 space-y-4">
+              <Card className="border shadow-sm">
+                <CardHeader className="border-b bg-slate-50 px-5 py-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg font-medium">My Properties</CardTitle>
+                      <CardDescription>Properties with engagement tracking</CardDescription>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">No engagements found</h3>
-                  <p className="text-gray-500 max-w-md mx-auto">
-                    There are no engagements matching your current filters. Try adjusting your search or filters.
+                </CardHeader>
+                
+                {/* Filter area */}
+                <div className="px-4 py-3 border-b">
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    <div className="flex-1 min-w-[200px]">
+                      <Select
+                        value={selectedProperties.length > 0 ? 'selected' : ''}
+                        onValueChange={() => {}}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Property" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Properties</SelectItem>
+                          {mockProperties.map(property => (
+                            <SelectItem key={property.id} value={property.id}>{property.title}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="flex-1 min-w-[200px]">
+                      <Select
+                        value={selectedEngagementTypes.length > 0 ? 'selected' : ''}
+                        onValueChange={() => {}}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Engagement Type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Types</SelectItem>
+                          <SelectItem value="view">Views</SelectItem>
+                          <SelectItem value="save">Saves</SelectItem>
+                          <SelectItem value="message">Messages</SelectItem>
+                          <SelectItem value="offer">Offers</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div className="flex-1 min-w-[200px]">
+                      <Select
+                        value={selectedBuyerTags.length > 0 ? 'selected' : ''}
+                        onValueChange={() => {}}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Status</SelectItem>
+                          <SelectItem value="active">Active</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="closed">Closed</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => {
+                        setSelectedProperties([]);
+                        setSelectedEngagementTypes([]);
+                        setSelectedBuyerTags([]);
+                      }}
+                      className="text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                    >
+                      <X className="h-3.5 w-3.5 mr-1" />
+                      Clear Filters
+                    </Button>
+                  </div>
+                </div>
+                
+                <CardContent className="p-0 max-h-[600px] overflow-y-auto">
+                  <div className="divide-y">
+                    {mockProperties.map(property => (
+                      <div 
+                        key={property.id}
+                        className={cn(
+                          "p-4 hover:bg-gray-50 cursor-pointer transition-colors",
+                          showBuyerStats === property.id ? "bg-gray-50 border-l-4 border-[#135341]" : ""
+                        )}
+                        onClick={() => setShowBuyerStats(property.id)}
+                      >
+                        <div className="flex gap-4">
+                          <div className="flex-shrink-0">
+                            <img 
+                              src={property.image} 
+                              alt={property.title}
+                              className="w-20 h-20 object-cover rounded-md"
+                            />
+                          </div>
+                          
+                          <div className="flex-1">
+                            <h4 className="font-medium text-gray-900 mb-1">{property.title}</h4>
+                            <p className="text-sm text-gray-500 mb-2">{property.address}</p>
+                            
+                            <div className="flex justify-between">
+                              <span className="text-sm font-medium">${property.price.toLocaleString()}</span>
+                              <Badge variant="outline" className={cn(
+                                property.status === "Live" ? "bg-green-100 text-green-800 border-green-200" :
+                                property.status === "Pending" ? "bg-amber-100 text-amber-800 border-amber-200" :
+                                "bg-gray-100 text-gray-800 border-gray-200"
+                              )}>
+                                {property.status}
+                              </Badge>
+                            </div>
+                            
+                            <div className="grid grid-cols-4 gap-2 mt-3">
+                              <div className="text-center">
+                                <p className="text-xs text-gray-500">Views</p>
+                                <p className="font-medium">{property.viewCount}</p>
+                              </div>
+                              <div className="text-center">
+                                <p className="text-xs text-gray-500">Saves</p>
+                                <p className="font-medium">{property.saveCount}</p>
+                              </div>
+                              <div className="text-center">
+                                <p className="text-xs text-gray-500">Messages</p>
+                                <p className={cn(
+                                  "font-medium",
+                                  property.messageCount > 0 && Math.random() > 0.5 ? "text-red-600 font-bold" : ""
+                                )}>{property.messageCount}</p>
+                              </div>
+                              <div className="text-center">
+                                <p className="text-xs text-gray-500">Offers</p>
+                                <p className={cn(
+                                  "font-medium",
+                                  property.offerCount > 0 && Math.random() > 0.6 ? "text-green-600 font-bold" : ""
+                                )}>{property.offerCount}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Right Panel - Engagement Content View */}
+            <div className="lg:col-span-2 space-y-6">
+              {showBuyerStats ? (
+                <>
+                  {/* Property Details Section with actions */}
+                  <Card className="border shadow-sm">
+                    <CardHeader className="border-b px-5 py-4">
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                          <div className="h-16 w-16 rounded-md overflow-hidden flex-shrink-0">
+                            <img 
+                              src={mockProperties.find(p => p.id === showBuyerStats)?.image}
+                              alt="Property"
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <CardTitle className="text-lg font-medium">
+                              {mockProperties.find(p => p.id === showBuyerStats)?.title}
+                            </CardTitle>
+                            <CardDescription>
+                              {mockProperties.find(p => p.id === showBuyerStats)?.address}
+                            </CardDescription>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                            onClick={() => {
+                              toast({
+                                title: "Edit Listing",
+                                description: "Opening property editor",
+                              });
+                            }}
+                          >
+                            <Edit className="h-4 w-4 mr-1.5" />
+                            Edit Listing
+                          </Button>
+                          
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            className="text-gray-700 hover:text-gray-900 hover:bg-gray-100"
+                            onClick={() => {
+                              toast({
+                                title: "Share Link",
+                                description: "Public link copied to clipboard",
+                              });
+                            }}
+                          >
+                            <ExternalLink className="h-4 w-4 mr-1.5" />
+                            Share Public Link
+                          </Button>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                  
+                  {/* Key Metrics Cards */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <Card className="border shadow-sm">
+                      <CardContent className="pt-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-sm font-medium text-gray-500">Views</p>
+                          <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
+                            <Eye className="h-4 w-4 text-purple-600" />
+                          </div>
+                        </div>
+                        <h3 className="text-2xl font-bold">
+                          {mockProperties.find(p => p.id === showBuyerStats)?.viewCount}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-1">
+                          +{Math.floor(Math.random() * 30)}% from last week
+                        </p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border shadow-sm">
+                      <CardContent className="pt-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-sm font-medium text-gray-500">Saves</p>
+                          <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <Bookmark className="h-4 w-4 text-blue-600" />
+                          </div>
+                        </div>
+                        <h3 className="text-2xl font-bold">
+                          {mockProperties.find(p => p.id === showBuyerStats)?.saveCount}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {Math.floor(Math.random() * 15)}% save rate
+                        </p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border shadow-sm">
+                      <CardContent className="pt-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-sm font-medium text-gray-500">Messages</p>
+                          <div className="h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <MessageCircle className="h-4 w-4 text-indigo-600" />
+                          </div>
+                        </div>
+                        <h3 className="text-2xl font-bold">
+                          {mockProperties.find(p => p.id === showBuyerStats)?.messageCount}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Replied to {Math.floor(Math.random() * (mockProperties.find(p => p.id === showBuyerStats)?.messageCount || 1))} messages
+                        </p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="border shadow-sm">
+                      <CardContent className="pt-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-sm font-medium text-gray-500">Offers</p>
+                          <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                            <DollarSign className="h-4 w-4 text-green-600" />
+                          </div>
+                        </div>
+                        <h3 className="text-2xl font-bold">
+                          {mockProperties.find(p => p.id === showBuyerStats)?.offerCount}
+                        </h3>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Avg {Math.floor(420000 + Math.random() * 80000).toLocaleString()} per offer
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  
+                  {/* Immediate Actions Section */}
+                  <Card className="border shadow-sm">
+                    <CardHeader className="border-b px-5 py-4">
+                      <CardTitle className="text-lg font-medium">Action Required</CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-5 py-4">
+                      <div className="space-y-4">
+                        {Math.random() > 0.4 ? (
+                          <>
+                            <Alert className="bg-amber-50 text-amber-800 border-amber-200">
+                              <AlertCircle className="h-4 w-4" />
+                              <AlertTitle>Unresponded Message</AlertTitle>
+                              <AlertDescription>
+                                John Smith sent you a message 2 hours ago about financing options.
+                              </AlertDescription>
+                              <div className="mt-2">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  className="mr-2 hover:bg-gray-100"
+                                >
+                                  <Sparkles className="h-3.5 w-3.5 mr-1 text-indigo-600" />
+                                  AI Reply
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  className="bg-[#135341] hover:bg-[#09261E]"
+                                >
+                                  <MessageCircle className="h-3.5 w-3.5 mr-1" />
+                                  Respond
+                                </Button>
+                              </div>
+                            </Alert>
+                            
+                            <Alert className="bg-green-50 text-green-800 border-green-200">
+                              <FileCheck className="h-4 w-4" />
+                              <AlertTitle>New Offer Received</AlertTitle>
+                              <AlertDescription>
+                                Sarah Johnson submitted an offer of $452,000.
+                              </AlertDescription>
+                              <div className="mt-2">
+                                <Button 
+                                  size="sm" 
+                                  className="bg-[#135341] hover:bg-[#09261E]"
+                                >
+                                  <Eye className="h-3.5 w-3.5 mr-1" />
+                                  Review Offer
+                                </Button>
+                              </div>
+                            </Alert>
+                          </>
+                        ) : (
+                          <div className="flex items-center justify-center py-8 text-center">
+                            <div>
+                              <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-2" />
+                              <h3 className="text-lg font-medium">All caught up!</h3>
+                              <p className="text-gray-500 mt-1">You have no pending actions right now.</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Engaged Buyers Section */}
+                  <Card className="border shadow-sm">
+                    <CardHeader className="border-b px-5 py-4">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-medium">Engaged Buyers</CardTitle>
+                        <Button variant="outline" size="sm" className="hover:bg-gray-100">View All</Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="px-0 py-0">
+                      <div className="divide-y">
+                        {mockBuyers.slice(0, 3).map(buyer => (
+                          <div key={buyer.id} className="p-4 hover:bg-gray-50 cursor-pointer">
+                            <div className="flex items-center gap-3">
+                              <Avatar className="h-10 w-10 flex-shrink-0">
+                                <AvatarImage src={buyer.avatar} alt={buyer.name} />
+                                <AvatarFallback>{buyer.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              
+                              <div className="flex-1">
+                                <div className="flex justify-between">
+                                  <h4 className="font-medium">{buyer.name}</h4>
+                                  <Badge className={getBuyerTypeBadge(buyer.type).color}>
+                                    {buyer.type}
+                                  </Badge>
+                                </div>
+                                
+                                <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                                  <div className="flex items-center">
+                                    <Eye className="h-3 w-3 mr-1" />
+                                    <span>{Math.floor(Math.random() * 12) + 1} views</span>
+                                  </div>
+                                  {Math.random() > 0.5 && (
+                                    <div className="flex items-center">
+                                      <Bookmark className="h-3 w-3 mr-1" />
+                                      <span>Saved</span>
+                                    </div>
+                                  )}
+                                  {Math.random() > 0.7 && (
+                                    <div className="flex items-center">
+                                      <MessageCircle className="h-3 w-3 mr-1" />
+                                      <span>Messaged</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              
+                              <Button size="sm" variant="ghost" className="text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                                <User className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Activity Timeline */}
+                  <Card className="border shadow-sm">
+                    <CardHeader className="border-b px-5 py-4">
+                      <CardTitle className="text-lg font-medium">Activity Timeline</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="divide-y">
+                        {recentActivity
+                          .filter(activity => 
+                            showBuyerStats === 'all' || activity.propertyId === showBuyerStats
+                          )
+                          .slice(0, 8)
+                          .map(activity => (
+                            <ActivityItem 
+                              key={activity.id}
+                              activity={activity}
+                              onRespond={(activity) => {
+                                toast({
+                                  title: "Responding to activity",
+                                  description: `Responding to ${activity.activityType} from ${activity.buyerName}`,
+                                });
+                              }}
+                            />
+                          ))
+                        }
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Save-to-Offer Conversion */}
+                  <Card className="border shadow-sm">
+                    <CardHeader className="border-b px-5 py-4">
+                      <CardTitle className="text-lg font-medium">Save-to-Offer Conversion</CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-5 py-4">
+                      <div className="mb-2">
+                        <div className="flex justify-between mb-1 text-sm">
+                          <span className="font-medium">Conversion Rate</span>
+                          <span className="font-medium text-[#135341]">
+                            {Math.floor(Math.random() * 15) + 5}%
+                          </span>
+                        </div>
+                        <Progress 
+                          value={Math.floor(Math.random() * 15) + 5} 
+                          className="h-2 bg-gray-100" 
+                        />
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        {mockProperties.find(p => p.id === showBuyerStats)?.saveCount} saves resulted in 
+                        {' '}{mockProperties.find(p => p.id === showBuyerStats)?.offerCount} offers
+                      </p>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Property Timeline Bar */}
+                  <Card className="border shadow-sm">
+                    <CardHeader className="border-b px-5 py-4">
+                      <CardTitle className="text-lg font-medium">Property Timeline</CardTitle>
+                    </CardHeader>
+                    <CardContent className="px-5 py-4">
+                      <div className="relative">
+                        <div className="h-2 bg-gray-100 rounded-full">
+                          <div 
+                            className="h-2 bg-[#135341] rounded-full" 
+                            style={{ width: `${Math.floor(Math.random() * 60) + 20}%` }}
+                          ></div>
+                        </div>
+                        
+                        <div className="flex justify-between text-xs text-gray-500 mt-2">
+                          <div className="text-center">
+                            <div className="h-3 w-3 rounded-full bg-[#135341] inline-block"></div>
+                            <div>Listed<br />{new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <div className="h-3 w-3 rounded-full bg-amber-500 inline-block"></div>
+                            <div>First View<br />{new Date(Date.now() - Math.random() * 25 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <div className="h-3 w-3 rounded-full bg-blue-500 inline-block"></div>
+                            <div>First Message<br />{new Date(Date.now() - Math.random() * 20 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
+                          </div>
+                          
+                          <div className="text-center">
+                            <div className="h-3 w-3 rounded-full bg-green-500 inline-block"></div>
+                            <div>First Offer<br />{new Date(Date.now() - Math.random() * 10 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
+                          </div>
+                          
+                          <div className="text-center opacity-50">
+                            <div className="h-3 w-3 rounded-full bg-gray-400 inline-block"></div>
+                            <div>Closing<br />Pending</div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-96 text-center">
+                  <div className="mb-4 w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
+                    <PanelRight className="h-8 w-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-800">Select a property to view engagement details</h3>
+                  <p className="text-gray-500 max-w-md mt-2">
+                    Choose a property from the list to see detailed engagement metrics, buyer activity, and conversion data.
                   </p>
                 </div>
-              ) : (
+              )
                 // Render each property block
                 propertiesWithEngagements.map((property) => (
                   <PropertyEngagementBlock 
