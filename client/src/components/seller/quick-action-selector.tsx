@@ -97,16 +97,16 @@ export function QuickActionSelector() {
       
       if (i === 1) {
         // List Property - diagonal top-left at ~315°
-        xPos = -50;
-        yPos = -50;
+        xPos = -65;
+        yPos = -65;
       } else if (i === 2) {
         // Offers Inbox - directly above at ~0°/360°
         xPos = 0;
-        yPos = -70;
+        yPos = -90;
       } else {
         // Campaign - directly left at ~275°
-        xPos = -70;
-        yPos = -5;
+        xPos = -90;
+        yPos = -10;
       }
       
       return {
@@ -146,7 +146,7 @@ export function QuickActionSelector() {
     >
       <AnimatePresence>
         {isOpen && (
-          <div className="absolute bottom-0 right-0">
+          <div className="absolute bottom-7 right-7">
             {/* List Property - Wine color at diagonal top-left ~315° */}
             <motion.div
               className="absolute"
