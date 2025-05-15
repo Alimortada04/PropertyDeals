@@ -3339,6 +3339,17 @@ export default function EngagementPage() {
                             <CardDescription>
                               {mockProperties.find(p => p.id === showBuyerStats)?.address}
                             </CardDescription>
+                            <div className="flex items-center gap-1 mt-1 text-sm">
+                              <Badge variant="outline" className="bg-slate-100 text-slate-800 border-0 font-normal">
+                                {mockProperties.find(p => p.id === showBuyerStats)?.beds} beds
+                              </Badge>
+                              <Badge variant="outline" className="bg-slate-100 text-slate-800 border-0 font-normal">
+                                {mockProperties.find(p => p.id === showBuyerStats)?.baths} baths
+                              </Badge>
+                              <Badge variant="outline" className="bg-slate-100 text-slate-800 border-0 font-normal">
+                                {mockProperties.find(p => p.id === showBuyerStats)?.sqft.toLocaleString()} sq ft
+                              </Badge>
+                            </div>
                           </div>
                         </div>
                         
@@ -3425,7 +3436,8 @@ export default function EngagementPage() {
                           {mockProperties.find(p => p.id === showBuyerStats)?.messageCount}
                         </h3>
                         <p className="text-xs text-gray-500 mt-1">
-                          Replied to {Math.floor(Math.random() * (mockProperties.find(p => p.id === showBuyerStats)?.messageCount || 1))} messages
+                          {/* Response score */}
+                          You've replied to {Math.floor(Math.random() * (mockProperties.find(p => p.id === showBuyerStats)?.messageCount || 1))} of {mockProperties.find(p => p.id === showBuyerStats)?.messageCount} messages
                         </p>
                       </CardContent>
                     </Card>
@@ -3441,9 +3453,14 @@ export default function EngagementPage() {
                         <h3 className="text-2xl font-bold">
                           {mockProperties.find(p => p.id === showBuyerStats)?.offerCount}
                         </h3>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Avg {Math.floor(420000 + Math.random() * 80000).toLocaleString()} per offer
-                        </p>
+                        <div className="flex justify-between items-center mt-1">
+                          <p className="text-xs text-gray-500">
+                            Avg ${Math.floor(420000 + Math.random() * 80000).toLocaleString()}
+                          </p>
+                          <Badge className="bg-green-100 text-green-800 border-green-200 text-xs font-normal">
+                            {Math.floor(Math.random() * 15) + 5}% conversion
+                          </Badge>
+                        </div>
                       </CardContent>
                     </Card>
                   </div>
@@ -3512,6 +3529,52 @@ export default function EngagementPage() {
                     </CardContent>
                   </Card>
                   
+                  {/* Activity Timeline */}
+                  <Card className="border shadow-sm">
+                    <CardHeader className="border-b px-5 py-4">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-medium">Activity Timeline</CardTitle>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="hover:bg-gray-100"
+                          onClick={() => {
+                            toast({
+                              title: "AI Assistant",
+                              description: "Opening AI response assistant",
+                            });
+                          }}
+                        >
+                          <Sparkles className="h-4 w-4 mr-1.5 text-indigo-600" />
+                          Respond with AI
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="divide-y">
+                        {recentActivity
+                          .filter(activity => 
+                            showBuyerStats === 'all' || activity.propertyId === showBuyerStats
+                          )
+                          .slice(0, 8)
+                          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) // Newest to oldest
+                          .map(activity => (
+                            <ActivityItem 
+                              key={activity.id}
+                              activity={activity}
+                              onRespond={(activity) => {
+                                toast({
+                                  title: "Responding to activity",
+                                  description: `Responding to ${activity.activityType} from ${activity.buyerName}`,
+                                });
+                              }}
+                            />
+                          ))
+                        }
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
                   {/* Engaged Buyers Section */}
                   <Card className="border shadow-sm">
                     <CardHeader className="border-b px-5 py-4">
@@ -3564,35 +3627,6 @@ export default function EngagementPage() {
                             </div>
                           </div>
                         ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  {/* Activity Timeline */}
-                  <Card className="border shadow-sm">
-                    <CardHeader className="border-b px-5 py-4">
-                      <CardTitle className="text-lg font-medium">Activity Timeline</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      <div className="divide-y">
-                        {recentActivity
-                          .filter(activity => 
-                            showBuyerStats === 'all' || activity.propertyId === showBuyerStats
-                          )
-                          .slice(0, 8)
-                          .map(activity => (
-                            <ActivityItem 
-                              key={activity.id}
-                              activity={activity}
-                              onRespond={(activity) => {
-                                toast({
-                                  title: "Responding to activity",
-                                  description: `Responding to ${activity.activityType} from ${activity.buyerName}`,
-                                });
-                              }}
-                            />
-                          ))
-                        }
                       </div>
                     </CardContent>
                   </Card>
