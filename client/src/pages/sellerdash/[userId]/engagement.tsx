@@ -2960,23 +2960,51 @@ export default function EngagementPage() {
             </div>
           </div>
           
-          {/* Engagement Stats Overview Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card>
+          {/* Engagement Overview Header Section */}
+          <div className="bg-white rounded-lg p-6 mb-6 border shadow-sm">
+            <div className="flex flex-wrap items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800">Engagement Overview</h2>
+                <p className="text-gray-500 mt-1">Track and analyze buyer interest across all your properties</p>
+              </div>
+              <div className="flex items-center space-x-3">
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-9" onClick={() => {}}>
+                      <CalendarClock className="h-4 w-4 mr-2" />
+                      Last 30 Days
+                    </Button>
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80 p-4">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-semibold">Date Range</h4>
+                      <p className="text-sm text-gray-500">Statistics shown represent activity from the last 30 days by default.</p>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+                
+                <Button variant="ghost" size="sm" className="h-9 text-blue-600 hover:text-blue-800">
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Full Report
+                </Button>
+              </div>
+            </div>
+            
+            {/* Top row - Primary stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Total Views</p>
-                    <h3 className="text-2xl font-bold mt-1">{totalViews}</h3>
+                    <p className="text-sm font-medium text-gray-500">Active Properties</p>
+                    <h3 className="text-3xl font-bold mt-1">{activeProperties}</h3>
                   </div>
-                  <div className="h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
-                    <Eye className="h-6 w-6 text-purple-600" />
+                  <div className="h-14 w-14 bg-[#135341]/10 rounded-full flex items-center justify-center">
+                    <Building className="h-7 w-7 text-[#135341]" />
                   </div>
                 </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <ArrowUpRight className="h-3.5 w-3.5 text-green-500 mr-1" />
-                  <span className="text-green-600 font-medium">12%</span>
-                  <span className="text-gray-500 ml-1">from last week</span>
+                <div className="mt-4 flex items-center gap-1 text-sm">
+                  <span className="text-gray-600">Currently being marketed</span>
                 </div>
               </CardContent>
             </Card>
