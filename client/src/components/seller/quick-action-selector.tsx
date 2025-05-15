@@ -79,36 +79,59 @@ export function QuickActionSelector() {
     setIsOpen(false);
   };
 
-  // Orbital animation variants
+  // Orbital animation variants for left-side positioning
   const orbitVariants = {
     hidden: { 
       opacity: 0, 
       scale: 0,
-      y: 0,
-      x: 0
+      x: 0,
+      y: 0
     },
-    visible: (i: number) => ({
-      opacity: 1,
-      scale: 1,
-      y: Math.sin((i * Math.PI) / 3) * -90,
-      x: Math.cos((i * Math.PI) / 3) * -70,
-      transition: {
-        type: "spring",
-        stiffness: 260,
-        damping: 20,
-        delay: i * 0.1
+    visible: (i: number) => {
+      // i=1: List Property (bottom-left, wine color)
+      // i=2: Offers Inbox (middle-left, light green)
+      // i=3: Campaign (top-left, dark green)
+      
+      // Position all buttons to the left with different angles
+      let xPos, yPos;
+      
+      if (i === 1) {
+        // List Property - bottom-left
+        xPos = -70;
+        yPos = 40;
+      } else if (i === 2) {
+        // Offers Inbox - direct left
+        xPos = -80;
+        yPos = 0;
+      } else {
+        // Campaign - top-left
+        xPos = -70;
+        yPos = -40;
       }
-    }),
+      
+      return {
+        opacity: 1,
+        scale: 1,
+        x: xPos,
+        y: yPos,
+        transition: {
+          type: "spring",
+          stiffness: 300,
+          damping: 22,
+          delay: i * 0.05
+        }
+      };
+    },
     exit: (i: number) => ({
       opacity: 0,
       scale: 0,
-      y: 0,
       x: 0,
+      y: 0,
       transition: {
         type: "spring",
-        stiffness: 260,
-        damping: 20,
-        delay: (3 - i) * 0.05
+        stiffness: 300,
+        damping: 22,
+        delay: (3 - i) * 0.03
       }
     })
   };
@@ -123,8 +146,8 @@ export function QuickActionSelector() {
     >
       <AnimatePresence>
         {isOpen && (
-          <div className="absolute bottom-16 right-0">
-            {/* Property Creation - Wine colored */}
+          <div className="absolute bottom-0 right-0">
+            {/* List Property - Wine colored (Bottom-left position) */}
             <motion.div
               className="absolute"
               custom={1}
@@ -135,17 +158,17 @@ export function QuickActionSelector() {
             >
               <Button
                 onClick={() => handleAction(propertyModal.onOpen)}
-                className="group relative h-12 w-12 rounded-full bg-[#803344] hover:bg-[#803344]/90 shadow-lg transition-transform transform hover:scale-110"
-                aria-label="New Listing"
+                className="group relative h-12 w-12 rounded-full bg-[#803344] hover:bg-[#803344]/80 shadow-lg transition-all duration-200 hover:shadow-xl"
+                aria-label="List Property"
               >
                 <Plus className="h-5 w-5" />
-                <span className="absolute right-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  New Listing
+                <span className="absolute left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  List Property
                 </span>
               </Button>
             </motion.div>
             
-            {/* Offers Inbox - Light Green */}
+            {/* Offers Inbox - Light Green (Middle-left position) */}
             <motion.div
               className="absolute"
               custom={2}
@@ -156,17 +179,17 @@ export function QuickActionSelector() {
             >
               <Button
                 onClick={() => handleAction(offersInboxModal.onOpen)}
-                className="group relative h-12 w-12 rounded-full bg-[#135341] hover:bg-[#135341]/90 shadow-lg transition-transform transform hover:scale-110"
+                className="group relative h-12 w-12 rounded-full bg-[#135341] hover:bg-[#135341]/80 shadow-lg transition-all duration-200 hover:shadow-xl"
                 aria-label="Offers Inbox"
               >
                 <DollarSign className="h-5 w-5" />
-                <span className="absolute right-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="absolute left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Offers Inbox
                 </span>
               </Button>
             </motion.div>
             
-            {/* Campaign Creation - Dark Green */}
+            {/* Campaign Creation - Dark Green (Top-left position) */}
             <motion.div
               className="absolute"
               custom={3}
@@ -177,12 +200,12 @@ export function QuickActionSelector() {
             >
               <Button
                 onClick={() => handleAction(campaignModal.onOpen)}
-                className="group relative h-12 w-12 rounded-full bg-[#09261E] hover:bg-[#09261E]/90 shadow-lg transition-transform transform hover:scale-110"
-                aria-label="Market a Deal"
+                className="group relative h-12 w-12 rounded-full bg-[#09261E] hover:bg-[#09261E]/80 shadow-lg transition-all duration-200 hover:shadow-xl"
+                aria-label="Start Campaign"
               >
                 <Megaphone className="h-5 w-5" />
-                <span className="absolute right-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  Market a Deal
+                <span className="absolute left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Start Campaign
                 </span>
               </Button>
             </motion.div>
@@ -192,8 +215,12 @@ export function QuickActionSelector() {
       
       {/* Main Trigger Button - Wine colored normally, Brand Pink when active */}
       <div className="relative">
-        {/* Continuous pulse animation */}
+        {/* Continuous pulse animation when idle */}
         <span className={`absolute inset-0 rounded-full ${isOpen ? 'opacity-0' : 'animate-pulse opacity-70'} bg-[#803344]/30`}></span>
+        
+        {/* Subtle shadow glow effect when active */}
+        <span className={`absolute inset-0 rounded-full ${isOpen ? 'opacity-100' : 'opacity-0'} shadow-glow transition-opacity duration-300`} 
+          style={{boxShadow: '0 0 15px 2px rgba(229, 159, 159, 0.6)'}}></span>
         
         <motion.div
           animate={{
@@ -202,18 +229,18 @@ export function QuickActionSelector() {
           }}
           transition={{
             type: "spring",
-            stiffness: 260,
-            damping: 20
+            stiffness: 400,
+            damping: 25
           }}
         >
           <Button
             onClick={toggleMenu}
             className={`relative h-14 w-14 rounded-full shadow-lg transition-all duration-300 ${
-              isOpen ? 'bg-[#E59F9F] hover:bg-[#E59F9F]/90' : 'bg-[#803344] hover:bg-[#803344]/90'
+              isOpen ? 'bg-[#E59F9F] hover:bg-[#E59F9F]/90 border-2 border-white/40' : 'bg-[#803344] hover:bg-[#803344]/90'
             }`}
             aria-label={isOpen ? 'Close menu' : 'Open actions menu'}
           >
-            <Plus className="h-6 w-6 transition-transform duration-300" />
+            <Plus className="h-6 w-6 transition-transform duration-300 text-white" />
           </Button>
         </motion.div>
       </div>
