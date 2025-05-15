@@ -1582,46 +1582,6 @@ function PropertyDetailView({
         </CardContent>
       </Card>
       
-      {/* Smart Nudges */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="text-base">Smart Insights</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {views > 0 && saves === 0 && (
-              <Alert variant="default" className="bg-blue-50 border-blue-200">
-                <Lightbulb className="h-4 w-4 text-blue-600" />
-                <AlertTitle className="text-sm font-medium text-blue-800">High Views, No Saves</AlertTitle>
-                <AlertDescription className="text-xs text-blue-700">
-                  This property has {views} views but no saves. Consider updating the listing with better photos or adjusting the price.
-                </AlertDescription>
-              </Alert>
-            )}
-            
-            {newMessages > 0 && (
-              <Alert variant="default" className="bg-green-50 border-green-200">
-                <MessageCircle className="h-4 w-4 text-green-600" />
-                <AlertTitle className="text-sm font-medium text-green-800">Unread Messages</AlertTitle>
-                <AlertDescription className="text-xs text-green-700">
-                  You have {newMessages} unread message{newMessages > 1 ? 's' : ''}. Fast responses improve your conversion rate.
-                </AlertDescription>
-              </Alert>
-            )}
-            
-            {newOffers > 0 && (
-              <Alert variant="default" className="bg-purple-50 border-purple-200">
-                <DollarSign className="h-4 w-4 text-purple-600" />
-                <AlertTitle className="text-sm font-medium text-purple-800">New Offers</AlertTitle>
-                <AlertDescription className="text-xs text-purple-700">
-                  You have {newOffers} new offer{newOffers > 1 ? 's' : ''} to review. Timely responses can help close deals faster.
-                </AlertDescription>
-              </Alert>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-      
       {/* AI Assistant CTA */}
       <div className="sticky bottom-6 right-6 flex justify-end">
         <Button className="bg-[#135341] hover:bg-[#09261E] rounded-full h-12 px-4 shadow-lg">
