@@ -86,7 +86,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
 import { 
   Tooltip,
   TooltipContent,
@@ -1330,9 +1329,12 @@ export default function EngagementZillowPage() {
                   
                   <div className="pl-12 pr-2">
                     <div className="relative">
-                      <Progress value={responseRate} className="h-1.5 bg-gray-100">
-                        <div className="h-full bg-indigo-600 rounded-full group-hover:bg-indigo-500 transition-colors duration-300"></div>
-                      </Progress>
+                      <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-indigo-600 rounded-full group-hover:bg-indigo-500 transition-colors duration-300"
+                          style={{ width: `${responseRate}%` }}
+                        ></div>
+                      </div>
                       <div className="text-[10px] text-gray-500 flex justify-between mt-1">
                         <span>Industry avg: 35%</span>
                         <span>Goal: 80%</span>
