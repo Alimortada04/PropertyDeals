@@ -26,6 +26,7 @@ import {
   ChevronsUpDown,
   Edit,
   ArrowUpRight,
+  ArrowDownRight,
   Sparkles,
   ExternalLink,
   Trash,
@@ -778,16 +779,16 @@ function PropertyDetailView({
       
       {/* Save to offer conversion */}
       <Card className="mb-6">
-        <CardHeader>
+        <CardHeader className="pb-2">
           <CardTitle className="text-base">Save to Offer Conversion</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex justify-between items-center mb-2">
             <div className="flex items-center">
-              <Bookmark className="h-4 w-4 text-gray-400 mr-1.5" />
+              <Bookmark className="h-4 w-4 text-amber-500 mr-1.5" />
               <span className="text-sm text-gray-600">{saves} saves</span>
               <ArrowRight className="h-3 w-3 mx-1.5 text-gray-400" />
-              <DollarSign className="h-4 w-4 text-gray-400 mr-1.5" />
+              <DollarSign className="h-4 w-4 text-green-500 mr-1.5" />
               <span className="text-sm text-gray-600">{offers} offers</span>
             </div>
             <Badge variant={saveToOfferRate >= 30 ? "default" : "secondary"} className="text-xs">
@@ -795,19 +796,124 @@ function PropertyDetailView({
             </Badge>
           </div>
           
-          <Progress value={saveToOfferRate} max={100} className="h-2" />
+          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-3">
+            <div 
+              className="h-full bg-gradient-to-r from-amber-500 to-green-500" 
+              style={{ width: `${saveToOfferRate}%` }}
+            ></div>
+          </div>
           
           {saves > offers && (
-            <Alert variant="default" className="bg-amber-50 border-amber-200 mt-3">
-              <Zap className="h-4 w-4 text-amber-600" />
-              <AlertTitle className="text-sm font-medium text-amber-800">Opportunity</AlertTitle>
-              <AlertDescription className="text-xs text-amber-700">
-                {saves - offers} buyer{saves - offers > 1 ? 's' : ''} saved this property but haven't made an offer yet.
+            <Alert variant="default" className="bg-[#803344] border-[#803344]/80 mt-3">
+              <Zap className="h-4 w-4 text-white" />
+              <AlertTitle className="text-sm font-medium text-white">Opportunity</AlertTitle>
+              <AlertDescription className="text-xs text-white/90">
+                {saves - offers} buyer{saves - offers > 1 ? 's' : ''} saved this property but haven't made an offer yet — consider following up.
               </AlertDescription>
             </Alert>
           )}
         </CardContent>
       </Card>
+      
+      {/* Activity Timeline */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-base font-medium">Activity Timeline</h3>
+        </div>
+        
+        <div className="border rounded-lg bg-white overflow-hidden">
+          <div className="max-h-[320px] overflow-y-auto p-4 space-y-4">
+            {sortedEngagements.map((engagement) => {
+              const buyer = getBuyerById(engagement.buyerId);
+              if (!buyer) return null;
+              
+              return (
+                <div key={engagement.id} className="flex gap-3">
+                  <div className="relative">
+                    <Avatar className="h-9 w-9 border-2 border-white" onClick={() => onViewBuyer(buyer.id)}>
+                      <AvatarFallback className="text-sm bg-blue-100 text-blue-800 cursor-pointer">
+                        {buyer.name ? buyer.name.charAt(0) : '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    
+                    <div className="absolute -bottom-1 -right-1 rounded-full p-1 border-2 border-white">
+                      {engagement.type === "view" && (
+                        <div className="h-4 w-4 bg-purple-100 rounded-full flex items-center justify-center">
+                          <Eye className="h-2.5 w-2.5 text-purple-700" />
+                        </div>
+                      )}
+                      {engagement.type === "save" && (
+                        <div className="h-4 w-4 bg-amber-100 rounded-full flex items-center justify-center">
+                          <Bookmark className="h-2.5 w-2.5 text-amber-700" />
+                        </div>
+                      )}
+                      {engagement.type === "message" && (
+                        <div className="h-4 w-4 bg-blue-100 rounded-full flex items-center justify-center">
+                          <MessageCircle className="h-2.5 w-2.5 text-blue-700" />
+                        </div>
+                      )}
+                      {engagement.type === "offer" && (
+                        <div className="h-4 w-4 bg-green-100 rounded-full flex items-center justify-center">
+                          <DollarSign className="h-2.5 w-2.5 text-green-700" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex-grow">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-medium text-sm">{buyer.name}</p>
+                          {buyer.tags?.map((tag, i) => (
+                            <Badge key={i} variant="outline" className="text-[10px] px-1 py-0 h-4">
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                        
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {formatDate(engagement.timestamp)}
+                        </p>
+                      </div>
+                      <span className="text-xs text-gray-400">
+                        {formatTimeAgo(engagement.timestamp)}
+                      </span>
+                    </div>
+                    
+                    {engagement.type === "message" && engagement.data.text && (
+                      <div className="mt-2 text-sm bg-gray-50 p-2 rounded-lg">
+                        {engagement.data.text}
+                        
+                        <div className="flex gap-2 mt-2">
+                          <Button variant="outline" size="sm" className="h-7 text-xs">
+                            Reply
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-7 text-xs flex items-center gap-1">
+                            <Sparkles className="h-3 w-3" />
+                            <span>AI Respond</span>
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {engagement.type === "offer" && engagement.data.amount && (
+                      <div className="mt-1.5">
+                        <Badge className="bg-green-100 text-green-800">
+                          {formatCurrency(engagement.data.amount)}
+                        </Badge>
+                        {engagement.data.note && (
+                          <p className="text-sm mt-1">{engagement.data.note}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
       
       {/* Engaged buyers */}
       {uniqueBuyers.length > 0 && (
