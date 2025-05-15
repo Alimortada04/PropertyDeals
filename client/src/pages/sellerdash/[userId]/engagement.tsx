@@ -136,7 +136,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { format, formatDistanceToNow, isAfter, subDays, isWithinInterval, startOfWeek, endOfWeek, differenceInHours } from 'date-fns';
+import { 
+  format, 
+  formatDistanceToNow, 
+  isAfter, 
+  subDays, 
+  subMonths,
+  isWithinInterval, 
+  startOfWeek, 
+  endOfWeek, 
+  startOfMonth,
+  endOfMonth,
+  differenceInHours 
+} from 'date-fns';
 import {
   Command,
   CommandEmpty,
@@ -2584,7 +2596,40 @@ export default function EngagementPage() {
   }, [engagementsByProperty]);
   
   // Calculate stats
+  const activeProperties = mockProperties.filter(p => p.status === "Live").length;
   const totalViews = mockEngagements.filter(e => e.type === "view").length;
+  const totalSaves = mockEngagements.filter(e => e.type === "save").length;
+  const totalMessages = mockEngagements.filter(e => e.type === "message").length;
+  const totalOffers = mockEngagements.filter(e => e.type === "offer").length;
+  
+  // Average per property
+  const avgViewsPerProperty = activeProperties ? Math.round(totalViews / activeProperties) : 0;
+  const avgSavesPerProperty = activeProperties ? Math.round(totalSaves / activeProperties) : 0;
+  const avgMessagesPerProperty = activeProperties ? Math.round(totalMessages / activeProperties) : 0;
+  const avgOffersPerProperty = activeProperties ? Math.round(totalOffers / activeProperties) : 0;
+  
+  // Time-based improvements (calculate increases over previous period)
+  const viewsLastMonth = mockEngagements.filter(e => {
+    const isView = e.type === "view";
+    const isLastMonth = isWithinInterval(new Date(e.timestamp), {
+      start: subMonths(startOfMonth(new Date()), 1),
+      end: subMonths(endOfMonth(new Date()), 1)
+    });
+    return isView && isLastMonth;
+  }).length;
+  
+  const viewsThisMonth = mockEngagements.filter(e => {
+    const isView = e.type === "view";
+    const isThisMonth = isWithinInterval(new Date(e.timestamp), {
+      start: startOfMonth(new Date()),
+      end: new Date()
+    });
+    return isView && isThisMonth;
+  }).length;
+  
+  const viewsImprovement = viewsLastMonth ? Math.round((viewsThisMonth - viewsLastMonth) / viewsLastMonth * 100) : 0;
+  
+  // Weekly stats
   const offersReceivedThisWeek = mockEngagements.filter(e => {
     const isOffer = e.type === "offer";
     const isThisWeek = isWithinInterval(new Date(e.timestamp), {
@@ -2593,6 +2638,7 @@ export default function EngagementPage() {
     });
     return isOffer && isThisWeek;
   }).length;
+  
   const messagesWaiting = mockEngagements.filter(e => e.type === "message" && e.status === "new").length;
   const responseRate = calculateResponseRate(mockEngagements);
   
