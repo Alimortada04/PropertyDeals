@@ -1,0 +1,109 @@
+Discover Page Enhancements (/sellerdash/[userId])
+🟢 Add Primary CTA Card:
+To the left of “Active Listings” in top row
+
+Green card with hover wine animation and a “+” icon
+
+Label: “Add a New Property”
+
+Opens the Add Property modal
+
+Should pop visually but not dominate the layout
+
+Engagement Page (/sellerdash/[userId]/engagement)
+
+Top section(Overview):
+Should be more built out and feel like its own review section of number of active properties, total views, saves, messages, and offers as well as average of each per property and improvement over time. Use design ideas from big CRM and management platforms to make this clean, intuitive, and animated.
+Expand top stats to include:
+
+Active Properties
+
+Total Views, Saves, Messages, Offers
+
+Averages per property
+
+Time-based improvement indicators (e.g., “+12% in past 30 days”)
+
+Use layout/styling ideas from top CRM dashboards (e.g., Salesforce, HubSpot):
+
+Animated cards
+
+Subtle shadow on hover
+
+Icons + tooltips
+
+Property List (Left Panel):
+Each card should show:
+
+Image
+
+Address
+
+Price
+
+Four engagement metrics (Views, Saves, Messages, Offers)
+
+If there's an unresponded message or offer, show a bold colored highlight (e.g., green or red) and clicking it should scroll the content panel to that section.
+
+Filters remain at the top:
+
+Use multi-select dropdowns for Property, Engagement Type, Status
+
+Make “Clear Filters” hover grey, not pink
+
+🧩 Engagement Content View (Right Panel):
+📍Top:
+Property details
+
+Edit Listing (opens property-specific version of the listing modal)
+
+Share Public Link (opens in new tab)
+
+Buttons hover grey, not pink
+
+📊 Key Metrics Cards:
+Views, Saves, Messages, Offers
+
+Response score (e.g., “You’ve replied to 3 of 5 messages”)
+
+Conversion percentage
+
+🚨 Immediate Actions:
+Unresponded messages or offers highlighted
+
+Smart nudges (“2 people viewed but didn’t message”)
+
+🧑 Engaged Buyers (above save-to-offer):
+Show buyer names, tags (Investor, REP, Cash Buyer)
+
+Clicking anywhere in row opens Buyer Profile Drawer
+
+Drawer includes activity level, tags, price range, preferences, last message
+
+Profile button hover = grey
+
+📜 Activity Timeline:
+Place directly below metrics
+
+Sort newest to oldest
+
+Show icons per activity type: save, view, message, offer
+
+“Respond with AI” button opens side AI Assistant — button hover = grey
+
+📈 Save-to-Offer Conversion
+Horizontal bar with percent and summary
+
+📆 Property Timeline Bar:
+Shows start (Listing Date) to end (Closing Date)
+
+Include milestones like:
+
+First view
+
+First message
+
+First offer
+
+Current stage (e.g., Under Contract)
+
