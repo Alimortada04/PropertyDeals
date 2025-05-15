@@ -1,0 +1,111 @@
+Main Layout – Zillow-Style Split View
+📁 Left Side: Property List
+Create a scrollable vertical stack of property cards. Each card should include:
+
+Image thumbnail
+
+Address and price
+
+Below: 4 mini metric tags (Views, Saves, Messages, Offers)
+
+Light background colors
+
+If unread messages or unresponded offers: highlight prominently
+
+Clicking these should scroll the right content panel to that section
+
+Show “⚠️ Needs Attention” tag if engagement is pending
+
+Sorting dropdown: “Most Recent”, “Highest Offers”, “Most Views”
+
+Cards should be responsive and allow 1, 2, or 3 columns based on screen width
+
+🧾 Right Side: Property Engagement Content Panel
+When a property is selected, load the full panel (right side) with:
+
+📌 Header
+Image, full address, price
+
+Top-right buttons:
+
+Edit → opens property listing modal with that property prefilled
+
+Share → opens public preview / share link
+
+Hover states for buttons should be grey, not pink
+
+📊 Metric Cards
+Views, Saves, Messages, Offers
+
+Last 30 days + % growth
+
+Consistent styling with top summary cards
+
+🧠 Smart Content Layout (in order):
+1. Activity Timeline
+Top of right panel
+
+Reverse chronological (most recent first)
+
+Each item includes:
+
+Icon (view, message, offer)
+
+Buyer name + tag
+
+Timestamp
+
+“Reply” button and “AI Respond” → opens AI side drawer
+
+AI button hover state = grey
+
+Load more button at bottom of timeline
+
+2. Engaged Buyers
+List buyers who interacted (save, view, message, offer)
+
+Show REP tag, type (Investor, Flipper, Pre-approved, etc.)
+
+Show Last Active Date
+
+Click anywhere on row to open Buyer Profile Drawer
+
+Drawer should include:
+
+REP status
+
+Email, phone, city
+
+Interests (tags)
+
+Property preferences
+
+Contact actions
+
+3. Save-to-Offer Conversion Bar
+Horizontal bar showing: e.g. 2 saves → 0 offers
+
+Tooltip: “Track conversion opportunity”
+
+Below bar: conversion message —
+
+“2 buyers saved this property but didn’t offer — follow up?”
+
+4. Property Timeline
+Horizontal visual tracker from Listing Date → Target Close
+
+Key milestone markers:
+
+1st view
+
+1st save
+
+1st message
+
+1st offer
+
+Accepted offer
+
+Last activity
+
+Each time a milestone threshold is hit (1st, 10th, 100th, etc.)

@@ -1,0 +1,138 @@
+yes follow this: fully build out the /sellerdash/[userId]/engagement page. This page should allow sellers to quickly monitor, filter, and interact with all buyer engagement across their active listings — with a CRM-like layout and responsive split-screen interface. delete anything not mentioned.
+
+Page Layout Structure
+🟢 Top Summary Section (Dashboard Cards)
+Add a top row with 4 animated engagement metric cards, styled like a CRM:
+
+Total and average per property Views – icon: 👁️
+
+Saves and average – icon: 📌
+
+Average number of offers per deal and New Offers - links to offers inbox popup
+
+Unread Messages – icon: 💬
+
+If there are new messages, display a New tag and link to messaging inbox
+
+Add a Callout CTA (“Respond to improve your conversion rate”)
+
+Response Rate – show % (e.g., 50%) with improvement or needs improvement indicator and average response time.
+
+Show small progress bar under it
+
+Tooltip: “Goal: 90%+ response rate”
+
+Use hover animations and arrow indicators to show growth for all info (e.g., “+12% from last week”).
+
+Filters + Actions
+Property (multi-select)
+
+Engagement Type (Views, Saves, Offers, Messages)
+
+Status (e.g., Replied, New, Viewed)
+
+Add Clear Filters button with hover color set to grey, not pink
+
+Add “Schedule Follow-Up” CTA button (styled like other dark green CTAs)
+
+Main Section Layout – Split View
+
+Left: Property List (Scrollable)
+Display as a vertical card stack of all properties. Should be 1, 2 or maybe 3 wide if it fits but responsive with screen sizes. They should look similar to other property cards with:
+
+Image thumbnail
+Address and listing price
+Then below that
+4 mini stat cards:
+
+Views
+Saves
+Messages
+Offers
+
+Use light colored backgrounds
+
+If messages/offers are new or unresponded → highlight the badge prominently and clicking should scroll to that section in the detail panel
+
+Add a “Needs Attention” tag when there's something pending (should be wine and white text with ⚠️)
+
+Sorting dropdown: “Most Recent”, “Highest Offers”, “Most Views”
+
+Right: Property Engagement Panel (Sticky & Scrollable)
+Triggered when a property card is clicked.
+
+📌 Header Section:
+Image + address + price
+
+Buttons (top right of card):
+
+Edit → opens full property listing modal pre-filled with this property’s data
+
+Share → opens a public preview or copyable link
+
+Buttons hover grey, not pink
+
+Stat Cards:
+Last 30 Days: Views, Saves, Messages, Offers
+
+Include % change arrows for insight
+
+Use familiar design from other platform cards
+
+Smart Section Layout (in order):
+
+Activity Timeline (top of content panel)
+Most recent first (top → bottom)
+
+Show timestamp, event type (e.g. Viewed, Messaged, Offered), and icon
+
+“Load More Activity” at bottom
+
+Message threads include:
+
+Name, tags, message preview
+
+“Reply” button (solid)
+
+AI Respond → opens side drawer (include pulse icon and tooltip)
+
+AI Button hover = grey
+
+Engaged Buyers
+List of all buyers who engaged
+
+Click anywhere on row to open Buyer Profile Drawer
+
+Drawer shows:
+
+REP status, tags, budget, preferences, engagement history
+
+Contact options
+
+“Send Message” CTA
+
+Make sure to include the date they last took an action as well as any important credibility tags for the buyer (Flipper, Investor, Verifieed, pre approved...)
+
+Save-to-Offer Conversion Bar
+Show horizontal % bar with tooltip:
+
+“2 saves → 0 offers”
+
+Below this: display conversion opportunity message:
+
+“2 buyers saved this property but didn’t offer — follow up?”
+
+Property Timeline
+Horizontal progress bar: Listing Date → Target Close Date
+
+Milestone markers (e.g., view milestones (1, 100, 1000, 5000), message mielstones (1, 10, 50, 100), each offer, last engagement, offer accepted...)
+
+Show current stage
+
+Global Behavior & UX
+Feature Behavior
+Responsive Layout Cleanly adapts to smaller screens (collapsing panels as needed)
+Sticky Filters Filters remain visible while scrolling
+Page Transitions Should be fast and smooth like other Seller Dashboard tabs
+Scroll Anchors Clicking badges scrolls user to the correct section in the content view
+Hover States Use consistent hover styling (no pink, only grey or light shadows)

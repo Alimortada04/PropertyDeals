@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { useParams } from "wouter";
 import { 
   Eye, 
@@ -6,6 +6,7 @@ import {
   MessageCircle,
   DollarSign,
   TrendingUp,
+  TrendingDown,
   AlertTriangle,
   Calendar,
   Filter,
@@ -20,10 +21,16 @@ import {
   CornerDownRight,
   Sparkles,
   Phone,
-  Mail
+  Mail,
+  Award,
+  Users,
+  ArrowUpRight,
+  ArrowRight,
+  CheckCircle,
+  XCircle
 } from "lucide-react";
 import { SellerDashboardLayout } from "@/components/layout/seller-dashboard-layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -53,7 +60,7 @@ import {
 } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, subDays } from 'date-fns';
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -72,16 +79,44 @@ const mockProperties = [
     status: "Live",
     daysListed: 8,
     viewCount: 236,
-    viewTrend: "+15%",
+    viewTrend: {
+      percentage: "+15%",
+      direction: "up",
+      fromLastWeek: true
+    },
     saveCount: 42,
-    saveTrend: "+8%",
+    saveTrend: {
+      percentage: "+8%",
+      direction: "up",
+      fromLastWeek: true
+    },
     offerCount: 3,
-    offerTrend: "New today",
+    offerTrend: {
+      text: "New today",
+      isNew: true
+    },
     messageCount: 14,
-    messageTrend: "+3 today",
+    unreadMessages: 4,
+    messageTrend: {
+      text: "+3 today",
+      isNew: true
+    },
+    lastResponseTime: 8, // hours
     hasUnreadMessages: true,
     hasNewOffers: true,
-    needsAttention: true
+    needsAttention: true,
+    milestones: [
+      { type: "listed", date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000) },
+      { type: "100-views", date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000) },
+      { type: "1st-offer", date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) }
+    ],
+    conversionStats: {
+      saveToOffer: {
+        saves: 42,
+        offers: 3,
+        rate: 7.1
+      }
+    }
   },
   {
     id: "p2",
@@ -94,16 +129,45 @@ const mockProperties = [
     status: "Under Contract",
     daysListed: 14,
     viewCount: 178,
-    viewTrend: "+5%",
+    viewTrend: {
+      percentage: "+5%",
+      direction: "up",
+      fromLastWeek: true
+    },
     saveCount: 28,
-    saveTrend: "0%",
+    saveTrend: {
+      percentage: "0%",
+      direction: "neutral",
+      fromLastWeek: true
+    },
     offerCount: 2,
-    offerTrend: "None new",
+    offerTrend: {
+      text: "None new",
+      isNew: false
+    },
     messageCount: 8,
-    messageTrend: "None new",
+    unreadMessages: 0,
+    messageTrend: {
+      text: "None new",
+      isNew: false
+    },
+    lastResponseTime: 2, // hours
     hasUnreadMessages: false,
     hasNewOffers: false,
-    needsAttention: false
+    needsAttention: false,
+    milestones: [
+      { type: "listed", date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000) },
+      { type: "100-views", date: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000) },
+      { type: "1st-offer", date: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000) },
+      { type: "offer-accepted", date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) }
+    ],
+    conversionStats: {
+      saveToOffer: {
+        saves: 28,
+        offers: 2,
+        rate: 7.1
+      }
+    }
   },
   {
     id: "p3",
@@ -116,16 +180,43 @@ const mockProperties = [
     status: "Live",
     daysListed: 5,
     viewCount: 143,
-    viewTrend: "+22%",
+    viewTrend: {
+      percentage: "+22%",
+      direction: "up",
+      fromLastWeek: true
+    },
     saveCount: 19,
-    saveTrend: "+12%",
+    saveTrend: {
+      percentage: "+12%",
+      direction: "up",
+      fromLastWeek: true
+    },
     offerCount: 0,
-    offerTrend: "None yet",
+    offerTrend: {
+      text: "None yet",
+      isNew: false
+    },
     messageCount: 6,
-    messageTrend: "+2 today",
+    unreadMessages: 2,
+    messageTrend: {
+      text: "+2 today",
+      isNew: true
+    },
+    lastResponseTime: 5, // hours
     hasUnreadMessages: true,
     hasNewOffers: false,
-    needsAttention: true
+    needsAttention: true,
+    milestones: [
+      { type: "listed", date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) },
+      { type: "100-views", date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) }
+    ],
+    conversionStats: {
+      saveToOffer: {
+        saves: 19,
+        offers: 0,
+        rate: 0
+      }
+    }
   },
   {
     id: "p4",
@@ -138,16 +229,43 @@ const mockProperties = [
     status: "Live",
     daysListed: 32,
     viewCount: 87,
-    viewTrend: "+3%",
+    viewTrend: {
+      percentage: "+3%",
+      direction: "up",
+      fromLastWeek: true
+    },
     saveCount: 15,
-    saveTrend: "+1%",
+    saveTrend: {
+      percentage: "+1%",
+      direction: "up",
+      fromLastWeek: true
+    },
     offerCount: 1,
-    offerTrend: "1 week ago",
+    offerTrend: {
+      text: "1 week ago",
+      isNew: false
+    },
     messageCount: 4,
-    messageTrend: "None new",
+    unreadMessages: 0,
+    messageTrend: {
+      text: "None new",
+      isNew: false
+    },
+    lastResponseTime: 1, // hours
     hasUnreadMessages: false,
     hasNewOffers: false,
-    needsAttention: false
+    needsAttention: false,
+    milestones: [
+      { type: "listed", date: new Date(Date.now() - 32 * 24 * 60 * 60 * 1000) },
+      { type: "1st-offer", date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
+    ],
+    conversionStats: {
+      saveToOffer: {
+        saves: 15,
+        offers: 1,
+        rate: 6.7
+      }
+    }
   }
 ];
 
@@ -270,7 +388,13 @@ export default function EngagementPage() {
   const [sorting, setSorting] = useState<string>("most-recent");
   const { toast } = useToast();
   
+  // References for scrolling to sections
+  const activityTimelineRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const offersRef = useRef<HTMLDivElement>(null);
+  
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(min-width: 769px) and (max-width: 1024px)');
   
   // Filter properties based on selected filters
   const filteredProperties = useMemo(() => {
@@ -326,15 +450,27 @@ export default function EngagementPage() {
     const totalSaves = mockProperties.reduce((sum, p) => sum + p.saveCount, 0);
     const totalOffers = mockProperties.reduce((sum, p) => sum + p.offerCount, 0);
     const totalMessages = mockProperties.reduce((sum, p) => sum + p.messageCount, 0);
+    const totalUnreadMessages = mockProperties.reduce((sum, p) => sum + (p.unreadMessages || 0), 0);
     
     const activeProperties = mockProperties.filter(p => p.status === "Live").length;
-    const avgViewsPerProperty = Math.round(totalViews / activeProperties);
-    const avgSavesPerProperty = Math.round(totalSaves / activeProperties);
-    const avgOffersPerProperty = totalOffers / activeProperties;
+    const avgViewsPerProperty = Math.round(totalViews / (activeProperties || 1));
+    const avgSavesPerProperty = Math.round(totalSaves / (activeProperties || 1));
+    const avgOffersPerProperty = (totalOffers / (activeProperties || 1)).toFixed(1);
     
     // Count unread messages and new offers
-    const unreadMessages = mockProperties.filter(p => p.hasUnreadMessages).length;
+    const unreadMessages = totalUnreadMessages;
     const newOffers = mockProperties.filter(p => p.hasNewOffers).length;
+    
+    // Calculate response rate
+    const totalResponses = mockEngagements.filter(e => e.type === "message" && e.status === "replied").length;
+    const totalMessagesReceived = mockEngagements.filter(e => e.type === "message").length;
+    const responseRate = Math.round((totalResponses / (totalMessagesReceived || 1)) * 100);
+    
+    // Calculate average response time
+    const avgResponseTime = mockProperties.reduce((sum, p) => sum + p.lastResponseTime, 0) / activeProperties;
+    
+    // Overall save-to-offer conversion rate
+    const saveToOfferRate = ((totalOffers / (totalSaves || 1)) * 100).toFixed(1);
     
     return {
       totalViews,
@@ -345,7 +481,10 @@ export default function EngagementPage() {
       newOffers,
       avgViewsPerProperty,
       avgSavesPerProperty,
-      avgOffersPerProperty
+      avgOffersPerProperty,
+      responseRate,
+      avgResponseTime,
+      saveToOfferRate
     };
   }, []);
   
@@ -360,6 +499,13 @@ export default function EngagementPage() {
     if (!selectedPropertyId) return [];
     return mockBuyers;
   }, [selectedPropertyId]);
+  
+  // Get property's timeline events
+  const propertyTimeline = useMemo(() => {
+    if (!selectedPropertyId) return [];
+    return filteredTimeline.filter(entry => entry.propertyId === selectedPropertyId)
+      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }, [selectedPropertyId, filteredTimeline]);
   
   // Format currency
   const formatCurrency = (amount: number) => {
@@ -412,79 +558,219 @@ export default function EngagementPage() {
       description: "A personalized response has been created based on this message.",
     });
   };
+  
+  const scrollToSection = (sectionRef: React.RefObject<HTMLDivElement>) => {
+    if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
+  const handleShowOffersInbox = () => {
+    toast({
+      title: "Offers Inbox",
+      description: "Opening offers inbox...",
+    });
+  };
+  
+  const handleMessageInbox = () => {
+    if (selectedPropertyId) {
+      scrollToSection(messagesRef);
+    } else {
+      toast({
+        title: "Message Inbox",
+        description: "Select a property to view messages.",
+      });
+    }
+  };
 
-  // Dashboard Metric Card Component
-  const MetricCard = ({ 
+  // Insight-driven metric cards
+  const InsightMetricCard = ({ 
+    emoji,
     icon: Icon, 
     title, 
-    value, 
+    primaryValue, 
     secondaryValue, 
-    trend, 
-    trendDirection, 
-    highlight 
+    trend,
+    trendDirection,
+    actionText,
+    actionFn,
+    highlight,
+    tooltip
   }: { 
-    icon: React.ElementType, 
-    title: string, 
-    value: string | number, 
-    secondaryValue?: string, 
-    trend?: string, 
-    trendDirection?: 'up' | 'down' | 'neutral',
-    highlight?: boolean 
+    emoji?: string;
+    icon: React.ElementType;
+    title: string;
+    primaryValue: string | number;
+    secondaryValue?: string;
+    trend?: string;
+    trendDirection?: 'up' | 'down' | 'neutral';
+    actionText?: string;
+    actionFn?: () => void;
+    highlight?: boolean;
+    tooltip?: string;
   }) => (
     <motion.div
       variants={fadeInUp}
       initial="initial"
       animate="animate"
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
       className={cn(
-        "rounded-lg shadow-sm border overflow-hidden",
-        highlight ? "bg-gradient-to-br from-[#803344]/5 to-[#803344]/10 border-[#803344]/30" : "bg-white"
+        "rounded-lg shadow-sm border overflow-hidden bg-white hover:shadow-md transition-all",
+        highlight ? "border-[#803344]" : "border-gray-200"
       )}
     >
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="space-y-2">
+      <CardContent className="p-5">
+        <div className="flex flex-col space-y-3">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-gray-100">
-                <Icon className="h-5 w-5 text-gray-700" />
-              </div>
-              <h3 className="font-medium text-gray-500 text-sm">{title}</h3>
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold">{value}</span>
-              {secondaryValue && (
-                <span className="text-sm text-gray-500">{secondaryValue}</span>
+              {emoji ? (
+                <div className="text-2xl">{emoji}</div>
+              ) : (
+                <div className="p-2 rounded-full bg-gray-100">
+                  <Icon className="h-5 w-5 text-gray-700" />
+                </div>
               )}
-            </div>
-            {trend && (
-              <div className="flex items-center gap-1.5">
-                {trendDirection === 'up' && <TrendingUp className="h-3 w-3 text-green-500" />}
-                <span className={cn(
-                  "text-xs",
-                  trendDirection === 'up' ? "text-green-600" : 
-                  trendDirection === 'down' ? "text-red-600" : "text-gray-500"
-                )}>
-                  {trend}
-                </span>
+              
+              <div>
+                <HoverCard openDelay={200}>
+                  <HoverCardTrigger asChild>
+                    <h3 className="font-medium text-gray-700 text-sm flex items-center">
+                      {title}
+                      {tooltip && <Info className="h-3 w-3 text-gray-400 ml-1" />}
+                    </h3>
+                  </HoverCardTrigger>
+                  {tooltip && (
+                    <HoverCardContent className="w-80 text-sm">
+                      {tooltip}
+                    </HoverCardContent>
+                  )}
+                </HoverCard>
               </div>
-            )}
-          </div>
-          
-          <AnimatePresence>
+            </div>
+            
             {highlight && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="px-2 py-1 rounded-full bg-[#803344] text-white text-xs"
+                className="px-2 py-0.5 rounded-full bg-[#803344] text-white text-xs font-medium"
               >
                 New
               </motion.div>
             )}
-          </AnimatePresence>
+          </div>
+          
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold">{primaryValue}</span>
+            {secondaryValue && (
+              <span className="text-sm text-gray-500">{secondaryValue}</span>
+            )}
+          </div>
+          
+          {trend && (
+            <div className="flex items-center gap-1.5">
+              {trendDirection === 'up' && <TrendingUp className="h-3 w-3 text-green-500" />}
+              {trendDirection === 'down' && <TrendingDown className="h-3 w-3 text-red-500" />}
+              <span className={cn(
+                "text-xs",
+                trendDirection === 'up' ? "text-green-600" : 
+                trendDirection === 'down' ? "text-red-600" : "text-gray-500"
+              )}>
+                {trend}
+              </span>
+            </div>
+          )}
+          
+          {actionText && actionFn && (
+            <Button 
+              variant="link" 
+              className="p-0 h-auto text-xs text-blue-600 justify-start hover:text-blue-800"
+              onClick={actionFn}
+            >
+              {actionText}
+              <ArrowUpRight className="h-3 w-3 ml-1" />
+            </Button>
+          )}
         </div>
       </CardContent>
     </motion.div>
   );
 
+  // Response Rate Card Component
+  const ResponseRateCard = ({
+    responseRate,
+    avgResponseTime,
+    isGood
+  }: {
+    responseRate: number;
+    avgResponseTime: number;
+    isGood: boolean;
+  }) => (
+    <div className="p-4 border rounded-lg bg-white">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-full bg-blue-50">
+            <Clock className="h-5 w-5 text-blue-500" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-medium">Response Rate</h3>
+              <HoverCard>
+                <HoverCardTrigger>
+                  <Info className="h-4 w-4 text-gray-400" />
+                </HoverCardTrigger>
+                <HoverCardContent className="w-80">
+                  <div className="space-y-2">
+                    <h4 className="font-medium">Response Rate Metrics</h4>
+                    <p className="text-sm text-gray-500">
+                      Your response rate affects your property ranking and buyer experience. 
+                      Aim for at least 90% response rate and an average response time of less than 4 hours.
+                    </p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
+            <div className="flex items-center gap-6 mt-1">
+              <div>
+                <span className="text-2xl font-bold">{responseRate}%</span>
+                <span className="ml-2 text-sm text-gray-500">
+                  ({isGood ? "Good" : "Needs Improvement"})
+                </span>
+              </div>
+              <div className="border-l pl-6">
+                <span className="text-sm font-medium">Avg Response Time:</span>
+                <span className="ml-2 text-sm">{avgResponseTime.toFixed(1)}h avg</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="mt-4 md:mt-0">
+          <div className="text-sm text-gray-500 mb-1">Goal: 90%+ response rate</div>
+          <div className="w-full max-w-xs h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div 
+              className={cn(
+                "h-full rounded-full",
+                responseRate >= 90 ? "bg-green-500" : 
+                responseRate >= 75 ? "bg-amber-500" : "bg-red-500"
+              )}
+              style={{ width: `${responseRate}%` }}
+            />
+          </div>
+        </div>
+      </div>
+      
+      <div className="mt-4 pt-4 border-t">
+        <Alert className="bg-amber-50 border-amber-200">
+          <AlertTriangle className="h-4 w-4 text-amber-500" />
+          <AlertTitle className="text-amber-800">Respond to improve your conversion rate</AlertTitle>
+          <AlertDescription className="text-amber-700">
+            Respond to inquiries within 4 hours to significantly improve your save-to-offer ratio.
+          </AlertDescription>
+        </Alert>
+      </div>
+    </div>
+  );
+  
   // Property Card Component
   const PropertyCard = ({ property }: { property: typeof mockProperties[0] }) => (
     <motion.div 
@@ -519,37 +805,91 @@ export default function EngagementPage() {
         </div>
         
         <div className="grid grid-cols-2 gap-2 mb-3">
-          <div className="p-2 bg-gray-50 rounded text-center">
+          <div 
+            className="p-2 bg-gray-50 rounded text-center cursor-pointer hover:bg-gray-100 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSelectProperty(property.id);
+              if (activityTimelineRef.current) {
+                setTimeout(() => scrollToSection(activityTimelineRef), 100);
+              }
+            }}
+          >
             <p className="text-sm font-medium text-gray-900">{property.viewCount}</p>
-            <p className="text-xs text-gray-500">Views</p>
+            <p className="text-xs text-gray-500 flex items-center justify-center">
+              <Eye className="h-3 w-3 mr-1 text-blue-500" />
+              <span>Views</span>
+            </p>
           </div>
-          <div className="p-2 bg-gray-50 rounded text-center">
+          <div 
+            className="p-2 bg-gray-50 rounded text-center cursor-pointer hover:bg-gray-100 transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSelectProperty(property.id);
+              if (activityTimelineRef.current) {
+                setTimeout(() => scrollToSection(activityTimelineRef), 100);
+              }
+            }}
+          >
             <p className="text-sm font-medium text-gray-900">{property.saveCount}</p>
-            <p className="text-xs text-gray-500">Saves</p>
+            <p className="text-xs text-gray-500 flex items-center justify-center">
+              <Bookmark className="h-3 w-3 mr-1 text-amber-500" />
+              <span>Saves</span>
+            </p>
           </div>
-          <div className={cn(
-            "p-2 rounded text-center",
-            property.hasNewOffers ? "bg-green-50" : "bg-gray-50"
-          )}>
+          <div 
+            className={cn(
+              "p-2 rounded text-center cursor-pointer hover:bg-gray-100 transition-colors",
+              property.hasNewOffers ? "bg-green-50" : "bg-gray-50"
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSelectProperty(property.id);
+              if (offersRef.current) {
+                setTimeout(() => scrollToSection(offersRef), 100);
+              }
+            }}
+          >
             <p className={cn(
-              "text-sm font-medium", 
+              "text-sm font-medium flex items-center justify-center", 
               property.hasNewOffers ? "text-green-700" : "text-gray-900"
             )}>
               {property.offerCount}
+              {property.hasNewOffers && <Badge className="ml-1.5 h-4 px-1 bg-green-100 text-green-800 border-green-300" variant="outline">New</Badge>}
             </p>
-            <p className="text-xs text-gray-500">Offers</p>
+            <p className="text-xs text-gray-500 flex items-center justify-center">
+              <DollarSign className="h-3 w-3 mr-1 text-purple-500" />
+              <span>Offers</span>
+            </p>
           </div>
-          <div className={cn(
-            "p-2 rounded text-center",
-            property.hasUnreadMessages ? "bg-blue-50" : "bg-gray-50"
-          )}>
+          <div 
+            className={cn(
+              "p-2 rounded text-center cursor-pointer hover:bg-gray-100 transition-colors",
+              property.hasUnreadMessages ? "bg-blue-50" : "bg-gray-50"
+            )}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleSelectProperty(property.id);
+              if (messagesRef.current) {
+                setTimeout(() => scrollToSection(messagesRef), 100);
+              }
+            }}
+          >
             <p className={cn(
-              "text-sm font-medium", 
+              "text-sm font-medium flex items-center justify-center", 
               property.hasUnreadMessages ? "text-blue-700" : "text-gray-900"
             )}>
               {property.messageCount}
+              {property.hasUnreadMessages && 
+                <Badge className="ml-1.5 h-4 px-1 bg-blue-100 text-blue-800 border-blue-300" variant="outline">
+                  {property.unreadMessages}
+                </Badge>
+              }
             </p>
-            <p className="text-xs text-gray-500">Messages</p>
+            <p className="text-xs text-gray-500 flex items-center justify-center">
+              <MessageCircle className="h-3 w-3 mr-1 text-blue-500" />
+              <span>Messages</span>
+            </p>
           </div>
         </div>
         
@@ -742,6 +1082,125 @@ export default function EngagementPage() {
       </div>
     </div>
   );
+  
+  // Save to Offer Conversion Component
+  const SaveToOfferConversion = ({ property }: { property: typeof mockProperties[0] }) => {
+    const { saves, offers, rate } = property.conversionStats.saveToOffer;
+    
+    return (
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="font-medium text-gray-900">Save-to-Offer Conversion</h3>
+          <HoverCard>
+            <HoverCardTrigger>
+              <Info className="h-4 w-4 text-gray-400" />
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+              <div className="space-y-2">
+                <h4 className="font-medium">Conversion Rate</h4>
+                <p className="text-sm text-gray-500">
+                  This shows what percentage of buyers who saved this property
+                  ended up making an offer. A higher rate indicates strong buyer intent.
+                </p>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+        
+        <div className="mb-2">
+          <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+            <div 
+              className="h-full rounded-full bg-blue-500"
+              style={{ width: `${Math.min(100, rate)}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <span>0%</span>
+            <span>{rate}%</span>
+            <span>100%</span>
+          </div>
+        </div>
+        
+        <div className="text-sm mt-3">
+          <span className="font-medium">{saves} saves</span>
+          <span className="mx-2">→</span>
+          <span className="font-medium">{offers} offers</span>
+        </div>
+        
+        {(saves > offers) && (
+          <div className="mt-2 text-sm text-amber-700 bg-amber-50 p-2 rounded-md border border-amber-200">
+            <span className="font-medium">{saves - offers} buyers</span> saved this property but didn't offer — follow up!
+          </div>
+        )}
+      </div>
+    );
+  };
+  
+  // Property Timeline Component
+  const PropertyTimelineComponent = ({ property }: { property: typeof mockProperties[0] }) => {
+    return (
+      <div className="p-4">
+        <h3 className="font-medium text-gray-900 mb-4">Property Timeline</h3>
+        <div className="relative pt-2 pb-10">
+          <div className="absolute top-6 left-0 w-full h-1 bg-gray-200 rounded-full" />
+          
+          <div className="relative">
+            {/* Listing Date */}
+            <div className="absolute -left-2 flex flex-col items-center">
+              <div className="w-5 h-5 rounded-full bg-green-500 z-10" />
+              <div className="text-xs text-gray-500 mt-1 whitespace-nowrap max-w-[80px] text-center">
+                Listed<br />{format(property.milestones.find(m => m.type === "listed")?.date || new Date(), 'MMM d')}
+              </div>
+            </div>
+            
+            {/* 100+ Views Milestone (if applicable) */}
+            {property.milestones.find(m => m.type === "100-views") && (
+              <div className="absolute left-1/3 flex flex-col items-center">
+                <div className="w-4 h-4 rounded-full bg-blue-400 z-10" />
+                <div className="text-xs text-gray-500 mt-1 whitespace-nowrap text-center">
+                  100+ Views<br />
+                  {format(property.milestones.find(m => m.type === "100-views")?.date || new Date(), 'MMM d')}
+                </div>
+              </div>
+            )}
+            
+            {/* First Offer (if applicable) */}
+            {property.milestones.find(m => m.type === "1st-offer") && (
+              <div className="absolute left-2/3 flex flex-col items-center">
+                <div className="w-4 h-4 rounded-full bg-purple-500 z-10" />
+                <div className="text-xs text-gray-500 mt-1 whitespace-nowrap text-center">
+                  First Offer<br />
+                  {format(property.milestones.find(m => m.type === "1st-offer")?.date || new Date(), 'MMM d')}
+                </div>
+              </div>
+            )}
+            
+            {/* Offer Accepted (if applicable) */}
+            {property.milestones.find(m => m.type === "offer-accepted") && (
+              <div className="absolute left-5/6 flex flex-col items-center">
+                <div className="w-5 h-5 rounded-full bg-green-600 z-10" />
+                <div className="text-xs text-gray-500 mt-1 whitespace-nowrap text-center">
+                  Offer Accepted<br />
+                  {format(property.milestones.find(m => m.type === "offer-accepted")?.date || new Date(), 'MMM d')}
+                </div>
+              </div>
+            )}
+            
+            {/* Target Close Date (if no offer accepted) */}
+            {!property.milestones.find(m => m.type === "offer-accepted") && (
+              <div className="absolute right-0 flex flex-col items-center">
+                <div className="w-4 h-4 rounded-full bg-gray-400 z-10" />
+                <div className="text-xs text-gray-500 mt-1 whitespace-nowrap text-center">
+                  Target Close<br />
+                  {format(new Date(Date.now() + 45 * 24 * 60 * 60 * 1000), 'MMM d')}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <SellerDashboardLayout>
@@ -752,15 +1211,17 @@ export default function EngagementPage() {
             <h1 className="text-2xl font-bold text-gray-800">Engagement</h1>
           </div>
           
-          {/* Top summary section */}
+          {/* Top summary section - Insight-driven metric cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <MetricCard 
-              icon={Eye} 
+            <InsightMetricCard 
+              icon={Eye}
+              emoji="👁️"
               title="Total Views" 
-              value={metrics.totalViews}
+              primaryValue={metrics.totalViews}
               secondaryValue={`Avg ${metrics.avgViewsPerProperty} per property`}
               trend="+15% from last week"
               trendDirection="up"
+              tooltip="Total views of all your properties. Average is calculated based on active listings only."
             />
             
             <MetricCard 
