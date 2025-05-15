@@ -483,8 +483,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
           </div>
         </div>
         
-        {/* Scrollable content area with padding to prevent footer overlap */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 pb-28">
+        {/* Scrollable content area with extra padding to prevent footer overlap */}
+        <div className="flex-1 overflow-y-auto px-6 py-4 pb-32">
           {/* Step labels */}
           <div className="grid grid-cols-4 mb-6 text-xs text-center">
           <div className={`transition-colors ${currentStep >= 1 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
@@ -1451,75 +1451,80 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         )}
         </div>
         
-        {/* Action buttons - fixed at the bottom with enhanced styling for visibility */}
-        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4 mt-auto px-6 py-4 border-t bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] sticky bottom-0 z-30 w-full">
-          <div>
-            {currentStep > 1 ? (
-              <Button 
-                variant="outline" 
-                onClick={handlePrevStep}
-                className="hover:bg-gray-100 transition-colors font-medium"
-              >
-                Back
-              </Button>
-            ) : (
-              <Button 
-                variant="outline" 
-                onClick={onClose}
-                className="hover:bg-gray-100 transition-colors font-medium"
-              >
-                Cancel
-              </Button>
-            )}
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-2">
-            <Button 
-              variant="outline" 
-              onClick={handleSaveDraft}
-              className="hover:bg-gray-100 transition-colors font-medium"
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Saving...
-                </>
+        {/* Action buttons - fixed at the absolute bottom of the modal */}
+        <DialogFooter className="flex flex-col px-6 py-4 border-t bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] sticky bottom-0 z-30 w-full">
+          {/* Action buttons row */}
+          <div className="flex flex-col sm:flex-row justify-between w-full">
+            <div>
+              {currentStep > 1 ? (
+                <Button 
+                  variant="outline" 
+                  onClick={handlePrevStep}
+                  className="hover:bg-gray-100 transition-colors font-medium"
+                >
+                  Back
+                </Button>
               ) : (
-                "Save & Finish Later"
+                <Button 
+                  variant="outline" 
+                  onClick={onClose}
+                  className="hover:bg-gray-100 transition-colors font-medium"
+                >
+                  Cancel
+                </Button>
               )}
-            </Button>
+            </div>
             
-            {currentStep < 4 ? (
+            <div className="flex flex-col sm:flex-row gap-2 mt-3 sm:mt-0">
               <Button 
-                onClick={handleNextStep} 
-                className="bg-[#135341] hover:bg-[#09261E] text-white font-medium shadow-sm transition-colors"
+                variant="outline" 
+                onClick={handleSaveDraft}
+                className="hover:bg-gray-100 transition-colors font-medium"
+                disabled={isSaving}
               >
-                Continue <ChevronRight className="ml-1 h-4 w-4" />
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleSubmitApplication} 
-                className="bg-[#135341] hover:bg-[#09261E] text-white font-medium shadow-sm transition-colors"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
+                {isSaving ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Submitting...
+                    Saving...
                   </>
                 ) : (
-                  "Submit Application"
+                  "Save & Finish Later"
                 )}
               </Button>
-            )}
+              
+              {currentStep < 4 ? (
+                <Button 
+                  onClick={handleNextStep} 
+                  className="bg-[#135341] hover:bg-[#09261E] text-white font-medium shadow-sm transition-colors"
+                >
+                  Continue <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
+              ) : (
+                <Button 
+                  onClick={handleSubmitApplication} 
+                  className="bg-[#135341] hover:bg-[#09261E] text-white font-medium shadow-sm transition-colors"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    "Submit Application"
+                  )}
+                </Button>
+              )}
+            </div>
+          </div>
+          
+          {/* Login text - at the very bottom */}
+          <div className="mt-4 w-full border-t pt-3 -mx-6 px-6">
+            <p className="text-xs text-gray-500 text-center">
+              Already a seller? <a href={`/sellerdash/${user?.id}`} className="text-green-700 font-medium underline">Log in to your dashboard here</a>
+            </p>
           </div>
         </DialogFooter>
-        
-        {/* Small text prompt for active sellers */}
-        <p className="text-xs text-gray-500 mt-6 text-center">
-          Already a seller? <a href={`/sellerdash/${user?.id}`} className="text-green-700 font-medium underline">Log in to your dashboard here</a>
-        </p>
       </DialogContent>
     </Dialog>
   );
