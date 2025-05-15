@@ -126,15 +126,15 @@ export function PropertyCard({
         </div>
       </div>
       
-      <CardContent className="pt-4">
+      <CardContent className="pt-3 pb-2">
         {/* Property title and address */}
-        <div className="mb-3">
+        <div className="mb-2">
           <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{title}</h3>
           <p className="text-sm text-gray-600 line-clamp-1">{address}</p>
         </div>
         
         {/* Property specs */}
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-2">
           <Badge variant="outline" className="bg-gray-50 font-normal">
             {beds} bed
           </Badge>
@@ -150,7 +150,7 @@ export function PropertyCard({
             <TooltipProvider delayDuration={0}>
               <Tooltip defaultOpen={false}>
                 <TooltipTrigger asChild>
-                  <Badge variant="outline" className="bg-gray-50 font-medium text-green-700 cursor-help relative">
+                  <Badge variant="outline" className="bg-gray-50 font-medium text-gray-900 cursor-help relative">
                     {formatCurrency(price)}
                   </Badge>
                 </TooltipTrigger>
@@ -171,7 +171,7 @@ export function PropertyCard({
             <TooltipProvider delayDuration={0}>
               <Tooltip defaultOpen={false}>
                 <TooltipTrigger asChild>
-                  <Badge variant="outline" className="bg-gray-50 font-medium text-purple-700 cursor-help relative">
+                  <Badge variant="outline" className="bg-gray-50 font-medium text-green-700 cursor-help relative">
                     +{formatCurrency(arv - price)}
                   </Badge>
                 </TooltipTrigger>

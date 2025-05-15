@@ -331,12 +331,12 @@ function PropertyCard({
   
   return (
     <div 
-      className={`border rounded-lg overflow-hidden mb-4 transition-all ${
+      className={`border rounded-lg overflow-hidden mb-4 transition-all cursor-pointer ${
         isSelected 
-          ? 'border-[#135341] ring-1 ring-[#135341] bg-white shadow-md' 
+          ? 'border-gray-300 bg-gray-50 shadow-md' 
           : hasNewActivity 
-            ? 'border-[#803344] ring-1 ring-[#803344] bg-white hover:shadow-md' 
-            : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
+            ? 'border-[#803344] ring-1 ring-[#803344] bg-white hover:bg-gray-50 hover:shadow-md' 
+            : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 hover:shadow-md'
       }`}
       onClick={onSelect}
     >
@@ -351,9 +351,12 @@ function PropertyCard({
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
         
         {/* Bottom content overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-2 text-white flex justify-between items-end">
-          <p className="font-medium text-sm line-clamp-1 max-w-[60%]">{property.address.split(',')[0]}</p>
-          <p className="font-semibold text-sm">{formatCurrency(property.price)}</p>
+        <div className="absolute bottom-0 left-0 right-0 p-2 text-white flex flex-col">
+          <p className="font-medium text-sm line-clamp-1 mb-0.5">{property.address.split(',')[0]}</p>
+          <div className="flex justify-between items-center">
+            <p className="text-xs text-white/80 line-clamp-1">{property.address.split(',').slice(1).join(',').trim()}</p>
+            <p className="font-semibold text-sm">{formatCurrency(property.price)}</p>
+          </div>
         </div>
         
         {hasNewActivity && (
@@ -364,19 +367,16 @@ function PropertyCard({
       {/* Property Details */}
       <div className="p-3">
         <div className="mb-2">
-          <h3 className="font-medium text-gray-800 line-clamp-1">{property.address.split(',')[0]}</h3>
-          <p className="text-xs text-gray-500 line-clamp-1">
-            {property.address.split(',').slice(1).join(',')}
-          </p>
+          <h3 className="font-medium text-gray-800 line-clamp-1">{property.title || "Property"}</h3>
         </div>
         
         {/* Mini Metric Boxes */}
         <div className="grid grid-cols-4 gap-1.5 mb-2">
-          <div className="flex flex-col items-center p-1.5 bg-blue-50 rounded-md">
-            <div className="h-5 w-5 flex items-center justify-center bg-blue-100 rounded-full mb-1">
-              <Eye className="h-3 w-3 text-blue-700" />
+          <div className="flex flex-col items-center p-1.5 bg-purple-50 rounded-md">
+            <div className="h-5 w-5 flex items-center justify-center bg-purple-100 rounded-full mb-1">
+              <Eye className="h-3 w-3 text-purple-700" />
             </div>
-            <span className="text-xs font-medium text-blue-800">{views}</span>
+            <span className="text-xs font-medium text-purple-800">{views}</span>
           </div>
           
           <div className="flex flex-col items-center p-1.5 bg-amber-50 rounded-md">
@@ -387,27 +387,27 @@ function PropertyCard({
           </div>
           
           <div className={`flex flex-col items-center p-1.5 rounded-md ${
-            newMessages > 0 ? 'bg-green-100' : 'bg-green-50'
+            newMessages > 0 ? 'bg-blue-100 ring-1 ring-[#803344]' : 'bg-blue-50'
           } cursor-pointer`}>
             <div className={`h-5 w-5 flex items-center justify-center rounded-full mb-1 ${
-              newMessages > 0 ? 'bg-green-200' : 'bg-green-100'
+              newMessages > 0 ? 'bg-blue-200' : 'bg-blue-100'
             }`}>
-              <MessageCircle className="h-3 w-3 text-green-700" />
+              <MessageCircle className="h-3 w-3 text-blue-700" />
             </div>
-            <span className="text-xs font-medium text-green-800">
+            <span className="text-xs font-medium text-blue-800">
               {messages}{newMessages > 0 && <span className="font-bold">*</span>}
             </span>
           </div>
           
           <div className={`flex flex-col items-center p-1.5 rounded-md ${
-            newOffers > 0 ? 'bg-purple-100' : 'bg-purple-50'
+            newOffers > 0 ? 'bg-green-100 ring-1 ring-[#803344]' : 'bg-green-50'
           } cursor-pointer`}>
             <div className={`h-5 w-5 flex items-center justify-center rounded-full mb-1 ${
-              newOffers > 0 ? 'bg-purple-200' : 'bg-purple-100'
+              newOffers > 0 ? 'bg-green-200' : 'bg-green-100'
             }`}>
-              <DollarSign className="h-3 w-3 text-purple-700" />
+              <DollarSign className="h-3 w-3 text-green-700" />
             </div>
-            <span className="text-xs font-medium text-purple-800">
+            <span className="text-xs font-medium text-green-800">
               {offers}{newOffers > 0 && <span className="font-bold">*</span>}
             </span>
           </div>
@@ -638,8 +638,8 @@ function PropertyDetailView({
   return (
     <div className="h-full overflow-y-auto p-4">
       {/* Property header */}
-      <div className="flex items-start gap-4 mb-6">
-        <div className="h-24 w-24 rounded-md overflow-hidden flex-shrink-0">
+      <div className="relative flex items-start mb-6">
+        <div className="h-32 w-32 rounded-md overflow-hidden flex-shrink-0">
           <img 
             src={property.image} 
             alt={property.title} 
@@ -647,113 +647,133 @@ function PropertyDetailView({
           />
         </div>
         
-        <div className="flex-grow">
-          <h2 className="text-xl font-semibold">{property.title}</h2>
-          <p className="text-gray-600">{property.address}</p>
-          <div className="flex items-center gap-2 mt-1">
-            <Badge variant="outline" className="text-sm">
-              {formatCurrency(property.price)}
-            </Badge>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-              {property.status}
-            </Badge>
+        <div className="flex-grow pl-4">
+          <div className="flex justify-between items-start">
+            <div>
+              <h2 className="text-xl font-semibold">{property.title}</h2>
+              <p className="text-gray-600">{property.address}</p>
+              <Badge variant="outline" className="text-sm mt-1">
+                {formatCurrency(property.price)}
+              </Badge>
+            </div>
+            
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-1.5 hover:bg-gray-100 text-gray-700"
+              >
+                <Share2 className="h-4 w-4" />
+                <span>Share Listing</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-1.5 hover:bg-gray-100 text-gray-700"
+              >
+                <Edit className="h-4 w-4" />
+                <span>Edit Listing</span>
+              </Button>
+            </div>
           </div>
           
-          <div className="flex gap-2 mt-3">
-            <Button variant="outline" size="sm" className="gap-1.5">
-              <Share2 className="h-4 w-4" />
-              <span>Share Listing</span>
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1.5">
-              <Edit className="h-4 w-4" />
-              <span>Edit Details</span>
-            </Button>
-          </div>
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 mt-2">
+            {property.status}
+          </Badge>
         </div>
       </div>
       
-      {/* Engagement summary cards */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex justify-between items-start">
-              <div className="flex items-center">
-                <div className="p-2 rounded-full bg-purple-100 mr-3">
-                  <Eye className="h-4 w-4 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Views</p>
-                  <p className="text-xl font-bold">{views}</p>
-                </div>
+      {/* Engagement summary cards - Last 30 Days */}
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-base font-medium">Performance Stats <span className="text-sm font-normal text-gray-500">(Last 30 Days)</span></h3>
+      </div>
+      
+      <div className="grid grid-cols-4 gap-3 mb-6">
+        {/* Views Card - Purple */}
+        <div className="bg-white border rounded-lg p-4 flex flex-col">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center">
+              <div className="h-9 w-9 rounded-full bg-purple-100 flex items-center justify-center">
+                <Eye className="h-5 w-5 text-purple-700" />
               </div>
-              <Badge variant="outline" className="text-xs">
-                Last 30 days
+              <span className="ml-2 text-sm font-medium text-gray-700">Views</span>
+            </div>
+            <div className="flex items-center text-xs text-green-600 font-medium">
+              <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
+              <span>15%</span>
+            </div>
+          </div>
+          <div className="mt-auto">
+            <div className="text-xl font-semibold">{views}</div>
+          </div>
+        </div>
+
+        {/* Saves Card - Amber */}
+        <div className="bg-white border rounded-lg p-4 flex flex-col">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center">
+              <div className="h-9 w-9 rounded-full bg-amber-100 flex items-center justify-center">
+                <Bookmark className="h-5 w-5 text-amber-700" />
+              </div>
+              <span className="ml-2 text-sm font-medium text-gray-700">Saves</span>
+            </div>
+            <div className="flex items-center text-xs text-green-600 font-medium">
+              <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
+              <span>12%</span>
+            </div>
+          </div>
+          <div className="mt-auto">
+            <div className="text-xl font-semibold">{saves}</div>
+          </div>
+        </div>
+        
+        {/* Messages Card - Blue */}
+        <div className="bg-white border rounded-lg p-4 flex flex-col">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center">
+              <div className="h-9 w-9 rounded-full bg-blue-100 flex items-center justify-center">
+                <MessageCircle className="h-5 w-5 text-blue-700" />
+              </div>
+              <span className="ml-2 text-sm font-medium text-gray-700">Messages</span>
+            </div>
+            <div className="flex items-center text-xs text-red-600 font-medium">
+              <ArrowDownRight className="h-3.5 w-3.5 mr-0.5" />
+              <span>5%</span>
+            </div>
+          </div>
+          <div className="mt-auto flex items-center">
+            <div className="text-xl font-semibold">{messages}</div>
+            {newMessages > 0 && (
+              <Badge className="ml-2 bg-blue-100 text-blue-800 hover:bg-blue-200">
+                {newMessages} new
               </Badge>
-            </div>
-          </CardContent>
-        </Card>
+            )}
+          </div>
+        </div>
         
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex justify-between items-start">
-              <div className="flex items-center">
-                <div className="p-2 rounded-full bg-amber-100 mr-3">
-                  <Bookmark className="h-4 w-4 text-amber-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Saves</p>
-                  <p className="text-xl font-bold">{saves}</p>
-                </div>
+        {/* Offers Card - Green */}
+        <div className="bg-white border rounded-lg p-4 flex flex-col">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center">
+              <div className="h-9 w-9 rounded-full bg-green-100 flex items-center justify-center">
+                <DollarSign className="h-5 w-5 text-green-700" />
               </div>
-              <div className="flex items-center text-xs text-gray-500">
-                <ArrowUpRight className="h-3 w-3 text-green-500 mr-1" />
-                <span>12%</span>
-              </div>
+              <span className="ml-2 text-sm font-medium text-gray-700">Offers</span>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex justify-between items-start">
-              <div className="flex items-center">
-                <div className="p-2 rounded-full bg-green-100 mr-3">
-                  <MessageCircle className="h-4 w-4 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Messages</p>
-                  <p className="text-xl font-bold">{messages}</p>
-                </div>
-              </div>
-              {newMessages > 0 && (
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
-                  {newMessages} new
-                </Badge>
-              )}
+            <div className="flex items-center text-xs text-green-600 font-medium">
+              <ArrowUpRight className="h-3.5 w-3.5 mr-0.5" />
+              <span>20%</span>
             </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex justify-between items-start">
-              <div className="flex items-center">
-                <div className="p-2 rounded-full bg-blue-100 mr-3">
-                  <DollarSign className="h-4 w-4 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Offers</p>
-                  <p className="text-xl font-bold">{offers}</p>
-                </div>
-              </div>
-              {newOffers > 0 && (
-                <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
-                  {newOffers} new
-                </Badge>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="mt-auto flex items-center">
+            <div className="text-xl font-semibold">{offers}</div>
+            {newOffers > 0 && (
+              <Badge className="ml-2 bg-green-100 text-green-800 hover:bg-green-200">
+                {newOffers} new
+              </Badge>
+            )}
+          </div>
+        </div>
       </div>
       
       {/* Save to offer conversion */}
