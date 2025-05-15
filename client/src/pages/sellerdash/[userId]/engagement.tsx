@@ -211,6 +211,7 @@ const mockBuyers = [
     engagementScore: 87,
     engagementHistory: [12, 8, 14, 18, 22, 24, 28],
     notes: "Serious cash buyer. Tends to make quick decisions and prefers off-market deals.",
+    tags: ["Hot lead", "Pre-approved", "Cash buyer"],
   },
   {
     id: "b2",
@@ -232,6 +233,7 @@ const mockBuyers = [
     engagementScore: 64,
     engagementHistory: [4, 8, 10, 15, 12, 14, 16],
     notes: "First-time homebuyer. Has pre-approval letter from XYZ Bank.",
+    tags: ["First-time buyer", "Needs info", "Pre-approved"],
   },
   {
     id: "b3",
@@ -254,6 +256,7 @@ const mockBuyers = [
     engagementScore: 48,
     engagementHistory: [5, 8, 12, 9, 7, 8, 10],
     notes: "Looking for vacation rental opportunities. Prefers lakefront properties.",
+    tags: ["Vacation property buyer", "Investor"],
   },
   {
     id: "b4",
@@ -278,6 +281,7 @@ const mockBuyers = [
     engagementScore: 92,
     engagementHistory: [14, 18, 22, 24, 26, 28, 30],
     notes: "Buyer's agent representing multiple investors. Very responsive and professional.",
+    tags: ["Agent", "Repeat visitor", "High budget"],
   },
   {
     id: "b5",
@@ -300,6 +304,7 @@ const mockBuyers = [
     engagementScore: 83,
     engagementHistory: [10, 15, 18, 22, 25, 24, 26],
     notes: "Experienced flipper with quick closing capability. May waive contingencies for the right deal.",
+    tags: ["Fast closer", "Experienced investor", "Cash buyer"],
   },
 ];
 
@@ -450,2047 +455,97 @@ const mockEngagements = [
     buyerType: "Investor",
     buyerReputation: "REP Verified",
     verified: true,
-    timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
+    timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
     status: "new",
-    message: "Just following up on my offer. I'm very interested in this property and am willing to discuss terms. Would you be open to a slightly shorter closing timeline of 25 days instead of 30?",
+    message: "Following up on my previous message. I'm still very interested in this property and would appreciate any additional information you can provide. I've already secured financing and am ready to proceed quickly.",
     aiScore: 0.88,
-    aiSentiment: "Very interested, flexible",
+    aiSentiment: "Highly interested, ready to proceed",
     activityHistory: [
-      { action: "Made offer", timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000) },
-      { action: "Sent message", timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000) },
+      { action: "Viewed property", timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
+      { action: "Saved property", timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+      { action: "Sent message", timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+      { action: "Viewed property", timestamp: new Date(Date.now() - 1.5 * 24 * 60 * 60 * 1000) },
+      { action: "Sent message", timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
     ],
     isUnread: true,
-    tags: ["Follow-up", "Active negotiation"],
+    tags: ["Hot lead", "Pre-approved"],
   },
   {
     id: "e7",
     propertyId: "p3",
-    type: "request",
+    type: "message",
     buyerId: "b4",
     buyerName: "Jessica Brown",
     buyerImage: "",
     buyerType: "Agent",
     buyerReputation: "REP Verified",
     verified: true,
-    timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 minutes ago
+    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000), // 6 hours ago
     status: "new",
-    requestType: "Showing Request",
-    message: "My client is very interested in this property. Would it be possible to schedule a showing for tomorrow afternoon around 3pm?",
-    aiScore: 0.90,
-    aiSentiment: "Hot lead with client",
+    message: "I have a client who is very interested in this property. We'd like to schedule a showing tomorrow afternoon if possible. Please let me know the available time slots. My client is pre-approved and can make a decision quickly.",
+    aiScore: 0.95,
+    aiSentiment: "Very high intent, qualified buyer",
     activityHistory: [
+      { action: "Viewed property", timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
       { action: "Viewed property", timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
+      { action: "Saved property", timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
       { action: "Viewed property", timestamp: new Date(Date.now() - 12 * 60 * 60 * 1000) },
-      { action: "Requested showing", timestamp: new Date(Date.now() - 30 * 60 * 1000) },
+      { action: "Sent message", timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000) },
     ],
     isUnread: true,
-    tags: ["Showing request", "Agent with client"],
+    tags: ["Agent", "Hot lead"],
   },
 ];
 
-// Enhanced CRM leads
-const mockLeads = [
-  {
-    id: "l1",
-    name: "Thomas Wilson",
-    email: "thomas.wilson@example.com",
-    phone: "555-123-4567",
-    image: "",
-    type: "Investor",
-    propertiesOfInterest: ["p1", "p3"],
-    lastActivity: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    status: "nurturing",
-    assignedRep: "rep1",
-    tags: ["cash buyer", "investor", "multifamily"],
-    engagementLevel: "High",
-    communicationPreference: "Email",
-    budget: "$400k-600k",
-    leadSource: "Website Form",
-    notes: "Looking for multifamily properties with value-add opportunities. Has financing already secured.",
-    activityHistory: [
-      { action: "Added to CRM", timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
-      { action: "Sent intro email", timestamp: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000) },
-      { action: "Viewed property p1", timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) },
-      { action: "Viewed property p3", timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) },
-      { action: "Replied to follow-up", timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
-    ],
-    nextFollowUp: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-  },
-  {
-    id: "l2",
-    name: "Emily Davis",
-    email: "emily.davis@example.com",
-    phone: "555-987-6543",
-    image: "",
-    type: "First-time Buyer",
-    propertiesOfInterest: ["p2"],
-    lastActivity: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    status: "contacted",
-    assignedRep: "",
-    tags: ["first-time buyer", "financing needed"],
-    engagementLevel: "Medium",
-    communicationPreference: "Phone",
-    budget: "$350k-425k",
-    leadSource: "Referral",
-    notes: "Looking for move-in ready properties. Needs to connect with a lender for pre-approval.",
-    activityHistory: [
-      { action: "Added to CRM", timestamp: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000) },
-      { action: "Initial phone call", timestamp: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000) },
-      { action: "Sent lender recommendations", timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) },
-      { action: "Viewed property p2", timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) },
-    ],
-    nextFollowUp: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-  },
-  {
-    id: "l3",
-    name: "Robert Taylor",
-    email: "robert.taylor@example.com",
-    phone: "555-456-7890",
-    image: "",
-    type: "Broker",
-    propertiesOfInterest: ["p1", "p2", "p3"],
-    lastActivity: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    status: "new lead",
-    assignedRep: "rep2",
-    tags: ["broker", "multiple inquiries", "buyer's agent"],
-    engagementLevel: "Very High",
-    communicationPreference: "Email and Phone",
-    budget: "Varies by client",
-    leadSource: "Industry Contact",
-    notes: "Broker representing several investors. Has clients looking for both residential and multifamily properties.",
-    activityHistory: [
-      { action: "Added to CRM", timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) },
-      { action: "Initial phone call", timestamp: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000) },
-      { action: "Sent portfolio information", timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
-      { action: "Client viewed property p1", timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
-      { action: "Client viewed property p3", timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
-    ],
-    nextFollowUp: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-  },
-  {
-    id: "l4",
-    name: "Jennifer Martinez",
-    email: "jennifer.martinez@example.com",
-    phone: "555-789-0123",
-    image: "",
-    type: "Investor",
-    propertiesOfInterest: ["p3"],
-    lastActivity: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-    status: "followed up",
-    assignedRep: "",
-    tags: ["slow responder", "investor", "fix and flip"],
-    engagementLevel: "Low",
-    communicationPreference: "Email only",
-    budget: "$350k-500k",
-    leadSource: "Social Media",
-    notes: "Interested in fix and flip properties. Long decision-making process and inconsistent communication.",
-    activityHistory: [
-      { action: "Added to CRM", timestamp: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000) },
-      { action: "Sent welcome email", timestamp: new Date(Date.now() - 44 * 24 * 60 * 60 * 1000) },
-      { action: "Viewed property p3", timestamp: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000) },
-      { action: "Follow-up email", timestamp: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000) },
-      { action: "Second follow-up", timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) },
-    ],
-    nextFollowUp: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  },
-  {
-    id: "l5",
-    name: "Michael Anderson",
-    email: "michael.anderson@example.com",
-    phone: "555-234-5678",
-    image: "",
-    type: "Investor",
-    propertiesOfInterest: ["p2"],
-    lastActivity: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
-    status: "dead",
-    assignedRep: "rep1",
-    tags: ["out-of-state", "investor"],
-    engagementLevel: "None",
-    communicationPreference: "Email",
-    budget: "$500k-750k",
-    leadSource: "Property Listing",
-    notes: "Initially interested but stopped responding. May have found a property elsewhere.",
-    activityHistory: [
-      { action: "Added to CRM", timestamp: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) },
-      { action: "Initial inquiry", timestamp: new Date(Date.now() - 55 * 24 * 60 * 60 * 1000) },
-      { action: "Viewed property p2", timestamp: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000) },
-      { action: "Follow-up email", timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
-      { action: "Final attempt", timestamp: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000) },
-    ],
-    nextFollowUp: null,
-  },
-  {
-    id: "l6",
-    name: "Amanda Wilson",
-    email: "amanda.wilson@example.com",
-    phone: "555-345-6789",
-    image: "",
-    type: "Agent",
-    propertiesOfInterest: ["p1", "p4"],
-    lastActivity: new Date(Date.now() - 6 * 60 * 60 * 1000),
-    status: "nurturing",
-    assignedRep: "rep2",
-    tags: ["agent", "represents buyers", "luxury"],
-    engagementLevel: "Very High",
-    communicationPreference: "Text and Email",
-    budget: "Varies by client",
-    leadSource: "Networking Event",
-    notes: "Top producing agent with high-end clients. Quick response time and professional communication.",
-    activityHistory: [
-      { action: "Added to CRM", timestamp: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000) },
-      { action: "Initial meeting", timestamp: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000) },
-      { action: "Client viewed property p4", timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) },
-      { action: "Client viewed property p1", timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) },
-      { action: "Follow-up call", timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000) },
-    ],
-    nextFollowUp: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-  },
-];
-
-// Enhanced Email Templates
-const mockTemplates = [
-  {
-    id: "t1",
-    name: "New Listing Announcement",
-    category: "New Listing",
-    subject: "New Off-Market Property Just Listed!",
-    body: "Hi {Buyer Name},\n\nI wanted to let you know about a new property we just listed in {City}. It's a great investment opportunity with an ARV of {ARV} and an assignment price of only {Assignment Price}.\n\nProperty Details:\n- {Beds} beds / {Baths} baths\n- {Sqft} square feet\n- Built in {Year Built}\n- Estimated repairs: {Repair Estimate}\n\nCheck it out here: {Link}\n\nLet me know if you're interested in discussing further or scheduling a showing.\n\nBest regards,\n{Seller Name}",
-    usage: 28,
-    openRate: 0.65,
-    responseRate: 0.22,
-    lastUsed: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-    tags: ["new listing", "initial contact"],
-  },
-  {
-    id: "t2",
-    name: "Price Drop Alert",
-    category: "Price Drop",
-    subject: "Price Reduced on {Property Name}",
-    body: "Hi {Buyer Name},\n\nGreat news! We've just reduced the price on {Property Name} in {City}. This property now has an even better ROI with the new assignment fee of {Assignment Price}.\n\nKey Numbers:\n- New Price: {Assignment Price}\n- ARV: {ARV}\n- Potential Profit: {Profit Potential}\n\nView the updated details: {Link}\n\nDon't miss this opportunity - price reductions tend to generate a lot of interest!\n\nBest regards,\n{Seller Name}",
-    usage: 15,
-    openRate: 0.72,
-    responseRate: 0.31,
-    lastUsed: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    tags: ["price change", "urgency"],
-  },
-  {
-    id: "t3",
-    name: "Under Contract Notice",
-    category: "Under Contract",
-    subject: "Property Going Under Contract Soon - Last Chance",
-    body: "Hi {Buyer Name},\n\nJust a heads up that {Property Name} in {City} is about to go under contract. If you're still interested, now is the time to act.\n\nWe currently have an offer of {Highest Offer} but wanted to give you one final opportunity before we move forward.\n\nView the property: {Link}\n\nWe're expecting to finalize the deal within 48 hours, so please let me know your decision as soon as possible.\n\nBest regards,\n{Seller Name}",
-    usage: 12,
-    openRate: 0.81,
-    responseRate: 0.28,
-    lastUsed: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    tags: ["urgency", "last chance"],
-  },
-  {
-    id: "t4",
-    name: "Final Call Reminder",
-    category: "Final Call",
-    subject: "FINAL CALL: Decision needed on {Property Name}",
-    body: "Hi {Buyer Name},\n\nThis is the final call for {Property Name} in {City}. We have multiple offers and will be making a decision by the end of day.\n\nIf you'd like to secure this property, please let me know immediately.\n\nProperty details: {Link}\n\nThank you for your interest.\n\nBest regards,\n{Seller Name}",
-    usage: 9,
-    openRate: 0.85,
-    responseRate: 0.20,
-    lastUsed: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-    tags: ["urgency", "final notice"],
-  },
-  {
-    id: "t5",
-    name: "Follow-Up After Viewing",
-    category: "Follow Up",
-    subject: "Follow-up on your recent viewing of {Property Name}",
-    body: "Hi {Buyer Name},\n\nI wanted to follow up on your recent viewing of {Property Name} in {City}. I hope you found the property interesting and that it meets your investment criteria.\n\nDo you have any questions I can answer about the property, neighborhood, or potential returns?\n\nI'd be happy to provide more information or schedule another showing if needed.\n\nBest regards,\n{Seller Name}",
-    usage: 34,
-    openRate: 0.58,
-    responseRate: 0.42,
-    lastUsed: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    tags: ["follow-up", "post-viewing"],
-  },
-  {
-    id: "t6",
-    name: "Financing Options",
-    category: "Information",
-    subject: "Financing Options for {Property Name}",
-    body: "Hi {Buyer Name},\n\nI wanted to share some financing options that might work well for {Property Name} in {City}.\n\nBased on the property's condition and potential, here are some options to consider:\n\n1. Conventional financing with 20% down\n2. Hard money loan for the purchase and renovations\n3. BRRRR strategy with refinance after renovations\n\nI've also attached a list of lenders who have worked with our investors in the past.\n\nLet me know if you'd like an introduction to any of these financing partners.\n\nBest regards,\n{Seller Name}",
-    usage: 18,
-    openRate: 0.63,
-    responseRate: 0.35,
-    lastUsed: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000),
-    tags: ["information", "financing"],
-  },
-  {
-    id: "t7",
-    name: "RE: Your Offer on {Property Name}",
-    category: "Negotiation",
-    subject: "RE: Your Offer on {Property Name}",
-    body: "Hi {Buyer Name},\n\nThank you for your offer of {Offer Amount} on {Property Name}.\n\nAfter careful consideration, we'd like to counter with {Counter Offer}. This reflects the property's true market value and potential, while still providing you with an excellent opportunity for returns.\n\nThe key points:\n- Purchase price: {Counter Offer}\n- All other terms remain as proposed\n- We can still accommodate your requested closing timeline\n\nPlease let me know your thoughts on this counter offer at your earliest convenience.\n\nBest regards,\n{Seller Name}",
-    usage: 22,
-    openRate: 0.94,
-    responseRate: 0.65,
-    lastUsed: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-    tags: ["negotiation", "counter offer"],
-  },
-];
-
-// ===================================
-// UTILITY FUNCTIONS AND HELPERS
-// ===================================
-
-// Utility function to format currency
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0
-  }).format(amount);
+// Animation variants for animated elements
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
-// Format number with commas
-const formatNumber = (num: number) => {
-  return new Intl.NumberFormat('en-US').format(num);
+const fadeIn = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 0.3 } },
 };
 
-// Utility function to get property by ID
-const getPropertyById = (id: string) => {
-  return mockProperties.find(property => property.id === id);
-};
-
-// Utility function to get buyer by ID
-const getBuyerById = (id: string) => {
-  return mockBuyers.find(buyer => buyer.id === id);
-};
-
-// Calculate time since a date in human-readable format
-const timeAgo = (date: Date) => {
-  return formatDistanceToNow(date, { addSuffix: true });
-};
-
-// Calculate time until a date in human-readable format
-const timeUntil = (date: Date) => {
-  return formatDistanceToNow(date, { addSuffix: true });
-};
-
-// Helper function to calculate property completion percentage
-const calculatePropertyCompletionPercent = (property: any) => {
-  const { status } = property;
-  switch (status) {
-    case "New Lead": return 5;
-    case "Initial Contact": return 10;
-    case "Negotiating": return 40;
-    case "Under Contract": return 70;
-    case "Closed": return 100;
-    default: return 25;
-  }
-};
-
-// Function to get a buyer's activity level color
-const getBuyerActivityColor = (level: string) => {
-  switch (level) {
-    case "Very Active": return "bg-green-500";
-    case "Active": return "bg-emerald-400";
-    case "Moderate": return "bg-amber-400";
-    case "Low": return "bg-orange-400";
-    case "Inactive": return "bg-gray-400";
-    default: return "bg-gray-300";
-  }
-};
-
-// Function to get AI confidence level color
-const getAIConfidenceColor = (score: number) => {
-  if (score >= 0.85) return "text-green-600";
-  if (score >= 0.7) return "text-emerald-600";
-  if (score >= 0.5) return "text-amber-600";
-  return "text-gray-600";
-};
-
-// Function to get sentiment indicator based on AI sentiment
-const getSentimentIndicator = (sentiment: string) => {
-  if (sentiment.includes("increase offer") || 
-      sentiment.includes("motivated") || 
-      sentiment.includes("hot lead") ||
-      sentiment.includes("very interested")) {
-    return { color: "bg-green-500", icon: Zap, text: "Likely to Convert" };
-  }
-  
-  if (sentiment.includes("genuine interest") || 
-      sentiment.includes("flexible") || 
-      sentiment.includes("research phase")) {
-    return { color: "bg-amber-400", icon: User, text: "Active Interest" };
-  }
-  
-  if (sentiment.includes("casual interest") || 
-      sentiment.includes("representing client")) {
-    return { color: "bg-blue-400", icon: Eye, text: "Evaluating" };
-  }
-  
-  return { color: "bg-gray-400", icon: Clock, text: "Monitoring" };
-};
-
-// Badge variants for different engagement types
-const getEngagementBadge = (type: string) => {
-  switch (type) {
-    case "offer":
-      return { icon: DollarSign, color: "bg-green-100 text-green-800 border border-green-200", label: "Offer" };
-    case "message":
-      return { icon: MessageCircle, color: "bg-blue-100 text-blue-800 border border-blue-200", label: "Message" };
-    case "save":
-      return { icon: Bookmark, color: "bg-purple-100 text-purple-800 border border-purple-200", label: "Saved" };
-    case "view":
-      return { icon: Eye, color: "bg-gray-100 text-gray-800 border border-gray-200", label: "Viewed" };
-    case "request":
-      return { icon: FileCheck, color: "bg-amber-100 text-amber-800 border border-amber-200", label: "Request" };
-    default:
-      return { icon: Clock, color: "bg-gray-100 text-gray-800 border border-gray-200", label: type };
-  }
-};
-
-// Badge variants for different statuses
-const getStatusBadge = (status: string) => {
-  switch (status) {
-    case "new":
-      return { text: "New", color: "bg-green-600 text-white border border-green-700" };
-    case "replied":
-      return { text: "Replied", color: "bg-blue-600 text-white border border-blue-700" };
-    case "viewed":
-      return { text: "Viewed", color: "bg-gray-600 text-white border border-gray-700" };
-    case "accepted":
-      return { text: "Accepted", color: "bg-teal-600 text-white border border-teal-700" };
-    case "declined":
-      return { text: "Declined", color: "bg-red-600 text-white border border-red-700" };
-    default:
-      return { text: status, color: "bg-gray-600 text-white border border-gray-700" };
-  }
-};
-
-// Badge variants for lead statuses
-const getLeadStatusBadge = (status: string) => {
-  switch (status) {
-    case "new lead":
-      return { text: "New Lead", color: "bg-green-600 text-white border border-green-700" };
-    case "contacted":
-      return { text: "Contacted", color: "bg-blue-600 text-white border border-blue-700" };
-    case "nurturing":
-      return { text: "Nurturing", color: "bg-purple-600 text-white border border-purple-700" };
-    case "followed up":
-      return { text: "Followed Up", color: "bg-yellow-600 text-white border border-yellow-700" };
-    case "dead":
-      return { text: "Dead", color: "bg-gray-600 text-white border border-gray-700" };
-    default:
-      return { text: status, color: "bg-gray-600 text-white border border-gray-700" };
-  }
-};
-
-// Badge variants for template categories
-const getTemplateCategoryBadge = (category: string) => {
-  switch (category) {
-    case "New Listing":
-      return { text: category, color: "bg-green-100 text-green-800 border border-green-200" };
-    case "Price Drop":
-      return { text: category, color: "bg-blue-100 text-blue-800 border border-blue-200" };
-    case "Under Contract":
-      return { text: category, color: "bg-yellow-100 text-yellow-800 border border-yellow-200" };
-    case "Final Call":
-      return { text: category, color: "bg-red-100 text-red-800 border border-red-200" };
-    case "Follow Up":
-      return { text: category, color: "bg-purple-100 text-purple-800 border border-purple-200" };
-    case "Information":
-      return { text: category, color: "bg-sky-100 text-sky-800 border border-sky-200" };
-    case "Negotiation":
-      return { text: category, color: "bg-amber-100 text-amber-800 border border-amber-200" };
-    default:
-      return { text: category, color: "bg-gray-100 text-gray-800 border border-gray-200" };
-  }
-};
-
-// Badge variants for buyer reputation
-const getBuyerReputationBadge = (reputation: string) => {
-  switch (reputation) {
-    case "REP Verified":
-      return { text: "REP Verified", color: "bg-[#803344] text-white border border-[#63263B]" };
-    case "Premium":
-      return { text: "Premium", color: "bg-violet-600 text-white border border-violet-700" };
-    case "Standard":
-      return { text: "Standard", color: "bg-blue-500 text-white border border-blue-600" };
-    case "New User":
-      return { text: "New User", color: "bg-gray-500 text-white border border-gray-600" };
-    default:
-      return { text: reputation, color: "bg-gray-500 text-white border border-gray-600" };
-  }
-};
-
-// Badge variants for buyer types
-const getBuyerTypeBadge = (type: string) => {
-  switch (type) {
-    case "Investor":
-      return { text: type, color: "bg-emerald-100 text-emerald-800 border border-emerald-200", icon: Coins };
-    case "Agent":
-      return { text: type, color: "bg-blue-100 text-blue-800 border border-blue-200", icon: Users };
-    case "Home Buyer":
-      return { text: type, color: "bg-amber-100 text-amber-800 border border-amber-200", icon: User };
-    case "Broker":
-      return { text: type, color: "bg-violet-100 text-violet-800 border border-violet-200", icon: Users };
-    case "First-time Buyer":
-      return { text: type, color: "bg-pink-100 text-pink-800 border border-pink-200", icon: User };
-    default:
-      return { text: type, color: "bg-gray-100 text-gray-800 border border-gray-200", icon: User };
-  }
-};
-
-// We've replaced getActivityIcon with inline code in the components
-
-// ======================================
-// REUSABLE COMPONENTS
-// ======================================
-
-// Badge component for buyer type/reputation
-interface BuyerBadgeProps {
-  type: string;
-  reputation: string;
-  verified: boolean;
-}
-
-const BuyerBadge: React.FC<BuyerBadgeProps> = ({ type, reputation, verified }) => {
-  const { text, color, icon } = getBuyerTypeBadge(type);
-  const { text: repText, color: repColor } = getBuyerReputationBadge(reputation);
-  
-  // Create a component dynamically
-  let IconComponent;
-  if (icon === User) {
-    IconComponent = <User className="h-3 w-3" />;
-  } else if (icon === Users) {
-    IconComponent = <Users className="h-3 w-3" />;
-  } else if (icon === Coins) {
-    IconComponent = <Coins className="h-3 w-3" />;
-  } else {
-    IconComponent = <User className="h-3 w-3" />;
-  }
-  
-  return (
-    <div className="flex items-center gap-1.5">
-      <Badge variant="outline" className={color + " text-xs flex items-center gap-1 whitespace-nowrap"}>
-        {IconComponent}
-        <span>{text}</span>
-      </Badge>
-      
-      {verified && (
-        <Badge variant="outline" className={repColor + " text-xs whitespace-nowrap"}>
-          {repText}
-        </Badge>
-      )}
-    </div>
-  );
-};
-
-// Activity Timeline component
-interface ActivityTimelineProps {
-  activities: Array<{ action: string; timestamp: Date }>;
-  limit?: number;
-}
-
-const ActivityTimeline: React.FC<ActivityTimelineProps> = ({ activities, limit = 3 }) => {
-  const sortedActivities = [...activities].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
-  const displayActivities = limit ? sortedActivities.slice(0, limit) : sortedActivities;
-  
-  return (
-    <div className="space-y-1 text-xs">
-      {displayActivities.map((activity, index) => (
-        <div key={index} className="flex items-center gap-1.5 text-gray-600">
-          <div className="rounded-full p-0.5 bg-gray-100 text-gray-600 flex items-center justify-center">
-            {/* Use the component icon safely */}
-            {(() => {
-              if (activity.action.includes("View")) return <Eye className="h-3.5 w-3.5" />;
-              if (activity.action.includes("Save")) return <Bookmark className="h-3.5 w-3.5" />;
-              if (activity.action.includes("Download")) return <FileText className="h-3.5 w-3.5" />;
-              if (activity.action.includes("message") || activity.action.includes("Message")) return <MessageCircle className="h-3.5 w-3.5" />;
-              if (activity.action.includes("offer") || activity.action.includes("Offer")) return <DollarSign className="h-3.5 w-3.5" />;
-              if (activity.action.includes("CRM") || activity.action.includes("Added")) return <Plus className="h-3.5 w-3.5" />;
-              if (activity.action.includes("call") || activity.action.includes("Call")) return <Phone className="h-3.5 w-3.5" />;
-              if (activity.action.includes("email") || activity.action.includes("Email")) return <Mail className="h-3.5 w-3.5" />;
-              if (activity.action.includes("Follow")) return <CornerDownRight className="h-3.5 w-3.5" />;
-              return <Clock className="h-3.5 w-3.5" />;
-            })()}
-          </div>
-          <span className="flex-1 truncate">{activity.action}</span>
-          <span className="text-gray-400">{timeAgo(activity.timestamp)}</span>
-        </div>
-      ))}
-      
-      {activities.length > limit && (
-        <Button variant="ghost" size="sm" className="text-xs h-6 px-2 text-gray-500 w-full justify-start">
-          Show {activities.length - limit} more activities...
-        </Button>
-      )}
-    </div>
-  );
-};
-
-// Buyer Activity Stats component
-interface BuyerActivityStatsProps {
-  buyer: any;
-}
-
-const BuyerActivityStats: React.FC<BuyerActivityStatsProps> = ({ buyer }) => {
-  return (
-    <div className="space-y-3 p-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium">{buyer.name}</h3>
-        <Badge variant="outline" className={getBuyerActivityColor(buyer.activityLevel) + " text-white text-xs px-2"}>
-          {buyer.activityLevel}
-        </Badge>
-      </div>
-      
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-gray-600">Engagement Score</span>
-          <span className="font-medium">{buyer.engagementScore}/100</span>
-        </div>
-        
-        <div className="relative pt-1">
-          <div className="flex mb-2 items-center justify-between">
-            <div className="w-full bg-gray-200 rounded-full h-1.5">
-              <div 
-                className="h-1.5 rounded-full bg-green-500" 
-                style={{ width: `${buyer.engagementScore}%` }}
-              />
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-600">Activity Trend</span>
-          <Sparkline
-            data={buyer.engagementHistory}
-            height={20}
-            width={60}
-            color="#22c55e"
-            strokeWidth={2}
-            fillOpacity={0.1}
-          />
-        </div>
-      </div>
-      
-      <Separator />
-      
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-gray-600">Previous Deals</span>
-          <span className="font-medium">{buyer.previousDeals}</span>
-        </div>
-        
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-gray-600">Budget</span>
-          <span className="font-medium">{formatCurrency(buyer.fundsAvailable)}</span>
-        </div>
-        
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-gray-600">Interests</span>
-          <div className="flex flex-wrap justify-end gap-1 max-w-[180px]">
-            {buyer.interests.map((interest: string, i: number) => (
-              <Badge key={i} variant="outline" className="text-xs px-1 py-0">
-                {interest}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      </div>
-      
-      <Separator />
-      
-      <div className="space-y-1">
-        <p className="text-xs font-medium">Notes</p>
-        <p className="text-xs text-gray-600">{buyer.notes}</p>
-      </div>
-      
-      <div className="flex justify-end gap-2 pt-2">
-        <Button variant="outline" size="sm" className="h-7 text-xs">Full Profile</Button>
-      </div>
-    </div>
-  );
-};
-
-// AI-assisted message suggestion component
-interface AIMessageSuggestionsProps {
-  engagement: any;
-}
-
-const AIMessageSuggestions: React.FC<AIMessageSuggestionsProps> = ({ engagement }) => {
-  const suggestions = [
-    "Send polite response",
-    "Request more details",
-    "Share property information",
-    "Schedule a showing"
-  ];
-  
-  if (engagement.type === "offer") {
-    suggestions.push("Counter offer");
-    suggestions.push("Accept offer");
-    suggestions.push("Request proof of funds");
-  }
-  
-  return (
-    <div className="space-y-2 p-3">
-      <div className="flex items-center text-sm font-medium">
-        <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" />
-        <span>AI Suggested Responses</span>
-      </div>
-      
-      <div className="space-y-1.5">
-        {suggestions.map((suggestion, index) => (
-          <Button 
-            key={index} 
-            variant="outline" 
-            size="sm"
-            className="w-full justify-start text-sm h-8 px-3"
-          >
-            {suggestion}
-          </Button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Enhanced quick response form
-interface QuickResponseFormProps {
-  engagement: any;
-  onCancel: () => void;
-  onSend: (text: string) => void;
-}
-
-const QuickResponseForm: React.FC<QuickResponseFormProps> = ({ engagement, onCancel, onSend }) => {
-  const [text, setText] = useState("");
-  
-  const handleSend = () => {
-    if (text.trim()) {
-      onSend(text);
-      setText("");
-    }
-  };
-  
-  return (
-    <div className="border rounded-md p-3 space-y-3 bg-white">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium">Quick Reply</h3>
-        <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={onCancel}>
-          <XCircle className="h-4 w-4" />
-        </Button>
-      </div>
-      
-      <Textarea 
-        placeholder="Type your response..." 
-        className="min-h-[100px] text-sm"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <Paperclip className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <LinkIcon className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <Sparkles className="h-4 w-4 text-purple-500" />
-          </Button>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="h-8" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="h-8 bg-[#135341] hover:bg-[#09261E]"
-            onClick={handleSend}
-            disabled={!text.trim()}
-          >
-            <Send className="h-3.5 w-3.5 mr-1.5" />
-            <span>Send</span>
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Enhanced Active Engagement Card component
-interface EngagementCardProps {
-  engagement: any;
-  isSelected?: boolean;
-  onSelect?: (id: string) => void;
-}
-
-const EngagementCard: React.FC<EngagementCardProps> = ({ 
-  engagement, 
-  isSelected = false,
-  onSelect
-}) => {
-  const [responding, setResponding] = useState(false);
-  const { toast } = useToast();
-  const [location, setLocation] = useLocation();
-  const isMobile = useMediaQuery('(max-width: 768px)');
-  
-  const property = getPropertyById(engagement.propertyId);
-  const buyer = getBuyerById(engagement.buyerId);
-  
-  const { icon: EngagementIcon, color: engagementColor, label: engagementLabel } = getEngagementBadge(engagement.type);
-  const { text: statusText, color: statusColor } = getStatusBadge(engagement.status);
-  const sentimentInfo = getSentimentIndicator(engagement.aiSentiment);
-  const SentimentIcon = sentimentInfo.icon;
-  
-  // Handle actions
-  const handleViewProperty = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setLocation(`/sellerdash/seller123/property/${engagement.propertyId}`);
-  };
-  
-  const handleViewBuyer = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast({
-      title: "Viewing Buyer Profile",
-      description: `Opening profile for ${engagement.buyerName}`,
-    });
-  };
-  
-  const handleViewConversation = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setLocation(`/sellerdash/seller123/property/${engagement.propertyId}?tab=messages&conversation=${engagement.buyerId}`);
-  };
-  
-  const handleRespond = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setResponding(true);
-  };
-  
-  const handleSendResponse = (text: string) => {
-    toast({
-      title: "Message Sent",
-      description: `Your response has been sent to ${engagement.buyerName}`,
-    });
-    setResponding(false);
-  };
-  
-  const handleAcceptOffer = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast({
-      title: "Offer Accepted",
-      description: `You've accepted the offer of ${formatCurrency(engagement.offerAmount)}`,
-    });
-  };
-  
-  const handleCounterOffer = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast({
-      title: "Counter Offer",
-      description: "Preparing counter offer response...",
-    });
-  };
-  
-  const handleDeclineOffer = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast({
-      title: "Offer Declined",
-      description: "The offer has been declined.",
-    });
-  };
-  
-  const handleGenerateAIResponse = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast({
-      title: "AI Response Generated",
-      description: "A response has been generated based on the conversation history.",
-    });
-  };
-  
-  const handleSelectCard = () => {
-    if (onSelect) {
-      onSelect(engagement.id);
-    }
-  };
-  
-  return (
-    <Card 
-      className={cn(
-        "mb-3 border transition-all",
-        isSelected ? "border-[#135341] shadow-md ring-1 ring-[#135341]" : "hover:shadow-md hover:border-gray-300",
-        engagement.isUnread ? "bg-blue-50/30" : "bg-white"
-      )}
-      onClick={handleSelectCard}
-    >
-      <CardContent className="p-4">
-        <div className="flex items-start gap-4">
-          {/* Left: Property thumbnail */}
-          <div 
-            className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-md overflow-hidden border border-gray-200 cursor-pointer relative"
-            onClick={handleViewProperty}
-          >
-            <img 
-              src={property?.image} 
-              alt={property?.address} 
-              className="w-full h-full object-cover"
-            />
-            {engagement.isUnread && (
-              <div className="absolute top-1 right-1 w-3 h-3 bg-blue-500 rounded-full ring-2 ring-white" />
-            )}
-          </div>
-          
-          {/* Middle: Engagement details */}
-          <div className="flex-1 min-w-0">
-            {/* Property and tag row */}
-            <div className="flex items-center flex-wrap gap-1.5 mb-1.5">
-              <div 
-                className="text-sm font-medium text-gray-800 cursor-pointer hover:text-[#135341] hover:underline"
-                onClick={handleViewProperty}
-              >
-                {property?.title || property?.address}
-              </div>
-              
-              <div className="flex gap-1.5">
-                <Badge className={engagementColor + " px-2 py-0.5 text-xs"}>
-                  <EngagementIcon className="h-3 w-3 mr-1" />
-                  <span>{engagementLabel}</span>
-                </Badge>
-                
-                <Badge className={statusColor + " px-2 py-0.5 text-xs"}>
-                  {statusText}
-                </Badge>
-              </div>
-            </div>
-            
-            {/* Buyer row */}
-            <div className="flex items-center flex-wrap gap-2 mb-2">
-              <div 
-                className="flex items-center gap-1.5 cursor-pointer hover:underline"
-                onClick={handleViewBuyer}
-              >
-                <Avatar className="h-6 w-6">
-                  <AvatarFallback className="text-xs bg-gray-200">{engagement.buyerName.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <span className="text-sm font-medium">{engagement.buyerName}</span>
-              </div>
-              
-              <BuyerBadge 
-                type={engagement.buyerType} 
-                reputation={engagement.buyerReputation} 
-                verified={engagement.verified} 
-              />
-            </div>
-            
-            {/* Content section */}
-            {engagement.message && (
-              <div className="relative">
-                <p className="text-sm text-gray-600 line-clamp-2 mb-2.5">{engagement.message}</p>
-              </div>
-            )}
-            
-            {/* Show offer details if it's an offer */}
-            {engagement.type === 'offer' && (
-              <div className="mb-2.5 flex items-center gap-3">
-                <Badge variant="outline" className="bg-green-50 text-green-700 flex items-center">
-                  <DollarSign className="h-3.5 w-3.5 mr-1" />
-                  <span>{formatCurrency(engagement.offerAmount)}</span>
-                </Badge>
-                
-                {engagement.offerTerms && (
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-7 text-xs px-2 text-gray-500"
-                      >
-                        <FileText className="h-3.5 w-3.5 mr-1" />
-                        <span>Offer Terms</span>
-                      </Button>
-                    </HoverCardTrigger>
-                    <HoverCardContent className="w-80 p-3">
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-medium">Offer Terms</h4>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="text-gray-500">Closing Timeframe:</div>
-                          <div className="font-medium">{engagement.offerTerms.closingTimeframe}</div>
-                          
-                          <div className="text-gray-500">Earnest Money:</div>
-                          <div className="font-medium">{formatCurrency(engagement.offerTerms.earnestMoney)}</div>
-                          
-                          <div className="text-gray-500">Contingencies:</div>
-                          <div className="font-medium">{engagement.offerTerms.contingencies.join(", ")}</div>
-                        </div>
-                      </div>
-                    </HoverCardContent>
-                  </HoverCard>
-                )}
-              </div>
-            )}
-            
-            {/* Bottom stats row */}
-            <div className="flex items-center flex-wrap gap-3 text-xs text-gray-500">
-              <div className="flex items-center">
-                <Clock className="h-3.5 w-3.5 mr-1" />
-                <span>{timeAgo(engagement.timestamp)}</span>
-              </div>
-              
-              {engagement.aiScore && (
-                <TooltipProvider delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex items-center cursor-help">
-                        <Brain className={cn("h-3.5 w-3.5 mr-1", getAIConfidenceColor(engagement.aiScore))} />
-                        <span className={cn("font-medium", getAIConfidenceColor(engagement.aiScore))}>
-                          {Math.round(engagement.aiScore * 100)}%
-                        </span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent className="p-3 bg-black/90 text-white border-0">
-                      <div className="space-y-1">
-                        <div className="font-medium">AI Confidence Score</div>
-                        <p className="text-xs text-gray-300">
-                          {engagement.aiSentiment} ({Math.round(engagement.aiScore * 100)}% confidence)
-                        </p>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-              
-              {engagement.aiSentiment && (
-                <TooltipProvider delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className={cn(
-                        "flex items-center gap-1 px-1.5 py-0.5 rounded-full text-white text-xs cursor-help",
-                        sentimentInfo.color
-                      )}>
-                        <SentimentIcon className="h-3 w-3" />
-                        <span>{sentimentInfo.text}</span>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent className="p-3 bg-black/90 text-white border-0">
-                      <div className="space-y-1">
-                        <div className="font-medium">AI Sentiment Analysis</div>
-                        <p className="text-xs text-gray-300">{engagement.aiSentiment}</p>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
-              
-              {engagement.tags && engagement.tags.length > 0 && (
-                <div className="flex items-center gap-1.5">
-                  <Tag className="h-3.5 w-3.5" />
-                  <div className="flex gap-1">
-                    {engagement.tags.slice(0, 2).map((tag: string, i: number) => (
-                      <Badge key={i} variant="outline" className="px-1 py-0 text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                    {engagement.tags.length > 2 && (
-                      <Badge variant="outline" className="px-1 py-0 text-xs">
-                        +{engagement.tags.length - 2}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Right: Actions */}
-          <div className="flex flex-col gap-2">
-            {/* Direct action buttons based on engagement type */}
-            {engagement.type === 'message' && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-3 text-blue-700 border-blue-200 hover:bg-blue-50"
-                onClick={handleRespond}
-              >
-                <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
-                <span>Respond</span>
-              </Button>
-            )}
-            
-            {engagement.type === 'offer' && engagement.status === 'new' && (
-              <div className="flex gap-1">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 w-7 p-0 text-green-700 border-green-200 hover:bg-green-50"
-                  onClick={handleAcceptOffer}
-                >
-                  <CheckCircle className="h-3.5 w-3.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 w-7 p-0 text-blue-700 border-blue-200 hover:bg-blue-50"
-                  onClick={handleCounterOffer}
-                >
-                  <CornerDownRight className="h-3.5 w-3.5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 w-7 p-0 text-red-700 border-red-200 hover:bg-red-50"
-                  onClick={handleDeclineOffer}
-                >
-                  <XCircle className="h-3.5 w-3.5" />
-                </Button>
-              </div>
-            )}
-            
-            {/* Show quick access to AI responses */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 px-3 text-purple-600"
-              onClick={handleGenerateAIResponse}
-            >
-              <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-              <span>AI Respond</span>
-            </Button>
-            
-            {/* View details button */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8"
-              onClick={handleViewConversation}
-            >
-              <PanelRight className="h-3.5 w-3.5 mr-1.5" />
-              <span>View Details</span>
-            </Button>
-          </div>
-        </div>
-        
-        {/* Expandable activity history */}
-        <Collapsible className="mt-3">
-          <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="w-full text-xs h-7 hover:bg-gray-50 border-t -mx-4 px-4 rounded-none">
-              <ChevronDown className="h-3.5 w-3.5 mr-1.5" />
-              <span>Show Activity History</span>
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="pt-3">
-            <ActivityTimeline activities={engagement.activityHistory} limit={Infinity} />
-          </CollapsibleContent>
-        </Collapsible>
-        
-        {/* Quick response form */}
-        {responding && (
-          <div className="mt-3 border-t pt-3">
-            <QuickResponseForm 
-              engagement={engagement}
-              onCancel={() => setResponding(false)}
-              onSend={handleSendResponse}
-            />
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-};
-
-// Lead Card Component for CRM table
-interface LeadCardProps {
-  lead: any;
-}
-
-const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
-  const { text: statusText, color: statusColor } = getLeadStatusBadge(lead.status);
-  const { toast } = useToast();
-  const [location, setLocation] = useLocation();
-  
-  const handleViewLead = () => {
-    toast({
-      title: "Viewing Lead",
-      description: `Opening detailed profile for ${lead.name}`,
-    });
-  };
-  
-  const handleCall = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast({
-      title: "Calling Lead",
-      description: `Initiating call to ${lead.phone}`,
-    });
-  };
-  
-  const handleEmail = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast({
-      title: "Emailing Lead",
-      description: `Creating new email to ${lead.email}`,
-    });
-  };
-  
-  const handleAnalytics = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toast({
-      title: "Lead Analytics",
-      description: `Viewing detailed analytics for ${lead.name}`,
-    });
-  };
-  
-  return (
-    <TableRow 
-      className="hover:bg-gray-50 cursor-pointer" 
-      onClick={handleViewLead}
-    >
-      <TableCell>
-        <div className="flex items-center gap-2">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-gray-200">{lead.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-medium text-sm">{lead.name}</p>
-            <p className="text-xs text-gray-500">{lead.email}</p>
-          </div>
-        </div>
-      </TableCell>
-      <TableCell>
-        <div className="text-sm">
-          <p>{lead.phone}</p>
-        </div>
-      </TableCell>
-      <TableCell>
-        <div className="flex flex-wrap gap-1">
-          {lead.propertiesOfInterest.map((propId: string) => {
-            const property = getPropertyById(propId);
-            return (
-              <Badge 
-                key={propId} 
-                variant="outline" 
-                className="text-xs cursor-pointer hover:bg-gray-100"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLocation(`/sellerdash/seller123/property/${propId}`);
-                }}
-              >
-                {property?.address.split(',')[0]}
-              </Badge>
-            );
-          })}
-        </div>
-      </TableCell>
-      <TableCell>
-        <div className="text-sm text-gray-600">
-          {timeAgo(lead.lastActivity)}
-        </div>
-      </TableCell>
-      <TableCell>
-        <Badge className={statusColor + " px-2 py-0.5 text-xs"}>
-          {statusText}
-        </Badge>
-      </TableCell>
-      <TableCell>
-        <div className="flex flex-wrap gap-1">
-          {lead.tags.map((tag: string, index: number) => (
-            <Badge key={index} variant="outline" className="bg-gray-100 text-gray-700 text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center justify-end gap-2">
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 w-8 p-0"
-                  onClick={handleEmail}
-                >
-                  <Mail className="h-4 w-4 text-blue-600" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-black/90 text-white border-0">
-                Email
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 w-8 p-0"
-                  onClick={handleCall}
-                >
-                  <Phone className="h-4 w-4 text-green-600" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-black/90 text-white border-0">
-                Call
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 w-8 p-0"
-                  onClick={handleAnalytics}
-                >
-                  <BarChart3 className="h-4 w-4 text-purple-600" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="bg-black/90 text-white border-0">
-                Analytics
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-};
-
-// Template Card component with enhanced features
-interface TemplateCardProps {
-  template: any;
-}
-
-const TemplateCard: React.FC<TemplateCardProps> = ({ template }) => {
-  const { text: categoryText, color: categoryColor } = getTemplateCategoryBadge(template.category);
-  const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleEditTemplate = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancelEdit = () => {
-    setIsEditing(false);
-  };
-
-  const handleUseTemplate = () => {
-    toast({
-      title: "Template Applied",
-      description: "Template content has been copied to the editor.",
-    });
-  };
-
-  return (
-    <Card className="mb-4 hover:shadow-md transition-shadow">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold">{template.name}</CardTitle>
-          <div className="flex items-center gap-2">
-            <Badge className={categoryColor + " px-2 py-0.5"}>
-              {categoryText}
-            </Badge>
-            {template.usage > 0 && (
-              <Badge variant="outline" className="bg-gray-100 text-gray-700 text-xs px-2">
-                Used {template.usage}x
-              </Badge>
-            )}
-          </div>
-        </div>
-        <CardDescription className="text-sm text-gray-600 font-medium">{template.subject}</CardDescription>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="bg-gray-50 rounded-md p-3 mb-3">
-          <p className="text-sm text-gray-700 whitespace-pre-line line-clamp-3">{template.body}</p>
-        </div>
-        
-        <div className="flex items-center justify-between text-xs text-gray-500">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center">
-              <Mail className="h-3.5 w-3.5 mr-1" />
-              <span>{Math.round(template.openRate * 100)}% open rate</span>
-            </div>
-            <div className="flex items-center">
-              <CornerDownRight className="h-3.5 w-3.5 mr-1" />
-              <span>{Math.round(template.responseRate * 100)}% response rate</span>
-            </div>
-          </div>
-          <div>Last used: {timeAgo(template.lastUsed)}</div>
-        </div>
-      </CardContent>
-      <CardFooter className="pt-0 flex justify-between">
-        {isEditing ? (
-          <>
-            <Button variant="outline" size="sm" onClick={handleCancelEdit}>
-              Cancel
-            </Button>
-            <Button variant="default" size="sm" className="bg-[#135341] hover:bg-[#09261E]">
-              <Edit className="h-4 w-4 mr-1.5" />
-              <span>Save Changes</span>
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button variant="ghost" size="sm" onClick={handleEditTemplate}>
-              <Edit className="h-4 w-4 mr-1.5" />
-              <span>Edit</span>
-            </Button>
-            <Button variant="default" size="sm" className="bg-[#135341] hover:bg-[#09261E]" onClick={handleUseTemplate}>
-              <Send className="h-4 w-4 mr-1.5" />
-              <span>Use Template</span>
-            </Button>
-          </>
-        )}
-      </CardFooter>
-    </Card>
-  );
-};
-
-// This function is already defined above - removed duplicate
-
-// Helper function for offer status badge
-function getOfferStatusBadge(status: string) {
-  switch (status) {
-    case "new": return { label: "New", className: "bg-green-100 text-green-800 border-green-200" };
-    case "accepted": return { label: "Accepted", className: "bg-blue-100 text-blue-800 border-blue-200" };
-    case "declined": return { label: "Declined", className: "bg-red-100 text-red-800 border-red-200" };
-    case "replied": return { label: "Replied", className: "bg-purple-100 text-purple-800 border-purple-200" };
-    case "viewed": return { label: "Viewed", className: "bg-gray-100 text-gray-800 border-gray-200" };
-    default: return { label: status, className: "bg-gray-100 text-gray-800 border-gray-200" };
-  }
-}
-
-// Calculate response rate from engagements
-function calculateResponseRate(engagements: typeof mockEngagements): number {
-  const messages = engagements.filter(e => e.type === "message");
-  const responded = messages.filter(e => e.status === "replied" || e.status === "accepted" || e.status === "declined");
-  
-  if (messages.length === 0) return 0;
-  return Math.round((responded.length / messages.length) * 100);
-}
-
-// BuyerProfile component
-interface BuyerProfileProps {
-  buyer?: typeof mockBuyers[0];
-}
-
-function BuyerProfile({ buyer }: BuyerProfileProps) {
-  if (!buyer) return null;
-  
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <Avatar className="h-14 w-14 border-2 border-white shadow-sm">
-          <AvatarFallback className="bg-blue-100 text-blue-800 font-semibold">
-            {buyer.name.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
-        <div>
-          <h3 className="font-semibold text-base">{buyer.name}</h3>
-          <div className="flex items-center gap-1 mt-0.5">
-            <CheckCircle className="h-3.5 w-3.5 text-blue-600" />
-            <span className="text-xs text-blue-700">Verified Buyer</span>
-          </div>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-2 gap-2 pt-2">
-        <div className="bg-gray-50 rounded-md p-2">
-          <p className="text-xs text-gray-500">Engagement</p>
-          <p className="font-medium">{buyer.engagementScore || 'N/A'}</p>
-        </div>
-        <div className="bg-gray-50 rounded-md p-2">
-          <p className="text-xs text-gray-500">Last Active</p>
-          <p className="font-medium">{timeAgo(buyer.lastActive)}</p>
-        </div>
-        <div className="bg-gray-50 rounded-md p-2">
-          <p className="text-xs text-gray-500">Budget Range</p>
-          <p className="font-medium">${formatNumber(buyer.fundsAvailable / 2)} - ${formatNumber(buyer.fundsAvailable)}</p>
-        </div>
-        <div className="bg-gray-50 rounded-md p-2">
-          <p className="text-xs text-gray-500">Response Rate</p>
-          <p className="font-medium">85%</p>
-        </div>
-      </div>
-      
-      <div className="pt-2">
-        <h4 className="text-sm font-medium mb-2">Buyer Tags</h4>
-        <div className="flex flex-wrap gap-1.5">
-          {buyer.interests?.map((tag, i) => (
-            <Badge 
-              key={i} 
-              variant="outline" 
-              className="bg-gray-100 text-gray-800 hover:bg-gray-200 px-2 py-0.5"
-            >
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      </div>
-      
-      <div className="pt-2">
-        <h4 className="text-sm font-medium mb-2">Properties Interested In</h4>
-        <div className="space-y-2">
-          {buyer.viewHistory?.map((view) => {
-            const property = getPropertyById(view.propertyId);
-            if (!property) return null;
-            
-            return (
-              <div key={view.propertyId} className="flex items-center justify-between gap-2 p-2 rounded-md border">
-                <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 bg-gray-100 rounded-md overflow-hidden">
-                    <img 
-                      src={property.image} 
-                      alt={property.title} 
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{property.address.split(',')[0]}</p>
-                    <p className="text-xs text-gray-500">${formatNumber(property.price)}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-1">
-                  <Badge variant="outline" className="text-xs">{view.count} views</Badge>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      
-      <div className="pt-3 flex justify-between border-t mt-4">
-        <Button variant="outline" size="sm" className="gap-1.5">
-          <Mail className="h-3.5 w-3.5" />
-          <span>Email</span>
-        </Button>
-        <Button variant="outline" size="sm" className="gap-1.5">
-          <Phone className="h-3.5 w-3.5" />
-          <span>Call</span>
-        </Button>
-        <Button variant="outline" size="sm" className="gap-1.5">
-          <FileText className="h-3.5 w-3.5" />
-          <span>Notes</span>
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-// AI Buyer Insights Component
-interface AIBuyerInsightsProps {
-  buyerId: string;
-}
-
-function AIBuyerInsights({ buyerId }: AIBuyerInsightsProps) {
-  const buyer = mockBuyers.find(b => b.id === buyerId);
-  if (!buyer) return null;
-  
-  // Get AI-generated insights based on buyer behavior
-  const getInsights = () => {
-    return [
-      {
-        type: "preference",
-        icon: <Home className="h-4 w-4 text-blue-600" />,
-        title: "Property Preferences",
-        content: "Shows strong interest in properties with rental potential. Tends to engage more with properties in urban locations and under $450,000."
-      },
-      {
-        type: "behavior",
-        icon: <BarChart3 className="h-4 w-4 text-purple-600" />,
-        title: "Engagement Pattern",
-        content: "Typically views properties multiple times before saving or making an offer. Most active during evenings and weekends."
-      },
-      {
-        type: "opportunities",
-        icon: <Zap className="h-4 w-4 text-amber-600" />,
-        title: "Opportunity Signals",
-        content: "Has viewed '123 Main St' multiple times but hasn't made an offer. Consider sending additional information or a personalized message."
-      },
-      {
-        type: "communication",
-        icon: <MessageCircle className="h-4 w-4 text-green-600" />,
-        title: "Communication Style",
-        content: "Responds well to direct, concise messages focusing on ROI and investment potential rather than aesthetic features."
-      }
-    ];
-  };
-  
-  const insights = getInsights();
-  
-  return (
-    <div className="space-y-4">
-      {insights.map((insight, i) => (
-        <div key={i} className="mb-3 pb-3 border-b last:border-0 last:mb-0 last:pb-0">
-          <div className="flex items-center gap-2 mb-1.5">
-            {insight.icon}
-            <h4 className="text-sm font-medium">{insight.title}</h4>
-          </div>
-          <p className="text-sm text-gray-600 pl-6">{insight.content}</p>
-        </div>
-      ))}
-      
-      <Button className="w-full bg-[#135341] hover:bg-[#09261E] gap-1.5">
-        <Sparkles className="h-4 w-4" />
-        <span>Generate Action Plan</span>
-      </Button>
-    </div>
-  );
-}
-
-// PropertyEngagementBlock Component
-interface PropertyEngagementBlockProps {
-  property: typeof mockProperties[0];
-  engagements: typeof mockEngagements;
-  onViewBuyer: (buyerId: string) => void;
-  onUseAI: (engagementId: string) => void;
-  saveToOfferRate: number;
-}
-
-function PropertyEngagementBlock({ 
-  property, 
-  engagements,
-  onViewBuyer,
-  onUseAI,
-  saveToOfferRate
-}: PropertyEngagementBlockProps) {
-  const [isExpanded, setIsExpanded] = useState(true);
-  
-  // Group engagements by type
-  const offers = engagements.filter(e => e.type === "offer");
-  const messages = engagements.filter(e => e.type === "message");
-  const views = engagements.filter(e => e.type === "view");
-  const saves = engagements.filter(e => e.type === "save");
-  
-  // Get stats
-  const viewCount = views.length;
-  const saveCount = saves.length;
-  const messageCount = messages.length;
-  const offerCount = offers.length;
-  
-  // Get unique buyers
-  const uniqueBuyerIds = new Set();
-  engagements.forEach(e => uniqueBuyerIds.add(e.buyerId));
-  
-  // Get buyer objects and ensure they're valid
-  const uniqueBuyers = Array.from(uniqueBuyerIds)
-    .map(id => getBuyerById(id as string))
-    .filter(buyer => buyer !== null && buyer !== undefined);
-  
-  // Check for recent activity
-  const hasRecentActivity = engagements.some(e => {
-    const activityTime = new Date(e.timestamp);
-    const hoursDiff = Math.floor((new Date().getTime() - activityTime.getTime()) / (1000 * 60 * 60));
-    return hoursDiff < 24;
-  });
-  
-  // Check for save without offer
-  const saveWithoutOffer = saves.some(save => 
-    !offers.some(offer => offer.buyerId === save.buyerId)
-  );
-  
-  return (
-    <Card className={cn(
-      "overflow-hidden transition-all duration-200",
-      hasRecentActivity && "border-l-4 border-l-blue-500"
-    )}>
-      <CardHeader className="pb-3 px-4 pt-4">
-        <div className="flex justify-between items-start">
-          {/* Property info */}
-          <div className="flex items-center gap-3">
-            <div className="h-16 w-20 bg-gray-100 rounded-md overflow-hidden">
-              <img 
-                src={property.image} 
-                alt={property.title} 
-                className="h-full w-full object-cover"
-              />
-            </div>
-            
-            <div>
-              <CardTitle className="text-lg flex items-center">
-                {property.address.split(',')[0]}
-              </CardTitle>
-              <div className="flex flex-wrap items-center gap-2 mt-1">
-                <Badge className={getStatusBadge(property.status).color}>
-                  {property.status}
-                </Badge>
-                <span className="text-sm text-gray-600">${formatNumber(property.price)}</span>
-                <span className="text-xs text-gray-500">
-                  {property.beds} bed • {property.baths} bath • {property.sqft} sqft
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          {/* Toggle expand/collapse */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="h-8 w-8 p-0" 
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </CardHeader>
-      
-      {isExpanded && (
-        <>
-          <CardContent className="px-4 pb-3 pt-0">
-            <div className="space-y-4">
-              {/* Engagement snapshot */}
-              <div className="flex flex-wrap gap-3">
-                <div className="bg-purple-50 rounded-lg p-2 flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center mr-2">
-                    <Eye className="h-4 w-4 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-purple-600">Views</p>
-                    <p className="font-medium">{viewCount}</p>
-                  </div>
-                </div>
-                
-                <div className="bg-amber-50 rounded-lg p-2 flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center mr-2">
-                    <Bookmark className="h-4 w-4 text-amber-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-amber-600">Saves</p>
-                    <p className="font-medium">{saveCount}</p>
-                  </div>
-                </div>
-                
-                <div className="bg-blue-50 rounded-lg p-2 flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center mr-2">
-                    <MessageCircle className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-blue-600">Messages</p>
-                    <p className="font-medium">{messageCount}</p>
-                  </div>
-                </div>
-                
-                <div className="bg-green-50 rounded-lg p-2 flex items-center">
-                  <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center mr-2">
-                    <DollarSign className="h-4 w-4 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-green-600">Offers</p>
-                    <p className="font-medium">{offerCount}</p>
-                  </div>
-                </div>
-                
-                {saveToOfferRate > 0 && (
-                  <div className="bg-indigo-50 rounded-lg p-2 flex items-center">
-                    <div className="h-8 w-8 rounded-full bg-indigo-100 flex items-center justify-center mr-2">
-                      <Percent className="h-4 w-4 text-indigo-600" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-indigo-600">Save to Offer</p>
-                      <p className="font-medium">{saveToOfferRate.toFixed(0)}%</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Opportunity indicator */}
-              {saveWithoutOffer && (
-                <Alert variant="outline" className="bg-amber-50 border-amber-200">
-                  <Zap className="h-4 w-4 text-amber-600" />
-                  <AlertTitle className="text-sm font-medium text-amber-800">Opportunity</AlertTitle>
-                  <AlertDescription className="text-xs text-amber-700">
-                    {saves.length - offers.length} buyer{saves.length - offers.length > 1 ? 's' : ''} saved this property but haven't made an offer yet.
-                  </AlertDescription>
-                </Alert>
-              )}
-              
-              {/* Engagement sections */}
-              <div className="space-y-4">
-                {/* Latest offers */}
-                {offers.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-medium mb-2">Latest Offers</h3>
-                    <div className="space-y-2">
-                      {offers.slice(0, 3).map((offer) => (
-                        <div 
-                          key={offer.id} 
-                          className={cn(
-                            "border rounded-lg p-3 hover:bg-gray-50 transition-colors",
-                            offer.status === "new" && "border-l-4 border-l-green-500"
-                          )}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              <Avatar className="h-7 w-7">
-                                <AvatarFallback>{offer.buyerName[0]}</AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="font-medium text-sm">{offer.buyerName}</p>
-                                <p className="text-xs text-gray-500">{timeAgo(offer.timestamp)}</p>
-                              </div>
-                            </div>
-                            <Badge className={getStatusBadge(offer.status).color}>
-                              {offer.status}
-                            </Badge>
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <p className="text-base font-semibold text-green-700">${formatNumber(offer.offerAmount || 0)}</p>
-                            <div className="flex items-center gap-1">
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-7 w-7 p-0"
-                                onClick={() => onViewBuyer(offer.buyerId)}
-                              >
-                                <User className="h-4 w-4 text-gray-600" />
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-7 w-7 p-0"
-                              >
-                                <MessageCircle className="h-4 w-4 text-gray-600" />
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-7 w-7 p-0"
-                              >
-                                <MoreHorizontal className="h-4 w-4 text-gray-600" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      
-                      {offers.length > 3 && (
-                        <Button variant="ghost" size="sm" className="w-full text-xs">
-                          View {offers.length - 3} more offers
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Latest messages */}
-                {messages.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-medium mb-2">Latest Messages</h3>
-                    <div className="space-y-2">
-                      {messages.slice(0, 3).map((message) => (
-                        <div 
-                          key={message.id} 
-                          className={cn(
-                            "border rounded-lg p-3 hover:bg-gray-50 transition-colors",
-                            message.status === "new" && "border-l-4 border-l-blue-500"
-                          )}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                              <Avatar className="h-7 w-7">
-                                <AvatarFallback>{message.buyerName[0]}</AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="font-medium text-sm">{message.buyerName}</p>
-                                <p className="text-xs text-gray-500">{timeAgo(message.timestamp)}</p>
-                              </div>
-                            </div>
-                            {message.status === "new" ? (
-                              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">New</Badge>
-                            ) : (
-                              <Badge variant="outline" className="bg-gray-100 text-gray-800">Replied</Badge>
-                            )}
-                          </div>
-                          
-                          <p className="text-sm text-gray-700 mb-2">{message.message}</p>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1.5">
-                              {message.aiSentiment && (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger>
-                                      <div className={cn(
-                                        "rounded-full p-1",
-                                        message.aiSentiment === "positive" && "bg-green-100",
-                                        message.aiSentiment === "neutral" && "bg-gray-100",
-                                        message.aiSentiment === "negative" && "bg-red-100"
-                                      )}>
-                                        {getSentimentIndicator(message.aiSentiment).icon}
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent side="bottom" className="bg-black/90 text-white border-0">
-                                      {getSentimentIndicator(message.aiSentiment).text}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              )}
-                              
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-7 gap-1 text-xs text-blue-600"
-                                onClick={() => onUseAI(message.id)}
-                              >
-                                <Sparkles className="h-3.5 w-3.5" />
-                                <span>AI Respond</span>
-                              </Button>
-                            </div>
-                            
-                            <div className="flex items-center gap-1">
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-7 w-7 p-0"
-                                onClick={() => onViewBuyer(message.buyerId)}
-                              >
-                                <User className="h-4 w-4 text-gray-600" />
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-7 w-7 p-0"
-                              >
-                                <ArrowUpRight className="h-4 w-4 text-gray-600" />
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="h-7 w-7 p-0"
-                              >
-                                <MoreHorizontal className="h-4 w-4 text-gray-600" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                      
-                      {messages.length > 3 && (
-                        <Button variant="ghost" size="sm" className="w-full text-xs">
-                          View {messages.length - 3} more messages
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Buyers */}
-                {uniqueBuyers.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-medium mb-2">Engaged Buyers ({uniqueBuyers.length})</h3>
-                    <div className="flex flex-wrap gap-2 items-center mb-2">
-                      {/* Temporarily simplify this part to locate the error */}
-                      {uniqueBuyers.slice(0, 8).map((buyer) => {
-                        if (!buyer) return null;
-                        
-                        return (
-                          <Avatar 
-                            key={buyer.id}
-                            className="h-9 w-9 border-2 border-white cursor-pointer hover:ring-2 hover:ring-gray-200 transition-all"
-                            onClick={() => onViewBuyer(buyer.id)}
-                          >
-                            <AvatarFallback className="bg-blue-100 text-blue-800 text-xs">
-                              {buyer.name ? buyer.name.charAt(0) : '?'}
-                            </AvatarFallback>
-                          </Avatar>
-                        );
-                      })}
-                      
-                      {uniqueBuyers.length > 8 && (
-                        <Avatar className="h-9 w-9 border-2 border-white cursor-pointer hover:scale-105 transition-all" onClick={() => {}}>
-                          <AvatarFallback className="bg-gray-100 text-gray-800 text-xs">
-                            +{uniqueBuyers.length - 8}
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </CardContent>
-          
-          <CardFooter className="px-4 py-3 flex justify-between border-t">
-            <Button variant="outline" size="sm" onClick={() => {}}>
-              <Eye className="h-4 w-4 mr-1.5" />
-              <span>View Activity</span>
-            </Button>
-            
-            <div className="flex items-center gap-2">
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-1.5">
-                      <Sparkles className="h-4 w-4 text-purple-600" />
-                      <span>AI Assist</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="top" className="bg-black/90 text-white border-0">
-                    Get AI insights and response suggestions
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              
-              <Button className="bg-[#135341] hover:bg-[#09261E]" size="sm">
-                <MessageCircle className="h-4 w-4 mr-1.5" />
-                <span>Respond</span>
-              </Button>
-            </div>
-          </CardFooter>
-        </>
-      )}
-    </Card>
-  );
-}
-
-// Main Engagement Page Component
 export default function EngagementPage() {
   const { userId } = useParams();
   const [location, setLocation] = useLocation();
   const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
   const [selectedEngagementTypes, setSelectedEngagementTypes] = useState<string[]>([]);
-  const [selectedBuyerTags, setSelectedBuyerTags] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showActivityLog, setShowActivityLog] = useState(false);
-  const [showBuyerStats, setShowBuyerStats] = useState<string | null>(null);
-  const [showAIAssist, setShowAIAssist] = useState(false);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+  const [sorting, setSorting] = useState<string>("most-recent");
   const { toast } = useToast();
   
   const isMobile = useMediaQuery('(max-width: 768px)');
   const isTablet = useMediaQuery('(min-width: 769px) and (max-width: 1024px)');
   
   // Filter engagements based on filters
-  const filteredEngagements = mockEngagements.filter(engagement => {
-    // Filter by properties if any selected
-    if (selectedProperties.length > 0 && !selectedProperties.includes(engagement.propertyId)) return false;
-    
-    // Filter by engagement types if any selected
-    if (selectedEngagementTypes.length > 0 && !selectedEngagementTypes.includes(engagement.type)) return false;
-    
-    // Filter by buyer tags if any selected
-    const buyer = getBuyerById(engagement.buyerId);
-    if (selectedBuyerTags.length > 0 && !selectedBuyerTags.some(tag => buyer?.tags?.includes(tag))) return false;
-    
-    // Search by buyer name, message content, or property address
-    if (searchQuery) {
-      const lowerQuery = searchQuery.toLowerCase();
-      const matchesBuyer = engagement.buyerName.toLowerCase().includes(lowerQuery);
-      const matchesMessage = engagement.message?.toLowerCase().includes(lowerQuery) || false;
-      const matchesProperty = getPropertyById(engagement.propertyId)?.address.toLowerCase().includes(lowerQuery) || false;
-      if (!matchesBuyer && !matchesMessage && !matchesProperty) return false;
-    }
-    
-    return true;
-  });
+  const filteredEngagements = useMemo(() => {
+    return mockEngagements.filter(engagement => {
+      // Filter by properties if any selected
+      if (selectedProperties.length > 0 && !selectedProperties.includes(engagement.propertyId)) return false;
+      
+      // Filter by engagement types if any selected
+      if (selectedEngagementTypes.length > 0 && !selectedEngagementTypes.includes(engagement.type)) return false;
+      
+      // Filter by status if any selected
+      if (selectedStatus.length > 0 && !selectedStatus.includes(engagement.status)) return false;
+      
+      // Search by buyer name, message content, or property address
+      if (searchQuery) {
+        const lowerQuery = searchQuery.toLowerCase();
+        const matchesBuyer = engagement.buyerName.toLowerCase().includes(lowerQuery);
+        const matchesMessage = engagement.message?.toLowerCase().includes(lowerQuery) || false;
+        const matchesProperty = getPropertyById(engagement.propertyId)?.address.toLowerCase().includes(lowerQuery) || false;
+        if (!matchesBuyer && !matchesMessage && !matchesProperty) return false;
+      }
+      
+      return true;
+    });
+  }, [selectedProperties, selectedEngagementTypes, selectedStatus, searchQuery]);
   
   // Group engagements by property
   const engagementsByProperty = useMemo(() => {
@@ -2509,78 +564,86 @@ export default function EngagementPage() {
   
   // Get properties with engagements
   const propertiesWithEngagements = useMemo(() => {
-    return Object.keys(engagementsByProperty).map(propId => 
+    let properties = Object.keys(engagementsByProperty).map(propId => 
       getPropertyById(propId)
-    ).filter(Boolean);
-  }, [engagementsByProperty]);
+    ).filter(Boolean) as typeof mockProperties;
+    
+    // Apply sorting
+    if (sorting === "most-recent") {
+      properties.sort((a, b) => b.daysListed - a.daysListed);
+    } else if (sorting === "highest-offers") {
+      properties.sort((a, b) => b.offerCount - a.offerCount);
+    } else if (sorting === "most-views") {
+      properties.sort((a, b) => b.viewCount - a.viewCount);
+    }
+    
+    return properties;
+  }, [engagementsByProperty, sorting]);
   
-  // Calculate stats
+  // Calculate metrics for dashboard
   const activeProperties = mockProperties.filter(p => p.status === "Live").length;
-  const totalViews = mockEngagements.filter(e => e.type === "view").length;
-  const totalSaves = mockEngagements.filter(e => e.type === "save").length;
-  const totalMessages = mockEngagements.filter(e => e.type === "message").length;
-  const totalOffers = mockEngagements.filter(e => e.type === "offer").length;
+  const totalViews = mockProperties.reduce((sum, p) => sum + p.viewCount, 0);
+  const avgViewsPerProperty = totalViews / (activeProperties || 1);
   
-  // Average per property
-  const avgViewsPerProperty = activeProperties ? Math.round(totalViews / activeProperties) : 0;
-  const avgSavesPerProperty = activeProperties ? Math.round(totalSaves / activeProperties) : 0;
-  const avgMessagesPerProperty = activeProperties ? Math.round(totalMessages / activeProperties) : 0;
-  const avgOffersPerProperty = activeProperties ? Math.round(totalOffers / activeProperties) : 0;
+  const totalSaves = mockProperties.reduce((sum, p) => sum + p.saveCount, 0);
+  const avgSavesPerProperty = totalSaves / (activeProperties || 1);
   
-  // Time-based improvements (calculate increases over previous period)
-  const viewsLastMonth = mockEngagements.filter(e => {
-    const isView = e.type === "view";
-    const isLastMonth = isWithinInterval(new Date(e.timestamp), {
-      start: subMonths(startOfMonth(new Date()), 1),
-      end: subMonths(endOfMonth(new Date()), 1)
-    });
-    return isView && isLastMonth;
-  }).length;
+  const totalOffers = mockProperties.reduce((sum, p) => sum + p.offerCount, 0);
+  const avgOffersPerProperty = totalOffers / (activeProperties || 1);
   
-  const viewsThisMonth = mockEngagements.filter(e => {
-    const isView = e.type === "view";
-    const isThisMonth = isWithinInterval(new Date(e.timestamp), {
-      start: startOfMonth(new Date()),
-      end: new Date()
-    });
-    return isView && isThisMonth;
-  }).length;
+  const totalMessages = mockProperties.reduce((sum, p) => sum + p.messageCount, 0);
+  const unreadMessages = mockEngagements.filter(e => e.type === "message" && e.status === "new").length;
   
-  const viewsImprovement = viewsLastMonth ? Math.round((viewsThisMonth - viewsLastMonth) / viewsLastMonth * 100) : 0;
+  // Mock response rate and time
+  const responseRate = 78;
+  const avgResponseTime = 6; // hours
   
-  // Weekly stats
-  const offersReceivedThisWeek = mockEngagements.filter(e => {
-    const isOffer = e.type === "offer";
-    const isThisWeek = isWithinInterval(new Date(e.timestamp), {
-      start: startOfWeek(new Date()),
-      end: endOfWeek(new Date())
-    });
-    return isOffer && isThisWeek;
-  }).length;
-  
-  const messagesWaiting = mockEngagements.filter(e => e.type === "message" && e.status === "new").length;
-  const responseRate = calculateResponseRate(mockEngagements);
-  
-  // Handle viewing buyer profile
-  const handleViewBuyerProfile = (buyerId: string) => {
-    setShowBuyerStats(buyerId);
+  // Helper functions
+  const getPropertyById = (propertyId: string) => {
+    return mockProperties.find(p => p.id === propertyId);
   };
   
-  // Handle AI assist
-  const handleShowAIAssist = (engagementId: string) => {
-    setShowAIAssist(true);
+  const getBuyerById = (buyerId: string) => {
+    return mockBuyers.find(b => b.id === buyerId);
   };
   
-  // Toggle property selection
+  const getPropertyEngagements = (propertyId: string) => {
+    return mockEngagements.filter(e => e.propertyId === propertyId);
+  };
+  
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+  
+  // Format date
+  const formatDate = (date: Date) => {
+    return format(date, 'MMM d, yyyy');
+  };
+  
+  // Calculate save-to-offer conversion rate for a specific property
+  const calcSaveToOfferConversion = (propertyId: string) => {
+    const property = getPropertyById(propertyId);
+    if (!property) return 0;
+    const saveCount = property.saveCount;
+    if (saveCount === 0) return 0;
+    
+    return (property.offerCount / saveCount) * 100;
+  };
+  
+  // Filter handlers
   const handleToggleProperty = (propertyId: string) => {
     setSelectedProperties(prev => 
-      prev.includes(propertyId)
+      prev.includes(propertyId) 
         ? prev.filter(id => id !== propertyId)
         : [...prev, propertyId]
     );
   };
   
-  // Toggle engagement type selection
   const handleToggleEngagementType = (type: string) => {
     setSelectedEngagementTypes(prev => 
       prev.includes(type)
@@ -2589,38 +652,409 @@ export default function EngagementPage() {
     );
   };
   
-  // Toggle buyer tag selection
-  const handleToggleBuyerTag = (tag: string) => {
-    setSelectedBuyerTags(prev => 
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+  const handleToggleStatus = (status: string) => {
+    setSelectedStatus(prev => 
+      prev.includes(status)
+        ? prev.filter(s => s !== status)
+        : [...prev, status]
     );
   };
   
-  // Calculate percentage of saves that led to offers
-  const calculateSaveToOfferRate = (propertyId: string) => {
-    const propertyEngagements = mockEngagements.filter(e => e.propertyId === propertyId);
-    const saves = propertyEngagements.filter(e => e.type === "save");
-    const savesThatMadeOffers = saves.filter(save => 
-      mockEngagements.some(e => 
-        e.type === "offer" && e.buyerId === save.buyerId && e.propertyId === propertyId
-      )
-    );
-    
-    if (saves.length === 0) return 0;
-    return (savesThatMadeOffers.length / saves.length) * 100;
+  const handleClearFilters = () => {
+    setSelectedProperties([]);
+    setSelectedEngagementTypes([]);
+    setSelectedStatus([]);
+    setSearchQuery("");
   };
   
-  // Buyer tags from all buyers
-  const allBuyerTags = useMemo(() => {
-    const tags = new Set<string>();
-    mockBuyers.forEach(buyer => {
-      buyer.tags?.forEach(tag => tags.add(tag));
+  const handleSelectProperty = (propertyId: string) => {
+    setSelectedPropertyId(propertyId);
+  };
+  
+  // AI response generation
+  const handleUseAI = (engagementId: string) => {
+    toast({
+      title: "AI response generated",
+      description: "A personalized response has been created based on this message.",
     });
-    return Array.from(tags);
-  }, []);
+  };
   
+  // Get latest activity data for timeline
+  const getPropertyActivityTimeline = (propertyId: string) => {
+    const relevantEngagements = mockEngagements.filter(e => e.propertyId === propertyId);
+    return relevantEngagements.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  };
+  
+  // Get all engaged buyers for a property
+  const getEngagedBuyers = (propertyId: string) => {
+    const relevantEngagements = mockEngagements.filter(e => e.propertyId === propertyId);
+    const buyerIds = [...new Set(relevantEngagements.map(e => e.buyerId))];
+    return buyerIds.map(id => {
+      const buyer = getBuyerById(id);
+      if (!buyer) return null;
+      
+      // Get latest engagement
+      const buyerEngagements = relevantEngagements.filter(e => e.buyerId === id);
+      const latestEngagement = buyerEngagements.sort((a, b) => 
+        b.timestamp.getTime() - a.timestamp.getTime()
+      )[0];
+      
+      return {
+        ...buyer,
+        latestEngagement
+      };
+    }).filter(Boolean);
+  };
+
+  // Render dashboard metric card
+  const MetricCard = ({ 
+    icon: Icon, 
+    title, 
+    value, 
+    secondaryValue, 
+    trend, 
+    trendDirection, 
+    highlight 
+  }: { 
+    icon: React.ElementType, 
+    title: string, 
+    value: string | number, 
+    secondaryValue?: string, 
+    trend?: string, 
+    trendDirection?: 'up' | 'down' | 'neutral',
+    highlight?: boolean 
+  }) => (
+    <motion.div
+      variants={fadeInUp}
+      initial="initial"
+      animate="animate"
+      className={cn(
+        "rounded-lg shadow-sm border overflow-hidden",
+        highlight ? "bg-gradient-to-br from-[#803344]/5 to-[#803344]/10 border-[#803344]/30" : "bg-white"
+      )}
+    >
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-full bg-gray-100">
+                <Icon className="h-5 w-5 text-gray-700" />
+              </div>
+              <h3 className="font-medium text-gray-500 text-sm">{title}</h3>
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold">{value}</span>
+              {secondaryValue && (
+                <span className="text-sm text-gray-500">{secondaryValue}</span>
+              )}
+            </div>
+            {trend && (
+              <div className="flex items-center gap-1.5">
+                {trendDirection === 'up' && <TrendingUp className="h-3 w-3 text-green-500" />}
+                {trendDirection === 'down' && <TrendingDown className="h-3 w-3 text-red-500" />}
+                <span className={cn(
+                  "text-xs",
+                  trendDirection === 'up' ? "text-green-600" : 
+                  trendDirection === 'down' ? "text-red-600" : "text-gray-500"
+                )}>
+                  {trend}
+                </span>
+              </div>
+            )}
+          </div>
+          
+          <AnimatePresence>
+            {highlight && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="px-2 py-1 rounded-full bg-[#803344] text-white text-xs"
+              >
+                New
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </CardContent>
+    </motion.div>
+  );
+
+  // Render property card
+  const PropertyCard = ({ property }: { property: (typeof mockProperties)[0] }) => {
+    const hasUnreadMessages = mockEngagements
+      .filter(e => e.propertyId === property.id && e.type === "message" && e.status === "new")
+      .length > 0;
+      
+    const hasNewOffers = mockEngagements
+      .filter(e => e.propertyId === property.id && e.type === "offer" && e.status === "new")
+      .length > 0;
+      
+    const needsAttention = hasUnreadMessages || hasNewOffers;
+    
+    return (
+      <motion.div 
+        variants={fadeIn}
+        initial="initial"
+        animate="animate"
+        whileHover={{ y: -4, transition: { duration: 0.2 } }}
+        className={cn(
+          "rounded-lg border shadow-sm overflow-hidden transition-all cursor-pointer",
+          selectedPropertyId === property.id ? "border-[#135341] ring-1 ring-[#135341]" : "border-gray-200 hover:border-gray-300",
+        )}
+        onClick={() => handleSelectProperty(property.id)}
+      >
+        <div className="relative">
+          <img 
+            src={property.image} 
+            alt={property.title} 
+            className="w-full h-40 object-cover"
+          />
+          {needsAttention && (
+            <div className="absolute top-2 right-2 px-2 py-1 rounded-full bg-[#803344] text-white text-xs flex items-center gap-1.5">
+              <AlertTriangle className="h-3 w-3" />
+              <span>Needs Attention</span>
+            </div>
+          )}
+        </div>
+        
+        <div className="p-4">
+          <div className="mb-3">
+            <h3 className="font-bold text-gray-900 truncate">{property.address}</h3>
+            <p className="text-gray-500 text-sm">{formatCurrency(property.price)}</p>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2 mb-3">
+            <div className="p-2 bg-gray-50 rounded text-center">
+              <p className="text-sm font-medium text-gray-900">{property.viewCount}</p>
+              <p className="text-xs text-gray-500">Views</p>
+            </div>
+            <div className="p-2 bg-gray-50 rounded text-center">
+              <p className="text-sm font-medium text-gray-900">{property.saveCount}</p>
+              <p className="text-xs text-gray-500">Saves</p>
+            </div>
+            <div className={cn(
+              "p-2 rounded text-center",
+              hasNewOffers ? "bg-green-50" : "bg-gray-50"
+            )}>
+              <p className={cn(
+                "text-sm font-medium", 
+                hasNewOffers ? "text-green-700" : "text-gray-900"
+              )}>
+                {property.offerCount}
+              </p>
+              <p className="text-xs text-gray-500">Offers</p>
+            </div>
+            <div className={cn(
+              "p-2 rounded text-center",
+              hasUnreadMessages ? "bg-blue-50" : "bg-gray-50"
+            )}>
+              <p className={cn(
+                "text-sm font-medium", 
+                hasUnreadMessages ? "text-blue-700" : "text-gray-900"
+              )}>
+                {property.messageCount}
+              </p>
+              <p className="text-xs text-gray-500">Messages</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <Badge 
+              variant="outline" 
+              className={cn(
+                "text-xs",
+                property.status === "Live" ? "border-green-200 text-green-700 bg-green-50" : 
+                property.status === "Under Contract" ? "border-blue-200 text-blue-700 bg-blue-50" : 
+                "border-gray-200 text-gray-700 bg-gray-50"
+              )}
+            >
+              {property.status}
+            </Badge>
+            <span className="text-xs text-gray-500">
+              {property.daysListed} {property.daysListed === 1 ? 'day' : 'days'} listed
+            </span>
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
+  // Render engagement timeline item
+  const EngagementTimelineItem = ({ engagement }: { engagement: (typeof mockEngagements)[0] }) => {
+    return (
+      <div className="flex group">
+        <div className="mr-3 flex flex-col items-center">
+          <div className="w-2 h-2 rounded-full bg-gray-300 group-hover:bg-[#135341]" />
+          <div className="w-0.5 h-full bg-gray-200 group-hover:bg-gray-300" />
+        </div>
+        <div className="pb-6 w-full">
+          <div className="flex justify-between items-start">
+            <div className="flex items-center">
+              <Avatar className="h-6 w-6 mr-2">
+                <AvatarFallback className="text-xs">
+                  {engagement.buyerName.split(' ').map(name => name[0]).join('')}
+                </AvatarFallback>
+              </Avatar>
+              <span className="font-medium text-gray-900">{engagement.buyerName}</span>
+            </div>
+            <span className="text-xs text-gray-500">{formatDistanceToNow(engagement.timestamp, { addSuffix: true })}</span>
+          </div>
+          
+          <div className="flex items-center mt-1">
+            {engagement.type === "view" && (
+              <div className="flex items-center text-sm text-gray-600">
+                <Eye className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
+                <span>Viewed this property</span>
+                {engagement.viewCount && (
+                  <span className="text-xs text-gray-500 ml-1.5">
+                    ({engagement.viewCount} times)
+                  </span>
+                )}
+              </div>
+            )}
+            {engagement.type === "save" && (
+              <div className="flex items-center text-sm text-gray-600">
+                <Bookmark className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
+                <span>Saved this property</span>
+              </div>
+            )}
+            {engagement.type === "message" && (
+              <div className="w-full">
+                <div className="flex items-center text-sm text-gray-600">
+                  <MessageCircle className="h-3.5 w-3.5 mr-1.5 text-green-500" />
+                  <span>Sent a message</span>
+                  {engagement.status === "new" && (
+                    <Badge variant="outline" className="ml-2 text-[10px] h-4 px-1 bg-green-50 text-green-700 border-green-200">
+                      New
+                    </Badge>
+                  )}
+                </div>
+                {engagement.message && (
+                  <div className="mt-1.5 pl-5">
+                    <p className="text-sm bg-gray-50 p-2 rounded-md border border-gray-100">
+                      {engagement.message.length > 120 
+                        ? engagement.message.substring(0, 120) + "..." 
+                        : engagement.message
+                      }
+                    </p>
+                    <div className="flex justify-end mt-1.5">
+                      <Button 
+                        variant="outline" 
+                        className="h-7 text-xs gap-1 mr-2 hover:bg-gray-200"
+                        onClick={() => handleUseAI(engagement.id)}
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        <span>AI Respond</span>
+                      </Button>
+                      <Button 
+                        className="h-7 text-xs gap-1 bg-[#135341] hover:bg-[#09261E]"
+                      >
+                        <CornerDownRight className="h-3 w-3" />
+                        <span>Reply</span>
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {engagement.type === "offer" && (
+              <div className="w-full">
+                <div className="flex items-center text-sm text-gray-600">
+                  <DollarSign className="h-3.5 w-3.5 mr-1.5 text-purple-500" />
+                  <span>Made an offer</span>
+                  {engagement.status === "new" && (
+                    <Badge variant="outline" className="ml-2 text-[10px] h-4 px-1 bg-purple-50 text-purple-700 border-purple-200">
+                      New
+                    </Badge>
+                  )}
+                  {engagement.status === "accepted" && (
+                    <Badge variant="outline" className="ml-2 text-[10px] h-4 px-1 bg-green-50 text-green-700 border-green-200">
+                      Accepted
+                    </Badge>
+                  )}
+                </div>
+                <div className="mt-1.5 pl-5">
+                  <div className="flex items-center text-sm font-medium">
+                    <span>Offer Amount: {formatCurrency(engagement.offerAmount)}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-1.5">
+                    <Badge variant="outline" className="text-[10px]">
+                      {engagement.offerTerms.closingTimeframe} close
+                    </Badge>
+                    {engagement.offerTerms.contingencies.map((contingency, i) => (
+                      <Badge key={i} variant="outline" className="text-[10px]">
+                        {contingency}
+                      </Badge>
+                    ))}
+                    <Badge variant="outline" className="text-[10px]">
+                      ${engagement.offerTerms.earnestMoney} earnest
+                    </Badge>
+                  </div>
+                  {engagement.message && (
+                    <p className="text-sm bg-gray-50 p-2 rounded-md border border-gray-100 mt-2">
+                      {engagement.message.length > 100 
+                        ? engagement.message.substring(0, 100) + "..." 
+                        : engagement.message
+                      }
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Render engaged buyer item
+  const EngagedBuyerItem = ({ buyer }: { buyer: any }) => {
+    return (
+      <div className="p-3 border rounded-md hover:border-gray-300 hover:bg-gray-50 transition-all cursor-pointer">
+        <div className="flex justify-between items-start">
+          <div className="flex items-center">
+            <Avatar className="h-8 w-8 mr-2">
+              <AvatarFallback>
+                {buyer.name.split(' ').map((name: string) => name[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <div className="flex items-center">
+                <span className="font-medium">{buyer.name}</span>
+                {buyer.verified && (
+                  <Badge className="ml-2 bg-blue-100 text-blue-800 hover:bg-blue-200 border-blue-200" variant="outline">
+                    Verified
+                  </Badge>
+                )}
+              </div>
+              <div className="flex items-center text-xs text-gray-500 mt-0.5">
+                <span className="mr-2">{buyer.type}</span>
+                <span>•</span>
+                <span className="ml-2">Last activity: {formatDistanceToNow(buyer.latestEngagement.timestamp, { addSuffix: true })}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-1">
+            <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-gray-200">
+              <Mail className="h-3.5 w-3.5 text-gray-500" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-gray-200">
+              <Phone className="h-3.5 w-3.5 text-gray-500" />
+            </Button>
+          </div>
+        </div>
+        
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {buyer.tags?.map((tag: string, i: number) => (
+            <Badge key={i} variant="secondary" className="px-2 py-0.5 text-[10px] bg-gray-100 text-gray-700">
+              {tag}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <SellerDashboardLayout>
       <div className="py-6">
@@ -2628,22 +1062,120 @@ export default function EngagementPage() {
           {/* Page header with title */}
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-800">Engagement</h1>
-            
-            <Button 
-              variant="outline" 
-              onClick={() => setLocation(`/sellerdash/${userId}/marketing`)}
-              className="flex items-center gap-2"
-            >
-              <Mail className="h-4 w-4" />
-              <span>Go to Marketing</span>
-            </Button>
           </div>
           
-          {/* Sticky filters bar */}
-          <div className="sticky top-0 z-10 bg-white rounded-lg border shadow-sm p-4 mb-4">
-            <div className="flex flex-col space-y-4">
+          {/* Top summary section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <MetricCard 
+              icon={Eye} 
+              title="Total Views" 
+              value={totalViews}
+              secondaryValue={`Avg ${Math.round(avgViewsPerProperty)} per property`}
+              trend="+15% from last week"
+              trendDirection="up"
+            />
+            
+            <MetricCard 
+              icon={Bookmark} 
+              title="Saves" 
+              value={totalSaves}
+              secondaryValue={`Avg ${Math.round(avgSavesPerProperty)} per property`}
+              trend="+8% from last week"
+              trendDirection="up"
+            />
+            
+            <MetricCard 
+              icon={DollarSign} 
+              title="Offers" 
+              value={totalOffers}
+              secondaryValue={`Avg ${avgOffersPerProperty.toFixed(1)} per deal`}
+              trend="New offer today"
+              trendDirection="up"
+              highlight={mockEngagements.some(e => e.type === "offer" && e.status === "new")}
+            />
+            
+            <MetricCard 
+              icon={MessageCircle} 
+              title="Messages" 
+              value={totalMessages}
+              secondaryValue={unreadMessages > 0 ? `${unreadMessages} unread` : "All read"}
+              trend="+3 today"
+              trendDirection="up"
+              highlight={unreadMessages > 0}
+            />
+          </div>
+          
+          {/* Response rate banner */}
+          <div className="p-4 border rounded-lg bg-white">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-blue-50">
+                  <Clock className="h-5 w-5 text-blue-500" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium">Response Rate</h3>
+                    <HoverCard>
+                      <HoverCardTrigger>
+                        <Info className="h-4 w-4 text-gray-400" />
+                      </HoverCardTrigger>
+                      <HoverCardContent className="w-80">
+                        <div className="space-y-2">
+                          <h4 className="font-medium">Response Rate Metrics</h4>
+                          <p className="text-sm text-gray-500">
+                            Your response rate affects your property ranking and buyer experience. 
+                            Aim for at least 90% response rate and an average response time of less than 4 hours.
+                          </p>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
+                  </div>
+                  <div className="flex items-center gap-6 mt-1">
+                    <div>
+                      <span className="text-2xl font-bold">{responseRate}%</span>
+                      <span className="ml-2 text-sm text-gray-500">
+                        ({responseRate >= 75 ? "Good" : "Needs Improvement"})
+                      </span>
+                    </div>
+                    <div className="border-l pl-6">
+                      <span className="text-sm font-medium">Avg Response Time:</span>
+                      <span className="ml-2 text-sm">{avgResponseTime} hours</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 md:mt-0">
+                <div className="text-sm text-gray-500 mb-1">Goal: 90%+ response rate</div>
+                <div className="w-full max-w-xs h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div 
+                    className={cn(
+                      "h-full rounded-full",
+                      responseRate >= 90 ? "bg-green-500" : 
+                      responseRate >= 75 ? "bg-amber-500" : "bg-red-500"
+                    )}
+                    style={{ width: `${responseRate}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-4 pt-4 border-t">
+              <Alert className="bg-amber-50 border-amber-200">
+                <AlertTriangle className="h-4 w-4 text-amber-500" />
+                <AlertTitle className="text-amber-800">Improve your conversion rate</AlertTitle>
+                <AlertDescription className="text-amber-700">
+                  Respond to inquiries within 4 hours to significantly improve your save-to-offer ratio.
+                </AlertDescription>
+              </Alert>
+            </div>
+          </div>
+          
+          {/* Filters and actions bar */}
+          <div className="sticky top-0 z-10 bg-white rounded-lg border shadow-sm p-4">
+            <div className="flex flex-wrap gap-3 items-center justify-between">
               <div className="flex flex-wrap gap-3 items-center">
-                {/* Multi-select Property dropdown */}
+                {/* Property filter */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-9 border-dashed">
@@ -2683,12 +1215,12 @@ export default function EngagementPage() {
                   </PopoverContent>
                 </Popover>
 
-                {/* Multi-select Engagement type dropdown */}
+                {/* Engagement type filter */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-9 border-dashed">
                       <MessageCircle className="mr-2 h-4 w-4" />
-                      Engagement
+                      Engagement Type
                       {selectedEngagementTypes.length > 0 && 
                         <Badge className="ml-2 bg-blue-100 text-blue-800 hover:bg-blue-200 border-blue-200" variant="outline">
                           {selectedEngagementTypes.length}
@@ -2701,31 +1233,13 @@ export default function EngagementPage() {
                     <Command>
                       <CommandList>
                         <CommandGroup>
-                          <CommandItem onSelect={() => handleToggleEngagementType("offer")}>
-                            <Checkbox 
-                              checked={selectedEngagementTypes.includes("offer")} 
-                              className="mr-2"
-                              onCheckedChange={() => handleToggleEngagementType("offer")}
-                            />
-                            <DollarSign className="mr-2 h-4 w-4 text-green-600" />
-                            <span>Offers</span>
-                          </CommandItem>
-                          <CommandItem onSelect={() => handleToggleEngagementType("message")}>
-                            <Checkbox 
-                              checked={selectedEngagementTypes.includes("message")} 
-                              className="mr-2"
-                              onCheckedChange={() => handleToggleEngagementType("message")}
-                            />
-                            <MessageCircle className="mr-2 h-4 w-4 text-blue-600" />
-                            <span>Messages</span>
-                          </CommandItem>
                           <CommandItem onSelect={() => handleToggleEngagementType("view")}>
                             <Checkbox 
                               checked={selectedEngagementTypes.includes("view")} 
                               className="mr-2"
                               onCheckedChange={() => handleToggleEngagementType("view")}
                             />
-                            <Eye className="mr-2 h-4 w-4 text-purple-600" />
+                            <Eye className="mr-2 h-4 w-4 text-blue-500" />
                             <span>Views</span>
                           </CommandItem>
                           <CommandItem onSelect={() => handleToggleEngagementType("save")}>
@@ -2734,33 +1248,42 @@ export default function EngagementPage() {
                               className="mr-2"
                               onCheckedChange={() => handleToggleEngagementType("save")}
                             />
-                            <Bookmark className="mr-2 h-4 w-4 text-amber-600" />
+                            <Bookmark className="mr-2 h-4 w-4 text-amber-500" />
                             <span>Saves</span>
                           </CommandItem>
-                          <CommandItem onSelect={() => handleToggleEngagementType("request")}>
+                          <CommandItem onSelect={() => handleToggleEngagementType("message")}>
                             <Checkbox 
-                              checked={selectedEngagementTypes.includes("request")} 
+                              checked={selectedEngagementTypes.includes("message")} 
                               className="mr-2"
-                              onCheckedChange={() => handleToggleEngagementType("request")}
+                              onCheckedChange={() => handleToggleEngagementType("message")}
                             />
-                            <FileCheck className="mr-2 h-4 w-4 text-indigo-600" />
-                            <span>Requests</span>
+                            <MessageCircle className="mr-2 h-4 w-4 text-green-500" />
+                            <span>Messages</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleEngagementType("offer")}>
+                            <Checkbox 
+                              checked={selectedEngagementTypes.includes("offer")} 
+                              className="mr-2"
+                              onCheckedChange={() => handleToggleEngagementType("offer")}
+                            />
+                            <DollarSign className="mr-2 h-4 w-4 text-purple-500" />
+                            <span>Offers</span>
                           </CommandItem>
                         </CommandGroup>
                       </CommandList>
                     </Command>
                   </PopoverContent>
                 </Popover>
-                
-                {/* Multi-select Buyer Tags dropdown */}
+
+                {/* Status filter */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="h-9 border-dashed">
-                      <Tag className="mr-2 h-4 w-4" />
-                      Buyer Tags
-                      {selectedBuyerTags.length > 0 && 
+                      <Filter className="mr-2 h-4 w-4" />
+                      Status
+                      {selectedStatus.length > 0 && 
                         <Badge className="ml-2 bg-blue-100 text-blue-800 hover:bg-blue-200 border-blue-200" variant="outline">
-                          {selectedBuyerTags.length}
+                          {selectedStatus.length}
                         </Badge>
                       }
                       <ChevronDown className="ml-2 h-4 w-4 text-gray-500" />
@@ -2768,937 +1291,406 @@ export default function EngagementPage() {
                   </PopoverTrigger>
                   <PopoverContent className="w-[220px] p-0">
                     <Command>
-                      <CommandInput placeholder="Search tags..." />
                       <CommandList>
-                        <CommandEmpty>No tags found</CommandEmpty>
                         <CommandGroup>
-                          {allBuyerTags.map((tag) => (
-                            <CommandItem
-                              key={tag}
-                              onSelect={() => handleToggleBuyerTag(tag)}
-                              className="flex items-center"
-                            >
-                              <Checkbox 
-                                checked={selectedBuyerTags.includes(tag)} 
-                                className="mr-2"
-                                onCheckedChange={() => handleToggleBuyerTag(tag)}
-                              />
-                              <span>{tag}</span>
-                            </CommandItem>
-                          ))}
+                          <CommandItem onSelect={() => handleToggleStatus("new")}>
+                            <Checkbox 
+                              checked={selectedStatus.includes("new")} 
+                              className="mr-2"
+                              onCheckedChange={() => handleToggleStatus("new")}
+                            />
+                            <span>New</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleStatus("viewed")}>
+                            <Checkbox 
+                              checked={selectedStatus.includes("viewed")} 
+                              className="mr-2"
+                              onCheckedChange={() => handleToggleStatus("viewed")}
+                            />
+                            <span>Viewed</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleStatus("replied")}>
+                            <Checkbox 
+                              checked={selectedStatus.includes("replied")} 
+                              className="mr-2"
+                              onCheckedChange={() => handleToggleStatus("replied")}
+                            />
+                            <span>Replied</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleStatus("accepted")}>
+                            <Checkbox 
+                              checked={selectedStatus.includes("accepted")} 
+                              className="mr-2"
+                              onCheckedChange={() => handleToggleStatus("accepted")}
+                            />
+                            <span>Accepted</span>
+                          </CommandItem>
                         </CommandGroup>
                       </CommandList>
                     </Command>
                   </PopoverContent>
                 </Popover>
-                
-                {/* Search box */}
-                <div className="relative flex-grow max-w-md">
+
+                {/* Search input */}
+                <div className="relative w-full md:w-auto">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
                   <Input
-                    placeholder="Search buyers or messages..."
-                    className="pl-9"
+                    placeholder="Search by buyer or property..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9 h-9 w-full md:w-[240px]"
                   />
-                </div>
-                
-                {/* Activity Log Button */}
-                <Dialog open={showActivityLog} onOpenChange={setShowActivityLog}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="h-9">
-                      <Activity className="h-4 w-4 mr-1.5" />
-                      <span>Activity Log</span>
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-3xl">
-                    <DialogHeader>
-                      <DialogTitle>Activity Log</DialogTitle>
-                      <DialogDescription>
-                        Recent buyer interactions across all your properties
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="max-h-[500px] overflow-y-auto">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Buyer</TableHead>
-                            <TableHead>Property</TableHead>
-                            <TableHead>Action</TableHead>
-                            <TableHead>Date/Time</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {mockEngagements.flatMap(engagement => 
-                            engagement.activityHistory.map((activity, i) => (
-                              <TableRow key={`${engagement.id}-${i}`}>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <Avatar className="h-6 w-6">
-                                      <AvatarFallback>{engagement.buyerName[0]}</AvatarFallback>
-                                    </Avatar>
-                                    <span className="font-medium">{engagement.buyerName}</span>
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  {getPropertyById(engagement.propertyId)?.address.split(',')[0]}
-                                </TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <div className="rounded-full p-1 bg-gray-100 text-gray-600">
-                                      {/* Use the component icon directly */}
-                                      {(() => {
-                                        if (activity.action.includes("View")) return <Eye className="h-3.5 w-3.5" />;
-                                        if (activity.action.includes("Save")) return <Bookmark className="h-3.5 w-3.5" />;
-                                        if (activity.action.includes("Download")) return <FileText className="h-3.5 w-3.5" />;
-                                        if (activity.action.includes("message") || activity.action.includes("Message")) return <MessageCircle className="h-3.5 w-3.5" />;
-                                        if (activity.action.includes("offer") || activity.action.includes("Offer")) return <DollarSign className="h-3.5 w-3.5" />;
-                                        if (activity.action.includes("CRM") || activity.action.includes("Added")) return <Plus className="h-3.5 w-3.5" />;
-                                        if (activity.action.includes("call") || activity.action.includes("Call")) return <Phone className="h-3.5 w-3.5" />;
-                                        if (activity.action.includes("email") || activity.action.includes("Email")) return <Mail className="h-3.5 w-3.5" />;
-                                        if (activity.action.includes("Follow")) return <CornerDownRight className="h-3.5 w-3.5" />;
-                                        return <Clock className="h-3.5 w-3.5" />;
-                                      })()}
-                                    </div>
-                                    <span>{activity.action}</span>
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  {format(activity.timestamp, 'MMM d, yyyy h:mm a')}
-                                </TableCell>
-                              </TableRow>
-                            ))
-                          ).sort((a, b) => b.key.localeCompare(a.key))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
-          </div>
-          
-          {/* Engagement Overview Header Section */}
-          <div className="bg-white rounded-lg p-6 mb-6 border shadow-sm">
-            <div className="flex flex-wrap items-center justify-between mb-4">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800">Engagement Overview</h2>
-                <p className="text-gray-500 mt-1">Track and analyze buyer interest across all your properties</p>
-              </div>
-              <div className="flex items-center space-x-3">
-                <HoverCard>
-                  <HoverCardTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-9" onClick={() => {}}>
-                      <CalendarClock className="h-4 w-4 mr-2" />
-                      Last 30 Days
-                    </Button>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-80 p-4">
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-semibold">Date Range</h4>
-                      <p className="text-sm text-gray-500">Statistics shown represent activity from the last 30 days by default.</p>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
-                
-                <Button variant="ghost" size="sm" className="h-9 text-blue-600 hover:text-blue-800">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Full Report
-                </Button>
-              </div>
-            </div>
-            
-            {/* Top row - Primary stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Active Properties</p>
-                    <h3 className="text-3xl font-bold mt-1">{activeProperties}</h3>
-                  </div>
-                  <div className="h-14 w-14 bg-[#135341]/10 rounded-full flex items-center justify-center">
-                    <Building className="h-7 w-7 text-[#135341]" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center gap-1 text-sm">
-                  <span className="text-gray-600">Currently being marketed</span>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Total Views</p>
-                    <h3 className="text-3xl font-bold mt-1">{totalViews}</h3>
-                  </div>
-                  <div className="h-14 w-14 bg-purple-100 rounded-full flex items-center justify-center">
-                    <Eye className="h-7 w-7 text-purple-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
-                  <span className="text-green-600 font-medium">+{viewsImprovement}%</span>
-                  <span className="text-gray-500 ml-1">in past 30 days</span>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Total Saves</p>
-                    <h3 className="text-3xl font-bold mt-1">{totalSaves}</h3>
-                  </div>
-                  <div className="h-14 w-14 bg-blue-100 rounded-full flex items-center justify-center">
-                    <Bookmark className="h-7 w-7 text-blue-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <span className="text-gray-600">Avg {avgSavesPerProperty} per property</span>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Total Offers</p>
-                    <h3 className="text-3xl font-bold mt-1">{totalOffers}</h3>
-                  </div>
-                  <div className="h-14 w-14 bg-green-100 rounded-full flex items-center justify-center">
-                    <DollarSign className="h-7 w-7 text-green-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <span className="text-gray-600">Avg {avgOffersPerProperty} per property</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          {/* Second row - Secondary stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Messages</p>
-                    <h3 className="text-3xl font-bold mt-1">{totalMessages}</h3>
-                  </div>
-                  <div className="h-14 w-14 bg-indigo-100 rounded-full flex items-center justify-center">
-                    <MessageCircle className="h-7 w-7 text-indigo-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Avg {avgMessagesPerProperty} per property</span>
-                  {messagesWaiting > 0 && (
-                    <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200 border-amber-200">
-                      {messagesWaiting} unread
-                    </Badge>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Offers This Week</p>
-                    <h3 className="text-3xl font-bold mt-1">{offersReceivedThisWeek}</h3>
-                  </div>
-                  <div className="h-14 w-14 bg-rose-100 rounded-full flex items-center justify-center">
-                    <Calendar className="h-7 w-7 text-rose-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  {offersReceivedThisWeek > 0 ? (
-                    <>
-                      <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
-                      <span className="text-green-600 font-medium">New offer today</span>
-                    </>
-                  ) : (
-                    <span className="text-gray-500">No offers this week</span>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Response Rate</p>
-                    <h3 className="text-3xl font-bold mt-1">{responseRate}%</h3>
-                  </div>
-                  <div className="h-14 w-14 bg-amber-100 rounded-full flex items-center justify-center">
-                    <TimerReset className="h-7 w-7 text-amber-600" />
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <Progress value={responseRate} className="h-2 bg-gray-100" />
-                  <div className="mt-1.5 flex justify-between text-xs">
-                    <span className="text-gray-500">Goal: 90%</span>
-                    {responseRate >= 90 ? (
-                      <span className="text-green-600 font-medium">Goal reached!</span>
-                    ) : (
-                      <span className="text-amber-600 font-medium">{90 - responseRate}% to goal</span>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">View to Offer</p>
-                    <h3 className="text-3xl font-bold mt-1">{totalViews ? Math.round((totalOffers / totalViews) * 100) : 0}%</h3>
-                  </div>
-                  <div className="h-14 w-14 bg-teal-100 rounded-full flex items-center justify-center">
-                    <Percent className="h-7 w-7 text-teal-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  <Sparkline 
-                    data={[3, 4, 5, 2, 7, 6, 8, 5, 9, 7, 8]} 
-                    width={100} 
-                    height={30} 
-                    color="#0E9F8E" 
-                    strokeWidth={2} 
-                  />
-                  <span className="ml-2 text-teal-600 font-medium">Trending up</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          {/* Main content area - Two-panel layout for Property List and Engagement View */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Panel - Property List with engagement metrics */}
-            <div className="lg:col-span-1 space-y-4">
-              <Card className="border shadow-sm">
-                <CardHeader className="border-b bg-slate-50 px-5 py-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-lg font-medium">My Properties</CardTitle>
-                      <CardDescription>Properties with engagement tracking</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                
-                {/* Filter area */}
-                <div className="px-4 py-3 border-b">
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    <div className="flex-1 min-w-[200px]">
-                      <Select
-                        value={selectedProperties.length > 0 ? 'selected' : ''}
-                        onValueChange={() => {}}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Property" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Properties</SelectItem>
-                          {mockProperties.map(property => (
-                            <SelectItem key={property.id} value={property.id}>{property.title}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="flex-1 min-w-[200px]">
-                      <Select
-                        value={selectedEngagementTypes.length > 0 ? 'selected' : ''}
-                        onValueChange={() => {}}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Engagement Type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Types</SelectItem>
-                          <SelectItem value="view">Views</SelectItem>
-                          <SelectItem value="save">Saves</SelectItem>
-                          <SelectItem value="message">Messages</SelectItem>
-                          <SelectItem value="offer">Offers</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="flex-1 min-w-[200px]">
-                      <Select
-                        value={selectedBuyerTags.length > 0 ? 'selected' : ''}
-                        onValueChange={() => {}}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">All Status</SelectItem>
-                          <SelectItem value="active">Active</SelectItem>
-                          <SelectItem value="pending">Pending</SelectItem>
-                          <SelectItem value="closed">Closed</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-end">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => {
-                        setSelectedProperties([]);
-                        setSelectedEngagementTypes([]);
-                        setSelectedBuyerTags([]);
-                      }}
-                      className="text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                  {searchQuery && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1 h-7 w-7 rounded-full"
+                      onClick={() => setSearchQuery("")}
                     >
-                      <X className="h-3.5 w-3.5 mr-1" />
-                      Clear Filters
+                      <X className="h-4 w-4" />
                     </Button>
-                  </div>
+                  )}
                 </div>
+
+                {/* Clear filters button */}
+                {(selectedProperties.length > 0 || selectedEngagementTypes.length > 0 || selectedStatus.length > 0 || searchQuery) && (
+                  <Button 
+                    variant="ghost" 
+                    className="h-9 text-sm hover:bg-gray-100"
+                    onClick={handleClearFilters}
+                  >
+                    Clear Filters
+                  </Button>
+                )}
+              </div>
+              
+              <div className="flex gap-3 mt-3 md:mt-0">
+                {/* Schedule button */}
+                <Button className="h-9 bg-[#09261E] hover:bg-[#09261E]/90">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Schedule Follow-Up
+                </Button>
                 
-                <CardContent className="p-0 max-h-[600px] overflow-y-auto">
-                  <div className="divide-y">
-                    {mockProperties.map(property => (
-                      <div 
-                        key={property.id}
-                        className={cn(
-                          "p-4 hover:bg-gray-50 cursor-pointer transition-colors",
-                          showBuyerStats === property.id ? "bg-gray-50 border-l-4 border-[#135341]" : ""
-                        )}
-                        onClick={() => setShowBuyerStats(property.id)}
-                      >
-                        <div className="flex gap-4">
-                          <div className="flex-shrink-0">
-                            <img 
-                              src={property.image} 
-                              alt={property.title}
-                              className="w-20 h-20 object-cover rounded-md"
-                            />
-                          </div>
-                          
-                          <div className="flex-1">
-                            <h4 className="font-medium text-gray-900 mb-1">{property.title}</h4>
-                            <p className="text-sm text-gray-500 mb-2">{property.address}</p>
-                            
-                            <div className="flex justify-between">
-                              <span className="text-sm font-medium">${property.price.toLocaleString()}</span>
-                              <Badge variant="outline" className={cn(
-                                property.status === "Live" ? "bg-green-100 text-green-800 border-green-200" :
-                                property.status === "Pending" ? "bg-amber-100 text-amber-800 border-amber-200" :
-                                "bg-gray-100 text-gray-800 border-gray-200"
-                              )}>
-                                {property.status}
-                              </Badge>
-                            </div>
-                            
-                            <div className="grid grid-cols-4 gap-2 mt-3">
-                              <div className="text-center">
-                                <p className="text-xs text-gray-500">Views</p>
-                                <p className="font-medium">{property.viewCount}</p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-gray-500">Saves</p>
-                                <p className="font-medium">{property.saveCount}</p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-gray-500">Messages</p>
-                                <p className={cn(
-                                  "font-medium",
-                                  property.messageCount > 0 && Math.random() > 0.5 ? "text-red-600 font-bold" : ""
-                                )}>{property.messageCount}</p>
-                              </div>
-                              <div className="text-center">
-                                <p className="text-xs text-gray-500">Offers</p>
-                                <p className={cn(
-                                  "font-medium",
-                                  property.offerCount > 0 && Math.random() > 0.6 ? "text-green-600 font-bold" : ""
-                                )}>{property.offerCount}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                {/* Sort dropdown */}
+                <Select value={sorting} onValueChange={setSorting}>
+                  <SelectTrigger className="h-9 w-[160px]">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="most-recent">Most Recent</SelectItem>
+                    <SelectItem value="highest-offers">Highest Offers</SelectItem>
+                    <SelectItem value="most-views">Most Views</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          
+          {/* Main content - split view */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left: Property list */}
+            <div className="lg:col-span-1">
+              <div className="space-y-4">
+                {propertiesWithEngagements.length === 0 ? (
+                  <div className="text-center p-6 border rounded-lg bg-gray-50">
+                    <p className="text-gray-500">No properties match your filters</p>
                   </div>
-                </CardContent>
-              </Card>
+                ) : (
+                  propertiesWithEngagements.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))
+                )}
+              </div>
             </div>
             
-            {/* Right Panel - Engagement Content View */}
-            <div className="lg:col-span-2 space-y-6">
-              {showBuyerStats ? (
-                <>
-                  {/* Property Details Section with actions */}
-                  <Card className="border shadow-sm">
-                    <CardHeader className="border-b px-5 py-4">
-                      <div className="flex flex-wrap items-center justify-between gap-4">
-                        <div className="flex items-center gap-4">
-                          <div className="h-16 w-16 rounded-md overflow-hidden flex-shrink-0">
-                            <img 
-                              src={mockProperties.find(p => p.id === showBuyerStats)?.image}
-                              alt="Property"
-                              className="h-full w-full object-cover"
-                            />
-                          </div>
-                          <div>
-                            <CardTitle className="text-lg font-medium">
-                              {mockProperties.find(p => p.id === showBuyerStats)?.title}
-                            </CardTitle>
-                            <CardDescription>
-                              {mockProperties.find(p => p.id === showBuyerStats)?.address}
-                            </CardDescription>
-                            <div className="flex items-center gap-1 mt-1 text-sm">
-                              <Badge variant="outline" className="bg-slate-100 text-slate-800 border-0 font-normal">
-                                {mockProperties.find(p => p.id === showBuyerStats)?.beds} beds
-                              </Badge>
-                              <Badge variant="outline" className="bg-slate-100 text-slate-800 border-0 font-normal">
-                                {mockProperties.find(p => p.id === showBuyerStats)?.baths} baths
-                              </Badge>
-                              <Badge variant="outline" className="bg-slate-100 text-slate-800 border-0 font-normal">
-                                {mockProperties.find(p => p.id === showBuyerStats)?.sqft.toLocaleString()} sq ft
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-                            onClick={() => {
-                              toast({
-                                title: "Edit Listing",
-                                description: "Opening property editor",
-                              });
-                            }}
-                          >
-                            <Edit className="h-4 w-4 mr-1.5" />
-                            Edit Listing
-                          </Button>
-                          
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            className="text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-                            onClick={() => {
-                              toast({
-                                title: "Share Link",
-                                description: "Public link copied to clipboard",
-                              });
-                            }}
-                          >
-                            <ExternalLink className="h-4 w-4 mr-1.5" />
-                            Share Public Link
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                  </Card>
-                  
-                  {/* Key Metrics Cards */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <Card className="border shadow-sm">
-                      <CardContent className="pt-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-medium text-gray-500">Views</p>
-                          <div className="h-8 w-8 bg-purple-100 rounded-full flex items-center justify-center">
-                            <Eye className="h-4 w-4 text-purple-600" />
-                          </div>
-                        </div>
-                        <h3 className="text-2xl font-bold">
-                          {mockProperties.find(p => p.id === showBuyerStats)?.viewCount}
-                        </h3>
-                        <p className="text-xs text-gray-500 mt-1">
-                          +{Math.floor(Math.random() * 30)}% from last week
-                        </p>
-                      </CardContent>
-                    </Card>
+            {/* Right: Property engagement panel */}
+            <div className="lg:col-span-2">
+              {selectedPropertyId ? (
+                <div>
+                  {(() => {
+                    const property = getPropertyById(selectedPropertyId);
+                    if (!property) return null;
                     
-                    <Card className="border shadow-sm">
-                      <CardContent className="pt-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-medium text-gray-500">Saves</p>
-                          <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <Bookmark className="h-4 w-4 text-blue-600" />
-                          </div>
-                        </div>
-                        <h3 className="text-2xl font-bold">
-                          {mockProperties.find(p => p.id === showBuyerStats)?.saveCount}
-                        </h3>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {Math.floor(Math.random() * 15)}% save rate
-                        </p>
-                      </CardContent>
-                    </Card>
+                    const timeline = getPropertyActivityTimeline(selectedPropertyId);
+                    const engagedBuyers = getEngagedBuyers(selectedPropertyId);
+                    const saveToOfferRate = calcSaveToOfferConversion(selectedPropertyId);
                     
-                    <Card className="border shadow-sm">
-                      <CardContent className="pt-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-medium text-gray-500">Messages</p>
-                          <div className="h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                            <MessageCircle className="h-4 w-4 text-indigo-600" />
-                          </div>
-                        </div>
-                        <h3 className="text-2xl font-bold">
-                          {mockProperties.find(p => p.id === showBuyerStats)?.messageCount}
-                        </h3>
-                        <p className="text-xs text-gray-500 mt-1">
-                          {/* Response score */}
-                          You've replied to {Math.floor(Math.random() * (mockProperties.find(p => p.id === showBuyerStats)?.messageCount || 1))} of {mockProperties.find(p => p.id === showBuyerStats)?.messageCount} messages
-                        </p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="border shadow-sm">
-                      <CardContent className="pt-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="text-sm font-medium text-gray-500">Offers</p>
-                          <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
-                            <DollarSign className="h-4 w-4 text-green-600" />
-                          </div>
-                        </div>
-                        <h3 className="text-2xl font-bold">
-                          {mockProperties.find(p => p.id === showBuyerStats)?.offerCount}
-                        </h3>
-                        <div className="flex justify-between items-center mt-1">
-                          <p className="text-xs text-gray-500">
-                            Avg ${Math.floor(420000 + Math.random() * 80000).toLocaleString()}
-                          </p>
-                          <Badge className="bg-green-100 text-green-800 border-green-200 text-xs font-normal">
-                            {Math.floor(Math.random() * 15) + 5}% conversion
-                          </Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  
-                  {/* Immediate Actions Section */}
-                  <Card className="border shadow-sm">
-                    <CardHeader className="border-b px-5 py-4">
-                      <CardTitle className="text-lg font-medium">Action Required</CardTitle>
-                    </CardHeader>
-                    <CardContent className="px-5 py-4">
-                      <div className="space-y-4">
-                        {Math.random() > 0.4 ? (
-                          <>
-                            <Alert className="bg-amber-50 text-amber-800 border-amber-200">
-                              <AlertCircle className="h-4 w-4" />
-                              <AlertTitle>Unresponded Message</AlertTitle>
-                              <AlertDescription>
-                                John Smith sent you a message 2 hours ago about financing options.
-                              </AlertDescription>
-                              <div className="mt-2">
-                                <Button 
-                                  size="sm" 
-                                  variant="outline"
-                                  className="mr-2 hover:bg-gray-100"
-                                >
-                                  <Sparkles className="h-3.5 w-3.5 mr-1 text-indigo-600" />
-                                  AI Reply
-                                </Button>
-                                <Button 
-                                  size="sm" 
-                                  className="bg-[#135341] hover:bg-[#09261E]"
-                                >
-                                  <MessageCircle className="h-3.5 w-3.5 mr-1" />
-                                  Respond
-                                </Button>
+                    return (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="border rounded-lg bg-white shadow-sm overflow-hidden"
+                      >
+                        {/* Header section */}
+                        <div className="p-4 border-b bg-gray-50">
+                          <div className="flex items-start justify-between">
+                            <div className="flex">
+                              <div className="w-20 h-20 rounded-md overflow-hidden mr-4">
+                                <img 
+                                  src={property.image} 
+                                  alt={property.title} 
+                                  className="w-full h-full object-cover"
+                                />
                               </div>
-                            </Alert>
-                            
-                            <Alert className="bg-green-50 text-green-800 border-green-200">
-                              <FileCheck className="h-4 w-4" />
-                              <AlertTitle>New Offer Received</AlertTitle>
-                              <AlertDescription>
-                                Sarah Johnson submitted an offer of $452,000.
-                              </AlertDescription>
-                              <div className="mt-2">
-                                <Button 
-                                  size="sm" 
-                                  className="bg-[#135341] hover:bg-[#09261E]"
-                                >
-                                  <Eye className="h-3.5 w-3.5 mr-1" />
-                                  Review Offer
-                                </Button>
-                              </div>
-                            </Alert>
-                          </>
-                        ) : (
-                          <div className="flex items-center justify-center py-8 text-center">
-                            <div>
-                              <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-2" />
-                              <h3 className="text-lg font-medium">All caught up!</h3>
-                              <p className="text-gray-500 mt-1">You have no pending actions right now.</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  {/* Activity Timeline */}
-                  <Card className="border shadow-sm">
-                    <CardHeader className="border-b px-5 py-4">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg font-medium">Activity Timeline</CardTitle>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="hover:bg-gray-100"
-                          onClick={() => {
-                            toast({
-                              title: "AI Assistant",
-                              description: "Opening AI response assistant",
-                            });
-                          }}
-                        >
-                          <Sparkles className="h-4 w-4 mr-1.5 text-indigo-600" />
-                          Respond with AI
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      <div className="divide-y">
-                        {recentActivity
-                          .filter(activity => 
-                            showBuyerStats === 'all' || activity.propertyId === showBuyerStats
-                          )
-                          .slice(0, 8)
-                          .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) // Newest to oldest
-                          .map(activity => (
-                            <ActivityItem 
-                              key={activity.id}
-                              activity={activity}
-                              onRespond={(activity) => {
-                                toast({
-                                  title: "Responding to activity",
-                                  description: `Responding to ${activity.activityType} from ${activity.buyerName}`,
-                                });
-                              }}
-                            />
-                          ))
-                        }
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  {/* Engaged Buyers Section */}
-                  <Card className="border shadow-sm">
-                    <CardHeader className="border-b px-5 py-4">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-lg font-medium">Engaged Buyers</CardTitle>
-                        <Button variant="outline" size="sm" className="hover:bg-gray-100">View All</Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="px-0 py-0">
-                      <div className="divide-y">
-                        {mockBuyers.slice(0, 3).map(buyer => (
-                          <div key={buyer.id} className="p-4 hover:bg-gray-50 cursor-pointer">
-                            <div className="flex items-center gap-3">
-                              <Avatar className="h-10 w-10 flex-shrink-0">
-                                <AvatarImage src={buyer.avatar} alt={buyer.name} />
-                                <AvatarFallback>{buyer.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              
-                              <div className="flex-1">
-                                <div className="flex justify-between">
-                                  <h4 className="font-medium">{buyer.name}</h4>
-                                  <Badge className={getBuyerTypeBadge(buyer.type).color}>
-                                    {buyer.type}
+                              <div>
+                                <h2 className="font-bold text-gray-900">
+                                  {property.address}
+                                </h2>
+                                <p className="text-gray-500 mt-0.5">
+                                  {formatCurrency(property.price)} · {property.beds} bd · {property.baths} ba · {property.sqft} sqft
+                                </p>
+                                <div className="flex items-center mt-1.5">
+                                  <Badge 
+                                    variant="outline" 
+                                    className={cn(
+                                      "text-xs",
+                                      property.status === "Live" ? "border-green-200 text-green-700 bg-green-50" : 
+                                      property.status === "Under Contract" ? "border-blue-200 text-blue-700 bg-blue-50" : 
+                                      "border-gray-200 text-gray-700 bg-gray-50"
+                                    )}
+                                  >
+                                    {property.status}
                                   </Badge>
-                                </div>
-                                
-                                <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
-                                  <div className="flex items-center">
-                                    <Eye className="h-3 w-3 mr-1" />
-                                    <span>{Math.floor(Math.random() * 12) + 1} views</span>
-                                  </div>
-                                  {Math.random() > 0.5 && (
-                                    <div className="flex items-center">
-                                      <Bookmark className="h-3 w-3 mr-1" />
-                                      <span>Saved</span>
-                                    </div>
-                                  )}
-                                  {Math.random() > 0.7 && (
-                                    <div className="flex items-center">
-                                      <MessageCircle className="h-3 w-3 mr-1" />
-                                      <span>Messaged</span>
-                                    </div>
-                                  )}
+                                  <span className="mx-2 text-gray-300">•</span>
+                                  <span className="text-xs text-gray-500">
+                                    {property.daysListed} {property.daysListed === 1 ? 'day' : 'days'} listed
+                                  </span>
                                 </div>
                               </div>
-                              
-                              <Button size="sm" variant="ghost" className="text-gray-500 hover:text-gray-700 hover:bg-gray-100">
-                                <User className="h-4 w-4" />
+                            </div>
+                            <div className="flex space-x-2">
+                              <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-gray-900">
+                                <Edit className="h-3.5 w-3.5 mr-1.5" />
+                                <span>Edit</span>
+                              </Button>
+                              <Button variant="outline" size="sm" className="hover:bg-gray-100 hover:text-gray-900">
+                                <Share className="h-3.5 w-3.5 mr-1.5" />
+                                <span>Share</span>
                               </Button>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  {/* Save-to-Offer Conversion */}
-                  <Card className="border shadow-sm">
-                    <CardHeader className="border-b px-5 py-4">
-                      <CardTitle className="text-lg font-medium">Save-to-Offer Conversion</CardTitle>
-                    </CardHeader>
-                    <CardContent className="px-5 py-4">
-                      <div className="mb-2">
-                        <div className="flex justify-between mb-1 text-sm">
-                          <span className="font-medium">Conversion Rate</span>
-                          <span className="font-medium text-[#135341]">
-                            {Math.floor(Math.random() * 15) + 5}%
-                          </span>
-                        </div>
-                        <Progress 
-                          value={Math.floor(Math.random() * 15) + 5} 
-                          className="h-2 bg-gray-100" 
-                        />
-                      </div>
-                      <p className="text-sm text-gray-500">
-                        {mockProperties.find(p => p.id === showBuyerStats)?.saveCount} saves resulted in 
-                        {' '}{mockProperties.find(p => p.id === showBuyerStats)?.offerCount} offers
-                      </p>
-                    </CardContent>
-                  </Card>
-                  
-                  {/* Property Timeline Bar */}
-                  <Card className="border shadow-sm">
-                    <CardHeader className="border-b px-5 py-4">
-                      <CardTitle className="text-lg font-medium">Property Timeline</CardTitle>
-                    </CardHeader>
-                    <CardContent className="px-5 py-4">
-                      <div className="relative">
-                        <div className="h-2 bg-gray-100 rounded-full">
-                          <div 
-                            className="h-2 bg-[#135341] rounded-full" 
-                            style={{ width: `${Math.floor(Math.random() * 60) + 20}%` }}
-                          ></div>
                         </div>
                         
-                        <div className="flex justify-between text-xs text-gray-500 mt-2">
-                          <div className="text-center">
-                            <div className="h-3 w-3 rounded-full bg-[#135341] inline-block"></div>
-                            <div>Listed<br />{new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
-                          </div>
-                          
-                          <div className="text-center">
-                            <div className="h-3 w-3 rounded-full bg-amber-500 inline-block"></div>
-                            <div>First View<br />{new Date(Date.now() - Math.random() * 25 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
-                          </div>
-                          
-                          <div className="text-center">
-                            <div className="h-3 w-3 rounded-full bg-blue-500 inline-block"></div>
-                            <div>First Message<br />{new Date(Date.now() - Math.random() * 20 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
-                          </div>
-                          
-                          <div className="text-center">
-                            <div className="h-3 w-3 rounded-full bg-green-500 inline-block"></div>
-                            <div>First Offer<br />{new Date(Date.now() - Math.random() * 10 * 24 * 60 * 60 * 1000).toLocaleDateString()}</div>
-                          </div>
-                          
-                          <div className="text-center opacity-50">
-                            <div className="h-3 w-3 rounded-full bg-gray-400 inline-block"></div>
-                            <div>Closing<br />Pending</div>
+                        {/* Stat cards */}
+                        <div className="p-4 border-b">
+                          <div className="text-sm font-medium text-gray-500 mb-3">Last 30 Days</div>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="p-3 border rounded-md bg-gray-50">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                  <Eye className="h-4 w-4 text-blue-500 mr-2" />
+                                  <span className="text-sm font-medium">Views</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                                  <span className="text-xs text-green-600">+12%</span>
+                                </div>
+                              </div>
+                              <p className="text-2xl font-bold mt-1">{property.viewCount}</p>
+                            </div>
+                            
+                            <div className="p-3 border rounded-md bg-gray-50">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                  <Bookmark className="h-4 w-4 text-amber-500 mr-2" />
+                                  <span className="text-sm font-medium">Saves</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                                  <span className="text-xs text-green-600">+8%</span>
+                                </div>
+                              </div>
+                              <p className="text-2xl font-bold mt-1">{property.saveCount}</p>
+                            </div>
+                            
+                            <div className="p-3 border rounded-md bg-gray-50">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                  <MessageCircle className="h-4 w-4 text-green-500 mr-2" />
+                                  <span className="text-sm font-medium">Messages</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                                  <span className="text-xs text-green-600">+15%</span>
+                                </div>
+                              </div>
+                              <p className="text-2xl font-bold mt-1">{property.messageCount}</p>
+                            </div>
+                            
+                            <div className="p-3 border rounded-md bg-gray-50">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center">
+                                  <DollarSign className="h-4 w-4 text-purple-500 mr-2" />
+                                  <span className="text-sm font-medium">Offers</span>
+                                </div>
+                                {property.offerCount > 0 ? (
+                                  <div className="flex items-center">
+                                    <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                                    <span className="text-xs text-green-600">New</span>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center">
+                                    <span className="text-xs text-gray-500">None yet</span>
+                                  </div>
+                                )}
+                              </div>
+                              <p className="text-2xl font-bold mt-1">{property.offerCount}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-96 text-center">
-                  <div className="mb-4 w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
-                    <PanelRight className="h-8 w-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-800">Select a property to view engagement details</h3>
-                  <p className="text-gray-500 max-w-md mt-2">
-                    Choose a property from the list to see detailed engagement metrics, buyer activity, and conversion data.
-                  </p>
+                        
+                        {/* Content sections */}
+                        <div className="divide-y">
+                          {/* Activity timeline */}
+                          <div className="p-4">
+                            <h3 className="font-medium text-gray-900 mb-4">Activity Timeline</h3>
+                            <div className="space-y-1">
+                              {timeline.slice(0, 5).map((engagement) => (
+                                <EngagementTimelineItem 
+                                  key={engagement.id} 
+                                  engagement={engagement} 
+                                />
+                              ))}
+                            </div>
+                            
+                            {timeline.length > 5 && (
+                              <Button 
+                                variant="outline" 
+                                className="w-full mt-2 text-sm"
+                              >
+                                Load More Activity
+                              </Button>
+                            )}
+                          </div>
+                          
+                          {/* Engaged buyers */}
+                          <div className="p-4">
+                            <h3 className="font-medium text-gray-900 mb-4">Engaged Buyers</h3>
+                            <div className="space-y-3">
+                              {engagedBuyers.length === 0 ? (
+                                <div className="text-center p-4 border rounded-lg bg-gray-50">
+                                  <p className="text-gray-500">No buyer engagement yet</p>
+                                </div>
+                              ) : (
+                                engagedBuyers.map((buyer: any) => (
+                                  <EngagedBuyerItem key={buyer.id} buyer={buyer} />
+                                ))
+                              )}
+                            </div>
+                          </div>
+                          
+                          {/* Save-to-offer conversion */}
+                          {property.saveCount > 0 && (
+                            <div className="p-4">
+                              <div className="flex items-center justify-between mb-2">
+                                <h3 className="font-medium text-gray-900">Save-to-Offer Conversion</h3>
+                                <HoverCard>
+                                  <HoverCardTrigger>
+                                    <Info className="h-4 w-4 text-gray-400" />
+                                  </HoverCardTrigger>
+                                  <HoverCardContent className="w-80">
+                                    <div className="space-y-2">
+                                      <h4 className="font-medium">Conversion Rate</h4>
+                                      <p className="text-sm text-gray-500">
+                                        This shows what percentage of buyers who saved this property
+                                        ended up making an offer. A higher rate indicates strong buyer intent.
+                                      </p>
+                                    </div>
+                                  </HoverCardContent>
+                                </HoverCard>
+                              </div>
+                              
+                              <div className="mb-2">
+                                <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                                  <div 
+                                    className={cn(
+                                      "h-full rounded-full bg-blue-500"
+                                    )}
+                                    style={{ width: `${Math.min(100, saveToOfferRate)}%` }}
+                                  />
+                                </div>
+                                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                                  <span>0%</span>
+                                  <span>{Math.round(saveToOfferRate)}%</span>
+                                  <span>100%</span>
+                                </div>
+                              </div>
+                              
+                              <div className="text-sm mt-3">
+                                <span className="font-medium">{property.saveCount} saves</span>
+                                <span className="mx-2">→</span>
+                                <span className="font-medium">{property.offerCount} offers</span>
+                              </div>
+                              
+                              {(property.saveCount > property.offerCount) && (
+                                <div className="mt-2 text-sm text-amber-700 bg-amber-50 p-2 rounded-md border border-amber-200">
+                                  <span className="font-medium">{property.saveCount - property.offerCount} buyers</span> saved this property but didn't offer — consider following up!
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          
+                          {/* Property timeline */}
+                          <div className="p-4">
+                            <h3 className="font-medium text-gray-900 mb-4">Property Timeline</h3>
+                            <div className="relative pt-2 pb-4">
+                              <div className="absolute top-6 left-0 w-full h-1 bg-gray-200 rounded-full" />
+                              
+                              {/* Listing marker */}
+                              <div className="relative">
+                                <div className="absolute -left-2 flex flex-col items-center">
+                                  <div className="w-5 h-5 rounded-full bg-green-500 z-10" />
+                                  <div className="text-xs text-gray-500 mt-1 whitespace-nowrap">
+                                    Listed<br />{formatDate(new Date(Date.now() - property.daysListed * 24 * 60 * 60 * 1000))}
+                                  </div>
+                                </div>
+                                
+                                {/* View milestones */}
+                                {property.viewCount >= 100 && (
+                                  <div className="absolute left-1/3 flex flex-col items-center">
+                                    <div className="w-4 h-4 rounded-full bg-blue-400 z-10" />
+                                    <div className="text-xs text-gray-500 mt-1 whitespace-nowrap">
+                                      100+ Views
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* Offer milestone */}
+                                {property.offerCount > 0 && (
+                                  <div className="absolute left-2/3 flex flex-col items-center">
+                                    <div className="w-4 h-4 rounded-full bg-purple-500 z-10" />
+                                    <div className="text-xs text-gray-500 mt-1 whitespace-nowrap">
+                                      First Offer
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {/* Target close date */}
+                                <div className="absolute right-0 flex flex-col items-center">
+                                  <div className="w-4 h-4 rounded-full bg-gray-400 z-10" />
+                                  <div className="text-xs text-gray-500 mt-1 whitespace-nowrap">
+                                    Target Close<br />{formatDate(new Date(Date.now() + 45 * 24 * 60 * 60 * 1000))}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })()}
                 </div>
-              )
-                // Render each property block
-                propertiesWithEngagements.map((property) => (
-                  <PropertyEngagementBlock 
-                    key={property!.id}
-                    property={property!}
-                    engagements={engagementsByProperty[property!.id]}
-                    onViewBuyer={handleViewBuyerProfile}
-                    onUseAI={handleShowAIAssist}
-                    saveToOfferRate={calculateSaveToOfferRate(property!.id)}
-                  />
-                ))
+              ) : (
+                <div className="flex items-center justify-center h-full border rounded-lg bg-gray-50 p-8">
+                  <div className="text-center max-w-md">
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">Select a property</h3>
+                    <p className="text-gray-500">
+                      Choose a property from the list to view detailed engagement metrics and activities.
+                    </p>
+                  </div>
+                </div>
               )}
             </div>
-            
-            {/* Side panel - Buyer stats */}
-            {showBuyerStats && (
-              <div className="lg:col-span-1">
-                <div className="sticky top-24 space-y-4">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between items-center">
-                        <CardTitle className="text-base">Buyer Profile</CardTitle>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-8 w-8 p-0"
-                          onClick={() => setShowBuyerStats(null)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <BuyerProfile buyer={mockBuyers.find(b => b.id === showBuyerStats)} />
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-base">Activity Timeline</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ActivityTimeline 
-                        activities={
-                          mockEngagements
-                            .filter(e => e.buyerId === showBuyerStats)
-                            .flatMap(e => e.activityHistory)
-                            .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
-                        }
-                      />
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between items-center">
-                        <CardTitle className="text-base flex items-center">
-                          <Sparkles className="h-4 w-4 mr-1.5 text-purple-500" />
-                          <span>AI Insights</span>
-                        </CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <AIBuyerInsights buyerId={showBuyerStats} />
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
