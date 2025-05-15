@@ -71,8 +71,8 @@ export function QuickActionSelector() {
     visible: (i: number) => ({
       opacity: 1,
       scale: 1,
-      y: Math.sin((i * Math.PI) / 3) * -80,
-      x: Math.cos((i * Math.PI) / 3) * -60,
+      y: Math.sin((i * Math.PI) / 3) * -90,
+      x: Math.cos((i * Math.PI) / 3) * -70,
       transition: {
         type: "spring",
         stiffness: 260,
@@ -95,7 +95,7 @@ export function QuickActionSelector() {
   };
 
   return (
-    <div id="quick-action-fab" className="fixed bottom-16 sm:bottom-10 right-6 z-50">
+    <div id="quick-action-fab" className="fixed bottom-24 sm:bottom-20 right-6 z-50">
       <AnimatePresence>
         {isOpen && (
           <div className="absolute bottom-16 right-0">

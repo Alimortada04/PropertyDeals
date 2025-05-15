@@ -119,6 +119,7 @@ export default function SellerDashboardPage() {
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  // Property modal is now handled through the global Quick Action Selector
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
   
   // In real implementation, check if the current user matches the userId param
@@ -482,17 +483,7 @@ export default function SellerDashboardPage() {
         </div>
       </div>
       
-      {/* Floating Quick List Button */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <Button 
-          size="lg"
-          className="h-14 w-14 rounded-full bg-[#803344] hover:bg-[#6a2a38] text-white shadow-lg hover:shadow-xl transition-all duration-300"
-          onClick={() => setIsAddPropertyModalOpen(true)}
-        >
-          <Plus className="h-6 w-6" />
-          <span className="sr-only">Quick List Property</span>
-        </Button>
-      </div>
+      {/* Floating Quick List Button removed - now using global QuickActionSelector */}
       
       {/* Enhanced Property Listing Modal */}
       <EnhancedPropertyListingModal
