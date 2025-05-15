@@ -1,79 +1,85 @@
-import { useState, useRef, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Progress } from "@/components/ui/progress";
-import { Checkbox } from "@/components/ui/checkbox";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import {
-  AlertCircle,
-  ArrowRight,
-  ArrowUpDown,
-  Building, 
-  BriefcaseBusiness,
-  Calendar,
-  CheckCircle2,
-  CheckSquare,
-  ChevronDown,
-  ChevronRight,
-  Clock,
-  Clock3,
-  ClipboardCheck,
-  ClipboardList,
-  DollarSign,
-  Download,
-  Edit2,
-  ExternalLink,
-  Eye,
-  FileText,
-  Filter,
-  Home,
-  Image as ImageIcon,
-  LayoutGrid,
-  Mail,
-  MessageCircle,
-  MessageSquare,
-  MoreHorizontal,
-  Paperclip,
-  Phone,
-  Plus,
-  PlusCircle,
-  Search,
-  Send,
-  Smile,
-  Star,
-  Table,
-  ThumbsUp,
-  Trash2,
-  User,
-  Users,
-  Wrench,
-  XCircle
-} from "lucide-react";
-import { Link, useLocation } from "wouter";
-
-// Import data
+import React, { useState, useRef, useEffect } from 'react';
+import { useParams, useLocation } from 'wouter';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  properties, 
-  propertiesByStage, 
-  propertyTasks, 
-  projects, 
-  Property,
-  Project
-} from "@/data/properties";
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger, 
+  DialogClose
+} from '@/components/ui/dialog';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  LayoutGrid, 
+  ListFilter,
+  ListIcon, 
+  KanbanSquare, 
+  Plus, 
+  PlusCircle, 
+  ClipboardList, 
+  Settings, 
+  Check, 
+  Users, 
+  Calendar, 
+  Home, 
+  DollarSign, 
+  FileText, 
+  Clock, 
+  MoreHorizontal, 
+  X, 
+  Edit,
+  Eye,
+  MessageSquare,
+  Trash2,
+  SendHorizontal,
+  ChevronUp,
+  ChevronDown,
+  AlertCircle,
+  BarChart2,
+  Filter,
+  ArrowUpDown,
+  ArrowDown,
+  Building,
+  CreditCard,
+  Upload,
+  FileUp,
+  Paperclip,
+  UserPlus,
+  Pencil,
+  ArrowRight,
+  Globe,
+  MapPin,
+  Share,
+  Phone,
+  Mail,
+  Inbox,
+  User,
+  Loader2
+} from 'lucide-react';
 
-// Property card component for Kanban board
+import { properties, Property, projects, Project } from '@/data/properties';
+
+// KanbanPropertyCard component for the kanban view
 interface KanbanPropertyCardProps {
   property: Property;
   onClickProperty: (id: number) => void;
@@ -82,86 +88,120 @@ interface KanbanPropertyCardProps {
 }
 
 const KanbanPropertyCard = ({ property, onClickProperty, onClickManage, onRemove }: KanbanPropertyCardProps) => {
-  // Priority badge color mapping - using requested colors
-  const getPriorityColor = (priority: string = 'medium') => {
-    switch(priority.toLowerCase()) {
-      case 'high': return 'bg-red-500 text-white';
-      case 'medium': return 'bg-yellow-400 text-white';
-      case 'low': return 'bg-blue-500 text-white';
-      default: return 'bg-yellow-400 text-white';
-    }
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(amount);
   };
   
+  // Get status badge class
+  const getStatusBadgeClass = (stage: string) => {
+    switch (stage) {
+      case 'favorited':
+        return 'bg-[#803344] text-white';
+      case 'contacted':
+        return 'bg-yellow-500 text-white';
+      case 'offer_made':
+        return 'bg-blue-500 text-white';
+      case 'pending':
+        return 'bg-purple-500 text-white';
+      case 'close_pending':
+        return 'bg-orange-500 text-white';
+      case 'closed':
+        return 'bg-green-700 text-white';
+      case 'dropped':
+        return 'bg-gray-500 text-white';
+      default:
+        return 'bg-gray-500 text-white';
+    }
+  };
+
   return (
-    <Card className="mb-3 shadow-sm hover:shadow-md transition-shadow">
+    <Card className="shadow-sm hover:shadow transition-shadow border border-gray-200 bg-white overflow-hidden property-card">
+      {/* Property image */}
       <div className="relative">
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="absolute top-2 left-2 z-10 bg-white/80 hover:bg-white/90 h-6 w-6 rounded-full"
-            >
-              <Trash2 className="h-3.5 w-3.5 text-gray-600" />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will remove <span className="font-semibold">{property.address}</span> from your pipeline.
-                You can always add it back later.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onRemove(property.id)}>
-                Remove
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <img 
+          src={property.imageUrl} 
+          alt={property.title} 
+          className="h-32 w-full object-cover"
+          onClick={() => onClickProperty(property.id)}
+        />
         
-        <div className="h-32 overflow-hidden">
-          <img 
-            src={property.imageUrl} 
-            alt={property.title} 
-            className="w-full h-full object-cover"
-          />
-          <Badge className={`absolute top-2 right-2 ${getPriorityColor(property.priority)}`}>
-            {property.priority === 'Medium' ? 'Med' : property.priority || 'Med'}
+        {/* Status badge */}
+        <div className="absolute top-2 left-2">
+          <Badge className={`${getStatusBadgeClass(property.stage)}`}>
+            {property.stage === 'favorited' ? 'Favorited' :
+             property.stage === 'contacted' ? 'Contacted' :
+             property.stage === 'offer_made' ? 'Offer Made' :
+             property.stage === 'pending' ? 'Pending' :
+             property.stage === 'close_pending' ? 'Closing Soon' :
+             property.stage === 'closed' ? 'Closed' : 'Dropped'}
+          </Badge>
+          <Badge variant="outline" className="font-normal text-xs">
+            {property.propertyType || 'Residential'}
           </Badge>
         </div>
       </div>
-      <CardContent className="p-3">
-        <h3 className="font-semibold text-[#09261E] truncate text-sm">{property.title}</h3>
-        <p className="text-gray-600 text-xs truncate">{property.address}</p>
-        <p className="text-[#09261E] font-bold mt-1 text-sm">${property.price.toLocaleString()}</p>
-        
-        <div className="flex gap-2 mt-3">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex-1 h-8 text-xs border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+      
+      <CardContent className="pt-3 px-3 pb-0">
+        <div className="space-y-1">
+          <h3 
+            className="font-semibold text-md cursor-pointer hover:text-[#09261E] line-clamp-1"
             onClick={() => onClickProperty(property.id)}
           >
-            <Eye className="h-3.5 w-3.5 mr-1" /> View
-          </Button>
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="flex-1 h-8 text-xs bg-[#09261E] hover:bg-[#135341]"
-            onClick={() => onClickManage(property.id)}
-          >
-            <ClipboardCheck className="h-3.5 w-3.5 mr-1" /> Manage
-          </Button>
+            {property.title}
+          </h3>
+          <p className="text-xs text-gray-500 flex items-center">
+            <MapPin className="h-3 w-3 mr-1 inline" />
+            {property.address}
+          </p>
+          <div className="flex items-center justify-between text-sm mt-1">
+            <span className="font-semibold">{formatCurrency(property.price)}</span>
+            <div className="flex items-center space-x-1 text-xs text-gray-500">
+              <span>{property.bedrooms} bd</span>
+              <span>•</span>
+              <span>{property.bathrooms} ba</span>
+              <span>•</span>
+              <span>{property.squareFeet.toLocaleString()} sqft</span>
+            </div>
+          </div>
         </div>
       </CardContent>
+      
+      <CardFooter className="p-2 pt-3 flex justify-end space-x-1 border-t mt-3">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="w-8 h-8 p-0" 
+          onClick={() => onClickProperty(property.id)}
+        >
+          <Eye className="h-4 w-4" />
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="w-8 h-8 p-0"
+          onClick={() => onClickManage(property.id)}
+        >
+          <Pencil className="h-4 w-4" />
+        </Button>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="w-8 h-8 p-0"
+          onClick={() => onRemove(property.id)}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </CardFooter>
     </Card>
   );
 };
 
-// Property Grid component
+// Property grid component for the grid view
 interface PropertyGridProps {
   properties: Property[];
   onClickProperty: (id: number) => void;
@@ -170,343 +210,130 @@ interface PropertyGridProps {
 }
 
 const PropertyGrid = ({ properties, onClickProperty, onClickManage, onRemove }: PropertyGridProps) => {
-  const [sortField, setSortField] = useState<string>('dateAdded');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [stageFilter, setStageFilter] = useState<string>('all');
-  
-  // Priority badge color mapping - using requested colors
-  const getPriorityColor = (priority: string = 'medium') => {
-    switch(priority.toLowerCase()) {
-      case 'high': return 'bg-red-500 text-white';
-      case 'medium': return 'bg-yellow-400 text-white';
-      case 'low': return 'bg-blue-500 text-white';
-      default: return 'bg-yellow-400 text-white';
-    }
-  };
-  
-  // Sort properties
-  const sortedProperties = [...properties].sort((a, b) => {
-    if (sortField === 'price') {
-      return sortOrder === 'asc' ? a.price - b.price : b.price - a.price;
-    }
-    if (sortField === 'dateAdded') {
-      const dateA = a.dateAdded || '';
-      const dateB = b.dateAdded || '';
-      return sortOrder === 'asc' 
-        ? dateA.localeCompare(dateB) 
-        : dateB.localeCompare(dateA);
-    }
-    if (sortField === 'priority') {
-      const priorityOrder: Record<string, number> = { high: 3, medium: 2, low: 1 };
-      const priorityA = priorityOrder[(a.priority || 'medium').toLowerCase()] || 0;
-      const priorityB = priorityOrder[(b.priority || 'medium').toLowerCase()] || 0;
-      return sortOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
-    }
-    return 0;
-  });
-  
-  // Filter properties by stage
-  const filteredProperties = stageFilter === 'all' 
-    ? sortedProperties 
-    : sortedProperties.filter(p => p.stage === stageFilter);
-  
-  // Stage display names
-  const stageNames: Record<string, string> = {
-    favorited: 'Favorited',
-    contacted: 'Contacted',
-    offer_made: 'Offer Made',
-    pending: 'Pending',
-    close_pending: 'Closing Soon',
-    closed: 'Closed',
-    dropped: 'Dropped'
-  };
-  
   return (
-    <div>
-      {/* Filters */}
-      <div className="mb-4 flex flex-wrap gap-2 items-center">
-        <div className="flex gap-2 items-center">
-          <Label htmlFor="stage-filter" className="text-sm whitespace-nowrap">Filter:</Label>
-          <Select
-            value={stageFilter}
-            onValueChange={setStageFilter}
-          >
-            <SelectTrigger id="stage-filter" className="w-[180px] h-9">
-              <SelectValue placeholder="All Stages" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Stages</SelectItem>
-              <SelectItem value="favorited">Favorited</SelectItem>
-              <SelectItem value="contacted">Contacted</SelectItem>
-              <SelectItem value="offer_made">Offer Made</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="close_pending">Closing Soon</SelectItem>
-              <SelectItem value="closed">Closed</SelectItem>
-              <SelectItem value="dropped">Dropped</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="flex gap-2 items-center ml-4">
-          <Label htmlFor="sort-by" className="text-sm whitespace-nowrap">Sort by:</Label>
-          <Select
-            value={sortField}
-            onValueChange={setSortField}
-          >
-            <SelectTrigger id="sort-by" className="w-[150px] h-9">
-              <SelectValue placeholder="Date Added" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="dateAdded">Date Added</SelectItem>
-              <SelectItem value="price">Price</SelectItem>
-              <SelectItem value="priority">Priority</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            className="h-9 px-2 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-          >
-            <ArrowUpDown className="h-4 w-4 mr-1" />
-            {sortOrder === 'asc' ? 'Asc' : 'Desc'}
-          </Button>
-        </div>
-      </div>
-      
-      {/* Grid */}
-      <div className="border rounded-lg overflow-hidden">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-gray-50 border-b">
-              <th className="py-3 px-4 text-left font-medium text-gray-600">Property</th>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">Address</th>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">Stage</th>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">Price</th>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">Priority</th>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">Date Added</th>
-              <th className="py-3 px-4 text-left font-medium text-gray-600">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProperties.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="py-4 text-center text-gray-500">
-                  No properties found
-                </td>
-              </tr>
-            ) : (
-              filteredProperties.map((property) => (
-                <tr key={property.id} className="border-b hover:bg-gray-50">
-                  <td className="py-3 px-4">
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-md overflow-hidden mr-3 flex-shrink-0">
-                        <img
-                          src={property.imageUrl}
-                          alt={property.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <span className="font-medium text-[#09261E]">{property.title}</span>
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-gray-600">
-                    {property.address}
-                  </td>
-                  <td className="py-3 px-4">
-                    <Badge variant="outline" className="font-normal">
-                      {stageNames[property.stage] || property.stage}
-                    </Badge>
-                  </td>
-                  <td className="py-3 px-4 font-medium">
-                    ${property.price.toLocaleString()}
-                  </td>
-                  <td className="py-3 px-4">
-                    <Badge className={`${getPriorityColor(property.priority)}`}>
-                      {property.priority === 'Medium' ? 'Med' : property.priority || 'Med'}
-                    </Badge>
-                  </td>
-                  <td className="py-3 px-4 text-gray-600">
-                    {property.dateAdded || 'N/A'}
-                  </td>
-                  <td className="py-3 px-4">
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 hover:bg-gray-100"
-                        onClick={() => onClickProperty(property.id)}
-                      >
-                        <Eye className="h-4 w-4 text-gray-600" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 hover:bg-gray-100"
-                        onClick={() => onClickManage(property.id)}
-                      >
-                        <ClipboardCheck className="h-4 w-4 text-gray-600" />
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-gray-500 hover:bg-gray-100"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This will remove <span className="font-semibold">{property.address}</span> from your pipeline.
-                              You can always add it back later.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => onRemove(property.id)}>
-                              Remove
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {properties.map((property) => (
+        <KanbanPropertyCard 
+          key={property.id} 
+          property={property} 
+          onClickProperty={onClickProperty}
+          onClickManage={onClickManage}
+          onRemove={onRemove}
+        />
+      ))}
     </div>
   );
 };
 
-// Project Card component for Project Management section
+// Project card component for project view
 interface ProjectCardProps {
   project: Project;
   onClick: (id: number) => void;
 }
 
 const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
-  const completedTasks = project.tasks.filter(t => t.completed).length;
-  const totalTasks = project.tasks.length;
-  const progressPercentage = Math.round((completedTasks / totalTasks) * 100);
-  
-  // Calculate days remaining
-  const today = new Date();
-  const endDate = new Date(project.timeline.endDate);
-  const daysRemaining = Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  
-  // Determine project status
-  const status = project.status || "active";
-  
-  // Color-code days remaining indicator
-  const getDaysRemainingColor = () => {
-    if (status === "completed") return "bg-green-500";
-    if (status === "paused") return "bg-gray-400";
-    
-    if (daysRemaining <= 0) return "bg-red-500"; // Behind schedule
-    if (daysRemaining <= 7) return "bg-orange-400"; // Warning
-    return "bg-blue-500"; // On track
-  };
-  
-  // Status indicator color
-  const getStatusColor = () => {
-    switch(status) {
-      case "active": return "bg-blue-500";
-      case "paused": return "bg-orange-400";
-      case "completed": return "bg-green-500";
-      default: return "bg-gray-400";
+  // Get badge based on status
+  const getStatusBadge = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'active':
+        return <Badge className="bg-green-500 text-white">Active</Badge>;
+      case 'paused':
+        return <Badge className="bg-yellow-500 text-white">Paused</Badge>;
+      case 'completed':
+        return <Badge className="bg-blue-500 text-white">Completed</Badge>;
+      default:
+        return <Badge className="bg-gray-500 text-white">{status}</Badge>;
     }
   };
   
+  // Calculate dates difference in days
+  const dateDiff = (start: string, end: string) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+  
+  // Calculate timeline percentage
+  const calculateTimelinePercentage = () => {
+    const { startDate, endDate, currentProgress } = project.timeline;
+    return currentProgress;
+  };
+  
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+  
   return (
-    <Card 
-      className="mb-4 hover:shadow-lg transition-all duration-300 cursor-pointer transform hover:-translate-y-1 border border-gray-200 hover:border-green-200 group relative overflow-hidden" 
-      onClick={() => onClick(project.id)}
-    >
-      {/* Status indicator that expands on hover */}
-      <div 
-        className={`absolute top-0 left-0 w-1.5 h-full ${getStatusColor()} group-hover:w-2 transition-all duration-300`} 
-        aria-hidden="true"
-      ></div>
-      
-      <CardContent className="p-4 pl-5">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center">
-            <div>
-              <div className="flex items-center">
-                <h3 className="text-lg font-semibold text-[#09261E] group-hover:text-green-600 transition-colors">{project.name}</h3>
-                <Badge 
-                  className="ml-2 px-2 py-0 h-5 text-[10px]"
-                  variant="outline"
-                >
-                  {status.charAt(0).toUpperCase() + status.slice(1)}
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-600">{project.address}</p>
-            </div>
-          </div>
-          <Badge 
-            className={`${getDaysRemainingColor()} z-10 group-hover:${getDaysRemainingColor()}`}
-          >
-            {status === "completed" ? 'Completed' : 
-             daysRemaining > 0 ? `${daysRemaining} days remaining` : 
-             (project.status === "completed" ? 'Completed' : 'Past due date')}
-          </Badge>
-        </div>
-        
-        <div className="flex flex-col space-y-3">
+    <Card className="shadow-sm hover:shadow-md transition-shadow cursor-pointer" onClick={() => onClick(project.id)}>
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start">
           <div>
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-sm font-medium">Progress</span>
-              <span className="text-xs text-gray-600">{progressPercentage}%</span>
-            </div>
-            <Progress value={progressPercentage} className="h-2" />
+            <CardTitle className="text-lg">{project.name}</CardTitle>
+            <CardDescription className="flex items-center mt-1">
+              <MapPin className="h-3 w-3 mr-1" />
+              {project.address}
+            </CardDescription>
           </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-100 p-3 rounded-lg group-hover:bg-gray-50 transition-colors">
-              <span className="text-xs text-gray-600 block mb-1">Budget</span>
-              <div className="flex items-baseline">
-                <span className="text-lg font-bold text-green-600">${project.budget.remaining.toLocaleString()}</span>
-                <span className="text-xs text-gray-600 ml-1">remaining</span>
-              </div>
-              <div className="text-xs text-gray-500 mt-1">
-                ${project.budget.actual.toLocaleString()} of ${project.budget.estimated.toLocaleString()} used
-              </div>
+          {getStatusBadge(project.status)}
+        </div>
+      </CardHeader>
+      
+      <CardContent className="pb-3">
+        <div className="space-y-4">
+          {/* Timeline progress */}
+          <div className="space-y-1">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Timeline Progress</span>
+              <span className="font-medium">{project.timeline.currentProgress}%</span>
             </div>
-            
-            <div className="bg-gray-50 p-3 rounded-lg group-hover:bg-gray-100 transition-colors">
-              <span className="text-xs text-gray-600 block mb-1">Tasks</span>
-              <div className="flex items-baseline">
-                <span className="text-lg font-bold text-gray-600">{completedTasks}/{totalTasks}</span>
-                <span className="text-xs text-gray-600 ml-1">completed</span>
-              </div>
-              <div className="text-xs text-gray-500 mt-1">
-                {completedTasks < totalTasks ? `${totalTasks - completedTasks} tasks remaining` : 'All tasks completed'}
-              </div>
+            <Progress value={calculateTimelinePercentage()} className="h-2" />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>{new Date(project.timeline.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+              <span>
+                {dateDiff(project.timeline.startDate, project.timeline.endDate)} days
+              </span>
+              <span>{new Date(project.timeline.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
             </div>
           </div>
           
-          <div className="mt-2">
-            <span className="text-xs text-gray-600 block mb-1">Latest Update</span>
-            {project.updates.length > 0 ? (
-              <div className="bg-gray-50 p-2 rounded text-sm group-hover:bg-white transition-colors">
-                <p className="text-gray-800">{project.updates[project.updates.length - 1].text}</p>
-                <div className="flex justify-between mt-1 text-xs text-gray-500">
-                  <span>{project.updates[project.updates.length - 1].author}</span>
-                  <span>{project.updates[project.updates.length - 1].date}</span>
-                </div>
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500">No updates yet</p>
-            )}
+          {/* Budget summary */}
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="p-2 bg-green-50 rounded">
+              <p className="text-xs text-gray-600">Budget</p>
+              <p className="font-semibold">{formatCurrency(project.budget.estimated)}</p>
+            </div>
+            <div className="p-2 bg-blue-50 rounded">
+              <p className="text-xs text-gray-600">Spent</p>
+              <p className="font-semibold">{formatCurrency(project.budget.actual)}</p>
+            </div>
+            <div className="p-2 bg-yellow-50 rounded">
+              <p className="text-xs text-gray-600">Remaining</p>
+              <p className={`font-semibold ${project.budget.remaining < 0 ? 'text-red-600' : ''}`}>
+                {formatCurrency(project.budget.remaining)}
+              </p>
+            </div>
+          </div>
+          
+          {/* Task Summary */}
+          <div className="flex justify-between text-sm">
+            <div>
+              <span className="text-xs text-gray-500">Tasks: </span>
+              <span className="font-medium">
+                {project.tasks.filter(t => t.completed).length}/{project.tasks.length} completed
+              </span>
+            </div>
+            <div>
+              <span className="text-xs text-gray-500">Team: </span>
+              <span className="font-medium">
+                {project.team.length} members
+              </span>
+            </div>
           </div>
         </div>
       </CardContent>
@@ -514,53 +341,29 @@ const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
   );
 };
 
-// Main Manage Tab component implementation
 export default function DashboardManageTab() {
   const { toast } = useToast();
+  const params = useParams();
   const [, setLocation] = useLocation();
-  const [activeView, setActiveView] = useState<string>("pipeline");
-  const [pipelineView, setPipelineView] = useState<"kanban" | "grid" | "cards">("kanban");
-  const [propertyDetailOpen, setPropertyDetailOpen] = useState<boolean>(false);
-  const [addPropertyOpen, setAddPropertyOpen] = useState<boolean>(false);
-  const [projectDetailOpen, setProjectDetailOpen] = useState<boolean>(false);
-  const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false);
+  const userId = params.userId || '';
+
+  // View states
+  const [activeView, setActiveView] = useState<'pipeline' | 'sheet' | 'projects'>('pipeline');
+  const [pipelineView, setPipelineView] = useState<'kanban' | 'grid'>('kanban');
+  
+  // Detail modals
+  const [propertyDetailOpen, setPropertyDetailOpen] = useState(false);
   const [activeProperty, setActiveProperty] = useState<number | null>(null);
+  const [projectDetailOpen, setProjectDetailOpen] = useState(false);
   const [activeProject, setActiveProject] = useState<number | null>(null);
+  const [addProjectOpen, setAddProjectOpen] = useState(false);
+  const [projectStatusFilter, setProjectStatusFilter] = useState<string>('all');
+  
+  // Task states
+  const [expandedTaskIds, setExpandedTaskIds] = useState<Set<number>>(new Set());
+  
+  // Local state for properties
   const [localProperties, setLocalProperties] = useState(properties);
-  const [projectStatusFilter, setProjectStatusFilter] = useState<"all" | "active" | "paused" | "completed">("all");
-  
-  // States for expansions and replies
-  const [expandedTaskIds, setExpandedTaskIds] = useState<Record<string, boolean>>({});
-  const [showReplies, setShowReplies] = useState(false);
-  const [isReplying, setIsReplying] = useState(false);
-  
-  // Toggle task expansion
-  const toggleTaskExpanded = (taskId: number) => {
-    setExpandedTaskIds(prev => ({
-      ...prev,
-      [taskId]: !prev[taskId]
-    }));
-  };
-  
-  // Handle property card clicks
-  const handleViewProperty = (propertyId: number) => {
-    setLocation(`/properties/${propertyId}`);
-  };
-  
-  const handleManageProperty = (propertyId: number) => {
-    setActiveProperty(propertyId);
-    setPropertyDetailOpen(true);
-  };
-  
-  const handleRemoveProperty = (propertyId: number) => {
-    // In a real app, this would call an API to update the database
-    setLocalProperties(localProperties.filter(p => p.id !== propertyId));
-  };
-  
-  const handleViewProject = (projectId: number) => {
-    setActiveProject(projectId);
-    setProjectDetailOpen(true);
-  };
   
   // State for direct HTML drag and drop
   const [isDragging, setIsDragging] = useState(false);
@@ -711,101 +514,161 @@ export default function DashboardManageTab() {
     {
       id: "offer_made",
       title: "Offer Made",
-      description: "Offer sent to seller",
+      description: "Offers submitted",
       properties: propertiesByStageLocal.offer_made || [],
-      color: "bg-red-500" // Red
+      color: "bg-blue-500" // Blue
     },
     {
       id: "pending",
       title: "Pending",
       description: "In negotiation",
       properties: propertiesByStageLocal.pending || [],
-      color: "bg-orange-400" // Orange
+      color: "bg-purple-500" // Purple
     },
     {
       id: "close_pending",
       title: "Closing Soon",
-      description: "In process of closing",
+      description: "Closing process started",
       properties: propertiesByStageLocal.close_pending || [],
-      color: "bg-green-400" // Green
+      color: "bg-orange-500" // Orange
     },
     {
       id: "closed",
       title: "Closed",
       description: "Deal completed",
       properties: propertiesByStageLocal.closed || [],
-      color: "bg-[#135341]" // Dark Green
+      color: "bg-green-700" // Green
     },
     {
       id: "dropped",
       title: "Dropped",
       description: "No longer pursuing",
       properties: propertiesByStageLocal.dropped || [],
-      color: "bg-gray-700" // Dark Grey
+      color: "bg-gray-500" // Gray
     }
   ];
   
+  // Get date in a readable format
+  const getFormattedDate = (dateString?: string) => {
+    if (!dateString) return 'N/A';
+    
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+  };
+  
+  // Toggle task expanded state
+  const toggleTaskExpanded = (taskId: number) => {
+    const newSet = new Set(expandedTaskIds);
+    if (newSet.has(taskId)) {
+      newSet.delete(taskId);
+    } else {
+      newSet.add(taskId);
+    }
+    setExpandedTaskIds(newSet);
+  };
+  
+  // Handle view property
+  const handleViewProperty = (propertyId: number) => {
+    setActiveProperty(propertyId);
+    setPropertyDetailOpen(true);
+  };
+  
+  // Handle manage property
+  const handleManageProperty = (propertyId: number) => {
+    setLocation(`/sellerdash/${userId}/property/${propertyId}`);
+  };
+  
+  // Handle remove property
+  const handleRemoveProperty = (propertyId: number) => {
+    toast({
+      title: "Property Removed",
+      description: "Property has been removed from your dashboard.",
+      variant: "default",
+    });
+    
+    setLocalProperties(localProperties.filter(p => p.id !== propertyId));
+  };
+  
+  // Handle view project
+  const handleViewProject = (projectId: number) => {
+    setActiveProject(projectId);
+    setProjectDetailOpen(true);
+  };
+  
   return (
-    <div>
-      {/* View toggle */}
-      <div className="flex flex-col space-y-6 mb-6">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden p-1">
-              <div className="flex">
-                <button 
-                  className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${activeView === "pipeline" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                  onClick={() => setActiveView("pipeline")}
-                >
-                  <Building className="h-4 w-4 mr-2" />
-                  Property Pipeline
-                </button>
-                <button 
-                  className={`px-6 py-2.5 text-sm rounded-full flex items-center transition-colors ${activeView === "projects" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                  onClick={() => setActiveView("projects")}
-                >
-                  <BriefcaseBusiness className="h-4 w-4 mr-2" />
-                  Project Management
-                </button>
-              </div>
-            </div>
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Property Pipeline</h1>
+          <p className="text-gray-500 text-sm">Manage your property deals and projects</p>
+        </div>
+        <div className="flex items-center space-x-2">
+          {/* View selector */}
+          <div className="bg-white border rounded-lg p-1 shadow-sm flex">
+            <button
+              onClick={() => setActiveView('pipeline')}
+              className={`px-3 py-1 rounded flex items-center text-sm ${
+                activeView === 'pipeline' 
+                  ? 'bg-[#09261E] text-white' 
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <ListFilter className="h-4 w-4 mr-1" />
+              Pipeline
+            </button>
+            <button
+              onClick={() => setActiveView('sheet')}
+              className={`px-3 py-1 rounded flex items-center text-sm ${
+                activeView === 'sheet' 
+                  ? 'bg-[#09261E] text-white' 
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <LayoutGrid className="h-4 w-4 mr-1" />
+              All
+            </button>
+            <button
+              onClick={() => setActiveView('projects')}
+              className={`px-3 py-1 rounded flex items-center text-sm ${
+                activeView === 'projects' 
+                  ? 'bg-[#09261E] text-white' 
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <ClipboardList className="h-4 w-4 mr-1" />
+              Projects
+            </button>
           </div>
           
+          {/* Pipeline view mode - only show in pipeline view */}
           {activeView === "pipeline" && (
-            <div className="flex items-center gap-2">
-              <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden p-1 mr-2">
-                <div className="flex">
-                  <button 
-                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "kanban" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                    onClick={() => setPipelineView("kanban")}
-                  >
-                    <LayoutGrid className="h-3.5 w-3.5 mr-1.5" />
-                    Kanban
-                  </button>
-                  <button 
-                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "grid" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                    onClick={() => setPipelineView("grid")}
-                  >
-                    <Table className="h-3.5 w-3.5 mr-1.5" />
-                    Sheet
-                  </button>
-                  <button 
-                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors ${pipelineView === "cards" ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                    onClick={() => setPipelineView("cards")}
-                  >
-                    <ImageIcon className="h-3.5 w-3.5 mr-1.5" />
-                    Grid
-                  </button>
-                </div>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-[#09261E] text-[#09261E] hover:bg-gray-100 data-[state=open]:bg-[#09261E] data-[state=open]:text-white"
-                onClick={() => setAddPropertyOpen(true)}
+            <div className="bg-white border rounded-lg p-1 shadow-sm flex">
+              <button
+                onClick={() => setPipelineView('kanban')}
+                className={`px-3 py-1 rounded flex items-center text-sm ${
+                  pipelineView === 'kanban' 
+                    ? 'bg-[#09261E] text-white' 
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
               >
-                <PlusCircle className="h-4 w-4 mr-1" /> Add Property
-              </Button>
+                <KanbanSquare className="h-4 w-4 mr-1" />
+                Kanban
+              </button>
+              <button
+                onClick={() => setPipelineView('grid')}
+                className={`px-3 py-1 rounded flex items-center text-sm ${
+                  pipelineView === 'grid' 
+                    ? 'bg-[#09261E] text-white' 
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <LayoutGrid className="h-4 w-4 mr-1" />
+                Grid
+              </button>
             </div>
           )}
           
@@ -884,1962 +747,84 @@ export default function DashboardManageTab() {
               onClickManage={handleManageProperty}
               onRemove={handleRemoveProperty}
             />
-          ) : (
-            /* Card Grid view */
-            <div className="mt-4">
-              {/* Filter and stage selector for card view */}
-              <div className="mb-6 flex flex-wrap gap-2 items-center">
-                <div className="flex gap-2 items-center">
-                  <Label htmlFor="stage-filter-cards" className="text-sm whitespace-nowrap">Filter Stage:</Label>
-                  <Select
-                    defaultValue="favorited"
-                    onValueChange={(value) => {}}
-                  >
-                    <SelectTrigger id="stage-filter-cards" className="w-[180px] h-9">
-                      <SelectValue placeholder="Favorites" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Stages</SelectItem>
-                      <SelectItem value="favorited">Favorites</SelectItem>
-                      <SelectItem value="contacted">Contacted</SelectItem>
-                      <SelectItem value="offer_made">Offer Made</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="close_pending">Closing Soon</SelectItem>
-                      <SelectItem value="closed">Closed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="flex gap-2 items-center ml-4">
-                  <Label htmlFor="property-filter" className="text-sm whitespace-nowrap">Property Filter:</Label>
-                  <Select
-                    defaultValue="all"
-                    onValueChange={(value) => {}}
-                  >
-                    <SelectTrigger id="property-filter" className="w-[150px] h-9">
-                      <SelectValue placeholder="All Properties" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Properties</SelectItem>
-                      <SelectItem value="residential">Residential</SelectItem>
-                      <SelectItem value="commercial">Commercial</SelectItem>
-                      <SelectItem value="land">Land</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              {/* Grid of properties */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {localProperties.map((property) => (
-                  <Card key={property.id} className="overflow-hidden transition-all hover:shadow-md">
-                    <div className="relative">
-                      <img 
-                        src={property.imageUrl} 
-                        alt={property.title} 
-                        className="w-full h-44 object-cover"
-                      />
-                      <Badge className={`absolute top-2 right-2 ${
-                        property.priority === 'High' ? 'bg-red-500 text-white' : 
-                        property.priority === 'Medium' ? 'bg-yellow-400 text-white' : 
-                        'bg-blue-500 text-white'
-                      }`}>
-                        {property.priority === 'Medium' ? 'Med' : property.priority || 'Med'}
-                      </Badge>
-                      <Badge className="absolute top-2 left-2 bg-white/80 text-[#09261E] backdrop-blur-sm">
-                        ${property.price.toLocaleString()}
-                      </Badge>
-                    </div>
-                    <CardContent className="p-3">
-                      <h3 className="font-semibold text-[#09261E] truncate">{property.title}</h3>
-                      <p className="text-gray-600 text-sm truncate">{property.address}</p>
-                      <div className="mt-2 flex items-center">
-                        <Badge variant="outline" className="font-normal text-xs mr-2">
-                          {property.stage === 'favorited' ? 'Favorite' : 
-                           property.stage === 'contacted' ? 'Contacted' :
-                           property.stage === 'offer_made' ? 'Offer Made' :
-                           property.stage === 'pending' ? 'Pending' :
-                           property.stage === 'close_pending' ? 'Closing Soon' :
-                           property.stage === 'closed' ? 'Closed' : 'Dropped'}
-                        </Badge>
-                        <Badge variant="outline" className="font-normal text-xs">
-                          {property.propertyType || 'Residential'}
-                        </Badge>
-                      </div>
-                      
-                      <div className="flex gap-2 mt-3">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="flex-1 h-8 text-xs border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
-                          onClick={() => handleViewProperty(property.id)}
-                        >
-                          <Eye className="h-3.5 w-3.5 mr-1" /> View
-                        </Button>
-                        <Button 
-                          variant="default" 
-                          size="sm" 
-                          className="flex-1 h-8 text-xs bg-[#09261E] hover:bg-[#135341]"
-                          onClick={() => handleManageProperty(property.id)}
-                        >
-                          <ClipboardCheck className="h-3.5 w-3.5 mr-1" /> Manage
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0 text-gray-500 hover:bg-gray-100"
-                          onClick={() => handleRemoveProperty(property.id)}
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
+          ) : null}
         </div>
       )}
       
-      {/* Project Management View */}
+      {/* Projects View */}
       {activeView === "projects" && (
-        <div>
-          {/* Project Filters */}
-          <div className="mb-6 flex items-center gap-3">
-            <Label htmlFor="project-status" className="text-sm font-medium">Filter by status:</Label>
-            <div className="bg-gray-100 shadow-sm rounded-full overflow-hidden p-1">
-              <div className="flex">
-                {["all", "active", "paused", "completed"].map((status) => (
-                  <button
-                    key={status}
-                    onClick={() => setProjectStatusFilter(status as "all" | "active" | "paused" | "completed")}
-                    className={`px-4 py-1.5 text-xs rounded-full flex items-center transition-colors
-                      ${projectStatusFilter === status ? "bg-white shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
-                  >
-                    {status === "active" && <Clock className="h-3.5 w-3.5 mr-1.5" />}
-                    {status === "paused" && <AlertCircle className="h-3.5 w-3.5 mr-1.5" />}
-                    {status === "completed" && <CheckCircle2 className="h-3.5 w-3.5 mr-1.5" />}
-                    {status === "all" && <Filter className="h-3.5 w-3.5 mr-1.5" />}
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </button>
-                ))}
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-2">
+              <Label>Filter:</Label>
+              <div className="flex border rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setProjectStatusFilter('all')}
+                  className={`px-3 py-1 text-sm ${
+                    projectStatusFilter === 'all' 
+                      ? 'bg-[#09261E] text-white' 
+                      : 'bg-white text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setProjectStatusFilter('active')}
+                  className={`px-3 py-1 text-sm ${
+                    projectStatusFilter === 'active' 
+                      ? 'bg-green-600 text-white' 
+                      : 'bg-white text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Active
+                </button>
+                <button
+                  onClick={() => setProjectStatusFilter('paused')}
+                  className={`px-3 py-1 text-sm ${
+                    projectStatusFilter === 'paused' 
+                      ? 'bg-yellow-500 text-white' 
+                      : 'bg-white text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Paused
+                </button>
+                <button
+                  onClick={() => setProjectStatusFilter('completed')}
+                  className={`px-3 py-1 text-sm ${
+                    projectStatusFilter === 'completed' 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-white text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  Completed
+                </button>
               </div>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setAddProjectOpen(true)}
+              className="text-[#09261E]"
+            >
+              <PlusCircle className="h-4 w-4 mr-1" />
+              Add Project
+            </Button>
           </div>
           
-          <div className="grid gap-6 md:grid-cols-2">
+          {/* Projects grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {projects
-              .filter(project => projectStatusFilter === "all" ? true : project.status === projectStatusFilter)
+              .filter(p => projectStatusFilter === 'all' || p.status.toLowerCase() === projectStatusFilter)
               .map(project => (
                 <ProjectCard 
                   key={project.id} 
-                  project={project} 
-                  onClick={handleViewProject} 
+                  project={project}
+                  onClick={handleViewProject}
                 />
               ))}
           </div>
-          
-          {projects.length === 0 && (
-            <div className="flex flex-col items-center justify-center h-32 border border-dashed border-gray-300 rounded-lg bg-gray-50 p-4 text-center text-gray-500">
-              <p>No renovation projects yet</p>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="mt-2"
-                onClick={() => setAddProjectOpen(true)}
-              >
-                <PlusCircle className="h-4 w-4 mr-1" /> Add Your First Project
-              </Button>
-            </div>
-          )}
         </div>
       )}
-      
-      {/* Property Detail Modal */}
-      <Dialog open={propertyDetailOpen} onOpenChange={setPropertyDetailOpen}>
-        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto h-[750px]">
-          <DialogHeader className="pb-2">
-            <DialogTitle className="text-xl text-[#09261E]">
-              Property Roadmap
-            </DialogTitle>
-            <DialogDescription className="pb-0">
-              {activeProperty && localProperties.find(p => p.id === activeProperty)?.address}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="mt-2">
-            <Tabs defaultValue="progress" className="w-full">
-              <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
-                <TabsTrigger value="progress" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Progress</TabsTrigger>
-                <TabsTrigger value="contacts" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Contacts</TabsTrigger>
-                <TabsTrigger value="outreach" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Outreach</TabsTrigger>
-                <TabsTrigger value="documents" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Documents</TabsTrigger>
-                <TabsTrigger value="notes" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Notes</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="progress" className="mt-4">
-                <div className="space-y-4">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">Pipeline Progress</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-sm font-medium">Overall Progress</span>
-                            <span className="text-sm">65%</span>
-                          </div>
-                          <Progress value={65} className="h-2" />
-                        </div>
-                        
-                        <div className="grid gap-2">
-                          {/* Pipeline stages with accordion-style checkable tasks */}
-                          {[
-                            { stage: 'Favorited', tasks: ['Save property details', 'Research neighborhood', 'Calculate initial numbers'], expanded: false },
-                            { stage: 'Contacted', tasks: ['Schedule first call', 'Request property details', 'Prepare questions'], expanded: false },
-                            { stage: 'Offer Made', tasks: ['Draft offer', 'Submit paperwork', 'Follow up with agent'], expanded: false },
-                            { stage: 'Pending', tasks: ['Schedule inspection', 'Review disclosures', 'Secure financing'], expanded: true },
-                            { stage: 'Closing', tasks: ['Final walkthrough', 'Verify wire details', 'Sign closing documents'], expanded: false }
-                          ].map((stage, stageIndex) => {
-                            const [isExpanded, setIsExpanded] = useState(stage.expanded);
-                            return (
-                              <div key={stage.stage} className="mt-2 border border-gray-100 rounded-md overflow-hidden">
-                                <button 
-                                  className="flex items-center justify-between w-full p-3 text-left font-medium hover:bg-gray-50"
-                                  onClick={() => setIsExpanded(!isExpanded)}
-                                >
-                                  <div className="flex items-center">
-                                    <Badge 
-                                      className={`mr-3 ${stageIndex < 3 ? 'bg-green-500' : stageIndex === 3 ? 'bg-green-500' : 'bg-gray-400'}`}
-                                    >
-                                      {stageIndex < 3 ? 'Completed' : stageIndex === 3 ? 'In Progress' : 'Upcoming'}
-                                    </Badge>
-                                    <span className="font-medium">{stage.stage}</span>
-                                  </div>
-                                  <ChevronRight className={`h-5 w-5 text-gray-400 transition-transform ${isExpanded ? 'transform rotate-90' : ''}`} />
-                                </button>
-                                
-                                {isExpanded && (
-                                  <div className="px-4 py-2 bg-gray-50 border-t border-gray-100">
-                                    {stage.tasks.map((task, taskIndex) => {
-                                      const [taskExpanded, setTaskExpanded] = useState(false);
-                                      const isChecked = stageIndex < 3 || (stageIndex === 3 && taskIndex < 2);
-                                      
-                                      return (
-                                        <div key={`task-${stageIndex}-${taskIndex}`} className="my-2">
-                                          <div 
-                                            className="flex items-center justify-between hover:bg-gray-100 rounded px-2 py-1 cursor-pointer transition-colors"
-                                            onClick={() => setTaskExpanded(!taskExpanded)}
-                                          >
-                                            <div className="flex items-center flex-1">
-                                              <Checkbox 
-                                                id={`task-${stageIndex}-${taskIndex}`} 
-                                                className="mr-2"
-                                                defaultChecked={isChecked}
-                                                onClick={(e) => e.stopPropagation()}
-                                              />
-                                              <label 
-                                                htmlFor={`task-${stageIndex}-${taskIndex}`}
-                                                className={`text-sm ${isChecked ? 'line-through text-gray-500' : ''} hover:text-[#09261E]`}
-                                                onClick={(e) => e.stopPropagation()}
-                                              >
-                                                {task}
-                                              </label>
-                                            </div>
-                                          </div>
-                                          
-                                          {expandedTaskIds[taskIndex] && (
-                                            <div className="mt-2 ml-6 text-xs text-gray-600 bg-white p-2 rounded-sm border border-gray-100">
-                                              <p className="mb-1"><strong>Due:</strong> {new Date().toLocaleDateString()}</p>
-                                              <p className="mb-1"><strong>Assignee:</strong> {stageIndex === 0 ? 'You' : 'Sarah Johnson'}</p>
-                                              <p className="mb-1"><strong>Priority:</strong> {taskIndex === 0 ? 'High' : 'Medium'}</p>
-                                              <p><strong>Description:</strong> Additional details about this task would appear here.</p>
-                                            </div>
-                                          )}
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg">Upcoming Events</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        {/* Sample events */}
-                        {[
-                          { title: 'Final walkthrough', date: '2025-05-10', time: '10:00 AM', location: 'Property Address' },
-                          { title: 'Closing appointment', date: '2025-05-15', time: '2:00 PM', location: 'Title Company Office' },
-                          { title: 'Key handover', date: '2025-05-15', time: '4:30 PM', location: 'Property Address' }
-                        ].map(event => (
-                          <div key={event.title} className="flex items-center justify-between p-3 border border-gray-100 rounded-md hover:bg-gray-50">
-                            <div className="flex items-center">
-                              <div className="w-10 h-10 rounded-full bg-[#EAF2EF] flex items-center justify-center mr-3">
-                                <Calendar className="h-4 w-4 text-[#09261E]" />
-                              </div>
-                              <div>
-                                <p className="font-medium text-sm">{event.title}</p>
-                                <p className="text-xs text-gray-500">{event.date} • {event.time}</p>
-                                <p className="text-xs text-gray-500">{event.location}</p>
-                              </div>
-                            </div>
-                            <Button variant="outline" size="sm" className="h-8 hover:bg-gray-100 hover:text-[#09261E] data-[state=active]:bg-[#09261E] data-[state=active]:text-white">
-                              <Calendar className="h-3.5 w-3.5 mr-1.5" />
-                              Add to Calendar
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="documents" className="mt-4 min-h-[500px]">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-semibold text-[#09261E]">Property Documents</h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
-                        Upload Document
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>Upload Document</DialogTitle>
-                        <DialogDescription>
-                          Upload your property-related documents here. Supported formats: PDF, DOCX, JPG, PNG.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:bg-gray-50">
-                          <FileText className="h-10 w-10 text-gray-400 mx-auto mb-2" />
-                          <p className="text-sm text-gray-600 mb-1">Drag and drop your file here, or click to browse</p>
-                          <p className="text-xs text-gray-500">Maximum file size: 25MB</p>
-                        </div>
-                        <div className="space-y-3">
-                          {(() => {
-                            const [docType, setDocType] = useState("");
-                            return (
-                              <>
-                                <div className="grid grid-cols-4 gap-4">
-                                  <div className="col-span-4 sm:col-span-2">
-                                    <Label htmlFor="document-type">Document Type</Label>
-                                    <Select onValueChange={setDocType}>
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Select type" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="purchase">Purchase Agreement</SelectItem>
-                                        <SelectItem value="offer">Offer to Purchase</SelectItem>
-                                        <SelectItem value="assignment">Assignment Agreement</SelectItem>
-                                        <SelectItem value="inspection">Inspection Report</SelectItem>
-                                        <SelectItem value="loan">Loan Documents</SelectItem>
-                                        <SelectItem value="title">Title Documents</SelectItem>
-                                        <SelectItem value="other">Other</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                  <div className="col-span-4 sm:col-span-2">
-                                    <Label htmlFor="document-date">Document Date</Label>
-                                    <Input type="date" id="document-date" />
-                                  </div>
-                                </div>
-                                
-                                {docType === "other" && (
-                                  <div>
-                                    <Label htmlFor="document-type-custom">Custom Document Type</Label>
-                                    <Input id="document-type-custom" placeholder="Enter document type" />
-                                  </div>
-                                )}
-                                
-                                <div>
-                                  <Label htmlFor="document-description">Description (Optional)</Label>
-                                  <Textarea id="document-description" rows={3} placeholder="Add notes about this document" />
-                                </div>
-                              </>
-                            );
-                          })()}
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button>Upload Document</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                
-                <Card>
-                  <CardContent className="p-0">
-                    <div className="divide-y divide-gray-100">
-                      {/* Sample documents */}
-                      {[
-                        { id: 1, name: 'Purchase Agreement', type: 'PDF', date: '2025-04-15', status: 'Signed' },
-                        { id: 2, name: 'Property Inspection Report', type: 'PDF', date: '2025-04-22', status: 'Completed' },
-                        { id: 3, name: 'Loan Approval Letter', type: 'PDF', date: '2025-04-25', status: 'Pending' },
-                        { id: 4, name: 'Closing Disclosure', type: 'PDF', date: '2025-05-02', status: 'Review' },
-                      ].map((doc) => (
-                        <div key={doc.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
-                          <div className="flex items-center">
-                            <FileText className="h-5 w-5 mr-3 text-[#09261E]" />
-                            <div>
-                              <h4 className="font-medium text-[#09261E] text-sm">{doc.name}</h4>
-                              <p className="text-xs text-gray-500">{doc.type} • {doc.date}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center">
-                            <Badge className={`mr-3 ${
-                              doc.status === 'Signed' || doc.status === 'Completed' ? 'bg-green-500' :
-                              'bg-gray-400'
-                            }`}>
-                              {doc.status}
-                            </Badge>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-gray-100">
-                              <Download className="h-4 w-4 text-gray-600" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="contacts" className="mt-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-semibold text-[#09261E]">Property Contacts</h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
-                        Add Contact
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>Add Property Contact</DialogTitle>
-                        <DialogDescription>
-                          Add professionals involved in this property transaction.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <Tabs defaultValue="search" className="w-full">
-                          <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
-                            <TabsTrigger value="search" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Search REPs</TabsTrigger>
-                            <TabsTrigger value="invite" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Invite Contact</TabsTrigger>
-                          </TabsList>
-                          
-                          <TabsContent value="search" className="mt-4">
-                            <div className="space-y-4">
-                              <div>
-                                <Label htmlFor="rep-search">Search for REPs on PropertyDeals</Label>
-                                <div className="relative">
-                                  <Input 
-                                    id="rep-search" 
-                                    placeholder="Search by name, location, or specialty..." 
-                                    className="pr-10"
-                                  />
-                                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                </div>
-                              </div>
-                              
-                              <div className="mt-4 border rounded-md divide-y">
-                                {[
-                                  { id: 1, name: 'Sarah Johnson', specialty: 'Home Inspector', location: 'Seattle, WA', avatar: 'S' },
-                                  { id: 2, name: 'Michael Chen', specialty: 'Mortgage Broker', location: 'Portland, OR', avatar: 'M' },
-                                  { id: 3, name: 'David Rodriguez', specialty: 'Real Estate Attorney', location: 'San Francisco, CA', avatar: 'D' },
-                                ].map(rep => (
-                                  <div key={rep.id} className="p-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between">
-                                    <div className="flex items-center">
-                                      <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3">
-                                        <span className="text-[#09261E] font-bold">{rep.avatar}</span>
-                                      </div>
-                                      <div>
-                                        <h4 className="font-medium text-[#09261E] text-sm">{rep.name}</h4>
-                                        <p className="text-xs text-gray-500">{rep.specialty} • {rep.location}</p>
-                                      </div>
-                                    </div>
-                                    <Button size="sm" variant="outline">Select</Button>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </TabsContent>
-                          
-                          <TabsContent value="invite" className="mt-4">
-                            <div className="space-y-4">
-                              <div>
-                                <Label htmlFor="invite-method">Invite Method</Label>
-                                <Select defaultValue="email">
-                                  <SelectTrigger id="invite-method">
-                                    <SelectValue placeholder="Select invite method" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="email">Email</SelectItem>
-                                    <SelectItem value="sms">SMS/Text</SelectItem>
-                                    <SelectItem value="social">Social Media</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="invite-contact">Contact Information</Label>
-                                <Input id="invite-contact" placeholder="Email address or phone number" />
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="invite-name">Contact Name</Label>
-                                <Input id="invite-name" placeholder="John Smith" />
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="invite-role">Role</Label>
-                                <Select>
-                                  <SelectTrigger id="invite-role">
-                                    <SelectValue placeholder="Select role" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="agent">Seller Agent</SelectItem>
-                                    <SelectItem value="buyer-agent">Buyer Agent</SelectItem>
-                                    <SelectItem value="loan">Loan Officer</SelectItem>
-                                    <SelectItem value="inspector">Inspector</SelectItem>
-                                    <SelectItem value="title">Title Company</SelectItem>
-                                    <SelectItem value="attorney">Attorney</SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="invite-message">Personal Message (Optional)</Label>
-                                <Textarea 
-                                  id="invite-message" 
-                                  rows={3} 
-                                  placeholder="I'd like to add you as a contact for my property at 123 Main St..."
-                                />
-                              </div>
-                            </div>
-                          </TabsContent>
-                        </Tabs>
-                      </div>
-                      <DialogFooter>
-                        <Button>Add Contact</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                
-                <Card>
-                  <CardContent className="p-0">
-                    <div className="divide-y divide-gray-100">
-                      {/* Sample contacts */}
-                      {[
-                        { id: 1, name: 'Sarah Johnson', role: 'Seller Agent', phone: '(555) 123-4567', email: 'sarah@example.com' },
-                        { id: 2, name: 'Michael Chen', role: 'Loan Officer', phone: '(555) 987-6543', email: 'michael@example.com' },
-                        { id: 3, name: 'Thomas Wilson', role: 'Home Inspector', phone: '(555) 456-7890', email: 'thomas@example.com' },
-                        { id: 4, name: 'Jennifer Lee', role: 'Title Company', phone: '(555) 234-5678', email: 'jennifer@example.com' },
-                      ].map((contact) => (
-                        <div key={contact.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
-                          <div className="flex items-center">
-                            <Link href={`/reps/${contact.id}`}>
-                              <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3 cursor-pointer">
-                                <span className="text-[#09261E] font-bold">{contact.name.charAt(0)}</span>
-                              </div>
-                            </Link>
-                            <div>
-                              <Link href={`/reps/${contact.id}`}>
-                                <h4 className="font-medium text-[#09261E] text-sm hover:underline cursor-pointer">{contact.name}</h4>
-                              </Link>
-                              <p className="text-xs text-gray-500">{contact.role}</p>
-                              <p className="text-xs text-gray-500">{contact.email}</p>
-                            </div>
-                          </div>
-                          <div className="flex space-x-2">
-                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-gray-600 hover:bg-gray-100">
-                              <Phone className="h-4 w-4" />
-                            </Button>
-                            <Button variant="outline" size="sm" className="h-8 w-8 p-0 text-gray-600 hover:bg-gray-100">
-                              <MessageSquare className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="outreach" className="mt-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-semibold text-[#09261E]">Professional Outreach</h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
-                        Find REP
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>Find a Real Estate Professional</DialogTitle>
-                        <DialogDescription>
-                          Connect with specialized REPs for your property needs
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4 py-4">
-                        <div>
-                          <Label htmlFor="rep-category">Professional Category</Label>
-                          <Select defaultValue="all">
-                            <SelectTrigger id="rep-category">
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="all">All Categories</SelectItem>
-                              <SelectItem value="agent">Real Estate Agents</SelectItem>
-                              <SelectItem value="inspector">Home Inspectors</SelectItem>
-                              <SelectItem value="lender">Mortgage Lenders</SelectItem>
-                              <SelectItem value="attorney">Real Estate Attorneys</SelectItem>
-                              <SelectItem value="appraiser">Property Appraisers</SelectItem>
-                              <SelectItem value="contractor">General Contractors</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        
-                        <div>
-                          <Label htmlFor="rep-location">Location</Label>
-                          <Input id="rep-location" placeholder="City, state, or zip code" />
-                        </div>
-                        
-                        <div className="relative">
-                          <Label htmlFor="rep-search">Search</Label>
-                          <Input 
-                            id="rep-search" 
-                            placeholder="Search by name or specialty..." 
-                            className="pr-10"
-                          />
-                          <Search className="absolute right-3 bottom-3 h-4 w-4 text-gray-400" />
-                        </div>
-                        
-                        <div className="border rounded-md divide-y max-h-60 overflow-y-auto mt-2">
-                          {[
-                            { id: 1, name: 'Sarah Johnson', specialty: 'Home Inspector', location: 'Seattle, WA', avatar: 'S', rating: 4.9, reviews: 56 },
-                            { id: 2, name: 'Michael Chen', specialty: 'Mortgage Broker', location: 'Portland, OR', avatar: 'M', rating: 4.7, reviews: 38 },
-                            { id: 3, name: 'David Rodriguez', specialty: 'Real Estate Attorney', location: 'San Francisco, CA', avatar: 'D', rating: 5.0, reviews: 27 },
-                            { id: 4, name: 'Jennifer Lee', specialty: 'Property Appraiser', location: 'Los Angeles, CA', avatar: 'J', rating: 4.8, reviews: 42 },
-                            { id: 5, name: 'Robert Taylor', specialty: 'General Contractor', location: 'San Diego, CA', avatar: 'R', rating: 4.6, reviews: 31 },
-                          ].map(rep => (
-                            <div key={rep.id} className="p-3 hover:bg-gray-50 cursor-pointer">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                  <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3">
-                                    <span className="text-[#09261E] font-bold">{rep.avatar}</span>
-                                  </div>
-                                  <div>
-                                    <h4 className="font-medium text-[#09261E] text-sm">{rep.name}</h4>
-                                    <p className="text-xs text-gray-500">{rep.specialty} • {rep.location}</p>
-                                    <div className="flex items-center mt-1">
-                                      <div className="flex">
-                                        {[...Array(5)].map((_, i) => (
-                                          <Star 
-                                            key={i} 
-                                            className={`h-3 w-3 ${i < Math.floor(rep.rating) ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`} 
-                                          />
-                                        ))}
-                                      </div>
-                                      <span className="text-xs text-gray-600 ml-1">{rep.rating} ({rep.reviews})</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <Button size="sm" variant="outline">Connect</Button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button>View All REPs</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                
-                <Card className="mb-6">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">Send Property-Specific Outreach</CardTitle>
-                    <CardDescription>
-                      Connect with real estate professionals about this specific property
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="mb-4">
-                      <Label htmlFor="outreach-recipient" className="text-sm mb-2 block">Recipient</Label>
-                      <Select>
-                        <SelectTrigger id="outreach-recipient">
-                          <SelectValue placeholder="Select recipient" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Property Contacts</SelectLabel>
-                            <SelectItem value="sarah">Sarah Johnson (Seller Agent)</SelectItem>
-                            <SelectItem value="michael">Michael Chen (Loan Officer)</SelectItem>
-                            <SelectItem value="thomas">Thomas Wilson (Home Inspector)</SelectItem>
-                          </SelectGroup>
-                          <SelectGroup>
-                            <SelectLabel>Recommended REPs</SelectLabel>
-                            <SelectItem value="david">David Rodriguez (Attorney)</SelectItem>
-                            <SelectItem value="jennifer">Jennifer Lee (Appraiser)</SelectItem>
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="mb-4">
-                      <Label htmlFor="outreach-message" className="text-sm mb-2 block">Message</Label>
-                      <Textarea 
-                        id="outreach-message" 
-                        className="min-h-[120px]" 
-                        placeholder="Hi, I'm interested in this property at 123 Main St and wanted to connect about the inspection details..." 
-                      />
-                    </div>
-                    <div className="flex justify-end">
-                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
-                        Send Message
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-medium text-gray-600">Outreach & Communications</h3>
-                  <div className="flex gap-2">
-                    <Select defaultValue="all">
-                      <SelectTrigger className="h-8 text-xs w-40">
-                        <SelectValue placeholder="Filter by role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Professionals</SelectItem>
-                        <SelectItem value="agent">Real Estate Agents</SelectItem>
-                        <SelectItem value="inspector">Home Inspectors</SelectItem>
-                        <SelectItem value="lender">Mortgage Lenders</SelectItem>
-                        <SelectItem value="attorney">Attorneys</SelectItem>
-                        <SelectItem value="contractor">Contractors</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    
-                    <Select defaultValue="all-status">
-                      <SelectTrigger className="h-8 text-xs w-40">
-                        <SelectValue placeholder="Filter by status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all-status">All Status</SelectItem>
-                        <SelectItem value="replied">Replied</SelectItem>
-                        <SelectItem value="sent">Sent</SelectItem>
-                        <SelectItem value="follow-up">Needs Follow-up</SelectItem>
-                        <SelectItem value="scheduled">Meeting Scheduled</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                
-                <Card>
-                  <CardContent className="p-0">
-                    <div className="divide-y divide-gray-100">
-                      {/* Sample outreach */}
-                      {[
-                        { 
-                          id: 1, 
-                          rep: 'James Wilson', 
-                          role: 'Property Inspector', 
-                          status: 'Sent', 
-                          date: '2025-05-01', 
-                          time: '10:25 AM',
-                          message: 'I would like to schedule an inspection for the property at 123 Main St. Are you available next week?',
-                          unread: true
-                        },
-                        { 
-                          id: 2, 
-                          rep: 'Emily Rodriguez', 
-                          role: 'Mortgage Specialist', 
-                          status: 'Replied', 
-                          date: '2025-04-28', 
-                          time: '3:47 PM',
-                          message: 'Hello! Interested in learning more about financing options for this property.',
-                          unread: false 
-                        },
-                        { 
-                          id: 3, 
-                          rep: 'David Chang', 
-                          role: 'Buyer Agent', 
-                          status: 'Follow up', 
-                          date: '2025-04-25', 
-                          time: '9:15 AM',
-                          message: 'Looking at making an offer on 123 Main St and would like you to represent me as a buyer agent.',
-                          unread: false
-                        },
-                        {
-                          id: 4,
-                          rep: 'Lisa Thompson',
-                          role: 'Real Estate Attorney',
-                          status: 'Meeting',
-                          date: '2025-04-22',
-                          time: '2:30 PM',
-                          message: 'I have reviewed the purchase agreement and have some suggestions for improvements to protect your interests.',
-                          unread: false
-                        }
-                      ].map((outreach) => (
-                        <div key={outreach.id} className={`p-4 hover:bg-gray-50 cursor-pointer ${outreach.unread ? 'bg-blue-50/30' : ''}`}>
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-2 ${
-                                outreach.unread ? 'bg-[#09261E]' : 'bg-[#09261E]/10'
-                              }`}>
-                                <span className={`font-bold text-xs ${
-                                  outreach.unread ? 'text-white' : 'text-[#09261E]'
-                                }`}>{outreach.rep.charAt(0)}</span>
-                              </div>
-                              <div>
-                                <div className="flex items-center">
-                                  <h4 className="font-medium text-[#09261E] text-sm">{outreach.rep}</h4>
-                                  {outreach.unread && (
-                                    <div className="w-2 h-2 rounded-full bg-blue-500 ml-2"></div>
-                                  )}
-                                </div>
-                                <p className="text-xs text-gray-500">{outreach.role}</p>
-                              </div>
-                            </div>
-                            <Badge className={
-                              outreach.status === 'Replied' ? 'bg-green-500' :
-                              outreach.status === 'Follow up' ? 'bg-gray-400' :
-                              outreach.status === 'Meeting' ? 'bg-gray-400' :
-                              'bg-gray-400'
-                            }>
-                              {outreach.status}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-gray-700 mb-2 line-clamp-2">{outreach.message}</p>
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs text-gray-500">{outreach.date} at {outreach.time}</span>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="h-7 text-xs border-[#09261E] text-[#09261E] hover:bg-gray-100 data-[state=open]:bg-[#09261E] data-[state=open]:text-white"
-                            >
-                              {outreach.status === 'Replied' ? 'View Conversation' : 
-                               outreach.status === 'Follow up' ? 'Send Reminder' : 
-                               outreach.status === 'Meeting' ? 'Join Meeting' :
-                               'Check Status'}
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="notes" className="mt-4">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-semibold text-[#09261E]">Property Notes</h3>
-                </div>
-                
-                <Card className="mb-4">
-                  <CardContent className="p-4">
-                    <Textarea 
-                      placeholder="Add your notes about this property..."
-                      className="mb-4 min-h-20"
-                    />
-                    
-                    <div className="flex justify-end">
-                      <Button className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E] data-[state=open]:bg-[#09261E] data-[state=open]:text-white">
-                        Add Note
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <div className="space-y-3">
-                  {/* Sample notes */}
-                  {[
-                    { 
-                      id: 1, 
-                      text: 'Seller indicated they might be flexible on the closing timeline if we can guarantee a solid offer.', 
-                      date: '2025-05-01 09:30 AM', 
-                      author: 'You'
-                    },
-                    { 
-                      id: 2, 
-                      text: 'The property has a newly replaced roof (2024) and HVAC system (2023). This should reduce maintenance costs for the first few years.', 
-                      date: '2025-04-28 03:15 PM', 
-                      author: 'You'
-                    },
-                    { 
-                      id: 3, 
-                      text: 'Neighborhood has 3 comparable sales in the last 6 months, averaging $285/sqft. This property is listed at $275/sqft which seems reasonable.', 
-                      date: '2025-04-25 11:45 AM', 
-                      author: 'You'
-                    },
-                  ].map((note) => (
-                    <Card key={note.id}>
-                      <CardContent className="p-4">
-                        <p className="text-sm mb-3">{note.text}</p>
-                        <div className="flex justify-between text-xs text-gray-500">
-                          <span>{note.author}</span>
-                          <span>{note.date}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Project Detail Modal */}
-      <Dialog open={projectDetailOpen} onOpenChange={setProjectDetailOpen}>
-        <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto h-[750px]">
-          <DialogHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <DialogTitle className="text-xl text-[#09261E]">
-                  Project Roadmap
-                </DialogTitle>
-                <DialogDescription className="pb-0">
-                  {activeProject && projects.find(p => p.id === activeProject)?.name}
-                </DialogDescription>
-              </div>
-              <Badge 
-                className={`${
-                  projects.find(p => p.id === activeProject)?.status === "active" ? "bg-blue-500" : 
-                  projects.find(p => p.id === activeProject)?.status === "paused" ? "bg-orange-400" :
-                  projects.find(p => p.id === activeProject)?.status === "completed" ? "bg-green-500" :
-                  "bg-gray-400"
-                }`}
-              >
-                {projects.find(p => p.id === activeProject)?.status || "Active"}
-              </Badge>
-            </div>
-          </DialogHeader>
-          
-          <div className="mt-2">
-            <Tabs defaultValue="overview">
-              <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
-                <TabsTrigger value="overview" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                  <span className="flex items-center">
-                    <ClipboardCheck className="h-4 w-4 mr-1.5" />
-                    Overview
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="tasks" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                  <span className="flex items-center">
-                    <CheckSquare className="h-4 w-4 mr-1.5" />
-                    Tasks
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="budget" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                  <span className="flex items-center">
-                    <DollarSign className="h-4 w-4 mr-1.5" />
-                    Budget
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="updates" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                  <span className="flex items-center">
-                    <MessageSquare className="h-4 w-4 mr-1.5" />
-                    Updates
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="team" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                  <span className="flex items-center">
-                    <Users className="h-4 w-4 mr-1.5" />
-                    Team
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="chat" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                  <span className="flex items-center">
-                    <MessageCircle className="h-4 w-4 mr-1.5" />
-                    Chat
-                  </span>
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="overview" className="mt-0">
-                {activeProject && (
-                  <div className="space-y-4">
-                    {/* Project Alert for schedule or budget issues */}
-                    {(() => {
-                      const project = projects.find(p => p.id === activeProject);
-                      const isBehindSchedule = project && project.timeline.currentProgress < 50; // Example threshold
-                      const isOverBudget = project && project.budget.actual > project.budget.estimated;
-                      
-                      if (isBehindSchedule || isOverBudget) {
-                        return (
-                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3 mb-4">
-                            <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <h4 className="font-medium text-amber-800 mb-1">Project Alert</h4>
-                              <div className="text-sm text-amber-700 space-y-1">
-                                {isBehindSchedule && (
-                                  <p>This project is behind schedule. Current progress: {project?.timeline.currentProgress}% (Expected: 50%)</p>
-                                )}
-                                {isOverBudget && (
-                                  <p>This project is over budget by ${(project ? project.budget.actual - project.budget.estimated : 0).toLocaleString()}</p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })()}
-                    <Card>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">Project Timeline</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          <div>
-                            <div className="flex justify-between mb-1">
-                              <span className="text-sm font-medium">Overall Progress</span>
-                              <span className="text-sm">
-                                {projects.find(p => p.id === activeProject)?.timeline.currentProgress}%
-                              </span>
-                            </div>
-                            <Progress 
-                              value={projects.find(p => p.id === activeProject)?.timeline.currentProgress} 
-                              className="h-2"
-                            />
-                          </div>
-                          
-                          <div className="flex justify-between text-sm">
-                            <div>
-                              <p className="text-gray-500">Start Date</p>
-                              <p className="font-medium">
-                                {projects.find(p => p.id === activeProject)?.timeline.startDate}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-gray-500">End Date</p>
-                              <p className="font-medium">
-                                {projects.find(p => p.id === activeProject)?.timeline.endDate}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Card>
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-lg">Budget Summary</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm">Estimated Budget</span>
-                              <span className="font-medium">
-                                ${projects.find(p => p.id === activeProject)?.budget.estimated.toLocaleString()}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm">Actual Spend</span>
-                              <span className="font-medium">
-                                ${projects.find(p => p.id === activeProject)?.budget.actual.toLocaleString()}
-                              </span>
-                            </div>
-                            <Separator />
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-medium">Remaining</span>
-                              <span className="font-medium text-green-600">
-                                ${projects.find(p => p.id === activeProject)?.budget.remaining.toLocaleString()}
-                              </span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card>
-                        <CardHeader className="pb-2">
-                          <CardTitle className="text-lg">Task Progress</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="space-y-3">
-                            {projects.find(p => p.id === activeProject)?.tasks.map(task => (
-                              <div 
-                                key={task.id} 
-                                className="flex items-center hover:bg-gray-100 rounded px-2 py-1 cursor-pointer transition-colors"
-                              >
-                                <div className="w-5 h-5 rounded border border-gray-300 flex items-center justify-center mr-3">
-                                  {task.completed && <CheckSquare className="h-4 w-4 text-green-600" />}
-                                </div>
-                                <span className={`${task.completed ? 'line-through text-gray-500' : ''} hover:text-[#09261E]`}>
-                                  {task.title}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                )}
-              </TabsContent>
-              
-              <TabsContent value="tasks" className="mt-0">
-                <div className="mb-4 flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <h3 className="font-semibold text-[#09261E]">Task Management</h3>
-                    <Select defaultValue="default" onValueChange={(value) => {
-                      // Implement task sorting logic here
-                      console.log('Sorting tasks by:', value);
-                    }}>
-                      <SelectTrigger className="h-8 w-[140px]">
-                        <SelectValue placeholder="Sort by" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="default">Default Order</SelectItem>
-                        <SelectItem value="due_date">Due Date</SelectItem>
-                        <SelectItem value="priority">Priority</SelectItem>
-                        <SelectItem value="status">Status</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
-                        <PlusCircle className="h-4 w-4 mr-1.5" />
-                        Add Task
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>Add New Task</DialogTitle>
-                        <DialogDescription>
-                          Create a new task for this project
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="task-title">Task Name</Label>
-                          <Input id="task-title" placeholder="Enter task title" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="grid gap-2">
-                            <Label htmlFor="task-due">Due Date</Label>
-                            <Input id="task-due" type="date" />
-                          </div>
-                          <div className="grid gap-2">
-                            <Label htmlFor="task-status">Status</Label>
-                            <Select defaultValue="not_started">
-                              <SelectTrigger id="task-status">
-                                <SelectValue placeholder="Select status" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="not_started">Not Started</SelectItem>
-                                <SelectItem value="in_progress">In Progress</SelectItem>
-                                <SelectItem value="completed">Completed</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="task-assigned">Assigned To</Label>
-                          <Select>
-                            <SelectTrigger id="task-assigned">
-                              <SelectValue placeholder="Select team member" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="you">You</SelectItem>
-                              <SelectItem value="john">John Smith</SelectItem>
-                              <SelectItem value="sarah">Sarah Johnson</SelectItem>
-                              <SelectItem value="mike">Mike Williams</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="task-details">Details</Label>
-                          <Textarea id="task-details" placeholder="Enter any additional notes or details" />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Add Task</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                
-                <Card>
-                  <CardContent className="p-0">
-                    <div className="divide-y divide-gray-100">
-                      {activeProject && projects.find(p => p.id === activeProject)?.tasks.map((task, index) => (
-                        <div key={task.id} className="p-3 hover:bg-gray-50">
-                          <div 
-                            className="flex items-center justify-between cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors"
-                            onClick={() => toggleTaskExpanded(task.id)}
-                          >
-                            <div className="flex items-start gap-3 flex-1">
-                              <Checkbox 
-                                id={`project-task-${task.id}`} 
-                                className="mt-1"
-                                checked={task.completed}
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                              <div>
-                                <label 
-                                  htmlFor={`project-task-${task.id}`}
-                                  className={`block font-medium mb-1 hover:text-[#09261E] ${task.completed ? 'line-through text-gray-500' : 'text-[#09261E]'}`}
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {task.title}
-                                </label>
-                                <div className="flex items-center gap-4 text-xs text-gray-500">
-                                  <div className="flex items-center">
-                                    <Clock className="h-3.5 w-3.5 mr-1" />
-                                    Due: {task.dueDate || 'Not set'}
-                                  </div>
-                                  {task.assignedTo && (
-                                    <div className="flex items-center">
-                                      <Users className="h-3.5 w-3.5 mr-1" />
-                                      {task.assignedTo}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            <Badge 
-                              className={`${
-                                task.status === 'Not Started' ? 'bg-gray-400' :
-                                task.status === 'In Progress' ? 'bg-blue-500' :
-                                'bg-green-500'
-                              }`}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {task.status || 'Not Started'}
-                            </Badge>
-                          </div>
-                          
-                          {expandedTaskIds[task.id] && (
-                            <div className="mt-2 ml-8 bg-white p-3 rounded border border-gray-100 text-sm">
-                              <p className="mb-2 text-[#09261E] font-medium">{task.title}</p>
-                              <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs mb-3">
-                                <div>
-                                  <span className="font-medium text-gray-600">Due Date:</span> {task.dueDate || 'Not set'}
-                                </div>
-                                <div>
-                                  <span className="font-medium text-gray-600">Status:</span> {task.status || 'Not Started'}
-                                </div>
-                                <div>
-                                  <span className="font-medium text-gray-600">Assigned:</span> {task.assignedTo || 'Unassigned'}
-                                </div>
-                                <div>
-                                  <span className="font-medium text-gray-600">Priority:</span> Medium
-                                </div>
-                              </div>
-                              <div className="text-xs text-gray-600">
-                                <span className="font-medium">Description:</span>
-                                <p className="mt-1">
-                                  No description provided for this task.
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="budget" className="mt-0">
-                <div className="mb-4 flex justify-between items-center">
-                  <h3 className="font-semibold text-[#09261E]">Budget Tracking</h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
-                        <PlusCircle className="h-4 w-4 mr-1.5" />
-                        Add Expense
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>Add New Expense</DialogTitle>
-                        <DialogDescription>
-                          Record a new expense for this project
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="expense-vendor">Vendor/Payee Name</Label>
-                          <Input id="expense-vendor" placeholder="Enter vendor or payee name" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="grid gap-2">
-                            <Label htmlFor="expense-amount">Amount ($)</Label>
-                            <Input id="expense-amount" type="number" min="0" step="0.01" placeholder="0.00" />
-                          </div>
-                          <div className="grid gap-2">
-                            <Label htmlFor="expense-date">Date Paid</Label>
-                            <Input id="expense-date" type="date" />
-                          </div>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="expense-category">Category</Label>
-                          <Select>
-                            <SelectTrigger id="expense-category">
-                              <SelectValue placeholder="Select category" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="labor">Labor</SelectItem>
-                              <SelectItem value="materials">Materials</SelectItem>
-                              <SelectItem value="permits">Permits & Fees</SelectItem>
-                              <SelectItem value="equipment">Equipment Rental</SelectItem>
-                              <SelectItem value="supplies">Supplies</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="expense-notes">Notes</Label>
-                          <Textarea id="expense-notes" placeholder="Enter any additional notes about this expense" />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Add Expense</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                
-                <Card className="mb-4">
-                  <CardContent className="pt-6">
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex justify-between mb-1">
-                          <span className="text-sm font-medium">Budget Usage</span>
-                          <span className="text-sm">
-                            {activeProject && 
-                              Math.round((projects.find(p => p.id === activeProject)?.budget.actual || 0) / 
-                              (projects.find(p => p.id === activeProject)?.budget.estimated || 1) * 100)
-                            }%
-                          </span>
-                        </div>
-                        <Progress 
-                          value={activeProject && 
-                            Math.round((projects.find(p => p.id === activeProject)?.budget.actual || 0) / 
-                            (projects.find(p => p.id === activeProject)?.budget.estimated || 1) * 100)
-                          } 
-                          className={`h-2 ${
-                            activeProject && 
-                            Math.round((projects.find(p => p.id === activeProject)?.budget.actual || 0) / 
-                            (projects.find(p => p.id === activeProject)?.budget.estimated || 1) * 100) >= 90
-                            ? 'progress-value-warning' : ''
-                          }`}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-3 gap-4 text-center">
-                        <div className="bg-gray-100 p-4 rounded-lg">
-                          <div className="text-sm text-gray-500">Estimated</div>
-                          <div className="text-lg font-bold">
-                            ${activeProject && projects.find(p => p.id === activeProject)?.budget.estimated.toLocaleString()}
-                          </div>
-                        </div>
-                        <div className="bg-gray-100 p-4 rounded-lg">
-                          <div className="text-sm text-gray-500">Spent</div>
-                          <div className="text-lg font-bold">
-                            ${activeProject && projects.find(p => p.id === activeProject)?.budget.actual.toLocaleString()}
-                          </div>
-                        </div>
-                        <div className="bg-gray-100 p-4 rounded-lg">
-                          <div className="text-sm text-gray-500">Remaining</div>
-                          <div className="text-lg font-bold text-green-600">
-                            ${activeProject && projects.find(p => p.id === activeProject)?.budget.remaining.toLocaleString()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <h4 className="font-medium text-[#09261E] mb-2">Expense Line Items</h4>
-                <Card>
-                  <CardContent className="p-0">
-                    <div className="divide-y divide-gray-100">
-                      {/* Sample expenses */}
-                      {[
-                        { id: 1, vendor: 'ABC Contracting', amount: 5800, date: '2025-03-15', category: 'Labor' },
-                        { id: 2, vendor: 'Smith Supply Co', amount: 2340, date: '2025-03-18', category: 'Materials' },
-                        { id: 3, vendor: 'City Permits', amount: 450, date: '2025-03-20', category: 'Permits' },
-                        { id: 4, vendor: 'Pro Plumbing', amount: 1250, date: '2025-04-02', category: 'Labor' },
-                      ].map(expense => (
-                        <div key={expense.id} className="flex items-center justify-between p-4 hover:bg-gray-50">
-                          <div>
-                            <p className="font-medium">{expense.vendor}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs text-gray-500">{expense.date}</span>
-                              <Badge className={`text-xs px-2 py-0 h-5 ${
-                                expense.category === 'Labor' ? 'bg-blue-100 text-blue-800 hover:bg-blue-100' : 
-                                expense.category === 'Materials' ? 'bg-green-100 text-green-800 hover:bg-green-100' : 
-                                expense.category === 'Permits' ? 'bg-purple-100 text-purple-800 hover:bg-purple-100' : 
-                                'bg-gray-100 text-gray-800 hover:bg-gray-100'
-                              }`}>
-                                {expense.category}
-                              </Badge>
-                            </div>
-                          </div>
-                          <div className="font-medium">${expense.amount.toLocaleString()}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="updates" className="mt-0">
-                <div className="mb-4 flex justify-between items-center">
-                  <h3 className="font-semibold text-[#09261E]">Project Updates</h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
-                        <PlusCircle className="h-4 w-4 mr-1.5" />
-                        Add Update
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>Post Project Update</DialogTitle>
-                        <DialogDescription>
-                          Share progress, updates, or milestones with the project team
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="update-text">Update Details</Label>
-                          <Textarea id="update-text" placeholder="Describe what's new or what's been accomplished..." className="min-h-[100px]" />
-                        </div>
-                        <div className="grid gap-2">
-                          <Label className="flex items-center gap-2">
-                            <PlusCircle className="h-4 w-4" />
-                            Add Photo (Optional)
-                          </Label>
-                          <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center cursor-pointer hover:bg-gray-50 transition-colors">
-                            <Input id="update-image" type="file" accept="image/*" className="hidden" />
-                            <label htmlFor="update-image" className="cursor-pointer">
-                              <div className="flex flex-col items-center gap-1">
-                                <FileText className="h-6 w-6 text-gray-400" />
-                                <span className="text-sm text-gray-500">Click to upload an image</span>
-                                <span className="text-xs text-gray-400">(Maximum size: 5MB)</span>
-                              </div>
-                            </label>
-                          </div>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="update-visibility">Visibility</Label>
-                          <Select defaultValue="team">
-                            <SelectTrigger id="update-visibility">
-                              <SelectValue placeholder="Select visibility" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="team">Team Only</SelectItem>
-                              <SelectItem value="clients">Team & Clients</SelectItem>
-                              <SelectItem value="public">Public</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Post Update</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                
-                <div className="space-y-4">
-                  {activeProject && [...(projects.find(p => p.id === activeProject)?.updates || [])].reverse().map((update, index) => {
-                    return (
-                      <Card key={index} className="overflow-hidden">
-                        <CardContent className="p-0">
-                          {/* Main update */}
-                          <div className="p-4 border-b border-gray-100">
-                            <div className="flex justify-between items-start mb-2">
-                              <div className="flex items-start gap-3">
-                                <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center flex-shrink-0">
-                                  <User className="h-5 w-5 text-[#09261E]" />
-                                </div>
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <h4 className="font-semibold text-[#09261E]">{update.author}</h4>
-                                    <span className="text-xs text-gray-500">{update.date}</span>
-                                  </div>
-                                  <p className="text-sm text-gray-700 mt-1">{update.text}</p>
-                                  <div className="flex gap-2 mt-2">
-                                    {update.text.toLowerCase().includes('budget') && (
-                                      <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100 text-xs">
-                                        Budget Impact
-                                      </Badge>
-                                    )}
-                                    {update.text.toLowerCase().includes('milestone') && (
-                                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100 text-xs">
-                                        Milestone
-                                      </Badge>
-                                    )}
-                                    {update.text.toLowerCase().includes('delay') && (
-                                      <Badge className="bg-red-100 text-red-800 hover:bg-red-100 text-xs">
-                                        Schedule Delay
-                                      </Badge>
-                                    )}
-                                  </div>
-                                  {update.image && (
-                                    <img 
-                                      src={update.image} 
-                                      alt="Update" 
-                                      className="mt-3 rounded-md max-h-48 object-cover"
-                                    />
-                                  )}
-                                </div>
-                              </div>
-                              <div className="flex items-center space-x-1">
-                                <Dialog>
-                                  <DialogTrigger asChild>
-                                    <Button 
-                                      variant="ghost" 
-                                      size="sm" 
-                                      className="text-xs text-gray-500 hover:bg-gray-100 hover:text-[#09261E]"
-                                    >
-                                      <MessageCircle className="h-3.5 w-3.5 mr-1.5" />
-                                      Reply
-                                    </Button>
-                                  </DialogTrigger>
-                                  <DialogContent className="sm:max-w-[425px]">
-                                    <DialogHeader>
-                                      <DialogTitle>Add Comment</DialogTitle>
-                                      <DialogDescription>
-                                        Add your comment to this thread
-                                      </DialogDescription>
-                                    </DialogHeader>
-                                    <div className="grid gap-4 py-4">
-                                      <Textarea 
-                                        placeholder="Write your comment here..." 
-                                        className="min-h-[100px]"
-                                      />
-                                      <div className="flex items-center gap-2">
-                                        <Paperclip className="h-4 w-4 text-gray-500" />
-                                        <span className="text-sm text-gray-500">Attach a file (optional)</span>
-                                      </div>
-                                    </div>
-                                    <DialogFooter>
-                                      <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">Post Comment</Button>
-                                    </DialogFooter>
-                                  </DialogContent>
-                                </Dialog>
-                              </div>
-                            </div>
-                            
-                            {/* Comments header */}
-                            <div 
-                              className="px-4 py-2 bg-gray-50 flex items-center justify-between cursor-pointer border-t border-gray-100"
-                            >
-                              <div className="flex items-center">
-                                <MessageSquare className="h-3.5 w-3.5 mr-1.5 text-gray-500" />
-                                <span className="text-xs text-gray-500 font-medium">
-                                  2 Comments
-                                </span>
-                              </div>
-                              <ChevronDown className="h-3.5 w-3.5 text-gray-500 transition-transform" />
-                            </div>
-                            
-                            {/* Comment list - simplified version */}
-                            <div className="px-4 py-2">
-                              <div className="space-y-3 ml-8">
-                                {[
-                                  { author: "Sarah Johnson", text: "Great progress! When do you expect the next milestone?", date: "Just now" },
-                                  { author: "Michael Chen", text: "I've added some notes to the documentation.", date: "Yesterday" }
-                                ].map((comment, commentIdx) => (
-                                  <div key={commentIdx} className="flex items-start gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                                      <User className="h-4 w-4 text-gray-600" />
-                                    </div>
-                                    <div className="flex-1">
-                                      <div className="flex items-center gap-2">
-                                        <h5 className="text-sm font-medium">{comment.author}</h5>
-                                        <span className="text-xs text-gray-500">{comment.date}</span>
-                                      </div>
-                                      <p className="text-xs text-gray-700">{comment.text}</p>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-              </TabsContent>
-              
-              <TabsContent value="team" className="mt-0">
-                <div className="mb-4 flex justify-between items-center">
-                  <h3 className="font-semibold text-[#09261E]">Project Team</h3>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size="sm" className="bg-[#09261E] hover:bg-gray-100 hover:text-[#09261E]">
-                        <PlusCircle className="h-4 w-4 mr-1.5" />
-                        Invite Member
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>Invite Team Member</DialogTitle>
-                        <DialogDescription>
-                          Add professionals involved in this project.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="py-4">
-                        <Tabs defaultValue="search" className="w-full">
-                          <TabsList className="w-full bg-gray-100 p-1 rounded-lg">
-                            <TabsTrigger value="search" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Search Team</TabsTrigger>
-                            <TabsTrigger value="invite" className="rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Invite Member</TabsTrigger>
-                          </TabsList>
-                          
-                          <TabsContent value="search" className="mt-4">
-                            <div className="space-y-4">
-                              <div>
-                                <h4 className="font-medium text-lg mb-4">Search for team members</h4>
-                                <div className="relative mb-6">
-                                  <Input placeholder="Search by name, role, or expertise..." className="pr-10" />
-                                  <Search className="absolute right-3 top-2.5 h-4 w-4 text-gray-400" />
-                                </div>
-                              </div>
-                              
-                              <div className="border rounded-md divide-y">
-                                {[
-                                  { id: 1, name: 'Sarah Johnson', specialty: 'Project Manager', location: 'Seattle, WA', avatar: 'S' },
-                                  { id: 2, name: 'Michael Chen', specialty: 'Contractor', location: 'Portland, OR', avatar: 'M' },
-                                  { id: 3, name: 'David Rodriguez', specialty: 'Designer', location: 'San Francisco, CA', avatar: 'D' },
-                                ].map(member => (
-                                  <div key={member.id} className="p-3 hover:bg-gray-50 cursor-pointer flex items-center justify-between">
-                                    <div className="flex items-center">
-                                      <div className="w-10 h-10 rounded-full bg-[#09261E]/10 flex items-center justify-center mr-3">
-                                        <span className="text-[#09261E] font-bold">{member.avatar}</span>
-                                      </div>
-                                      <div>
-                                        <h4 className="font-medium text-[#09261E] text-sm">{member.name}</h4>
-                                        <p className="text-xs text-gray-500">{member.specialty} • {member.location}</p>
-                                      </div>
-                                    </div>
-                                    <Button size="sm" variant="outline">Select</Button>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </TabsContent>
-                          
-                          <TabsContent value="invite" className="mt-4">
-                            <div className="space-y-4">
-                              <div>
-                                <Label htmlFor="invite-method">Invite Method</Label>
-                                <Select defaultValue="email">
-                                  <SelectTrigger id="invite-method">
-                                    <SelectValue placeholder="Select invite method" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="email">Email</SelectItem>
-                                    <SelectItem value="sms">SMS/Text</SelectItem>
-                                    <SelectItem value="system">System User</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="invite-contact">Contact Information</Label>
-                                <Input id="invite-contact" placeholder="Email address or phone number" />
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="invite-name">Contact Name</Label>
-                                <Input id="invite-name" placeholder="John Smith" />
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="invite-role">Role</Label>
-                                <Select>
-                                  <SelectTrigger id="invite-role">
-                                    <SelectValue placeholder="Select role" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="project_manager">Project Manager</SelectItem>
-                                    <SelectItem value="contractor">Contractor</SelectItem>
-                                    <SelectItem value="designer">Designer</SelectItem>
-                                    <SelectItem value="client">Client</SelectItem>
-                                    <SelectItem value="team_member">Team Member</SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              
-                              <div>
-                                <Label htmlFor="invite-permission">Permissions</Label>
-                                <Select defaultValue="viewer">
-                                  <SelectTrigger id="invite-permission">
-                                    <SelectValue placeholder="Select permission level" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="admin">Admin (Full access)</SelectItem>
-                                    <SelectItem value="editor">Editor (Can edit)</SelectItem>
-                                    <SelectItem value="viewer">Viewer (View only)</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                              
-
-                            </div>
-                          </TabsContent>
-                        </Tabs>
-                      </div>
-                      <DialogFooter>
-                        <Button variant="outline" className="mr-auto">
-                          Add without sending invitation
-                        </Button>
-                        <Button type="submit" className="bg-[#09261E] hover:bg-[#135341]">
-                          Send Invitation
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-                
-                <Card className="mb-4">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">Roles & Responsibilities</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <div className="divide-y divide-gray-100">
-                      {/* Sample team members */}
-                      {[
-                        { id: 1, name: 'John Smith', role: 'Project Manager', email: 'john@example.com', permissions: 'Editor' },
-                        { id: 2, name: 'Sarah Johnson', role: 'Designer', email: 'sarah@example.com', permissions: 'Editor' },
-                        { id: 3, name: 'Mike Williams', role: 'Contractor', email: 'mike@example.com', permissions: 'Viewer' },
-                        { id: 4, name: 'Lisa Brown', role: 'Client', email: 'lisa@example.com', permissions: 'Viewer' },
-                      ].map(member => (
-                        <div key={member.id} className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
-                          <div className="flex items-center">
-                            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                              <Users className="h-5 w-5 text-gray-500" />
-                            </div>
-                            <div>
-                              <p className="font-medium">{member.name}</p>
-                              <p className="text-xs text-gray-500">{member.role} • {member.email}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Select defaultValue={member.permissions}>
-                              <SelectTrigger className="w-28 h-8">
-                                <SelectValue placeholder="Permissions" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Editor">Editor</SelectItem>
-                                <SelectItem value="Viewer">Viewer</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">Team Activity</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {[
-                        { name: 'John Smith', action: 'updated task', item: 'Verify wire details', time: '2 hours ago' },
-                        { name: 'Sarah Johnson', action: 'uploaded document', item: 'Final design mockups.pdf', time: 'Yesterday' },
-                        { name: 'Mike Williams', action: 'commented on', item: 'Kitchen plumbing issues', time: '2 days ago' },
-                      ].map((activity, index) => (
-                        <div key={index} className="flex items-start p-2 rounded-md hover:bg-gray-50 transition-colors">
-                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5">
-                            <Users className="h-4 w-4 text-gray-500" />
-                          </div>
-                          <div>
-                            <p className="text-sm">
-                              <span className="font-medium">{activity.name}</span>
-                              <span className="text-gray-600"> {activity.action} </span>
-                              <span className="text-[#09261E] font-medium">{activity.item}</span>
-                            </p>
-                            <p className="text-xs text-gray-500">{activity.time}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="chat" className="mt-0">
-                <div className="flex flex-col h-[400px]">
-                  <div className="flex-1 overflow-y-auto mb-4 bg-gray-50 p-3 rounded-lg" id="chat-messages">
-                    <div className="space-y-4">
-                      {/* Chat messages */}
-                      {[
-                        { 
-                          sender: 'John Smith', 
-                          avatar: 'JS', 
-                          avatarColor: '#135341', 
-                          message: 'Hey team, just wanted to update you all on the kitchen cabinet installation - we\'re on track for completion by Friday.', 
-                          time: '2 days ago', 
-                          isMine: false 
-                        },
-                        { 
-                          sender: 'Sarah Johnson', 
-                          avatar: 'SJ', 
-                          avatarColor: '#803344', 
-                          message: 'Great! The clients wanted to know if they should schedule the appliance delivery for Monday then?', 
-                          time: '2 days ago', 
-                          isMine: false 
-                        },
-                        { 
-                          sender: 'You', 
-                          avatar: 'You', 
-                          message: 'Yes, Monday works well. I\'ll be on site to receive the delivery and make sure everything is set up correctly.', 
-                          time: '2 days ago', 
-                          isMine: true 
-                        },
-                        { 
-                          sender: 'Mike Williams', 
-                          avatar: 'MW', 
-                          avatarColor: '#0C598A', 
-                          message: 'Just a heads up, I noticed the backsplash material might be delayed. I\'m following up with the supplier today.', 
-                          time: 'Yesterday', 
-                          isMine: false 
-                        },
-                        { 
-                          sender: 'You', 
-                          avatar: 'You', 
-                          message: 'Thanks for flagging that Mike. Let me know what they say - we might need to adjust our timeline if there\'s a significant delay.', 
-                          time: 'Yesterday', 
-                          isMine: true 
-                        },
-                        { 
-                          sender: 'Mike Williams', 
-                          avatar: 'MW', 
-                          avatarColor: '#0C598A',
-                          message: 'Good news - supplier confirmed delivery for Thursday. We\'re still on track.', 
-                          time: '5 hours ago', 
-                          isMine: false,
-                          hasImage: true,
-                          imageUrl: 'https://images.unsplash.com/photo-1618282434267-84d6943a3a31?q=80&w=600&auto=format' 
-                        },
-                      ].map((message, index) => (
-                        <div key={index} className={`flex ${message.isMine ? 'justify-end' : 'justify-start'} group`}>
-                          {!message.isMine && (
-                            <div 
-                              className="w-9 h-9 rounded-full flex items-center justify-center mr-2 flex-shrink-0 text-white shadow-sm" 
-                              style={{ backgroundColor: message.avatarColor || '#09261E' }}
-                            >
-                              <span className="text-xs font-semibold">{message.avatar}</span>
-                            </div>
-                          )}
-                          <div className={`max-w-[75%] rounded-lg p-3 ${message.isMine ? 'bg-[#09261E] text-white' : 'bg-white border border-gray-200 shadow-sm'}`}>
-                            {!message.isMine && (
-                              <div className="font-medium text-sm mb-1">{message.sender}</div>
-                            )}
-                            <p className="text-sm">{message.message}</p>
-                            {message.hasImage && (
-                              <div className="mt-2 rounded-md overflow-hidden">
-                                <img 
-                                  src={message.imageUrl} 
-                                  alt="Shared content" 
-                                  className="w-full max-h-40 object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                                />
-                              </div>
-                            )}
-                            <div className={`text-xs mt-1.5 flex items-center ${message.isMine ? 'text-gray-300' : 'text-gray-500'}`}>
-                              {message.time}
-                              <span className="invisible group-hover:visible ml-2 flex items-center space-x-1.5">
-                                <Button variant="ghost" size="icon" className="h-5 w-5 rounded-full">
-                                  <ThumbsUp className="h-3 w-3" />
-                                </Button>
-                                <Button variant="ghost" size="icon" className="h-5 w-5 rounded-full">
-                                  <MoreHorizontal className="h-3 w-3" />
-                                </Button>
-                              </span>
-                            </div>
-                          </div>
-                          {message.isMine && (
-                            <div className="w-9 h-9 rounded-full bg-[#09261E] flex items-center justify-center ml-2 flex-shrink-0 shadow-sm">
-                              <span className="text-xs font-semibold text-white">You</span>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div className="border rounded-lg p-2 bg-white">
-                    <div className="flex justify-between mb-2">
-                      <div className="flex space-x-1">
-                        <Button variant="ghost" size="sm" className="h-8 px-3 rounded-md text-sm">
-                          📷 Photo
-                        </Button>
-                        <Button variant="ghost" size="sm" className="h-8 px-3 rounded-md text-sm">
-                          📁 File
-                        </Button>
-                      </div>
-                    </div>
-                    <div className="relative">
-                      <Textarea 
-                        placeholder="Type your message here..." 
-                        className="pr-12 resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-none"
-                        rows={2}
-                      />
-                      <div className="absolute right-1 bottom-1 flex items-center">
-                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full text-gray-400 hover:text-gray-600 mr-0.5">
-                          <PlusCircle className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          className="h-8 w-8 rounded-full bg-[#09261E] hover:bg-[#135341]"
-                        >
-                          <Send className="h-4 w-4 text-white" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Auto scroll script */}
-                <script dangerouslySetInnerHTML={{
-                  __html: `
-                    document.addEventListener('DOMContentLoaded', function() {
-                      const chatContainer = document.getElementById('chat-messages');
-                      if (chatContainer) {
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                      }
-                    });
-                  `
-                }} />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
