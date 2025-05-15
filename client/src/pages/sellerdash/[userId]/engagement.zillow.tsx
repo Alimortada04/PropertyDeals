@@ -741,11 +741,15 @@ function AIMessageSuggestions({ engagement }: { engagement: typeof mockEngagemen
 function PropertyDetailView({ 
   property, 
   engagements, 
-  onViewBuyer 
+  onViewBuyer,
+  timelineRef,
+  onScrollTimeline
 }: { 
   property: typeof mockProperties[0]; 
   engagements: typeof mockEngagements;
   onViewBuyer: (id: string) => void;
+  timelineRef: React.RefObject<HTMLDivElement>;
+  onScrollTimeline: (direction: 'left' | 'right') => void;
 }) {
   // Engagement metrics
   const views = engagements.filter(e => e.type === "view").length;
@@ -1254,7 +1258,7 @@ function PropertyDetailView({
               variant="outline" 
               size="icon" 
               className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-[#135341] transition-colors"
-              onClick={() => scrollTimeline('left')}
+              onClick={() => onScrollTimeline('left')}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -1262,7 +1266,7 @@ function PropertyDetailView({
               variant="outline" 
               size="icon" 
               className="h-8 w-8 rounded-full hover:bg-gray-100 hover:text-[#135341] transition-colors"
-              onClick={() => scrollTimeline('right')}
+              onClick={() => onScrollTimeline('right')}
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -1392,8 +1396,8 @@ function PropertyDetailView({
                                 </p>
                               )}
                               {stage.active && currentStage === index && (
-                                <div className="mt-1 bg-white shadow-sm border border-gray-200 rounded-full px-2 py-0.5 text-[10px] font-medium text-[#135341]">
-                                  Current
+                                <div className="mt-1 bg-white shadow-sm border border-green-100 rounded-full px-2 py-0.5 text-[10px] font-medium text-[#135341] animate-pulse">
+                                  Current Stage
                                 </div>
                               )}
                             </div>
@@ -1999,6 +2003,8 @@ export default function EngagementZillowPage() {
                 property={selectedProperty} 
                 engagements={selectedPropertyEngagements}
                 onViewBuyer={handleViewBuyer}
+                timelineRef={timelineRef}
+                onScrollTimeline={scrollTimeline}
               />
             ) : (
               <div className="h-full flex items-center justify-center">
