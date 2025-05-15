@@ -61,6 +61,8 @@ import {
 import RoleSwitcher from './RoleSwitcher';
 import FloatingActionMenu from './FloatingActionMenu';
 import MarketingTab from './MarketingTab';
+import { QuickActionSelector } from '@/components/seller/quick-action-selector';
+import { ModalProvider } from '@/providers/modal-provider';
 
 // Property listing wizard steps
 const WIZARD_STEPS = [
@@ -1034,10 +1036,16 @@ export default function SellerDashboard() {
 
   return (
     <div className="pt-20 sm:pt-24 md:pt-20 p-4 sm:p-6 md:p-12 space-y-8">
+      {/* Modal Provider for all modals */}
+      <ModalProvider />
+      
       {/* Role Switcher */}
       <RoleSwitcher currentRole={activeRole} onRoleChange={handleRoleChange} />
       
-      {/* Floating Action Menu - Mobile Optimized */}
+      {/* Quick Action Selector - Wine colored FAB */}
+      <QuickActionSelector />
+      
+      {/* Original Floating Action Menu - can be removed once testing is complete */}
       <FloatingActionMenu 
         onAddDeal={handleAddDeal}
         onShare={handleShareProperty}
