@@ -331,67 +331,86 @@ function PropertyCard({
   
   return (
     <div 
-      className={`border rounded-lg overflow-hidden mb-3 transition-all ${
+      className={`border rounded-lg overflow-hidden mb-4 transition-all ${
         isSelected 
-          ? 'border-[#135341] ring-1 ring-[#135341] bg-white' 
-          : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-sm'
+          ? 'border-[#135341] ring-1 ring-[#135341] bg-white shadow-md' 
+          : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
       }`}
       onClick={onSelect}
     >
-      <div className="flex items-start p-3">
-        <div className="h-20 w-20 rounded-md overflow-hidden flex-shrink-0 relative">
-          <img 
-            src={property.image} 
-            alt={property.title} 
-            className="h-full w-full object-cover"
-          />
-          {hasNewActivity && (
-            <div className="absolute top-1 right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse" />
-          )}
+      {/* Property Image */}
+      <div className="w-full h-36 relative">
+        <img 
+          src={property.image} 
+          alt={property.title} 
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 text-white">
+          <p className="font-semibold">{formatCurrency(property.price)}</p>
         </div>
         
-        <div className="ml-3 flex-grow">
-          <div className="flex items-start justify-between mb-1">
-            <div>
-              <h3 className="font-medium text-gray-800 line-clamp-1">{property.address.split(',')[0]}</h3>
-              <p className="text-xs text-gray-500">
-                {property.address.split(',').slice(1).join(',')}
-              </p>
-            </div>
-            <Badge variant="outline" className="ml-2 text-xs">
-              {formatCurrency(property.price)}
-            </Badge>
-          </div>
+        {hasNewActivity && (
+          <div className="absolute top-2 right-2 h-3 w-3 bg-red-500 rounded-full animate-pulse" />
+        )}
+      </div>
+      
+      {/* Property Details */}
+      <div className="p-3">
+        <div className="mb-2">
+          <h3 className="font-medium text-gray-800 line-clamp-1">{property.address.split(',')[0]}</h3>
+          <p className="text-xs text-gray-500 line-clamp-1">
+            {property.address.split(',').slice(1).join(',')}
+          </p>
+        </div>
+        
+        {/* Metrics in Light Pills */}
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs font-normal">
+            <Eye className="h-3 w-3 mr-1" />
+            {views} Views
+          </Badge>
           
-          <div className="flex flex-wrap items-center mt-2 text-xs text-gray-600 gap-2">
-            <div className="flex items-center">
-              <Eye className="h-3 w-3 mr-1 text-blue-500" />
-              <span>{views}</span>
-            </div>
-            <div className="flex items-center">
-              <Bookmark className="h-3 w-3 mr-1 text-amber-500" />
-              <span>{saves}</span>
-            </div>
-            <div className="flex items-center">
-              <MessageCircle className="h-3 w-3 mr-1 text-green-500" />
-              <span>{messages}{newMessages > 0 && <span className="text-green-600 font-medium ml-0.5">({newMessages})</span>}</span>
-            </div>
-            <div className="flex items-center">
-              <DollarSign className="h-3 w-3 mr-1 text-purple-500" />
-              <span>{offers}{newOffers > 0 && <span className="text-purple-600 font-medium ml-0.5">({newOffers})</span>}</span>
-            </div>
-          </div>
+          <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 text-xs font-normal">
+            <Bookmark className="h-3 w-3 mr-1" />
+            {saves} Saves
+          </Badge>
+          
+          <Badge 
+            variant="outline" 
+            className={`${
+              newMessages > 0 
+                ? 'bg-green-100 text-green-800 border-green-300 font-medium' 
+                : 'bg-green-50 text-green-700 border-green-200 font-normal'
+            } text-xs cursor-pointer`}
+          >
+            <MessageCircle className="h-3 w-3 mr-1" />
+            {messages} {newMessages > 0 && `(${newMessages})`}
+          </Badge>
+          
+          <Badge 
+            variant="outline" 
+            className={`${
+              newOffers > 0 
+                ? 'bg-purple-100 text-purple-800 border-purple-300 font-medium' 
+                : 'bg-purple-50 text-purple-700 border-purple-200 font-normal'
+            } text-xs cursor-pointer`}
+          >
+            <DollarSign className="h-3 w-3 mr-1" />
+            {offers} {newOffers > 0 && `(${newOffers})`}
+          </Badge>
         </div>
       </div>
       
+      {/* Needs Attention Warning */}
       {hasNewActivity && (
-        <div className="bg-amber-50 px-3 py-1.5 text-xs border-t border-amber-100">
+        <div className="bg-amber-50 px-3 py-2 text-xs border-t border-amber-100 flex items-center">
+          <AlertTriangle className="h-3.5 w-3.5 text-amber-500 mr-1.5" />
           <span className="font-medium text-amber-800">Needs attention</span>
           {newMessages > 0 && (
-            <span className="text-amber-700"> • {newMessages} unread message{newMessages > 1 ? 's' : ''}</span>
+            <span className="text-amber-700 ml-1"> • {newMessages} unread message{newMessages > 1 ? 's' : ''}</span>
           )}
           {newOffers > 0 && (
-            <span className="text-amber-700"> • {newOffers} new offer{newOffers > 1 ? 's' : ''}</span>
+            <span className="text-amber-700 ml-1"> • {newOffers} new offer{newOffers > 1 ? 's' : ''}</span>
           )}
         </div>
       )}
@@ -1337,7 +1356,7 @@ export default function EngagementZillowPage() {
         {/* Main Content - Split View */}
         <div className="flex-grow flex overflow-hidden">
           {/* Left Column - Property List */}
-          <div className="w-1/3 border-r overflow-y-auto p-4">
+          <div className="w-full md:w-1/2 lg:w-1/3 border-r overflow-y-auto p-4">
             {/* Search and Filter Bar */}
             <div className="mb-4 space-y-3">
               {/* Search Bar */}
@@ -1400,15 +1419,17 @@ export default function EngagementZillowPage() {
               <h2 className="text-base font-medium">Properties ({filteredProperties.length})</h2>
             </div>
             
-            {filteredProperties.map((property) => (
-              <PropertyCard
-                key={property.id}
-                property={property}
-                engagements={engagementsByProperty[property.id] || []}
-                isSelected={selectedPropertyId === property.id}
-                onSelect={() => setSelectedPropertyId(property.id)}
-              />
-            ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
+              {filteredProperties.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  property={property}
+                  engagements={engagementsByProperty[property.id] || []}
+                  isSelected={selectedPropertyId === property.id}
+                  onSelect={() => setSelectedPropertyId(property.id)}
+                />
+              ))}
+            </div>
             
             {filteredProperties.length === 0 && (
               <div className="border border-dashed rounded-lg p-6 text-center">
