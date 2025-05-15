@@ -465,7 +465,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[550px] max-h-[85vh] h-auto w-[95vw] overflow-hidden p-0 flex flex-col">
+      <DialogContent className="sm:max-w-[550px] max-h-[95vh] md:max-h-[85vh] h-auto w-[92vw] overflow-hidden p-0 flex flex-col rounded-lg">
         {/* Fixed Header */}
         <div className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-10">
           <DialogTitle className="text-xl font-semibold">Seller Application</DialogTitle>
