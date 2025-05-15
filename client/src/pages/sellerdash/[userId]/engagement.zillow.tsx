@@ -939,7 +939,7 @@ function PropertyDetailView({
                             className="h-7 text-xs flex items-center gap-1 bg-white"
                             onClick={(e) => {
                               e.stopPropagation();
-                              onViewBuyer(buyer.id);
+                              setSelectedAIEngagementId(engagement.id);
                             }}
                           >
                             <Sparkles className="h-3 w-3" />
@@ -983,7 +983,7 @@ function PropertyDetailView({
                             className="h-7 text-xs flex items-center gap-1 bg-white"
                             onClick={(e) => {
                               e.stopPropagation();
-                              // AI Suggest functionality
+                              setSelectedAIEngagementId(engagement.id);
                             }}
                           >
                             <Sparkles className="h-3 w-3" />
