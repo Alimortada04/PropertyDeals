@@ -225,8 +225,7 @@ export function QuickActionSelector() {
         <motion.div
           animate={{
             scale: isOpen ? 1.1 : 1,
-            rotate: isOpen ? 45 : 0,
-            x: isOpen ? -5 : 0
+            rotate: isOpen ? 45 : 0
           }}
           transition={{
             type: "spring",
