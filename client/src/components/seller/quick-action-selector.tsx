@@ -162,7 +162,7 @@ export function QuickActionSelector() {
                 aria-label="List Property"
               >
                 <Plus className="h-5 w-5" />
-                <span className="absolute top-1/2 -translate-y-1/2 left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="absolute -top-8 -left-8 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   List Property
                 </span>
               </Button>
@@ -183,7 +183,7 @@ export function QuickActionSelector() {
                 aria-label="Offers Inbox"
               >
                 <DollarSign className="h-5 w-5" />
-                <span className="absolute bottom-14 left-1/4 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="absolute -top-8 -left-8 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Offers Inbox
                 </span>
               </Button>
@@ -204,7 +204,7 @@ export function QuickActionSelector() {
                 aria-label="Start Campaign"
               >
                 <Megaphone className="h-5 w-5" />
-                <span className="absolute top-1/2 -translate-y-1/2 left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="absolute -top-8 -left-8 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Start Campaign
                 </span>
               </Button>
