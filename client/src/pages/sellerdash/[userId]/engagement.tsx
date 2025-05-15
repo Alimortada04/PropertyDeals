@@ -1224,97 +1224,52 @@ export default function EngagementPage() {
               tooltip="Total views of all your properties. Average is calculated based on active listings only."
             />
             
-            <MetricCard 
-              icon={Bookmark} 
+            <InsightMetricCard 
+              icon={Bookmark}
+              emoji="📌"
               title="Saves" 
-              value={metrics.totalSaves}
+              primaryValue={metrics.totalSaves}
               secondaryValue={`Avg ${metrics.avgSavesPerProperty} per property`}
               trend="+8% from last week"
               trendDirection="up"
+              tooltip="Number of times buyers saved your properties to their favorites."
             />
             
-            <MetricCard 
-              icon={DollarSign} 
-              title="Offers" 
-              value={metrics.totalOffers}
-              secondaryValue={`Avg ${metrics.avgOffersPerProperty.toFixed(1)} per deal`}
+            <InsightMetricCard 
+              icon={DollarSign}
+              emoji="💰"
+              title="Offers Summary" 
+              primaryValue={metrics.totalOffers}
+              secondaryValue={`Avg ${metrics.avgOffersPerProperty} per property`}
               trend={metrics.newOffers > 0 ? "New offer today" : "None new"}
               trendDirection={metrics.newOffers > 0 ? "up" : "neutral"}
               highlight={metrics.newOffers > 0}
+              actionText="View in Offers Inbox"
+              actionFn={handleShowOffersInbox}
+              tooltip="Summary of all offers received on your properties."
             />
             
-            <MetricCard 
-              icon={MessageCircle} 
-              title="Messages" 
-              value={metrics.totalMessages}
-              secondaryValue={metrics.unreadMessages > 0 ? `${metrics.unreadMessages} unread` : "All read"}
-              trend="+3 today"
-              trendDirection="up"
+            <InsightMetricCard 
+              icon={MessageCircle}
+              emoji="💬"
+              title="Unread Messages" 
+              primaryValue={metrics.unreadMessages > 0 ? metrics.unreadMessages : "0"}
+              secondaryValue={metrics.unreadMessages > 0 ? `of ${metrics.totalMessages} total` : "All read"}
+              trend={metrics.unreadMessages > 0 ? "Respond quickly" : "All caught up"}
+              trendDirection={metrics.unreadMessages > 0 ? "up" : "neutral"}
               highlight={metrics.unreadMessages > 0}
+              actionText={metrics.unreadMessages > 0 ? "View messages" : undefined}
+              actionFn={metrics.unreadMessages > 0 ? handleMessageInbox : undefined}
+              tooltip="Unread messages from potential buyers. Responding quickly improves your conversion rate."
             />
           </div>
           
-          {/* Response rate banner */}
-          <div className="p-4 border rounded-lg bg-white">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-full bg-blue-50">
-                  <Clock className="h-5 w-5 text-blue-500" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium">Response Rate</h3>
-                    <HoverCard>
-                      <HoverCardTrigger>
-                        <Info className="h-4 w-4 text-gray-400" />
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-80">
-                        <div className="space-y-2">
-                          <h4 className="font-medium">Response Rate Metrics</h4>
-                          <p className="text-sm text-gray-500">
-                            Your response rate affects your property ranking and buyer experience. 
-                            Aim for at least 90% response rate and an average response time of less than 4 hours.
-                          </p>
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </div>
-                  <div className="flex items-center gap-6 mt-1">
-                    <div>
-                      <span className="text-2xl font-bold">50%</span>
-                      <span className="ml-2 text-sm text-gray-500">
-                        (Needs Improvement)
-                      </span>
-                    </div>
-                    <div className="border-l pl-6">
-                      <span className="text-sm font-medium">Avg Response Time:</span>
-                      <span className="ml-2 text-sm">8 hours</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="mt-4 md:mt-0">
-                <div className="text-sm text-gray-500 mb-1">Goal: 90%+ response rate</div>
-                <div className="w-full max-w-xs h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full rounded-full bg-amber-500"
-                    style={{ width: '50%' }}
-                  />
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-4 pt-4 border-t">
-              <Alert className="bg-amber-50 border-amber-200">
-                <AlertTriangle className="h-4 w-4 text-amber-500" />
-                <AlertTitle className="text-amber-800">Respond to improve your conversion rate</AlertTitle>
-                <AlertDescription className="text-amber-700">
-                  Respond to inquiries within 4 hours to significantly improve your save-to-offer ratio.
-                </AlertDescription>
-              </Alert>
-            </div>
-          </div>
+          {/* Response rate section */}
+          <ResponseRateCard 
+            responseRate={metrics.responseRate}
+            avgResponseTime={metrics.avgResponseTime}
+            isGood={metrics.responseRate >= 75}
+          />
           
           {/* Filters and actions bar */}
           <div className="sticky top-0 z-10 bg-white rounded-lg border shadow-sm p-4">
@@ -1523,11 +1478,14 @@ export default function EngagementPage() {
             </div>
           </div>
           
-          {/* Main content - split view */}
+          {/* Main content - Zillow-style split view */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left: Property list */}
+            {/* Left: Property list (scrollable) */}
             <div className="lg:col-span-1">
-              <div className="space-y-4">
+              <div className={cn(
+                "space-y-4",
+                !isMobile && "max-h-[calc(100vh-300px)] overflow-y-auto pr-2"
+              )}>
                 {sortedProperties.length === 0 ? (
                   <div className="text-center p-6 border rounded-lg bg-gray-50">
                     <p className="text-gray-500">No properties match your filters</p>
@@ -1548,8 +1506,8 @@ export default function EngagementPage() {
                   animate={{ opacity: 1 }}
                   className="border rounded-lg bg-white shadow-sm overflow-hidden"
                 >
-                  {/* Header section */}
-                  <div className="p-4 border-b bg-gray-50">
+                  {/* Header section - Sticky */}
+                  <div className="p-4 border-b bg-gray-50 sticky top-0 z-10">
                     <div className="flex items-start justify-between">
                       <div className="flex">
                         <div className="w-20 h-20 rounded-md overflow-hidden mr-4">
