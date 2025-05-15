@@ -366,7 +366,7 @@ function PropertyCard({
         isSelected 
           ? 'border-gray-300 bg-gray-50 shadow-md' 
           : hasNewActivity 
-            ? 'border-gray-300 bg-white hover:bg-gray-50 hover:shadow-md' 
+            ? 'border-[#803344] ring-1 ring-[#803344]/40 bg-white hover:bg-gray-50 hover:shadow-md' 
             : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 hover:shadow-md'
       }`}
       onClick={onSelect}
@@ -1760,8 +1760,8 @@ export default function EngagementZillowPage() {
             {/* Views Card */}
             <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 relative">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
-                  <Eye className="h-7 w-7 text-blue-400 opacity-70" />
+                <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
+                  <Eye className="h-7 w-7 text-purple-500 opacity-70" />
                 </div>
                 
                 <div className="relative">
@@ -1787,7 +1787,7 @@ export default function EngagementZillowPage() {
             <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 relative">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-amber-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
-                  <Bookmark className="h-7 w-7 text-amber-400 opacity-70" />
+                  <Bookmark className="h-7 w-7 text-amber-500 opacity-70" />
                 </div>
                 
                 <div className="relative">
@@ -1823,7 +1823,7 @@ export default function EngagementZillowPage() {
             >
               <CardContent className="p-4 relative">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
-                  <DollarSign className="h-7 w-7 text-green-400 opacity-70" />
+                  <DollarSign className="h-7 w-7 text-green-500 opacity-70" />
                 </div>
                 
                 <div className="relative">
@@ -1848,8 +1848,8 @@ export default function EngagementZillowPage() {
             {/* Unread Messages Card */}
             <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 relative">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
-                  <MessageCircle className="h-7 w-7 text-purple-400 opacity-70" />
+                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
+                  <MessageCircle className="h-7 w-7 text-blue-500 opacity-70" />
                 </div>
                 
                 <div className="relative">
