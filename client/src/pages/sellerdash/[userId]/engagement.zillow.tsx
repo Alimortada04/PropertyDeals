@@ -1184,26 +1184,23 @@ export default function EngagementZillowPage() {
             {/* Views Card */}
             <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
               <CardContent className="p-4 relative">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500">
+                  <Eye className="h-7 w-7 text-blue-400 opacity-70" />
+                </div>
                 
                 <div className="relative">
-                  <div className="flex items-center mb-3">
-                    <div className="bg-blue-100 p-2.5 rounded-full mr-3 group-hover:scale-110 transition-transform duration-300">
-                      <Eye className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">Views</p>
-                      <div className="flex items-center">
-                        <span className="text-2xl font-bold">{totalViews}</span>
-                        <div className="flex items-center ml-2 text-emerald-600">
-                          <ArrowUpRight className="h-4 w-4" />
-                          <span className="text-xs">12%</span>
-                        </div>
+                  <div className="mb-3">
+                    <p className="text-sm font-medium text-gray-500">Views</p>
+                    <div className="flex items-center">
+                      <span className="text-2xl font-bold">{totalViews}</span>
+                      <div className="flex items-center ml-2 text-emerald-600">
+                        <ArrowUpRight className="h-4 w-4" />
+                        <span className="text-xs">12%</span>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="text-xs text-gray-500 pl-12">
+                  <div className="text-xs text-gray-500">
                     <p>Average 4 views per property</p>
                   </div>
                 </div>

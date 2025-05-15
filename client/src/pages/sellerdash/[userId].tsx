@@ -352,6 +352,15 @@ export default function SellerDashboardPage() {
             <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
               {/* Removed "Add New Property" button as requested */}
               <div className="flex gap-2 flex-1">
+                {/* List a Property CTA Card */}
+                <Button 
+                  className="flex items-center gap-2 bg-[#135341] hover:bg-[#09261E] text-white"
+                  onClick={() => setIsAddPropertyModalOpen(true)}
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>List a Property</span>
+                </Button>
+                
                 <div className="relative flex-1">
                   <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <Input
