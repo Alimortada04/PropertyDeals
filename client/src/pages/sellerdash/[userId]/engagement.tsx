@@ -3009,66 +3009,153 @@ export default function EngagementPage() {
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Total Views</p>
+                    <h3 className="text-3xl font-bold mt-1">{totalViews}</h3>
+                  </div>
+                  <div className="h-14 w-14 bg-purple-100 rounded-full flex items-center justify-center">
+                    <Eye className="h-7 w-7 text-purple-600" />
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center text-sm">
+                  <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
+                  <span className="text-green-600 font-medium">+{viewsImprovement}%</span>
+                  <span className="text-gray-500 ml-1">in past 30 days</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Total Saves</p>
+                    <h3 className="text-3xl font-bold mt-1">{totalSaves}</h3>
+                  </div>
+                  <div className="h-14 w-14 bg-blue-100 rounded-full flex items-center justify-center">
+                    <Bookmark className="h-7 w-7 text-blue-600" />
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center text-sm">
+                  <span className="text-gray-600">Avg {avgSavesPerProperty} per property</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Total Offers</p>
+                    <h3 className="text-3xl font-bold mt-1">{totalOffers}</h3>
+                  </div>
+                  <div className="h-14 w-14 bg-green-100 rounded-full flex items-center justify-center">
+                    <DollarSign className="h-7 w-7 text-green-600" />
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center text-sm">
+                  <span className="text-gray-600">Avg {avgOffersPerProperty} per property</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Second row - Secondary stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Messages</p>
+                    <h3 className="text-3xl font-bold mt-1">{totalMessages}</h3>
+                  </div>
+                  <div className="h-14 w-14 bg-indigo-100 rounded-full flex items-center justify-center">
+                    <MessageCircle className="h-7 w-7 text-indigo-600" />
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Avg {avgMessagesPerProperty} per property</span>
+                  {messagesWaiting > 0 && (
+                    <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200 border-amber-200">
+                      {messagesWaiting} unread
+                    </Badge>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-500">Offers This Week</p>
-                    <h3 className="text-2xl font-bold mt-1">{offersReceivedThisWeek}</h3>
+                    <h3 className="text-3xl font-bold mt-1">{offersReceivedThisWeek}</h3>
                   </div>
-                  <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
-                    <DollarSign className="h-6 w-6 text-green-600" />
+                  <div className="h-14 w-14 bg-rose-100 rounded-full flex items-center justify-center">
+                    <Calendar className="h-7 w-7 text-rose-600" />
                   </div>
                 </div>
                 <div className="mt-4 flex items-center text-sm">
                   {offersReceivedThisWeek > 0 ? (
                     <>
-                      <ArrowUpRight className="h-3.5 w-3.5 text-green-500 mr-1" />
+                      <ArrowUpRight className="h-4 w-4 text-green-500 mr-1" />
                       <span className="text-green-600 font-medium">New offer today</span>
                     </>
                   ) : (
-                    <span className="text-gray-500">No recent offers</span>
+                    <span className="text-gray-500">No offers this week</span>
                   )}
                 </div>
               </CardContent>
             </Card>
             
-            <Card>
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Messages Waiting</p>
-                    <h3 className="text-2xl font-bold mt-1">{messagesWaiting}</h3>
-                  </div>
-                  <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <MessageCircle className="h-6 w-6 text-blue-600" />
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center text-sm">
-                  {messagesWaiting > 0 ? (
-                    <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">
-                      {messagesWaiting > 1 ? `${messagesWaiting} unread messages` : '1 unread message'}
-                    </Badge>
-                  ) : (
-                    <span className="text-gray-500">All messages read</span>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
+            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-500">Response Rate</p>
-                    <h3 className="text-2xl font-bold mt-1">{responseRate}%</h3>
+                    <h3 className="text-3xl font-bold mt-1">{responseRate}%</h3>
                   </div>
-                  <div className="h-12 w-12 bg-amber-100 rounded-full flex items-center justify-center">
-                    <Timer className="h-6 w-6 text-amber-600" />
+                  <div className="h-14 w-14 bg-amber-100 rounded-full flex items-center justify-center">
+                    <TimerReset className="h-7 w-7 text-amber-600" />
                   </div>
                 </div>
                 <div className="mt-4">
-                  <Progress value={responseRate} className="h-2" />
+                  <Progress value={responseRate} className="h-2 bg-gray-100" />
+                  <div className="mt-1.5 flex justify-between text-xs">
+                    <span className="text-gray-500">Goal: 90%</span>
+                    {responseRate >= 90 ? (
+                      <span className="text-green-600 font-medium">Goal reached!</span>
+                    ) : (
+                      <span className="text-amber-600 font-medium">{90 - responseRate}% to goal</span>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-0 shadow-sm hover:shadow-md transition-shadow duration-200">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">View to Offer</p>
+                    <h3 className="text-3xl font-bold mt-1">{totalViews ? Math.round((totalOffers / totalViews) * 100) : 0}%</h3>
+                  </div>
+                  <div className="h-14 w-14 bg-teal-100 rounded-full flex items-center justify-center">
+                    <Percent className="h-7 w-7 text-teal-600" />
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center text-sm">
+                  <Sparkline 
+                    data={[3, 4, 5, 2, 7, 6, 8, 5, 9, 7, 8]} 
+                    width={100} 
+                    height={30} 
+                    color="#0E9F8E" 
+                    strokeWidth={2} 
+                  />
+                  <span className="ml-2 text-teal-600 font-medium">Trending up</span>
                 </div>
               </CardContent>
             </Card>
