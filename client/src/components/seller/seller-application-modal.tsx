@@ -484,7 +484,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         </div>
         
         {/* Scrollable content area */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="flex-1 overflow-y-auto px-6 py-4 pb-16">
           {/* Step labels */}
           <div className="grid grid-cols-4 mb-6 text-xs text-center">
           <div className={`transition-colors ${currentStep >= 1 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
@@ -1452,7 +1452,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         </div>
         
         {/* Action buttons - positioned outside of scrollable area */}
-        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4 mt-0 px-6 py-4 border-t bg-white sticky bottom-0">
+        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4 mt-auto px-6 py-4 border-t bg-white sticky bottom-0 z-10">
           <div>
             {currentStep > 1 ? (
               <Button 
