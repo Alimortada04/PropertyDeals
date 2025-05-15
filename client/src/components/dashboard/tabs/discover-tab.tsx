@@ -791,7 +791,7 @@ export default function DashboardDiscoverTab({ user }: DiscoverTabProps) {
               </div>
               <CardContent className="p-4">
                 <h4 className="font-medium text-[#09261E] truncate">{property.title}</h4>
-                <p className="text-sm text-gray-500 truncate">{property.address}</p>
+                <p className="text-sm text-gray-500 truncate">{property.type} · {property.beds} bd · {property.baths} ba</p>
               </CardContent>
             </Card>
           ))}
