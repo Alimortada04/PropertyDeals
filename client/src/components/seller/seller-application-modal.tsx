@@ -465,7 +465,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[550px] max-h-[90vh] md:max-h-[85vh] min-h-[50vh] h-auto w-[92vw] overflow-hidden p-0 flex flex-col rounded-lg border-0">
+      <DialogContent className="sm:max-w-[550px] max-h-[90vh] md:max-h-[85vh] h-[90vh] w-[92vw] overflow-hidden p-0 flex flex-col rounded-lg border-0">
         {/* HEADER: Fixed at top */}
         <div className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-30 shadow-sm flex-shrink-0">
           <DialogTitle className="text-xl font-semibold">Seller Application</DialogTitle>
@@ -1518,8 +1518,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
             </div>
           </div>
           
-          {/* Login text - at the very bottom */}
-          <div className="mt-4 w-full border-t pt-3 -mx-6 px-6">
+          {/* Login text - at the very bottom and centered */}
+          <div className="mt-4 w-full border-t pt-3 -mx-6 px-6 flex justify-center">
             <p className="text-xs text-gray-500 text-center">
               Already a seller? <a href={`/sellerdash/${user?.id}`} className="text-green-700 font-medium underline">Log in to your dashboard here</a>
             </p>
