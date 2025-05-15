@@ -61,8 +61,7 @@ import {
 import RoleSwitcher from './RoleSwitcher';
 import FloatingActionMenu from './FloatingActionMenu';
 import MarketingTab from './MarketingTab';
-import { QuickActionSelector } from '@/components/seller/quick-action-selector';
-import { ModalProvider } from '@/providers/modal-provider';
+// QuickActionSelector and ModalProvider are now in seller-dashboard-layout.tsx
 
 // Property listing wizard steps
 const WIZARD_STEPS = [
@@ -1036,16 +1035,12 @@ export default function SellerDashboard() {
 
   return (
     <div className="pt-20 sm:pt-24 md:pt-20 p-4 sm:p-6 md:p-12 space-y-8">
-      {/* Modal Provider for all modals */}
-      <ModalProvider />
+      {/* Modal Provider moved to seller-dashboard-layout.tsx */}
       
       {/* Role Switcher */}
       <RoleSwitcher currentRole={activeRole} onRoleChange={handleRoleChange} />
       
-      {/* Quick Action Selector - Wine colored FAB */}
-      <QuickActionSelector />
-      
-      {/* Original Floating Action Menu removed - using QuickActionSelector instead */}
+      {/* Quick Action Selector moved to seller-dashboard-layout.tsx */}
       
       {/* Removed old floating toolbar as requested */}
   

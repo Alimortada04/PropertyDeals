@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home, Loader2, MessageSquare, Megaphone } from "lucide-react";
 import Navbar from "./navbar";
 import { useQueryClient } from '@tanstack/react-query';
+import { QuickActionSelector } from '@/components/seller/quick-action-selector';
+import { ModalProvider } from '@/providers/modal-provider';
 
 interface SellerDashboardLayoutProps {
   children: React.ReactNode;
@@ -158,6 +160,12 @@ export function SellerDashboardLayoutWithUserId({
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F5F5F5]">
+      {/* Modal Provider for all popups and modals */}
+      <ModalProvider />
+      
+      {/* Global Quick Action Selector - floating action button */}
+      <QuickActionSelector />
+      
       {/* Pill-style navigation - Sticky to top and transparent */}
       <div className="sticky top-0 z-40 pt-4 pb-2">
         <div className="container max-w-7xl mx-auto px-4">
