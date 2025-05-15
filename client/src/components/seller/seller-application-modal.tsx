@@ -465,15 +465,15 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[550px] max-h-[95vh] md:max-h-[85vh] h-auto w-[92vw] overflow-hidden p-0 flex flex-col rounded-lg">
-        {/* Fixed Header */}
-        <div className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-10">
+      <DialogContent className="sm:max-w-[550px] max-h-[90vh] md:max-h-[85vh] min-h-[50vh] h-auto w-[92vw] overflow-hidden p-0 flex flex-col rounded-lg border-0">
+        {/* Fixed Header - Stays visible at all times */}
+        <div className="px-6 pt-6 pb-2 border-b sticky top-0 bg-white z-30 shadow-sm">
           <DialogTitle className="text-xl font-semibold">Seller Application</DialogTitle>
           <DialogDescription>
             Complete this application to become a verified PropertyDeals seller.
           </DialogDescription>
           
-          {/* Progress indicator */}
+          {/* Progress indicator - Always visible */}
           <div className="pt-2 pb-2">
             <div className="flex justify-between text-sm text-gray-500 mb-1">
               <span>Step {currentStep} of 4</span>
@@ -483,8 +483,8 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
           </div>
         </div>
         
-        {/* Scrollable content area with enough bottom padding to not get covered by footer */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 pb-24">
+        {/* Scrollable content area with padding to prevent footer overlap */}
+        <div className="flex-1 overflow-y-auto px-6 py-4 pb-28">
           {/* Step labels */}
           <div className="grid grid-cols-4 mb-6 text-xs text-center">
           <div className={`transition-colors ${currentStep >= 1 ? "text-[#135341] font-medium" : "text-gray-500"}`}>
@@ -1451,14 +1451,14 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         )}
         </div>
         
-        {/* Action buttons - fixed at the bottom */}
-        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4 mt-auto px-6 py-4 border-t bg-white shadow-md sticky bottom-0 z-20">
+        {/* Action buttons - fixed at the bottom with enhanced styling for visibility */}
+        <DialogFooter className="flex flex-col sm:flex-row justify-between gap-4 mt-auto px-6 py-4 border-t bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] sticky bottom-0 z-30 w-full">
           <div>
             {currentStep > 1 ? (
               <Button 
                 variant="outline" 
                 onClick={handlePrevStep}
-                className="hover:bg-gray-100"
+                className="hover:bg-gray-100 transition-colors font-medium"
               >
                 Back
               </Button>
@@ -1466,18 +1466,18 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
               <Button 
                 variant="outline" 
                 onClick={onClose}
-                className="hover:bg-gray-100"
+                className="hover:bg-gray-100 transition-colors font-medium"
               >
                 Cancel
               </Button>
             )}
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button 
               variant="outline" 
               onClick={handleSaveDraft}
-              className="hover:bg-gray-100"
+              className="hover:bg-gray-100 transition-colors font-medium"
               disabled={isSaving}
             >
               {isSaving ? (
@@ -1493,14 +1493,14 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
             {currentStep < 4 ? (
               <Button 
                 onClick={handleNextStep} 
-                className="bg-[#135341] hover:bg-[#09261E]"
+                className="bg-[#135341] hover:bg-[#09261E] text-white font-medium shadow-sm transition-colors"
               >
                 Continue <ChevronRight className="ml-1 h-4 w-4" />
               </Button>
             ) : (
               <Button 
                 onClick={handleSubmitApplication} 
-                className="bg-[#135341] hover:bg-[#09261E]"
+                className="bg-[#135341] hover:bg-[#09261E] text-white font-medium shadow-sm transition-colors"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
