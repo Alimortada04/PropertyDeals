@@ -1691,14 +1691,8 @@ export default function EngagementPage() {
                       Choose a property from the list to view detailed engagement metrics and activities.
                     </p>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </SellerDashboardLayout>
-  );
+                </div>>
+                          <h3 className="font-medium text-gray-900">Save-to-Offer Conversion</h3>
                           <HoverCard>
                             <HoverCardTrigger>
                               <Info className="h-4 w-4 text-gray-400" />
