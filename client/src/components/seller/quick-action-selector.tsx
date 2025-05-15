@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { 
   Plus, 
@@ -14,6 +14,8 @@ import { useCampaignModal } from "@/hooks/use-campaign-modal";
 
 export function QuickActionSelector() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const fabRef = useRef<HTMLDivElement>(null);
   
   const propertyModal = usePropertyModal();
   const offersInboxModal = useOffersInboxModal();
@@ -23,6 +25,24 @@ export function QuickActionSelector() {
   const WINE_COLOR = "#803344";
   const LIGHT_GREEN = "#135341";
   const DARK_GREEN = "#09261E";
+  const BRAND_PINK = "#E59F9F";
+
+  // Handle hover events
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    
+    // Use a timeout to prevent immediate closing when moving between elements
+    setTimeout(() => {
+      if (!isHovering) {
+        setIsOpen(false);
+      }
+    }, 300);
+  };
 
   // Close when ESC key is pressed
   useEffect(() => {
@@ -35,8 +55,7 @@ export function QuickActionSelector() {
     // Close when clicked outside
     const handleClickOutside = (event: MouseEvent) => {
       if (isOpen && event.target instanceof HTMLElement) {
-        const fabElement = document.getElementById('quick-action-fab');
-        if (fabElement && !fabElement.contains(event.target)) {
+        if (fabRef.current && !fabRef.current.contains(event.target)) {
           setIsOpen(false);
         }
       }
@@ -95,7 +114,13 @@ export function QuickActionSelector() {
   };
 
   return (
-    <div id="quick-action-fab" className="fixed bottom-24 sm:bottom-20 right-6 z-50">
+    <div 
+      id="quick-action-fab" 
+      ref={fabRef}
+      className="fixed bottom-24 sm:bottom-20 right-6 z-50"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <AnimatePresence>
         {isOpen && (
           <div className="absolute bottom-16 right-0">
@@ -165,14 +190,15 @@ export function QuickActionSelector() {
         )}
       </AnimatePresence>
       
-      {/* Main Trigger Button - Wine colored */}
+      {/* Main Trigger Button - Wine colored normally, Brand Pink when active */}
       <div className="relative">
         {/* Continuous pulse animation */}
         <span className={`absolute inset-0 rounded-full ${isOpen ? 'opacity-0' : 'animate-pulse opacity-70'} bg-[#803344]/30`}></span>
         
         <motion.div
           animate={{
-            scale: isOpen ? 1.1 : 1
+            scale: isOpen ? 1.1 : 1,
+            rotate: isOpen ? 45 : 0
           }}
           transition={{
             type: "spring",
@@ -183,11 +209,11 @@ export function QuickActionSelector() {
           <Button
             onClick={toggleMenu}
             className={`relative h-14 w-14 rounded-full shadow-lg transition-all duration-300 ${
-              isOpen ? 'bg-red-500 hover:bg-red-600 rotate-45' : 'bg-[#803344] hover:bg-[#803344]/90'
+              isOpen ? 'bg-[#E59F9F] hover:bg-[#E59F9F]/90' : 'bg-[#803344] hover:bg-[#803344]/90'
             }`}
             aria-label={isOpen ? 'Close menu' : 'Open actions menu'}
           >
-            {isOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
+            <Plus className="h-6 w-6 transition-transform duration-300" />
           </Button>
         </motion.div>
       </div>
