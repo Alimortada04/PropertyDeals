@@ -1157,32 +1157,25 @@ export default function EngagementZillowPage() {
     <SellerDashboardLayout>
       <div className="flex flex-col h-[calc(100vh-60px)]">
         {/* Top Bar - Stats and Filters */}
-        <div className="border-b p-4 bg-white">
+        <div className="border-b p-4 bg-transparent">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold text-gray-800">Engagements</h1>
             
             <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={`px-2 h-8 ${viewMode === "list" ? "bg-gray-100" : ""}`}
-                onClick={() => setViewMode("list")}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={`px-2 h-8 ${viewMode === "grid" ? "bg-gray-100" : ""}`}
-                onClick={() => setViewMode("grid")}
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </Button>
-              
-              <Button className="bg-[#135341] hover:bg-[#09261E] gap-1.5 h-8">
-                <CalendarPlus className="h-4 w-4" />
-                <span>Schedule Follow-up</span>
-              </Button>
+              {/* Filter Dropdown */}
+              <Select>
+                <SelectTrigger className="w-[210px] h-9 bg-[#135341] text-white hover:bg-[#09261E] border-none">
+                  <CalendarPlus className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Filter Engagement" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="lifetime">Lifetime Total</SelectItem>
+                  <SelectItem value="last7">Past 7 Days</SelectItem>
+                  <SelectItem value="last30">Past 30 Days</SelectItem>
+                  <SelectItem value="property-avg">Property Averages</SelectItem>
+                  <SelectItem value="by-property">By Property</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           
@@ -1247,7 +1240,17 @@ export default function EngagementZillowPage() {
             </Card>
             
             {/* Offers Card */}
-            <Card className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300">
+            <Card 
+              className="shadow-sm border overflow-hidden group hover:shadow-md transition-all duration-300 cursor-pointer"
+              onClick={() => {
+                // Open offers inbox modal here
+                toast({
+                  title: "Offers Inbox",
+                  description: "This would open the Offers Inbox popup",
+                  variant: "default",
+                });
+              }}
+            >
               <CardContent className="p-4 relative">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-full transform translate-x-8 -translate-y-8 group-hover:scale-110 transition-transform duration-500"></div>
                 
@@ -1268,11 +1271,8 @@ export default function EngagementZillowPage() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center pl-12">
-                    <Button variant="link" className="text-xs p-0 h-5 text-blue-600">
-                      View in Offers Inbox
-                      <ChevronRight className="h-3 w-3 ml-1" />
-                    </Button>
+                  <div className="flex items-center justify-center pl-12">
+                    <span className="text-xs text-gray-500">Click to open Offers Inbox</span>
                   </div>
                 </div>
               </CardContent>
