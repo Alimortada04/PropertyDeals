@@ -88,25 +88,25 @@ export function QuickActionSelector() {
       y: 0
     },
     visible: (i: number) => {
-      // i=1: List Property (bottom-left, wine color)
-      // i=2: Offers Inbox (middle-left, light green)
-      // i=3: Campaign (top-left, dark green)
+      // i=1: List Property (diagonal top-left, wine color, ~315°)
+      // i=2: Offers Inbox (directly above, light green, ~0°/360°)
+      // i=3: Campaign (direct left, dark green, ~275°)
       
-      // Position all buttons to the left with different angles
+      // Position buttons with specified angles
       let xPos, yPos;
       
       if (i === 1) {
-        // List Property - bottom-left
-        xPos = -70;
-        yPos = 40;
+        // List Property - diagonal top-left at ~315°
+        xPos = -50;
+        yPos = -50;
       } else if (i === 2) {
-        // Offers Inbox - direct left
-        xPos = -80;
-        yPos = 0;
+        // Offers Inbox - directly above at ~0°/360°
+        xPos = 0;
+        yPos = -70;
       } else {
-        // Campaign - top-left
+        // Campaign - directly left at ~275°
         xPos = -70;
-        yPos = -40;
+        yPos = -5;
       }
       
       return {
@@ -140,14 +140,14 @@ export function QuickActionSelector() {
     <div 
       id="quick-action-fab" 
       ref={fabRef}
-      className="fixed bottom-24 sm:bottom-20 right-6 z-50"
+      className="fixed bottom-16 sm:bottom-12 right-6 z-50"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <AnimatePresence>
         {isOpen && (
           <div className="absolute bottom-0 right-0">
-            {/* List Property - Wine colored (Bottom-left position) */}
+            {/* List Property - Wine color at diagonal top-left ~315° */}
             <motion.div
               className="absolute"
               custom={1}
@@ -162,13 +162,13 @@ export function QuickActionSelector() {
                 aria-label="List Property"
               >
                 <Plus className="h-5 w-5" />
-                <span className="absolute left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="absolute top-1/2 -translate-y-1/2 left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   List Property
                 </span>
               </Button>
             </motion.div>
             
-            {/* Offers Inbox - Light Green (Middle-left position) */}
+            {/* Offers Inbox - Light Green directly above at ~0°/360° */}
             <motion.div
               className="absolute"
               custom={2}
@@ -183,13 +183,13 @@ export function QuickActionSelector() {
                 aria-label="Offers Inbox"
               >
                 <DollarSign className="h-5 w-5" />
-                <span className="absolute left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="absolute bottom-14 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Offers Inbox
                 </span>
               </Button>
             </motion.div>
             
-            {/* Campaign Creation - Dark Green (Top-left position) */}
+            {/* Campaign Creation - Dark Green directly left at ~275° */}
             <motion.div
               className="absolute"
               custom={3}
@@ -204,7 +204,7 @@ export function QuickActionSelector() {
                 aria-label="Start Campaign"
               >
                 <Megaphone className="h-5 w-5" />
-                <span className="absolute left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                <span className="absolute top-1/2 -translate-y-1/2 left-14 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Start Campaign
                 </span>
               </Button>
