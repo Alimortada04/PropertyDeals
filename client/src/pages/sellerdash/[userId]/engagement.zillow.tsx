@@ -572,49 +572,152 @@ function BuyerProfile({ buyer }: { buyer: typeof mockBuyers[0] }) {
 // AI message suggestions component
 function AIMessageSuggestions({ engagement }: { engagement: typeof mockEngagements[0] }) {
   const buyer = getBuyerById(engagement.buyerId);
+  const property = mockProperties.find(p => p.id === engagement.propertyId);
+  const [selectedTemplate, setSelectedTemplate] = useState(0);
   
-  const suggestionTemplates = [
+  const getMessageContent = () => {
+    if (engagement.type === "message") {
+      return engagement.data.text || engagement.data.message || "No message content";
+    } else if (engagement.type === "offer") {
+      return `Offer of ${formatCurrency(engagement.data.amount)}`;
+    }
+    return "No content available";
+  };
+  
+  const getPropertyShortAddress = () => {
+    return property ? property.address.split(',')[0] : "the property";
+  };
+  
+  // Message-specific templates
+  const messageTemplates = [
     {
-      title: "Professional Response",
-      content: `Hi ${buyer?.name}, thank you for your interest in the property at ${mockProperties.find(p => p.id === engagement.propertyId)?.address.split(',')[0]}. I'd be happy to provide more information or schedule a viewing at your convenience. When would be a good time for you?`,
+      title: "Send follow-up",
+      content: `Hi ${buyer?.name}, thank you for your interest in the property at ${getPropertyShortAddress()}. I'd be happy to provide more information or schedule a viewing at your convenience. When would be a good time for you?`,
     },
     {
       title: "Detailed Information",
-      content: `Hello ${buyer?.name}, thank you for your message about ${mockProperties.find(p => p.id === engagement.propertyId)?.title}. This property features ${mockProperties.find(p => p.id === engagement.propertyId)?.beds} bedrooms, ${mockProperties.find(p => p.id === engagement.propertyId)?.baths} bathrooms, and ${mockProperties.find(p => p.id === engagement.propertyId)?.sqft} square feet. Would you like me to send you additional photos or information about the neighborhood?`,
+      content: `Hello ${buyer?.name}, thank you for your message about ${property?.title}. This property features ${property?.beds} bedrooms, ${property?.baths} bathrooms, and ${property?.sqft} square feet. Would you like me to send you additional photos or information about the neighborhood?`,
     },
     {
       title: "Schedule a Viewing",
-      content: `Hi ${buyer?.name}, thanks for your interest in the ${mockProperties.find(p => p.id === engagement.propertyId)?.title}. I have availability this weekend for private viewings. Would Saturday or Sunday work better for you to see the property in person?`,
+      content: `Hi ${buyer?.name}, thanks for your interest in the ${property?.title}. I have availability this weekend for private viewings. Would Saturday or Sunday work better for you to see the property in person?`,
     },
   ];
   
+  // Offer-specific templates
+  const offerTemplates = [
+    {
+      title: "Acknowledge Offer",
+      content: `Hi ${buyer?.name}, thank you for your offer of ${engagement.type === "offer" ? formatCurrency(engagement.data.amount) : ""} on ${getPropertyShortAddress()}. I've received your offer and will review it with the seller. I'll get back to you within 24 hours with their response.`,
+    },
+    {
+      title: "Request POF",
+      content: `Hello ${buyer?.name}, thanks for your offer on ${property?.address}. To proceed with the next steps, could you please provide proof of funds or pre-approval? This will help strengthen your offer with the seller.`,
+    },
+    {
+      title: "Ask about timeline",
+      content: `Hi ${buyer?.name}, regarding your offer on ${getPropertyShortAddress()}, could you share your preferred timeline for closing? This information will help us better evaluate your offer alongside others we've received.`,
+    },
+  ];
+  
+  // Select appropriate templates based on engagement type
+  const suggestionTemplates = engagement.type === "offer" ? offerTemplates : messageTemplates;
+  
   return (
     <div className="p-4 space-y-4">
-      <div className="bg-gray-50 p-3 rounded-md">
-        <h4 className="text-sm font-medium mb-1">Original Message</h4>
-        <p className="text-sm text-gray-700">
-          {engagement.type === "message" ? engagement.data.message : "No message content"}
-        </p>
+      <div className="bg-gray-50 p-4 rounded-md border border-gray-100 mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+            {engagement.type === "message" ? 
+              <MessageCircle className="h-4 w-4 text-blue-700" /> : 
+              <DollarSign className="h-4 w-4 text-green-700" />}
+          </div>
+          <div>
+            <p className="text-sm font-medium">{buyer?.name || "Unknown"}</p>
+            <p className="text-xs text-gray-500">{formatDate(engagement.timestamp)}</p>
+          </div>
+        </div>
+        <div className="ml-10">
+          <p className="text-sm text-gray-700">
+            {getMessageContent()}
+          </p>
+        </div>
       </div>
       
       <div className="space-y-3">
-        <h4 className="text-sm font-medium">AI-Generated Responses</h4>
-        <p className="text-xs text-gray-500">Select a template to use or customize</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h4 className="text-sm font-medium">AI-Generated Suggestions</h4>
+            <p className="text-xs text-gray-500">Select a template to use or customize</p>
+          </div>
+          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+            <Sparkles className="h-3 w-3 mr-1" />
+            AI Generated
+          </Badge>
+        </div>
         
         {suggestionTemplates.map((template, index) => (
-          <div key={index} className="border rounded-md overflow-hidden">
-            <div className="bg-white px-3 py-2 border-b">
-              <h5 className="text-sm font-medium">{template.title}</h5>
+          <div 
+            key={index} 
+            className={`border rounded-md overflow-hidden cursor-pointer ${
+              selectedTemplate === index ? 'border-blue-300 ring-1 ring-blue-300' : ''
+            }`}
+            onClick={() => setSelectedTemplate(index)}
+          >
+            <div className={`px-3 py-2 border-b flex justify-between items-center ${
+              selectedTemplate === index ? 'bg-blue-50' : 'bg-white'
+            }`}>
+              <h5 className="text-sm font-medium flex items-center gap-2">
+                {selectedTemplate === index && (
+                  <div className="h-4 w-4 rounded-full bg-blue-500 flex items-center justify-center">
+                    <CheckCircle className="h-3 w-3 text-white" />
+                  </div>
+                )}
+                {template.title}
+              </h5>
+              <div className="flex gap-1">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-6 w-6 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Edit functionality
+                  }}
+                >
+                  <Edit className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </div>
-            <div className="p-3 bg-white">
+            <div className={`p-3 ${selectedTemplate === index ? 'bg-blue-50/50' : 'bg-white'}`}>
               <p className="text-sm text-gray-700 whitespace-pre-line">{template.content}</p>
             </div>
-            <div className="bg-gray-50 p-2 flex justify-end gap-2">
-              <Button variant="outline" size="sm" className="h-8">
+            <div className={`p-2 flex justify-end gap-2 ${selectedTemplate === index ? 'bg-blue-50/30' : 'bg-gray-50'}`}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="h-8"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Edit functionality
+                }}
+              >
                 <Edit className="h-3.5 w-3.5 mr-1" />
                 <span>Edit</span>
               </Button>
-              <Button size="sm" className="h-8">
+              <Button 
+                size="sm" 
+                className="h-8 bg-[#135341] hover:bg-[#09261E]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // Use template
+                  setSelectedAIEngagementId(null);
+                  toast({
+                    title: "Template Selected",
+                    description: "Response template has been applied",
+                  });
+                }}
+              >
                 <Send className="h-3.5 w-3.5 mr-1" />
                 <span>Use</span>
               </Button>
