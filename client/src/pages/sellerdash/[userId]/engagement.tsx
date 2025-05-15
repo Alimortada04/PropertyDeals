@@ -1086,90 +1086,417 @@ export default function EngagementPage() {
           {/* Page header - "Engagements" title */}
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-800">Engagements</h1>
-            {/* Schedule Follow-up button - top right */}
-            <Button className="h-9 bg-[#09261E] hover:bg-[#09261E]/90">
-              <Calendar className="mr-2 h-4 w-4" />
-              Schedule Follow-Up
-            </Button>
           </div>
           
-          {/* Top summary section - 4 Insight-driven metric cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <InsightMetricCard 
-              icon={Eye}
-              emoji="👁️"
-              title="Total Views" 
-              primaryValue={metrics.totalViews}
-              secondaryValue={`Avg ${metrics.avgViewsPerProperty} per property`}
-              trend="+15% from last week"
-              trendDirection="up"
-              tooltip="Total views of all your properties. Average is calculated based on active listings only."
-            />
+          {/* Top summary section - 5 Insight-driven metric cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {/* Views metric card */}
+            <motion.div
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="rounded-lg shadow-sm border overflow-hidden bg-white hover:shadow-md transition-all"
+            >
+              <CardContent className="p-5">
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="text-2xl">👁️</div>
+                      <HoverCard openDelay={200}>
+                        <HoverCardTrigger asChild>
+                          <h3 className="font-medium text-gray-700 text-sm flex items-center">
+                            Views
+                            <Info className="h-3 w-3 text-gray-400 ml-1" />
+                          </h3>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80 text-sm">
+                          Total views of all your properties. Average is calculated based on active listings only.
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-bold">{metrics.totalViews}</span>
+                    <span className="text-sm text-gray-500">Avg {metrics.avgViewsPerProperty} per property</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1.5">
+                    <TrendingUp className="h-3 w-3 text-green-500" />
+                    <span className="text-xs text-green-600">+15% from last week</span>
+                  </div>
+                </div>
+              </CardContent>
+            </motion.div>
             
-            <InsightMetricCard 
-              icon={Bookmark}
-              emoji="📌"
-              title="Saves" 
-              primaryValue={metrics.totalSaves}
-              secondaryValue={`Avg ${metrics.avgSavesPerProperty} per property`}
-              trend="+8% from last week"
-              trendDirection="up"
-              tooltip="Number of times buyers saved your properties to their favorites."
-            />
+            {/* Saves metric card */}
+            <motion.div
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="rounded-lg shadow-sm border overflow-hidden bg-white hover:shadow-md transition-all"
+            >
+              <CardContent className="p-5">
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="text-2xl">📌</div>
+                      <HoverCard openDelay={200}>
+                        <HoverCardTrigger asChild>
+                          <h3 className="font-medium text-gray-700 text-sm flex items-center">
+                            Saves
+                            <Info className="h-3 w-3 text-gray-400 ml-1" />
+                          </h3>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80 text-sm">
+                          Number of times buyers saved your properties to their favorites.
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-bold">{metrics.totalSaves}</span>
+                    <span className="text-sm text-gray-500">Avg {metrics.avgSavesPerProperty} per property</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1.5">
+                    <TrendingUp className="h-3 w-3 text-green-500" />
+                    <span className="text-xs text-green-600">+8% from last week</span>
+                  </div>
+                </div>
+              </CardContent>
+            </motion.div>
             
-            <InsightMetricCard 
-              icon={MessageCircle}
-              emoji="💬"
-              title="Unread Messages" 
-              primaryValue={metrics.unreadMessages > 0 ? metrics.unreadMessages : "0"}
-              secondaryValue={metrics.unreadMessages > 0 ? `of ${metrics.totalMessages} total` : "All read"}
-              trend={metrics.unreadMessages > 0 ? "Respond quickly" : "All caught up"}
-              trendDirection={metrics.unreadMessages > 0 ? "up" : "neutral"}
-              highlight={metrics.unreadMessages > 0}
-              actionText={metrics.unreadMessages > 0 ? "View messages" : undefined}
-              actionFn={metrics.unreadMessages > 0 ? handleMessageInbox : undefined}
-              tooltip="Unread messages from potential buyers. Responding quickly improves your conversion rate."
-            />
+            {/* Offers metric card */}
+            <motion.div
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="rounded-lg shadow-sm border overflow-hidden bg-white hover:shadow-md transition-all"
+            >
+              <CardContent className="p-5">
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="text-2xl">💰</div>
+                      <HoverCard openDelay={200}>
+                        <HoverCardTrigger asChild>
+                          <h3 className="font-medium text-gray-700 text-sm flex items-center">
+                            Offers
+                            <Info className="h-3 w-3 text-gray-400 ml-1" />
+                          </h3>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80 text-sm">
+                          Offers received on your properties. Average is calculated from active listings only.
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                    {metrics.newOffers > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="px-2 py-0.5 rounded-full bg-green-500 text-white text-xs font-medium"
+                      >
+                        New
+                      </motion.div>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-bold">{metrics.totalOffers}</span>
+                    <span className="text-sm text-gray-500">Avg {metrics.avgOffersPerProperty} per property</span>
+                  </div>
+                  
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto text-xs text-blue-600 justify-start hover:text-blue-800"
+                    onClick={handleShowOffersInbox}
+                  >
+                    View new offers
+                    <ArrowUpRight className="h-3 w-3 ml-1" />
+                  </Button>
+                </div>
+              </CardContent>
+            </motion.div>
             
-            <InsightMetricCard 
-              icon={DollarSign}
-              emoji="💰"
-              title="Response Rate" 
-              primaryValue={`${metrics.responseRate}%`}
-              secondaryValue="Goal: 90%+"
-              tooltip="Your response rate affects property ranking. Aim for at least 90%."
-            />
+            {/* Unread Messages metric card */}
+            <motion.div
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className={cn(
+                "rounded-lg shadow-sm border overflow-hidden bg-white hover:shadow-md transition-all",
+                metrics.unreadMessages > 0 ? "border-[#803344]" : "border-gray-200"
+              )}
+            >
+              <CardContent className="p-5">
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="text-2xl">💬</div>
+                      <HoverCard openDelay={200}>
+                        <HoverCardTrigger asChild>
+                          <h3 className="font-medium text-gray-700 text-sm flex items-center">
+                            Unread Messages
+                            <Info className="h-3 w-3 text-gray-400 ml-1" />
+                          </h3>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80 text-sm">
+                          Unread messages from potential buyers. Responding quickly improves your conversion rate.
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                    
+                    {metrics.unreadMessages > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="px-2 py-0.5 rounded-full bg-[#803344] text-white text-xs font-medium"
+                      >
+                        New
+                      </motion.div>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-bold">{metrics.unreadMessages > 0 ? metrics.unreadMessages : "0"}</span>
+                    <span className="text-sm text-gray-500">{metrics.unreadMessages > 0 ? `of ${metrics.totalMessages} total` : "All read"}</span>
+                  </div>
+                  
+                  {metrics.unreadMessages > 0 ? (
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-amber-600">Respond to improve conversion</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle className="h-3 w-3 text-green-500" />
+                      <span className="text-xs text-green-600">All caught up</span>
+                    </div>
+                  )}
+                  
+                  {metrics.unreadMessages > 0 && (
+                    <Button 
+                      variant="link" 
+                      className="p-0 h-auto text-xs text-blue-600 justify-start hover:text-blue-800"
+                      onClick={handleMessageInbox}
+                    >
+                      View messages
+                      <ArrowUpRight className="h-3 w-3 ml-1" />
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </motion.div>
+            
+            {/* Response Rate metric card */}
+            <motion.div
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              className="rounded-lg shadow-sm border overflow-hidden bg-white hover:shadow-md transition-all"
+            >
+              <CardContent className="p-5">
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="text-2xl">📈</div>
+                      <HoverCard openDelay={200}>
+                        <HoverCardTrigger asChild>
+                          <h3 className="font-medium text-gray-700 text-sm flex items-center">
+                            Response Rate
+                            <Info className="h-3 w-3 text-gray-400 ml-1" />
+                          </h3>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80 text-sm">
+                          Your response rate affects property ranking. Aim for at least 90%.
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-bold">{metrics.responseRate}%</span>
+                    <span className="text-sm text-gray-500">Avg {metrics.avgResponseTime.toFixed(1)}h response</span>
+                  </div>
+                  
+                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div 
+                      className={cn(
+                        "h-full rounded-full transition-all duration-1000 ease-in-out",
+                        metrics.responseRate >= 90 ? "bg-green-500" : 
+                        metrics.responseRate >= 75 ? "bg-amber-500" : "bg-red-500"
+                      )}
+                      style={{ width: `${metrics.responseRate}%` }}
+                    />
+                  </div>
+                  
+                  <div className="flex items-center gap-1.5">
+                    {metrics.responseRate < 90 ? (
+                      <span className="text-xs text-amber-600">Needs Improvement (Goal: 90%+)</span>
+                    ) : (
+                      <div className="flex items-center">
+                        <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                        <span className="text-xs text-green-600">+12% from last month</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </motion.div>
           </div>
           
           {/* Filters bar - sticky */}
           <div className="sticky top-0 z-10 bg-white rounded-lg border shadow-sm p-4">
             <div className="flex flex-wrap gap-3 items-center justify-between">
               <div className="flex flex-wrap gap-3 items-center">
-                <div className="flex items-center text-sm font-medium mr-2">
-                  All Properties
-                  <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
-                </div>
+                {/* Property Multi-select Dropdown */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-9 gap-1 border-gray-300">
+                      <Building2 className="h-4 w-4 text-gray-500" />
+                      <span>Property</span>
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search properties..." />
+                      <CommandList>
+                        <CommandEmpty>No properties found.</CommandEmpty>
+                        <CommandGroup>
+                          {mockProperties.map((property) => (
+                            <CommandItem
+                              key={property.id}
+                              onSelect={() => handleToggleProperty(property.id)}
+                              className="flex items-center gap-2"
+                            >
+                              <Checkbox
+                                checked={selectedProperties.includes(property.id)}
+                                className="h-4 w-4"
+                              />
+                              <span>{property.address.split(',')[0]}</span>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 
-                <div className="flex items-center text-sm font-medium mr-2">
-                  All Engagements
-                  <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
-                </div>
+                {/* Engagement Type Dropdown */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-9 gap-1 border-gray-300">
+                      <Filter className="h-4 w-4 text-gray-500" />
+                      <span>Engagement Type</span>
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandList>
+                        <CommandGroup>
+                          <CommandItem onSelect={() => handleToggleEngagementType("view")}>
+                            <Checkbox
+                              checked={selectedEngagementTypes.includes("view")}
+                              className="h-4 w-4 mr-2"
+                            />
+                            <Eye className="h-4 w-4 mr-2 text-blue-500" />
+                            <span>Views</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleEngagementType("save")}>
+                            <Checkbox
+                              checked={selectedEngagementTypes.includes("save")}
+                              className="h-4 w-4 mr-2"
+                            />
+                            <Bookmark className="h-4 w-4 mr-2 text-amber-500" />
+                            <span>Saves</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleEngagementType("message")}>
+                            <Checkbox
+                              checked={selectedEngagementTypes.includes("message")}
+                              className="h-4 w-4 mr-2"
+                            />
+                            <MessageCircle className="h-4 w-4 mr-2 text-green-500" />
+                            <span>Messages</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleEngagementType("offer")}>
+                            <Checkbox
+                              checked={selectedEngagementTypes.includes("offer")}
+                              className="h-4 w-4 mr-2"
+                            />
+                            <DollarSign className="h-4 w-4 mr-2 text-purple-500" />
+                            <span>Offers</span>
+                          </CommandItem>
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 
-                <div className="flex items-center text-sm font-medium mr-2">
-                  All Statuses
-                  <ChevronDown className="h-4 w-4 ml-1 text-gray-500" />
-                </div>
+                {/* Status Dropdown */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-9 gap-1 border-gray-300">
+                      <Clock className="h-4 w-4 text-gray-500" />
+                      <span>Status</span>
+                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandList>
+                        <CommandGroup>
+                          <CommandItem onSelect={() => handleToggleStatus("new")}>
+                            <Checkbox
+                              checked={selectedStatus.includes("new")}
+                              className="h-4 w-4 mr-2"
+                            />
+                            <span>New</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleStatus("replied")}>
+                            <Checkbox
+                              checked={selectedStatus.includes("replied")}
+                              className="h-4 w-4 mr-2"
+                            />
+                            <span>Replied</span>
+                          </CommandItem>
+                          <CommandItem onSelect={() => handleToggleStatus("viewed")}>
+                            <Checkbox
+                              checked={selectedStatus.includes("viewed")}
+                              className="h-4 w-4 mr-2"
+                            />
+                            <span>Viewed</span>
+                          </CommandItem>
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
 
                 {/* Clear filters button */}
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="h-7 text-xs"
+                  className="h-9 text-xs hover:bg-gray-100"
                   onClick={handleClearFilters}
                 >
+                  <X className="h-3.5 w-3.5 mr-1" />
                   Clear Filters
                 </Button>
               </div>
+              
+              {/* Schedule Follow-up button */}
+              <Button className="h-9 bg-[#09261E] hover:bg-[#09261E]/90">
+                <Calendar className="mr-2 h-4 w-4" />
+                Schedule Follow-Up
+              </Button>
             </div>
           </div>
           
