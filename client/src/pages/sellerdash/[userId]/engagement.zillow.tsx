@@ -62,7 +62,6 @@ import {
   Share2,
   MapPin,
   Calendar,
-  RefreshCw,
   LayoutGrid,
   List,
   ArrowRight,
