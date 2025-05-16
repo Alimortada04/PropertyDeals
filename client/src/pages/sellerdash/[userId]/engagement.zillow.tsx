@@ -1020,7 +1020,16 @@ function PropertyDetailView({
                                 }
                               </p>
                               <div className="flex justify-end mt-1.5">
-                                <Button variant="outline" size="sm" className="h-7 text-xs mr-2 hover:bg-gray-200">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-7 text-xs mr-2 hover:bg-gray-200"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedMessage(engagement.data.message);
+                                    setAiDrawerOpen(true);
+                                  }}
+                                >
                                   <Sparkles className="h-3 w-3 mr-1" />
                                   <span>AI Respond</span>
                                 </Button>
@@ -1598,6 +1607,8 @@ export default function EngagementZillowPage() {
   const [filterProperty, setFilterProperty] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
+  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const { toast } = useToast();
   const timelineRef = useRef<HTMLDivElement>(null);
