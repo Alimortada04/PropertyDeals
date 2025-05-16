@@ -56,7 +56,6 @@ import {
   ChevronUp,
   Lightbulb,
   Layout,
-  HelpCircle,
   Sliders,
   CalendarPlus,
   ArrowLeftRight,
