@@ -917,6 +917,168 @@ function PropertyDetailView({
       
 
       
+      {/* Activity Feed */}
+      <Card className="mb-6">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-base">Activity Timeline</CardTitle>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 gap-1 hover:bg-gray-200">
+                <Filter className="h-3.5 w-3.5" />
+                <span>Filter</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Filter By Type</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <Eye className="h-4 w-4 mr-2" />
+                <span>Views</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Bookmark className="h-4 w-4 mr-2" />
+                <span>Saves</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <MessageCircle className="h-4 w-4 mr-2" />
+                <span>Messages</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <DollarSign className="h-4 w-4 mr-2" />
+                <span>Offers</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {sortedEngagements.slice(0, 5).map((engagement) => {
+              const buyer = getBuyerById(engagement.buyerId);
+              if (!buyer) return null;
+              
+              return (
+                <div key={engagement.id} className="flex gap-3">
+                  <div className="relative">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="text-xs bg-gray-100">
+                        {buyer.name ? buyer.name.charAt(0) : '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute top-6 left-3.5 h-full w-0.5 bg-gray-100" />
+                  </div>
+                  
+                  <div className="flex-grow pb-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-sm font-medium">{buyer.name}</p>
+                        <p className="text-xs text-gray-500">{formatDate(engagement.timestamp)}</p>
+                      </div>
+                      
+                      {engagement.status === "new" && (
+                        <Badge variant="outline" className="text-[10px] bg-green-50 text-green-700 border-green-200">
+                          New
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    <div className="mt-1.5">
+                      {engagement.type === "view" && (
+                        <div className="text-sm text-gray-600 flex items-center">
+                          <Eye className="h-3.5 w-3.5 text-blue-500 mr-1.5" />
+                          <span>Viewed this property</span>
+                          {engagement.data.duration && (
+                            <span className="text-xs text-gray-500 ml-1.5">
+                              ({Math.floor(engagement.data.duration / 60)} min)
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      
+                      {engagement.type === "save" && (
+                        <div className="text-sm text-gray-600 flex items-center">
+                          <Bookmark className="h-3.5 w-3.5 text-amber-500 mr-1.5" />
+                          <span>Saved this property</span>
+                        </div>
+                      )}
+                      
+                      {engagement.type === "message" && (
+                        <div>
+                          <div className="text-sm text-gray-600 flex items-center">
+                            <MessageCircle className="h-3.5 w-3.5 text-green-500 mr-1.5" />
+                            <span>Sent a message</span>
+                          </div>
+                          
+                          {engagement.data.message && (
+                            <div className="mt-1.5 pl-5">
+                              <p className="text-sm bg-gray-50 p-2 rounded-md border border-gray-100">
+                                {engagement.data.message.length > 120 
+                                  ? engagement.data.message.substring(0, 120) + "..." 
+                                  : engagement.data.message
+                                }
+                              </p>
+                              <div className="flex justify-end mt-1.5">
+                                <Button variant="outline" size="sm" className="h-7 text-xs mr-2 hover:bg-gray-200">
+                                  <Sparkles className="h-3 w-3 mr-1" />
+                                  <span>AI Respond</span>
+                                </Button>
+                                <Button size="sm" className="h-7 text-xs bg-[#135341] hover:bg-[#09261E]">
+                                  <CornerDownRight className="h-3 w-3 mr-1" />
+                                  <span>Reply</span>
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
+                      {engagement.type === "offer" && (
+                        <div>
+                          <div className="text-sm text-gray-600 flex items-center">
+                            <DollarSign className="h-3.5 w-3.5 text-purple-500 mr-1.5" />
+                            <span>Made an offer of {formatCurrency(engagement.data.amount)}</span>
+                          </div>
+                          
+                          {engagement.data.contingencies && (
+                            <div className="mt-1.5 pl-5">
+                              <div className="flex items-center text-xs text-gray-500 gap-1.5">
+                                <span>Contingencies:</span>
+                                <div className="flex flex-wrap gap-1">
+                                  {engagement.data.contingencies.map((cont: string, i: number) => (
+                                    <Badge key={i} variant="outline" className="text-[10px] h-4 px-1">
+                                      {cont}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="flex justify-end mt-1.5">
+                                <Button variant="secondary" size="sm" className="h-7 text-xs mr-2 hover:bg-gray-200">
+                                  <XCircle className="h-3 w-3 mr-1" />
+                                  <span>Decline</span>
+                                </Button>
+                                <Button size="sm" className="h-7 text-xs bg-[#135341] hover:bg-[#09261E]">
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                  <span>Accept</span>
+                                </Button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          
+          {sortedEngagements.length > 5 && (
+            <Button variant="outline" className="w-full mt-2 text-sm hover:bg-gray-200" size="sm">
+              <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+              <span>Load More Activity</span>
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+      
       {/* Property Timeline - Horizontal Carousel */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
