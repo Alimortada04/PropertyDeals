@@ -46,14 +46,11 @@ import {
   User,
   LinkIcon,
   Repeat,
-  User,
   ChevronDown,
   Coins,
   FileCheck,
   Zap,
-  ThumbsUp,
   ListFilter,
-  X,
   Home,
   Percent,
   ChevronUp,
@@ -78,6 +75,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter, SheetClose } from "@/components/ui/sheet";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { 
   DropdownMenu,
