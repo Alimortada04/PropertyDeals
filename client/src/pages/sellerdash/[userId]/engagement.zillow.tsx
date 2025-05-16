@@ -578,7 +578,7 @@ function BuyerProfile({ buyer }: { buyer: typeof mockBuyers[0] }) {
 function AIMessageSuggestions({ engagement }: { engagement: typeof mockEngagements[0] }) {
   const buyer = getBuyerById(engagement.buyerId);
   const property = mockProperties.find(p => p.id === engagement.propertyId);
-  const [selectedTemplate, setSelectedTemplate] = useState(0);
+  const { toast } = useToast();
   
   const getMessageContent = () => {
     if (engagement.type === "message") {
@@ -593,10 +593,17 @@ function AIMessageSuggestions({ engagement }: { engagement: typeof mockEngagemen
     return property ? property.address.split(',')[0] : "the property";
   };
   
+  const handleUseTemplate = () => {
+    toast({
+      title: "Template Selected",
+      description: "Response template has been applied",
+    });
+  };
+  
   // Message-specific templates
   const messageTemplates = [
     {
-      title: "Send follow-up",
+      title: "Professional Response",
       content: `Hi ${buyer?.name}, thank you for your interest in the property at ${getPropertyShortAddress()}. I'd be happy to provide more information or schedule a viewing at your convenience. When would be a good time for you?`,
     },
     {
@@ -609,8 +616,65 @@ function AIMessageSuggestions({ engagement }: { engagement: typeof mockEngagemen
     },
   ];
   
-  // Offer-specific templates
-  const offerTemplates = [
+  const templates = engagement.type === "message" ? messageTemplates : messageTemplates;
+  
+  return (
+    <div className="p-4 space-y-4">
+      <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+        <p className="text-sm text-gray-600 font-medium mb-1">Original Message</p>
+        <p className="text-sm">{getMessageContent()}</p>
+      </div>
+      
+      <div className="space-y-3">
+        <p className="text-sm font-medium text-gray-700">AI-Generated Responses</p>
+        <p className="text-xs text-gray-500">Select a template to use or customize</p>
+        
+        <div className="space-y-3">
+          {templates.map((template, index) => (
+            <div key={index} className="bg-white border rounded-lg p-3 hover:border-blue-200 transition-colors cursor-pointer">
+              <p className="text-sm font-medium mb-1">{template.title}</p>
+              <p className="text-sm text-gray-600">{template.content}</p>
+              <div className="flex justify-end mt-2 gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-7 text-xs hover:bg-gray-200"
+                  onClick={() => {
+                    toast({
+                      title: "Edit Mode",
+                      description: "You can now edit this response",
+                    });
+                  }}
+                >
+                  <Edit className="h-3 w-3 mr-1" />
+                  <span>Edit</span>
+                </Button>
+                <Button 
+                  size="sm" 
+                  className="h-7 text-xs bg-[#135341] hover:bg-[#09261E]"
+                  onClick={handleUseTemplate}
+                >
+                  <Send className="h-3 w-3 mr-1" />
+                  <span>Use</span>
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="pt-2">
+          <Button className="w-full bg-[#135341] hover:bg-[#09261E]">
+            <Brain className="h-4 w-4 mr-2" />
+            <span>Generate Custom Response</span>
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Offer-specific templates
+const offerTemplates = [
     {
       title: "Acknowledge Offer",
       content: `Hi ${buyer?.name}, thank you for your offer of ${engagement.type === "offer" ? formatCurrency(engagement.data.amount) : ""} on ${getPropertyShortAddress()}. I've received your offer and will review it with the seller. I'll get back to you within 24 hours with their response.`,
