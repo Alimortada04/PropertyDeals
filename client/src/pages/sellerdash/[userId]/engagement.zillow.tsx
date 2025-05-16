@@ -38,6 +38,12 @@ import {
   AlertTriangle,
   Paperclip,
   FileText,
+  X,
+  ThumbsUp,
+  ArrowRight,
+  RefreshCw,
+  HelpCircle,
+  User,
   LinkIcon,
   Repeat,
   User,
@@ -928,22 +934,22 @@ function PropertyDetailView({
                 <span>Filter</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="min-w-[180px]">
               <DropdownMenuLabel>Filter By Type</DropdownMenuLabel>
-              <DropdownMenuItem>
-                <Eye className="h-4 w-4 mr-2" />
+              <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
+                <Eye className="h-4 w-4 mr-2 text-purple-700" />
                 <span>Views</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bookmark className="h-4 w-4 mr-2" />
+              <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
+                <Bookmark className="h-4 w-4 mr-2 text-amber-500" />
                 <span>Saves</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <MessageCircle className="h-4 w-4 mr-2" />
+              <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
+                <MessageCircle className="h-4 w-4 mr-2 text-blue-500" />
                 <span>Messages</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <DollarSign className="h-4 w-4 mr-2" />
+              <DropdownMenuItem className="hover:bg-gray-100 cursor-pointer">
+                <DollarSign className="h-4 w-4 mr-2 text-green-500" />
                 <span>Offers</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -1079,198 +1085,7 @@ function PropertyDetailView({
         </CardContent>
       </Card>
       
-      {/* Property Timeline - Horizontal Carousel */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="text-base font-medium">Property Timeline</h3>
-          <div className="flex gap-1">
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-8 w-8 rounded-full hover:bg-gray-200 hover:text-gray-700 transition-colors"
-              onClick={() => onScrollTimeline('left')}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-8 w-8 rounded-full hover:bg-gray-200 hover:text-gray-700 transition-colors"
-              onClick={() => onScrollTimeline('right')}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-        
-        <Card className="border rounded-lg overflow-hidden">
-          <CardContent className="p-4">
-            {/* Timeline visualization */}
-            <div className="relative">
-              {/* Determine current stage */}
-              {(() => {
-                let currentStage = 0; // 0: Listed
-                if (views > 0) currentStage = 1; // 1: First View
-                if (saves > 0) currentStage = 2; // 2: First Save
-                if (messages > 0) currentStage = 3; // 3: First Message
-                if (offers > 0) currentStage = 4; // 4: First Offer
-                // 5: Offer Accepted (we don't have this status in the mock data yet)
-                // 6: Target Close
-                
-                const stages = [
-                  {
-                    name: "Listed",
-                    icon: <FileText className="h-4 w-4" />,
-                    date: property.listed,
-                    color: "#135341",
-                    active: currentStage >= 0,
-                    completed: currentStage > 0
-                  },
-                  {
-                    name: "First View",
-                    icon: <Eye className="h-4 w-4" />,
-                    date: engagements
-                      .filter(e => e.type === "view")
-                      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
-                    color: "rgb(126, 34, 206)", // purple-700
-                    active: currentStage >= 1,
-                    completed: currentStage > 1
-                  },
-                  {
-                    name: "First Save",
-                    icon: <Bookmark className="h-4 w-4" />,
-                    date: engagements
-                      .filter(e => e.type === "save")
-                      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
-                    color: "rgb(234, 179, 8)", // yellow-500
-                    active: currentStage >= 2,
-                    completed: currentStage > 2
-                  },
-                  {
-                    name: "First Message",
-                    icon: <MessageCircle className="h-4 w-4" />,
-                    date: engagements
-                      .filter(e => e.type === "message")
-                      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
-                    color: "rgb(59, 130, 246)", // blue-500
-                    active: currentStage >= 3,
-                    completed: currentStage > 3
-                  },
-                  {
-                    name: "First Offer",
-                    icon: <DollarSign className="h-4 w-4" />,
-                    date: engagements
-                      .filter(e => e.type === "offer")
-                      .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())[0]?.timestamp,
-                    color: "rgb(34, 197, 94)", // green-500
-                    active: currentStage >= 4,
-                    completed: currentStage > 4
-                  },
-                  {
-                    name: "Offer Accepted",
-                    icon: <ThumbsUp className="h-4 w-4" />,
-                    date: null, // We don't have this in mock data yet
-                    color: "rgb(245, 158, 11)", // amber-500
-                    active: currentStage >= 5,
-                    completed: currentStage > 5
-                  },
-                  {
-                    name: "Target Close",
-                    icon: <CheckCircle className="h-4 w-4" />,
-                    date: new Date(new Date(property.listed).getTime() + 60 * 24 * 60 * 60 * 1000).toString(),
-                    color: currentStage >= 6 ? "#135341" : "rgb(156, 163, 175)", // green-800 or gray-400
-                    active: currentStage >= 6,
-                    completed: false
-                  }
-                ];
-                
-                // Filter out stages with no date (except for Target Close which always shows)
-                const visibleStages = stages.filter((stage, index) => 
-                  stage.date || index === 0 || index === stages.length - 1
-                );
-                
-                // Calculate progress percentage for the progress bar
-                const progressPercentage = Math.min(100, Math.round((currentStage / (stages.length - 1)) * 100));
-                
-                return (
-                  <>
-                    {/* Horizontal Carousel Timeline */}
-                    <div className="relative">
-                      {/* Timeline bar */}
-                      <div className="absolute left-0 right-0 h-2 bg-gray-100 top-[28px] z-0"></div>
-                      
-                      {/* Progress bar */}
-                      <div className="absolute left-0 h-2 bg-gradient-to-r from-[#135341] to-green-500 top-[28px] z-[1] rounded-r-full" style={{ width: `${progressPercentage}%` }}></div>
-                    
-                      {/* Timeline stages - Scrollable Horizontal Carousel */}
-                      <div ref={timelineRef} className="relative z-10 pb-2 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                        <div className="flex min-w-max px-2 pb-2 pt-1 space-x-6">
-                          {visibleStages.map((stage, index) => (
-                            <div key={index} className="flex flex-col items-center gap-1 min-w-[80px] transition-all hover:scale-105">
-                              <div 
-                                className={`h-10 w-10 rounded-full flex items-center justify-center transition-all shadow-sm ${
-                                  stage.active 
-                                    ? 'text-white' 
-                                    : 'bg-gray-100 text-gray-400 border-2 border-dashed border-gray-300'
-                                }`}
-                                style={{ backgroundColor: stage.active ? stage.color : undefined }}
-                              >
-                                {stage.icon}
-                              </div>
-                              <p className={`text-xs font-semibold mt-1 ${stage.active ? 'text-gray-800' : 'text-gray-400'}`}>
-                                {stage.name}
-                              </p>
-                              {stage.date && (
-                                <p className="text-[10px] text-gray-500">
-                                  {formatDate(stage.date)}
-                                </p>
-                              )}
-                              {stage.active && currentStage === index && (
-                                <div className="mt-1 bg-white shadow-sm border border-green-100 rounded-full px-2 py-0.5 text-[10px] font-medium text-[#135341] animate-pulse">
-                                  Current Stage
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Current status */}
-                    <div className="bg-gray-50 p-3 mt-4 rounded-lg border border-gray-100">
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <div className="p-1.5 rounded-full bg-[#135341]/10">
-                            <Clock className="h-4 w-4 text-[#135341]" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-gray-800">
-                              {stages[currentStage].name} ({formatTimeAgo(stages[currentStage].date)})
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {currentStage < stages.length - 1 
-                                ? `Next stage: ${stages[currentStage + 1].name}`
-                                : "Final stage"}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="text-right">
-                          <p className="text-xs text-gray-500">Days on market</p>
-                          <p className="text-base font-medium text-gray-800">
-                            {Math.ceil((new Date().getTime() - new Date(property.listed).getTime()) / (1000 * 60 * 60 * 24))}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
+
       {/* Engaged buyers */}
       {uniqueBuyers.length > 0 && (
         <Card className="mb-6">
