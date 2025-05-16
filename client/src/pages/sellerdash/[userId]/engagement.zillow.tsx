@@ -1027,7 +1027,7 @@ function PropertyDetailView({
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setSelectedMessage(engagement.data.message);
-                                    setAiDrawerOpen(true);
+                                    setSelectedAIEngagementId(engagement.id);
                                   }}
                                 >
                                   <Sparkles className="h-3 w-3 mr-1" />
