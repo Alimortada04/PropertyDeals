@@ -367,7 +367,7 @@ function PropertyCard({
         isSelected 
           ? 'border-gray-300 bg-gray-50 shadow-md' 
           : hasNewActivity 
-            ? 'border-[#803344] ring-1 ring-[#803344]/40 bg-white hover:bg-gray-50 hover:shadow-md' 
+            ? 'border-gray-300 bg-white hover:bg-gray-50 hover:shadow-md' 
             : 'border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 hover:shadow-md'
       }`}
       onClick={onSelect}
@@ -419,7 +419,7 @@ function PropertyCard({
           </div>
           
           <div className={`flex flex-col items-center p-1.5 rounded-md ${
-            newMessages > 0 ? 'bg-blue-100 ring-1 ring-[#803344]' : 'bg-blue-50'
+            newMessages > 0 ? 'bg-blue-100' : 'bg-blue-50'
           } cursor-pointer`}>
             <div className={`h-5 w-5 flex items-center justify-center rounded-full mb-1 ${
               newMessages > 0 ? 'bg-blue-200' : 'bg-blue-100'
@@ -432,7 +432,7 @@ function PropertyCard({
           </div>
           
           <div className={`flex flex-col items-center p-1.5 rounded-md ${
-            newOffers > 0 ? 'bg-green-100 ring-1 ring-[#803344]' : 'bg-green-50'
+            newOffers > 0 ? 'bg-green-100' : 'bg-green-50'
           } cursor-pointer`}>
             <div className={`h-5 w-5 flex items-center justify-center rounded-full mb-1 ${
               newOffers > 0 ? 'bg-green-200' : 'bg-green-100'
@@ -448,14 +448,14 @@ function PropertyCard({
       
       {/* Needs Attention Warning */}
       {hasNewActivity && (
-        <div className="bg-[#803344] px-3 py-2 text-xs border-t border-[#803344]/80 flex items-center">
-          <AlertTriangle className="h-3.5 w-3.5 text-white mr-1.5" />
-          <span className="font-medium text-white">Needs attention</span>
+        <div className="bg-gray-100 px-3 py-2 text-xs border-t border-gray-200 flex items-center">
+          <AlertTriangle className="h-3.5 w-3.5 text-amber-500 mr-1.5" />
+          <span className="font-medium text-gray-700">Needs attention</span>
           {newMessages > 0 && (
-            <span className="text-white/90 ml-1"> • {newMessages} unread message{newMessages > 1 ? 's' : ''}</span>
+            <span className="text-gray-600 ml-1"> • {newMessages} unread message{newMessages > 1 ? 's' : ''}</span>
           )}
           {newOffers > 0 && (
-            <span className="text-white/90 ml-1"> • {newOffers} new offer{newOffers > 1 ? 's' : ''}</span>
+            <span className="text-gray-600 ml-1"> • {newOffers} new offer{newOffers > 1 ? 's' : ''}</span>
           )}
         </div>
       )}
@@ -1213,7 +1213,7 @@ function PropertyDetailView({
           <CardTitle className="text-base">Save to Offer Conversion</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex justify-between items-center mb-2">
+          <div className="relative mb-2">
             <div className="flex items-center">
               <Bookmark className="h-4 w-4 text-amber-500 mr-1.5" />
               <span className="text-sm text-gray-600">{saves} saves</span>
@@ -1221,7 +1221,7 @@ function PropertyDetailView({
               <DollarSign className="h-4 w-4 text-green-500 mr-1.5" />
               <span className="text-sm text-gray-600">{offers} offers</span>
             </div>
-            <Badge variant={saveToOfferRate >= 30 ? "default" : "secondary"} className="text-xs">
+            <Badge variant={saveToOfferRate >= 30 ? "default" : "secondary"} className="text-xs absolute top-0 right-0">
               {saveToOfferRate}%
             </Badge>
           </div>
