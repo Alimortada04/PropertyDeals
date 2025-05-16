@@ -1079,7 +1079,7 @@ function PropertyDetailView({
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
                           <div className="p-1.5 rounded-full bg-[#135341]/10">
-                            <Clock8 className="h-4 w-4 text-[#135341]" />
+                            <Clock className="h-4 w-4 text-[#135341]" />
                           </div>
                           <div>
                             <p className="text-sm font-medium text-gray-800">
