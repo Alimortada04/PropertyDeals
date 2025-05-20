@@ -1,14 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// Initialize Supabase client with explicit values
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
+// For production code, we'd handle this more gracefully
 if (!supabaseUrl || !supabaseKey) {
   console.warn('Supabase URL or key is missing. Auth functionality will not work properly.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(
+  supabaseUrl || '',
+  supabaseKey || '',
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  }
+);
 
 // Function to check if email already exists in the system
 export async function checkEmailExists(email: string, isRegistrationCheck: boolean = false): Promise<boolean> {
