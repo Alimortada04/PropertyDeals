@@ -154,7 +154,7 @@ export default function Sidebar() {
     staleTime: 5 * 60 * 1000, // Cache for 5 minutes to reduce DB queries
   });
   
-  // Handle List a Property click with correct authentication flow
+  // Handle List a Property click - routes directly to sellerdash/userid
   const handleListPropertyClick = async () => {
     // First, check if user is authenticated using supabase.auth.getUser()
     const { data: { user: currentUser }, error } = await supabase.auth.getUser();
@@ -165,24 +165,9 @@ export default function Sidebar() {
       return;
     }
     
-    // User is logged in, check seller status
-    const { data: sellerProfile, error: profileError } = await supabase
-      .from('sellers')
-      .select('status, businessName')
-      .eq('userId', currentUser.id)
-      .single();
-    
-    if (profileError && profileError.code !== 'PGRST116') {
-      console.error('Error checking seller status:', profileError);
-    }
-    
-    // Check if seller profile exists and status is 'active'
-    if (sellerProfile?.status === 'active') {
-      window.location.href = `/sellerdash/${currentUser.id}`;
-    } else {
-      // Profile missing or status != 'active', open seller application modal
-      setIsSellerModalOpen(true);
-    }
+    // User is logged in, route directly to their sellerdash page
+    // The sellerdash page will handle showing the seller application modal for non-active sellers
+    window.location.href = `/sellerdash/${currentUser.id}`;
   };
 
   // Handle seller application form submission
