@@ -486,41 +486,8 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                             {statusNames[offer.status]}
                           </Badge>
                           
-                          {/* Actions */}
-                          <div className="flex items-center space-x-2">
-                            {!["accepted", "declined"].includes(offer.status) && (
-                              <>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="h-8 w-8 p-0 text-green-600 border-green-200 hover:bg-green-50"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleOfferAction(offer.id, "accept");
-                                  }}
-                                  disabled={isLoading === offer.id}
-                                >
-                                  {isLoading === offer.id ? (
-                                    <LoaderIcon className="h-4 w-4 animate-spin" />
-                                  ) : (
-                                    <CheckIcon className="h-4 w-4" />
-                                  )}
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="h-8 w-8 p-0 text-red-600 border-red-200 hover:bg-red-50"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleOfferAction(offer.id, "decline");
-                                  }}
-                                  disabled={isLoading === offer.id}
-                                >
-                                  <XIcon className="h-4 w-4" />
-                                </Button>
-                              </>
-                            )}
-                            
+                          {/* Expand indicator only */}
+                          <div className="flex items-center">
                             <ChevronDownIcon 
                               className={cn(
                                 "h-4 w-4 text-gray-400 transition-transform",
@@ -534,22 +501,22 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
 
                     {/* Expanded content */}
                     {isExpanded && (
-                      <div className="border-t bg-gray-50 p-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div className="border-t bg-gray-50 p-4 sm:p-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 max-w-full">
                           {/* Left column */}
                           <div className="space-y-4">
                             {/* Offer message */}
                             <div>
                               <h4 className="font-medium text-sm text-gray-700 mb-2">💬 Offer Message</h4>
-                              <p className="text-sm text-gray-600 bg-white p-3 rounded border">
+                              <div className="text-sm text-gray-600 bg-white p-3 rounded border max-h-32 overflow-y-auto break-words">
                                 {offer.message}
-                              </p>
+                              </div>
                             </div>
 
                             {/* Buyer credibility */}
                             <div>
                               <h4 className="font-medium text-sm text-gray-700 mb-3">✅ Buyer Credibility</h4>
-                              <div className="bg-white p-4 rounded border space-y-3">
+                              <div className="bg-white p-4 rounded border space-y-3 max-h-40 overflow-y-auto">
                                 <div className="flex justify-between items-center">
                                   <span className="text-sm text-gray-600">PD Rating</span>
                                   <div className="flex items-center gap-2">
