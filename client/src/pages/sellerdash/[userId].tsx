@@ -259,10 +259,10 @@ export default function SellerDashboardPage() {
             {/* Wine background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#803344] to-[#803344]"></div>
             
-            {/* Animated decoration elements with constant movement */}
-            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 animate-ping"></div>
+            {/* Animated decoration elements on hover only */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 group-hover:animate-ping"></div>
             
             {/* Content with vertical centering */}
             <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
@@ -290,10 +290,10 @@ export default function SellerDashboardPage() {
             {/* Lighter green background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341]"></div>
             
-            {/* Animated decoration elements with constant movement */}
-            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 animate-ping"></div>
+            {/* Animated decoration elements on hover only */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 group-hover:animate-ping"></div>
             
             {/* Content with vertical centering */}
             <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
@@ -321,10 +321,10 @@ export default function SellerDashboardPage() {
             {/* Dark green background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#09261E]"></div>
             
-            {/* Animated decoration elements with constant movement */}
-            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 animate-ping"></div>
+            {/* Animated decoration elements on hover only */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 group-hover:animate-ping"></div>
             
             {/* Content with vertical centering */}
             <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
