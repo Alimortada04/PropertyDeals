@@ -254,10 +254,13 @@ export default function SellerDashboardPage() {
           {/* List a Property CTA Card */}
           <div 
             onClick={() => setIsAddPropertyModalOpen(true)}
-            className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
-            {/* Background with dark green primary and wine on hover */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341] group-hover:from-[#803344] group-hover:to-[#803344] transition-colors duration-500 ease-in-out"></div>
+            {/* Wine background */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#803344] to-[#803344]"></div>
+            
+            {/* Hover wash effect */}
+            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
             
             {/* Animated decoration elements */}
             <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
@@ -274,7 +277,7 @@ export default function SellerDashboardPage() {
                 List a Property
               </h3>
               
-              <div className="mt-2 text-sm text-white/80 group-hover:text-white transition-colors duration-300 flex items-center">
+              <div className="mt-2 text-sm text-white/80 flex items-center">
                 <span>Get Started</span>
                 <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </div>
@@ -284,10 +287,13 @@ export default function SellerDashboardPage() {
           {/* Review Offers CTA Card */}
           <div 
             onClick={() => window.location.href = `/sellerdash/${userId}/offers`}
-            className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
-            {/* Background with dark green and darker green on hover */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#09261E] group-hover:from-[#135341] group-hover:to-[#135341] transition-colors duration-500 ease-in-out"></div>
+            {/* Lighter green background */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341]"></div>
+            
+            {/* Hover wash effect */}
+            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
             
             {/* Animated decoration elements */}
             <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
@@ -297,14 +303,14 @@ export default function SellerDashboardPage() {
             <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
               {/* Icon with animation */}
               <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                <HandHeart className="h-6 w-6 text-white transition-colors duration-300" />
+                <HandHeart className="h-6 w-6 text-white" />
               </div>
               
-              <h3 className="text-lg font-medium text-white group-hover:scale-105 transition-all duration-300">
+              <h3 className="text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
                 Review Offers
               </h3>
               
-              <div className="mt-2 text-sm text-white/80 transition-colors duration-300 flex items-center">
+              <div className="mt-2 text-sm text-white/80 flex items-center">
                 <span>{stats.offersPending} pending</span>
                 <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </div>
@@ -314,10 +320,13 @@ export default function SellerDashboardPage() {
           {/* Market a Deal CTA Card */}
           <div 
             onClick={() => setIsCampaignModalOpen(true)}
-            className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
-            {/* Background with wine and salmon pink on hover */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#803344] to-[#8B4256] group-hover:from-[#F4A7A3] group-hover:to-[#E08C8C] transition-colors duration-500 ease-in-out"></div>
+            {/* Dark green background */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#09261E]"></div>
+            
+            {/* Hover wash effect */}
+            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
             
             {/* Animated decoration elements */}
             <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
@@ -330,11 +339,11 @@ export default function SellerDashboardPage() {
                 <Megaphone className="h-6 w-6 text-white" />
               </div>
               
-              <h3 className="text-lg font-medium text-white group-hover:text-gray-800 group-hover:scale-105 transition-all duration-300">
+              <h3 className="text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
                 Market a Deal
               </h3>
               
-              <div className="mt-2 text-sm text-white/80 group-hover:text-gray-600 transition-colors duration-300 flex items-center">
+              <div className="mt-2 text-sm text-white/80 flex items-center">
                 <span>Start Campaign</span>
                 <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </div>
