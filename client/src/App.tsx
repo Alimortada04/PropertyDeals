@@ -117,9 +117,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/">
-        <AppLayout>
-          <DashboardPage />
-        </AppLayout>
+        <Redirect to="/properties" />
       </Route>
       
       <Route path="/home">

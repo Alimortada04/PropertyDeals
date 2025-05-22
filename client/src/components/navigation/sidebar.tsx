@@ -175,8 +175,8 @@ export default function Sidebar() {
         </div>
       </div>
       
-      {/* Search button fixed to bottom */}
-      <div className="p-4 pb-10 flex flex-col items-center justify-center">
+      {/* Search button fixed to bottom with proper spacing */}
+      <div className="p-4 pb-20 flex flex-col items-center justify-center">
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
