@@ -34,59 +34,114 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { 
   CheckIcon, XIcon, MessageSquareIcon, 
   RefreshCcwIcon, BotIcon, 
   ChevronDownIcon, SearchIcon, FilterIcon,
-  CalendarIcon, ExternalLinkIcon, HomeIcon
+  CalendarIcon, ExternalLinkIcon, HomeIcon,
+  ChevronUpIcon, DollarSignIcon, UserIcon,
+  BadgeCheckIcon, TrendingUpIcon, StarIcon,
+  SendIcon, LoaderIcon
 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
 
-// Mock data for demo
+// Enhanced mock data with comprehensive buyer credibility info
 const mockOffers = [
   {
     id: "1",
-    property: { id: "p1", name: "Modern Farmhouse", image: "/assets/property-1.jpg" },
-    buyer: { id: "b1", name: "John Smith", isRep: true },
+    property: { id: "p1", name: "Modern Farmhouse", image: "/assets/property-1.jpg", purchasePrice: 320000 },
+    buyer: { 
+      id: "b1", 
+      name: "John Smith", 
+      username: "johnsmith", 
+      isRep: true,
+      verified: true,
+      pdRating: 4.8,
+      recentDeals: 12,
+      financingMethod: "Cash",
+      avgClosingTime: "18 days"
+    },
     amount: 350000,
-    notes: "Looking to close within 30 days. Pre-approved.",
+    message: "Looking to close within 30 days. Pre-approved and ready to move quickly. This property fits perfectly with my investment strategy.",
     status: "new",
     timestamp: new Date(2025, 4, 10, 9, 30),
   },
   {
     id: "2",
-    property: { id: "p2", name: "Downtown Loft", image: "/assets/property-2.jpg" },
-    buyer: { id: "b2", name: "Emma Johnson", isRep: false },
+    property: { id: "p2", name: "Downtown Loft", image: "/assets/property-2.jpg", purchasePrice: 380000 },
+    buyer: { 
+      id: "b2", 
+      name: "Emma Johnson", 
+      username: "emmaj", 
+      isRep: false,
+      verified: true,
+      pdRating: 4.2,
+      recentDeals: 3,
+      financingMethod: "Conventional Loan",
+      avgClosingTime: "35 days"
+    },
     amount: 425000,
-    notes: "Would like to see the property again before finalizing.",
+    message: "Would like to see the property again before finalizing. Very interested and have financing pre-approval.",
     status: "viewed",
     timestamp: new Date(2025, 4, 9, 15, 45),
   },
   {
     id: "3",
-    property: { id: "p1", name: "Modern Farmhouse", image: "/assets/property-1.jpg" },
-    buyer: { id: "b3", name: "Michael Davis", isRep: true },
+    property: { id: "p1", name: "Modern Farmhouse", image: "/assets/property-1.jpg", purchasePrice: 320000 },
+    buyer: { 
+      id: "b3", 
+      name: "Michael Davis", 
+      username: "mdavis", 
+      isRep: true,
+      verified: true,
+      pdRating: 4.9,
+      recentDeals: 25,
+      financingMethod: "Cash",
+      avgClosingTime: "14 days"
+    },
     amount: 355000,
-    notes: "Cash offer. Can close in 14 days.",
+    message: "Cash offer. Can close in 14 days. No contingencies. Serious buyer with track record.",
     status: "countered",
     timestamp: new Date(2025, 4, 8, 11, 20),
   },
   {
     id: "4",
-    property: { id: "p3", name: "Suburban Ranch", image: "/assets/property-3.jpg" },
-    buyer: { id: "b4", name: "Sarah Wilson", isRep: false },
+    property: { id: "p3", name: "Suburban Ranch", image: "/assets/property-3.jpg", purchasePrice: 265000 },
+    buyer: { 
+      id: "b4", 
+      name: "Sarah Wilson", 
+      username: "sarahw", 
+      isRep: false,
+      verified: false,
+      pdRating: 3.8,
+      recentDeals: 1,
+      financingMethod: "FHA Loan",
+      avgClosingTime: "45 days"
+    },
     amount: 289000,
-    notes: "Flexible on closing date.",
+    message: "Flexible on closing date. First-time investor but very motivated.",
     status: "accepted",
     timestamp: new Date(2025, 4, 7, 16, 10),
   },
   {
     id: "5",
-    property: { id: "p2", name: "Downtown Loft", image: "/assets/property-2.jpg" },
-    buyer: { id: "b5", name: "David Miller", isRep: false },
+    property: { id: "p2", name: "Downtown Loft", image: "/assets/property-2.jpg", purchasePrice: 380000 },
+    buyer: { 
+      id: "b5", 
+      name: "David Miller", 
+      username: "davidm", 
+      isRep: false,
+      verified: true,
+      pdRating: 4.1,
+      recentDeals: 5,
+      financingMethod: "Portfolio Loan",
+      avgClosingTime: "28 days"
+    },
     amount: 415000,
-    notes: "Contingent on home inspection.",
+    message: "Contingent on home inspection. Willing to work with reasonable repair requests.",
     status: "declined",
     timestamp: new Date(2025, 4, 5, 10, 15),
   },
@@ -116,27 +171,34 @@ interface OffersInboxModalProps {
 }
 
 export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
-  const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
-  const [counterOffer, setCounterOffer] = useState<string>("");
-  const [filters, setFilters] = useState({
-    property: "all",
-    status: "all",
-    buyer: "all",
-    dateRange: {
-      from: undefined as Date | undefined,
-      to: undefined as Date | undefined,
-    },
-  });
-  const [showFilters, setShowFilters] = useState(false);
-  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
+  const [expandedOffers, setExpandedOffers] = useState<Set<string>>(new Set());
+  const [counterOffer, setCounterOffer] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
+  const [isLoading, setIsLoading] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("all");
+  const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedBuyer, setSelectedBuyer] = useState("all");
+  const [dateRange, setDateRange] = useState<{from?: Date; to?: Date}>({});
 
   // Filter offers based on current filter settings
   const filteredOffers = mockOffers.filter(offer => {
-    if (filters.property !== "all" && offer.property.id !== filters.property) return false;
-    if (filters.status !== "all" && offer.status !== filters.status) return false;
-    if (filters.buyer !== "all" && offer.buyer.id !== filters.buyer) return false;
-    if (filters.dateRange.from && offer.timestamp < filters.dateRange.from) return false;
-    if (filters.dateRange.to && offer.timestamp > filters.dateRange.to) return false;
+    // Tab filtering
+    if (activeTab !== "all" && offer.status !== activeTab) return false;
+    
+    // Multi-property filter
+    if (selectedProperties.length > 0 && !selectedProperties.includes(offer.property.id)) return false;
+    
+    // Status filter
+    if (selectedStatus !== "all" && offer.status !== selectedStatus) return false;
+    
+    // Buyer filter
+    if (selectedBuyer !== "all" && offer.buyer.id !== selectedBuyer) return false;
+    
+    // Date range filter
+    if (dateRange.from && offer.timestamp < dateRange.from) return false;
+    if (dateRange.to && offer.timestamp > dateRange.to) return false;
+    
     return true;
   });
 
