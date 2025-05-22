@@ -256,8 +256,8 @@ export default function SellerDashboardPage() {
             onClick={() => setIsAddPropertyModalOpen(true)}
             className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
-            {/* Background with gradient and animation */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#135341] group-hover:from-[#803344] group-hover:to-[#803344]/90 transition-colors duration-500 ease-in-out"></div>
+            {/* Background with dark green primary and wine on hover */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341] group-hover:from-[#803344] group-hover:to-[#803344] transition-colors duration-500 ease-in-out"></div>
             
             {/* Animated decoration elements */}
             <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
@@ -297,14 +297,14 @@ export default function SellerDashboardPage() {
             <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
               {/* Icon with animation */}
               <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                <HandHeart className="h-6 w-6 text-green-700 group-hover:text-white transition-colors duration-300" />
+                <HandHeart className="h-6 w-6 text-white transition-colors duration-300" />
               </div>
               
-              <h3 className="text-lg font-medium text-green-800 group-hover:text-white group-hover:scale-105 transition-all duration-300">
+              <h3 className="text-lg font-medium text-white group-hover:scale-105 transition-all duration-300">
                 Review Offers
               </h3>
               
-              <div className="mt-2 text-sm text-green-600 group-hover:text-white/80 transition-colors duration-300 flex items-center">
+              <div className="mt-2 text-sm text-white/80 transition-colors duration-300 flex items-center">
                 <span>{stats.offersPending} pending</span>
                 <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </div>
