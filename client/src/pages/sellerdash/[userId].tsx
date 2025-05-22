@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
 import SellerApplicationModal from '@/components/seller/seller-application-modal';
-import OffersInboxModal from '@/components/seller/offers-inbox-modal';
+import { OffersInboxModal } from '@/components/seller/offers-inbox-modal';
 import { CampaignCreationModal } from '@/components/seller/campaign-creation-modal';
 import { 
   Card, 
