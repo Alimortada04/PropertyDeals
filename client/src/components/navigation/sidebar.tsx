@@ -169,6 +169,70 @@ export default function Sidebar() {
       setIsSellerModalOpen(true);
     }
   };
+
+  // Handle seller application form submission
+  const { toast } = useToast();
+  const [sellerFormData, setSellerFormData] = useState({
+    business_name: '',
+    experience_years: '',
+    specialization: '',
+    bio: '',
+    website: '',
+    phone: ''
+  });
+  const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
+
+  const handleSellerApplicationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.id) return;
+
+    setIsSubmittingApplication(true);
+    
+    try {
+      // Submit seller application to seller_profiles table
+      const { error } = await supabase
+        .from('seller_profiles')
+        .insert({
+          user_id: user.id,
+          business_name: sellerFormData.business_name,
+          experience_years: parseInt(sellerFormData.experience_years) || 0,
+          specialization: sellerFormData.specialization,
+          bio: sellerFormData.bio,
+          website: sellerFormData.website,
+          phone: sellerFormData.phone,
+          status: 'pending',
+          user_type: 'seller_pending'
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Application submitted!",
+        description: "Your seller application has been submitted for review. We'll notify you once it's approved.",
+      });
+
+      // Close modal and reset form
+      setIsSellerModalOpen(false);
+      setSellerFormData({
+        business_name: '',
+        experience_years: '',
+        specialization: '',
+        bio: '',
+        website: '',
+        phone: ''
+      });
+
+    } catch (error) {
+      console.error('Error submitting seller application:', error);
+      toast({
+        title: "Error submitting application",
+        description: "There was an error submitting your seller application. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingApplication(false);
+    }
+  };
   
   return (
     <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-inner border-r">
@@ -260,6 +324,99 @@ export default function Sidebar() {
           </Tooltip>
         </TooltipProvider>
       </div>
+
+      {/* Seller Application Modal */}
+      <Dialog open={isSellerModalOpen} onOpenChange={setIsSellerModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Apply to Become a Seller</DialogTitle>
+          </DialogHeader>
+          
+          <form onSubmit={handleSellerApplicationSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="business_name">Business Name *</Label>
+              <Input
+                id="business_name"
+                value={sellerFormData.business_name}
+                onChange={(e) => setSellerFormData(prev => ({ ...prev, business_name: e.target.value }))}
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="experience_years">Years of Experience *</Label>
+              <Input
+                id="experience_years"
+                type="number"
+                value={sellerFormData.experience_years}
+                onChange={(e) => setSellerFormData(prev => ({ ...prev, experience_years: e.target.value }))}
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="specialization">Specialization *</Label>
+              <Input
+                id="specialization"
+                placeholder="e.g., Residential, Commercial, Land Development"
+                value={sellerFormData.specialization}
+                onChange={(e) => setSellerFormData(prev => ({ ...prev, specialization: e.target.value }))}
+                required
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={sellerFormData.phone}
+                onChange={(e) => setSellerFormData(prev => ({ ...prev, phone: e.target.value }))}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="website">Website</Label>
+              <Input
+                id="website"
+                type="url"
+                placeholder="https://yourwebsite.com"
+                value={sellerFormData.website}
+                onChange={(e) => setSellerFormData(prev => ({ ...prev, website: e.target.value }))}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="bio">Bio</Label>
+              <Textarea
+                id="bio"
+                placeholder="Tell us about your experience and what makes you a great seller..."
+                value={sellerFormData.bio}
+                onChange={(e) => setSellerFormData(prev => ({ ...prev, bio: e.target.value }))}
+                rows={3}
+              />
+            </div>
+            
+            <div className="flex gap-3 pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setIsSellerModalOpen(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                disabled={isSubmittingApplication}
+                className="flex-1"
+              >
+                {isSubmittingApplication ? "Submitting..." : "Submit Application"}
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
