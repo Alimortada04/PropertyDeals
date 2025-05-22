@@ -259,12 +259,10 @@ export default function SellerDashboardPage() {
             {/* Wine background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#803344] to-[#803344]"></div>
             
-            {/* Hover wash effect */}
-            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-            
-            {/* Animated decoration elements */}
-            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            {/* Animated decoration elements with constant movement */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 animate-ping"></div>
             
             {/* Content with vertical centering */}
             <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
@@ -286,18 +284,16 @@ export default function SellerDashboardPage() {
           
           {/* Review Offers CTA Card */}
           <div 
-            onClick={() => window.location.href = `/sellerdash/${userId}/offers`}
+            onClick={() => {/* Will open offers inbox popup - same as quick action */}}
             className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Lighter green background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341]"></div>
             
-            {/* Hover wash effect */}
-            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-            
-            {/* Animated decoration elements */}
-            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            {/* Animated decoration elements with constant movement */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 animate-ping"></div>
             
             {/* Content with vertical centering */}
             <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
@@ -319,18 +315,16 @@ export default function SellerDashboardPage() {
           
           {/* Market a Deal CTA Card */}
           <div 
-            onClick={() => setIsCampaignModalOpen(true)}
+            onClick={() => {/* Will open campaign popup - same as quick action */}}
             className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Dark green background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#09261E]"></div>
             
-            {/* Hover wash effect */}
-            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-            
-            {/* Animated decoration elements */}
-            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
-            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            {/* Animated decoration elements with constant movement */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 animate-pulse group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 animate-bounce group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 animate-ping"></div>
             
             {/* Content with vertical centering */}
             <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
