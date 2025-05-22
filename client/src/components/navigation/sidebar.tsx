@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 // Import removed - will use inline image
 import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 import {
   Home,
   Building,
@@ -54,6 +55,11 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 
 interface ProfileData {
@@ -62,7 +68,7 @@ interface ProfileData {
 }
 
 interface NavItemProps {
-  href: string;
+  href?: string;
   icon: React.ReactNode;
   label: string;
   active?: boolean;
@@ -71,26 +77,34 @@ interface NavItemProps {
 }
 
 const NavItem: FC<NavItemProps> = ({ href, icon, label, active, onClick, className }) => {
+  const content = (
+    <div
+      className={cn(
+        "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all cursor-pointer",
+        active
+          ? "text-[#803344] bg-gray-100 scale-105" 
+          : "text-[#09261E] hover:text-[#803344] hover:bg-gray-100 hover:scale-105",
+        className
+      )}
+      onClick={onClick}
+    >
+      {icon}
+      <span className="sr-only">{label}</span>
+    </div>
+  );
+
   return (
     <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex justify-center">
-            <Link href={href}>
-              <div
-                className={cn(
-                  "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all",
-                  active
-                    ? "text-[#803344] bg-gray-100 scale-105" 
-                    : "text-[#09261E] hover:text-[#803344] hover:bg-gray-100 hover:scale-105",
-                  className
-                )}
-                onClick={onClick}
-              >
-                {icon}
-                <span className="sr-only">{label}</span>
-              </div>
-            </Link>
+            {href && !onClick ? (
+              <Link href={href}>
+                {content}
+              </Link>
+            ) : (
+              content
+            )}
           </div>
         </TooltipTrigger>
         <TooltipContent 
@@ -110,12 +124,51 @@ export default function Sidebar() {
   const [location] = useLocation();
   const { user, logoutMutation } = useAuth();
   const activeRole = user?.activeRole || "visitor";
+  const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   
   // Fetch profile data including profile photo
   const { data: profileData = {} as ProfileData } = useQuery<ProfileData>({
     queryKey: ['/api/profile'],
     enabled: !!user
   });
+  
+  // Check seller status
+  const { data: sellerStatus } = useQuery({
+    queryKey: ['seller-status', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data, error } = await supabase
+        .from('seller_profiles')
+        .select('status, user_type')
+        .eq('user_id', user.id)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching seller status:', error);
+        return null;
+      }
+      
+      return data;
+    },
+    enabled: !!user?.id
+  });
+  
+  // Handle List a Property click with smart routing
+  const handleListPropertyClick = async () => {
+    // Check if user is logged in
+    if (!user?.id) {
+      window.location.href = '/auth/signin';
+      return;
+    }
+    
+    // Check if user is an approved seller
+    if (sellerStatus?.status === 'approved' || sellerStatus?.user_type === 'seller') {
+      window.location.href = `/sellerdash/${user.id}`;
+    } else {
+      // Open seller application modal
+      setIsSellerModalOpen(true);
+    }
+  };
   
   return (
     <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-inner border-r">
@@ -147,12 +200,12 @@ export default function Sidebar() {
             active={location.startsWith('/favorites')} 
           />
           
-          {/* Listing/Add Property icon */}
+          {/* List a Property icon - Smart routing with seller status check */}
           <NavItem 
-            href={user?.id ? `/sellerdash/${user.id}` : "/sellerdash"} 
             icon={<PlusCircle size={24} />} 
             label="List a Property"
-            active={location.startsWith('/sellerdash')} 
+            active={location.startsWith('/sellerdash')}
+            onClick={handleListPropertyClick}
           />
           
           {/* Profile icon - with profile photo and hover animation */}
