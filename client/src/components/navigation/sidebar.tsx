@@ -20,7 +20,8 @@ import {
   Briefcase,
   MessageCircle,
   Calendar,
-  Compass
+  Compass,
+  Heart
 } from "lucide-react";
 
 // Custom TwoHouses icon component based on the provided image
@@ -116,166 +117,58 @@ export default function Sidebar() {
     enabled: !!user
   });
   
-  // Menu popup state
-  const [showMenu, setShowMenu] = useState(false);
-  // We don't need any search state here as we're using the app-wide search
-  
-  // Handle logout
-  const handleLogout = () => {
-    logoutMutation.mutate();
-  };
-
   return (
     <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-inner border-r">
       {/* Logo at top - Using pdLogo.png image */}
       <div className="flex items-center justify-center h-16 mb-0">
-        <Link href="/dashboard">
+        <Link href="/properties">
           <div className="flex items-center justify-center hover:scale-110 transition-all">
             <img src="/images/pdLogo.png" alt="PropertyDeals" className="h-10 w-auto" />
           </div>
         </Link>
       </div>
       
-      {/* Main Navigation (Scrollable) */}
-      <ScrollArea className="flex-1 pb-12">
-        <div className="space-y-2 flex flex-col items-center pt-2 mt-0">
-          <NavItem 
-            href="/" 
-            icon={<Home size={24} />} 
-            label="Home"
-            active={location === '/'} 
-          />
-          
+      {/* Main Navigation (Centered in the middle of sidebar) */}
+      <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="space-y-6 flex flex-col items-center">
+          {/* Home/Properties icon */}
           <NavItem 
             href="/properties" 
-            icon={
-              <div className="w-6 h-6 flex items-center justify-center">
-                <img 
-                  src="/images/real-estate-new.png"
-                  alt="Properties" 
-                  className="w-5 h-5 object-contain" 
-                />
-              </div>
-            } 
+            icon={<Home size={24} />} 
             label="Properties"
             active={location.startsWith('/properties')} 
           />
           
+          {/* Favorites icon */}
           <NavItem 
-            href="/reps" 
-            icon={<Users size={24} />} 
-            label="Professionals"
-            active={location.startsWith('/reps')} 
+            href="/favorites" 
+            icon={<Heart size={24} />} 
+            label="Favorites"
+            active={location.startsWith('/favorites')} 
           />
           
+          {/* Profile icon - with profile photo and hover animation */}
           <NavItem 
-            href="/inbox" 
-            icon={<MessageCircle size={24} />} 
-            label="Messages"
-            active={location.startsWith('/inbox')} 
+            href={user?.username ? `/profile/${user.username}` : "/profile"} 
+            icon={
+              <Avatar className="h-8 w-8 transition-all transform group-hover:scale-110 duration-200">
+                <AvatarImage 
+                  src={profileData?.profile_photo_url || ""} 
+                  alt={(profileData?.full_name || user?.fullName || "User") as string} 
+                />
+                <AvatarFallback className="bg-white p-0">
+                  <User size={20} />
+                </AvatarFallback>
+              </Avatar>
+            } 
+            label="Profile"
+            active={location.startsWith('/profile')} 
           />
-          
-          <NavItem 
-            href="/community" 
-            icon={<Calendar size={24} />} 
-            label="Community"
-            active={location.startsWith('/community')} 
-          />
-          
-          <NavItem 
-            href="/playbook" 
-            icon={<Book size={24} />} 
-            label="Playbook"
-            active={location.startsWith('/playbook')} 
-          />
-          
-          {/* List Property - Route to dynamic userid path or signin */}
-          <TooltipProvider delayDuration={100}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex justify-center">
-                  <div
-                    className={cn(
-                      "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all cursor-pointer",
-                      location.startsWith('/sellerdash')
-                        ? "text-[#803344] bg-gray-100 scale-105" 
-                        : "text-[#09261E] hover:text-[#803344] hover:bg-gray-100 hover:scale-105"
-                    )}
-                    onClick={() => {
-                      // Get user from Supabase session
-                      if (user && user.id) {
-                        // Check if user is an active/approved seller
-                        if (activeRole === 'seller') {
-                          // Active seller - go directly to their dashboard
-                          window.location.replace(`/sellerdash/${user.id}`);
-                        } else {
-                          // Not an active seller - go to seller application
-                          window.location.replace('/sellerdash');
-                        }
-                      } else {
-                        // If not authenticated, redirect to signin
-                        window.location.replace("/auth/signin");
-                      }
-                    }}
-                  >
-                    <PlusCircle size={24} />
-                    <span className="sr-only">List a Property</span>
-                  </div>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent 
-                side="right" 
-                sideOffset={4} 
-                align="center" 
-                className="font-medium text-sm py-1 px-2"
-              >
-                List a Property
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          {activeRole === 'seller' && (
-            <NavItem 
-              href="/seller/dashboard" 
-              icon={<Briefcase size={24} />} 
-              label="Seller Dashboard"
-              active={location.startsWith('/seller/dashboard')} 
-            />
-          )}
-          
-          {activeRole === 'agent' && (
-            <NavItem 
-              href="/agent/dashboard" 
-              icon={<Briefcase size={24} />} 
-              label="Agent Dashboard"
-              active={location.startsWith('/agent/dashboard')} 
-            />
-          )}
-          
-          {activeRole === 'contractor' && (
-            <NavItem 
-              href="/contractor/dashboard" 
-              icon={<Briefcase size={24} />} 
-              label="Contractor Dashboard"
-              active={location.startsWith('/contractor/dashboard')} 
-            />
-          )}
-          
-          {user?.isAdmin && (
-            <NavItem 
-              href="/admin/dashboard" 
-              icon={<Briefcase size={24} />} 
-              label="Admin Dashboard"
-              active={location.startsWith('/admin')} 
-              className="mt-2"
-            />
-          )}
         </div>
-      </ScrollArea>
+      </div>
       
-      {/* Bottom Navigation (Fixed) - No border, centered icons */}
-      <div className="p-2 pb-16 flex flex-col items-center justify-center space-y-2">
-        {/* Search button - Uses app-wide keyboard shortcut */}
+      {/* Search button fixed to bottom */}
+      <div className="p-4 pb-10 flex flex-col items-center justify-center">
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -305,27 +198,7 @@ export default function Sidebar() {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        
-        {/* Profile icon - with profile photo and hover animation */}
-        <NavItem 
-          href="/profile" 
-          icon={
-            <Avatar className="h-8 w-8 transition-all transform group-hover:scale-110 duration-200">
-              <AvatarImage 
-                src={profileData?.profile_photo_url || ""} 
-                alt={(profileData?.full_name || user?.fullName || "User") as string} 
-              />
-              <AvatarFallback className="bg-white p-0">
-                <img src="/images/pdLogo.png" alt="PropertyDeals Logo" className="w-full h-full object-contain" />
-              </AvatarFallback>
-            </Avatar>
-          } 
-          label="Profile"
-          active={location.startsWith('/profile')} 
-        />
       </div>
-      
-      {/* Bottom bar removed from here - now in app-layout.tsx */}
     </div>
   );
 }

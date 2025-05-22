@@ -24,6 +24,7 @@ import ForgotPasswordPage from "@/pages/auth/forgot-password";
 import RegisterPage from "@/pages/auth/register";
 import SignInPage from "@/pages/auth/signin";
 import ResetPasswordPage from "@/pages/auth/reset-password";
+import FavoritesPage from "@/pages/favorites";
 import OnboardingPage from "@/pages/onboarding";
 import AboutPage from "@/pages/about-page";
 import ContactPage from "@/pages/contact-page";
@@ -133,6 +134,12 @@ function Router() {
       <ProtectedRoute path="/properties" component={() => (
         <AppLayout>
           <PropertiesPage />
+        </AppLayout>
+      )} />
+      
+      <ProtectedRoute path="/favorites" component={() => (
+        <AppLayout>
+          <FavoritesPage />
         </AppLayout>
       )} />
       <Route path="/p/:id">
