@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
 import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
+import SellerApplicationModal from '@/components/seller/seller-application-modal';
 import { 
   Card, 
   CardContent, 
@@ -121,10 +124,41 @@ export default function SellerDashboardPage() {
   const [statusFilter, setStatusFilter] = useState('All');
   // Property modal is now handled through the global Quick Action Selector
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
+  const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   
   // In real implementation, check if the current user matches the userId param
   // If not, redirect to their own dashboard or show an authorization error
   const userId = params.userId || '';
+
+  // Check seller status for current user
+  const { data: sellerStatus, isLoading: isCheckingStatus } = useQuery({
+    queryKey: ['seller-status', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data, error } = await supabase
+        .from('sellers')
+        .select('status, businessName')
+        .eq('userId', user.id)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching seller status:', error);
+        return null;
+      }
+      
+      return data;
+    },
+    enabled: !!user?.id
+  });
+
+  // Determine if we should show the seller application modal
+  const shouldShowSellerModal = !isCheckingStatus && (!sellerStatus || sellerStatus.status !== 'active');
+
+  useEffect(() => {
+    if (shouldShowSellerModal) {
+      setIsSellerModalOpen(true);
+    }
+  }, [shouldShowSellerModal]);
   
   // Get seller stats for the top cards
   const stats = {
