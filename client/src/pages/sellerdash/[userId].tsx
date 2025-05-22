@@ -331,52 +331,7 @@ export default function SellerDashboardPage() {
           </Card>
         </div>
         
-        {/* Recently Touched Section */}
-        <div className="mb-10">
-          <h2 className="text-xl font-semibold mb-4">Recently Touched</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {RECENT_ACTIVITY.length > 0 ? (
-              RECENT_ACTIVITY.map(activity => (
-                <Card key={activity.id} className="overflow-hidden hover:shadow-md transition-shadow duration-200">
-                  <div className="relative h-32 bg-gray-200">
-                    <img 
-                      src={activity.thumbnail} 
-                      alt={activity.propertyTitle}
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        // Fallback if image fails to load
-                        (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/e2e8f0/1e293b?text=Property+Image';
-                      }}
-                    />
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="mb-2">
-                      <h3 className="font-semibold text-gray-900 mb-1">{activity.propertyTitle}</h3>
-                      <p className="text-sm text-gray-500 flex items-center gap-1">
-                        <Clock className="h-3 w-3" /> 
-                        Last touched {activity.timeAgo} ago - {activity.action}
-                      </p>
-                    </div>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="w-full bg-white hover:bg-gray-50 border-gray-200"
-                      onClick={() => setLocation(`/sellerdash/${userId}/property/${activity.propertyId}`)}
-                    >
-                      Resume
-                      <ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              <div className="col-span-3 py-8 text-center bg-white rounded-lg border border-dashed border-gray-300">
-                <p className="text-gray-500">No recent activity found</p>
-              </div>
-            )}
-          </div>
-        </div>
+
         
         {/* Your Properties Section */}
         <div>
