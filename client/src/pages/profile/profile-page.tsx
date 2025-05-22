@@ -37,6 +37,15 @@ import { supabase } from "@/lib/supabase";
 import { navigateToHelpSection, navigateToProfileTab, getCurrentHelpSection } from "@/lib/navigation";
 import styles from "./profile-page.module.css";
 import ConnectionsTab from "./connections-tab";
+import { 
+  getBuyerProfile, 
+  upsertBuyerProfile, 
+  isUsernameAvailable, 
+  uploadProfilePhoto, 
+  uploadBannerImage, 
+  uploadProofOfFunds,
+  type BuyerProfile 
+} from "@/lib/buyer-profile";
 
 // Import icons
 import {
@@ -341,20 +350,50 @@ export default function ProfilePage() {
     showProfile: true
   });
 
-  // Fetch profile data on component mount
-  const { data: fetchedProfile, isLoading } = useQuery({
-    queryKey: ['/api/profile']
+  // Fetch buyer profile data from Supabase
+  const { data: buyerProfile, isLoading, error } = useQuery({
+    queryKey: ['buyer-profile', user?.id],
+    queryFn: () => user?.id ? getBuyerProfile(user.id) : null,
+    enabled: !!user?.id
   });
 
-  // Handle profile data when fetched
+  // Handle buyer profile data when fetched
   useEffect(() => {
-    if (fetchedProfile) {
+    if (buyerProfile) {
       setProfileData(prev => ({
         ...prev,
-        ...fetchedProfile
+        full_name: buyerProfile.full_name || prev.full_name,
+        username: buyerProfile.username || prev.username,
+        phone: buyerProfile.phone || null,
+        location: buyerProfile.location || null,
+        bio: buyerProfile.bio || null,
+        is_public: buyerProfile.is_public || false,
+        business_name: buyerProfile.business_name,
+        in_real_estate_since: buyerProfile.in_real_estate_since,
+        type_of_buyer: buyerProfile.type_of_buyer || [],
+        website: buyerProfile.website,
+        instagram: buyerProfile.instagram,
+        facebook: buyerProfile.facebook,
+        linkedin: buyerProfile.linkedin,
+        profile_photo_url: buyerProfile.profile_photo_url,
+        profile_banner_url: buyerProfile.banner_image_url,
+        markets: buyerProfile.markets || [],
+        property_types: buyerProfile.property_types || [],
+        property_conditions: buyerProfile.property_conditions || [],
+        ideal_budget_min: buyerProfile.ideal_budget_min,
+        ideal_budget_max: buyerProfile.ideal_budget_max,
+        financing_methods: buyerProfile.financing_methods || [],
+        preferred_financing_method: buyerProfile.preferred_financing_method,
+        closing_timeline: buyerProfile.closing_timeline,
+        number_of_deals_last_12_months: buyerProfile.number_of_deals_last_12_months,
+        goal_deals_next_12_months: buyerProfile.goal_deals_next_12_months,
+        total_deals_done: buyerProfile.total_deals_done,
+        current_portfolio_count: buyerProfile.current_portfolio_count,
+        proof_of_funds_url: buyerProfile.proof_of_funds_url,
+        proof_of_funds_verified: buyerProfile.proof_of_funds_verified || false
       }));
     }
-  }, [fetchedProfile]);
+  }, [buyerProfile]);
 
   // Debounce username check while user types
   useEffect(() => {
@@ -373,27 +412,15 @@ export default function ProfilePage() {
     
     const timer = setTimeout(async () => {
       try {
-        // Check if username exists
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('username')
-          .eq('username', username)
-          .neq('id', user?.id)
-          .maybeSingle();
+        // Check if username exists in buyer_profiles
+        const available = await isUsernameAvailable(username, user?.id);
         
-        if (error) {
-          console.error("Username check error:", error);
-          setIsCheckingUsername(false);
-          return;
-        }
-        
-        // If data exists, username is taken
-        if (data) {
-          setIsUsernameAvailable(false);
-          setUsernameMessage("Username already taken");
-        } else {
+        if (available) {
           setIsUsernameAvailable(true);
           setUsernameMessage("Username available");
+        } else {
+          setIsUsernameAvailable(false);
+          setUsernameMessage("Username already taken");
         }
         
         setIsCheckingUsername(false);
