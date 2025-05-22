@@ -23,6 +23,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+} from "@/components/ui/dropdown-menu";
 
 // Enhanced mock data with comprehensive buyer credibility info
 const mockOffers = [
@@ -251,7 +258,7 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[1100px] max-h-[90vh] p-0 flex flex-col overflow-hidden">
+      <DialogContent className="sm:max-w-[1100px] h-[90vh] p-0 flex flex-col overflow-hidden">
         <DialogHeader className="p-6 pb-4 border-b">
           <div className="flex justify-between items-center">
             <div>
@@ -274,25 +281,36 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
             {/* Multi-select Property filter */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Properties</Label>
-              <div className="space-y-2 max-h-32 overflow-y-auto">
-                {uniqueProperties.map(property => (
-                  <div key={property.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`property-${property.id}`}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-between text-left font-normal h-10"
+                  >
+                    <span className="truncate">
+                      {selectedProperties.length === 0
+                        ? "All properties"
+                        : selectedProperties.length === 1
+                        ? uniqueProperties.find(p => p.id === selectedProperties[0])?.name
+                        : `${selectedProperties.length} selected`}
+                    </span>
+                    <ChevronDownIcon className="h-4 w-4 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  {uniqueProperties.map(property => (
+                    <DropdownMenuCheckboxItem
+                      key={property.id}
                       checked={selectedProperties.includes(property.id)}
                       onCheckedChange={(checked) => 
                         handlePropertyFilterChange(property.id, checked as boolean)
                       }
-                    />
-                    <Label 
-                      htmlFor={`property-${property.id}`} 
-                      className="text-sm cursor-pointer"
                     >
                       {property.name}
-                    </Label>
-                  </div>
-                ))}
-              </div>
+                    </DropdownMenuCheckboxItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
             
             {/* Status filter */}
@@ -396,8 +414,8 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
           </div>
         </div>
 
-        {/* Main content */}
-        <div className="flex-1 overflow-y-auto p-6">
+        {/* Main content - fixed height with scroll */}
+        <div className="flex-1 overflow-y-auto p-6" style={{scrollbarWidth: 'thin'}}>
           <div className="space-y-2">
             {filteredOffers.length === 0 ? (
               <div className="text-center py-12 text-gray-500">
@@ -415,7 +433,7 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                     {/* Offer row (clickable) */}
                     <div 
                       className={cn(
-                        "p-4 cursor-pointer hover:bg-gray-50 transition-colors",
+                        "p-4 cursor-pointer hover:bg-gray-50 hover:shadow-sm transition-all duration-200",
                         offer.status === "new" && "bg-blue-50"
                       )}
                       onClick={() => toggleOfferExpansion(offer.id)}
