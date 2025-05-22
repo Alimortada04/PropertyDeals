@@ -189,12 +189,44 @@ export default function Sidebar() {
             active={location.startsWith('/playbook')} 
           />
           
-          <NavItem 
-            href="/sellerdash" 
-            icon={<PlusCircle size={24} />} 
-            label="List a Property"
-            active={location.startsWith('/sellerdash')} 
-          />
+          {/* List Property - Route to dynamic userid path or signin */}
+          <TooltipProvider delayDuration={100}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex justify-center">
+                  <div
+                    className={cn(
+                      "relative group flex items-center justify-center w-12 h-12 rounded-full transition-all cursor-pointer",
+                      location.startsWith('/sellerdash')
+                        ? "text-[#803344] bg-gray-100 scale-105" 
+                        : "text-[#09261E] hover:text-[#803344] hover:bg-gray-100 hover:scale-105"
+                    )}
+                    onClick={() => {
+                      // Get user from Supabase session
+                      if (user && user.id) {
+                        // Replace current history entry instead of pushing new one
+                        window.location.replace(`/sellerdash/${user.id}`);
+                      } else {
+                        // If not authenticated, redirect to signin
+                        window.location.replace("/auth/signin");
+                      }
+                    }}
+                  >
+                    <PlusCircle size={24} />
+                    <span className="sr-only">List a Property</span>
+                  </div>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent 
+                side="right" 
+                sideOffset={4} 
+                align="center" 
+                className="font-medium text-sm py-1 px-2"
+              >
+                List a Property
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           
           {activeRole === 'seller' && (
             <NavItem 
