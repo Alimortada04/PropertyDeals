@@ -28,6 +28,8 @@ import {
   BadgeCheck,
   BadgeAlert,
   Clock3,
+  HandHeart,
+  Megaphone,
   DollarSign,
   Building,
   MoreHorizontal,
@@ -245,7 +247,7 @@ export default function SellerDashboardPage() {
           </div>
         </div>
         
-        {/* Quick Stats grid with List a Property CTA */}
+        {/* Quick Stats grid with CTA Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
           
           {/* List a Property CTA Card */}
@@ -278,6 +280,66 @@ export default function SellerDashboardPage() {
             </div>
           </div>
           
+          {/* Review Offers CTA Card */}
+          <div 
+            onClick={() => window.location.href = `/sellerdash/${userId}/offers`}
+            className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
+          >
+            {/* Background with light primary green and dark green on hover */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-green-100 to-green-200 group-hover:from-[#135341] group-hover:to-[#09261E] transition-colors duration-500 ease-in-out"></div>
+            
+            {/* Animated decoration elements */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            
+            {/* Content with vertical centering */}
+            <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
+              {/* Icon with animation */}
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                <HandHeart className="h-6 w-6 text-green-700 group-hover:text-white transition-colors duration-300" />
+              </div>
+              
+              <h3 className="text-lg font-medium text-green-800 group-hover:text-white group-hover:scale-105 transition-all duration-300">
+                Review Offers
+              </h3>
+              
+              <div className="mt-2 text-sm text-green-600 group-hover:text-white/80 transition-colors duration-300 flex items-center">
+                <span>{stats.offersPending} pending</span>
+                <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              </div>
+            </div>
+          </div>
+          
+          {/* Market a Deal CTA Card */}
+          <div 
+            onClick={() => {/* Will open campaign popup */}}
+            className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
+          >
+            {/* Background with wine and salmon pink on hover */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#803344] to-[#8B4256] group-hover:from-[#F4A7A3] group-hover:to-[#E08C8C] transition-colors duration-500 ease-in-out"></div>
+            
+            {/* Animated decoration elements */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
+            <div className="absolute -left-8 -bottom-8 h-16 w-16 rounded-full bg-white opacity-10 group-hover:scale-125 transition-transform duration-700 delay-100"></div>
+            
+            {/* Content with vertical centering */}
+            <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
+              {/* Icon with animation */}
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+                <Megaphone className="h-6 w-6 text-white" />
+              </div>
+              
+              <h3 className="text-lg font-medium text-white group-hover:text-gray-800 group-hover:scale-105 transition-all duration-300">
+                Market a Deal
+              </h3>
+              
+              <div className="mt-2 text-sm text-white/80 group-hover:text-gray-600 transition-colors duration-300 flex items-center">
+                <span>Start Campaign</span>
+                <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              </div>
+            </div>
+          </div>
+          
           {/* Active Listings */}
           <Card className="border-l-4 border-l-[#135341] hover:shadow-md transition-shadow duration-200">
             <CardHeader className="pb-2">
@@ -291,19 +353,6 @@ export default function SellerDashboardPage() {
             </CardContent>
           </Card>
           
-          {/* Offers Pending */}
-          <Card className="border-l-4 border-l-[#803344] hover:shadow-md transition-shadow duration-200">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <Users className="h-7 w-7 text-[#803344]" />
-                <span className="text-3xl font-bold">{stats.offersPending}</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardTitle className="text-base font-medium text-gray-600">Offers Pending</CardTitle>
-            </CardContent>
-          </Card>
-          
           {/* Assignment Revenue */}
           <Card className="border-l-4 border-l-green-600 hover:shadow-md transition-shadow duration-200">
             <CardHeader className="pb-2">
@@ -314,19 +363,6 @@ export default function SellerDashboardPage() {
             </CardHeader>
             <CardContent>
               <CardTitle className="text-base font-medium text-gray-600">Assignment Revenue</CardTitle>
-            </CardContent>
-          </Card>
-          
-          {/* Avg Days on Market */}
-          <Card className="border-l-4 border-l-blue-600 hover:shadow-md transition-shadow duration-200">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                <Calendar className="h-7 w-7 text-blue-600" />
-                <span className="text-3xl font-bold">{stats.avgDaysOnMarket}</span>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardTitle className="text-base font-medium text-gray-600">Avg. Days on Market</CardTitle>
             </CardContent>
           </Card>
         </div>
