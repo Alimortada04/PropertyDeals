@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PropertyCreationModal } from "@/components/seller/property-creation-modal";
+import { EnhancedPropertyListingModal } from "@/components/property/enhanced-property-listing-modal";
 import { OffersInboxModal } from "@/components/seller/offers-inbox-modal";
 import { CampaignCreationModal } from "@/components/seller/campaign-creation-modal";
 import { usePropertyModal } from "@/hooks/use-property-modal";
@@ -23,7 +23,7 @@ export const ModalProvider = () => {
 
   return (
     <>
-      <PropertyCreationModal 
+      <EnhancedPropertyListingModal 
         isOpen={propertyModal.isOpen} 
         onClose={propertyModal.onClose} 
       />
