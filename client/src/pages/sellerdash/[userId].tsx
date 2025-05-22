@@ -127,6 +127,7 @@ export default function SellerDashboardPage() {
   // Property modal is now handled through the global Quick Action Selector
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
+  const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false);
   
   // In real implementation, check if the current user matches the userId param
   // If not, redirect to their own dashboard or show an authorization error
@@ -286,7 +287,7 @@ export default function SellerDashboardPage() {
             className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Background with light primary green and dark green on hover */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-green-100 to-green-200 group-hover:from-[#135341] group-hover:to-[#09261E] transition-colors duration-500 ease-in-out"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341] group-hover:from-[#09261E] group-hover:to-[#09261E] transition-colors duration-500 ease-in-out"></div>
             
             {/* Animated decoration elements */}
             <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
@@ -312,7 +313,7 @@ export default function SellerDashboardPage() {
           
           {/* Market a Deal CTA Card */}
           <div 
-            onClick={() => {/* Will open campaign popup */}}
+            onClick={() => setIsCampaignModalOpen(true)}
             className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Background with wine and salmon pink on hover */}
