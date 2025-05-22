@@ -147,6 +147,14 @@ export default function Sidebar() {
             active={location.startsWith('/favorites')} 
           />
           
+          {/* Listing/Add Property icon */}
+          <NavItem 
+            href={user?.id ? `/sellerdash/${user.id}` : "/sellerdash"} 
+            icon={<PlusCircle size={24} />} 
+            label="List a Property"
+            active={location.startsWith('/sellerdash')} 
+          />
+          
           {/* Profile icon - with profile photo and hover animation */}
           <NavItem 
             href={user?.username ? `/profile/${user.username}` : "/profile"} 

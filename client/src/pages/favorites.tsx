@@ -1,9 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
-import { Empty } from "@/components/common/empty";
+import { 
+  Loader2, 
+  Heart, 
+  Search, 
+  Home, 
+  Filter, 
+  ArrowUpDown, 
+  ChevronDown,
+  X,
+  Grid,
+  List
+} from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 // UI Components
@@ -12,10 +22,27 @@ import {
   CardContent,
   CardDescription,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Property {
   id: string;
@@ -28,11 +55,64 @@ interface Property {
   imageUrl: string;
   status: string;
   createdAt: string;
+  propertyType?: string;
+  yearBuilt?: number;
 }
+
+// Empty state component
+const Empty = ({ 
+  title, 
+  description, 
+  icon = "heart", 
+  action 
+}: { 
+  title: string; 
+  description: string; 
+  icon?: "heart" | "home" | "search"; 
+  action?: { label: string; onClick: () => void } 
+}) => {
+  const getIcon = () => {
+    switch (icon) {
+      case "heart":
+        return <Heart className="h-12 w-12 text-gray-300" />;
+      case "home":
+        return <Home className="h-12 w-12 text-gray-300" />;
+      case "search":
+        return <Search className="h-12 w-12 text-gray-300" />;
+      default:
+        return <Heart className="h-12 w-12 text-gray-300" />;
+    }
+  };
+
+  return (
+    <Card className="w-full border border-gray-200">
+      <CardContent className="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <div className="bg-gray-100 rounded-full p-4 mb-4">
+          {getIcon()}
+        </div>
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
+        <p className="text-gray-500 mb-6 max-w-md">{description}</p>
+        {action && (
+          <Button 
+            onClick={action.onClick}
+            className="bg-[#09261E] hover:bg-[#135341] text-white"
+          >
+            {action.label}
+          </Button>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
 
 export default function FavoritesPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [sortBy, setSortBy] = useState<string>("recently-added");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   // Fetch user's favorited properties from Supabase
   const { data: favoriteProperties, isLoading, error } = useQuery({
@@ -72,25 +152,106 @@ export default function FavoritesPage() {
     enabled: !!user
   });
 
+  // Apply client-side filtering and sorting
+  const filteredProperties = React.useMemo(() => {
+    if (!favoriteProperties) return [];
+    
+    let result = [...favoriteProperties];
+    
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        property => 
+          property.title.toLowerCase().includes(query) || 
+          property.address.toLowerCase().includes(query)
+      );
+    }
+    
+    // Apply status filter
+    if (filterStatus !== 'all') {
+      result = result.filter(
+        property => property.status?.toLowerCase() === filterStatus.toLowerCase()
+      );
+    }
+    
+    // Apply sorting
+    switch (sortBy) {
+      case 'price-high-low':
+        result.sort((a, b) => {
+          const priceA = typeof a.price === 'string' ? parseInt(a.price.replace(/[^0-9]/g, '')) : a.price;
+          const priceB = typeof b.price === 'string' ? parseInt(b.price.replace(/[^0-9]/g, '')) : b.price;
+          return priceB - priceA;
+        });
+        break;
+      case 'price-low-high':
+        result.sort((a, b) => {
+          const priceA = typeof a.price === 'string' ? parseInt(a.price.replace(/[^0-9]/g, '')) : a.price;
+          const priceB = typeof b.price === 'string' ? parseInt(b.price.replace(/[^0-9]/g, '')) : b.price;
+          return priceA - priceB;
+        });
+        break;
+      case 'beds-high-low':
+        result.sort((a, b) => b.beds - a.beds);
+        break;
+      case 'sqft-high-low':
+        result.sort((a, b) => b.sqft - a.sqft);
+        break;
+      case 'recently-added':
+      default:
+        // Sort by createdAt (newest first)
+        result.sort((a, b) => {
+          const dateA = new Date(a.createdAt || 0).getTime();
+          const dateB = new Date(b.createdAt || 0).getTime();
+          return dateB - dateA;
+        });
+    }
+    
+    return result;
+  }, [favoriteProperties, searchQuery, filterStatus, sortBy]);
+
+  // Add a filter to the active filters
+  const addFilter = (filter: string) => {
+    if (!activeFilters.includes(filter)) {
+      setActiveFilters([...activeFilters, filter]);
+    }
+  };
+
+  // Remove a filter from active filters
+  const removeFilter = (filter: string) => {
+    setActiveFilters(activeFilters.filter(f => f !== filter));
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setActiveFilters([]);
+    setFilterStatus('all');
+    setSearchQuery('');
+  };
+
   if (isLoading) {
     return (
-      <div className="container py-8">
-        <h1 className="text-3xl font-bold mb-6">Your Favorites</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map(i => (
-            <Card key={i} className="overflow-hidden">
-              <Skeleton className="h-48 w-full" />
-              <CardContent className="p-5">
-                <Skeleton className="h-5 w-2/3 mb-2" />
-                <Skeleton className="h-4 w-full mb-4" />
-                <div className="flex justify-between">
-                  <Skeleton className="h-4 w-1/4" />
-                  <Skeleton className="h-4 w-1/4" />
-                  <Skeleton className="h-4 w-1/4" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+      <div className="container py-8 pl-20">
+        <div className="max-w-screen-2xl mx-auto">
+          <h1 className="text-3xl font-bold mb-2">Your Favorites</h1>
+          <p className="text-gray-500 mb-6">Loading your favorite properties...</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map(i => (
+              <Card key={i} className="overflow-hidden">
+                <Skeleton className="h-48 w-full" />
+                <CardContent className="p-5">
+                  <Skeleton className="h-5 w-2/3 mb-2" />
+                  <Skeleton className="h-4 w-full mb-4" />
+                  <div className="flex justify-between">
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-4 w-1/4" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -98,34 +259,42 @@ export default function FavoritesPage() {
 
   if (error) {
     return (
-      <div className="container py-8">
-        <h1 className="text-3xl font-bold mb-6">Your Favorites</h1>
-        <Card className="p-6 text-center">
-          <CardTitle className="text-red-500 mb-2">Error Loading Favorites</CardTitle>
-          <CardDescription>
-            We couldn't load your favorite properties. Please try again later.
-          </CardDescription>
-          <Button className="mt-4" onClick={() => window.location.reload()}>
-            Try Again
-          </Button>
-        </Card>
+      <div className="container py-8 pl-20">
+        <div className="max-w-screen-2xl mx-auto">
+          <h1 className="text-3xl font-bold mb-2">Your Favorites</h1>
+          <p className="text-gray-500 mb-6">We encountered an error while loading your favorite properties.</p>
+          
+          <Card className="p-6 text-center">
+            <CardTitle className="text-red-500 mb-2">Error Loading Favorites</CardTitle>
+            <CardDescription>
+              We couldn't load your favorite properties. Please try again later.
+            </CardDescription>
+            <Button className="mt-4" onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
+          </Card>
+        </div>
       </div>
     );
   }
 
   if (!favoriteProperties || favoriteProperties.length === 0) {
     return (
-      <div className="container py-8">
-        <h1 className="text-3xl font-bold mb-6">Your Favorites</h1>
-        <Empty 
-          title="No favorites yet"
-          description="Properties you save will appear here. Start browsing to find properties you love."
-          icon="heart"
-          action={{
-            label: "Browse Properties",
-            onClick: () => setLocation("/properties")
-          }}
-        />
+      <div className="container py-8 pl-20">
+        <div className="max-w-screen-2xl mx-auto">
+          <h1 className="text-3xl font-bold mb-2">Your Favorites</h1>
+          <p className="text-gray-500 mb-6">Welcome to your personalized property dashboard. Save properties here for easy access.</p>
+          
+          <Empty 
+            title="No favorites yet"
+            description="Properties you save will appear here. Start browsing to find properties you love."
+            icon="heart"
+            action={{
+              label: "Browse Properties",
+              onClick: () => setLocation("/properties")
+            }}
+          />
+        </div>
       </div>
     );
   }
@@ -161,40 +330,273 @@ export default function FavoritesPage() {
     }
   };
 
+  // Get greeting based on time of day
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
+  // Get user name
+  const userName = user?.fullName || user?.username || "there";
+
   return (
-    <div className="container py-8">
-      <h1 className="text-3xl font-bold mb-6">Your Favorites</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {favoriteProperties.map((property: Property) => (
-          <Link key={property.id} href={`/properties/${property.id}`}>
-            <Card className="overflow-hidden hover:shadow-md transition-shadow border cursor-pointer h-full">
-              <div className="relative h-48 bg-gray-200 overflow-hidden">
-                <Badge className={`absolute top-2 left-2 ${getStatusBadgeColor(property.status)}`}>
-                  {property.status || 'For Sale'}
-                </Badge>
-                <img 
-                  src={property.imageUrl} 
-                  alt={property.title}
-                  className="h-full w-full object-cover transform transition-transform duration-500 group-hover:scale-110"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/e2e8f0/1e293b?text=Property+Image';
-                  }}
-                />
+    <div className="container py-8 pl-20">
+      <div className="max-w-screen-2xl mx-auto">
+        {/* Header with greeting */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">{getGreeting()}, {userName}</h1>
+          <p className="text-gray-500">
+            You have {filteredProperties.length} favorite {filteredProperties.length === 1 ? 'property' : 'properties'} saved.
+          </p>
+        </div>
+        
+        {/* Filters and sorting */}
+        <div className="bg-white rounded-lg border mb-8 p-5">
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+            {/* Search */}
+            <div className="relative flex-grow max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search by title or address"
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  onClick={() => setSearchQuery('')}
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            
+            {/* Filters */}
+            <div className="flex items-center gap-3">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Filter className="h-4 w-4" />
+                    Filter
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => setFilterStatus("all")}>
+                    All Properties
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setFilterStatus("for sale")}>
+                    For Sale
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setFilterStatus("pending")}>
+                    Pending
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setFilterStatus("sold")}>
+                    Sold
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setFilterStatus("off market")}>
+                    Off Market
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
+              {/* Sort */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <ArrowUpDown className="h-4 w-4" />
+                    Sort
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => setSortBy("recently-added")}>
+                    Recently Added
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setSortBy("price-high-low")}>
+                    Price (High to Low)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortBy("price-low-high")}>
+                    Price (Low to High)
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setSortBy("beds-high-low")}>
+                    Beds (Most first)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortBy("sqft-high-low")}>
+                    Square Feet (Largest first)
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
+              {/* View toggle */}
+              <div className="flex bg-gray-100 rounded-md p-1">
+                <Button
+                  variant={viewMode === "grid" ? "default" : "ghost"}
+                  size="sm"
+                  className={`flex items-center justify-center h-8 w-8 rounded-md ${viewMode === "grid" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500"}`}
+                  onClick={() => setViewMode("grid")}
+                >
+                  <Grid className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "default" : "ghost"}
+                  size="sm"
+                  className={`flex items-center justify-center h-8 w-8 rounded-md ${viewMode === "list" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500"}`}
+                  onClick={() => setViewMode("list")}
+                >
+                  <List className="h-4 w-4" />
+                </Button>
               </div>
-              <CardContent className="p-5">
-                <CardTitle className="text-xl mb-1 line-clamp-1">{property.title}</CardTitle>
-                <CardDescription className="mb-3 line-clamp-1">{property.address}</CardDescription>
-                <div className="flex justify-between text-sm">
-                  <div className="font-semibold">{formatCurrency(property.price)}</div>
-                  <div>{property.beds} beds</div>
-                  <div>{property.baths} baths</div>
-                  <div>{property.sqft.toLocaleString()} sqft</div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+            </div>
+          </div>
+          
+          {/* Active filters */}
+          {(searchQuery || filterStatus !== 'all' || activeFilters.length > 0) && (
+            <div className="flex flex-wrap items-center gap-2 mt-4">
+              <span className="text-sm text-gray-500">Active filters:</span>
+              
+              {searchQuery && (
+                <Badge variant="outline" className="flex items-center gap-1 rounded-full px-3 py-1">
+                  Search: {searchQuery}
+                  <button onClick={() => setSearchQuery('')} className="ml-1">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )}
+              
+              {filterStatus !== 'all' && (
+                <Badge variant="outline" className="flex items-center gap-1 rounded-full px-3 py-1">
+                  Status: {filterStatus}
+                  <button onClick={() => setFilterStatus('all')} className="ml-1">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )}
+              
+              {activeFilters.map(filter => (
+                <Badge key={filter} variant="outline" className="flex items-center gap-1 rounded-full px-3 py-1">
+                  {filter}
+                  <button onClick={() => removeFilter(filter)} className="ml-1">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+              
+              {(searchQuery || filterStatus !== 'all' || activeFilters.length > 0) && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-sm text-gray-500 hover:text-gray-700"
+                  onClick={clearFilters}
+                >
+                  Clear all
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+        
+        {filteredProperties.length === 0 ? (
+          <Empty 
+            title="No properties match your filters"
+            description="Try adjusting your search criteria to find more properties."
+            icon="search"
+            action={{
+              label: "Clear Filters",
+              onClick: clearFilters
+            }}
+          />
+        ) : viewMode === "grid" ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProperties.map((property: Property) => (
+              <Link key={property.id} href={`/properties/${property.id}`}>
+                <Card className="overflow-hidden hover:shadow-md transition-shadow border cursor-pointer h-full">
+                  <div className="relative h-48 bg-gray-200 overflow-hidden">
+                    <Badge className={`absolute top-2 left-2 ${getStatusBadgeColor(property.status)}`}>
+                      {property.status || 'For Sale'}
+                    </Badge>
+                    <img 
+                      src={property.imageUrl} 
+                      alt={property.title}
+                      className="h-full w-full object-cover transform transition-transform duration-500 hover:scale-105"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/e2e8f0/1e293b?text=Property+Image';
+                      }}
+                    />
+                  </div>
+                  <CardContent className="p-5">
+                    <CardTitle className="text-xl mb-1 line-clamp-1">{property.title}</CardTitle>
+                    <CardDescription className="mb-3 line-clamp-1">{property.address}</CardDescription>
+                    <div className="flex justify-between text-sm">
+                      <div className="font-semibold">{formatCurrency(property.price)}</div>
+                      <div>{property.beds} beds</div>
+                      <div>{property.baths} baths</div>
+                      <div>{property.sqft.toLocaleString()} sqft</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredProperties.map((property: Property) => (
+              <Link key={property.id} href={`/properties/${property.id}`}>
+                <Card className="overflow-hidden hover:shadow-md transition-shadow border cursor-pointer">
+                  <div className="flex flex-col md:flex-row">
+                    <div className="relative w-full md:w-1/3 h-48 bg-gray-200 overflow-hidden">
+                      <Badge className={`absolute top-2 left-2 ${getStatusBadgeColor(property.status)}`}>
+                        {property.status || 'For Sale'}
+                      </Badge>
+                      <img 
+                        src={property.imageUrl} 
+                        alt={property.title}
+                        className="h-full w-full object-cover transform transition-transform duration-500 hover:scale-105"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://placehold.co/600x400/e2e8f0/1e293b?text=Property+Image';
+                        }}
+                      />
+                    </div>
+                    <div className="p-5 flex-1">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-xl mb-1">{property.title}</CardTitle>
+                          <CardDescription className="mb-3">{property.address}</CardDescription>
+                        </div>
+                        <div className="text-xl font-bold text-[#09261E]">
+                          {formatCurrency(property.price)}
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-4 gap-4 mt-4">
+                        <div>
+                          <div className="text-sm text-gray-500">Beds</div>
+                          <div className="font-medium">{property.beds}</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500">Baths</div>
+                          <div className="font-medium">{property.baths}</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500">Sq Ft</div>
+                          <div className="font-medium">{property.sqft.toLocaleString()}</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-gray-500">Type</div>
+                          <div className="font-medium">{property.propertyType || "Residential"}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
