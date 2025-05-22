@@ -525,50 +525,54 @@ export default function ProfilePage() {
     }
   };
   
+  // Save mutations for buyer profile
+  const saveProfileMutation = useMutation({
+    mutationFn: async (data: Partial<BuyerProfile>) => {
+      if (!user?.id) throw new Error('User not authenticated');
+      return await upsertBuyerProfile({
+        ...data,
+        user_id: user.id
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Profile saved",
+        description: "Your profile has been updated successfully.",
+      });
+      queryClient.invalidateQueries({ queryKey: ['buyer-profile', user?.id] });
+    },
+    onError: (error) => {
+      console.error('Error saving profile:', error);
+      toast({
+        title: "Error saving profile",
+        description: "There was an error saving your profile. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
   // Handle profile photo change
   const handleProfilePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !user?.id) return;
     
     setLoading(true);
     
     try {
-      // Upload to Storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user?.id}-${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
+      const photoUrl = await uploadProfilePhoto(file, user.id);
       
-      const { error: uploadError } = await supabase.storage
-        .from('profiles')
-        .upload(filePath, file);
-      
-      if (uploadError) {
-        throw uploadError;
-      }
-      
-      // Get public URL
-      const { data: publicUrlData } = supabase.storage
-        .from('profiles')
-        .getPublicUrl(filePath);
-      
-      // Update profile data
+      // Update profile data locally
       setProfileData(prev => ({
         ...prev,
-        profile_photo_url: publicUrlData.publicUrl
+        profile_photo_url: photoUrl
       }));
       
-      // Update profile in database immediately
-      await supabase
-        .from('profiles')
-        .update({ profile_photo_url: publicUrlData.publicUrl })
-        .eq('id', user?.id);
-      
-      toast({
-        title: "Profile photo updated",
-        description: "Your profile photo has been updated successfully.",
+      // Save to database
+      await saveProfileMutation.mutateAsync({
+        profile_photo_url: photoUrl
       });
       
-      setIsProfileSectionModified(true);
+      setIsProfileSectionModified(false);
     } catch (error) {
       console.error('Error uploading photo:', error);
       toast({
@@ -621,47 +625,25 @@ export default function ProfilePage() {
   // Handle banner image change
   const handleBannerImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !user?.id) return;
     
     setLoading(true);
     
     try {
-      // Upload to Storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user?.id}-banner-${Date.now()}.${fileExt}`;
-      const filePath = `banners/${fileName}`;
+      const bannerUrl = await uploadBannerImage(file, user.id);
       
-      const { error: uploadError } = await supabase.storage
-        .from('profiles')
-        .upload(filePath, file);
-      
-      if (uploadError) {
-        throw uploadError;
-      }
-      
-      // Get public URL
-      const { data: publicUrlData } = supabase.storage
-        .from('profiles')
-        .getPublicUrl(filePath);
-      
-      // Update profile data
+      // Update profile data locally
       setProfileData(prev => ({
         ...prev,
-        profile_banner_url: publicUrlData.publicUrl
+        profile_banner_url: bannerUrl
       }));
       
-      // Update profile in database immediately
-      await supabase
-        .from('profiles')
-        .update({ profile_banner_url: publicUrlData.publicUrl })
-        .eq('id', user?.id);
-      
-      toast({
-        title: "Banner image updated",
-        description: "Your banner image has been updated successfully.",
+      // Save to database
+      await saveProfileMutation.mutateAsync({
+        banner_image_url: bannerUrl
       });
       
-      setIsProfileSectionModified(true);
+      setIsProfileSectionModified(false);
     } catch (error) {
       console.error('Error uploading banner:', error);
       toast({
