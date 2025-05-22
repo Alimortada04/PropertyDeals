@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
-import { createUser, submitSellerApplication, SellerStatus } from '@/lib/supabase';
+import { supabase, createUser, submitSellerApplication, SellerStatus } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 import {
@@ -374,87 +374,61 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       // Save seller application to Supabase
       console.log('Submitting seller application to Supabase', sellerApplicationData);
       
-      // Map the form data to match the SellerOnboardingData interface
-      // Cast to a partial object that matches the SellerOnboardingData interface
-      const sellerData: Partial<{
-        fullName: string;
-        email: string;
-        phone: string;
-        businessName: string;
-        yearsInRealEstate: string;
-        businessType: string;
-        targetMarkets: string[];
-        dealTypes: string[];
-        maxDealVolume: string;
-        hasBuyerList: boolean;
-        isDirectToSeller: boolean;
-        purchaseAgreements: null;
-        assignmentContracts: null;
-        notes: string;
-        websiteUrl: string;
-        socialFacebook: string;
-        socialInstagram: string;
-        socialLinkedin: string;
-        hasProofOfFunds: boolean;
-        usesTitleCompany: boolean;
-        isDraft: boolean;
-        status: SellerStatus;
-      }> = {
-        fullName: sellerApplicationData.fullName,
-        email: sellerApplicationData.email,
-        phone: sellerApplicationData.phoneNumber,
-        businessName: sellerApplicationData.businessName || (sellerApplicationData.fullName + " Properties"), // Use provided business name or fallback
-        yearsInRealEstate: sellerApplicationData.realEstateSince,
-        businessType: sellerApplicationData.businessTypes.join(', '), // Converting array to string
-        
-        targetMarkets: sellerApplicationData.targetMarkets,
-        dealTypes: sellerApplicationData.dealTypes,
-        maxDealVolume: sellerApplicationData.maxDealVolume,
-        hasBuyerList: sellerApplicationData.hasBuyerList,
-        isDirectToSeller: sellerApplicationData.isDirectToSeller,
-        
-        // Files will be handled separately in the supabase function
-        purchaseAgreements: null,
-        assignmentContracts: null,
-        notes: sellerApplicationData.notes,
-        websiteUrl: sellerApplicationData.websiteUrl,
-        socialFacebook: sellerApplicationData.facebookProfile,
-        socialInstagram: sellerApplicationData.instagramProfile,
-        socialLinkedin: sellerApplicationData.linkedinProfile,
-        // Include any additional fields that we added in our form
-        hasProofOfFunds: true, // Hard-coded for now
-        usesTitleCompany: sellerApplicationData.titleCompanies.length > 0,
-        
-        isDraft: false,
-        status: 'pending' as SellerStatus,
-      };
-      
-      // Type assertion to match the expected interface
-      const success = await submitSellerApplication(sellerData as any);
-      
-      if (success) {
-        // Display success message and close modal
-        setIsSubmitting(false);
-        toast({
-          title: "Application Submitted",
-          description: "Your seller application has been successfully submitted for review.",
-          variant: "default",
+      // Submit directly to Supabase sellers table
+      const { data, error } = await supabase
+        .from('sellers')
+        .insert({
+          userId: user?.id, // This should match the auth user ID
+          fullName: sellerApplicationData.fullName,
+          email: sellerApplicationData.email,
+          phone: sellerApplicationData.phoneNumber,
+          businessName: sellerApplicationData.businessName || null,
+          yearsInRealEstate: sellerApplicationData.realEstateSince,
+          businessType: sellerApplicationData.businessTypes.join(', '),
+          targetMarkets: sellerApplicationData.targetMarkets,
+          dealTypes: sellerApplicationData.dealTypes,
+          maxDealVolume: sellerApplicationData.maxDealVolume,
+          hasBuyerList: sellerApplicationData.hasBuyerList,
+          isDirectToSeller: sellerApplicationData.isDirectToSeller,
+          purchaseAgreements: null, // Handle files separately
+          assignmentContracts: null, // Handle files separately
+          notes: sellerApplicationData.notes,
+          websiteUrl: sellerApplicationData.websiteUrl,
+          socialFacebook: sellerApplicationData.facebookProfile,
+          socialInstagram: sellerApplicationData.instagramProfile,
+          socialLinkedin: sellerApplicationData.linkedinProfile,
+          hasProofOfFunds: true,
+          usesTitleCompany: sellerApplicationData.titleCompanies.length > 0,
+          isDraft: false,
+          status: 'pending'
         });
-        onClose();
-        
-        // Redirect to seller dashboard
-        setTimeout(() => {
-          setLocation('/sellerdash');
-        }, 1000);
-      } else {
-        // Show error message
+      
+      if (error) {
+        console.error('Error submitting seller application:', error);
         setIsSubmitting(false);
         toast({
           title: "Submission Failed",
-          description: "There was an error submitting your application. Please try again.",
+          description: error.message || "There was an error submitting your application. Please try again.",
           variant: "destructive",
         });
+        return;
       }
+
+      // Success - display success message and close modal
+      setIsSubmitting(false);
+      toast({
+        title: "Application Submitted",
+        description: "Your seller application has been successfully submitted for review.",
+        variant: "default",
+      });
+      onClose();
+      
+      // Redirect to seller dashboard with their user ID
+      setTimeout(() => {
+        if (user?.id) {
+          setLocation(`/sellerdash/${user.id}`);
+        }
+      }, 1000);
       
     } catch (error) {
       console.error('Error submitting application:', error);
