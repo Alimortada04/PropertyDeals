@@ -130,6 +130,7 @@ export default function SellerDashboardPage() {
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false);
+  const [isOffersInboxOpen, setIsOffersInboxOpen] = useState(false);
   
   // In real implementation, check if the current user matches the userId param
   // If not, redirect to their own dashboard or show an authorization error
@@ -286,7 +287,7 @@ export default function SellerDashboardPage() {
           
           {/* Review Offers CTA Card */}
           <div 
-            onClick={() => {/* Will open offers inbox popup - same as quick action */}}
+            onClick={() => setIsOffersInboxOpen(true)}
             className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Lighter green background */}
@@ -317,7 +318,7 @@ export default function SellerDashboardPage() {
           
           {/* Market a Deal CTA Card */}
           <div 
-            onClick={() => {/* Will open campaign popup - same as quick action */}}
+            onClick={() => setIsCampaignModalOpen(true)}
             className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Dark green background */}
