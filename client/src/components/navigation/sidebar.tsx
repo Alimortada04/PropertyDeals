@@ -132,8 +132,8 @@ export default function Sidebar() {
     enabled: !!user
   });
   
-  // Check seller status
-  const { data: sellerStatus } = useQuery({
+  // Check seller status - cached for session
+  const { data: sellerStatus, refetch: refetchSellerStatus } = useQuery({
     queryKey: ['seller-status', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
@@ -150,22 +150,37 @@ export default function Sidebar() {
       
       return data;
     },
-    enabled: !!user?.id
+    enabled: !!user?.id,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes to reduce DB queries
   });
   
-  // Handle List a Property click with smart routing
+  // Handle List a Property click with correct authentication flow
   const handleListPropertyClick = async () => {
-    // Check if user is logged in
-    if (!user?.id) {
+    // First, check if user is authenticated using supabase.auth.getUser()
+    const { data: { user: currentUser }, error } = await supabase.auth.getUser();
+    
+    if (error || !currentUser) {
+      // Not logged in, route to signin
       window.location.href = '/auth/signin';
       return;
     }
     
-    // Check if user is an approved seller
-    if (sellerStatus?.status === 'approved' || sellerStatus?.user_type === 'seller') {
-      window.location.href = `/sellerdash/${user.id}`;
+    // User is logged in, check seller status
+    const { data: sellerProfile, error: profileError } = await supabase
+      .from('seller_profiles')
+      .select('status, user_type')
+      .eq('user_id', currentUser.id)
+      .single();
+    
+    if (profileError && profileError.code !== 'PGRST116') {
+      console.error('Error checking seller status:', profileError);
+    }
+    
+    // Check if seller profile exists and status is 'active'
+    if (sellerProfile?.status === 'active') {
+      window.location.href = `/sellerdash/${currentUser.id}`;
     } else {
-      // Open seller application modal
+      // Profile missing or status != 'active', open seller application modal
       setIsSellerModalOpen(true);
     }
   };
@@ -221,6 +236,9 @@ export default function Sidebar() {
         website: '',
         phone: ''
       });
+
+      // Refresh seller status cache
+      refetchSellerStatus();
 
     } catch (error) {
       console.error('Error submitting seller application:', error);
