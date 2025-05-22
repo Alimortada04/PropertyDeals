@@ -138,9 +138,9 @@ export default function Sidebar() {
     queryFn: async () => {
       if (!user?.id) return null;
       const { data, error } = await supabase
-        .from('seller_profiles')
-        .select('status, user_type')
-        .eq('user_id', user.id)
+        .from('sellers')
+        .select('status, businessName')
+        .eq('userId', user.id)
         .single();
       
       if (error && error.code !== 'PGRST116') {
@@ -167,9 +167,9 @@ export default function Sidebar() {
     
     // User is logged in, check seller status
     const { data: sellerProfile, error: profileError } = await supabase
-      .from('seller_profiles')
-      .select('status, user_type')
-      .eq('user_id', currentUser.id)
+      .from('sellers')
+      .select('status, businessName')
+      .eq('userId', currentUser.id)
       .single();
     
     if (profileError && profileError.code !== 'PGRST116') {
@@ -187,13 +187,15 @@ export default function Sidebar() {
 
   // Handle seller application form submission
   const { toast } = useToast();
+  const [currentStep, setCurrentStep] = useState(1);
   const [sellerFormData, setSellerFormData] = useState({
-    business_name: '',
-    experience_years: '',
-    specialization: '',
-    bio: '',
-    website: '',
-    phone: ''
+    fullName: user?.fullName || '',
+    email: user?.email || '',
+    phone: '',
+    username: user?.username || '',
+    yearsInRealEstate: '',
+    businessName: '',
+    businessType: ''
   });
   const [isSubmittingApplication, setIsSubmittingApplication] = useState(false);
 
@@ -204,19 +206,22 @@ export default function Sidebar() {
     setIsSubmittingApplication(true);
     
     try {
-      // Submit seller application to seller_profiles table
+      // Submit seller application to sellers table
       const { error } = await supabase
-        .from('seller_profiles')
+        .from('sellers')
         .insert({
-          user_id: user.id,
-          business_name: sellerFormData.business_name,
-          experience_years: parseInt(sellerFormData.experience_years) || 0,
-          specialization: sellerFormData.specialization,
-          bio: sellerFormData.bio,
-          website: sellerFormData.website,
+          userId: user.id,
+          fullName: sellerFormData.fullName,
+          email: sellerFormData.email,
           phone: sellerFormData.phone,
-          status: 'pending',
-          user_type: 'seller_pending'
+          businessName: sellerFormData.businessName || null,
+          yearsInRealEstate: sellerFormData.yearsInRealEstate,
+          businessType: sellerFormData.businessType,
+          targetMarkets: [],
+          dealTypes: [],
+          maxDealVolume: '',
+          isDraft: false,
+          status: 'pending'
         });
 
       if (error) throw error;
@@ -228,13 +233,15 @@ export default function Sidebar() {
 
       // Close modal and reset form
       setIsSellerModalOpen(false);
+      setCurrentStep(1);
       setSellerFormData({
-        business_name: '',
-        experience_years: '',
-        specialization: '',
-        bio: '',
-        website: '',
-        phone: ''
+        fullName: user?.fullName || '',
+        email: user?.email || '',
+        phone: '',
+        username: user?.username || '',
+        yearsInRealEstate: '',
+        businessName: '',
+        businessType: ''
       });
 
       // Refresh seller status cache
@@ -345,77 +352,149 @@ export default function Sidebar() {
 
       {/* Seller Application Modal */}
       <Dialog open={isSellerModalOpen} onOpenChange={setIsSellerModalOpen}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Apply to Become a Seller</DialogTitle>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="border-b pb-4">
+            <DialogTitle className="text-xl font-semibold text-gray-900">Seller Application</DialogTitle>
+            <p className="text-sm text-gray-600 mt-1">Complete this application to become a verified PropertyDeals seller.</p>
           </DialogHeader>
           
-          <form onSubmit={handleSellerApplicationSubmit} className="space-y-4">
+          {/* Progress Bar */}
+          <div className="py-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-700">Step 1 of 4</span>
+              <span className="text-sm text-gray-500">25% Complete</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-[#09261E] h-2 rounded-full transition-all duration-300" style={{ width: '25%' }}></div>
+            </div>
+          </div>
+
+          {/* Tab Navigation */}
+          <div className="flex border-b">
+            <button 
+              type="button"
+              className={`px-4 py-2 text-sm font-medium border-b-2 ${
+                currentStep === 1 ? 'border-[#09261E] text-[#09261E]' : 'border-transparent text-gray-500'
+              }`}
+            >
+              Basic Info
+            </button>
+            <button 
+              type="button"
+              className="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-400 cursor-not-allowed"
+            >
+              Activity
+            </button>
+            <button 
+              type="button"
+              className="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-400 cursor-not-allowed"
+            >
+              Trust
+            </button>
+            <button 
+              type="button"
+              className="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-400 cursor-not-allowed"
+            >
+              Review
+            </button>
+          </div>
+
+          {/* Form Content */}
+          <form onSubmit={handleSellerApplicationSubmit} className="space-y-6 py-4">
             <div>
-              <Label htmlFor="business_name">Business Name *</Label>
-              <Input
-                id="business_name"
-                value={sellerFormData.business_name}
-                onChange={(e) => setSellerFormData(prev => ({ ...prev, business_name: e.target.value }))}
-                required
-              />
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">Basic Information</h3>
+              <p className="text-sm text-gray-600 mb-4">Tell us about yourself and your business</p>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">
+                    Full Name *
+                  </Label>
+                  <Input
+                    id="fullName"
+                    value={sellerFormData.fullName}
+                    onChange={(e) => setSellerFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="username" className="text-sm font-medium text-gray-700">
+                    Username *
+                  </Label>
+                  <Input
+                    id="username"
+                    value={sellerFormData.username}
+                    onChange={(e) => setSellerFormData(prev => ({ ...prev, username: e.target.value }))}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                  <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    Email *
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={sellerFormData.email}
+                    onChange={(e) => setSellerFormData(prev => ({ ...prev, email: e.target.value }))}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                    Phone Number *
+                  </Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="(123) 456-7890"
+                    value={sellerFormData.phone}
+                    onChange={(e) => setSellerFormData(prev => ({ ...prev, phone: e.target.value }))}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div>
+                  <Label htmlFor="yearsInRealEstate" className="text-sm font-medium text-gray-700">
+                    In Real Estate Since *
+                  </Label>
+                  <Input
+                    id="yearsInRealEstate"
+                    placeholder="2020"
+                    value={sellerFormData.yearsInRealEstate}
+                    onChange={(e) => setSellerFormData(prev => ({ ...prev, yearsInRealEstate: e.target.value }))}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="businessName" className="text-sm font-medium text-gray-700">
+                    Business Name <span className="text-gray-400">(Optional)</span>
+                  </Label>
+                  <Input
+                    id="businessName"
+                    placeholder="Your business or company name"
+                    value={sellerFormData.businessName}
+                    onChange={(e) => setSellerFormData(prev => ({ ...prev, businessName: e.target.value }))}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
             </div>
             
-            <div>
-              <Label htmlFor="experience_years">Years of Experience *</Label>
-              <Input
-                id="experience_years"
-                type="number"
-                value={sellerFormData.experience_years}
-                onChange={(e) => setSellerFormData(prev => ({ ...prev, experience_years: e.target.value }))}
-                required
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="specialization">Specialization *</Label>
-              <Input
-                id="specialization"
-                placeholder="e.g., Residential, Commercial, Land Development"
-                value={sellerFormData.specialization}
-                onChange={(e) => setSellerFormData(prev => ({ ...prev, specialization: e.target.value }))}
-                required
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={sellerFormData.phone}
-                onChange={(e) => setSellerFormData(prev => ({ ...prev, phone: e.target.value }))}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="website">Website</Label>
-              <Input
-                id="website"
-                type="url"
-                placeholder="https://yourwebsite.com"
-                value={sellerFormData.website}
-                onChange={(e) => setSellerFormData(prev => ({ ...prev, website: e.target.value }))}
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor="bio">Bio</Label>
-              <Textarea
-                id="bio"
-                placeholder="Tell us about your experience and what makes you a great seller..."
-                value={sellerFormData.bio}
-                onChange={(e) => setSellerFormData(prev => ({ ...prev, bio: e.target.value }))}
-                rows={3}
-              />
-            </div>
-            
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-6 border-t">
               <Button 
                 type="button" 
                 variant="outline" 
@@ -425,14 +504,28 @@ export default function Sidebar() {
                 Cancel
               </Button>
               <Button 
+                type="button"
+                variant="outline"
+                className="px-6"
+                disabled
+              >
+                Save & Finish Later
+              </Button>
+              <Button 
                 type="submit" 
                 disabled={isSubmittingApplication}
-                className="flex-1"
+                className="bg-[#09261E] hover:bg-[#09261E]/90 px-8"
               >
-                {isSubmittingApplication ? "Submitting..." : "Submit Application"}
+                {isSubmittingApplication ? "Submitting..." : "Continue"}
               </Button>
             </div>
           </form>
+
+          <div className="border-t pt-4 text-center">
+            <p className="text-sm text-gray-500">
+              Already a seller? <button className="text-[#09261E] font-medium hover:underline">Log in to your dashboard here</button>
+            </p>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
