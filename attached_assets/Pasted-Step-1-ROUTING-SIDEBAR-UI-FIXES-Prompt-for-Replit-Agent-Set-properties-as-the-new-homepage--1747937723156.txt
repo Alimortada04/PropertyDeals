@@ -1,0 +1,93 @@
+Step 1: ROUTING + SIDEBAR UI FIXES
+🧠 Prompt for Replit Agent:
+Set /properties as the new homepage (/) by updating the root route to redirect to /properties on load.
+
+In the sidebar:
+
+Move the search icon up slightly so it’s not covered by the bottom bar.
+
+Ensure the layout remains consistent across all screen sizes.
+
+Maintain the logo pinned to top, menu icons centered, and search icon pinned slightly above the bottom.
+
+🔧 Step 2: Build Account Preferences Flow (End-to-End)
+Now let’s scope the user experience for editable account preferences, stored in Supabase, and shown on their public profile page.
+
+🧩 User Flow Breakdown:
+A. Logged-In User Account Page
+/profile (or /profile/account)
+
+Tabs: Account Info, Preferences, Connections, Notifications (as planned)
+
+“Preferences” tab contains:
+
+Preferred property types (e.g., Single Family, Multi-Family, Land, etc.)
+
+Preferred conditions (e.g., Light Rehab, Heavy Rehab, Turnkey)
+
+Markets interested in (multi-select city/state)
+
+Budget range ($min – $max)
+
+Financing type(s) (Cash, Hard Money, Conventional, Creative)
+
+Closing speed (dropdown: ASAP, 7–14 days, 15–30 days, etc.)
+
+Past deals done (numeric + optional upload proof field)
+
+All values saved to the buyer_profiles table for now.
+
+🛠️ Prompt for Replit Agent (Preferences Tab Connection)
+Connect the Preferences tab on the /profile page to Supabase:
+
+On page load, fetch the logged-in user's preferences from the buyer_profiles table.
+
+Populate all form inputs with current values (multi-select, dropdowns, inputs).
+
+On form submit, update the Supabase buyer_profiles record with the new data.
+
+Use real-time form validation + a confirmation alert after saving.
+
+All fields:
+
+preferred_property_types (array of strings)
+
+preferred_conditions (array of strings)
+
+target_markets (array of strings)
+
+budget_min (number)
+
+budget_max (number)
+
+financing_methods (array of strings)
+
+closing_timeline (string)
+
+past_deals (integer)
+
+proof_of_funds (optional file upload to Supabase Storage)
+
+B. Public Buyer Profile Page
+/profile/[username] or /buyer/[username]
+
+Display select fields from their preferences publicly:
+
+Property types, markets, budget range, financing types, and deal history
+
+Do not show sensitive details (e.g., email, phone, uploads)
+
+🛠️ Prompt for Replit Agent (Public Profile Display)
+On /profile/[username], fetch the buyer profile by username (or user_id) and display public preference data:
+
+Property types
+
+Target markets
+
+Budget range
+
+Financing types
+
+Past deals completed
+
+Only fetch and display non-sensitive fields from buyer_profiles.

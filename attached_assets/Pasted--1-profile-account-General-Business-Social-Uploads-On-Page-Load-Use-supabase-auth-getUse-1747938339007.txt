@@ -1,0 +1,88 @@
+ 1. /profile/account — General + Business + Social + Uploads
+On Page Load:
+
+Use supabase.auth.getUser() to get the logged-in user's ID and email.
+
+Fetch the corresponding row from buyer_profiles using the user_id.
+
+Populate the following fields:
+
+js
+Copy
+Edit
+// Field Bindings
+full_name → buyer_profiles.full_name
+username → buyer_profiles.username (must be unique)
+email → from supabase.auth (read-only)
+phone → buyer_profiles.phone
+location → buyer_profiles.location
+bio → buyer_profiles.bio
+is_public (toggle) → buyer_profiles.is_public
+
+business_name → buyer_profiles.business_name
+in_real_estate_since → buyer_profiles.in_real_estate_since (as YYYY)
+type_of_buyer → buyer_profiles.type_of_buyer (multi-select)
+
+website → buyer_profiles.website
+instagram → buyer_profiles.instagram
+facebook → buyer_profiles.facebook
+linkedin → buyer_profiles.linkedin
+
+profile_photo → upload to `public/profiles/` and store URL in buyer_profiles.profile_photo_url  
+banner_image → upload to `public/banners/` and store URL in buyer_profiles.banner_image_url
+On Save:
+
+Validate required fields (e.g. username not empty and unique).
+
+Upload selected image files and get public URLs.
+
+Update the corresponding buyer_profiles row with all changes.
+
+Display a success message or toast on completion.
+
+✅ 2. /profile/property_preferences — Investment + Deal Preferences + Verification
+On Page Load:
+
+Fetch buyer_profiles row using authenticated user_id.
+
+Pre-fill the following:
+
+js
+Copy
+Edit
+// Investment Criteria
+target_markets → buyer_profiles.markets
+property_types → buyer_profiles.property_types
+property_conditions → buyer_profiles.property_conditions
+ideal_budget_min → buyer_profiles.ideal_budget_min
+ideal_budget_max → buyer_profiles.ideal_budget_max
+
+// Deal Preferences
+financing_methods → buyer_profiles.financing_methods (multi-select)
+preferred_financing_method → buyer_profiles.preferred_financing_method
+closing_timeline → buyer_profiles.closing_timeline
+number_of_deals_last_12_months → buyer_profiles.number_of_deals_last_12_months
+goal_deals_next_12_months → buyer_profiles.goal_deals_next_12_months
+total_deals_done → buyer_profiles.total_deals_done
+current_portfolio_count → buyer_profiles.current_portfolio_count
+
+// Verification
+proof_of_funds → upload to `private/proof_of_funds/` and save URL in buyer_profiles.proof_of_funds_url
+On Save:
+
+Only send changed values in the update query.
+
+Ensure multi-selects are saved as text[].
+
+Save file uploads and store URLs.
+
+Add “✅ Saved” confirmation message on completion.
+
+🛠 Additional Requirements
+Disable save button unless changes have been made.
+
+Add loading indicators during fetch/update operations.
+
+Handle Supabase errors with error messages or toasts.
+
+Ensure mobile responsiveness and validation states are clean.
