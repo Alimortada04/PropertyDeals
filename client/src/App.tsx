@@ -421,6 +421,23 @@ function Router() {
         )}
       </Route>
       
+      {/* Seller dashboard offers route */}
+      <Route path="/sellerdash/:userId/offers">
+        {params => (
+          <AppLayout>
+            {/* Using dynamic import to resolve at runtime */}
+            {(() => {
+              const OffersPage = React.lazy(() => import('./pages/sellerdash/[userId]/offers'));
+              return (
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  <OffersPage />
+                </React.Suspense>
+              );
+            })()}
+          </AppLayout>
+        )}
+      </Route>
+      
       {/* Property detail page for seller dashboard - temporarily allowed without authentication */}
       <Route path="/sellerdash/:userId/property/:propertyId">
         {params => (
