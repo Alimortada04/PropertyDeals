@@ -245,7 +245,7 @@ export default function Sidebar() {
   };
   
   return (
-    <div className="fixed inset-y-0 left-0 z-40 flex flex-col bg-white/70 backdrop-blur-md shadow-inner border-r">
+    <div className="fixed inset-y-0 left-0 z-40 w-16 flex flex-col bg-white/70 backdrop-blur-md shadow-inner border-r">
       {/* Logo at top - Using pdLogo.png image */}
       <div className="flex items-center justify-center h-16 mb-0">
         <Link href="/properties">
