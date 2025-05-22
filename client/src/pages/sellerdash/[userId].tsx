@@ -286,8 +286,8 @@ export default function SellerDashboardPage() {
             onClick={() => window.location.href = `/sellerdash/${userId}/offers`}
             className="group relative overflow-hidden rounded-lg border hover:shadow-md transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
-            {/* Background with light primary green and dark green on hover */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341] group-hover:from-[#09261E] group-hover:to-[#09261E] transition-colors duration-500 ease-in-out"></div>
+            {/* Background with dark green and darker green on hover */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#09261E] group-hover:from-[#135341] group-hover:to-[#135341] transition-colors duration-500 ease-in-out"></div>
             
             {/* Animated decoration elements */}
             <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500"></div>
