@@ -563,6 +563,12 @@ export default function SellerDashboardPage() {
         isOpen={isAddPropertyModalOpen}
         onClose={() => setIsAddPropertyModalOpen(false)}
       />
+
+      {/* Seller Application Modal - Shows for non-active sellers */}
+      <SellerApplicationModal
+        isOpen={isSellerModalOpen}
+        onClose={() => setIsSellerModalOpen(false)}
+      />
     </SellerDashboardLayout>
   );
 }
