@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { EnhancedPropertyListingModal } from "@/components/property/enhanced-property-listing-modal";
-import { OffersInboxModal } from "@/components/seller/offers-inbox-modal";
+import { OffersInboxModal } from "@/components/seller/offers-inbox-modal-new";
 import { CampaignCreationModal } from "@/components/seller/campaign-creation-modal";
 import { usePropertyModal } from "@/hooks/use-property-modal";
 import { useOffersInboxModal } from "@/hooks/use-offers-inbox-modal";
