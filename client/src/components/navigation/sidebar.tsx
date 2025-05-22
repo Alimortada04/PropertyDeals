@@ -204,8 +204,14 @@ export default function Sidebar() {
                     onClick={() => {
                       // Get user from Supabase session
                       if (user && user.id) {
-                        // Replace current history entry instead of pushing new one
-                        window.location.replace(`/sellerdash/${user.id}`);
+                        // Check if user is an active/approved seller
+                        if (activeRole === 'seller') {
+                          // Active seller - go directly to their dashboard
+                          window.location.replace(`/sellerdash/${user.id}`);
+                        } else {
+                          // Not an active seller - go to seller application
+                          window.location.replace('/sellerdash');
+                        }
                       } else {
                         // If not authenticated, redirect to signin
                         window.location.replace("/auth/signin");
