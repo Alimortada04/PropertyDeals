@@ -488,6 +488,18 @@ export default function SellerDashboardPage() {
         isOpen={isSellerModalOpen}
         onClose={() => setIsSellerModalOpen(false)}
       />
+
+      {/* Offers Inbox Modal */}
+      <OffersInboxModal
+        isOpen={isOffersInboxOpen}
+        onClose={() => setIsOffersInboxOpen(false)}
+      />
+
+      {/* Campaign Creation Modal */}
+      <CampaignCreationModal
+        isOpen={isCampaignModalOpen}
+        onClose={() => setIsCampaignModalOpen(false)}
+      />
     </SellerDashboardLayout>
   );
 }
