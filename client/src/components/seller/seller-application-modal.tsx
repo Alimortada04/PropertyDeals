@@ -374,34 +374,39 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       // Save seller application to Supabase
       console.log('Submitting seller application to Supabase', sellerApplicationData);
       
+      // Log the data being submitted for debugging
+      const submissionData = {
+        userId: user?.id,
+        fullName: sellerApplicationData.fullName,
+        email: sellerApplicationData.email,
+        phone: sellerApplicationData.phoneNumber,
+        businessName: sellerApplicationData.businessName || null,
+        yearsInRealEstate: sellerApplicationData.realEstateSince,
+        businessType: sellerApplicationData.businessTypes.join(', '),
+        targetMarkets: sellerApplicationData.targetMarkets,
+        dealTypes: sellerApplicationData.dealTypes,
+        maxDealVolume: sellerApplicationData.maxDealVolume,
+        hasBuyerList: sellerApplicationData.hasBuyerList,
+        isDirectToSeller: sellerApplicationData.isDirectToSeller,
+        purchaseAgreements: null,
+        assignmentContracts: null,
+        notes: sellerApplicationData.notes,
+        websiteUrl: sellerApplicationData.websiteUrl,
+        socialFacebook: sellerApplicationData.facebookProfile,
+        socialInstagram: sellerApplicationData.instagramProfile,
+        socialLinkedin: sellerApplicationData.linkedinProfile,
+        hasProofOfFunds: true,
+        usesTitleCompany: sellerApplicationData.titleCompanies.length > 0,
+        isDraft: false,
+        status: 'pending'
+      };
+      
+      console.log('Submitting seller application with data:', submissionData);
+      
       // Submit directly to Supabase sellers table
       const { data, error } = await supabase
         .from('sellers')
-        .insert({
-          userId: user?.id, // This should match the auth user ID
-          fullName: sellerApplicationData.fullName,
-          email: sellerApplicationData.email,
-          phone: sellerApplicationData.phoneNumber,
-          businessName: sellerApplicationData.businessName || null,
-          yearsInRealEstate: sellerApplicationData.realEstateSince,
-          businessType: sellerApplicationData.businessTypes.join(', '),
-          targetMarkets: sellerApplicationData.targetMarkets,
-          dealTypes: sellerApplicationData.dealTypes,
-          maxDealVolume: sellerApplicationData.maxDealVolume,
-          hasBuyerList: sellerApplicationData.hasBuyerList,
-          isDirectToSeller: sellerApplicationData.isDirectToSeller,
-          purchaseAgreements: null, // Handle files separately
-          assignmentContracts: null, // Handle files separately
-          notes: sellerApplicationData.notes,
-          websiteUrl: sellerApplicationData.websiteUrl,
-          socialFacebook: sellerApplicationData.facebookProfile,
-          socialInstagram: sellerApplicationData.instagramProfile,
-          socialLinkedin: sellerApplicationData.linkedinProfile,
-          hasProofOfFunds: true,
-          usesTitleCompany: sellerApplicationData.titleCompanies.length > 0,
-          isDraft: false,
-          status: 'pending'
-        });
+        .insert(submissionData);
       
       if (error) {
         console.error('Error submitting seller application:', error);
