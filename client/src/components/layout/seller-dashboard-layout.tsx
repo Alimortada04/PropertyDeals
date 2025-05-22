@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from "react";
 import { useLocation, Link, useParams } from "wouter";
 import { cn } from "@/lib/utils";
-import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home, Loader2, MessageSquare, Megaphone } from "lucide-react";
+import { Compass, FileClock, Users, BarChart3, LayoutGrid, Home, Loader2, MessageSquare, Megaphone, HandHeart } from "lucide-react";
 import Navbar from "./navbar";
 import { useQueryClient } from '@tanstack/react-query';
 import { QuickActionSelector } from '@/components/seller/quick-action-selector';
@@ -64,25 +64,18 @@ export function SellerDashboardLayoutWithUserId({
       queries: ['/api/properties'],
     },
     {
-      label: "Manage",
-      icon: FileClock,
-      href: `/sellerdash/${userId}/manage`,
-      exact: false,
-      queries: ['/api/properties'],
-    },
-    {
-      label: "Engagement",
-      icon: MessageSquare,
-      href: `/sellerdash/${userId}/engagement`,
-      exact: false,
-      queries: ['/api/users', '/api/inquiries'],
-    },
-    {
-      label: "Marketing",
+      label: "Market",
       icon: Megaphone,
       href: `/sellerdash/${userId}/marketing`,
       exact: false,
       queries: ['/api/users', '/api/campaigns'],
+    },
+    {
+      label: "Offers",
+      icon: HandHeart,
+      href: `/sellerdash/${userId}/offers`,
+      exact: false,
+      queries: ['/api/users', '/api/inquiries'],
     },
     {
       label: "Analytics",
