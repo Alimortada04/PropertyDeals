@@ -361,8 +361,11 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                     }}
                     className="rounded-md border-0"
                     classNames={{
+                      day: "hover:bg-gray-100",
                       day_selected: "bg-green-100 text-green-900 hover:bg-green-200",
                       day_range_middle: "bg-green-50",
+                      day_range_start: "bg-green-100 text-green-900",
+                      day_range_end: "bg-green-100 text-green-900",
                     }}
                   />
                 </PopoverContent>
