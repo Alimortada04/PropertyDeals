@@ -10,7 +10,7 @@ import { format } from "date-fns";
 import { 
   ChevronDownIcon, CheckIcon, XIcon, MessageSquareIcon,
   UserIcon, BadgeCheckIcon, TrendingUpIcon, 
-  StarIcon, SendIcon, LoaderIcon, CalendarIcon
+  StarIcon, SendIcon, LoaderIcon, CalendarIcon, SearchIcon
 } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { 
@@ -146,10 +146,23 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
   const [counterAmount, setCounterAmount] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
   const [isLoading, setIsLoading] = useState<string | null>(null);
+  
+  // Search state for dropdowns
+  const [statusSearch, setStatusSearch] = useState("");
+  const [propertySearch, setPropertySearch] = useState("");
 
   // Get unique properties for filter
   const uniqueProperties = Array.from(new Set(mockOffers.map(o => o.property.id)))
     .map(id => mockOffers.find(o => o.property.id === id)!.property);
+
+  // Filtered options for search
+  const filteredStatusOptions = statusOptions.filter(status =>
+    status.label.toLowerCase().includes(statusSearch.toLowerCase())
+  );
+  
+  const filteredPropertyOptions = uniqueProperties.filter(property =>
+    property.address.toLowerCase().includes(propertySearch.toLowerCase())
+  );
 
   // Updated filter logic
   const filteredOffers = mockOffers.filter(offer => {
@@ -255,14 +268,14 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
 
           {/* Streamlined filters - no tabs */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 pt-4 border-t">
-            {/* Status filter - multi-select */}
+            {/* Status filter - multi-select with search */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Status</Label>
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-full justify-between text-left font-normal h-10"
+                    className="w-full justify-between text-left font-normal h-10 hover:bg-gray-50"
                   >
                     <span className="truncate">
                       {selectedStatuses.length === 0
@@ -274,19 +287,34 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                     <ChevronDownIcon className="h-4 w-4 opacity-50" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56">
-                  {statusOptions.map(status => (
-                    <DropdownMenuCheckboxItem
-                      key={status.value}
-                      checked={selectedStatuses.includes(status.value)}
-                      onCheckedChange={(checked) => 
-                        handleStatusFilterChange(status.value, checked as boolean)
-                      }
-                      className="hover:bg-gray-50"
-                    >
-                      {status.label}
-                    </DropdownMenuCheckboxItem>
-                  ))}
+                <DropdownMenuContent className="w-56 p-0" onCloseAutoFocus={(e) => e.preventDefault()}>
+                  <div className="p-2 border-b">
+                    <div className="relative">
+                      <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                      <Input
+                        placeholder="Search statuses..."
+                        value={statusSearch}
+                        onChange={(e) => setStatusSearch(e.target.value)}
+                        className="pl-8 h-8 text-sm"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    {filteredStatusOptions.map(status => (
+                      <DropdownMenuCheckboxItem
+                        key={status.value}
+                        checked={selectedStatuses.includes(status.value)}
+                        onCheckedChange={(checked) => 
+                          handleStatusFilterChange(status.value, checked as boolean)
+                        }
+                        className="hover:bg-gray-50"
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        {status.label}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -298,7 +326,7 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-full justify-between text-left font-normal h-10"
+                    className="w-full justify-between text-left font-normal h-10 hover:bg-gray-50"
                   >
                     <span className="truncate">
                       {selectedProperties.length === 0
@@ -334,7 +362,7 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-full justify-between text-left font-normal h-10"
+                    className="w-full justify-between text-left font-normal h-10 hover:bg-gray-50"
                   >
                     <span className="truncate">
                       {dateRange.from
