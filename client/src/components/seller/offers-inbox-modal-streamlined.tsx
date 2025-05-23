@@ -10,14 +10,8 @@ import { format } from "date-fns";
 import { 
   ChevronDownIcon, CheckIcon, XIcon, MessageSquareIcon,
   UserIcon, BadgeCheckIcon, TrendingUpIcon, 
-  StarIcon, SendIcon, LoaderIcon, CalendarIcon, SearchIcon
+  StarIcon, SendIcon, LoaderIcon, SearchIcon
 } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { 
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -141,7 +135,6 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
   // State management - streamlined without tabs
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>(["new", "active"]);
   const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
-  const [dateRange, setDateRange] = useState<{from?: Date; to?: Date}>({});
   const [expandedOffers, setExpandedOffers] = useState<Set<string>>(new Set());
   const [counterAmount, setCounterAmount] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
@@ -171,10 +164,6 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
     
     // Property filtering (multi-select) 
     if (selectedProperties.length > 0 && !selectedProperties.includes(offer.property.id)) return false;
-    
-    // Date range filter
-    if (dateRange.from && offer.timestamp < dateRange.from) return false;
-    if (dateRange.to && offer.timestamp > dateRange.to) return false;
     
     return true;
   });
@@ -267,7 +256,7 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
           </div>
 
           {/* Streamlined filters - no tabs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 pt-4 border-t">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-4 border-t">
             {/* Status filter - multi-select with search */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Status</Label>
@@ -370,50 +359,7 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
               </DropdownMenu>
             </div>
             
-            {/* Date picker with light green styling */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Date Range</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between text-left font-normal h-10 hover:bg-gray-50"
-                  >
-                    <span className="truncate">
-                      {dateRange.from
-                        ? dateRange.to
-                          ? `${format(dateRange.from, "MMM d")} - ${format(dateRange.to, "MMM d")}`
-                          : format(dateRange.from, "MMM d, yyyy")
-                        : "Select dates"}
-                    </span>
-                    <CalendarIcon className="h-4 w-4 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="range"
-                    selected={{
-                      from: dateRange.from,
-                      to: dateRange.to
-                    }}
-                    onSelect={(range) => {
-                      setDateRange({
-                        from: range?.from,
-                        to: range?.to
-                      });
-                    }}
-                    className="rounded-md border-0"
-                    classNames={{
-                      day: "hover:bg-gray-100",
-                      day_selected: "bg-green-100 text-green-900 hover:bg-green-200",
-                      day_range_middle: "bg-green-50",
-                      day_range_start: "bg-green-100 text-green-900",
-                      day_range_end: "bg-green-100 text-green-900",
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+
           </div>
         </DialogHeader>
 
