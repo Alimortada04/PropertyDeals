@@ -159,35 +159,7 @@ export function SellerDashboardLayoutWithUserId({
       {/* Global Quick Action Selector - floating action button */}
       <QuickActionSelector />
       
-      {/* Pill-style navigation - Sticky to top and transparent */}
-      <div className="sticky top-0 z-40 pt-4 pb-2">
-        <div className="container max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-center">
-            <div className="backdrop-blur-lg bg-white/10 shadow-lg border border-white/20 rounded-xl px-4 py-2 inline-flex">
-              <div className="p-1 flex-nowrap gap-2 overflow-x-auto flex">
-                {navItems.map((item) => {
-                  const active = isActive(item.href, item.exact);
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onMouseEnter={() => handleNavHover(item)}
-                      className={cn(
-                        "data-[active=true]:bg-[#09261E] data-[active=true]:text-white data-[active=true]:shadow-sm data-[active=true]:font-semibold data-[active=false]:bg-white/70 data-[active=false]:border data-[active=false]:border-neutral-200 data-[active=false]:text-gray-700 data-[active=false]:hover:bg-gray-100 rounded-full px-4 py-2 transition-all duration-200 ease-in-out scale-100 hover:scale-[1.02] relative flex items-center",
-                      )}
-                      data-active={active}
-                    >
-                      <item.icon className="w-4 h-4 mr-2" />
-                      <span className="font-medium">{item.label}</span>
-                      <div className={cn("absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full mb-0.5", active ? "bg-[#09261E]" : "hidden")}></div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Main content with transition effects */}
       <div className="flex-1">
