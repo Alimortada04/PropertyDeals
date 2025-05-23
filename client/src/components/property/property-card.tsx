@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useOffersInboxModal } from "@/hooks/use-offers-inbox-modal";
 import { Eye, Users, Clock, MoreHorizontal, FileText, Send, Edit, ExternalLink, Globe } from "lucide-react";
 import { 
   DropdownMenu,
@@ -63,6 +64,9 @@ export function PropertyCard({
 }: PropertyCardProps) {
   // For navigation
   const [, setLocation] = useLocation();
+  
+  // For opening offers inbox modal
+  const offersInboxModal = useOffersInboxModal();
   
   // Define status badge color function
   const getStatusBadgeClass = (status: PropertyStatus) => {
@@ -288,7 +292,7 @@ export function PropertyCard({
             className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
             onClick={(e) => {
               e.stopPropagation();
-              setLocation(`${propertyDetailUrl}?tab=offers`);
+              offersInboxModal.onOpen(id);
             }}
           >
             Offers ({offers})
