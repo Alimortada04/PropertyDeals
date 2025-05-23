@@ -297,7 +297,7 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                         onCheckedChange={(checked) => 
                           handleStatusFilterChange(status.value, checked as boolean)
                         }
-                        className="hover:bg-gray-50"
+                        className="hover:bg-gray-50 hover:!bg-gray-50 data-[highlighted]:bg-gray-50"
                         onSelect={(e) => e.preventDefault()}
                       >
                         {status.label}
@@ -348,7 +348,7 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                         onCheckedChange={(checked) => 
                           handlePropertyFilterChange(property.id, checked as boolean)
                         }
-                        className="hover:bg-gray-50"
+                        className="hover:bg-gray-50 hover:!bg-gray-50 data-[highlighted]:bg-gray-50"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <span className="truncate">{property.address}</span>
