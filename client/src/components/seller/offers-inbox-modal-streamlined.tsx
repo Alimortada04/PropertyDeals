@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -129,9 +129,10 @@ const statusNames = {
 interface OffersInboxModalProps {
   isOpen: boolean;
   onClose: () => void;
+  preSelectedPropertyId?: string;
 }
 
-export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
+export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: OffersInboxModalProps) {
   // State management - streamlined without tabs
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>(["new", "active"]);
   const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
@@ -139,6 +140,15 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
   const [counterAmount, setCounterAmount] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
   const [isLoading, setIsLoading] = useState<string | null>(null);
+
+  // Initialize with pre-selected property when modal opens
+  useEffect(() => {
+    if (isOpen && preSelectedPropertyId) {
+      setSelectedProperties([preSelectedPropertyId]);
+    } else if (isOpen && !preSelectedPropertyId) {
+      setSelectedProperties([]);
+    }
+  }, [isOpen, preSelectedPropertyId]);
   
   // Search state for dropdowns
   const [statusSearch, setStatusSearch] = useState("");

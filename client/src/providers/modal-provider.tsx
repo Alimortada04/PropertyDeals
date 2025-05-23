@@ -30,6 +30,7 @@ export const ModalProvider = () => {
       <OffersInboxModal
         isOpen={offersInboxModal.isOpen}
         onClose={offersInboxModal.onClose}
+        preSelectedPropertyId={offersInboxModal.preSelectedPropertyId}
       />
       <CampaignCreationModal
         isOpen={campaignModal.isOpen}
