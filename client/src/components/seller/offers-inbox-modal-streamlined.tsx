@@ -319,10 +319,10 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
               </DropdownMenu>
             </div>
 
-            {/* Property filter - multi-select using addresses */}
+            {/* Property filter - multi-select with search */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Properties</Label>
-              <DropdownMenu>
+              <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
@@ -338,19 +338,34 @@ export function OffersInboxModal({ isOpen, onClose }: OffersInboxModalProps) {
                     <ChevronDownIcon className="h-4 w-4 opacity-50" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-64">
-                  {uniqueProperties.map(property => (
-                    <DropdownMenuCheckboxItem
-                      key={property.id}
-                      checked={selectedProperties.includes(property.id)}
-                      onCheckedChange={(checked) => 
-                        handlePropertyFilterChange(property.id, checked as boolean)
-                      }
-                      className="hover:bg-gray-50"
-                    >
-                      <span className="truncate">{property.address}</span>
-                    </DropdownMenuCheckboxItem>
-                  ))}
+                <DropdownMenuContent className="w-64 p-0" onCloseAutoFocus={(e) => e.preventDefault()}>
+                  <div className="p-2 border-b">
+                    <div className="relative">
+                      <SearchIcon className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
+                      <Input
+                        placeholder="Search properties..."
+                        value={propertySearch}
+                        onChange={(e) => setPropertySearch(e.target.value)}
+                        className="pl-8 h-8 text-sm"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    {filteredPropertyOptions.map(property => (
+                      <DropdownMenuCheckboxItem
+                        key={property.id}
+                        checked={selectedProperties.includes(property.id)}
+                        onCheckedChange={(checked) => 
+                          handlePropertyFilterChange(property.id, checked as boolean)
+                        }
+                        className="hover:bg-gray-50"
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        <span className="truncate">{property.address}</span>
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </div>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
