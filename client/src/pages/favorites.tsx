@@ -410,19 +410,34 @@ export default function FavoritesPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={() => setFilterStatus("all")}>
+                  <DropdownMenuItem 
+                    onClick={() => setFilterStatus("all")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "all" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     All Properties
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setFilterStatus("for sale")}>
+                  <DropdownMenuItem 
+                    onClick={() => setFilterStatus("for sale")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "for sale" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     For Sale
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setFilterStatus("pending")}>
+                  <DropdownMenuItem 
+                    onClick={() => setFilterStatus("pending")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "pending" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     Pending
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setFilterStatus("sold")}>
+                  <DropdownMenuItem 
+                    onClick={() => setFilterStatus("sold")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "sold" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     Sold
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setFilterStatus("off market")}>
+                  <DropdownMenuItem 
+                    onClick={() => setFilterStatus("off market")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "off market" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     Off Market
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -438,21 +453,36 @@ export default function FavoritesPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={() => setSortBy("recently-added")}>
+                  <DropdownMenuItem 
+                    onClick={() => setSortBy("recently-added")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "recently-added" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     Recently Added
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => setSortBy("price-high-low")}>
+                  <DropdownMenuItem 
+                    onClick={() => setSortBy("price-high-low")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "price-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     Price (High to Low)
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSortBy("price-low-high")}>
+                  <DropdownMenuItem 
+                    onClick={() => setSortBy("price-low-high")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "price-low-high" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     Price (Low to High)
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => setSortBy("beds-high-low")}>
+                  <DropdownMenuItem 
+                    onClick={() => setSortBy("beds-high-low")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "beds-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     Beds (Most first)
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setSortBy("sqft-high-low")}>
+                  <DropdownMenuItem 
+                    onClick={() => setSortBy("sqft-high-low")}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "sqft-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  >
                     Square Feet (Largest first)
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -463,7 +493,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
-                  className={`flex items-center justify-center h-8 w-8 rounded-md ${viewMode === "grid" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500"}`}
+                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "grid" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid className="h-4 w-4" />
@@ -471,7 +501,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "list" ? "default" : "ghost"}
                   size="sm"
-                  className={`flex items-center justify-center h-8 w-8 rounded-md ${viewMode === "list" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500"}`}
+                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "list" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
                   onClick={() => setViewMode("list")}
                 >
                   <List className="h-4 w-4" />
