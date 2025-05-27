@@ -46,7 +46,7 @@ export default function PropertiesPage() {
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid"); // Only grid and map views now
   const [location, setLocation] = useLocation();
   const [hoveredPropertyId, setHoveredPropertyId] = useState<number | null>(null);
-  const propertiesPerPage = viewMode === 'map' ? 12 : 6;
+  const propertiesPerPage = 48;
   
   // State for controlling collapsible view controls section
   const [showViewControls, setShowViewControls] = useState(true);
