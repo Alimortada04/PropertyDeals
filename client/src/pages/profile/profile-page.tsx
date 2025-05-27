@@ -882,8 +882,8 @@ function ProfilePage() {
       
       {/* Main content with sidebar */}
       <div className="flex flex-1">
-        {/* Settings Menu Sidebar - reduced width to 220px */}
-        <div className="w-[220px] fixed top-0 left-16 bottom-[48px] bg-white border-r flex flex-col shadow-sm">
+        {/* Settings Menu Sidebar - hidden on mobile, fixed on desktop */}
+        <div className="hidden md:block w-[220px] fixed top-0 left-16 bottom-[48px] bg-white border-r flex flex-col shadow-sm">
           {/* User Profile Section - Redesigned to match screenshot */}
           <div className="px-6 pt-8 pb-6 border-b flex flex-col items-center">
             <div className="relative mb-2">
