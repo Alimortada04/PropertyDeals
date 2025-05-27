@@ -154,9 +154,9 @@ export default function FavoritesPage() {
 
   // Apply client-side filtering and sorting
   const filteredProperties = React.useMemo(() => {
-    if (!favoriteProperties) return [];
+    if (!displayProperties) return [];
     
-    let result = [...favoriteProperties];
+    let result = [...displayProperties];
     
     // Apply search filter
     if (searchQuery) {
@@ -208,7 +208,7 @@ export default function FavoritesPage() {
     }
     
     return result;
-  }, [favoriteProperties, searchQuery, filterStatus, sortBy]);
+  }, [displayProperties, searchQuery, filterStatus, sortBy]);
 
   // Add a filter to the active filters
   const addFilter = (filter: string) => {
@@ -278,26 +278,50 @@ export default function FavoritesPage() {
     );
   }
 
-  if (!favoriteProperties || favoriteProperties.length === 0) {
-    return (
-      <div className="container py-8 pl-20">
-        <div className="max-w-screen-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">Your Favorites</h1>
-          <p className="text-gray-500 mb-6">Welcome to your personalized property dashboard. Save properties here for easy access.</p>
-          
-          <Empty 
-            title="No favorites yet"
-            description="Properties you save will appear here. Start browsing to find properties you love."
-            icon="heart"
-            action={{
-              label: "Browse Properties",
-              onClick: () => setLocation("/properties")
-            }}
-          />
-        </div>
-      </div>
-    );
-  }
+  // Example properties when user has no favorites
+  const exampleProperties = [
+    {
+      id: "example-1",
+      title: "Modern Downtown Condo",
+      address: "123 Main Street, Downtown",
+      price: "$485,000",
+      beds: 2,
+      baths: 2,
+      sqft: "1,250",
+      status: "For Sale",
+      image: "/api/placeholder/400/300",
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "example-2", 
+      title: "Suburban Family Home",
+      address: "456 Oak Avenue, Riverside",
+      price: "$675,000",
+      beds: 4,
+      baths: 3,
+      sqft: "2,100",
+      status: "For Sale",
+      image: "/api/placeholder/400/300",
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "example-3",
+      title: "Investment Duplex",
+      address: "789 Pine Street, Westside", 
+      price: "$395,000",
+      beds: 3,
+      baths: 2,
+      sqft: "1,800",
+      status: "For Sale",
+      image: "/api/placeholder/400/300",
+      createdAt: new Date().toISOString()
+    }
+  ];
+
+  // Use example properties if user has no favorites
+  const displayProperties = favoriteProperties && favoriteProperties.length > 0 
+    ? favoriteProperties 
+    : exampleProperties;
 
   // Helper function to format currency
   const formatCurrency = (price: string | number) => {
