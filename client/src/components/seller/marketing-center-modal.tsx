@@ -487,7 +487,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
   const renderNewCampaign = () => (
     <div className="flex flex-col h-full">
       {/* Fixed Header */}
-      <header className="border-b bg-white p-6 pb-4">
+      <header className="border-b bg-white px-4 sm:px-6 pt-5 pb-2">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-4">
             <Button 
@@ -524,7 +524,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       </header>
 
       {/* Scrollable Content */}
-      <main className="overflow-y-auto flex-1 px-6 py-4 min-h-0 max-h-full">
+      <main className="overflow-y-auto flex-1 px-4 sm:px-6 py-4 min-h-0">
         {campaignStep === 1 && renderNewCampaignStep1()}
         {campaignStep === 2 && renderNewCampaignStep2()}
         {campaignStep === 3 && renderNewCampaignStep3()}
@@ -532,8 +532,8 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       </main>
 
       {/* Fixed Footer */}
-      <footer className="border-t p-4 bg-white">
-        <div className="flex justify-between">
+      <footer className="border-t px-4 sm:px-6 py-4 bg-white">
+        <div className="flex justify-between flex-wrap gap-3">
           <div>
             {campaignStep < 4 && (
               <Button variant="outline" onClick={() => setCurrentView('main')}>
@@ -583,7 +583,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
     return (
       <div className="flex flex-col h-full">
         {/* Fixed Header */}
-        <header className="border-b bg-white p-6 pb-4">
+        <header className="border-b bg-white px-4 sm:px-6 pt-5 pb-2">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
               <Button 
@@ -645,7 +645,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         </header>
 
         {/* Scrollable Content */}
-        <main className="overflow-y-auto flex-1 px-6 py-4 space-y-4 min-h-0 max-h-full">
+        <main className="overflow-y-auto flex-1 px-4 sm:px-6 py-4 space-y-4 min-h-0">
           {activeTab === 'active' && activeCampaigns.map((campaign) => (
             <Card key={campaign.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-5">
@@ -902,15 +902,13 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[800px] h-[90vh] overflow-hidden p-0 rounded-2xl shadow-xl bg-white text-[#09261E]">
+      <DialogContent className="fixed max-w-[800px] w-full h-[90vh] rounded-2xl shadow-xl bg-white overflow-hidden flex flex-col text-[#09261E] p-0">
         <DialogTitle className="sr-only">Marketing Center</DialogTitle>
         <DialogDescription className="sr-only">Comprehensive marketing tools for your property listings</DialogDescription>
-        <div className="flex flex-col h-full">
-          {currentView === 'main' && renderMainView()}
-          {currentView === 'new-campaign' && renderNewCampaign()}
-          {currentView === 'all-campaigns' && renderAllCampaigns()}
-          {currentView === 'jv-partners' && renderJVPartners()}
-        </div>
+        {currentView === 'main' && renderMainView()}
+        {currentView === 'new-campaign' && renderNewCampaign()}
+        {currentView === 'all-campaigns' && renderAllCampaigns()}
+        {currentView === 'jv-partners' && renderJVPartners()}
       </DialogContent>
     </Dialog>
   );

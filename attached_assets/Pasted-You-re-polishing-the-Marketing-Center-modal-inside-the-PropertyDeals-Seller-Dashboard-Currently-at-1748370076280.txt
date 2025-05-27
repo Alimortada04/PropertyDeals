@@ -1,0 +1,64 @@
+You're polishing the Marketing Center modal inside the PropertyDeals Seller Dashboard. Currently, at zoom levels above 100% (e.g. 125%, 150%), content overflows or gets cut off, and scroll behavior becomes unreliable.
+
+✅ Objective
+Ensure all modal content stays visible and scrolls properly at all zoom levels.
+
+🔧 Required Fixes
+Enable Scrollable Modal Content
+
+Ensure all modal pages (New Campaign, JV Partners, etc.) use a consistent internal scroll structure:
+
+tsx
+Copy
+Edit
+<div className="fixed max-w-[800px] w-full h-[90vh] rounded-2xl shadow-xl bg-white overflow-hidden flex flex-col">
+  <div className="px-6 pt-5 pb-2 border-b"> {/* Header */} </div>
+  <div className="overflow-y-auto px-6 py-4 flex-1"> {/* Scrollable Content */} </div>
+  <div className="border-t px-6 py-4"> {/* Footer Buttons */} </div>
+</div>
+Fix Zoom-Level Overflows
+
+Avoid fixed pixel heights for content boxes inside the modal.
+
+Use flex-1 with overflow-y-auto instead of manually setting height on children.
+
+Apply min-h-0 on any flex parents that contain scrollable children to avoid layout breakage.
+
+Responsive Padding
+
+Use responsive padding classes like px-4 sm:px-6 md:px-8 to ensure proper spacing at all screen widths and zoom levels.
+
+Ensure buttons don’t get squished or wrapped when zoomed in.
+
+Sticky Footer for Actions
+
+Keep launch buttons (Launch Campaign, Send Invite) pinned to the bottom of the modal using sticky bottom-0 or placing them in a persistent footer slot.
+
+Test at 75%, 100%, 125%, and 150% Zoom
+
+All modal steps should remain:
+
+Scrollable internally
+
+Vertically centered
+
+Fully visible
+
+Buttons always accessible
+
+🧾 Apply to These Modal Sections:
+New Campaign (All steps, especially Step 4: Final Details)
+
+All Campaigns tabbed view
+
+JV Partners modal
+
+Initial 3-card view ("New Campaign", "All Campaigns", "JV Partners")
+
+🖼️ Design Guidance
+Font: Lato and League Spartan
+
+Color palette and padding should remain consistent with the platform
+
+Maintain soft corner radius (rounded-2xl) and light shadow (shadow-xl)
+
