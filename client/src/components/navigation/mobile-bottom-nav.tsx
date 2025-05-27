@@ -94,7 +94,7 @@ export default function MobileBottomNav() {
     {
       icon: <Plus className="w-6 h-6" />,
       label: 'List',
-      href: user?.id ? `/sellerdash/${user.id}` : '/sellerdash',
+      href: user?.id ? `/sellerdash/${user.id}` : '/sellerdash/1',
       isActive: location.startsWith('/sellerdash'),
     },
   ];

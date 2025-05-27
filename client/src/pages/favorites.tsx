@@ -378,7 +378,7 @@ export default function FavoritesPage() {
   const userName = user?.fullName || user?.username || "there";
 
   return (
-    <div className="container py-8 pl-[30px] pr-[30px]">
+    <div className="container py-8 px-4 md:px-6 lg:px-8">
       <div className="max-w-screen-2xl mx-auto">
         {/* Header with greeting */}
         <div className="mb-8">

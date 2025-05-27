@@ -366,7 +366,7 @@ export default function PropertiesPage() {
   );
   
   return (
-    <div className="flex flex-col min-h-screen pb-12 bg-white pt-16 md:pt-4">
+    <div className="flex flex-col min-h-screen bg-white md:pt-4 pt-[0px] pb-[0px]">
       {/* Breadcrumb and Header Section - White background */}
       <div className="w-full bg-white">
         <div className="bg-white container mx-auto px-4 pt-8 pb-6">
@@ -389,7 +389,6 @@ export default function PropertiesPage() {
           </div>
         </div>
       </div>
-      
       {/* Property Search Bar */}
       <div className="sticky top-0 z-30 bg-white pb-0 px-0 w-full left-0 right-0">
         <PropertySearchBar
@@ -429,7 +428,6 @@ export default function PropertiesPage() {
           viewMode={viewMode}
         />
       </div>
-
       {/* Main Content Area */}
       <div className="flex-grow mt-6">
         {/* Location-based Property Recommendations */}
@@ -475,7 +473,7 @@ export default function PropertiesPage() {
           </div>
         ) : viewMode === 'grid' ? (
           // Grid View - Traditional Card Grid
-          <div className="container mx-auto px-4">
+          (<div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {currentProperties.map((property) => (
                 <div 
@@ -487,7 +485,6 @@ export default function PropertiesPage() {
                 </div>
               ))}
             </div>
-            
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="mt-12 flex justify-center">
@@ -538,10 +535,10 @@ export default function PropertiesPage() {
                 </Pagination>
               </div>
             )}
-          </div>
+          </div>)
         ) : (
           // Map View - Properties grid + Map side by side
-          <div className="container mx-auto px-4">
+          (<div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row gap-4">
               {/* Left Column - Properties in Grid Format */}
               <div className="w-full md:w-1/2">
@@ -616,7 +613,7 @@ export default function PropertiesPage() {
                 />
               </div>
             </div>
-          </div>
+          </div>)
         )}
       </div>
     </div>
