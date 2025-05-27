@@ -82,7 +82,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
       )}
       
       {/* Fixed bottom bar with expandable center */}
-      <div className="fixed bottom-0 left-0 right-0 z-[60] border-t border-gray-200 shadow-md bg-white">
+      <div className="fixed bottom-16 left-0 right-0 z-[60] border-t border-gray-200 shadow-md bg-white">
         <div className="flex items-center justify-between h-14 px-6">
           {/* Call Button (Left) */}
           <button 
