@@ -197,16 +197,30 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
   };
 
   const renderMainView = () => (
-    <div className="flex flex-col items-center justify-center h-full text-center px-6">
-      <div className="space-y-6 max-w-4xl w-full">
-        <div className="space-y-3">
-          <h2 className="text-3xl font-bold text-[#09261E] font-['League_Spartan']">Marketing Center</h2>
-          <p className="text-gray-600 font-['Lato'] text-lg">Launch campaigns, manage marketing, and collaborate with partners</p>
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="px-4 sm:px-6 pt-5 pb-2 border-b bg-white">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold font-['League_Spartan'] text-[#09261E]">Marketing Center</h2>
+            <p className="text-gray-600 mt-1 font-['Lato']">Launch campaigns, manage marketing, and collaborate with partners</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12">
-          {/* New Campaign Card */}
-          <Card 
+      {/* Scrollable Content */}
+      <div className="overflow-y-auto px-4 sm:px-6 py-8 flex-1 min-h-0">
+        <div className="flex flex-col items-center justify-center text-center">
+          <div className="space-y-6 max-w-4xl w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {/* New Campaign Card */}
+              <Card 
             className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#135341] group"
             onClick={() => setCurrentView('new-campaign')}
           >
@@ -252,6 +266,8 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
               <p className="text-gray-600 text-sm font-['Lato']">Collaborate with other sellers to co-market a deal</p>
             </CardContent>
           </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -794,7 +810,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
   const renderJVPartners = () => (
     <div className="flex flex-col h-full">
       {/* Fixed Header */}
-      <header className="border-b bg-white p-6 pb-4">
+      <header className="border-b bg-white px-4 sm:px-6 pt-5 pb-2">
         <div className="flex items-center space-x-4">
           <Button 
             variant="ghost" 
@@ -813,7 +829,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       </header>
 
       {/* Scrollable Content */}
-      <main className="overflow-y-auto flex-1 px-6 py-4 space-y-6 min-h-0 max-h-full">
+      <main className="overflow-y-auto flex-1 px-4 sm:px-6 py-4 space-y-6 min-h-0">
         {/* Invite Partner Card */}
         <Card className="border border-gray-200">
           <CardHeader className="pb-3">
@@ -888,7 +904,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       </main>
 
       {/* Fixed Footer */}
-      <footer className="border-t p-4 bg-white">
+      <footer className="border-t px-4 sm:px-6 py-4 bg-white">
         <Button 
           className="w-full bg-[#135341] hover:bg-[#09261E] text-white font-['Lato']"
           disabled={!jvPartnerEmail || !selectedProperty}
