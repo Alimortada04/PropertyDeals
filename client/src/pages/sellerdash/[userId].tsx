@@ -318,7 +318,7 @@ export default function SellerDashboardPage() {
           
           {/* Market a Deal CTA Card */}
           <div 
-            onClick={() => setIsCampaignModalOpen(true)}
+            onClick={() => marketingCenterModal.onOpen()}
             className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Dark green background */}
@@ -495,11 +495,7 @@ export default function SellerDashboardPage() {
         onClose={() => setIsOffersInboxOpen(false)}
       />
 
-      {/* Campaign Creation Modal */}
-      <CampaignCreationModal
-        isOpen={isCampaignModalOpen}
-        onClose={() => setIsCampaignModalOpen(false)}
-      />
+
     </SellerDashboardLayout>
   );
 }
