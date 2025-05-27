@@ -721,15 +721,15 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100 transition-all duration-200 hover:scale-105">
                       <Eye className="h-4 w-4 mr-1" />
                       View
                     </Button>
-                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100 transition-all duration-200 hover:scale-105">
                       <Edit className="h-4 w-4 mr-1" />
                       Edit
                     </Button>
-                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100 transition-all duration-200 hover:scale-105">
                       <Pause className="h-4 w-4 mr-1" />
                       Pause
                     </Button>
@@ -766,15 +766,15 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100 transition-all duration-200 hover:scale-105">
                       <Eye className="h-4 w-4 mr-1" />
                       Preview
                     </Button>
-                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100 transition-all duration-200 hover:scale-105">
                       <Edit className="h-4 w-4 mr-1" />
                       Edit
                     </Button>
-                    <Button variant="outline" size="sm" className="text-green-600 border-green-600 hover:bg-green-50">
+                    <Button variant="outline" size="sm" className="text-green-600 border-green-600 hover:bg-green-50 transition-all duration-200 hover:scale-105">
                       <Play className="h-4 w-4 mr-1" />
                       Send Now
                     </Button>
@@ -818,11 +818,11 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100 transition-all duration-200 hover:scale-105">
                       <Eye className="h-4 w-4 mr-1" />
                       View Report
                     </Button>
-                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100 transition-all duration-200 hover:scale-105">
                       <Copy className="h-4 w-4 mr-1" />
                       Duplicate
                     </Button>
