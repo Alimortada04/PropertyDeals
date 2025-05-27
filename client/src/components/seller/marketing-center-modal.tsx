@@ -203,16 +203,10 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       {/* Header */}
       <div className="px-4 sm:px-6 pt-5 pb-2 border-b bg-white relative">
         <div className="flex items-center justify-between">
-          <div className="pr-12">
+          <div>
             <h2 className="text-2xl font-bold font-['League_Spartan'] text-[#09261E]">Marketing Center</h2>
             <p className="text-gray-600 mt-1 font-['Lato']">Launch campaigns, manage marketing, and collaborate with partners</p>
           </div>
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors p-2 hover:bg-gray-100 rounded-full z-10"
-          >
-            <X className="h-5 w-5" />
-          </button>
         </div>
       </div>
 
