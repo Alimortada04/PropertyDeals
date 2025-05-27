@@ -251,8 +251,8 @@ export default function SellerDashboardPage() {
           </div>
         </div>
         
-        {/* Quick Stats grid with CTA Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
+        {/* Quick Stats grid with CTA Cards - Mobile: 3 action cards across, then 2 white cards in second row */}
+        <div className="grid grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4 mb-10">
           
           {/* List a Property CTA Card */}
           <div 
@@ -268,19 +268,19 @@ export default function SellerDashboardPage() {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 group-hover:animate-ping"></div>
             
             {/* Content with vertical centering */}
-            <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
+            <div className="relative h-full flex flex-col items-center justify-center text-center p-2 lg:p-4 z-10">
               {/* Icon with animation */}
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Plus className="h-6 w-6 text-white" />
+              <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-full bg-white/20 flex items-center justify-center mb-1 lg:mb-3 group-hover:scale-110 transition-transform duration-300">
+                <Plus className="h-3 w-3 lg:h-6 lg:w-6 text-white" />
               </div>
               
-              <h3 className="text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
+              <h3 className="text-xs lg:text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
                 List a Property
               </h3>
               
-              <div className="mt-2 text-sm text-white/80 flex items-center">
-                <span>Get Started</span>
-                <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              <div className="mt-1 lg:mt-2 text-xs lg:text-sm text-white/80 flex items-center">
+                <span className="hidden lg:inline">Get Started</span>
+                <ChevronRight className="h-2 w-2 lg:h-3 lg:w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </div>
             </div>
           </div>
@@ -299,19 +299,19 @@ export default function SellerDashboardPage() {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 group-hover:animate-ping"></div>
             
             {/* Content with vertical centering */}
-            <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
+            <div className="relative h-full flex flex-col items-center justify-center text-center p-2 lg:p-4 z-10">
               {/* Icon with animation */}
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                <HandHeart className="h-6 w-6 text-white" />
+              <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-full bg-white/20 flex items-center justify-center mb-1 lg:mb-3 group-hover:scale-110 transition-transform duration-300">
+                <HandHeart className="h-3 w-3 lg:h-6 lg:w-6 text-white" />
               </div>
               
-              <h3 className="text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
+              <h3 className="text-xs lg:text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
                 Review Offers
               </h3>
               
-              <div className="mt-2 text-sm text-white/80 flex items-center">
-                <span>{stats.offersPending} pending</span>
-                <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              <div className="mt-1 lg:mt-2 text-xs lg:text-sm text-white/80 flex items-center">
+                <span className="hidden lg:inline">{stats.offersPending} pending</span>
+                <ChevronRight className="h-2 w-2 lg:h-3 lg:w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </div>
             </div>
           </div>
@@ -330,19 +330,19 @@ export default function SellerDashboardPage() {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 group-hover:animate-ping"></div>
             
             {/* Content with vertical centering */}
-            <div className="relative h-full flex flex-col items-center justify-center text-center p-4 z-10">
+            <div className="relative h-full flex flex-col items-center justify-center text-center p-2 lg:p-4 z-10">
               {/* Icon with animation */}
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Megaphone className="h-6 w-6 text-white" />
+              <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-full bg-white/20 flex items-center justify-center mb-1 lg:mb-3 group-hover:scale-110 transition-transform duration-300">
+                <Megaphone className="h-3 w-3 lg:h-6 lg:w-6 text-white" />
               </div>
               
-              <h3 className="text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
+              <h3 className="text-xs lg:text-lg font-medium text-white group-hover:scale-105 transition-transform duration-300">
                 Market a Deal
               </h3>
               
-              <div className="mt-2 text-sm text-white/80 flex items-center">
-                <span>Start Campaign</span>
-                <ChevronRight className="h-3 w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
+              <div className="mt-1 lg:mt-2 text-xs lg:text-sm text-white/80 flex items-center">
+                <span className="hidden lg:inline">Start Campaign</span>
+                <ChevronRight className="h-2 w-2 lg:h-3 lg:w-3 ml-1 group-hover:translate-x-1 transition-transform duration-300" />
               </div>
             </div>
           </div>
