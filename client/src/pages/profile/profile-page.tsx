@@ -1007,8 +1007,8 @@ export default function ProfilePage() {
           </div>
         </div>
         
-        {/* Main content area - Adjusted margin-left to account for both sidebars */}
-        <div className="ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20">
+        {/* Main content area - Responsive margin for mobile/desktop */}
+        <div className="md:ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20">
           <div className="max-w-3xl mx-auto space-y-6">
             
             {/* Tab Content - We'll conditionally show different content based on the active sidebar menu item */}
