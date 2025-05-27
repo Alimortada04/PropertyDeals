@@ -223,7 +223,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
           <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-[#135341]/5 via-[#09261E]/3 to-transparent rounded-full blur-3xl"></div>
         </div>
         
-        <div className="flex flex-col items-center justify-center text-center relative">
+        <div className="flex flex-col items-center justify-center text-center relative min-h-full">
           <div className="space-y-6 max-w-4xl w-full">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {/* New Campaign Card */}
