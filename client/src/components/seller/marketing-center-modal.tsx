@@ -204,15 +204,17 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       <div className="px-4 sm:px-6 pt-5 pb-2 border-b bg-white">
         <div className="flex items-center justify-between">
           <div>
+            <div className="mb-2">
+              <p className="text-lg font-['Lato'] text-gray-600">
+                Welcome back, <span className="font-semibold text-[#09261E]">Alex</span> 👋
+              </p>
+              <p className="text-sm text-gray-500 font-['Lato']">
+                You currently have <span className="font-medium text-[#135341]">2 active campaigns</span> and <span className="font-medium text-[#135341]">1 JV in progress</span>.
+              </p>
+            </div>
             <h2 className="text-2xl font-bold font-['League_Spartan'] text-[#09261E]">Marketing Center</h2>
             <p className="text-gray-600 mt-1 font-['Lato']">Launch campaigns, manage marketing, and collaborate with partners</p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="h-6 w-6" />
-          </button>
         </div>
       </div>
 
@@ -587,7 +589,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         <div className="flex justify-between flex-wrap gap-3">
           <div>
             {campaignStep < 4 && (
-              <Button variant="outline" onClick={() => setCurrentView('main')}>
+              <Button variant="outline" onClick={() => setCurrentView('main')} className="hover:bg-gray-100">
                 Save Draft
               </Button>
             )}
@@ -607,7 +609,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
               </Button>
             ) : (
               <div className="flex space-x-3">
-                <Button variant="outline">
+                <Button variant="outline" className="hover:bg-gray-100">
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule Later
                 </Button>
@@ -727,15 +729,15 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
                       <Eye className="h-4 w-4 mr-1" />
                       View
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
                       <Edit className="h-4 w-4 mr-1" />
                       Edit
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
                       <Pause className="h-4 w-4 mr-1" />
                       Pause
                     </Button>
