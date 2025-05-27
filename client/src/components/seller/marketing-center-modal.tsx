@@ -217,8 +217,13 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       </div>
 
       {/* Scrollable Content */}
-      <div className="overflow-y-auto px-4 sm:px-6 py-8 flex-1 min-h-0">
-        <div className="flex flex-col items-center justify-center text-center">
+      <div className="overflow-y-auto px-4 sm:px-6 py-8 flex-1 min-h-0 relative">
+        {/* Subtle Background Shape */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-[#135341]/5 via-[#09261E]/3 to-transparent rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="flex flex-col items-center justify-center text-center relative">
           <div className="space-y-6 max-w-4xl w-full">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {/* New Campaign Card */}
@@ -269,7 +274,35 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             </CardContent>
           </Card>
             </div>
+            
+            {/* Mini Tips / Stats */}
+            <div className="text-sm text-gray-400 mt-8 space-y-2">
+              <p className="flex items-center justify-center gap-2">
+                <span>💡</span>
+                <span>Tip: JV campaigns are shared with both audiences — double your reach.</span>
+              </p>
+              <p className="flex items-center justify-center gap-2">
+                <span>📊</span>
+                <span>You've launched 3 campaigns this month — keep it going!</span>
+              </p>
+            </div>
           </div>
+        </div>
+      </div>
+      
+      {/* Sticky Call-to-Action Footer */}
+      <div className="border-t px-4 sm:px-6 py-4 bg-gray-50/50">
+        <div className="text-center">
+          <p className="text-sm text-gray-600 mb-2 font-['Lato']">
+            Need help launching your first campaign?
+          </p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="text-[#135341] border-[#135341] hover:bg-[#135341] hover:text-white font-['Lato']"
+          >
+            View Marketing Guide
+          </Button>
         </div>
       </div>
     </div>
