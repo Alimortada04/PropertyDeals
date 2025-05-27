@@ -213,7 +213,7 @@ export function PropertyCard({
           </div>
         </div>
       </div>
-      <CardFooter className="flex items-center justify-between gap-2 pt-2 pb-4 px-6">
+      <CardFooter className="p-6 flex items-center justify-between gap-2 px-6 pl-[10px] pr-[10px] pt-[5px] pb-[5px]">
         {/* Action buttons - now full width with 3 buttons */}
         <div className="grid grid-cols-3 gap-2 w-full">
           {/* Actions dropdown */}
