@@ -37,6 +37,8 @@ import { supabase } from "@/lib/supabase";
 import { navigateToHelpSection, navigateToProfileTab, getCurrentHelpSection } from "@/lib/navigation";
 import styles from "./profile-page.module.css";
 import ConnectionsTab from "./connections-tab";
+import MobileSettingsMenu from "@/components/profile/mobile-settings-menu";
+import MobileSettingsSection from "@/components/profile/mobile-settings-section";
 import { 
   getBuyerProfile, 
   upsertBuyerProfile, 
@@ -192,7 +194,7 @@ const ProfileMenuItem = ({ icon, label, href, active, onClick, danger, className
   );
 };
 
-export default function ProfilePage() {
+function ProfilePage() {
   // Get the current route for active menu tracking
   const [location] = useLocation();
   const { toast } = useToast();
@@ -3460,4 +3462,76 @@ export default function ProfilePage() {
       </div>
     </div>
   );
+}
+
+// Export the profile page with mobile routing integration
+export default function ProfilePageWithMobileRouting() {
+  const [location] = useLocation();
+  
+  // Mobile section detection from URL
+  const mobileSection = location.split('/profile/')[1];
+  
+  // Mobile settings menu titles
+  const getSectionTitle = (section: string) => {
+    const titles = {
+      'account': 'Account',
+      'preferences': 'Property Preferences', 
+      'connections': 'Connections',
+      'notifications': 'Notifications',
+      'integrations': 'Integrations',
+      'memberships': 'Memberships',
+      'help': 'Help Center'
+    };
+    return titles[section as keyof typeof titles] || 'Settings';
+  };
+
+  // Mobile view: Show specific section content
+  if (mobileSection && mobileSection !== 'profile') {
+    return (
+      <MobileSettingsSection 
+        section={mobileSection}
+        title={getSectionTitle(mobileSection)}
+      >
+        <div className="space-y-6">
+          <Card className="bg-white shadow-sm border border-gray-200">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold text-gray-900">{getSectionTitle(mobileSection)}</CardTitle>
+              <CardDescription className="text-gray-600">
+                Configure your {mobileSection} settings and preferences.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="text-center text-gray-500 py-8">
+                <div className="mb-4">
+                  <User className="h-12 w-12 mx-auto text-gray-300" />
+                </div>
+                <p className="text-lg font-medium">{getSectionTitle(mobileSection)} Settings</p>
+                <p className="text-sm mt-2">This section is being developed for mobile.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </MobileSettingsSection>
+    );
+  }
+
+  // Mobile view: Show main settings menu (when on /profile)
+  if (location === '/profile') {
+    return (
+      <>
+        {/* Mobile Settings Menu - only visible on mobile */}
+        <div className="md:hidden">
+          <MobileSettingsMenu />
+        </div>
+        
+        {/* Desktop Layout - hidden on mobile, show normal profile page */}
+        <div className="hidden md:block">
+          <ProfilePage />
+        </div>
+      </>
+    );
+  }
+
+  // Default: Show normal profile page
+  return <ProfilePage />;
 }
