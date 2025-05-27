@@ -74,14 +74,13 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
       <div className="bg-white border-b border-gray-200 px-4 py-3">
         <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
       </div>
-
       {/* Settings Menu Items */}
       <div className="mt-6 px-4 space-y-3">
         {settingsItems.map((item) => {
           const IconComponent = item.icon;
           return (
             <Link key={item.id} href={item.href}>
-              <div className="bg-white rounded-lg border border-gray-200 p-4 active:bg-gray-50 transition-colors min-h-[48px] flex items-center justify-between">
+              <div className="bg-white rounded-lg border border-gray-200 p-4 active:bg-gray-50 transition-colors min-h-[48px] flex items-center justify-between mt-[5px] mb-[5px]">
                 <div className="flex items-center space-x-3">
                   <div className="flex-shrink-0">
                     <IconComponent className="h-5 w-5 text-[#135341]" />
@@ -102,32 +101,6 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
         })}
       </div>
 
-      {/* Support Section */}
-      <div className="mt-8 px-4">
-        <div className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3 px-1">
-          Support
-        </div>
-        <div className="space-y-3">
-          <Link href="/profile/help">
-            <div className="bg-white rounded-lg border border-gray-200 p-4 active:bg-gray-50 transition-colors min-h-[48px] flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="flex-shrink-0">
-                  <HelpCircle className="h-5 w-5 text-[#135341]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-base font-medium text-gray-900 truncate">
-                    Help & Support
-                  </p>
-                  <p className="text-sm text-gray-500 truncate">
-                    Get help and contact support
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="h-4 w-4 text-gray-400" />
-            </div>
-          </Link>
-        </div>
-      </div>
     </div>
   );
 };

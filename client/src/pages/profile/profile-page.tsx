@@ -879,7 +879,6 @@ function ProfilePage() {
         accept="image/*"
         className="hidden"
       />
-      
       {/* Main content with sidebar */}
       <div className="flex flex-1">
         {/* Settings Menu Sidebar - hidden on mobile, fixed on desktop */}
@@ -1010,7 +1009,7 @@ function ProfilePage() {
         </div>
         
         {/* Main content area - Responsive margin for mobile/desktop */}
-        <div className="md:ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20">
+        <div className="md:ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20 pl-[0px] pr-[0px]">
           <div className="max-w-3xl mx-auto space-y-6">
             
             {/* Tab Content - We'll conditionally show different content based on the active sidebar menu item */}
