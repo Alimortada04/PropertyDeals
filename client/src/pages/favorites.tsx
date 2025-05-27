@@ -125,7 +125,7 @@ export default function FavoritesPage() {
       baths: 2,
       sqft: "1,250",
       status: "For Sale",
-      image: "/api/placeholder/400/300",
+      thumbnail: "/api/placeholder/400/300",
       createdAt: new Date().toISOString()
     },
     {
@@ -137,7 +137,7 @@ export default function FavoritesPage() {
       baths: 3,
       sqft: "2,100",
       status: "For Sale",
-      image: "/api/placeholder/400/300",
+      thumbnail: "/api/placeholder/400/300",
       createdAt: new Date().toISOString()
     },
     {
@@ -149,7 +149,7 @@ export default function FavoritesPage() {
       baths: 2,
       sqft: "1,800",
       status: "For Sale",
-      image: "/api/placeholder/400/300",
+      thumbnail: "/api/placeholder/400/300",
       createdAt: new Date().toISOString()
     }
   ];
@@ -378,7 +378,7 @@ export default function FavoritesPage() {
         
         {/* Filters and sorting */}
         <div className="bg-white rounded-lg border mb-8 p-5">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <div className="flex flex-wrap items-center justify-between gap-4 mt-[0px] mb-[0px]">
             {/* Search */}
             <div className="relative flex-grow max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -545,7 +545,7 @@ export default function FavoritesPage() {
                       {property.status || 'For Sale'}
                     </Badge>
                     <img 
-                      src={property.imageUrl} 
+                      src={property.thumbnail} 
                       alt={property.title}
                       className="h-full w-full object-cover transform transition-transform duration-500 hover:scale-105"
                       onError={(e) => {
@@ -568,7 +568,7 @@ export default function FavoritesPage() {
             ))}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {filteredProperties.map((property: Property) => (
               <Link key={property.id} href={`/properties/${property.id}`}>
                 <Card className="overflow-hidden hover:shadow-md transition-shadow border cursor-pointer">
@@ -578,7 +578,7 @@ export default function FavoritesPage() {
                         {property.status || 'For Sale'}
                       </Badge>
                       <img 
-                        src={property.imageUrl} 
+                        src={property.thumbnail} 
                         alt={property.title}
                         className="h-full w-full object-cover transform transition-transform duration-500 hover:scale-105"
                         onError={(e) => {
