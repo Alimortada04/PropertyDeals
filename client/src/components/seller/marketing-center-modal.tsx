@@ -628,14 +628,14 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
     return (
       <div className="flex flex-col h-full">
         {/* Fixed Header */}
-        <header className="border-b bg-white px-4 sm:px-6 pt-5 pb-2">
+        <header className="border-b bg-white px-4 sm:px-6 pt-[35px] pb-2">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={() => setCurrentView('main')}
-                className="hover:bg-gray-100"
+                className="hover:bg-gray-100 transition-all duration-200 hover:scale-105"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back
@@ -656,7 +656,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             <button
               onClick={() => setActiveTab('active')}
               className={cn(
-                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200",
+                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105",
                 activeTab === 'active'
                   ? "bg-white text-[#09261E] shadow-sm"
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
@@ -667,7 +667,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             <button
               onClick={() => setActiveTab('scheduled')}
               className={cn(
-                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200",
+                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105",
                 activeTab === 'scheduled'
                   ? "bg-white text-[#09261E] shadow-sm"
                   : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
