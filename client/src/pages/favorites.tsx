@@ -611,7 +611,7 @@ export default function FavoritesPage() {
           <div className="space-y-6">
             {filteredProperties.map((property: Property) => (
               <Link key={property.id} href={`/properties/${property.id}`}>
-                <Card className="overflow-hidden hover:shadow-md transition-shadow border cursor-pointer">
+                <Card className="rounded-lg bg-card text-card-foreground shadow-sm overflow-hidden hover:shadow-md transition-shadow border cursor-pointer pl-[0px] pr-[0px] pt-[0px] pb-[0px] mt-[10px] mb-[10px]">
                   <div className="flex flex-col md:flex-row">
                     <div className="relative w-full md:w-1/3 h-48 bg-gray-200 overflow-hidden">
                       <Badge className={`absolute top-2 left-2 ${getStatusBadgeColor(property.status)}`}>
