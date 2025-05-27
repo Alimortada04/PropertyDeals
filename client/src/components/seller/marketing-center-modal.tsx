@@ -947,7 +947,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed max-w-[800px] w-full h-[90vh] rounded-2xl shadow-xl bg-white overflow-hidden flex flex-col text-[#09261E] p-0">
+      <DialogContent className="fixed sm:max-w-[800px] max-w-[95vw] w-full h-[90vh] rounded-2xl shadow-xl bg-white overflow-hidden flex flex-col text-[#09261E] p-0">
         <DialogTitle className="sr-only">Marketing Center</DialogTitle>
         <DialogDescription className="sr-only">Comprehensive marketing tools for your property listings</DialogDescription>
         {currentView === 'main' && renderMainView()}
