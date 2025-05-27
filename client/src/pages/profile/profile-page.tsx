@@ -3468,8 +3468,9 @@ function ProfilePage() {
 export default function ProfilePageWithMobileRouting() {
   const [location] = useLocation();
   
-  // Mobile section detection from URL
-  const mobileSection = location.split('/profile/')[1];
+  // Section detection from URL
+  const urlParts = location.split('/profile/');
+  const currentSection = urlParts[1] || '';
   
   // Mobile settings menu titles
   const getSectionTitle = (section: string) => {
@@ -3485,46 +3486,23 @@ export default function ProfilePageWithMobileRouting() {
     return titles[section as keyof typeof titles] || 'Settings';
   };
 
-  // Mobile view: Show specific section content
-  if (mobileSection && mobileSection !== 'profile') {
-    return (
-      <MobileSettingsSection 
-        section={mobileSection}
-        title={getSectionTitle(mobileSection)}
-      >
-        <div className="space-y-6">
-          <Card className="bg-white shadow-sm border border-gray-200">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg font-semibold text-gray-900">{getSectionTitle(mobileSection)}</CardTitle>
-              <CardDescription className="text-gray-600">
-                Configure your {mobileSection} settings and preferences.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="text-center text-gray-500 py-8">
-                <div className="mb-4">
-                  <User className="h-12 w-12 mx-auto text-gray-300" />
-                </div>
-                <p className="text-lg font-medium">{getSectionTitle(mobileSection)} Settings</p>
-                <p className="text-sm mt-2">This section is being developed for mobile.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </MobileSettingsSection>
-    );
-  }
-
-  // Mobile view: Show main settings menu (when on /profile)
-  if (location === '/profile') {
+  // If we're on a specific section route, show mobile back navigation on mobile
+  if (currentSection && currentSection !== 'profile') {
     return (
       <>
-        {/* Mobile Settings Menu - only visible on mobile */}
+        {/* Mobile: Show section with back navigation */}
         <div className="md:hidden">
-          <MobileSettingsMenu />
+          <MobileSettingsSection 
+            section={currentSection}
+            title={getSectionTitle(currentSection)}
+          >
+            <div className="space-y-6">
+              <ProfilePage />
+            </div>
+          </MobileSettingsSection>
         </div>
         
-        {/* Desktop Layout - hidden on mobile, show normal profile page */}
+        {/* Desktop: Show normal profile page */}
         <div className="hidden md:block">
           <ProfilePage />
         </div>
@@ -3532,6 +3510,18 @@ export default function ProfilePageWithMobileRouting() {
     );
   }
 
-  // Default: Show normal profile page
-  return <ProfilePage />;
+  // If we're on /profile, show mobile menu on mobile and desktop layout on desktop
+  return (
+    <>
+      {/* Mobile: Show settings menu */}
+      <div className="md:hidden">
+        <MobileSettingsMenu />
+      </div>
+      
+      {/* Desktop: Show normal profile page */}
+      <div className="hidden md:block">
+        <ProfilePage />
+      </div>
+    </>
+  );
 }
