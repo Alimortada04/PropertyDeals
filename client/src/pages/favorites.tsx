@@ -271,10 +271,18 @@ export default function FavoritesPage() {
     setActiveFilters(activeFilters.filter(f => f !== filter));
   };
 
+  const toggleStatusFilter = (status: string) => {
+    if (filterStatus.includes(status)) {
+      setFilterStatus(filterStatus.filter(s => s !== status));
+    } else {
+      setFilterStatus([...filterStatus, status]);
+    }
+  };
+
   // Clear all filters
   const clearFilters = () => {
     setActiveFilters([]);
-    setFilterStatus('all');
+    setFilterStatus([]);
     setSearchQuery('');
   };
 
@@ -370,7 +378,7 @@ export default function FavoritesPage() {
   const userName = user?.fullName || user?.username || "there";
 
   return (
-    <div className="container py-8 pl-20">
+    <div className="container py-8 pl-[30px] pr-[30px]">
       <div className="max-w-screen-2xl mx-auto">
         {/* Header with greeting */}
         <div className="mb-8">
@@ -413,36 +421,34 @@ export default function FavoritesPage() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem 
-                    onClick={() => setFilterStatus("all")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "all" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
-                  >
-                    All Properties
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => setFilterStatus("for sale")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "for sale" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  <DropdownMenuCheckboxItem 
+                    checked={filterStatus.includes("for sale")}
+                    onCheckedChange={() => toggleStatusFilter("for sale")}
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     For Sale
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => setFilterStatus("pending")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "pending" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem 
+                    checked={filterStatus.includes("pending")}
+                    onCheckedChange={() => toggleStatusFilter("pending")}
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     Pending
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => setFilterStatus("sold")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "sold" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem 
+                    checked={filterStatus.includes("sold")}
+                    onCheckedChange={() => toggleStatusFilter("sold")}
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     Sold
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => setFilterStatus("off market")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${filterStatus === "off market" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem 
+                    checked={filterStatus.includes("off market")}
+                    onCheckedChange={() => toggleStatusFilter("off market")}
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     Off Market
-                  </DropdownMenuItem>
+                  </DropdownMenuCheckboxItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               
@@ -514,7 +520,7 @@ export default function FavoritesPage() {
           </div>
           
           {/* Active filters */}
-          {(searchQuery || filterStatus !== 'all' || activeFilters.length > 0) && (
+          {(searchQuery || filterStatus.length > 0 || activeFilters.length > 0) && (
             <div className="flex flex-wrap items-center gap-2 mt-4">
               <span className="text-sm text-gray-500">Active filters:</span>
               
@@ -527,14 +533,14 @@ export default function FavoritesPage() {
                 </Badge>
               )}
               
-              {filterStatus !== 'all' && (
-                <Badge variant="outline" className="flex items-center gap-1 rounded-full px-3 py-1">
-                  Status: {filterStatus}
-                  <button onClick={() => setFilterStatus('all')} className="ml-1">
+              {filterStatus.map(status => (
+                <Badge key={status} variant="outline" className="flex items-center gap-1 rounded-full px-3 py-1">
+                  Status: {status}
+                  <button onClick={() => toggleStatusFilter(status)} className="ml-1">
                     <X className="h-3 w-3" />
                   </button>
                 </Badge>
-              )}
+              ))}
               
               {activeFilters.map(filter => (
                 <Badge key={filter} variant="outline" className="flex items-center gap-1 rounded-full px-3 py-1">
@@ -545,7 +551,7 @@ export default function FavoritesPage() {
                 </Badge>
               ))}
               
-              {(searchQuery || filterStatus !== 'all' || activeFilters.length > 0) && (
+              {(searchQuery || filterStatus.length > 0 || activeFilters.length > 0) && (
                 <Button
                   variant="ghost"
                   size="sm"
