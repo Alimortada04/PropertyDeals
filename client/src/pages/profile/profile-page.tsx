@@ -3475,7 +3475,7 @@ export default function ProfilePageWithMobileRouting() {
   const getSectionTitle = (section: string) => {
     const titles = {
       'account': 'Account',
-      'preferences': 'Property Preferences', 
+      'property_preferences': 'Property Preferences', 
       'connections': 'Connections',
       'notifications': 'Notifications',
       'integrations': 'Integrations',

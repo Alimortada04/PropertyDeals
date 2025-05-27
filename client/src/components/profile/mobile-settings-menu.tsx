@@ -25,11 +25,11 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
       href: '/profile/account'
     },
     {
-      id: 'preferences',
+      id: 'property_preferences',
       title: 'Property Preferences',
       description: 'Investment criteria and filters',
       icon: Settings,
-      href: '/profile/preferences'
+      href: '/profile/property_preferences'
     },
     {
       id: 'connections',
