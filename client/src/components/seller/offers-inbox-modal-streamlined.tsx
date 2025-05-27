@@ -247,7 +247,7 @@ export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: Off
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[1100px] max-w-[95vw] h-[90vh] p-0 flex flex-col overflow-hidden">
+      <DialogContent className="sm:max-w-[1100px] h-[90vh] p-0 flex flex-col overflow-hidden">
         <DialogHeader className="p-6 pb-4 border-b">
           <div className="flex justify-between items-center">
             <div>
