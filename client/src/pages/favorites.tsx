@@ -53,6 +53,7 @@ interface Property {
   baths: number;
   sqft: number;
   imageUrl: string;
+  thumbnail: string;
   status: string;
   createdAt: string;
   propertyType?: string;
