@@ -114,6 +114,46 @@ export default function FavoritesPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
+  // Example properties when user has no favorites
+  const exampleProperties = [
+    {
+      id: "example-1",
+      title: "Modern Downtown Condo",
+      address: "123 Main Street, Downtown",
+      price: "$485,000",
+      beds: 2,
+      baths: 2,
+      sqft: "1,250",
+      status: "For Sale",
+      image: "/api/placeholder/400/300",
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "example-2", 
+      title: "Suburban Family Home",
+      address: "456 Oak Avenue, Riverside",
+      price: "$675,000",
+      beds: 4,
+      baths: 3,
+      sqft: "2,100",
+      status: "For Sale",
+      image: "/api/placeholder/400/300",
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "example-3",
+      title: "Investment Duplex",
+      address: "789 Pine Street, Westside", 
+      price: "$395,000",
+      beds: 3,
+      baths: 2,
+      sqft: "1,800",
+      status: "For Sale",
+      image: "/api/placeholder/400/300",
+      createdAt: new Date().toISOString()
+    }
+  ];
+
   // Fetch user's favorited properties from Supabase
   const { data: favoriteProperties, isLoading, error } = useQuery({
     queryKey: ['/favorites', user?.id],
@@ -151,6 +191,11 @@ export default function FavoritesPage() {
     },
     enabled: !!user
   });
+
+  // Use example properties if user has no favorites
+  const displayProperties = favoriteProperties && favoriteProperties.length > 0 
+    ? favoriteProperties 
+    : exampleProperties;
 
   // Apply client-side filtering and sorting
   const filteredProperties = React.useMemo(() => {
@@ -277,51 +322,6 @@ export default function FavoritesPage() {
       </div>
     );
   }
-
-  // Example properties when user has no favorites
-  const exampleProperties = [
-    {
-      id: "example-1",
-      title: "Modern Downtown Condo",
-      address: "123 Main Street, Downtown",
-      price: "$485,000",
-      beds: 2,
-      baths: 2,
-      sqft: "1,250",
-      status: "For Sale",
-      image: "/api/placeholder/400/300",
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: "example-2", 
-      title: "Suburban Family Home",
-      address: "456 Oak Avenue, Riverside",
-      price: "$675,000",
-      beds: 4,
-      baths: 3,
-      sqft: "2,100",
-      status: "For Sale",
-      image: "/api/placeholder/400/300",
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: "example-3",
-      title: "Investment Duplex",
-      address: "789 Pine Street, Westside", 
-      price: "$395,000",
-      beds: 3,
-      baths: 2,
-      sqft: "1,800",
-      status: "For Sale",
-      image: "/api/placeholder/400/300",
-      createdAt: new Date().toISOString()
-    }
-  ];
-
-  // Use example properties if user has no favorites
-  const displayProperties = favoriteProperties && favoriteProperties.length > 0 
-    ? favoriteProperties 
-    : exampleProperties;
 
   // Helper function to format currency
   const formatCurrency = (price: string | number) => {
