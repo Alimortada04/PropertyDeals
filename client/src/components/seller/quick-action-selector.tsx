@@ -10,7 +10,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { usePropertyModal } from "@/hooks/use-property-modal";
 import { useOffersInboxModal } from "@/hooks/use-offers-inbox-modal";
-import { useCampaignModal } from "@/hooks/use-campaign-modal";
+import { useMarketingCenterModal } from "@/hooks/use-marketing-center-modal";
 
 export function QuickActionSelector() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +19,7 @@ export function QuickActionSelector() {
   
   const propertyModal = usePropertyModal();
   const offersInboxModal = useOffersInboxModal();
-  const campaignModal = useCampaignModal();
+  const marketingCenterModal = useMarketingCenterModal();
 
   // Colors based on the brand palette
   const WINE_COLOR = "#803344";
@@ -199,7 +199,7 @@ export function QuickActionSelector() {
               exit="exit"
             >
               <Button
-                onClick={() => handleAction(campaignModal.onOpen)}
+                onClick={() => handleAction(marketingCenterModal.onOpen)}
                 className="group relative h-12 w-12 rounded-full bg-[#09261E] hover:bg-[#09261E]/80 shadow-lg transition-all duration-200 hover:shadow-xl"
                 aria-label="Start Campaign"
               >

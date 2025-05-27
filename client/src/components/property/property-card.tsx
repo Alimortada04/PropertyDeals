@@ -7,6 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useOffersInboxModal } from "@/hooks/use-offers-inbox-modal";
+import { useMarketingCenterModal } from "@/hooks/use-marketing-center-modal";
 import { Eye, Users, Clock, MoreHorizontal, FileText, Send, Edit, ExternalLink, Globe, Megaphone } from "lucide-react";
 import { 
   DropdownMenu,
@@ -67,6 +68,7 @@ export function PropertyCard({
   
   // For opening offers inbox modal
   const offersInboxModal = useOffersInboxModal();
+  const marketingCenterModal = useMarketingCenterModal();
   
   // Define status badge color function
   const getStatusBadgeClass = (status: PropertyStatus) => {
@@ -277,7 +279,7 @@ export function PropertyCard({
             className="w-full text-[#803344] border-[#803344] bg-white hover:bg-[#803344] hover:text-white transition-colors"
             onClick={(e) => {
               e.stopPropagation();
-              setLocation(`${propertyDetailUrl}?tab=marketing`);
+              marketingCenterModal.onOpen();
             }}
           >
             <Megaphone className="h-4 w-4 md:mr-1" />
