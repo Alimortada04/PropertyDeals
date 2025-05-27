@@ -266,9 +266,9 @@ export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: Off
           </div>
 
           {/* Streamlined filters - side by side */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-6 pt-4 border-t">
+          <div className="flex flex-row gap-4 mt-6 pt-4 border-t justify-center">
             {/* Status filter - multi-select with search */}
-            <div className="space-y-2">
+            <div className="space-y-2 flex-1 max-w-xs">
               <Label className="text-sm font-medium">Status</Label>
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
@@ -319,7 +319,7 @@ export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: Off
             </div>
 
             {/* Property filter - multi-select with search */}
-            <div className="space-y-2">
+            <div className="space-y-2 flex-1 max-w-xs">
               <Label className="text-sm font-medium">Properties</Label>
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
@@ -399,7 +399,7 @@ export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: Off
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 flex-1">
-                          {/* Property */}
+                          {/* Property Image and Address */}
                           <div className="flex items-center space-x-3">
                             <img 
                               src={offer.property.image} 
@@ -411,9 +411,8 @@ export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: Off
                             </div>
                           </div>
                           
-                          {/* Buyer */}
+                          {/* Buyer Name Only */}
                           <div className="flex items-center space-x-2 min-w-0">
-                            <UserIcon className="h-4 w-4 text-gray-400 flex-shrink-0" />
                             <a 
                               href={`/profile/${offer.buyer.username}`}
                               className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline truncate"
@@ -421,32 +420,12 @@ export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: Off
                             >
                               {offer.buyer.name}
                             </a>
-                            {offer.buyer.isRep && (
-                              <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-800">
-                                REP
-                              </Badge>
-                            )}
-                            {offer.buyer.verified && (
-                              <BadgeCheckIcon className="h-4 w-4 text-green-500 flex-shrink-0" />
-                            )}
                           </div>
                           
                           {/* Amount */}
                           <div className="text-right">
                             <p className="font-semibold text-lg">${offer.amount.toLocaleString()}</p>
                           </div>
-                          
-                          {/* Date */}
-                          <div className="text-right text-sm text-gray-600">
-                            <p className="font-medium">
-                              {format(offer.timestamp, "MMM d, yyyy")}
-                            </p>
-                          </div>
-                          
-                          {/* Status */}
-                          <Badge className={cn("text-xs", statusColors[offer.status])}>
-                            {statusNames[offer.status]}
-                          </Badge>
                           
                           {/* Expand indicator only */}
                           <div className="flex items-center">
@@ -464,6 +443,39 @@ export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: Off
                     {/* Expanded content */}
                     {isExpanded && (
                       <div className="border-t bg-gray-50 p-4 sm:p-6">
+                        {/* Offer Details Header */}
+                        <div className="mb-4 p-3 bg-white rounded border">
+                          <div className="flex flex-wrap items-center gap-4 text-sm">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-gray-600">Buyer Type:</span>
+                              {offer.buyer.isRep && (
+                                <Badge variant="secondary" className="text-xs bg-purple-100 text-purple-800">
+                                  REP
+                                </Badge>
+                              )}
+                              {offer.buyer.verified && (
+                                <div className="flex items-center space-x-1">
+                                  <BadgeCheckIcon className="h-4 w-4 text-green-500" />
+                                  <span className="text-xs text-green-600">Verified</span>
+                                </div>
+                              )}
+                              {!offer.buyer.isRep && !offer.buyer.verified && (
+                                <span className="text-xs text-gray-500">Standard</span>
+                              )}
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-gray-600">Submitted:</span>
+                              <span className="font-medium">{format(offer.timestamp, "MMM d, yyyy")}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-gray-600">Status:</span>
+                              <Badge className={cn("text-xs", statusColors[offer.status])}>
+                                {statusNames[offer.status]}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                        
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 max-w-full">
                           {/* Left column */}
                           <div className="space-y-4">
