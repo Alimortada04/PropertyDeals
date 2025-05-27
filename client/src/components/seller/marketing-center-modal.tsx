@@ -269,8 +269,8 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
           </Card>
             </div>
             
-            {/* Mini Tips / Stats */}
-            <div className="text-sm text-gray-400 mt-8 space-y-2">
+            {/* Mini Tips / Stats - hidden on mobile */}
+            <div className="text-sm text-gray-400 mt-8 space-y-2 hidden md:block">
               <p className="flex items-center justify-center gap-2">
                 <span>💡</span>
                 <span>Tip: JV campaigns are shared with both audiences — double your reach.</span>
