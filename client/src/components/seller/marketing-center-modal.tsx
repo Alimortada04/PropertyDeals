@@ -197,60 +197,62 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
   };
 
   const renderMainView = () => (
-    <div className="p-6 space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-[#09261E] font-['League_Spartan']">Marketing Center</h2>
-        <p className="text-gray-600 font-['Lato']">Launch campaigns, manage marketing, and collaborate with partners</p>
-      </div>
+    <div className="flex flex-col items-center justify-center h-full text-center px-6">
+      <div className="space-y-6 max-w-4xl w-full">
+        <div className="space-y-3">
+          <h2 className="text-3xl font-bold text-[#09261E] font-['League_Spartan']">Marketing Center</h2>
+          <p className="text-gray-600 font-['Lato'] text-lg">Launch campaigns, manage marketing, and collaborate with partners</p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* New Campaign Card */}
-        <Card 
-          className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#135341] group"
-          onClick={() => setCurrentView('new-campaign')}
-        >
-          <CardHeader className="text-center pb-4">
-            <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors">
-              <Plus className="h-7 w-7 text-white" />
-            </div>
-            <CardTitle className="text-[#09261E] font-['League_Spartan']">New Campaign</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-gray-600 text-sm font-['Lato']">Launch a new marketing campaign</p>
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12">
+          {/* New Campaign Card */}
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#135341] group"
+            onClick={() => setCurrentView('new-campaign')}
+          >
+            <CardHeader className="text-center pb-4">
+              <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors mb-2">
+                <Plus className="h-7 w-7 text-white" />
+              </div>
+              <CardTitle className="text-[#09261E] font-['League_Spartan'] mt-1.5">New Campaign</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-gray-600 text-sm font-['Lato']">Launch a new marketing campaign</p>
+            </CardContent>
+          </Card>
 
-        {/* All Campaigns Card */}
-        <Card 
-          className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#135341] group"
-          onClick={() => setCurrentView('all-campaigns')}
-        >
-          <CardHeader className="text-center pb-4">
-            <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors">
-              <FileText className="h-7 w-7 text-white" />
-            </div>
-            <CardTitle className="text-[#09261E] font-['League_Spartan']">All Campaigns</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-gray-600 text-sm font-['Lato']">View, edit, and manage your campaigns</p>
-          </CardContent>
-        </Card>
+          {/* All Campaigns Card */}
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#135341] group"
+            onClick={() => setCurrentView('all-campaigns')}
+          >
+            <CardHeader className="text-center pb-4">
+              <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors mb-2">
+                <FileText className="h-7 w-7 text-white" />
+              </div>
+              <CardTitle className="text-[#09261E] font-['League_Spartan'] mt-1.5">All Campaigns</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-gray-600 text-sm font-['Lato']">View, edit, and manage your campaigns</p>
+            </CardContent>
+          </Card>
 
-        {/* JV Partners Card */}
-        <Card 
-          className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#135341] group"
-          onClick={() => setCurrentView('jv-partners')}
-        >
-          <CardHeader className="text-center pb-4">
-            <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors">
-              <Users className="h-7 w-7 text-white" />
-            </div>
-            <CardTitle className="text-[#09261E] font-['League_Spartan']">JV Partners</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-gray-600 text-sm font-['Lato']">Collaborate with other sellers to co-market a deal</p>
-          </CardContent>
-        </Card>
+          {/* JV Partners Card */}
+          <Card 
+            className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 hover:border-[#135341] group"
+            onClick={() => setCurrentView('jv-partners')}
+          >
+            <CardHeader className="text-center pb-4">
+              <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors mb-2">
+                <Users className="h-7 w-7 text-white" />
+              </div>
+              <CardTitle className="text-[#09261E] font-['League_Spartan'] mt-1.5">JV Partners</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-gray-600 text-sm font-['Lato']">Collaborate with other sellers to co-market a deal</p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );
@@ -485,7 +487,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
   const renderNewCampaign = () => (
     <div className="flex flex-col h-full">
       {/* Fixed Header */}
-      <div className="p-6 pb-4 border-b bg-white">
+      <header className="border-b bg-white p-6 pb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-4">
             <Button 
@@ -519,18 +521,18 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             ))}
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <main className="overflow-y-auto flex-1 px-6 py-4">
         {campaignStep === 1 && renderNewCampaignStep1()}
         {campaignStep === 2 && renderNewCampaignStep2()}
         {campaignStep === 3 && renderNewCampaignStep3()}
         {campaignStep === 4 && renderNewCampaignStep4()}
-      </div>
+      </main>
 
       {/* Fixed Footer */}
-      <div className="p-6 pt-4 border-t bg-white">
+      <footer className="border-t p-4 bg-white">
         <div className="flex justify-between">
           <div>
             {campaignStep < 4 && (
@@ -569,7 +571,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             )}
           </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 
@@ -581,7 +583,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
     return (
       <div className="flex flex-col h-full">
         {/* Fixed Header */}
-        <div className="p-6 pb-4 border-b bg-white">
+        <header className="border-b bg-white p-6 pb-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
               <Button 
@@ -640,10 +642,10 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
               Past ({pastCampaigns.length})
             </button>
           </div>
-        </div>
+        </header>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <main className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
           {activeTab === 'active' && activeCampaigns.map((campaign) => (
             <Card key={campaign.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-5">
@@ -784,7 +786,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
               </CardContent>
             </Card>
           ))}
-        </div>
+        </main>
       </div>
     );
   };
