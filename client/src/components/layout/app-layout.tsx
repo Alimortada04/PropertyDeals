@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "@/components/navigation/sidebar";
+import MobileBottomNav from "@/components/navigation/mobile-bottom-nav";
 import { Button } from "@/components/ui/button";
 import { 
   Settings,

@@ -464,7 +464,7 @@ export default function FavoritesPage() {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem 
                     onClick={() => setSortBy("recently-added")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "recently-added" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                    className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-[#135341] hover:bg-[#135341] focus:bg-[#135341] text-[#ffffff]"
                   >
                     Recently Added
                   </DropdownMenuItem>
