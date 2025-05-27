@@ -690,7 +690,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         </header>
 
         {/* Scrollable Content */}
-        <main className="overflow-y-auto flex-1 px-4 sm:px-6 py-4 space-y-4 min-h-0">
+        <main className="overflow-y-auto flex-1 px-4 sm:px-6 pt-8 pb-4 space-y-4 min-h-0">
           {activeTab === 'active' && activeCampaigns.map((campaign) => (
             <Card key={campaign.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-5">
