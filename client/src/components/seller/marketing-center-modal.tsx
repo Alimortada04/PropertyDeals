@@ -30,7 +30,9 @@ import {
   AlertTriangle,
   Play,
   Pause,
-  Clock
+  Clock,
+  X,
+  ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
