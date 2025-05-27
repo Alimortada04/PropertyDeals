@@ -546,7 +546,7 @@ export default function FavoritesPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200"
                   onClick={clearFilters}
                 >
                   Clear all
