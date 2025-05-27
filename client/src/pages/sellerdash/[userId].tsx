@@ -251,13 +251,13 @@ export default function SellerDashboardPage() {
           </div>
         </div>
         
-        {/* Quick Stats grid with CTA Cards - Mobile: 3 action cards across, then 2 white cards in second row */}
-        <div className="grid grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4 mb-10">
+        {/* Quick Stats grid with CTA Cards - 6 column grid: top row 2 spaces each, bottom row 3 spaces each */}
+        <div className="grid grid-cols-6 gap-2 lg:gap-4 mb-10">
           
-          {/* List a Property CTA Card */}
+          {/* List a Property CTA Card - spans 2 columns */}
           <div 
             onClick={() => setIsAddPropertyModalOpen(true)}
-            className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="col-span-2 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Wine background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#803344] to-[#803344]"></div>
@@ -285,10 +285,10 @@ export default function SellerDashboardPage() {
             </div>
           </div>
           
-          {/* Review Offers CTA Card */}
+          {/* Review Offers CTA Card - spans 2 columns */}
           <div 
             onClick={() => setIsOffersInboxOpen(true)}
-            className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="col-span-2 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Lighter green background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341]"></div>
@@ -299,7 +299,7 @@ export default function SellerDashboardPage() {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-24 w-24 rounded-full bg-white opacity-5 group-hover:animate-ping"></div>
             
             {/* Content with vertical centering */}
-            <div className="relative h-full flex flex-col items-center justify-center text-center p-2 lg:p-4 z-10">
+            <div className="relative h-full flex flex-col items-center justify-center text-center p-2 lg:p-4 z-10 pt-[30px] pb-[30px]">
               {/* Icon with animation */}
               <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-full bg-white/20 flex items-center justify-center mb-1 lg:mb-3 group-hover:scale-110 transition-transform duration-300">
                 <HandHeart className="h-3 w-3 lg:h-6 lg:w-6 text-white" />
@@ -316,10 +316,10 @@ export default function SellerDashboardPage() {
             </div>
           </div>
           
-          {/* Market a Deal CTA Card */}
+          {/* Market a Deal CTA Card - spans 2 columns */}
           <div 
             onClick={() => marketingCenterModal.onOpen()}
-            className="group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="col-span-2 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Dark green background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#09261E]"></div>
@@ -347,8 +347,8 @@ export default function SellerDashboardPage() {
             </div>
           </div>
           
-          {/* Active Listings */}
-          <Card className="border-l-4 border-l-[#135341] hover:shadow-md transition-shadow duration-200">
+          {/* Active Listings - spans 3 columns */}
+          <Card className="col-span-3 border-l-4 border-l-[#135341] hover:shadow-md transition-shadow duration-200">
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <Building className="h-7 w-7 text-[#135341]" />
@@ -360,8 +360,8 @@ export default function SellerDashboardPage() {
             </CardContent>
           </Card>
           
-          {/* Assignment Revenue */}
-          <Card className="border-l-4 border-l-green-600 hover:shadow-md transition-shadow duration-200">
+          {/* Assignment Revenue - spans 3 columns */}
+          <Card className="col-span-3 border-l-4 border-l-green-600 hover:shadow-md transition-shadow duration-200">
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <DollarSign className="h-7 w-7 text-green-600" />
@@ -457,7 +457,7 @@ export default function SellerDashboardPage() {
             </div>
           ) : (
             // Empty state
-            <div className="py-16 text-center bg-white rounded-lg border border-dashed border-gray-300">
+            (<div className="py-16 text-center bg-white rounded-lg border border-dashed border-gray-300">
               <Building className="h-12 w-12 mx-auto text-gray-400 mb-4" />
               <h3 className="text-xl font-medium text-gray-900 mb-2">You haven't listed any properties yet.</h3>
               <p className="text-gray-500 mb-6">Get started by adding your first deal.</p>
@@ -468,34 +468,28 @@ export default function SellerDashboardPage() {
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Property
               </Button>
-            </div>
+            </div>)
           )}
         </div>
         
 
       </div>
-      
       {/* Floating Quick List Button removed - now using global QuickActionSelector */}
-      
       {/* Enhanced Property Listing Modal */}
       <EnhancedPropertyListingModal
         isOpen={isAddPropertyModalOpen}
         onClose={() => setIsAddPropertyModalOpen(false)}
       />
-
       {/* Seller Application Modal - Shows for non-active sellers */}
       <SellerApplicationModal
         isOpen={isSellerModalOpen}
         onClose={() => setIsSellerModalOpen(false)}
       />
-
       {/* Offers Inbox Modal */}
       <OffersInboxModal
         isOpen={isOffersInboxOpen}
         onClose={() => setIsOffersInboxOpen(false)}
       />
-
-
     </SellerDashboardLayout>
   );
 }
