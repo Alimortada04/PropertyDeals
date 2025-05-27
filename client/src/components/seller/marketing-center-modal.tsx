@@ -98,6 +98,9 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
   const [currentView, setCurrentView] = useState<MarketingView>('main');
   const [campaignStep, setCampaignStep] = useState<CampaignStep>(1);
   
+  // Campaign Manager State - moved to top level to fix hooks error
+  const [activeTab, setActiveTab] = useState('active');
+  
   // New Campaign State
   const [selectedProperty, setSelectedProperty] = useState<string>('');
   const [campaignChannel, setCampaignChannel] = useState<CampaignChannel>('email');
@@ -411,59 +414,71 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       </div>
 
       {(campaignChannel === 'email' || campaignChannel === 'both') && (
-        <div className="space-y-4">
-          <h4 className="font-medium text-[#09261E] font-['League_Spartan']">Email Content</h4>
-          <div>
-            <Label htmlFor="email-subject" className="font-['Lato']">Subject Line</Label>
-            <Input
-              id="email-subject"
-              value={emailSubject}
-              onChange={(e) => setEmailSubject(e.target.value)}
-              placeholder="Enter email subject..."
-              className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="email-content" className="font-['Lato']">Email Body</Label>
-            <Textarea
-              id="email-content"
-              value={emailContent}
-              onChange={(e) => setEmailContent(e.target.value)}
-              placeholder="Write your email content..."
-              rows={6}
-              className="mt-1"
-            />
-          </div>
-        </div>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-['League_Spartan'] text-[#09261E]">Email Content</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="email-subject" className="font-['Lato']">Subject Line</Label>
+              <Input
+                id="email-subject"
+                value={emailSubject}
+                onChange={(e) => setEmailSubject(e.target.value)}
+                placeholder="Enter email subject..."
+                className="mt-1"
+              />
+            </div>
+            <div>
+              <Label htmlFor="email-content" className="font-['Lato']">Email Body</Label>
+              <Textarea
+                id="email-content"
+                value={emailContent}
+                onChange={(e) => setEmailContent(e.target.value)}
+                placeholder="Write your email content..."
+                rows={5}
+                className="mt-1"
+              />
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {(campaignChannel === 'social' || campaignChannel === 'both') && (
-        <div>
-          <h4 className="font-medium text-[#09261E] mb-2 font-['League_Spartan']">Social Media</h4>
-          <div>
-            <Label htmlFor="social-caption" className="font-['Lato']">Caption</Label>
-            <Textarea
-              id="social-caption"
-              value={socialCaption}
-              onChange={(e) => setSocialCaption(e.target.value)}
-              placeholder="Write your social media caption..."
-              rows={4}
-              className="mt-1"
-            />
-          </div>
-        </div>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg font-['League_Spartan'] text-[#09261E]">Social Media</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div>
+              <Label htmlFor="social-caption" className="font-['Lato']">Caption</Label>
+              <Textarea
+                id="social-caption"
+                value={socialCaption}
+                onChange={(e) => setSocialCaption(e.target.value)}
+                placeholder="Write your social media caption..."
+                rows={4}
+                className="mt-1"
+              />
+            </div>
+          </CardContent>
+        </Card>
       )}
 
-      <div>
-        <Label htmlFor="target-audience" className="font-['Lato']">Target Audience (Optional)</Label>
-        <Input
-          id="target-audience"
-          value={targetAudience}
-          onChange={(e) => setTargetAudience(e.target.value)}
-          placeholder="e.g., First-time buyers, Investors, etc."
-          className="mt-1"
-        />
-      </div>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-['League_Spartan'] text-[#09261E]">Target Audience</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Input
+            id="target-audience"
+            value={targetAudience}
+            onChange={(e) => setTargetAudience(e.target.value)}
+            placeholder="e.g., First-time buyers, Investors, etc."
+          />
+          <p className="text-sm text-gray-600 mt-2 font-['Lato']">Optional: Specify who this campaign targets</p>
+        </CardContent>
+      </Card>
     </div>
   );
 
@@ -559,8 +574,6 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
   );
 
   const renderAllCampaigns = () => {
-    const [activeTab, setActiveTab] = useState('active');
-    
     const activeCampaigns = mockCampaigns.filter(c => c.status === 'active');
     const scheduledCampaigns = mockCampaigns.filter(c => c.status === 'scheduled');
     const pastCampaigns = mockCampaigns.filter(c => c.status === 'completed');
@@ -800,11 +813,11 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Invite Partner Card */}
-        <Card>
-          <CardHeader>
+        <Card className="border border-gray-200">
+          <CardHeader className="pb-3">
             <CardTitle className="font-['League_Spartan'] text-[#09261E]">Invite JV Partner</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 p-5">
             <div>
               <Label htmlFor="jv-email" className="font-['Lato']">Partner Email</Label>
               <Input
@@ -813,13 +826,14 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                 value={jvPartnerEmail}
                 onChange={(e) => setJvPartnerEmail(e.target.value)}
                 placeholder="Enter partner's email address"
+                className="mt-1"
               />
             </div>
             
             <div>
               <Label htmlFor="jv-property" className="font-['Lato']">Select Property to Co-Market</Label>
               <Select value={selectedProperty} onValueChange={setSelectedProperty}>
-                <SelectTrigger>
+                <SelectTrigger className="mt-1">
                   <SelectValue placeholder="Choose a property" />
                 </SelectTrigger>
                 <SelectContent>
@@ -835,36 +849,37 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         </Card>
 
         {/* JV Notes Card */}
-        <Card>
-          <CardHeader>
+        <Card className="border border-gray-200">
+          <CardHeader className="pb-3">
             <CardTitle className="font-['League_Spartan'] text-[#09261E]">JV Notes</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-5">
             <Textarea
               value={jvNotes}
               onChange={(e) => setJvNotes(e.target.value)}
               placeholder="Add notes about this joint venture partnership..."
               rows={4}
             />
+            <p className="text-sm text-gray-600 mt-2 font-['Lato']">Share details about the partnership approach</p>
           </CardContent>
         </Card>
 
         {/* Partnership Terms Card */}
-        <Card>
-          <CardHeader>
+        <Card className="border border-gray-200">
+          <CardHeader className="pb-3">
             <CardTitle className="font-['League_Spartan'] text-[#09261E]">Partnership Terms</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 p-5">
             <Textarea
               value={jvTerms}
               onChange={(e) => setJvTerms(e.target.value)}
               placeholder="Outline the terms of your joint venture (commission split, responsibilities, etc.)"
-              rows={6}
+              rows={5}
             />
             
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 pt-2">
               <Switch checked={jvApproved} onCheckedChange={setJvApproved} />
-              <Label className="font-['Lato']">I agree to the partnership terms</Label>
+              <Label className="font-['Lato'] text-sm">I agree to the partnership terms outlined above</Label>
             </div>
           </CardContent>
         </Card>
@@ -873,7 +888,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       {/* Fixed Footer */}
       <div className="p-6 pt-4 border-t bg-white">
         <Button 
-          className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
+          className="w-full bg-[#135341] hover:bg-[#09261E] text-white font-['Lato']"
           disabled={!jvPartnerEmail || !selectedProperty}
         >
           <Send className="h-4 w-4 mr-2" />
@@ -885,16 +900,14 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[720px] h-[640px] overflow-hidden p-0 rounded-2xl shadow-xl bg-[#F5F5F5] text-[#09261E]">
+      <DialogContent className="max-w-[800px] h-[90vh] overflow-hidden p-0 rounded-2xl shadow-xl bg-white text-[#09261E]">
         <DialogTitle className="sr-only">Marketing Center</DialogTitle>
         <DialogDescription className="sr-only">Comprehensive marketing tools for your property listings</DialogDescription>
         <div className="flex flex-col h-full">
-          <div className="flex-1 overflow-y-auto">
-            {currentView === 'main' && renderMainView()}
-            {currentView === 'new-campaign' && renderNewCampaign()}
-            {currentView === 'all-campaigns' && renderAllCampaigns()}
-            {currentView === 'jv-partners' && renderJVPartners()}
-          </div>
+          {currentView === 'main' && renderMainView()}
+          {currentView === 'new-campaign' && renderNewCampaign()}
+          {currentView === 'all-campaigns' && renderAllCampaigns()}
+          {currentView === 'jv-partners' && renderJVPartners()}
         </div>
       </DialogContent>
     </Dialog>
