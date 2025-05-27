@@ -197,7 +197,7 @@ export function PropertyCard({
         </div>
       </CardContent>
       {/* Stats footer */}
-      <div className="px-6 py-3 border-t border-gray-100 bg-gray-50 flex justify-between items-center text-sm pt-[12px] pb-[12px] pl-[12px] pr-[12px]">
+      <div className="px-6 py-3 border-t border-gray-100 bg-gray-50 flex justify-center items-center text-sm pt-[12px] pb-[12px] pl-[12px] pr-[12px]">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-gray-600">
             <Eye className="h-4 w-4" />
