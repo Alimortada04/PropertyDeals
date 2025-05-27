@@ -1,43 +1,166 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Home, Heart, Search, Plus, User } from 'lucide-react';
+import { Home, Heart, Search, Plus, User, MapPin, Settings, FileText, BarChart3, Users, MessageSquare, Building2 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { useQuery } from '@tanstack/react-query';
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-// Simple search modal component
+// Comprehensive search modal component
 const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [, setLocation] = useLocation();
+  const { user } = useAuth();
+
+  // Fetch properties for search
+  const { data: properties = [] } = useQuery({
+    queryKey: ['/api/properties'],
+    enabled: isOpen && searchQuery.length > 0
+  });
+
+  // Define navigation items for search
+  const navigationItems = [
+    { name: 'Properties', href: '/properties', icon: Building2, description: 'Browse available properties' },
+    { name: 'Favorites', href: '/favorites', icon: Heart, description: 'Your saved properties' },
+    { name: 'Profile Settings', href: '/profile', icon: Settings, description: 'Account settings' },
+    { name: 'Seller Dashboard', href: user?.id ? `/sellerdash/${user.id}` : '/sellerdash/1', icon: BarChart3, description: 'Manage your listings' },
+    { name: 'Campaign Manager', href: user?.id ? `/sellerdash/${user.id}` : '/sellerdash/1', icon: FileText, description: 'Marketing campaigns' },
+    { name: 'Analytics', href: user?.id ? `/sellerdash/${user.id}` : '/sellerdash/1', icon: BarChart3, description: 'Performance insights' },
+    { name: 'Messages', href: user?.id ? `/sellerdash/${user.id}/engagement` : '/sellerdash/1/engagement', icon: MessageSquare, description: 'Buyer communications' },
+    { name: 'REPs Directory', href: '/reps', icon: Users, description: 'Real estate professionals' },
+  ];
+
+  // Filter properties and navigation based on search
+  const filteredProperties = properties.filter((property: any) =>
+    property.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    property.address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    property.city?.toLowerCase().includes(searchQuery.toLowerCase())
+  ).slice(0, 3);
+
+  const filteredNavigation = navigationItems.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchQuery.toLowerCase())
+  ).slice(0, 4);
+
+  const handleNavigation = (href: string) => {
+    setLocation(href);
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Search Properties</h2>
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 pt-16">
+      <div className="bg-white rounded-2xl w-full max-w-lg max-h-[80vh] overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b">
+          <h2 className="text-lg font-semibold">Search PropertyDeals</h2>
           <Button variant="ghost" size="sm" onClick={onClose}>
             ✕
           </Button>
         </div>
-        <div className="space-y-4">
-          <input
-            type="text"
-            placeholder="Search by location, price, or property type..."
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#135341]"
-            autoFocus
-          />
-          <div className="flex gap-2">
-            <Button className="flex-1 bg-[#135341] hover:bg-[#09261E]">
-              Search
-            </Button>
-            <Button variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
+
+        {/* Search Input */}
+        <div className="p-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="text"
+              placeholder="Search properties, pages, or features..."
+              className="w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#135341] text-gray-700"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
+            />
           </div>
+        </div>
+
+        {/* Results */}
+        <div className="max-h-96 overflow-y-auto">
+          {searchQuery.length === 0 ? (
+            // Quick Navigation when no search
+            <div className="p-4">
+              <h3 className="text-sm font-medium text-gray-500 mb-3">QUICK NAVIGATION</h3>
+              <div className="grid grid-cols-2 gap-2">
+                {navigationItems.slice(0, 6).map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleNavigation(item.href)}
+                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left transition-colors"
+                  >
+                    <item.icon className="h-5 w-5 text-[#135341]" />
+                    <div>
+                      <div className="font-medium text-sm">{item.name}</div>
+                      <div className="text-xs text-gray-500 line-clamp-1">{item.description}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            // Search Results
+            <div className="space-y-1">
+              {/* Properties Section */}
+              {filteredProperties.length > 0 && (
+                <div className="p-4">
+                  <h3 className="text-sm font-medium text-gray-500 mb-3">PROPERTIES</h3>
+                  {filteredProperties.map((property: any, index: number) => (
+                    <button
+                      key={index}
+                      onClick={() => handleNavigation(`/properties/${property.id}`)}
+                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left transition-colors"
+                    >
+                      <Building2 className="h-5 w-5 text-[#135341]" />
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium text-sm truncate">{property.title}</div>
+                        <div className="text-xs text-gray-500 truncate flex items-center gap-1">
+                          <MapPin className="h-3 w-3" />
+                          {property.address}
+                        </div>
+                      </div>
+                      <div className="text-sm font-medium text-[#135341]">
+                        ${property.price?.toLocaleString()}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Navigation Section */}
+              {filteredNavigation.length > 0 && (
+                <div className="p-4 border-t">
+                  <h3 className="text-sm font-medium text-gray-500 mb-3">PAGES & FEATURES</h3>
+                  {filteredNavigation.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleNavigation(item.href)}
+                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 text-left transition-colors"
+                    >
+                      <item.icon className="h-5 w-5 text-[#135341]" />
+                      <div>
+                        <div className="font-medium text-sm">{item.name}</div>
+                        <div className="text-xs text-gray-500">{item.description}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* No Results */}
+              {searchQuery.length > 0 && filteredProperties.length === 0 && filteredNavigation.length === 0 && (
+                <div className="p-8 text-center text-gray-500">
+                  <Search className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+                  <div className="text-sm">No results found for "{searchQuery}"</div>
+                  <div className="text-xs mt-1">Try a different search term</div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
