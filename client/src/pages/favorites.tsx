@@ -32,6 +32,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuCheckboxItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -111,7 +112,7 @@ export default function FavoritesPage() {
   const [, setLocation] = useLocation();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortBy, setSortBy] = useState<string>("recently-added");
-  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [filterStatus, setFilterStatus] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
@@ -215,9 +216,11 @@ export default function FavoritesPage() {
     }
     
     // Apply status filter
-    if (filterStatus !== 'all') {
+    if (filterStatus.length > 0) {
       result = result.filter(
-        property => property.status?.toLowerCase() === filterStatus.toLowerCase()
+        property => filterStatus.some(status => 
+          property.status?.toLowerCase() === status.toLowerCase()
+        )
       );
     }
     
