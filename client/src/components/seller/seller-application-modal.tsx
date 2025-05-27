@@ -1433,7 +1433,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         {/* FOOTER: Action buttons and login link */}
         <div className="border-t bg-white flex-none">
           {/* Main action buttons */}
-          <div className="p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="p-6 flex flex-row justify-between items-center gap-4">
             <div>
               {currentStep > 1 ? (
                 <Button 
@@ -1454,7 +1454,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
               )}
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <div className="flex flex-row gap-3 w-auto">
               <Button 
                 variant="outline" 
                 onClick={handleSaveDraft}
