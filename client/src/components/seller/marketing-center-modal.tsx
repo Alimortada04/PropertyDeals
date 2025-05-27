@@ -524,7 +524,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
       </header>
 
       {/* Scrollable Content */}
-      <main className="overflow-y-auto flex-1 px-6 py-4">
+      <main className="overflow-y-auto flex-1 px-6 py-4 max-h-0">
         {campaignStep === 1 && renderNewCampaignStep1()}
         {campaignStep === 2 && renderNewCampaignStep2()}
         {campaignStep === 3 && renderNewCampaignStep3()}
@@ -645,7 +645,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         </header>
 
         {/* Scrollable Content */}
-        <main className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
+        <main className="overflow-y-auto flex-1 px-6 py-4 space-y-4 max-h-0">
           {activeTab === 'active' && activeCampaigns.map((campaign) => (
             <Card key={campaign.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-5">
@@ -794,7 +794,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
   const renderJVPartners = () => (
     <div className="flex flex-col h-full">
       {/* Fixed Header */}
-      <div className="p-6 pb-4 border-b bg-white">
+      <header className="border-b bg-white p-6 pb-4">
         <div className="flex items-center space-x-4">
           <Button 
             variant="ghost" 
@@ -810,10 +810,10 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             <p className="text-sm text-gray-600 font-['Lato']">Collaborate with other sellers to co-market deals</p>
           </div>
         </div>
-      </div>
+      </header>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <main className="overflow-y-auto flex-1 px-6 py-4 space-y-6 max-h-0">
         {/* Invite Partner Card */}
         <Card className="border border-gray-200">
           <CardHeader className="pb-3">
@@ -885,10 +885,10 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             </div>
           </CardContent>
         </Card>
-      </div>
+      </main>
 
       {/* Fixed Footer */}
-      <div className="p-6 pt-4 border-t bg-white">
+      <footer className="border-t p-4 bg-white">
         <Button 
           className="w-full bg-[#135341] hover:bg-[#09261E] text-white font-['Lato']"
           disabled={!jvPartnerEmail || !selectedProperty}
@@ -896,7 +896,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
           <Send className="h-4 w-4 mr-2" />
           Send JV Campaign Invite
         </Button>
-      </div>
+      </footer>
     </div>
   );
 
