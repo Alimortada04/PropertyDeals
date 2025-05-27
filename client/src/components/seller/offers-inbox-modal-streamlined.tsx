@@ -265,8 +265,8 @@ export function OffersInboxModal({ isOpen, onClose, preSelectedPropertyId }: Off
             </div>
           </div>
 
-          {/* Streamlined filters - no tabs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-4 border-t">
+          {/* Streamlined filters - side by side */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-6 pt-4 border-t">
             {/* Status filter - multi-select with search */}
             <div className="space-y-2">
               <Label className="text-sm font-medium">Status</Label>

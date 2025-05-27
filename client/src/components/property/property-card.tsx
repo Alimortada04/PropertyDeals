@@ -7,7 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useOffersInboxModal } from "@/hooks/use-offers-inbox-modal";
-import { Eye, Users, Clock, MoreHorizontal, FileText, Send, Edit, ExternalLink, Globe } from "lucide-react";
+import { Eye, Users, Clock, MoreHorizontal, FileText, Send, Edit, ExternalLink, Globe, Megaphone } from "lucide-react";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -281,7 +281,7 @@ export function PropertyCard({
               setLocation(`${propertyDetailUrl}?tab=marketing`);
             }}
           >
-            <Globe className="h-4 w-4 mr-1" />
+            <Megaphone className="h-4 w-4 mr-1" />
             Market
           </Button>
           
