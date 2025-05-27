@@ -61,8 +61,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
         {/* Sidebar */}
         <Sidebar />
         
-        {/* Bottom Dock Bar - Slightly thicker, white background with flush corners */}
-        <div className="fixed bottom-0 left-0 w-full h-12 bg-white border-t flex items-center z-50 shadow-md">
+        {/* Bottom Dock Bar - Hidden on mobile, visible on desktop */}
+        <div className="fixed bottom-0 left-0 w-full h-12 bg-white border-t flex items-center z-50 shadow-md hidden md:flex">
           <div className="w-full px-4 flex items-center justify-between">
             <div>
               {/* Menu selector on far left with popup menu (like whop.com) */}
@@ -201,11 +201,14 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </div>
       
       {/* Main Content Area */}
-      <div className="pl-16 pb-12">  {/* Adjusted padding for slightly thicker dock */}
+      <div className="md:pl-16 pb-20 md:pb-12">  {/* Adjusted padding for mobile nav */}
         <div className="min-h-screen">
           {children}
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
       
       {/* Message Popup */}
       <MessagePopup 

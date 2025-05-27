@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Home, Heart, Search, Plus, User } from 'lucide-react';
-import { useUser } from '@/hooks/use-user';
+import { useAuth } from '@/hooks/use-auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 
@@ -64,7 +64,7 @@ export default function MobileBottomNav() {
   const navItems = [
     {
       icon: <Avatar className="w-6 h-6">
-        <AvatarImage src={user?.profilePicture} />
+        <AvatarImage src="" />
         <AvatarFallback className="text-xs bg-[#135341] text-white">
           {getUserInitials(user)}
         </AvatarFallback>
