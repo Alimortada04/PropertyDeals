@@ -774,11 +774,11 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
                       <Eye className="h-4 w-4 mr-1" />
                       Preview
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
                       <Edit className="h-4 w-4 mr-1" />
                       Edit
                     </Button>
@@ -826,11 +826,11 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
                       <Eye className="h-4 w-4 mr-1" />
                       View Report
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="hover:bg-gray-100">
                       <Copy className="h-4 w-4 mr-1" />
                       Duplicate
                     </Button>
