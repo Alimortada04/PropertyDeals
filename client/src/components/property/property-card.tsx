@@ -129,7 +129,6 @@ export function PropertyCard({
           </Badge>
         </div>
       </div>
-      
       <CardContent className="pt-3 pb-2">
         {/* Property title and address */}
         <div className="mb-2">
@@ -137,17 +136,19 @@ export function PropertyCard({
           <p className="text-sm text-gray-600 line-clamp-1">{address}</p>
         </div>
         
-        {/* Property specs */}
+        {/* Property specs - hide bed/bath/sqft on mobile */}
         <div className="flex flex-wrap gap-2 mb-2">
-          <Badge variant="outline" className="bg-gray-50 font-normal">
-            {beds} bed
-          </Badge>
-          <Badge variant="outline" className="bg-gray-50 font-normal">
-            {baths} bath
-          </Badge>
-          <Badge variant="outline" className="bg-gray-50 font-normal">
-            {formatNumber(sqft)} sqft
-          </Badge>
+          <div className="hidden md:flex gap-2">
+            <Badge variant="outline" className="bg-gray-50 font-normal">
+              {beds} bed
+            </Badge>
+            <Badge variant="outline" className="bg-gray-50 font-normal">
+              {baths} bath
+            </Badge>
+            <Badge variant="outline" className="bg-gray-50 font-normal">
+              {formatNumber(sqft)} sqft
+            </Badge>
+          </div>
           
           {/* Listing Price and Deal Value (Assignment Fee) on the same line */}
           <div className="flex gap-2 w-full">
@@ -195,9 +196,8 @@ export function PropertyCard({
           </div>
         </div>
       </CardContent>
-      
       {/* Stats footer */}
-      <div className="px-6 py-3 border-t border-gray-100 bg-gray-50 flex justify-between items-center text-sm">
+      <div className="px-6 py-3 border-t border-gray-100 bg-gray-50 flex justify-between items-center text-sm pt-[12px] pb-[12px] pl-[12px] pr-[12px]">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1 text-gray-600">
             <Eye className="h-4 w-4" />
@@ -213,7 +213,6 @@ export function PropertyCard({
           </div>
         </div>
       </div>
-      
       <CardFooter className="flex items-center justify-between gap-2 pt-2 pb-4 px-6">
         {/* Action buttons - now full width with 3 buttons */}
         <div className="grid grid-cols-3 gap-2 w-full">
@@ -226,8 +225,8 @@ export function PropertyCard({
                 className="w-full text-gray-700 hover:bg-gray-100 focus:ring-0 transition-all group relative overflow-hidden"
               >
                 <div className="flex items-center relative z-20">
-                  <MoreHorizontal className="h-4 w-4 mr-1 text-gray-700 group-hover:rotate-90 transition-transform duration-300" />
-                  <span className="text-gray-700">Actions</span>
+                  <MoreHorizontal className="h-4 w-4 md:mr-1 text-gray-700 group-hover:rotate-90 transition-transform duration-300" />
+                  <span className="text-gray-700 hidden md:inline">Actions</span>
                 </div>
                 <span className="absolute inset-0 bg-gray-100 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-300 z-10"></span>
               </Button>
@@ -281,11 +280,11 @@ export function PropertyCard({
               setLocation(`${propertyDetailUrl}?tab=marketing`);
             }}
           >
-            <Megaphone className="h-4 w-4 mr-1" />
-            Market
+            <Megaphone className="h-4 w-4 md:mr-1" />
+            <span className="hidden md:inline">Market</span>
           </Button>
           
-          {/* Primary button: Offers */}
+          {/* Primary button: Offers with people icon */}
           <Button 
             variant="default" 
             size="sm" 
@@ -295,7 +294,9 @@ export function PropertyCard({
               offersInboxModal.onOpen(id);
             }}
           >
-            Offers ({offers})
+            <Users className="h-4 w-4 md:mr-1" />
+            <span className="hidden md:inline">Offers ({offers})</span>
+            <span className="md:hidden">{offers}</span>
           </Button>
         </div>
       </CardFooter>
