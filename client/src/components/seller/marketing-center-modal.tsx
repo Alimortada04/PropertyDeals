@@ -48,8 +48,8 @@ type CampaignChannel = 'email' | 'social' | 'both';
 // Mock data for demonstration
 const mockProperties = [
   { id: '1', title: 'Modern Farmhouse', address: '123 Main St, Downtown', price: 285000, status: 'Live', thumbnail: '/api/placeholder/150/100' },
-  { id: '2', title: 'Urban Loft', address: '456 Oak Ave, Midtown', price: 195000, status: 'Live', thumbnail: '/api/placeholder/150/100' },
-  { id: '3', title: 'Suburban Ranch', address: '789 Pine Dr, Suburbs', price: 320000, status: 'Draft', thumbnail: '/api/placeholder/150/100' },
+  { id: '2', title: 'Urban Loft', address: '456 City Ave, Midtown', price: 195000, status: 'Live', thumbnail: '/api/placeholder/150/100' },
+  { id: '3', title: 'Suburban Ranch', address: '789 Oak Dr, Suburbs', price: 320000, status: 'Live', thumbnail: '/api/placeholder/150/100' }
 ];
 
 const mockCampaigns = [
@@ -60,13 +60,12 @@ const mockCampaigns = [
     channels: ['email', 'social'],
     status: 'active',
     sent: 1250,
-    opens: 380,
-    clicks: 95,
-    sentDate: new Date('2024-01-15'),
+    opens: 320,
+    clicks: 85,
     type: 'new-deal'
   },
   {
-    id: '2', 
+    id: '2',
     name: 'Urban Loft - Price Drop',
     property: mockProperties[1],
     channels: ['email'],
@@ -122,11 +121,11 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
     if (!isOpen) {
       setCurrentView('main');
       setCampaignStep(1);
-      // Reset form data
       setSelectedProperty('');
       setCampaignChannel('email');
       setCampaignType('new-deal');
       setUseAITemplate(false);
+      setAITemplate('investor-focus');
       setCampaignName('');
       setTargetAudience('');
       setEmailSubject('');
@@ -139,33 +138,20 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
     }
   }, [isOpen]);
 
-  // Auto-generate campaign name
-  useEffect(() => {
-    if (selectedProperty && campaignType) {
-      const property = mockProperties.find(p => p.id === selectedProperty);
-      if (property) {
-        const typeLabel = campaignType.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
-        const date = new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-        setCampaignName(`${property.title} - ${typeLabel} ${date}`);
-      }
-    }
-  }, [selectedProperty, campaignType]);
-
-  // AI Template generation
-  const generateAITemplate = () => {
+  const generateAIContent = () => {
     const property = mockProperties.find(p => p.id === selectedProperty);
     if (!property) return;
 
     const templates = {
       'new-deal': {
-        subject: `🏠 NEW DEAL ALERT: ${property.title} - ${property.address}`,
-        email: `Exciting new investment opportunity just hit the market!\n\n${property.title}\n📍 ${property.address}\n💰 ${property.price.toLocaleString()}\n\nThis property won't last long. Serious inquiries only.\n\nReady to move fast? Reply now!`,
-        social: `🚨 NEW DEAL: ${property.title} just dropped! ${property.address} - $${property.price.toLocaleString()}. DM for details! #RealEstate #Investment #NewDeal`
+        subject: `🏡 NEW DEAL ALERT: ${property.title} - ${property.price.toLocaleString()}`,
+        email: `Exciting new opportunity just hit the market!\n\n${property.title}\n📍 ${property.address}\n💰 $${property.price.toLocaleString()}\n\nThis won't last long. Schedule your showing today!`,
+        social: `🚨 NEW DEAL ALERT! ${property.title} just listed at $${property.price.toLocaleString()}. Prime location, incredible value. DM for details! #NewListing #RealEstate`
       },
       'price-drop': {
-        subject: `💥 PRICE DROP: ${property.title} - Now $${property.price.toLocaleString()}`,
-        email: `Major price reduction on this incredible property!\n\n${property.title}\n📍 ${property.address}\n💰 NOW: $${property.price.toLocaleString()}\n\nDon't miss this opportunity - motivated seller!`,
-        social: `💥 PRICE DROP ALERT! ${property.title} just got more affordable. New price: $${property.price.toLocaleString()}. This won't last! #PriceDrop #Investment`
+        subject: `💥 PRICE DROP: ${property.title} - Now ${property.price.toLocaleString()}`,
+        email: `Great news! Price just dropped on this amazing property.\n\n${property.title}\n📍 ${property.address}\n💰 NEW PRICE: $${property.price.toLocaleString()}\n\nDon't miss this opportunity - reduced to sell fast!`,
+        social: `💥 PRICE DROP ALERT! ${property.title} just reduced to $${property.price.toLocaleString()}. Seller is motivated! #PriceDrop #Deal`
       },
       'final-call': {
         subject: `⏰ FINAL CALL: ${property.title} - Last Chance!`,
@@ -222,7 +208,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         >
           <CardHeader className="text-center pb-4">
             <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors">
-              <Plus className="h-8 w-8 text-white" />
+              <Plus className="h-7 w-7 text-white" />
             </div>
             <CardTitle className="text-[#09261E] font-['League_Spartan']">New Campaign</CardTitle>
           </CardHeader>
@@ -238,7 +224,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         >
           <CardHeader className="text-center pb-4">
             <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors">
-              <FileText className="h-8 w-8 text-white" />
+              <FileText className="h-7 w-7 text-white" />
             </div>
             <CardTitle className="text-[#09261E] font-['League_Spartan']">All Campaigns</CardTitle>
           </CardHeader>
@@ -254,7 +240,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         >
           <CardHeader className="text-center pb-4">
             <div className="w-16 h-16 bg-[#135341] rounded-xl mx-auto flex items-center justify-center group-hover:bg-[#09261E] transition-colors">
-              <Users className="h-8 w-8 text-white" />
+              <Users className="h-7 w-7 text-white" />
             </div>
             <CardTitle className="text-[#09261E] font-['League_Spartan']">JV Partners</CardTitle>
           </CardHeader>
@@ -270,43 +256,35 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
     <div className="space-y-6">
       <div>
         <Label className="text-base font-medium font-['Lato']">Select Property to Market</Label>
-        <p className="text-sm text-gray-600 mb-4 font-['Lato']">Choose from your live or draft properties</p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 max-h-80 overflow-y-auto">
-        {mockProperties.filter(p => p.status === 'Live' || p.status === 'Draft').map((property) => (
-          <Card 
-            key={property.id}
-            className={cn(
-              "cursor-pointer transition-all duration-200 border-2",
-              selectedProperty === property.id 
-                ? "border-[#135341] bg-[#135341]/5" 
-                : "border-gray-200 hover:border-[#135341]/50"
-            )}
-            onClick={() => setSelectedProperty(property.id)}
-          >
-            <CardContent className="flex items-center space-x-4 p-4">
-              <img 
-                src={property.thumbnail} 
-                alt={property.title}
-                className="w-16 h-16 rounded-lg object-cover"
-              />
-              <div className="flex-1">
-                <h3 className="font-semibold font-['League_Spartan'] text-[#09261E]">{property.title}</h3>
-                <p className="text-gray-600 text-sm font-['Lato']">{property.address}</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="font-semibold text-[#09261E] font-['Lato']">${property.price.toLocaleString()}</span>
-                  <Badge variant={property.status === 'Live' ? 'default' : 'secondary'} className="text-xs">
-                    {property.status}
-                  </Badge>
-                </div>
-              </div>
-              {selectedProperty === property.id && (
-                <Check className="h-6 w-6 text-[#135341]" />
+        <p className="text-sm text-gray-600 mb-4 font-['Lato']">Choose from your active listings</p>
+        <div className="grid gap-3">
+          {mockProperties.map((property) => (
+            <Card 
+              key={property.id} 
+              className={cn(
+                "cursor-pointer transition-all duration-200 hover:shadow-md",
+                selectedProperty === property.id ? "ring-2 ring-[#135341] border-[#135341]" : "border-gray-200"
               )}
-            </CardContent>
-          </Card>
-        ))}
+              onClick={() => setSelectedProperty(property.id)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-4">
+                  <img 
+                    src={property.thumbnail} 
+                    alt={property.title}
+                    className="w-16 h-16 rounded-lg object-cover"
+                  />
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-[#09261E] font-['League_Spartan']">{property.title}</h4>
+                    <p className="text-sm text-gray-600 font-['Lato']">{property.address}</p>
+                    <p className="text-lg font-bold text-[#135341] font-['League_Spartan']">${property.price.toLocaleString()}</p>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800">{property.status}</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -315,341 +293,347 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
     <div className="space-y-6">
       <div>
         <Label className="text-base font-medium font-['Lato']">Campaign Type</Label>
-        <p className="text-sm text-gray-600 mb-4 font-['Lato']">Select the type of campaign you want to create</p>
+        <p className="text-sm text-gray-600 mb-4 font-['Lato']">What kind of campaign are you creating?</p>
+        <div className="grid grid-cols-2 gap-4">
+          {[
+            { value: 'new-deal', label: 'New Deal', description: 'Announce a new property listing' },
+            { value: 'price-drop', label: 'Price Drop', description: 'Alert about a price reduction' },
+            { value: 'final-call', label: 'Final Call', description: 'Last chance urgency campaign' },
+            { value: 'under-contract', label: 'Under Contract', description: 'Announce a successful sale' }
+          ].map((type) => (
+            <Card 
+              key={type.value}
+              className={cn(
+                "cursor-pointer transition-all duration-200",
+                campaignType === type.value ? "ring-2 ring-[#135341] border-[#135341]" : "border-gray-200 hover:border-gray-300"
+              )}
+              onClick={() => setCampaignType(type.value as CampaignType)}
+            >
+              <CardContent className="p-4 text-center">
+                <h4 className="font-medium text-[#09261E] font-['League_Spartan']">{type.label}</h4>
+                <p className="text-xs text-gray-600 mt-1 font-['Lato']">{type.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
-
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { value: 'new-deal', label: 'New Deal', icon: Plus },
-          { value: 'price-drop', label: 'Price Drop', icon: ArrowRight },
-          { value: 'final-call', label: 'Final Call', icon: AlertTriangle },
-          { value: 'under-contract', label: 'Under Contract', icon: Check }
-        ].map(({ value, label, icon: Icon }) => (
-          <Card
-            key={value}
-            className={cn(
-              "cursor-pointer transition-all duration-200 border-2",
-              campaignType === value 
-                ? "border-[#135341] bg-[#135341]/5" 
-                : "border-gray-200 hover:border-[#135341]/50"
-            )}
-            onClick={() => setCampaignType(value as CampaignType)}
-          >
-            <CardContent className="flex items-center space-x-3 p-4">
-              <Icon className="h-5 w-5 text-[#135341]" />
-              <span className="font-medium font-['Lato']">{label}</span>
-              {campaignType === value && <Check className="h-4 w-4 text-[#135341] ml-auto" />}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Separator />
 
       <div>
         <Label className="text-base font-medium font-['Lato']">Marketing Channels</Label>
-        <p className="text-sm text-gray-600 mb-4 font-['Lato']">Choose how you want to reach your audience</p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-3">
-        {[
-          { value: 'email', label: 'Email Only', icon: Mail, desc: 'Send to your email list' },
-          { value: 'social', label: 'Social Media Only', icon: MessageSquare, desc: 'Post on social platforms' },
-          { value: 'both', label: 'Email + Social', icon: Send, desc: 'Maximum reach across channels' }
-        ].map(({ value, label, icon: Icon, desc }) => (
-          <Card
-            key={value}
-            className={cn(
-              "cursor-pointer transition-all duration-200 border-2",
-              campaignChannel === value 
-                ? "border-[#135341] bg-[#135341]/5" 
-                : "border-gray-200 hover:border-[#135341]/50"
-            )}
-            onClick={() => setCampaignChannel(value as CampaignChannel)}
-          >
-            <CardContent className="flex items-center space-x-3 p-4">
-              <Icon className="h-5 w-5 text-[#135341]" />
-              <div className="flex-1">
-                <div className="font-medium font-['Lato']">{label}</div>
-                <div className="text-sm text-gray-600 font-['Lato']">{desc}</div>
-              </div>
-              {campaignChannel === value && <Check className="h-4 w-4 text-[#135341]" />}
-            </CardContent>
-          </Card>
-        ))}
+        <p className="text-sm text-gray-600 mb-4 font-['Lato']">Where do you want to promote this campaign?</p>
+        <div className="grid grid-cols-3 gap-4">
+          {[
+            { value: 'email', label: 'Email Only', icon: Mail },
+            { value: 'social', label: 'Social Only', icon: MessageSquare },
+            { value: 'both', label: 'Email + Social', icon: Send }
+          ].map((channel) => (
+            <Card 
+              key={channel.value}
+              className={cn(
+                "cursor-pointer transition-all duration-200",
+                campaignChannel === channel.value ? "ring-2 ring-[#135341] border-[#135341]" : "border-gray-200 hover:border-gray-300"
+              )}
+              onClick={() => setCampaignChannel(channel.value as CampaignChannel)}
+            >
+              <CardContent className="p-4 text-center">
+                <channel.icon className="h-8 w-8 mx-auto mb-2 text-[#135341]" />
+                <h4 className="font-medium text-[#09261E] font-['League_Spartan']">{channel.label}</h4>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
 
   const renderNewCampaignStep3 = () => (
     <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <Sparkles className="h-12 w-12 text-[#135341] mx-auto" />
-        <h3 className="text-xl font-semibold font-['League_Spartan'] text-[#09261E]">AI Template Assistant</h3>
-        <p className="text-gray-600 font-['Lato']">Let AI create compelling campaign content for you</p>
+      <div className="flex items-center space-x-3">
+        <Switch 
+          checked={useAITemplate}
+          onCheckedChange={setUseAITemplate}
+        />
+        <div>
+          <Label className="text-base font-medium font-['Lato']">Use AI Content Generator</Label>
+          <p className="text-sm text-gray-600 font-['Lato']">Let AI create optimized content for your campaign</p>
+        </div>
       </div>
 
-      <Card className="border-2 border-[#135341]/20">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <Label className="text-base font-medium font-['Lato']">Use AI Template</Label>
-            <Switch 
-              checked={useAITemplate} 
-              onCheckedChange={setUseAITemplate}
-            />
+      {useAITemplate && (
+        <div className="space-y-4">
+          <div>
+            <Label className="text-sm font-medium font-['Lato']">AI Template Style</Label>
+            <Select value={aiTemplate} onValueChange={setAITemplate}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose template style" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(aiTemplates).map(([key, template]) => (
+                  <SelectItem key={key} value={key}>
+                    <div>
+                      <div className="font-medium">{template.name}</div>
+                      <div className="text-xs text-gray-500">{template.description}</div>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
-          {useAITemplate && (
-            <div className="space-y-4">
-              <div>
-                <Label className="text-sm font-medium font-['Lato']">Template Style</Label>
-                <Select value={aiTemplate} onValueChange={setAITemplate}>
-                  <SelectTrigger className="mt-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(aiTemplates).map(([key, template]) => (
-                      <SelectItem key={key} value={key}>
-                        <div>
-                          <div className="font-medium">{template.name}</div>
-                          <div className="text-xs text-gray-600">{template.description}</div>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button 
-                onClick={generateAITemplate}
-                className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
-                disabled={!selectedProperty}
-              >
-                <Sparkles className="h-4 w-4 mr-2" />
-                Generate AI Content
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {!useAITemplate && (
-        <div className="text-center p-8 text-gray-500">
-          <p className="font-['Lato']">Skip AI generation and create your content manually in the next step.</p>
+          <Button 
+            onClick={generateAIContent}
+            disabled={!selectedProperty}
+            className="w-full bg-[#135341] hover:bg-[#09261E]"
+          >
+            <Sparkles className="h-4 w-4 mr-2" />
+            Generate AI Content
+          </Button>
         </div>
       )}
+
+      <div className="text-center text-sm text-gray-500 font-['Lato']">
+        {useAITemplate ? 'AI will generate content on the next step' : 'You can write custom content on the next step'}
+      </div>
     </div>
   );
 
   const renderNewCampaignStep4 = () => (
     <div className="space-y-6">
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="campaign-name" className="font-['Lato']">Campaign Name</Label>
-          <Input 
-            id="campaign-name"
-            value={campaignName}
-            onChange={(e) => setCampaignName(e.target.value)}
-            className="mt-2"
-          />
-        </div>
+      <div>
+        <Label htmlFor="campaign-name" className="text-base font-medium font-['Lato']">Campaign Name</Label>
+        <Input
+          id="campaign-name"
+          value={campaignName}
+          onChange={(e) => setCampaignName(e.target.value)}
+          placeholder="Give your campaign a name..."
+          className="mt-2"
+        />
+      </div>
 
-        <div>
-          <Label htmlFor="target-audience" className="font-['Lato']">Target Audience</Label>
-          <Select value={targetAudience} onValueChange={setTargetAudience}>
-            <SelectTrigger className="mt-2">
-              <SelectValue placeholder="Select your audience" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all-buyers">All Buyers (1,200+)</SelectItem>
-              <SelectItem value="active-investors">Active Investors (340)</SelectItem>
-              <SelectItem value="previous-inquiries">Previous Inquiries (89)</SelectItem>
-              <SelectItem value="local-buyers">Local Buyers (156)</SelectItem>
-              <SelectItem value="custom-list">Custom List</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {(campaignChannel === 'email' || campaignChannel === 'both') && (
-          <>
-            <div>
-              <Label htmlFor="email-subject" className="font-['Lato']">Email Subject Line</Label>
-              <Input 
-                id="email-subject"
-                value={emailSubject}
-                onChange={(e) => setEmailSubject(e.target.value)}
-                placeholder="Enter compelling subject line"
-                className="mt-2"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="email-content" className="font-['Lato']">Email Content</Label>
-              <Textarea 
-                id="email-content"
-                value={emailContent}
-                onChange={(e) => setEmailContent(e.target.value)}
-                placeholder="Write your email content here..."
-                className="mt-2 min-h-[150px]"
-              />
-            </div>
-          </>
-        )}
-
-        {(campaignChannel === 'social' || campaignChannel === 'both') && (
+      {(campaignChannel === 'email' || campaignChannel === 'both') && (
+        <div className="space-y-4">
+          <h4 className="font-medium text-[#09261E] font-['League_Spartan']">Email Content</h4>
           <div>
-            <Label htmlFor="social-caption" className="font-['Lato']">Social Media Caption</Label>
-            <Textarea 
+            <Label htmlFor="email-subject" className="font-['Lato']">Subject Line</Label>
+            <Input
+              id="email-subject"
+              value={emailSubject}
+              onChange={(e) => setEmailSubject(e.target.value)}
+              placeholder="Enter email subject..."
+              className="mt-1"
+            />
+          </div>
+          <div>
+            <Label htmlFor="email-content" className="font-['Lato']">Email Body</Label>
+            <Textarea
+              id="email-content"
+              value={emailContent}
+              onChange={(e) => setEmailContent(e.target.value)}
+              placeholder="Write your email content..."
+              rows={6}
+              className="mt-1"
+            />
+          </div>
+        </div>
+      )}
+
+      {(campaignChannel === 'social' || campaignChannel === 'both') && (
+        <div>
+          <h4 className="font-medium text-[#09261E] mb-2 font-['League_Spartan']">Social Media</h4>
+          <div>
+            <Label htmlFor="social-caption" className="font-['Lato']">Caption</Label>
+            <Textarea
               id="social-caption"
               value={socialCaption}
               onChange={(e) => setSocialCaption(e.target.value)}
-              placeholder="Write your social media post..."
-              className="mt-2 min-h-[100px]"
+              placeholder="Write your social media caption..."
+              rows={4}
+              className="mt-1"
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      <Card className="bg-[#135341]/5 border-[#135341]/20">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Send className="h-4 w-4 text-[#135341]" />
-            <span className="font-medium text-[#135341] font-['Lato']">Campaign Preview</span>
-          </div>
-          <p className="text-sm text-gray-600 font-['Lato']">
-            This campaign will reach approximately{' '}
-            <span className="font-semibold text-[#09261E]">
-              {targetAudience === 'all-buyers' ? '1,200+' : targetAudience === 'active-investors' ? '340' : '250'}
-            </span>{' '}
-            potential buyers via {campaignChannel === 'both' ? 'email and social media' : campaignChannel}.
-          </p>
-        </CardContent>
-      </Card>
+      <div>
+        <Label htmlFor="target-audience" className="font-['Lato']">Target Audience (Optional)</Label>
+        <Input
+          id="target-audience"
+          value={targetAudience}
+          onChange={(e) => setTargetAudience(e.target.value)}
+          placeholder="e.g., First-time buyers, Investors, etc."
+          className="mt-1"
+        />
+      </div>
     </div>
   );
 
   const renderNewCampaign = () => (
-    <div className="space-y-6">
-      {/* Header with back button and progress */}
-      <div className="flex items-center justify-between border-b pb-4">
-        <div className="flex items-center space-x-4">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => {
-              if (campaignStep === 1) {
-                setCurrentView('main');
-              } else {
-                handleBack();
-              }
-            }}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <div>
-            <h2 className="text-xl font-semibold font-['League_Spartan'] text-[#09261E]">{getStepTitle()}</h2>
-            <p className="text-sm text-gray-600 font-['Lato']">Step {campaignStep} of 4</p>
+    <div className="flex flex-col h-full">
+      {/* Fixed Header */}
+      <div className="p-6 pb-4 border-b bg-white">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-4">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => campaignStep === 1 ? setCurrentView('main') : handleBack()}
+              className="hover:bg-gray-100"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              {campaignStep === 1 ? 'Back to Main' : 'Back'}
+            </Button>
+            <div>
+              <h2 className="text-xl font-semibold font-['League_Spartan'] text-[#09261E]">New Campaign</h2>
+              <p className="text-sm text-gray-600 font-['Lato']">Step {campaignStep} of 4: {getStepTitle()}</p>
+            </div>
           </div>
-        </div>
-        
-        {/* Progress bar */}
-        <div className="flex space-x-2">
-          {[1, 2, 3, 4].map((step) => (
-            <div
-              key={step}
-              className={cn(
-                "w-8 h-2 rounded-full",
-                step <= campaignStep ? "bg-[#135341]" : "bg-gray-200"
-              )}
-            />
-          ))}
+          <div className="flex items-center space-x-2">
+            {/* Step indicators */}
+            {[1, 2, 3, 4].map((step) => (
+              <div 
+                key={step}
+                className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
+                  step <= campaignStep 
+                    ? "bg-[#135341] text-white" 
+                    : "bg-gray-200 text-gray-500"
+                )}
+              >
+                {step}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Step content */}
-      <div className="min-h-[400px]">
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-6">
         {campaignStep === 1 && renderNewCampaignStep1()}
         {campaignStep === 2 && renderNewCampaignStep2()}
         {campaignStep === 3 && renderNewCampaignStep3()}
         {campaignStep === 4 && renderNewCampaignStep4()}
       </div>
 
-      {/* Footer with navigation */}
-      <div className="flex justify-between border-t pt-4">
-        <Button 
-          variant="outline" 
-          onClick={handleBack}
-          disabled={campaignStep === 1}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Previous
-        </Button>
-
-        {campaignStep < 4 ? (
-          <Button 
-            onClick={handleNext}
-            className="bg-[#135341] hover:bg-[#09261E] text-white"
-            disabled={
-              (campaignStep === 1 && !selectedProperty) ||
-              (campaignStep === 2 && (!campaignType || !campaignChannel))
-            }
-          >
-            Next
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
-        ) : (
-          <div className="space-x-2">
-            <Button variant="outline">
-              Save Draft
-            </Button>
-            <Button 
-              className="bg-[#135341] hover:bg-[#09261E] text-white"
-              disabled={!campaignName || !targetAudience}
-            >
-              <Send className="h-4 w-4 mr-2" />
-              Launch Campaign
-            </Button>
+      {/* Fixed Footer */}
+      <div className="p-6 pt-4 border-t bg-white">
+        <div className="flex justify-between">
+          <div>
+            {campaignStep < 4 && (
+              <Button variant="outline" onClick={() => setCurrentView('main')}>
+                Save Draft
+              </Button>
+            )}
           </div>
-        )}
+          <div className="flex space-x-3">
+            {campaignStep < 4 ? (
+              <Button 
+                onClick={handleNext}
+                disabled={
+                  (campaignStep === 1 && !selectedProperty) ||
+                  (campaignStep === 2 && (!campaignType || !campaignChannel))
+                }
+                className="bg-[#135341] hover:bg-[#09261E] text-white"
+              >
+                Next Step
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            ) : (
+              <div className="flex space-x-3">
+                <Button variant="outline">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Schedule Later
+                </Button>
+                <Button 
+                  className="bg-[#135341] hover:bg-[#09261E] text-white"
+                  disabled={!campaignName || (!emailSubject && !socialCaption)}
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Launch Campaign
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
 
-  const renderAllCampaigns = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => setCurrentView('main')}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <h2 className="text-xl font-semibold font-['League_Spartan'] text-[#09261E]">Campaign Manager</h2>
+  const renderAllCampaigns = () => {
+    const [activeTab, setActiveTab] = useState('active');
+    
+    const activeCampaigns = mockCampaigns.filter(c => c.status === 'active');
+    const scheduledCampaigns = mockCampaigns.filter(c => c.status === 'scheduled');
+    const pastCampaigns = mockCampaigns.filter(c => c.status === 'completed');
+
+    return (
+      <div className="flex flex-col h-full">
+        {/* Fixed Header */}
+        <div className="p-6 pb-4 border-b bg-white">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-4">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setCurrentView('main')}
+                className="hover:bg-gray-100"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+              <h2 className="text-xl font-semibold font-['League_Spartan'] text-[#09261E]">Campaign Manager</h2>
+            </div>
+            <Button 
+              onClick={() => setCurrentView('new-campaign')}
+              className="bg-[#135341] hover:bg-[#09261E] text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Campaign
+            </Button>
+          </div>
+
+          {/* Pill-style Tabs */}
+          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+            <button
+              onClick={() => setActiveTab('active')}
+              className={cn(
+                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200",
+                activeTab === 'active'
+                  ? "bg-white text-[#09261E] shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+              )}
+            >
+              Active ({activeCampaigns.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('scheduled')}
+              className={cn(
+                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200",
+                activeTab === 'scheduled'
+                  ? "bg-white text-[#09261E] shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+              )}
+            >
+              Scheduled ({scheduledCampaigns.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('past')}
+              className={cn(
+                "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200",
+                activeTab === 'past'
+                  ? "bg-white text-[#09261E] shadow-sm"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+              )}
+            >
+              Past ({pastCampaigns.length})
+            </button>
+          </div>
         </div>
-        <Button 
-          onClick={() => setCurrentView('new-campaign')}
-          className="bg-[#135341] hover:bg-[#09261E] text-white"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Campaign
-        </Button>
-      </div>
 
-      <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="scheduled">Scheduled</TabsTrigger>
-          <TabsTrigger value="past">Past</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="active" className="space-y-4">
-          {mockCampaigns.filter(c => c.status === 'active').map((campaign) => (
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          {activeTab === 'active' && activeCampaigns.map((campaign) => (
             <Card key={campaign.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div className="flex space-x-4">
                     <img 
@@ -668,7 +652,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                         <Badge className="bg-green-100 text-green-800">Active</Badge>
                       </div>
                       {campaign.sent && (
-                        <div className="flex space-x-4 text-sm text-gray-600">
+                        <div className="flex items-center space-x-4 text-sm text-gray-600">
                           <span>Sent: {campaign.sent}</span>
                           <span>Opens: {campaign.opens}</span>
                           <span>Clicks: {campaign.clicks}</span>
@@ -677,29 +661,27 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
+                    <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4 mr-1" />
+                      View
                     </Button>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-4 w-4" />
+                    <Button variant="outline" size="sm">
+                      <Edit className="h-4 w-4 mr-1" />
+                      Edit
                     </Button>
-                    <Button variant="ghost" size="sm">
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Pause className="h-4 w-4" />
+                    <Button variant="outline" size="sm">
+                      <Pause className="h-4 w-4 mr-1" />
+                      Pause
                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
-        </TabsContent>
 
-        <TabsContent value="scheduled" className="space-y-4">
-          {mockCampaigns.filter(c => c.status === 'scheduled').map((campaign) => (
+          {activeTab === 'scheduled' && scheduledCampaigns.map((campaign) => (
             <Card key={campaign.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div className="flex space-x-4">
                     <img 
@@ -724,29 +706,27 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
+                    <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4 mr-1" />
+                      Preview
                     </Button>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-4 w-4" />
+                    <Button variant="outline" size="sm">
+                      <Edit className="h-4 w-4 mr-1" />
+                      Edit
                     </Button>
-                    <Button variant="ghost" size="sm">
-                      <Play className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" className="text-red-600">
-                      <Trash2 className="h-4 w-4" />
+                    <Button variant="outline" size="sm" className="text-green-600 border-green-600 hover:bg-green-50">
+                      <Play className="h-4 w-4 mr-1" />
+                      Send Now
                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
-        </TabsContent>
 
-        <TabsContent value="past" className="space-y-4">
-          {mockCampaigns.filter(c => c.status === 'completed').map((campaign) => (
+          {activeTab === 'past' && pastCampaigns.map((campaign) => (
             <Card key={campaign.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div className="flex space-x-4">
                     <img 
@@ -767,182 +747,138 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
                           {campaign.sentDate?.toLocaleDateString()}
                         </span>
                       </div>
-                      <div className="flex space-x-4 text-sm text-gray-600">
+                      <div className="flex items-center space-x-4 text-sm text-gray-600">
                         <span>Sent: {campaign.sent}</span>
-                        <span>Opens: {campaign.opens} ({Math.round((campaign.opens! / campaign.sent!) * 100)}%)</span>
-                        <span>Clicks: {campaign.clicks} ({Math.round((campaign.clicks! / campaign.sent!) * 100)}%)</span>
+                        <span>Opens: {campaign.opens}</span>
+                        <span>Clicks: {campaign.clicks}</span>
+                        <span className="text-[#135341] font-medium">
+                          {Math.round((campaign.clicks! / campaign.sent!) * 100)}% CTR
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
+                    <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4 mr-1" />
+                      View Report
                     </Button>
-                    <Button variant="ghost" size="sm">
-                      <Copy className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <ExternalLink className="h-4 w-4" />
+                    <Button variant="outline" size="sm">
+                      <Copy className="h-4 w-4 mr-1" />
+                      Duplicate
                     </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
+        </div>
+      </div>
+    );
+  };
 
   const renderJVPartners = () => (
-    <div className="space-y-6">
-      <div className="flex items-center space-x-4">
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => setCurrentView('main')}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
-        <div>
-          <h2 className="text-xl font-semibold font-['League_Spartan'] text-[#09261E]">JV Partnership</h2>
-          <p className="text-sm text-gray-600 font-['Lato']">Collaborate with other sellers to co-market deals</p>
+    <div className="flex flex-col h-full">
+      {/* Fixed Header */}
+      <div className="p-6 pb-4 border-b bg-white">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => setCurrentView('main')}
+            className="hover:bg-gray-100"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          <div>
+            <h2 className="text-xl font-semibold font-['League_Spartan'] text-[#09261E]">JV Partners</h2>
+            <p className="text-sm text-gray-600 font-['Lato']">Collaborate with other sellers to co-market deals</p>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Column - Partner & Property Selection */}
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-['League_Spartan'] text-[#09261E]">Invite Partner</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="partner-email" className="font-['Lato']">Partner Email or Username</Label>
-                <Input 
-                  id="partner-email"
-                  value={jvPartnerEmail}
-                  onChange={(e) => setJvPartnerEmail(e.target.value)}
-                  placeholder="partner@example.com or @username"
-                  className="mt-2"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-['League_Spartan'] text-[#09261E]">Select Property</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {mockProperties.slice(0, 2).map((property) => (
-                  <Card 
-                    key={property.id}
-                    className={cn(
-                      "cursor-pointer transition-all duration-200 border-2",
-                      selectedProperty === property.id 
-                        ? "border-[#135341] bg-[#135341]/5" 
-                        : "border-gray-200 hover:border-[#135341]/50"
-                    )}
-                    onClick={() => setSelectedProperty(property.id)}
-                  >
-                    <CardContent className="flex items-center space-x-3 p-3">
-                      <img 
-                        src={property.thumbnail} 
-                        alt={property.title}
-                        className="w-12 h-12 rounded object-cover"
-                      />
-                      <div className="flex-1">
-                        <h4 className="font-medium font-['Lato'] text-[#09261E]">{property.title}</h4>
-                        <p className="text-sm text-gray-600 font-['Lato']">${property.price.toLocaleString()}</p>
-                      </div>
-                      {selectedProperty === property.id && (
-                        <Check className="h-5 w-5 text-[#135341]" />
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Column - Campaign Details & Terms */}
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-['League_Spartan'] text-[#09261E]">JV Notes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Textarea 
-                value={jvNotes}
-                onChange={(e) => setJvNotes(e.target.value)}
-                placeholder="Add notes about this partnership, campaign goals, or any special instructions..."
-                className="min-h-[100px]"
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        {/* Invite Partner Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-['League_Spartan'] text-[#09261E]">Invite JV Partner</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="jv-email" className="font-['Lato']">Partner Email</Label>
+              <Input
+                id="jv-email"
+                type="email"
+                value={jvPartnerEmail}
+                onChange={(e) => setJvPartnerEmail(e.target.value)}
+                placeholder="Enter partner's email address"
               />
-            </CardContent>
-          </Card>
+            </div>
+            
+            <div>
+              <Label htmlFor="jv-property" className="font-['Lato']">Select Property to Co-Market</Label>
+              <Select value={selectedProperty} onValueChange={setSelectedProperty}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose a property" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mockProperties.map((property) => (
+                    <SelectItem key={property.id} value={property.id}>
+                      {property.title} - ${property.price.toLocaleString()}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-['League_Spartan'] text-[#09261E]">Partnership Terms</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="jv-terms" className="font-['Lato']">Terms & Profit Share (Optional)</Label>
-                <Textarea 
-                  id="jv-terms"
-                  value={jvTerms}
-                  onChange={(e) => setJvTerms(e.target.value)}
-                  placeholder="e.g., 50/50 split on assignment fee, partner handles social media..."
-                  className="mt-2"
-                />
-              </div>
+        {/* JV Notes Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-['League_Spartan'] text-[#09261E]">JV Notes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Textarea
+              value={jvNotes}
+              onChange={(e) => setJvNotes(e.target.value)}
+              placeholder="Add notes about this joint venture partnership..."
+              rows={4}
+            />
+          </CardContent>
+        </Card>
 
-              <div className="space-y-3">
-                <h4 className="font-medium font-['Lato'] text-[#09261E]">Permissions</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-['Lato']">Partner can edit campaign content</span>
-                    <Switch defaultChecked />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-['Lato']">Partner can launch campaigns</span>
-                    <Switch />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-['Lato']">Partner can view analytics</span>
-                    <Switch defaultChecked />
-                  </div>
-                </div>
-              </div>
+        {/* Partnership Terms Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="font-['League_Spartan'] text-[#09261E]">Partnership Terms</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Textarea
+              value={jvTerms}
+              onChange={(e) => setJvTerms(e.target.value)}
+              placeholder="Outline the terms of your joint venture (commission split, responsibilities, etc.)"
+              rows={6}
+            />
+            
+            <div className="flex items-center space-x-2">
+              <Switch checked={jvApproved} onCheckedChange={setJvApproved} />
+              <Label className="font-['Lato']">I agree to the partnership terms</Label>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-              <div className="flex items-center space-x-2 p-4 bg-[#135341]/5 rounded-lg">
-                <input 
-                  type="checkbox" 
-                  id="jv-approval"
-                  checked={jvApproved}
-                  onChange={(e) => setJvApproved(e.target.checked)}
-                  className="rounded border-[#135341]"
-                />
-                <Label htmlFor="jv-approval" className="text-sm font-['Lato']">
-                  Both partners must approve before campaign launch
-                </Label>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Button 
-            className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
-            disabled={!jvPartnerEmail || !selectedProperty}
-          >
-            <Send className="h-4 w-4 mr-2" />
-            Send JV Campaign Invite
-          </Button>
-        </div>
+      {/* Fixed Footer */}
+      <div className="p-6 pt-4 border-t bg-white">
+        <Button 
+          className="w-full bg-[#135341] hover:bg-[#09261E] text-white"
+          disabled={!jvPartnerEmail || !selectedProperty}
+        >
+          <Send className="h-4 w-4 mr-2" />
+          Send JV Campaign Invite
+        </Button>
       </div>
     </div>
   );
