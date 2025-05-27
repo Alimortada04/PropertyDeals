@@ -63,12 +63,7 @@ export default function MobileBottomNav() {
 
   const navItems = [
     {
-      icon: <Avatar className="w-6 h-6">
-        <AvatarImage src="" />
-        <AvatarFallback className="text-xs bg-[#135341] text-white">
-          {getUserInitials(user)}
-        </AvatarFallback>
-      </Avatar>,
+      icon: <User className="w-6 h-6" />,
       label: 'Profile',
       href: '/profile',
       isActive: location === '/profile',
