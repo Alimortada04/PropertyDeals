@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
 import SellerApplicationModal from '@/components/seller/seller-application-modal';
 import { OffersInboxModal } from '@/components/seller/offers-inbox-modal-streamlined';
-import { CampaignCreationModal } from '@/components/seller/campaign-creation-modal';
+import { useMarketingCenterModal } from '@/hooks/use-marketing-center-modal';
 import { 
   Card, 
   CardContent, 
@@ -129,7 +129,7 @@ export default function SellerDashboardPage() {
   // Property modal is now handled through the global Quick Action Selector
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
-  const [isCampaignModalOpen, setIsCampaignModalOpen] = useState(false);
+  const marketingCenterModal = useMarketingCenterModal();
   const [isOffersInboxOpen, setIsOffersInboxOpen] = useState(false);
   
   // In real implementation, check if the current user matches the userId param
