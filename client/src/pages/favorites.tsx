@@ -290,8 +290,8 @@ export default function FavoritesPage() {
     return (
       <div className="container py-8 pl-20">
         <div className="max-w-screen-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2">Your Favorites</h1>
-          <p className="text-gray-500 mb-6">Loading your favorite properties...</p>
+          <h1 className="text-3xl font-bold mb-2 text-[#803344]">Your Favorites</h1>
+          <p className="text-[#803344]/70 mb-6">Loading your favorite properties...</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
@@ -650,8 +650,8 @@ export default function FavoritesPage() {
                           <div className="font-medium text-[#803344]">{property.sqft.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-sm text-gray-500">Type</div>
-                          <div className="font-medium">{property.propertyType || "Residential"}</div>
+                          <div className="text-sm text-[#803344]/60">Type</div>
+                          <div className="font-medium text-[#803344]">{property.propertyType || "Residential"}</div>
                         </div>
                       </div>
                     </div>
