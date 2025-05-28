@@ -284,7 +284,6 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </div>
         </div>
       </div>
-
       {/* Image Carousel positioned right under sticky header */}
       <div className="pt-14">
         <MobileImageCarousel 
@@ -293,7 +292,6 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           onBack={onBack}
         />
       </div>
-      
       {/* Property Header */}
       <div className="px-4 py-3 border-b border-gray-200">
         <div className="flex justify-between items-start mb-2">
@@ -356,7 +354,6 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </Button>
         </div>
       </div>
-      
       {/* Main Content */}
       <div className="pb-24"> {/* Padding bottom for floating CTA */}
         {/* Property Stats - Quick Info (just icon and value on one line) */}
@@ -1256,11 +1253,11 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         </div>
         
         {/* More Deals by Michael */}
-        <div className="px-4 py-6 border-t border-gray-200">
-          <h3 className="text-lg font-heading font-bold text-[#09261E] mb-4">More Deals by Michael</h3>
-          <div className="grid grid-cols-1 gap-4">
+        <div className="py-6 border-t border-gray-200 pl-[16px] pr-[16px]">
+          <h3 className="text-lg font-heading font-bold text-[#09261E] mb-4 px-4">More Deals by Michael</h3>
+          <div className="flex overflow-x-auto gap-4 px-4 pb-2 snap-x snap-mandatory hide-scrollbar">
             {sellerProperties.map((prop) => (
-              <div key={prop.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <div key={prop.id} className="flex-shrink-0 w-64 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow snap-start">
                 <div className="relative h-48 overflow-hidden">
                   <img 
                     src={prop.imageUrl} 
@@ -1294,7 +1291,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               </div>
             ))}
           </div>
-          <div className="text-center mt-4">
+          <div className="text-center mt-4 px-4">
             <Button variant="outline" className="border-[#09261E] text-[#09261E] hover:bg-[#09261E]/10 w-full">
               View All Properties by Michael
             </Button>
@@ -1302,11 +1299,11 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         </div>
         
         {/* Similar Deals You Might Like */}
-        <div className="px-4 py-6 border-t border-gray-200">
-          <h3 className="text-lg font-heading font-bold text-[#09261E] mb-4">Similar Deals You Might Like</h3>
-          <div className="grid grid-cols-1 gap-4">
+        <div className="py-6 border-t border-gray-200">
+          <h3 className="text-lg font-heading font-bold text-[#09261E] mb-4 px-4">Similar Deals You Might Like</h3>
+          <div className="flex overflow-x-auto gap-4 px-4 pb-2 snap-x snap-mandatory hide-scrollbar">
             {sellerProperties.slice().reverse().map((prop) => (
-              <div key={`similar-${prop.id}`} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+              <div key={`similar-${prop.id}`} className="flex-shrink-0 w-64 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow snap-start">
                 <div className="relative h-48 overflow-hidden">
                   <img 
                     src={prop.imageUrl} 
@@ -1345,7 +1342,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               </div>
             ))}
           </div>
-          <div className="text-center mt-4">
+          <div className="text-center mt-4 px-4">
             <Button className="bg-[#09261E] hover:bg-[#135341] w-full">
               View All Similar Properties
             </Button>
@@ -1379,7 +1376,6 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         
 
       </div>
-      
       {/* Floating CTA Bar */}
       <MobileFloatingCTA
         onClick={handleContactClick}
@@ -1388,7 +1384,6 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         sellerPosition="Real Estate Agent"
         sellerImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"
       />
-      
       {/* Contact Seller Modal */}
       <Dialog open={contactModalOpen} onOpenChange={setContactModalOpen}>
         <DialogContent className="w-[90%] max-w-[425px] p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
@@ -1440,7 +1435,6 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </form>
         </DialogContent>
       </Dialog>
-      
       {/* Get Contractor Quote Modal */}
       <Dialog open={offerModalOpen} onOpenChange={setOfferModalOpen}>
         <DialogContent className="w-[90%] max-w-[425px] p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
@@ -1499,7 +1493,6 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </form>
         </DialogContent>
       </Dialog>
-      
       {/* Share Dialog */}
       <Dialog open={shareModalOpen} onOpenChange={setShareModalOpen}>
         <DialogContent className="w-[90%] max-w-[425px] p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
