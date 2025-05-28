@@ -502,7 +502,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
-                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "grid" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
+                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "grid" ? "bg-[#803344] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid className="h-4 w-4" />
@@ -510,7 +510,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "list" ? "default" : "ghost"}
                   size="sm"
-                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "list" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
+                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "list" ? "bg-[#803344] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
                   onClick={() => setViewMode("list")}
                 >
                   <List className="h-4 w-4" />
