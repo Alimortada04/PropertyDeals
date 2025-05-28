@@ -165,21 +165,21 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
                     }
                   }}
                 >
-                  <div className="bg-white rounded-2xl shadow-xl p-6 min-w-[300px] max-w-[90vw] border border-gray-100">
+                  <div className="bg-white rounded-2xl shadow-xl p-4 w-full max-w-[320px] border border-gray-100">
                     {/* Agent Info */}
-                    <div className="flex items-center mb-4">
-                      <Avatar className="h-12 w-12 border-2 border-[#09261E]">
+                    <div className="flex items-center mb-3">
+                      <Avatar className="h-10 w-10 border-2 border-[#09261E]">
                         <AvatarImage src={sellerImage} alt={sellerName} />
-                        <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">{initials}</AvatarFallback>
+                        <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-xs">{initials}</AvatarFallback>
                       </Avatar>
                       <div className="ml-3">
-                        <div className="font-semibold text-[#09261E] text-lg">{sellerName}</div>
-                        <div className="text-sm text-gray-500">{sellerPosition}</div>
+                        <div className="font-semibold text-[#09261E] text-base">{sellerName}</div>
+                        <div className="text-xs text-gray-500">{sellerPosition}</div>
                       </div>
                     </div>
                     
                     {/* Agent Stats */}
-                    <div className="space-y-2 text-sm mb-6">
+                    <div className="space-y-1.5 text-sm mb-4">
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Experience</span>
                         <span className="font-medium">8 years</span>
@@ -195,7 +195,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
                     </div>
                     
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div className="flex gap-2">
                       <Button 
                         onClick={() => {
                           setIsExpanded(false);
@@ -203,16 +203,16 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
                             onOfferClick();
                           }
                         }}
-                        className="flex-1 bg-[#803344] hover:bg-[#803344]/90 text-white rounded-xl py-3"
+                        className="flex-1 bg-[#803344] hover:bg-[#803344]/90 text-white rounded-lg py-2.5 text-sm"
                       >
-                        <DollarSign className="h-4 w-4 mr-2" />
+                        <DollarSign className="h-3 w-3 mr-1.5" />
                         Make Offer
                       </Button>
                       <Button 
                         onClick={handleProfileClick}
-                        className="flex-1 bg-[#09261E] hover:bg-[#09261E]/90 text-white rounded-xl py-3"
+                        className="flex-1 bg-[#09261E] hover:bg-[#09261E]/90 text-white rounded-lg py-2.5 text-sm"
                       >
-                        <User className="h-4 w-4 mr-2" />
+                        <User className="h-3 w-3 mr-1.5" />
                         View Profile
                       </Button>
                     </div>
