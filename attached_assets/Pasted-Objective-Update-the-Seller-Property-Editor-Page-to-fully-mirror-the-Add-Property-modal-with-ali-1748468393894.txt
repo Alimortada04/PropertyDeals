@@ -1,0 +1,126 @@
+Objective: Update the Seller Property Editor Page to fully mirror the "Add Property" modal, with aligned content, spacing, behavior, and structure. This includes padding adjustments, unified field layout, and accurate field groupings per step.
+
+🔧 GLOBAL FIXES
+Add spacing between top header and the first input field
+
+Add padding to bottom of the page to prevent scroll cutoff or cramped spacing
+
+Ensure save as draft persists at bottom on all steps
+
+Ensure responsive design for all screens
+
+✅ STEP 1: Property Information
+Match exactly to modal layout and placeholder language:
+
+Property Address
+Enter the full property address
+Note: Auto-fill logic active
+
+Property Title
+e.g. Colonial Single Family
+A descriptive title helps buyers identify your property
+
+Property Type
+Dropdown: Select property type
+
+City | State | Zip Code
+e.g. Chicago | e.g. IL | e.g. 60601
+
+Bedrooms | Bathrooms | Year Built
+e.g. 3 | e.g. 2.5 | e.g. 1990
+
+Square Footage | Lot Size
+e.g. 2500 | e.g. 0.25 acres
+
+County (optional)
+e.g. Cook County
+
+Parcel ID / APN (optional)
+e.g. 14-21-106-017-0000
+
+✅ STEP 2: Media
+Use the same layout as the modal:
+
+Primary Image (upload/dropzone)
+
+Gallery Images (multi-upload)
+
+Video Walkthrough
+
+Option 1: Paste YouTube/Vimeo/Drive link
+
+Option 2: Upload MP4/WebM
+
+✅ STEP 3: Finance
+Exact structure and logic as the modal:
+
+Rental Income
+Field: Total Monthly Rent
+Placeholder: e.g. 2500
+Subtitle: Enter the total monthly rental income for this property
+
+Unit Breakdown (Required for Multi-family)
+Show “No units added yet.” prompt if empty
+Button: Add Unit
+
+Expenses
+Table Format:
+Expense Name | Amount | Frequency
+Default rows: Property Tax, Insurance, Utilities
+Button: Add Expense
+
+Show Monthly Total and Annual Total dynamically
+
+Property Condition & Repairs
+
+Condition Dropdown: “Good – Minor Repairs Needed”
+
+Description: “Accurately describe the condition to set buyer expectations”
+
+Repair Projects: Button to Add Repair and list builder
+
+✅ STEP 4: Logistics
+Exactly match modal flow:
+
+Purchase Price
+Placeholder: e.g. 200000
+
+Listing Price
+Placeholder: e.g. 225000
+
+Assignment Fee
+Auto-calculated field: Listing Price - Purchase Price
+
+Access Type
+Dropdown or description field: “How can buyers access the property?”
+
+Closing Date (Optional)
+Datepicker: Expected closing date (if known)
+
+Documentation Upload
+Label: “Purchase Agreement”
+Drag & drop zone: Accept PDF, DOC, DOCX, max 10MB
+Subtitle: “You can upload this later, but it's required before publishing.”
+
+Partners & Notes
+
+Partners: Input + Add button
+Placeholder: “Enter partner name” → No partners added yet default
+
+Notes: Textarea
+Description: “Special conditions, instructions for buyers, or other important details... This information will be shown to potential buyers”
+
+✅ STEP 5: Property Description (Replace “Review”)
+Remove all unrelated review content
+
+Replace with AI-Generated Description panel from modal
+
+Tone dropdown (e.g. Professional)
+
+Type dropdown (e.g. Standard Listing)
+
+Regenerate button
+
+Textarea field: Description output
+
+Subtitle: You can edit this description or regenerate with different settings
