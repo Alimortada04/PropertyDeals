@@ -273,7 +273,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               variant="ghost"
               size="sm"
               onClick={() => setShareModalOpen(true)}
-              className="h-9 w-9 p-0 rounded-full bg-white/30 backdrop-blur-sm shadow-sm hover:bg-white/50"
+              className="h-9 w-9 p-0 rounded-full backdrop-blur-sm shadow-sm hover:bg-white/50 bg-[#697280]"
             >
               <Share className="h-5 w-5 text-white" />
             </Button>
