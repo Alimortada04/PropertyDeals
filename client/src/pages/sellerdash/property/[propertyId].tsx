@@ -53,6 +53,8 @@ interface PropertyEditorData {
   arv?: number;
   estimatedRepairs?: number;
   monthlyRent?: number;
+  assignmentFee?: number;
+  jvAvailable?: boolean;
   propertyTaxes?: number;
   insurance?: number;
   utilities?: number;
@@ -126,6 +128,8 @@ export default function PropertyEditor() {
         arv: property.arv,
         estimatedRepairs: property.estimatedRepairs,
         monthlyRent: property.monthlyRent,
+        assignmentFee: property.assignmentFee,
+        jvAvailable: property.jvAvailable ?? false,
         propertyTaxes: property.propertyTaxes,
         insurance: property.insurance,
         utilities: property.utilities,
@@ -216,11 +220,10 @@ export default function PropertyEditor() {
 
   const sections = [
     { id: 'overview', label: 'Property Overview', icon: Home },
-    { id: 'details', label: 'Core Details', icon: Building },
-    { id: 'financial', label: 'Financial Snapshot', icon: DollarSign },
-    { id: 'descriptions', label: 'Descriptions', icon: FileText },
-    { id: 'media', label: 'Media', icon: ImageIcon },
-    { id: 'access', label: 'Access & Logistics', icon: MapPin }
+    { id: 'details', label: 'Property Details', icon: Building },
+    { id: 'media', label: 'Media & Files', icon: ImageIcon },
+    { id: 'financial', label: 'Pricing & Terms', icon: DollarSign },
+    { id: 'summary', label: 'Summary & Access', icon: FileText }
   ];
 
   return (
@@ -559,19 +562,19 @@ export default function PropertyEditor() {
               </Card>
             )}
 
-            {/* Financial Snapshot Section */}
+            {/* Pricing & Terms Section */}
             {activeSection === 'financial' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <DollarSign className="h-5 w-5" />
-                    <span>Financial Snapshot</span>
+                    <span>Pricing & Terms</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="price">Asking Price</Label>
+                      <Label htmlFor="price">Listing Price</Label>
                       <Input
                         id="price"
                         type="number"
@@ -579,6 +582,9 @@ export default function PropertyEditor() {
                         onChange={(e) => handleFieldChange('price', parseInt(e.target.value) || 0)}
                         min="0"
                       />
+                      <p className="text-sm text-gray-500 mt-1">
+                        Your asking price for this property
+                      </p>
                     </div>
                     <div>
                       <Label htmlFor="arv">ARV (After Repair Value)</Label>
@@ -590,6 +596,9 @@ export default function PropertyEditor() {
                         placeholder="Optional"
                         min="0"
                       />
+                      <p className="text-sm text-gray-500 mt-1">
+                        Estimated value after repairs
+                      </p>
                     </div>
                   </div>
 
@@ -621,7 +630,37 @@ export default function PropertyEditor() {
                   <Separator />
 
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Operating Expenses</h3>
+                    <h3 className="text-lg font-medium">Assignment & Partnership Terms</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="assignmentFee">Assignment Fee</Label>
+                        <Input
+                          id="assignmentFee"
+                          type="number"
+                          value={editData.assignmentFee || ''}
+                          onChange={(e) => handleFieldChange('assignmentFee', parseInt(e.target.value) || undefined)}
+                          placeholder="Optional"
+                          min="0"
+                        />
+                        <p className="text-sm text-gray-500 mt-1">
+                          Fee for assignment contracts
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2 pt-6">
+                        <Switch
+                          id="jvAvailable"
+                          checked={editData.jvAvailable || false}
+                          onCheckedChange={(checked) => handleFieldChange('jvAvailable', checked)}
+                        />
+                        <Label htmlFor="jvAvailable">JV Partnership Available</Label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Operating Expenses (Optional)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="propertyTaxes">Property Taxes (Annual)</Label>
@@ -671,48 +710,6 @@ export default function PropertyEditor() {
                         />
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Descriptions Section */}
-            {activeSection === 'descriptions' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <FileText className="h-5 w-5" />
-                    <span>Descriptions</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <Label htmlFor="shortSummary">Short Summary</Label>
-                    <Input
-                      id="shortSummary"
-                      value={editData.shortSummary}
-                      onChange={(e) => handleFieldChange('shortSummary', e.target.value)}
-                      placeholder="Brief hook headline (e.g., 'Turnkey rental in desirable neighborhood')"
-                      maxLength={100}
-                    />
-                    <p className="text-sm text-gray-500 mt-1">
-                      {editData.shortSummary.length}/100 characters
-                    </p>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="description">Full Description</Label>
-                    <Textarea
-                      id="description"
-                      value={editData.description}
-                      onChange={(e) => handleFieldChange('description', e.target.value)}
-                      placeholder="Detailed property description..."
-                      rows={8}
-                      className="resize-none"
-                    />
-                    <p className="text-sm text-gray-500 mt-1">
-                      Describe the property's features, condition, neighborhood, and investment potential.
-                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -785,56 +782,154 @@ export default function PropertyEditor() {
               </Card>
             )}
 
-            {/* Access & Logistics Section */}
-            {activeSection === 'access' && (
+            {/* Summary & Access Section */}
+            {activeSection === 'summary' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
-                    <MapPin className="h-5 w-5" />
-                    <span>Access & Logistics</span>
+                    <FileText className="h-5 w-5" />
+                    <span>Summary & Access</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="shortSummary">Property Summary</Label>
+                    <Input
+                      id="shortSummary"
+                      value={editData.shortSummary}
+                      onChange={(e) => handleFieldChange('shortSummary', e.target.value)}
+                      placeholder="Brief hook headline (e.g., 'Turnkey rental in desirable neighborhood')"
+                      maxLength={100}
+                    />
+                    <p className="text-sm text-gray-500 mt-1">
+                      {editData.shortSummary.length}/100 characters
+                    </p>
+                  </div>
+
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Access & Logistics</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="lockboxCode">Lockbox Code</Label>
+                        <Input
+                          id="lockboxCode"
+                          value={editData.lockboxCode || ''}
+                          onChange={(e) => handleFieldChange('lockboxCode', e.target.value)}
+                          placeholder="Optional"
+                        />
+                      </div>
+                      <div className="flex items-center space-x-2 pt-6">
+                        <Switch
+                          id="tenantAware"
+                          checked={editData.tenantAware}
+                          onCheckedChange={(checked) => handleFieldChange('tenantAware', checked)}
+                        />
+                        <Label htmlFor="tenantAware">Tenant is aware of sale</Label>
+                      </div>
+                    </div>
+
                     <div>
-                      <Label htmlFor="lockboxCode">Lockbox Code</Label>
-                      <Input
-                        id="lockboxCode"
-                        value={editData.lockboxCode || ''}
-                        onChange={(e) => handleFieldChange('lockboxCode', e.target.value)}
-                        placeholder="Optional"
+                      <Label htmlFor="accessInstructions">Access Instructions</Label>
+                      <Textarea
+                        id="accessInstructions"
+                        value={editData.accessInstructions || ''}
+                        onChange={(e) => handleFieldChange('accessInstructions', e.target.value)}
+                        placeholder="How to access the property for showings..."
+                        rows={3}
                       />
                     </div>
-                    <div className="flex items-center space-x-2 pt-6">
-                      <Switch
-                        id="tenantAware"
-                        checked={editData.tenantAware}
-                        onCheckedChange={(checked) => handleFieldChange('tenantAware', checked)}
+
+                    <div>
+                      <Label htmlFor="showingNotes">Showing Availability Notes</Label>
+                      <Textarea
+                        id="showingNotes"
+                        value={editData.showingNotes || ''}
+                        onChange={(e) => handleFieldChange('showingNotes', e.target.value)}
+                        placeholder="Best times for showings, special requirements, etc."
+                        rows={3}
                       />
-                      <Label htmlFor="tenantAware">Tenant is aware of sale</Label>
                     </div>
                   </div>
 
-                  <div>
-                    <Label htmlFor="accessInstructions">Access Instructions</Label>
-                    <Textarea
-                      id="accessInstructions"
-                      value={editData.accessInstructions || ''}
-                      onChange={(e) => handleFieldChange('accessInstructions', e.target.value)}
-                      placeholder="How to access the property for showings..."
-                      rows={3}
-                    />
+                  <Separator />
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium">Investment Strategy Tags</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <Label>Strategy Type</Label>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {['Buy & Hold', 'Flip', 'BRRRR', 'Wholesale', 'JV Partnership'].map((tag) => (
+                            <Badge
+                              key={tag}
+                              variant={editData.strategyTags.includes(tag) ? "default" : "outline"}
+                              className={`cursor-pointer ${
+                                editData.strategyTags.includes(tag) 
+                                  ? 'bg-[#135341] text-white' 
+                                  : 'hover:bg-gray-100'
+                              }`}
+                              onClick={() => {
+                                const currentTags = editData.strategyTags;
+                                const newTags = currentTags.includes(tag)
+                                  ? currentTags.filter(t => t !== tag)
+                                  : [...currentTags, tag];
+                                handleFieldChange('strategyTags', newTags);
+                              }}
+                            >
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label>Condition Tags</Label>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {['Move-In Ready', 'Light Rehab', 'Heavy Rehab', 'Full Gut', 'Tear Down'].map((tag) => (
+                            <Badge
+                              key={tag}
+                              variant={editData.conditionTags.includes(tag) ? "default" : "outline"}
+                              className={`cursor-pointer ${
+                                editData.conditionTags.includes(tag) 
+                                  ? 'bg-[#135341] text-white' 
+                                  : 'hover:bg-gray-100'
+                              }`}
+                              onClick={() => {
+                                const currentTags = editData.conditionTags;
+                                const newTags = currentTags.includes(tag)
+                                  ? currentTags.filter(t => t !== tag)
+                                  : [...currentTags, tag];
+                                handleFieldChange('conditionTags', newTags);
+                              }}
+                            >
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
+                  <Separator />
+
                   <div>
-                    <Label htmlFor="showingNotes">Showing Availability Notes</Label>
-                    <Textarea
-                      id="showingNotes"
-                      value={editData.showingNotes || ''}
-                      onChange={(e) => handleFieldChange('showingNotes', e.target.value)}
-                      placeholder="Best times for showings, special requirements, etc."
-                      rows={3}
-                    />
+                    <Label htmlFor="saleType">Sale Type</Label>
+                    <Select
+                      value={editData.saleType}
+                      onValueChange={(value) => handleFieldChange('saleType', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Direct Sale">Direct Sale</SelectItem>
+                        <SelectItem value="Assignment">Assignment</SelectItem>
+                        <SelectItem value="JV Partnership">JV Partnership</SelectItem>
+                        <SelectItem value="Wholesale">Wholesale</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </CardContent>
               </Card>
