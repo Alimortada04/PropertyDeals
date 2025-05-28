@@ -235,39 +235,36 @@ export function PropertyCard({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="min-w-[180px]">
               <DropdownMenuItem 
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLocation(`/sellerdash/${userId}/property/${id}`);
+                }}
+                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLocation(`/property/${id}`);
+                }}
                 className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
               >
                 <Eye className="h-4 w-4 mr-2" />
                 Preview
               </DropdownMenuItem>
               <DropdownMenuItem 
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const propertyUrl = `${window.location.origin}/property/${id}`;
+                  navigator.clipboard.writeText(propertyUrl);
+                  // You can add a toast notification here if desired
+                }}
                 className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
               >
                 <Send className="h-4 w-4 mr-2" />
                 Share
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={(e) => e.stopPropagation()}
-                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                View Pipeline
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={(e) => e.stopPropagation()}
-                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Manage
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={(e) => e.stopPropagation()}
-                className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
-              >
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
