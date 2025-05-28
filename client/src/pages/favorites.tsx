@@ -382,7 +382,7 @@ export default function FavoritesPage() {
       <div className="max-w-screen-2xl mx-auto">
         {/* Header with greeting */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">{getGreeting()}, {userName}</h1>
+          <h1 className="text-3xl font-bold mb-2 text-[#803344]">{getGreeting()}, {userName}</h1>
           <p className="text-gray-500">
             You have {filteredProperties.length} favorite {filteredProperties.length === 1 ? 'property' : 'properties'} saved.
           </p>
