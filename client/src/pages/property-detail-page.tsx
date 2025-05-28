@@ -344,12 +344,59 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   
   // Render the appropriate view based on device
   return isMobile ? (
-    <MobilePropertyView 
-      property={property}
-      onBack={() => window.history.back()}
-      onContactSeller={handleContactSeller}
-      onMakeOffer={() => setOfferModalOpen(true)}
-    />
+    <>
+      <MobilePropertyView 
+        property={property}
+        onBack={() => window.history.back()}
+        onContactSeller={handleContactSeller}
+        onMakeOffer={() => setOfferModalOpen(true)}
+      />
+      
+      {/* Make an Offer Modal - Mobile */}
+      {offerModalOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          onClick={() => setOfferModalOpen(false)}
+        >
+          <div 
+            className="bg-white rounded-lg p-6 max-w-md w-full overflow-y-auto max-h-[90vh]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-2xl font-bold text-[#09261E] mb-4">Make an Offer</h2>
+              
+            <div className="mb-6">
+              <div className="bg-gray-50 border border-gray-200 rounded-md p-4 mb-4">
+                <h4 className="font-heading text-[#09261E] font-bold mb-2">Sign up or login required</h4>
+                <p className="text-gray-700 text-sm mb-3">
+                  To submit an offer, you'll need to create an account or login to your existing account.
+                </p>
+                <Link to="/auth" className="bg-[#09261E] text-white rounded-md py-2 px-4 text-sm font-medium inline-block hover:bg-[#135341] transition-colors">
+                  Sign up or Login
+                </Link>
+              </div>
+                
+              <div className="text-gray-600 text-sm">
+                <p className="mb-2">Making an offer through PropertyDeals gives you:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Faster response times from sellers</li>
+                  <li>Secure document handling and signatures</li>
+                  <li>Access to recommended inspectors and lenders</li>
+                  <li>Step-by-step guidance through the entire process</li>
+                </ul>
+              </div>
+            </div>
+              
+            <Button 
+              onClick={() => setOfferModalOpen(false)}
+              className="w-full mt-4 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
+              variant="outline"
+            >
+              Close
+            </Button>
+          </div>
+        </div>
+      )}
+    </>
   ) : (
     <TooltipProvider>
       {/* Property Hero Section with Photo Gallery */}

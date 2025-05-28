@@ -31,7 +31,8 @@ interface MobilePropertyViewProps {
 const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
   property,
   onBack,
-  onContactSeller
+  onContactSeller,
+  onMakeOffer
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -1354,6 +1355,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
       <MobileFloatingCTA
         onClick={handleContactClick}
         onContactClick={handleContactClick}
+        onOfferClick={onMakeOffer}
         sellerName="Michael Johnson"
         sellerPosition="Real Estate Agent"
         sellerImage="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"
