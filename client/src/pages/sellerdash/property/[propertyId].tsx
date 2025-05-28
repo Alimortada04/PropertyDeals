@@ -39,21 +39,26 @@ interface PropertyEditorData {
   city: string;
   state: string;
   zipCode: string;
+  county?: string;
+  parcelId?: string;
   status: 'live' | 'draft';
   isPublic: boolean;
   propertyType: string;
   bedrooms: number;
   bathrooms: number;
   squareFeet: number;
-  lotSize?: number;
+  lotSize?: string;
   yearBuilt?: number;
   condition: string;
   occupancyStatus: string;
   price: number;
+  purchasePrice?: number;
+  listingPrice: number;
+  assignmentFee?: number;
   arv?: number;
   estimatedRepairs?: number;
   monthlyRent?: number;
-  assignmentFee?: number;
+  totalMonthlyRent?: number;
   jvAvailable?: boolean;
   propertyTaxes?: number;
   insurance?: number;
@@ -61,15 +66,33 @@ interface PropertyEditorData {
   hoaFees?: number;
   shortSummary: string;
   description: string;
+  primaryImage?: string;
   images: string[];
   videoUrl?: string;
+  accessType?: string;
+  closingDate?: string;
   units?: Array<{
     id: string;
+    label: string;
     beds: number;
     baths: number;
     rent: number;
     sqft: number;
-    status: 'vacant' | 'occupied';
+    occupied: boolean;
+  }>;
+  expenses?: Array<{
+    id: string;
+    name: string;
+    amount: string;
+    frequency: 'monthly' | 'quarterly' | 'annually';
+  }>;
+  repairs?: Array<{
+    id: string;
+    taskName: string;
+    description: string;
+    estimatedCost: number;
+    contractorQuote?: string;
+    contractor?: string;
   }>;
   documents?: Array<{
     id: string;
@@ -77,6 +100,8 @@ interface PropertyEditorData {
     url: string;
     type: string;
   }>;
+  partners?: string[];
+  additionalNotes?: string;
   strategyTags: string[];
   conditionTags: string[];
   saleType: string;
@@ -101,7 +126,7 @@ export default function PropertyEditor() {
 
   // Local state for editing
   const [editData, setEditData] = useState<PropertyEditorData | null>(null);
-  const [activeSection, setActiveSection] = useState('overview');
+  const [activeSection, setActiveSection] = useState('info');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Initialize edit data when property loads
@@ -219,11 +244,11 @@ export default function PropertyEditor() {
   }
 
   const sections = [
-    { id: 'overview', label: 'Property Overview', icon: Home },
-    { id: 'details', label: 'Property Details', icon: Building },
-    { id: 'media', label: 'Media & Files', icon: ImageIcon },
-    { id: 'financial', label: 'Pricing & Terms', icon: DollarSign },
-    { id: 'summary', label: 'Summary & Access', icon: FileText }
+    { id: 'info', label: 'Property Information', icon: Home },
+    { id: 'media', label: 'Property Media', icon: ImageIcon },
+    { id: 'financials', label: 'Property Financials', icon: DollarSign },
+    { id: 'logistics', label: 'Listing Logistics', icon: MapPin },
+    { id: 'review', label: 'Review', icon: FileText }
   ];
 
   return (
@@ -334,68 +359,83 @@ export default function PropertyEditor() {
               </Select>
             </div>
 
-            {/* Property Overview Section */}
-            {activeSection === 'overview' && (
+            {/* Step 1: Property Information */}
+            {activeSection === 'info' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Home className="h-5 w-5" />
-                    <span>Property Overview</span>
+                    <span>Step 1: Property Information</span>
                   </CardTitle>
+                  <p className="text-sm text-gray-600">Enter the essential details about your property</p>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="title">Property Title</Label>
-                      <Input
-                        id="title"
-                        value={editData.title}
-                        onChange={(e) => handleFieldChange('title', e.target.value)}
-                        placeholder="e.g., Modern Farmhouse"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="propertyType">Property Type</Label>
-                      <Select
-                        value={editData.propertyType}
-                        onValueChange={(value) => handleFieldChange('propertyType', value)}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Single Family">Single Family</SelectItem>
-                          <SelectItem value="Multi-Family">Multi-Family</SelectItem>
-                          <SelectItem value="Condo">Condo</SelectItem>
-                          <SelectItem value="Townhouse">Townhouse</SelectItem>
-                          <SelectItem value="Commercial">Commercial</SelectItem>
-                          <SelectItem value="Land">Land</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <Separator />
-
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Address</h3>
+                    <div>
+                      <Label htmlFor="address" className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        Property Address
+                      </Label>
+                      <Input
+                        id="address"
+                        value={editData.address}
+                        onChange={(e) => handleFieldChange('address', e.target.value)}
+                        placeholder="Enter the full property address"
+                      />
+                      <p className="text-sm text-gray-500 mt-1">
+                        Address information will be used to automatically fill property details
+                      </p>
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="md:col-span-2">
-                        <Label htmlFor="address">Street Address</Label>
+                      <div>
+                        <Label htmlFor="title" className="flex items-center gap-2">
+                          <Home className="h-4 w-4 text-muted-foreground" />
+                          Property Title
+                        </Label>
                         <Input
-                          id="address"
-                          value={editData.address}
-                          onChange={(e) => handleFieldChange('address', e.target.value)}
-                          placeholder="123 Main St"
+                          id="title"
+                          value={editData.title}
+                          onChange={(e) => handleFieldChange('title', e.target.value)}
+                          placeholder="e.g. Colonial Single Family"
                         />
+                        <p className="text-sm text-gray-500 mt-1">
+                          A descriptive title helps buyers identify your property
+                        </p>
                       </div>
+                      <div>
+                        <Label htmlFor="propertyType" className="flex items-center gap-2">
+                          <Building className="h-4 w-4 text-muted-foreground" />
+                          Property Type
+                        </Label>
+                        <Select
+                          value={editData.propertyType}
+                          onValueChange={(value) => handleFieldChange('propertyType', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select property type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Single Family">Single Family</SelectItem>
+                            <SelectItem value="Multi-Family">Multi-Family</SelectItem>
+                            <SelectItem value="Duplex">Duplex</SelectItem>
+                            <SelectItem value="Condo">Condo</SelectItem>
+                            <SelectItem value="Vacant Land">Vacant Land</SelectItem>
+                            <SelectItem value="Commercial">Commercial</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <Label htmlFor="city">City</Label>
                         <Input
                           id="city"
                           value={editData.city}
                           onChange={(e) => handleFieldChange('city', e.target.value)}
-                          placeholder="City"
+                          placeholder="e.g. Chicago"
                         />
                       </div>
                       <div>
@@ -404,48 +444,99 @@ export default function PropertyEditor() {
                           id="state"
                           value={editData.state}
                           onChange={(e) => handleFieldChange('state', e.target.value)}
-                          placeholder="State"
+                          placeholder="e.g. IL"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="zipCode">ZIP Code</Label>
+                        <Label htmlFor="zipCode">Zip Code</Label>
                         <Input
                           id="zipCode"
                           value={editData.zipCode}
                           onChange={(e) => handleFieldChange('zipCode', e.target.value)}
-                          placeholder="12345"
+                          placeholder="e.g. 60601"
                         />
                       </div>
                     </div>
-                  </div>
 
-                  <Separator />
-
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Status & Visibility</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
-                        <Label htmlFor="status">Listing Status</Label>
-                        <Select
-                          value={editData.status}
-                          onValueChange={(value: 'live' | 'draft') => handleFieldChange('status', value)}
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="draft">Draft</SelectItem>
-                            <SelectItem value="live">Live</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="flex items-center space-x-2 pt-6">
-                        <Switch
-                          id="isPublic"
-                          checked={editData.isPublic}
-                          onCheckedChange={(checked) => handleFieldChange('isPublic', checked)}
+                        <Label htmlFor="bedrooms">Bedrooms</Label>
+                        <Input
+                          id="bedrooms"
+                          type="number"
+                          value={editData.bedrooms}
+                          onChange={(e) => handleFieldChange('bedrooms', parseInt(e.target.value) || 0)}
+                          placeholder="e.g. 3"
+                          min="0"
                         />
-                        <Label htmlFor="isPublic">Public Listing</Label>
+                      </div>
+                      <div>
+                        <Label htmlFor="bathrooms">Bathrooms</Label>
+                        <Input
+                          id="bathrooms"
+                          type="number"
+                          step="0.5"
+                          value={editData.bathrooms}
+                          onChange={(e) => handleFieldChange('bathrooms', parseFloat(e.target.value) || 0)}
+                          placeholder="e.g. 2.5"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="yearBuilt">Year Built</Label>
+                        <Input
+                          id="yearBuilt"
+                          type="number"
+                          value={editData.yearBuilt || ''}
+                          onChange={(e) => handleFieldChange('yearBuilt', parseInt(e.target.value) || undefined)}
+                          placeholder="e.g. 1990"
+                          min="1800"
+                          max={new Date().getFullYear()}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="squareFeet">Square Footage</Label>
+                        <Input
+                          id="squareFeet"
+                          type="number"
+                          value={editData.squareFeet}
+                          onChange={(e) => handleFieldChange('squareFeet', parseInt(e.target.value) || 0)}
+                          placeholder="e.g. 2500"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="lotSize">Lot Size</Label>
+                        <Input
+                          id="lotSize"
+                          value={editData.lotSize || ''}
+                          onChange={(e) => handleFieldChange('lotSize', e.target.value)}
+                          placeholder="e.g. 0.25 acres"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="county">County (optional)</Label>
+                        <Input
+                          id="county"
+                          value={editData.county || ''}
+                          onChange={(e) => handleFieldChange('county', e.target.value)}
+                          placeholder="e.g. Cook County"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="parcelId">Parcel ID / APN (optional)</Label>
+                        <Input
+                          id="parcelId"
+                          value={editData.parcelId || ''}
+                          onChange={(e) => handleFieldChange('parcelId', e.target.value)}
+                          placeholder="e.g. 14-21-106-017-0000"
+                        />
                       </div>
                     </div>
                   </div>
@@ -453,8 +544,8 @@ export default function PropertyEditor() {
               </Card>
             )}
 
-            {/* Core Details Section */}
-            {activeSection === 'details' && (
+            {/* Step 2: Property Media */}
+            {activeSection === 'media' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
