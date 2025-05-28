@@ -251,13 +251,13 @@ export default function SellerDashboardPage() {
           </div>
         </div>
         
-        {/* Quick Stats grid with CTA Cards - 6 column grid: top row 2 spaces each, bottom row 3 spaces each */}
-        <div className="grid grid-cols-6 gap-2 lg:gap-4 mb-10">
+        {/* Quick Stats grid with CTA Cards - 6 column grid on mobile/tablet: top row 2 spaces each, bottom row 3 spaces each. 5 column grid on desktop: all cards in 1 row */}
+        <div className="grid grid-cols-6 xl:grid-cols-5 gap-2 lg:gap-4 mb-10">
           
-          {/* List a Property CTA Card - spans 2 columns */}
+          {/* List a Property CTA Card - spans 2 columns on mobile/tablet, 1 column on desktop */}
           <div 
             onClick={() => setIsAddPropertyModalOpen(true)}
-            className="col-span-2 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="col-span-2 xl:col-span-1 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Wine background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#803344] to-[#803344]"></div>
@@ -285,10 +285,10 @@ export default function SellerDashboardPage() {
             </div>
           </div>
           
-          {/* Review Offers CTA Card - spans 2 columns */}
+          {/* Review Offers CTA Card - spans 2 columns on mobile/tablet, 1 column on desktop */}
           <div 
             onClick={() => setIsOffersInboxOpen(true)}
-            className="col-span-2 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="col-span-2 xl:col-span-1 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Lighter green background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#135341] to-[#135341]"></div>
@@ -316,10 +316,10 @@ export default function SellerDashboardPage() {
             </div>
           </div>
           
-          {/* Market a Deal CTA Card - spans 2 columns */}
+          {/* Market a Deal CTA Card - spans 2 columns on mobile/tablet, 1 column on desktop */}
           <div 
             onClick={() => marketingCenterModal.onOpen()}
-            className="col-span-2 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
+            className="col-span-2 xl:col-span-1 group relative overflow-hidden rounded-lg border hover:shadow-lg transition-all duration-300 cursor-pointer h-full flex flex-col"
           >
             {/* Dark green background */}
             <div className="absolute inset-0 bg-gradient-to-tr from-[#09261E] to-[#09261E]"></div>
@@ -347,8 +347,8 @@ export default function SellerDashboardPage() {
             </div>
           </div>
           
-          {/* Active Listings - spans 3 columns */}
-          <Card className="col-span-3 border-l-4 border-l-[#135341] hover:shadow-md transition-shadow duration-200">
+          {/* Active Listings - spans 3 columns on mobile/tablet, 1 column on desktop */}
+          <Card className="col-span-3 xl:col-span-1 border-l-4 border-l-[#135341] hover:shadow-md transition-shadow duration-200">
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <Building className="h-7 w-7 text-[#135341]" />
@@ -360,8 +360,8 @@ export default function SellerDashboardPage() {
             </CardContent>
           </Card>
           
-          {/* Assignment Revenue - spans 3 columns */}
-          <Card className="col-span-3 border-l-4 border-l-green-600 hover:shadow-md transition-shadow duration-200">
+          {/* Assignment Revenue - spans 3 columns on mobile/tablet, 1 column on desktop */}
+          <Card className="col-span-3 xl:col-span-1 border-l-4 border-l-green-600 hover:shadow-md transition-shadow duration-200">
             <CardHeader className="pb-2">
               <div className="flex justify-between items-start">
                 <DollarSign className="h-7 w-7 text-green-600" />
