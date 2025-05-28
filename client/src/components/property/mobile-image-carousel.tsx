@@ -71,31 +71,7 @@ const MobileImageCarousel: React.FC<MobileImageCarouselProps> = ({
   };
   
   return (
-    <div className="relative w-full bg-black">
-      {/* Navigation header */}
-      <div className="absolute top-0 left-0 right-0 z-10 p-3 flex justify-between">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="rounded-full bg-black/30 hover:bg-black/50 text-white"
-          onClick={onBack}
-        >
-          <ChevronLeft size={22} />
-        </Button>
-        
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="rounded-full bg-black/30 hover:bg-black/50 text-white"
-          onClick={toggleFavorite}
-        >
-          <Heart 
-            size={22} 
-            className={isFavorite ? 'fill-red-500 text-red-500' : ''} 
-          />
-        </Button>
-      </div>
-      
+    <div className="relative w-full bg-black">      
       {/* Image carousel */}
       <div 
         ref={scrollContainerRef}
