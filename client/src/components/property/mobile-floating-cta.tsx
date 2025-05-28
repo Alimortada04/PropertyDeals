@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { MessageCircle, Phone, User, X, ChevronRight } from 'lucide-react';
+import { MessageCircle, Phone, User, X, ChevronRight, DollarSign } from 'lucide-react';
 import { Property } from '@shared/schema';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MobileFloatingCTAProps {
   property?: Property;
@@ -25,6 +26,54 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [pulseAnimation, setPulseAnimation] = useState(true);
+
+  // Orbital animation variants for the planetary bubbles
+  const orbitVariants = {
+    hidden: { 
+      opacity: 0, 
+      scale: 0,
+      x: 0,
+      y: 0
+    },
+    visible: (i: number) => {
+      let xPos, yPos;
+      
+      if (i === 1) {
+        // View Profile - top left position
+        xPos = -45;
+        yPos = -45;
+      } else {
+        // Make an Offer - top right position
+        xPos = 45;
+        yPos = -45;
+      }
+      
+      return {
+        opacity: 1,
+        scale: 1,
+        x: xPos,
+        y: yPos,
+        transition: {
+          type: "spring",
+          stiffness: 300,
+          damping: 22,
+          delay: i * 0.1
+        }
+      };
+    },
+    exit: (i: number) => ({
+      opacity: 0,
+      scale: 0,
+      x: 0,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 22,
+        delay: (2 - i) * 0.05
+      }
+    })
+  };
 
   const initials = sellerName
     .split(' ')
@@ -52,7 +101,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
   const handleProfileClick = () => {
     setIsExpanded(false);
     // Navigate to profile page
-    alert("Viewing REP profile: " + sellerName);
+    console.log('View Profile clicked');
   };
 
   const toggleExpand = () => {
@@ -104,26 +153,70 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
           </button>
         </div>
         
-        {/* Center Avatar Button with expansion */}
+        {/* Center Avatar Button with planetary animation */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-10">
-          {/* Gradient background avatar button */}
           <div className="relative">
-            {/* Circular button with gradient background */}
+            <AnimatePresence>
+              {isExpanded && (
+                <div className="absolute">
+                  {/* View Profile - Top Left */}
+                  <motion.div
+                    className="absolute"
+                    custom={1}
+                    variants={orbitVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <Button
+                      onClick={handleProfileClick}
+                      className="group relative h-10 w-10 rounded-full bg-[#09261E] hover:bg-[#09261E]/80 shadow-lg transition-all duration-200 hover:shadow-xl"
+                      aria-label="View Profile"
+                    >
+                      <User className="h-4 w-4 text-white" />
+                      <span className="absolute -top-8 -left-8 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        View Profile
+                      </span>
+                    </Button>
+                  </motion.div>
+                  
+                  {/* Make an Offer - Top Right */}
+                  <motion.div
+                    className="absolute"
+                    custom={2}
+                    variants={orbitVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                  >
+                    <Button
+                      onClick={onOfferClick}
+                      className="group relative h-10 w-10 rounded-full bg-[#803344] hover:bg-[#803344]/80 shadow-lg transition-all duration-200 hover:shadow-xl"
+                      aria-label="Make an Offer"
+                    >
+                      <DollarSign className="h-4 w-4 text-white" />
+                      <span className="absolute -top-8 -right-8 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Make an Offer
+                      </span>
+                    </Button>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
+            
+            {/* Main Avatar Button */}
             <button 
               onClick={toggleExpand}
-              className={`flex items-center justify-center rounded-full shadow-lg
-                ${isExpanded ? 'w-20 h-20' : 'w-20 h-20'}
-                ${pulseAnimation ? 'animate-pulse-gentle' : ''}
+              className={`flex items-center justify-center rounded-full shadow-lg w-20 h-20
+                ${pulseAnimation && !isExpanded ? 'animate-pulse-gentle' : ''}
                 transition-all duration-500 z-40 overflow-hidden
               `}
               style={{ 
-                background: 'linear-gradient(to bottom, white, #09261E)'
+                background: isExpanded ? '#09261E' : 'linear-gradient(to bottom, white, #09261E)'
               }}
             >
               {isExpanded ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-[#09261E]">
-                  <X size={24} className="text-white animate-fade-in" />
-                </div>
+                <X size={24} className="text-white" />
               ) : (
                 <div className="relative w-full h-full p-0.5">
                   <Avatar className="h-full w-full ring-0 ring-offset-0">
