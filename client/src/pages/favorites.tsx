@@ -594,7 +594,7 @@ export default function FavoritesPage() {
                     />
                   </div>
                   <CardContent className="p-5">
-                    <CardTitle className="text-xl mb-1 line-clamp-1">{property.title}</CardTitle>
+                    <CardTitle className="font-semibold tracking-tight text-xl mb-1 line-clamp-1 text-[#803344]">{property.title}</CardTitle>
                     <CardDescription className="mb-3 line-clamp-1">{property.address}</CardDescription>
                     <div className="flex justify-between text-sm">
                       <div className="font-semibold">{formatCurrency(property.price)}</div>
@@ -629,7 +629,7 @@ export default function FavoritesPage() {
                     <div className="p-5 flex-1">
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-xl mb-1">{property.title}</CardTitle>
+                          <CardTitle className="font-semibold tracking-tight text-xl mb-1 text-[#803344]">{property.title}</CardTitle>
                           <CardDescription className="mb-3">{property.address}</CardDescription>
                         </div>
                         <div className="text-xl font-bold text-[#09261E]">
