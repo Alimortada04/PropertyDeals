@@ -83,24 +83,24 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
       
       {/* Fixed bottom bar with expandable center */}
       <div className="fixed bottom-0 left-0 right-0 z-[60] border-t border-white/20 shadow-lg bg-white/20 backdrop-blur-md" style={{boxShadow: '0 -8px 16px -4px rgba(0, 0, 0, 0.1), 0 -4px 6px -1px rgba(0, 0, 0, 0.06)'}}>
-        <div className="flex items-center justify-between h-14 px-6">
+        <div className="flex items-center justify-between h-14 px-8">
           {/* Call Button (Left) */}
           <button 
-            className="h-9 w-9 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80 flex items-center justify-center"
-            onClick={handlePhoneClick}
+            className="h-12 w-12 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80 flex items-center justify-center transition-all duration-200"
+            onClick={() => window.location.href = 'tel:+15551234567'}
           >
-            <Phone size={20} className="text-gray-700" />
+            <Phone size={22} className="text-gray-700" />
           </button>
           
-          {/* Empty center space for avatar */}
-          <div className="flex-1"></div>
+          {/* Empty center space for avatar - reduced width */}
+          <div className="flex-1 max-w-[120px]"></div>
           
           {/* Message Button (Right) */}
           <button 
-            className="h-9 w-9 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80 flex items-center justify-center"
-            onClick={handleMessageClick}
+            className="h-12 w-12 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80 flex items-center justify-center transition-all duration-200"
+            onClick={() => window.location.href = 'sms:+15551234567'}
           >
-            <MessageCircle size={20} className="text-gray-700" />
+            <MessageCircle size={22} className="text-gray-700" />
           </button>
         </div>
         
