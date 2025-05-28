@@ -204,29 +204,24 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
         </div>
       </div>
-      
       {/* Main Content Area */}
-      <div className="md:pl-16 pb-20 md:pb-12">  {/* Adjusted padding for mobile nav */}
+      <div className="md:pl-16 md:pb-12 pt-[0px] pb-[0px]">  {/* Adjusted padding for mobile nav */}
         <div className="min-h-screen">
           {children}
         </div>
       </div>
-
       {/* Mobile Bottom Navigation */}
       {!shouldHideMobileNav && <MobileBottomNav />}
-      
       {/* Message Popup */}
       <MessagePopup 
         isOpen={showMessagePopup} 
         onClose={() => setShowMessagePopup(false)} 
       />
-      
       {/* Notification Popup */}
       <NotificationPopup 
         isOpen={showNotificationPopup}
         onClose={() => setShowNotificationPopup(false)}
       />
-
       {/* Global Search */}
       {showSearch && <GlobalSearchInput onClose={() => setShowSearch(false)} />}
     </div>
