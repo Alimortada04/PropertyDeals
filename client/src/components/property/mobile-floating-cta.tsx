@@ -82,14 +82,14 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
       )}
       
       {/* Fixed bottom bar with expandable center */}
-      <div className="fixed bottom-0 left-0 right-0 z-[60] border-t border-gray-200 shadow-md bg-white">
+      <div className="fixed bottom-0 left-0 right-0 z-[60] border-t border-white/20 shadow-md bg-white/20 backdrop-blur-md">
         <div className="flex items-center justify-between h-14 px-6">
           {/* Call Button (Left) */}
           <button 
-            className="flex items-center justify-center text-[#09261E] h-14 w-20"
+            className="h-9 w-9 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80 flex items-center justify-center"
             onClick={handlePhoneClick}
           >
-            <Phone size={24} className="text-[#09261E]" />
+            <Phone size={20} className="text-gray-700" />
           </button>
           
           {/* Empty center space for avatar */}
@@ -97,7 +97,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
           
           {/* Message Button (Right) */}
           <button 
-            className="flex items-center justify-center text-[#09261E] h-14 w-20"
+            className="h-9 w-9 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80 flex items-center justify-center"
             onClick={handleMessageClick}
           >
             <MessageCircle size={24} className="text-[#09261E]" />
