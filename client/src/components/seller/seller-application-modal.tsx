@@ -1467,7 +1467,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
                     Saving...
                   </>
                 ) : (
-                  "Save & Finish Later"
+                  "Save"
                 )}
               </Button>
               
