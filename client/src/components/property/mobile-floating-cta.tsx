@@ -100,7 +100,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
             className="h-9 w-9 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80 flex items-center justify-center"
             onClick={handleMessageClick}
           >
-            <MessageCircle size={24} className="text-[#09261E]" />
+            <MessageCircle size={20} className="text-gray-700" />
           </button>
         </div>
         
