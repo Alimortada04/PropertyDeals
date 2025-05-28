@@ -27,7 +27,14 @@ import {
   X,
   Plus,
   Trash2,
-  ExternalLink
+  ExternalLink,
+  Video,
+  Key,
+  Calendar,
+  Tag,
+  Calculator,
+  Handshake,
+  Settings
 } from 'lucide-react';
 import { SellerDashboardLayout } from '@/components/layout/seller-dashboard-layout';
 import { apiRequest } from '@/lib/queryClient';
@@ -653,152 +660,173 @@ export default function PropertyEditor() {
               </Card>
             )}
 
-            {/* Pricing & Terms Section */}
-            {activeSection === 'financial' && (
+            {/* Step 3: Property Financials */}
+            {activeSection === 'financials' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <DollarSign className="h-5 w-5" />
-                    <span>Pricing & Terms</span>
+                    <span>Step 3: Property Financials</span>
                   </CardTitle>
+                  <p className="text-sm text-gray-600">Set your pricing, financial details, and investment information</p>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="price">Listing Price</Label>
-                      <Input
-                        id="price"
-                        type="number"
-                        value={editData.price}
-                        onChange={(e) => handleFieldChange('price', parseInt(e.target.value) || 0)}
-                        min="0"
-                      />
-                      <p className="text-sm text-gray-500 mt-1">
-                        Your asking price for this property
-                      </p>
-                    </div>
-                    <div>
-                      <Label htmlFor="arv">ARV (After Repair Value)</Label>
-                      <Input
-                        id="arv"
-                        type="number"
-                        value={editData.arv || ''}
-                        onChange={(e) => handleFieldChange('arv', parseInt(e.target.value) || undefined)}
-                        placeholder="Optional"
-                        min="0"
-                      />
-                      <p className="text-sm text-gray-500 mt-1">
-                        Estimated value after repairs
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="estimatedRepairs">Estimated Repairs</Label>
-                      <Input
-                        id="estimatedRepairs"
-                        type="number"
-                        value={editData.estimatedRepairs || ''}
-                        onChange={(e) => handleFieldChange('estimatedRepairs', parseInt(e.target.value) || undefined)}
-                        placeholder="Optional"
-                        min="0"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="monthlyRent">Monthly Rent</Label>
-                      <Input
-                        id="monthlyRent"
-                        type="number"
-                        value={editData.monthlyRent || ''}
-                        onChange={(e) => handleFieldChange('monthlyRent', parseInt(e.target.value) || undefined)}
-                        placeholder="Actual or projected"
-                        min="0"
-                      />
-                    </div>
-                  </div>
-
-                  <Separator />
-
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Assignment & Partnership Terms</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="assignmentFee">Assignment Fee</Label>
-                        <Input
-                          id="assignmentFee"
-                          type="number"
-                          value={editData.assignmentFee || ''}
-                          onChange={(e) => handleFieldChange('assignmentFee', parseInt(e.target.value) || undefined)}
-                          placeholder="Optional"
-                          min="0"
-                        />
-                        <p className="text-sm text-gray-500 mt-1">
-                          Fee for assignment contracts
-                        </p>
-                      </div>
-                      <div className="flex items-center space-x-2 pt-6">
-                        <Switch
-                          id="jvAvailable"
-                          checked={editData.jvAvailable || false}
-                          onCheckedChange={(checked) => handleFieldChange('jvAvailable', checked)}
-                        />
-                        <Label htmlFor="jvAvailable">JV Partnership Available</Label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Operating Expenses (Optional)</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="propertyTaxes">Property Taxes (Annual)</Label>
-                        <Input
-                          id="propertyTaxes"
-                          type="number"
-                          value={editData.propertyTaxes || ''}
-                          onChange={(e) => handleFieldChange('propertyTaxes', parseInt(e.target.value) || undefined)}
-                          placeholder="Optional"
-                          min="0"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="insurance">Insurance (Annual)</Label>
-                        <Input
-                          id="insurance"
-                          type="number"
-                          value={editData.insurance || ''}
-                          onChange={(e) => handleFieldChange('insurance', parseInt(e.target.value) || undefined)}
-                          placeholder="Optional"
-                          min="0"
-                        />
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <DollarSign className="h-4 w-4 text-muted-foreground" />
+                        Pricing Information
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Set your pricing strategy and financial expectations
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="listingPrice">Listing Price *</Label>
+                          <Input
+                            id="listingPrice"
+                            type="number"
+                            value={editData.listingPrice}
+                            onChange={(e) => handleFieldChange('listingPrice', parseInt(e.target.value) || 0)}
+                            placeholder="e.g. 275000"
+                            min="0"
+                          />
+                          <p className="text-sm text-gray-500 mt-1">
+                            Your asking price for this property
+                          </p>
+                        </div>
+                        <div>
+                          <Label htmlFor="purchasePrice">Purchase Price (Optional)</Label>
+                          <Input
+                            id="purchasePrice"
+                            type="number"
+                            value={editData.purchasePrice || ''}
+                            onChange={(e) => handleFieldChange('purchasePrice', parseInt(e.target.value) || undefined)}
+                            placeholder="e.g. 225000"
+                            min="0"
+                          />
+                          <p className="text-sm text-gray-500 mt-1">
+                            What you paid for the property
+                          </p>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="utilities">Utilities (Monthly)</Label>
-                        <Input
-                          id="utilities"
-                          type="number"
-                          value={editData.utilities || ''}
-                          onChange={(e) => handleFieldChange('utilities', parseInt(e.target.value) || undefined)}
-                          placeholder="If owner pays"
-                          min="0"
-                        />
+                    <Separator />
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <Calculator className="h-4 w-4 text-muted-foreground" />
+                        Investment Analysis
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Help investors understand the deal potential
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="arv">ARV (After Repair Value)</Label>
+                          <Input
+                            id="arv"
+                            type="number"
+                            value={editData.arv || ''}
+                            onChange={(e) => handleFieldChange('arv', parseInt(e.target.value) || undefined)}
+                            placeholder="e.g. 350000"
+                            min="0"
+                          />
+                          <p className="text-sm text-gray-500 mt-1">
+                            Estimated value after repairs
+                          </p>
+                        </div>
+                        <div>
+                          <Label htmlFor="estimatedRepairs">Estimated Repairs</Label>
+                          <Input
+                            id="estimatedRepairs"
+                            type="number"
+                            value={editData.estimatedRepairs || ''}
+                            onChange={(e) => handleFieldChange('estimatedRepairs', parseInt(e.target.value) || undefined)}
+                            placeholder="e.g. 25000"
+                            min="0"
+                          />
+                          <p className="text-sm text-gray-500 mt-1">
+                            Cost to bring property to retail condition
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <Label htmlFor="hoaFees">HOA Fees (Monthly)</Label>
-                        <Input
-                          id="hoaFees"
-                          type="number"
-                          value={editData.hoaFees || ''}
-                          onChange={(e) => handleFieldChange('hoaFees', parseInt(e.target.value) || undefined)}
-                          placeholder="Optional"
-                          min="0"
-                        />
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <Home className="h-4 w-4 text-muted-foreground" />
+                        Rental Information (For Investment Properties)
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Add rental details if this is an income-producing property
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="monthlyRent">Monthly Rent (Single Unit)</Label>
+                          <Input
+                            id="monthlyRent"
+                            type="number"
+                            value={editData.monthlyRent || ''}
+                            onChange={(e) => handleFieldChange('monthlyRent', parseInt(e.target.value) || undefined)}
+                            placeholder="e.g. 2500"
+                            min="0"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="totalMonthlyRent">Total Monthly Rent (Multi-Unit)</Label>
+                          <Input
+                            id="totalMonthlyRent"
+                            type="number"
+                            value={editData.totalMonthlyRent || ''}
+                            onChange={(e) => handleFieldChange('totalMonthlyRent', parseInt(e.target.value) || undefined)}
+                            placeholder="e.g. 5000"
+                            min="0"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <Handshake className="h-4 w-4 text-muted-foreground" />
+                        Deal Structure (Optional)
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Specify assignment fees and partnership opportunities
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="assignmentFee">Assignment Fee</Label>
+                          <Input
+                            id="assignmentFee"
+                            type="number"
+                            value={editData.assignmentFee || ''}
+                            onChange={(e) => handleFieldChange('assignmentFee', parseInt(e.target.value) || undefined)}
+                            placeholder="e.g. 15000"
+                            min="0"
+                          />
+                          <p className="text-sm text-gray-500 mt-1">
+                            Fee for assigning the contract
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-2 pt-6">
+                          <Switch
+                            id="jvAvailable"
+                            checked={editData.jvAvailable || false}
+                            onCheckedChange={(checked) => handleFieldChange('jvAvailable', checked)}
+                          />
+                          <Label htmlFor="jvAvailable">Joint Venture Available</Label>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -806,68 +834,433 @@ export default function PropertyEditor() {
               </Card>
             )}
 
-            {/* Media Section */}
+            {/* Step 4: Listing Logistics */}
+            {activeSection === 'logistics' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <MapPin className="h-5 w-5" />
+                    <span>Step 4: Listing Logistics</span>
+                  </CardTitle>
+                  <p className="text-sm text-gray-600">Set up property access, showing instructions, and listing details</p>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <Key className="h-4 w-4 text-muted-foreground" />
+                        Property Access
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Provide instructions for buyers and agents to access the property
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="accessType">Access Type</Label>
+                          <Select
+                            value={editData.accessType || ''}
+                            onValueChange={(value) => handleFieldChange('accessType', value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select access method" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="lockbox">Lockbox</SelectItem>
+                              <SelectItem value="key_pickup">Key Pickup</SelectItem>
+                              <SelectItem value="appointment_only">Appointment Only</SelectItem>
+                              <SelectItem value="occupied">Occupied - Tenant Coordination</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="lockboxCode">Lockbox Code (if applicable)</Label>
+                          <Input
+                            id="lockboxCode"
+                            value={editData.lockboxCode || ''}
+                            onChange={(e) => handleFieldChange('lockboxCode', e.target.value)}
+                            placeholder="e.g. 1234"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="accessInstructions">Access Instructions</Label>
+                        <Textarea
+                          id="accessInstructions"
+                          value={editData.accessInstructions || ''}
+                          onChange={(e) => handleFieldChange('accessInstructions', e.target.value)}
+                          placeholder="Detailed instructions for accessing the property..."
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        Showing & Timeline
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Set showing preferences and important dates
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-center space-x-2">
+                          <Switch
+                            id="tenantAware"
+                            checked={editData.tenantAware}
+                            onCheckedChange={(checked) => handleFieldChange('tenantAware', checked)}
+                          />
+                          <Label htmlFor="tenantAware">Tenant Aware of Sale</Label>
+                        </div>
+                        <div>
+                          <Label htmlFor="closingDate">Preferred Closing Date</Label>
+                          <Input
+                            id="closingDate"
+                            type="date"
+                            value={editData.closingDate || ''}
+                            onChange={(e) => handleFieldChange('closingDate', e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="showingNotes">Showing Notes</Label>
+                        <Textarea
+                          id="showingNotes"
+                          value={editData.showingNotes || ''}
+                          onChange={(e) => handleFieldChange('showingNotes', e.target.value)}
+                          placeholder="Special instructions for showings, parking, pets, etc..."
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <Tag className="h-4 w-4 text-muted-foreground" />
+                        Property Tags & Categories
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Add tags to help buyers find your property
+                      </p>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <Label>Investment Strategy Tags</Label>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {['Flip', 'Buy & Hold', 'BRRRR', 'Short-Term Rental', 'Live-In Flip', 'Wholesale'].map((tag) => (
+                              <Button
+                                key={tag}
+                                variant={editData.strategyTags?.includes(tag) ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => {
+                                  const currentTags = editData.strategyTags || [];
+                                  const updatedTags = currentTags.includes(tag)
+                                    ? currentTags.filter(t => t !== tag)
+                                    : [...currentTags, tag];
+                                  handleFieldChange('strategyTags', updatedTags);
+                                }}
+                              >
+                                {tag}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <Label>Property Condition Tags</Label>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {['Move-In Ready', 'Cosmetic Updates', 'Moderate Rehab', 'Heavy Rehab', 'Tear Down'].map((tag) => (
+                              <Button
+                                key={tag}
+                                variant={editData.conditionTags?.includes(tag) ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => {
+                                  const currentTags = editData.conditionTags || [];
+                                  const updatedTags = currentTags.includes(tag)
+                                    ? currentTags.filter(t => t !== tag)
+                                    : [...currentTags, tag];
+                                  handleFieldChange('conditionTags', updatedTags);
+                                }}
+                              >
+                                {tag}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Step 5: Review */}
+            {activeSection === 'review' && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <FileText className="h-5 w-5" />
+                    <span>Step 5: Review</span>
+                  </CardTitle>
+                  <p className="text-sm text-gray-600">Review your listing before publishing</p>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        Property Description
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Write a compelling description of your property
+                      </p>
+                      
+                      <div>
+                        <Label htmlFor="shortSummary">Short Summary (for cards & previews)</Label>
+                        <Textarea
+                          id="shortSummary"
+                          value={editData.shortSummary}
+                          onChange={(e) => handleFieldChange('shortSummary', e.target.value)}
+                          placeholder="Brief, compelling summary for property cards..."
+                          rows={2}
+                        />
+                        <p className="text-sm text-gray-500 mt-1">
+                          Keep it under 150 characters for best display
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="description">Detailed Description</Label>
+                        <Textarea
+                          id="description"
+                          value={editData.description}
+                          onChange={(e) => handleFieldChange('description', e.target.value)}
+                          placeholder="Detailed property description highlighting key features, location benefits, investment potential..."
+                          rows={6}
+                        />
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <Settings className="h-4 w-4 text-muted-foreground" />
+                        Listing Settings
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-4">
+                        Control how your listing appears and who can see it
+                      </p>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="status">Listing Status</Label>
+                          <Select
+                            value={editData.status}
+                            onValueChange={(value: 'live' | 'draft') => handleFieldChange('status', value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="draft">Draft (Not Visible)</SelectItem>
+                              <SelectItem value="live">Live (Public)</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex items-center space-x-2 pt-6">
+                          <Switch
+                            id="isPublic"
+                            checked={editData.isPublic}
+                            onCheckedChange={(checked) => handleFieldChange('isPublic', checked)}
+                          />
+                          <Label htmlFor="isPublic">Public Listing</Label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h4 className="font-medium mb-2">Listing Summary</h4>
+                      <div className="text-sm text-gray-600 space-y-1">
+                        <p><strong>Property:</strong> {editData.title || 'No title set'}</p>
+                        <p><strong>Address:</strong> {editData.address || 'No address set'}</p>
+                        <p><strong>Type:</strong> {editData.propertyType || 'Not specified'}</p>
+                        <p><strong>Price:</strong> ${editData.listingPrice?.toLocaleString() || 'Not set'}</p>
+                        <p><strong>Status:</strong> {editData.status === 'live' ? 'Live' : 'Draft'}</p>
+                        <p><strong>Public:</strong> {editData.isPublic ? 'Yes' : 'No'}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Step 2: Property Media - Complete Implementation */}
             {activeSection === 'media' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <ImageIcon className="h-5 w-5" />
-                    <span>Media</span>
+                    <span>Step 2: Property Media</span>
                   </CardTitle>
+                  <p className="text-sm text-gray-600">Upload photos, videos, and documents to showcase your property</p>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div>
-                    <Label>Property Images</Label>
-                    <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                      <Upload className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                      <p className="text-sm text-gray-600 mb-2">Drag and drop images or click to upload</p>
-                      <Button variant="outline" size="sm">
-                        Choose Files
-                      </Button>
-                    </div>
-                    
-                    {editData.images.length > 0 && (
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-                        {editData.images.map((image, index) => (
-                          <div key={index} className="relative group">
-                            <img
-                              src={image}
-                              alt={`Property image ${index + 1}`}
-                              className="w-full h-32 object-cover rounded-lg"
-                            />
-                            <button
-                              onClick={() => {
-                                const newImages = editData.images.filter((_, i) => i !== index);
-                                handleFieldChange('images', newImages);
-                              }}
-                              className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                            {index === 0 && (
-                              <Badge className="absolute bottom-2 left-2 bg-[#135341] text-white">
-                                Primary
-                              </Badge>
-                            )}
-                          </div>
-                        ))}
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                        Property Photos
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-3">
+                        Upload high-quality photos that showcase your property's best features
+                      </p>
+                      
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+                        <ImageIcon className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                        <div className="space-y-2">
+                          <p className="text-lg font-medium text-gray-700">Drag & drop photos here</p>
+                          <p className="text-sm text-gray-500">or click to browse your computer</p>
+                          <p className="text-xs text-gray-400">Supports: JPG, PNG, HEIC (Max 10MB each)</p>
+                        </div>
+                        <Button className="mt-4" variant="outline">
+                          <Upload className="h-4 w-4 mr-2" />
+                          Choose Photos
+                        </Button>
                       </div>
-                    )}
-                  </div>
 
-                  <Separator />
+                      {editData.images && editData.images.length > 0 && (
+                        <div className="mt-4">
+                          <p className="text-sm text-gray-600 mb-3">Uploaded Photos ({editData.images.length})</p>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {editData.images.map((image, index) => (
+                              <div key={index} className="relative group">
+                                <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                                  <img 
+                                    src={image} 
+                                    alt={`Property ${index + 1}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    className="h-6 w-6 p-0"
+                                    onClick={() => {
+                                      const updatedImages = editData.images.filter((_, i) => i !== index);
+                                      handleFieldChange('images', updatedImages);
+                                    }}
+                                  >
+                                    <X className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                                {index === 0 && (
+                                  <div className="absolute bottom-2 left-2">
+                                    <span className="bg-green-600 text-white text-xs px-2 py-1 rounded">
+                                      Primary
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
 
-                  <div>
-                    <Label htmlFor="videoUrl">Video Walkthrough URL</Label>
-                    <Input
-                      id="videoUrl"
-                      value={editData.videoUrl || ''}
-                      onChange={(e) => handleFieldChange('videoUrl', e.target.value)}
-                      placeholder="YouTube, Vimeo, or cloud storage link"
-                    />
-                    <p className="text-sm text-gray-500 mt-1">
-                      Optional: Add a video tour or walkthrough
-                    </p>
+                    <Separator />
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <Video className="h-4 w-4 text-muted-foreground" />
+                        Property Video (Optional)
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-3">
+                        Add a video tour to give buyers a comprehensive view of your property
+                      </p>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <Label htmlFor="videoUrl">Video URL</Label>
+                          <Input
+                            id="videoUrl"
+                            value={editData.videoUrl || ''}
+                            onChange={(e) => handleFieldChange('videoUrl', e.target.value)}
+                            placeholder="Paste YouTube, Vimeo, or direct video link"
+                          />
+                        </div>
+                        
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                          <Video className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                          <p className="text-sm text-gray-600">or upload a video file</p>
+                          <Button variant="outline" size="sm" className="mt-2">
+                            <Upload className="h-4 w-4 mr-2" />
+                            Choose Video
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-base font-medium">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
+                        Property Documents (Optional)
+                      </Label>
+                      <p className="text-sm text-gray-500 mb-3">
+                        Upload relevant documents like floor plans, inspection reports, or property disclosures
+                      </p>
+                      
+                      <div className="space-y-3">
+                        {editData.documents && editData.documents.length > 0 && (
+                          <div className="space-y-2">
+                            {editData.documents.map((doc, index) => (
+                              <div key={doc.id} className="flex items-center justify-between p-3 border rounded-lg">
+                                <div className="flex items-center space-x-3">
+                                  <FileText className="h-4 w-4 text-gray-500" />
+                                  <div>
+                                    <p className="text-sm font-medium">{doc.name}</p>
+                                    <p className="text-xs text-gray-500">{doc.type}</p>
+                                  </div>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    const updatedDocs = editData.documents?.filter((_, i) => i !== index) || [];
+                                    handleFieldChange('documents', updatedDocs);
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                          <FileText className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                          <p className="text-sm text-gray-600">Drag & drop documents here</p>
+                          <p className="text-xs text-gray-400 mb-3">Supports: PDF, DOC, DOCX (Max 25MB each)</p>
+                          <Button variant="outline" size="sm">
+                            <Upload className="h-4 w-4 mr-2" />
+                            Choose Documents
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
