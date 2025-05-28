@@ -256,7 +256,7 @@ export default function MobileBottomNav() {
                 <button
                   className={`flex flex-col items-center justify-center px-2 py-1 rounded-lg transition-all duration-200 active:scale-95 ${
                     isActive 
-                      ? 'text-[#135341]' 
+                      ? (item.label === 'Favorites' ? 'text-[#803344]' : 'text-[#135341]')
                       : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                   }`}
                 >
@@ -264,7 +264,7 @@ export default function MobileBottomNav() {
                     {item.icon}
                   </div>
                   <span className={`text-xs font-medium mt-1 transition-all duration-200 ${
-                    isActive ? 'text-[#135341]' : 'text-gray-500'
+                    isActive ? (item.label === 'Favorites' ? 'text-[#803344]' : 'text-[#135341]') : 'text-gray-500'
                   }`}>
                     {item.label}
                   </span>
