@@ -12,7 +12,7 @@ import {
   Bath, Square as SquareIcon, Link as LinkIcon, Mail, Check as CheckIcon,
   Copy as CopyIcon, ChevronRight, Calculator, PercentSquare, Car, 
   ArrowRight, ChevronDown, Wrench, BedDouble, HelpCircle, MoveRight,
-  Info, MessageSquare
+  Info, MessageSquare, ChevronLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -245,12 +245,50 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
 
   return (
     <div className="min-h-screen bg-white relative lg:hidden">
-      {/* Image Carousel */}
-      <MobileImageCarousel 
-        images={propertyImages} 
-        address={property.address}
-        onBack={onBack}
-      />
+      {/* Sticky Top Navigation Bar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+        <div className="flex items-center justify-between px-4 py-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onBack}
+            className="h-9 w-9 p-0 rounded-full bg-white shadow-sm hover:bg-gray-50"
+          >
+            <ArrowRight className="h-5 w-5 text-gray-700 rotate-180" />
+          </Button>
+          
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleFavorite}
+              className="h-9 w-9 p-0 rounded-full bg-white shadow-sm hover:bg-gray-50"
+            >
+              <Heart 
+                className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-700'}`} 
+              />
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShareModalOpen(true)}
+              className="h-9 w-9 p-0 rounded-full bg-white shadow-sm hover:bg-gray-50"
+            >
+              <Share className="h-5 w-5 text-gray-700" />
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Image Carousel with top padding for sticky header */}
+      <div className="pt-16">
+        <MobileImageCarousel 
+          images={propertyImages} 
+          address={property.address}
+          onBack={onBack}
+        />
+      </div>
       
       {/* Property Header */}
       <div className="px-4 py-3 border-b border-gray-200">
