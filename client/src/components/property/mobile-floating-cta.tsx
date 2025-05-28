@@ -137,7 +137,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
             <AnimatePresence>
               {isExpanded && (
                 <motion.div
-                  className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-50"
+                  className="fixed bottom-28 left-1/2 transform -translate-x-1/2 z-50"
                   initial={{ 
                     opacity: 0, 
                     scale: 0.3, 
