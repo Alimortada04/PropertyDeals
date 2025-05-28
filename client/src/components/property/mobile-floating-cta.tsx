@@ -27,53 +27,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [pulseAnimation, setPulseAnimation] = useState(true);
 
-  // Orbital animation variants for the planetary bubbles
-  const orbitVariants = {
-    hidden: { 
-      opacity: 0, 
-      scale: 0,
-      x: 0,
-      y: 0
-    },
-    visible: (i: number) => {
-      let xPos, yPos;
-      
-      if (i === 1) {
-        // View Profile - top left position
-        xPos = -45;
-        yPos = -45;
-      } else {
-        // Make an Offer - top right position
-        xPos = 45;
-        yPos = -45;
-      }
-      
-      return {
-        opacity: 1,
-        scale: 1,
-        x: xPos,
-        y: yPos,
-        transition: {
-          type: "spring",
-          stiffness: 300,
-          damping: 22,
-          delay: i * 0.1
-        }
-      };
-    },
-    exit: (i: number) => ({
-      opacity: 0,
-      scale: 0,
-      x: 0,
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 22,
-        delay: (2 - i) * 0.05
-      }
-    })
-  };
+
 
   const initials = sellerName
     .split(' ')
@@ -153,57 +107,9 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
           </button>
         </div>
         
-        {/* Center Avatar Button with planetary animation */}
+        {/* Center Avatar Button with genie popup */}
         <div className="absolute left-1/2 -translate-x-1/2 -top-10">
           <div className="relative">
-            <AnimatePresence>
-              {isExpanded && (
-                <div className="absolute">
-                  {/* View Profile - Top Left */}
-                  <motion.div
-                    className="absolute"
-                    custom={1}
-                    variants={orbitVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                  >
-                    <Button
-                      onClick={handleProfileClick}
-                      className="group relative h-10 w-10 rounded-full bg-[#09261E] hover:bg-[#09261E]/80 shadow-lg transition-all duration-200 hover:shadow-xl"
-                      aria-label="View Profile"
-                    >
-                      <User className="h-4 w-4 text-white" />
-                      <span className="absolute -top-8 -left-8 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        View Profile
-                      </span>
-                    </Button>
-                  </motion.div>
-                  
-                  {/* Make an Offer - Top Right */}
-                  <motion.div
-                    className="absolute"
-                    custom={2}
-                    variants={orbitVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                  >
-                    <Button
-                      onClick={onOfferClick}
-                      className="group relative h-10 w-10 rounded-full bg-[#803344] hover:bg-[#803344]/80 shadow-lg transition-all duration-200 hover:shadow-xl"
-                      aria-label="Make an Offer"
-                    >
-                      <DollarSign className="h-4 w-4 text-white" />
-                      <span className="absolute -top-8 -right-8 bg-black/80 backdrop-blur-sm text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        Make an Offer
-                      </span>
-                    </Button>
-                  </motion.div>
-                </div>
-              )}
-            </AnimatePresence>
-            
             {/* Main Avatar Button */}
             <button 
               onClick={toggleExpand}
@@ -226,52 +132,94 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
                 </div>
               )}
             </button>
+
+            {/* Genie Popup */}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-50"
+                  initial={{ 
+                    opacity: 0, 
+                    scale: 0.3, 
+                    y: 40,
+                    transformOrigin: "center bottom"
+                  }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1, 
+                    y: 0,
+                    transition: {
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25,
+                      mass: 0.5
+                    }
+                  }}
+                  exit={{ 
+                    opacity: 0, 
+                    scale: 0.3, 
+                    y: 40,
+                    transition: {
+                      duration: 0.3,
+                      ease: "easeInOut"
+                    }
+                  }}
+                >
+                  <div className="bg-white rounded-2xl shadow-xl p-6 min-w-[300px] max-w-[90vw] border border-gray-100">
+                    {/* Agent Info */}
+                    <div className="flex items-center mb-4">
+                      <Avatar className="h-12 w-12 border-2 border-[#09261E]">
+                        <AvatarImage src={sellerImage} alt={sellerName} />
+                        <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">{initials}</AvatarFallback>
+                      </Avatar>
+                      <div className="ml-3">
+                        <div className="font-semibold text-[#09261E] text-lg">{sellerName}</div>
+                        <div className="text-sm text-gray-500">{sellerPosition}</div>
+                      </div>
+                    </div>
+                    
+                    {/* Agent Stats */}
+                    <div className="space-y-2 text-sm mb-6">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Experience</span>
+                        <span className="font-medium">8 years</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Deals Closed</span>
+                        <span className="font-medium">134</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Response Time</span>
+                        <span className="font-medium">1-2 hours</span>
+                      </div>
+                    </div>
+                    
+                    {/* Action Buttons */}
+                    <div className="flex gap-3">
+                      <Button 
+                        onClick={onOfferClick}
+                        className="flex-1 bg-[#803344] hover:bg-[#803344]/90 text-white rounded-xl py-3"
+                      >
+                        <DollarSign className="h-4 w-4 mr-2" />
+                        Make Offer
+                      </Button>
+                      <Button 
+                        onClick={handleProfileClick}
+                        className="flex-1 bg-[#09261E] hover:bg-[#09261E]/90 text-white rounded-xl py-3"
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        View Profile
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
 
-      {/* Expandable Profile Info */}
-      {isExpanded && (
-        <div 
-          className="fixed bottom-16 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-4 z-50 w-[80%] max-w-xs animate-rise-up border border-gray-200"
-          style={{
-            animation: 'fadeInUpward 0.3s ease-out forwards'
-          } as React.CSSProperties}
-        >
-          <div className="flex items-center mb-3">
-            <Avatar className="h-12 w-12 border-2 border-[#09261E]">
-              <AvatarImage src={sellerImage} alt={sellerName} />
-              <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-sm">{initials}</AvatarFallback>
-            </Avatar>
-            <div className="ml-3">
-              <div className="font-semibold text-[#09261E]">{sellerName}</div>
-              <div className="text-xs text-gray-500">{sellerPosition}</div>
-            </div>
-          </div>
-          
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Experience</span>
-              <span className="font-medium">8 years</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Deals Closed</span>
-              <span className="font-medium">134</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Response Time</span>
-              <span className="font-medium">1-2 hours</span>
-            </div>
-          </div>
-          
-          <Button 
-            onClick={handleProfileClick}
-            className="w-full mt-3 bg-[#09261E] hover:bg-[#135341] text-white"
-          >
-            View Full Profile <ChevronRight className="h-4 w-4 ml-1" />
-          </Button>
-        </div>
-      )}
+
 
       {/* Animation classes are defined in index.css */}
     </>
