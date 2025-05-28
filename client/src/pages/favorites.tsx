@@ -383,7 +383,7 @@ export default function FavoritesPage() {
         {/* Header with greeting */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2 text-[#803344]">{getGreeting()}, {userName}</h1>
-          <p className="text-[#803344]/70">
+          <p className="text-gray-500">
             You have {filteredProperties.length} favorite {filteredProperties.length === 1 ? 'property' : 'properties'} saved.
           </p>
         </div>
@@ -414,7 +414,7 @@ export default function FavoritesPage() {
             <div className="flex items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2">
+                  <Button variant="outline" className="flex items-center gap-2 hover:bg-gray-100">
                     <Filter className="h-4 w-4" />
                     Filter
                     <ChevronDown className="h-4 w-4" />
@@ -424,28 +424,28 @@ export default function FavoritesPage() {
                   <DropdownMenuCheckboxItem 
                     checked={filterStatus.includes("for sale")}
                     onCheckedChange={() => toggleStatusFilter("for sale")}
-                    className="hover:bg-[#803344]/10 focus:bg-[#803344]/10 data-[state=checked]:bg-[#803344] data-[state=checked]:text-white"
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     For Sale
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem 
                     checked={filterStatus.includes("pending")}
                     onCheckedChange={() => toggleStatusFilter("pending")}
-                    className="hover:bg-[#803344]/10 focus:bg-[#803344]/10 data-[state=checked]:bg-[#803344] data-[state=checked]:text-white"
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     Pending
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem 
                     checked={filterStatus.includes("sold")}
                     onCheckedChange={() => toggleStatusFilter("sold")}
-                    className="hover:bg-[#803344]/10 focus:bg-[#803344]/10 data-[state=checked]:bg-[#803344] data-[state=checked]:text-white"
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     Sold
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem 
                     checked={filterStatus.includes("off market")}
                     onCheckedChange={() => toggleStatusFilter("off market")}
-                    className="hover:bg-[#803344]/10 focus:bg-[#803344]/10 data-[state=checked]:bg-[#803344] data-[state=checked]:text-white"
+                    className="hover:bg-gray-100 focus:bg-gray-100"
                   >
                     Off Market
                   </DropdownMenuCheckboxItem>
@@ -455,7 +455,7 @@ export default function FavoritesPage() {
               {/* Sort */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2">
+                  <Button variant="outline" className="flex items-center gap-2 hover:bg-gray-100">
                     <ArrowUpDown className="h-4 w-4" />
                     Sort
                     <ChevronDown className="h-4 w-4" />
@@ -502,7 +502,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
-                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "grid" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
+                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "grid" ? "bg-[#803344] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid className="h-4 w-4" />
@@ -510,7 +510,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "list" ? "default" : "ghost"}
                   size="sm"
-                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "list" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
+                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "list" ? "bg-[#803344] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
                   onClick={() => setViewMode("list")}
                 >
                   <List className="h-4 w-4" />
