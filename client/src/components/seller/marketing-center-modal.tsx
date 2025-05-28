@@ -294,9 +294,8 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             variant="outline" 
             size="sm" 
             className="text-[#135341] border-[#135341] hover:bg-[#135341] hover:text-white font-['Lato']"
-          >
-            View Marketing Guide
-          </Button>
+            onClick={() => window.open('/help', '_blank')}
+          >Contact Support</Button>
         </div>
       </div>
     </div>
