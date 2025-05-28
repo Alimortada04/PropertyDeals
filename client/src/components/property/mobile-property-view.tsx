@@ -246,15 +246,15 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
   return (
     <div className="min-h-screen bg-white relative lg:hidden">
       {/* Sticky Top Navigation Bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white/20 backdrop-blur-md border-b border-white/20">
         <div className="flex items-center justify-between px-4 py-3">
           <Button
             variant="ghost"
             size="sm"
             onClick={onBack}
-            className="h-9 w-9 p-0 rounded-full bg-white shadow-sm hover:bg-gray-50"
+            className="h-9 w-9 p-0 rounded-full bg-white/30 backdrop-blur-sm shadow-sm hover:bg-white/50"
           >
-            <ArrowRight className="h-5 w-5 text-gray-700 rotate-180" />
+            <ArrowRight className="h-5 w-5 text-white rotate-180" />
           </Button>
           
           <div className="flex items-center space-x-3">
@@ -262,10 +262,10 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               variant="ghost"
               size="sm"
               onClick={toggleFavorite}
-              className="h-9 w-9 p-0 rounded-full bg-white shadow-sm hover:bg-gray-50"
+              className="h-9 w-9 p-0 rounded-full bg-white/30 backdrop-blur-sm shadow-sm hover:bg-white/50"
             >
               <Heart 
-                className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-700'}`} 
+                className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-white'}`} 
               />
             </Button>
             
@@ -273,9 +273,9 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               variant="ghost"
               size="sm"
               onClick={() => setShareModalOpen(true)}
-              className="h-9 w-9 p-0 rounded-full bg-white shadow-sm hover:bg-gray-50"
+              className="h-9 w-9 p-0 rounded-full bg-white/30 backdrop-blur-sm shadow-sm hover:bg-white/50"
             >
-              <Share className="h-5 w-5 text-gray-700" />
+              <Share className="h-5 w-5 text-white" />
             </Button>
           </div>
         </div>
