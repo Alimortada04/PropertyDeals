@@ -165,7 +165,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
                     }
                   }}
                 >
-                  <div className="bg-white rounded-2xl shadow-xl p-5 w-full max-w-[350px] border border-gray-100">
+                  <div className="bg-white rounded-2xl shadow-xl p-5 w-auto min-w-[300px] max-w-[90vw] border border-gray-100">
                     {/* Agent Info */}
                     <div className="flex items-center mb-4">
                       <Avatar className="h-12 w-12 border-2 border-[#09261E]">
