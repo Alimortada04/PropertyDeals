@@ -1291,11 +1291,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               </div>
             ))}
           </div>
-          <div className="text-center mt-4 px-4">
-            <Button variant="outline" className="border-[#09261E] text-[#09261E] hover:bg-[#09261E]/10 w-full">
-              View All Properties by Michael
-            </Button>
-          </div>
+
         </div>
         
         {/* Similar Deals You Might Like */}
