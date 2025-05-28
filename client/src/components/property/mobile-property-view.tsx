@@ -25,6 +25,7 @@ interface MobilePropertyViewProps {
   property: Property;
   onBack?: () => void;
   onContactSeller: () => void;
+  onMakeOffer?: () => void;
 }
 
 const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({

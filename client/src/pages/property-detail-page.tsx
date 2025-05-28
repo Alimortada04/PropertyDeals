@@ -348,6 +348,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       property={property}
       onBack={() => window.history.back()}
       onContactSeller={handleContactSeller}
+      onMakeOffer={() => setOfferModalOpen(true)}
     />
   ) : (
     <TooltipProvider>
