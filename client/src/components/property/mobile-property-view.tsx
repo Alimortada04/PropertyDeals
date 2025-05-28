@@ -1372,6 +1372,9 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             </p>
           </div>
         </div>
+        
+        {/* Bottom padding to account for floating contact bar */}
+        <div className="h-24"></div>
       </div>
       
       {/* Floating CTA Bar */}
