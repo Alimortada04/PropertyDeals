@@ -227,8 +227,9 @@ export default function PropertyEditor() {
     <SellerDashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center space-x-4">
+        <div className="space-y-4">
+          {/* Top row - Back button and action buttons */}
+          <div className="flex items-center justify-between">
             <Button 
               variant="ghost" 
               onClick={() => setLocation(`/sellerdash/${userId}`)}
@@ -237,30 +238,32 @@ export default function PropertyEditor() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
-            <div>
-              <h1 className="text-2xl font-semibold text-[#09261E]">Edit Property</h1>
-              <p className="text-gray-600">{editData.address}</p>
+            
+            <div className="flex items-center space-x-3">
+              <Button 
+                variant="outline" 
+                onClick={handlePreview}
+                className="hover:bg-gray-100"
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                Preview Public Listing
+                <ExternalLink className="h-3 w-3 ml-1" />
+              </Button>
+              <Button 
+                onClick={handleSave}
+                disabled={!hasUnsavedChanges || saveMutation.isPending}
+                className="bg-[#135341] hover:bg-[#09261E] text-white"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                {saveMutation.isPending ? 'Saving...' : 'Save Changes'}
+              </Button>
             </div>
           </div>
           
-          <div className="flex items-center space-x-3">
-            <Button 
-              variant="outline" 
-              onClick={handlePreview}
-              className="hover:bg-gray-100"
-            >
-              <Eye className="h-4 w-4 mr-2" />
-              Preview Public Listing
-              <ExternalLink className="h-3 w-3 ml-1" />
-            </Button>
-            <Button 
-              onClick={handleSave}
-              disabled={!hasUnsavedChanges || saveMutation.isPending}
-              className="bg-[#135341] hover:bg-[#09261E] text-white"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              {saveMutation.isPending ? 'Saving...' : 'Save Changes'}
-            </Button>
+          {/* Bottom row - Title and address */}
+          <div>
+            <h1 className="text-2xl font-semibold text-[#09261E]">Edit Property</h1>
+            <p className="text-gray-600">{editData.address}</p>
           </div>
         </div>
 
