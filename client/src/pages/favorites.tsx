@@ -382,8 +382,8 @@ export default function FavoritesPage() {
       <div className="max-w-screen-2xl mx-auto">
         {/* Header with greeting */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">{getGreeting()}, {userName}</h1>
-          <p className="text-gray-500">
+          <h1 className="text-3xl font-bold mb-2 text-[#803344]">{getGreeting()}, {userName}</h1>
+          <p className="text-[#803344]/70">
             You have {filteredProperties.length} favorite {filteredProperties.length === 1 ? 'property' : 'properties'} saved.
           </p>
         </div>
@@ -424,28 +424,28 @@ export default function FavoritesPage() {
                   <DropdownMenuCheckboxItem 
                     checked={filterStatus.includes("for sale")}
                     onCheckedChange={() => toggleStatusFilter("for sale")}
-                    className="hover:bg-gray-100 focus:bg-gray-100"
+                    className="hover:bg-[#803344]/10 focus:bg-[#803344]/10 data-[state=checked]:bg-[#803344] data-[state=checked]:text-white"
                   >
                     For Sale
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem 
                     checked={filterStatus.includes("pending")}
                     onCheckedChange={() => toggleStatusFilter("pending")}
-                    className="hover:bg-gray-100 focus:bg-gray-100"
+                    className="hover:bg-[#803344]/10 focus:bg-[#803344]/10 data-[state=checked]:bg-[#803344] data-[state=checked]:text-white"
                   >
                     Pending
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem 
                     checked={filterStatus.includes("sold")}
                     onCheckedChange={() => toggleStatusFilter("sold")}
-                    className="hover:bg-gray-100 focus:bg-gray-100"
+                    className="hover:bg-[#803344]/10 focus:bg-[#803344]/10 data-[state=checked]:bg-[#803344] data-[state=checked]:text-white"
                   >
                     Sold
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem 
                     checked={filterStatus.includes("off market")}
                     onCheckedChange={() => toggleStatusFilter("off market")}
-                    className="hover:bg-gray-100 focus:bg-gray-100"
+                    className="hover:bg-[#803344]/10 focus:bg-[#803344]/10 data-[state=checked]:bg-[#803344] data-[state=checked]:text-white"
                   >
                     Off Market
                   </DropdownMenuCheckboxItem>
@@ -464,33 +464,33 @@ export default function FavoritesPage() {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem 
                     onClick={() => setSortBy("recently-added")}
-                    className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-[#135341] hover:bg-[#135341] focus:bg-[#135341] text-[#ffffff]"
+                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "recently-added" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
                   >
                     Recently Added
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={() => setSortBy("price-high-low")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "price-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "price-high-low" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
                   >
                     Price (High to Low)
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setSortBy("price-low-high")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "price-low-high" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "price-low-high" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
                   >
                     Price (Low to High)
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={() => setSortBy("beds-high-low")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "beds-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "beds-high-low" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
                   >
                     Beds (Most first)
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setSortBy("sqft-high-low")}
-                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "sqft-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
+                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "sqft-high-low" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
                   >
                     Square Feet (Largest first)
                   </DropdownMenuItem>
@@ -594,13 +594,13 @@ export default function FavoritesPage() {
                     />
                   </div>
                   <CardContent className="p-5">
-                    <CardTitle className="text-xl mb-1 line-clamp-1">{property.title}</CardTitle>
-                    <CardDescription className="mb-3 line-clamp-1">{property.address}</CardDescription>
+                    <CardTitle className="text-xl mb-1 line-clamp-1 text-[#803344]">{property.title}</CardTitle>
+                    <CardDescription className="mb-3 line-clamp-1 text-[#803344]/70">{property.address}</CardDescription>
                     <div className="flex justify-between text-sm">
-                      <div className="font-semibold">{formatCurrency(property.price)}</div>
-                      <div>{property.beds} beds</div>
-                      <div>{property.baths} baths</div>
-                      <div>{property.sqft.toLocaleString()} sqft</div>
+                      <div className="font-semibold text-[#803344]">{formatCurrency(property.price)}</div>
+                      <div className="text-[#803344]/80">{property.beds} beds</div>
+                      <div className="text-[#803344]/80">{property.baths} baths</div>
+                      <div className="text-[#803344]/80">{property.sqft.toLocaleString()} sqft</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -629,25 +629,25 @@ export default function FavoritesPage() {
                     <div className="p-5 flex-1">
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-xl mb-1">{property.title}</CardTitle>
-                          <CardDescription className="mb-3">{property.address}</CardDescription>
+                          <CardTitle className="text-xl mb-1 text-[#803344]">{property.title}</CardTitle>
+                          <CardDescription className="mb-3 text-[#803344]/70">{property.address}</CardDescription>
                         </div>
-                        <div className="text-xl font-bold text-[#09261E]">
+                        <div className="text-xl font-bold text-[#803344]">
                           {formatCurrency(property.price)}
                         </div>
                       </div>
                       <div className="grid grid-cols-4 gap-4 mt-4">
                         <div>
-                          <div className="text-sm text-gray-500">Beds</div>
-                          <div className="font-medium">{property.beds}</div>
+                          <div className="text-sm text-[#803344]/60">Beds</div>
+                          <div className="font-medium text-[#803344]">{property.beds}</div>
                         </div>
                         <div>
-                          <div className="text-sm text-gray-500">Baths</div>
-                          <div className="font-medium">{property.baths}</div>
+                          <div className="text-sm text-[#803344]/60">Baths</div>
+                          <div className="font-medium text-[#803344]">{property.baths}</div>
                         </div>
                         <div>
-                          <div className="text-sm text-gray-500">Sq Ft</div>
-                          <div className="font-medium">{property.sqft.toLocaleString()}</div>
+                          <div className="text-sm text-[#803344]/60">Sq Ft</div>
+                          <div className="font-medium text-[#803344]">{property.sqft.toLocaleString()}</div>
                         </div>
                         <div>
                           <div className="text-sm text-gray-500">Type</div>
