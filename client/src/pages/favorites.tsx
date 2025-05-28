@@ -290,8 +290,8 @@ export default function FavoritesPage() {
     return (
       <div className="container py-8 pl-20">
         <div className="max-w-screen-2xl mx-auto">
-          <h1 className="text-3xl font-bold mb-2 text-[#803344]">Your Favorites</h1>
-          <p className="text-[#803344]/70 mb-6">Loading your favorite properties...</p>
+          <h1 className="text-3xl font-bold mb-2">Your Favorites</h1>
+          <p className="text-gray-500 mb-6">Loading your favorite properties...</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
@@ -382,7 +382,7 @@ export default function FavoritesPage() {
       <div className="max-w-screen-2xl mx-auto">
         {/* Header with greeting */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-[#803344]">{getGreeting()}, {userName}</h1>
+          <h1 className="text-3xl font-bold mb-2">{getGreeting()}, {userName}</h1>
           <p className="text-gray-500">
             You have {filteredProperties.length} favorite {filteredProperties.length === 1 ? 'property' : 'properties'} saved.
           </p>
@@ -414,7 +414,7 @@ export default function FavoritesPage() {
             <div className="flex items-center gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2 hover:bg-gray-100">
+                  <Button variant="outline" className="flex items-center gap-2">
                     <Filter className="h-4 w-4" />
                     Filter
                     <ChevronDown className="h-4 w-4" />
@@ -455,7 +455,7 @@ export default function FavoritesPage() {
               {/* Sort */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2 hover:bg-gray-100">
+                  <Button variant="outline" className="flex items-center gap-2">
                     <ArrowUpDown className="h-4 w-4" />
                     Sort
                     <ChevronDown className="h-4 w-4" />
@@ -464,33 +464,33 @@ export default function FavoritesPage() {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem 
                     onClick={() => setSortBy("recently-added")}
-                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "recently-added" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
+                    className="relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-[#135341] hover:bg-[#135341] focus:bg-[#135341] text-[#ffffff]"
                   >
                     Recently Added
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={() => setSortBy("price-high-low")}
-                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "price-high-low" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "price-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
                   >
                     Price (High to Low)
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setSortBy("price-low-high")}
-                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "price-low-high" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "price-low-high" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
                   >
                     Price (Low to High)
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     onClick={() => setSortBy("beds-high-low")}
-                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "beds-high-low" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "beds-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
                   >
                     Beds (Most first)
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={() => setSortBy("sqft-high-low")}
-                    className={`hover:bg-[#803344]/10 focus:bg-[#803344]/10 ${sortBy === "sqft-high-low" ? "bg-[#803344] text-white hover:bg-[#803344] focus:bg-[#803344]" : ""}`}
+                    className={`hover:bg-gray-100 focus:bg-gray-100 ${sortBy === "sqft-high-low" ? "bg-[#135341] text-white hover:bg-[#135341] focus:bg-[#135341]" : ""}`}
                   >
                     Square Feet (Largest first)
                   </DropdownMenuItem>
@@ -502,7 +502,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
-                  className="gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 px-3 flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 text-white bg-[#803344]"
+                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "grid" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid className="h-4 w-4" />
@@ -510,7 +510,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "list" ? "default" : "ghost"}
                   size="sm"
-                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "list" ? "bg-[#803344] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
+                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "list" ? "bg-[#09261E] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
                   onClick={() => setViewMode("list")}
                 >
                   <List className="h-4 w-4" />
@@ -594,13 +594,13 @@ export default function FavoritesPage() {
                     />
                   </div>
                   <CardContent className="p-5">
-                    <CardTitle className="text-xl mb-1 line-clamp-1 text-[#803344]">{property.title}</CardTitle>
-                    <CardDescription className="mb-3 line-clamp-1 text-[#803344]/70">{property.address}</CardDescription>
+                    <CardTitle className="text-xl mb-1 line-clamp-1">{property.title}</CardTitle>
+                    <CardDescription className="mb-3 line-clamp-1">{property.address}</CardDescription>
                     <div className="flex justify-between text-sm">
-                      <div className="font-semibold text-[#803344]">{formatCurrency(property.price)}</div>
-                      <div className="text-[#803344]/80">{property.beds} beds</div>
-                      <div className="text-[#803344]/80">{property.baths} baths</div>
-                      <div className="text-[#803344]/80">{property.sqft.toLocaleString()} sqft</div>
+                      <div className="font-semibold">{formatCurrency(property.price)}</div>
+                      <div>{property.beds} beds</div>
+                      <div>{property.baths} baths</div>
+                      <div>{property.sqft.toLocaleString()} sqft</div>
                     </div>
                   </CardContent>
                 </Card>
@@ -629,29 +629,29 @@ export default function FavoritesPage() {
                     <div className="p-5 flex-1">
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-xl mb-1 text-[#803344]">{property.title}</CardTitle>
-                          <CardDescription className="mb-3 text-[#803344]/70">{property.address}</CardDescription>
+                          <CardTitle className="text-xl mb-1">{property.title}</CardTitle>
+                          <CardDescription className="mb-3">{property.address}</CardDescription>
                         </div>
-                        <div className="text-xl font-bold text-[#803344]">
+                        <div className="text-xl font-bold text-[#09261E]">
                           {formatCurrency(property.price)}
                         </div>
                       </div>
                       <div className="grid grid-cols-4 gap-4 mt-4">
                         <div>
-                          <div className="text-sm text-[#803344]/60">Beds</div>
-                          <div className="font-medium text-[#803344]">{property.beds}</div>
+                          <div className="text-sm text-gray-500">Beds</div>
+                          <div className="font-medium">{property.beds}</div>
                         </div>
                         <div>
-                          <div className="text-sm text-[#803344]/60">Baths</div>
-                          <div className="font-medium text-[#803344]">{property.baths}</div>
+                          <div className="text-sm text-gray-500">Baths</div>
+                          <div className="font-medium">{property.baths}</div>
                         </div>
                         <div>
-                          <div className="text-sm text-[#803344]/60">Sq Ft</div>
-                          <div className="font-medium text-[#803344]">{property.sqft.toLocaleString()}</div>
+                          <div className="text-sm text-gray-500">Sq Ft</div>
+                          <div className="font-medium">{property.sqft.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-sm text-[#803344]/60">Type</div>
-                          <div className="font-medium text-[#803344]">{property.propertyType || "Residential"}</div>
+                          <div className="text-sm text-gray-500">Type</div>
+                          <div className="font-medium">{property.propertyType || "Residential"}</div>
                         </div>
                       </div>
                     </div>
