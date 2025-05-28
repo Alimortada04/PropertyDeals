@@ -502,7 +502,7 @@ export default function FavoritesPage() {
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
-                  className={`flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 ${viewMode === "grid" ? "bg-[#803344] text-white" : "bg-transparent text-gray-500 hover:bg-gray-200"}`}
+                  className="gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary/90 px-3 flex items-center justify-center h-8 w-8 rounded-md transition-all duration-200 text-white bg-[#803344]"
                   onClick={() => setViewMode("grid")}
                 >
                   <Grid className="h-4 w-4" />
