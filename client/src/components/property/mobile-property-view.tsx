@@ -1352,33 +1352,32 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </div>
         </div>
         
-        {/* Email Signup CTA with wine-colored border */}
-        <div className="px-4 py-8 bg-gradient-to-r from-[#09261E] to-[#135341] text-white border-t-2 border-b-2 border-[#803344]">
+        {/* Email Signup CTA - Desktop style with white background */}
+        <div className="px-4 py-8 bg-white border-t border-gray-200">
           <div className="text-center">
-            <h3 className="text-xl font-heading font-bold mb-3">Don't Miss Out on New Deals</h3>
-            <p className="text-white/80 mb-6">
-              Get notified about new properties in this area.
+            <h3 className="text-xl font-heading font-bold mb-3 text-gray-900">Don't Miss Out on New Deals</h3>
+            <p className="text-gray-600 mb-6">
+              Get notified about new properties in this area and receive personalized recommendations.
             </p>
             
             <div className="flex flex-col gap-3">
               <Input 
                 type="email" 
                 placeholder="Your email address" 
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus-visible:ring-white/30"
+                className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
               />
-              <Button className="bg-[#803344] hover:bg-[#803344]/90">
+              <Button className="bg-gray-900 hover:bg-gray-800 text-white">
                 Sign Up Now
               </Button>
             </div>
             
-            <p className="mt-3 text-xs text-white/60">
+            <p className="mt-3 text-xs text-gray-500">
               We respect your privacy and won't share your information.
             </p>
           </div>
         </div>
         
-        {/* Bottom padding to account for floating contact bar */}
-        <div className="h-24"></div>
+
       </div>
       
       {/* Floating CTA Bar */}
