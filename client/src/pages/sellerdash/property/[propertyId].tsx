@@ -1,401 +1,376 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, Link } from 'wouter';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '@/hooks/use-auth';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from 'react';
+import { useParams, useLocation } from 'wouter';
+import { ArrowLeft, Building, Camera, DollarSign, Truck, FileText, Save, Eye, Edit3, Calculator, Home, Calendar, Users, MapPin, Bed, Bath, Square, Clock, Tag, TrendingUp, PiggyBank, Wrench, Key, FileUp, Plus, Trash2, Upload, Video, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { 
-  ArrowLeft, 
-  Eye, 
-  Save, 
-  MapPin, 
-  Home, 
-  DollarSign, 
-  FileText, 
-  Image as ImageIcon, 
-  Building, 
-  Upload, 
-  X,
-  Plus,
-  Trash2,
-  ExternalLink,
-  Video,
-  Key,
-  Calendar,
-  Tag,
-  Calculator,
-  Handshake,
-  Settings
-} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { SellerDashboardLayout } from '@/components/layout/seller-dashboard-layout';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import { useToast } from '@/hooks/use-toast';
 
-interface PropertyEditorData {
-  id: string;
+interface Property {
+  id: number;
   title: string;
   address: string;
   city: string;
   state: string;
   zipCode: string;
-  county?: string;
-  parcelId?: string;
-  status: 'live' | 'draft';
-  isPublic: boolean;
   propertyType: string;
   bedrooms: number;
   bathrooms: number;
   squareFeet: number;
   lotSize?: string;
   yearBuilt?: number;
-  condition: string;
-  occupancyStatus: string;
-  price: number;
-  purchasePrice?: number;
+  county?: string;
+  parcelId?: string;
   listingPrice: number;
-  assignmentFee?: number;
+  purchasePrice?: number;
   arv?: number;
   estimatedRepairs?: number;
   monthlyRent?: number;
-  totalMonthlyRent?: number;
-  jvAvailable?: boolean;
-  propertyTaxes?: number;
-  insurance?: number;
-  utilities?: number;
-  hoaFees?: number;
-  shortSummary: string;
-  description: string;
-  primaryImage?: string;
-  images: string[];
+  condition: string;
+  occupancyStatus: string;
+  description?: string;
+  images?: string[];
   videoUrl?: string;
-  accessType?: string;
-  closingDate?: string;
-  units?: Array<{
-    id: string;
-    label: string;
-    beds: number;
-    baths: number;
-    rent: number;
-    sqft: number;
-    occupied: boolean;
-  }>;
-  expenses?: Array<{
-    id: string;
-    name: string;
-    amount: string;
-    frequency: 'monthly' | 'quarterly' | 'annually';
-  }>;
-  repairs?: Array<{
-    id: string;
-    taskName: string;
-    description: string;
-    estimatedCost: number;
-    contractorQuote?: string;
-    contractor?: string;
-  }>;
-  documents?: Array<{
-    id: string;
-    name: string;
-    url: string;
-    type: string;
-  }>;
-  partners?: string[];
-  additionalNotes?: string;
-  strategyTags: string[];
-  conditionTags: string[];
-  saleType: string;
-  lockboxCode?: string;
+  assignmentFee?: number;
   accessInstructions?: string;
-  tenantAware: boolean;
-  showingNotes?: string;
+  closingDate?: string;
+  notes?: string;
+}
+
+interface RentalUnit {
+  id: string;
+  rent: number;
+}
+
+interface Expense {
+  id: string;
+  name: string;
+  amount: number;
+  frequency: 'Monthly' | 'Annual' | 'Quarterly';
+}
+
+interface Repair {
+  id: string;
+  name: string;
+  cost: number;
+  notes: string;
+}
+
+interface Partner {
+  id: string;
+  name: string;
 }
 
 export default function PropertyEditor() {
-  const { userId, propertyId } = useParams();
+  const { propertyId } = useParams<{ propertyId: string }>();
   const [, setLocation] = useLocation();
-  const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Load property data
+  const [activeSection, setActiveSection] = useState<'information' | 'media' | 'finance' | 'logistics' | 'description'>('information');
+  const [editData, setEditData] = useState<Partial<Property>>({});
+  const [rentalUnits, setRentalUnits] = useState<RentalUnit[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [repairs, setRepairs] = useState<Repair[]>([]);
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [generatedDescription, setGeneratedDescription] = useState('');
+  const [descriptionTone, setDescriptionTone] = useState('Professional');
+  const [descriptionType, setDescriptionType] = useState('Marketing');
+
   const { data: property, isLoading } = useQuery({
-    queryKey: [`/api/properties/${propertyId}`],
-    enabled: !!propertyId
+    queryKey: ['/api/properties', propertyId],
+    enabled: !!propertyId,
   });
 
-  // Local state for editing
-  const [editData, setEditData] = useState<PropertyEditorData | null>(null);
-  const [activeSection, setActiveSection] = useState('info');
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-  // Initialize edit data when property loads
-  useEffect(() => {
-    if (property && !editData) {
-      setEditData({
-        id: property.id,
-        title: property.title || '',
-        address: property.address || '',
-        city: property.city || '',
-        state: property.state || '',
-        zipCode: property.zipCode || '',
-        status: property.status || 'draft',
-        isPublic: property.isPublic ?? true,
-        propertyType: property.propertyType || 'Single Family',
-        bedrooms: property.bedrooms || 3,
-        bathrooms: property.bathrooms || 2,
-        squareFeet: property.squareFeet || 0,
-        lotSize: property.lotSize,
-        yearBuilt: property.yearBuilt,
-        condition: property.condition || 'Good',
-        occupancyStatus: property.occupancyStatus || 'Vacant',
-        price: property.price || 0,
-        arv: property.arv,
-        estimatedRepairs: property.estimatedRepairs,
-        monthlyRent: property.monthlyRent,
-        assignmentFee: property.assignmentFee,
-        jvAvailable: property.jvAvailable ?? false,
-        propertyTaxes: property.propertyTaxes,
-        insurance: property.insurance,
-        utilities: property.utilities,
-        hoaFees: property.hoaFees,
-        shortSummary: property.shortSummary || '',
-        description: property.description || '',
-        images: property.images || [],
-        videoUrl: property.videoUrl,
-        units: property.units || [],
-        documents: property.documents || [],
-        strategyTags: property.strategyTags || [],
-        conditionTags: property.conditionTags || [],
-        saleType: property.saleType || 'Direct Sale',
-        lockboxCode: property.lockboxCode,
-        accessInstructions: property.accessInstructions,
-        tenantAware: property.tenantAware ?? false,
-        showingNotes: property.showingNotes
-      });
-    }
-  }, [property, editData]);
-
-  // Save mutation
-  const saveMutation = useMutation({
-    mutationFn: async (data: Partial<PropertyEditorData>) => {
-      const res = await apiRequest('PATCH', `/api/properties/${propertyId}`, data);
-      return res.json();
-    },
+  const updatePropertyMutation = useMutation({
+    mutationFn: (data: Partial<Property>) =>
+      apiRequest(`/api/properties/${propertyId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      }),
     onSuccess: () => {
       toast({
-        title: 'Property Updated',
-        description: 'Your changes have been saved successfully.',
+        title: "Property Updated",
+        description: "Your changes have been saved successfully.",
       });
-      setHasUnsavedChanges(false);
-      queryClient.invalidateQueries({ queryKey: [`/api/properties/${propertyId}`] });
+      queryClient.invalidateQueries({ queryKey: ['/api/properties', propertyId] });
     },
-    onError: (error: Error) => {
+    onError: (error: any) => {
       toast({
-        variant: 'destructive',
-        title: 'Save Failed',
-        description: error.message || 'Failed to save changes.',
+        title: "Save Failed",
+        description: error.message || "Failed to save property changes.",
+        variant: "destructive",
       });
-    }
+    },
   });
 
-  const handleFieldChange = (field: string, value: any) => {
-    if (!editData) return;
-    
-    setEditData(prev => prev ? { ...prev, [field]: value } : null);
-    setHasUnsavedChanges(true);
+  useEffect(() => {
+    if (property) {
+      setEditData(property);
+      setGeneratedDescription(property.description || '');
+    }
+  }, [property]);
+
+  const handleFieldChange = (field: keyof Property, value: any) => {
+    setEditData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSave = () => {
-    if (!editData) return;
-    saveMutation.mutate(editData);
+    const dataToSave = {
+      ...editData,
+      monthlyRent: calculateTotalRent(),
+      assignmentFee: calculateAssignmentFee(),
+    };
+    updatePropertyMutation.mutate(dataToSave);
   };
 
-  const handlePreview = () => {
-    window.open(`/p/${propertyId}`, '_blank');
+  const addRentalUnit = () => {
+    const newUnit: RentalUnit = {
+      id: Date.now().toString(),
+      rent: 0,
+    };
+    setRentalUnits(prev => [...prev, newUnit]);
+  };
+
+  const updateRentalUnit = (id: string, rent: number) => {
+    setRentalUnits(prev => prev.map(unit => unit.id === id ? { ...unit, rent } : unit));
+  };
+
+  const removeRentalUnit = (id: string) => {
+    setRentalUnits(prev => prev.filter(unit => unit.id !== id));
+  };
+
+  const calculateTotalRent = () => {
+    return rentalUnits.reduce((total, unit) => total + unit.rent, 0);
+  };
+
+  const addExpense = () => {
+    const newExpense: Expense = {
+      id: Date.now().toString(),
+      name: '',
+      amount: 0,
+      frequency: 'Monthly',
+    };
+    setExpenses(prev => [...prev, newExpense]);
+  };
+
+  const updateExpense = (id: string, field: keyof Expense, value: any) => {
+    setExpenses(prev => prev.map(expense => expense.id === id ? { ...expense, [field]: value } : expense));
+  };
+
+  const removeExpense = (id: string) => {
+    setExpenses(prev => prev.filter(expense => expense.id !== id));
+  };
+
+  const calculateMonthlyExpenses = () => {
+    return expenses.reduce((total, expense) => {
+      if (expense.frequency === 'Monthly') return total + expense.amount;
+      if (expense.frequency === 'Annual') return total + (expense.amount / 12);
+      if (expense.frequency === 'Quarterly') return total + (expense.amount / 3);
+      return total;
+    }, 0);
+  };
+
+  const calculateAnnualExpenses = () => {
+    return expenses.reduce((total, expense) => {
+      if (expense.frequency === 'Monthly') return total + (expense.amount * 12);
+      if (expense.frequency === 'Annual') return total + expense.amount;
+      if (expense.frequency === 'Quarterly') return total + (expense.amount * 4);
+      return total;
+    }, 0);
+  };
+
+  const addRepair = () => {
+    const newRepair: Repair = {
+      id: Date.now().toString(),
+      name: '',
+      cost: 0,
+      notes: '',
+    };
+    setRepairs(prev => [...prev, newRepair]);
+  };
+
+  const updateRepair = (id: string, field: keyof Repair, value: any) => {
+    setRepairs(prev => prev.map(repair => repair.id === id ? { ...repair, [field]: value } : repair));
+  };
+
+  const removeRepair = (id: string) => {
+    setRepairs(prev => prev.filter(repair => repair.id !== id));
+  };
+
+  const calculateAssignmentFee = () => {
+    if (editData.listingPrice && editData.purchasePrice) {
+      return editData.listingPrice - editData.purchasePrice;
+    }
+    return 0;
+  };
+
+  const addPartner = () => {
+    const newPartner: Partner = {
+      id: Date.now().toString(),
+      name: '',
+    };
+    setPartners(prev => [...prev, newPartner]);
+  };
+
+  const updatePartner = (id: string, name: string) => {
+    setPartners(prev => prev.map(partner => partner.id === id ? { ...partner, name } : partner));
+  };
+
+  const removePartner = (id: string) => {
+    setPartners(prev => prev.filter(partner => partner.id !== id));
+  };
+
+  const generateDescription = async () => {
+    try {
+      const response = await apiRequest('/api/ai/generate-description', {
+        method: 'POST',
+        body: JSON.stringify({
+          property: editData,
+          tone: descriptionTone,
+          type: descriptionType,
+        }),
+      });
+      setGeneratedDescription(response.description);
+      handleFieldChange('description', response.description);
+      toast({
+        title: "Description Generated",
+        description: "AI description has been generated successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Generation Failed",
+        description: "Failed to generate description. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (isLoading) {
     return (
       <SellerDashboardLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#135341] mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading property...</p>
-          </div>
+          <div className="text-lg">Loading property...</div>
         </div>
       </SellerDashboardLayout>
     );
   }
 
-  if (!property || !editData) {
+  if (!property) {
     return (
       <SellerDashboardLayout>
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">Property Not Found</h2>
-          <p className="text-gray-600 mb-6">The property you're looking for doesn't exist or you don't have access to it.</p>
-          <Button onClick={() => setLocation(`/sellerdash/${userId}`)}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-lg">Property not found</div>
         </div>
       </SellerDashboardLayout>
     );
   }
 
   const sections = [
-    { id: 'info', label: 'Property Information', icon: Home },
-    { id: 'media', label: 'Media', icon: ImageIcon },
+    { id: 'information', label: 'Property Information', icon: Building },
+    { id: 'media', label: 'Media', icon: Camera },
     { id: 'finance', label: 'Finance', icon: DollarSign },
-    { id: 'logistics', label: 'Logistics', icon: MapPin },
-    { id: 'description', label: 'Property Description', icon: FileText }
-  ];
+    { id: 'logistics', label: 'Logistics', icon: Truck },
+    { id: 'description', label: 'Property Description', icon: FileText },
+  ] as const;
 
   return (
     <SellerDashboardLayout>
-      <div className="space-y-6">
+      <div className="p-6 pb-20">
         {/* Header */}
-        <div className="space-y-4">
-          {/* Top row - Back button and action buttons */}
-          <div className="flex items-center justify-between">
-            <Button 
-              variant="ghost" 
-              onClick={() => setLocation(`/sellerdash/${userId}`)}
-              className="hover:bg-gray-100"
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocation('/sellerdash/1')}
+              className="flex items-center space-x-2"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Dashboard</span>
             </Button>
-            
-            <div className="flex items-center space-x-3">
-              <Button 
-                variant="outline" 
-                onClick={handlePreview}
-                className="hover:bg-gray-100"
-              >
-                <Eye className="h-4 w-4 mr-2" />
-                Preview Public Listing
-                <ExternalLink className="h-3 w-3 ml-1" />
-              </Button>
-              <Button 
-                onClick={handleSave}
-                disabled={!hasUnsavedChanges || saveMutation.isPending}
-                className="bg-[#135341] hover:bg-[#09261E] text-white"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                {saveMutation.isPending ? 'Saving...' : 'Save Changes'}
-              </Button>
+            <div>
+              <h1 className="text-2xl font-bold">Edit Property</h1>
+              <p className="text-gray-600">{property.address}</p>
             </div>
           </div>
-          
-          {/* Bottom row - Title and address */}
-          <div>
-            <h1 className="text-2xl font-semibold text-[#09261E]">Edit Property</h1>
-            <p className="text-gray-600">{editData.address}</p>
-          </div>
+          <Button
+            onClick={handleSave}
+            disabled={updatePropertyMutation.isPending}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <Save className="h-4 w-4 mr-2" />
+            {updatePropertyMutation.isPending ? 'Saving...' : 'Save'}
+          </Button>
         </div>
 
-        {/* Unsaved Changes Warning */}
-        {hasUnsavedChanges && (
-          <Card className="border-orange-200 bg-orange-50">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                  <span className="text-sm text-orange-800">You have unsaved changes</span>
-                </div>
-                <Button size="sm" onClick={handleSave} className="bg-orange-600 hover:bg-orange-700 text-white">
-                  Save Now
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Tab Navigation */}
+        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg mb-8">
+          {sections.map((section, index) => {
+            const Icon = section.icon;
+            return (
+              <button
+                key={section.id}
+                onClick={() => setActiveSection(section.id)}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  activeSection === section.id
+                    ? 'bg-white text-green-600 shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                <span className="hidden md:inline">{section.label}</span>
+                <span className="md:hidden">{index + 1}</span>
+              </button>
+            );
+          })}
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Desktop Sidebar Navigation */}
-          <div className="hidden lg:block lg:col-span-1">
-            <Card className="sticky top-6">
+        <div className="max-w-4xl">
+          {/* Step 1: Property Information */}
+          {activeSection === 'information' && (
+            <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Edit Sections</CardTitle>
+                <CardTitle className="flex items-center space-x-2">
+                  <Building className="h-5 w-5" />
+                  <span>Step 1: Property Information</span>
+                </CardTitle>
+                <p className="text-sm text-gray-600">Enter the basic details about your property</p>
               </CardHeader>
-              <CardContent className="space-y-2">
-                {sections.map((section) => (
-                  <button
-                    key={section.id}
-                    onClick={() => setActiveSection(section.id)}
-                    className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors flex items-center space-x-2 ${
-                      activeSection === section.id
-                        ? 'bg-[#135341] text-white'
-                        : 'hover:bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    <section.icon className="h-4 w-4" />
-                    <span>{section.label}</span>
-                  </button>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Main Content */}
-          <div className="lg:col-span-3">
-            {/* Mobile Section Selector */}
-            <div className="lg:hidden mb-6">
-              <Select value={activeSection} onValueChange={setActiveSection}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select section to edit" />
-                </SelectTrigger>
-                <SelectContent>
-                  {sections.map((section) => (
-                    <SelectItem key={section.id} value={section.id}>
-                      <div className="flex items-center space-x-2">
-                        <section.icon className="h-4 w-4" />
-                        <span>{section.label}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Step 1: Property Information */}
-            {activeSection === 'info' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Home className="h-5 w-5" />
-                    <span>Step 1: Property Information</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-8 pt-6">
-                  {/* Property Address */}
-                  <div className="space-y-2">
-                    <Label htmlFor="address" className="text-sm font-medium">
+              <CardContent className="space-y-6">
+                {/* Property Address */}
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="address" className="flex items-center gap-2 text-base font-medium">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
                       Property Address
                     </Label>
                     <Input
                       id="address"
                       value={editData.address}
                       onChange={(e) => handleFieldChange('address', e.target.value)}
-                      placeholder="Enter the full property address"
-                      className="h-11"
+                      placeholder="e.g. 123 Main Street"
+                      className="mt-2"
                     />
-                    <p className="text-sm text-gray-500">
-                      Note: Auto-fill logic active
+                    <p className="text-sm text-gray-500 mt-1">
+                      Enter the full street address of the property
                     </p>
                   </div>
 
+                  <Separator />
+
                   {/* Property Title */}
-                  <div className="space-y-2">
-                    <Label htmlFor="title" className="text-sm font-medium">
+                  <div>
+                    <Label htmlFor="title" className="flex items-center gap-2 text-base font-medium">
+                      <Tag className="h-4 w-4 text-muted-foreground" />
                       Property Title
                     </Label>
                     <Input
@@ -403,695 +378,762 @@ export default function PropertyEditor() {
                       value={editData.title}
                       onChange={(e) => handleFieldChange('title', e.target.value)}
                       placeholder="e.g. Colonial Single Family"
-                      className="h-11"
+                      className="mt-2"
                     />
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 mt-1">
                       A descriptive title helps buyers identify your property
                     </p>
                   </div>
 
                   {/* Property Type */}
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Property Type</Label>
-                    <Select value={editData.propertyType} onValueChange={(value) => handleFieldChange('propertyType', value)}>
-                      <SelectTrigger className="h-11">
+                  <div>
+                    <Label htmlFor="propertyType" className="flex items-center gap-2 text-base font-medium">
+                      <Building className="h-4 w-4 text-muted-foreground" />
+                      Property Type
+                    </Label>
+                    <Select
+                      value={editData.propertyType}
+                      onValueChange={(value) => handleFieldChange('propertyType', value)}
+                    >
+                      <SelectTrigger className="mt-2">
                         <SelectValue placeholder="Select property type" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Single Family">Single Family</SelectItem>
-                        <SelectItem value="Multi Family">Multi Family</SelectItem>
+                        <SelectItem value="Multi-Family">Multi-Family</SelectItem>
+                        <SelectItem value="Duplex">Duplex</SelectItem>
                         <SelectItem value="Condo">Condo</SelectItem>
-                        <SelectItem value="Townhouse">Townhouse</SelectItem>
+                        <SelectItem value="Vacant Land">Vacant Land</SelectItem>
                         <SelectItem value="Commercial">Commercial</SelectItem>
-                        <SelectItem value="Land">Land</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  {/* City | State | Zip Code */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="city" className="text-sm font-medium">City</Label>
-                      <Input
-                        id="city"
-                        value={editData.city}
-                        onChange={(e) => handleFieldChange('city', e.target.value)}
-                        placeholder="e.g. Chicago"
-                        className="h-11"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="state" className="text-sm font-medium">State</Label>
-                      <Input
-                        id="state"
-                        value={editData.state}
-                        onChange={(e) => handleFieldChange('state', e.target.value)}
-                        placeholder="e.g. IL"
-                        className="h-11"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="zipCode" className="text-sm font-medium">Zip Code</Label>
-                      <Input
-                        id="zipCode"
-                        value={editData.zipCode}
-                        onChange={(e) => handleFieldChange('zipCode', e.target.value)}
-                        placeholder="e.g. 60601"
-                        className="h-11"
-                      />
-                    </div>
-                  </div>
+                  <Separator />
 
-                  {/* Bedrooms | Bathrooms | Year Built */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="bedrooms" className="text-sm font-medium">Bedrooms</Label>
-                      <Input
-                        id="bedrooms"
-                        type="number"
-                        value={editData.bedrooms}
-                        onChange={(e) => handleFieldChange('bedrooms', parseInt(e.target.value) || 0)}
-                        placeholder="e.g. 3"
-                        className="h-11"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="bathrooms" className="text-sm font-medium">Bathrooms</Label>
-                      <Input
-                        id="bathrooms"
-                        type="number"
-                        step="0.5"
-                        value={editData.bathrooms}
-                        onChange={(e) => handleFieldChange('bathrooms', parseFloat(e.target.value) || 0)}
-                        placeholder="e.g. 2.5"
-                        className="h-11"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="yearBuilt" className="text-sm font-medium">Year Built</Label>
-                      <Input
-                        id="yearBuilt"
-                        type="number"
-                        value={editData.yearBuilt || ''}
-                        onChange={(e) => handleFieldChange('yearBuilt', parseInt(e.target.value) || undefined)}
-                        placeholder="e.g. 1990"
-                        className="h-11"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Square Footage | Lot Size */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="squareFeet" className="text-sm font-medium">Square Footage</Label>
-                      <Input
-                        id="squareFeet"
-                        type="number"
-                        value={editData.squareFeet}
-                        onChange={(e) => handleFieldChange('squareFeet', parseInt(e.target.value) || 0)}
-                        placeholder="e.g. 2500"
-                        className="h-11"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lotSize" className="text-sm font-medium">Lot Size</Label>
-                      <Input
-                        id="lotSize"
-                        value={editData.lotSize || ''}
-                        onChange={(e) => handleFieldChange('lotSize', e.target.value)}
-                        placeholder="e.g. 0.25 acres"
-                        className="h-11"
-                      />
-                    </div>
-                  </div>
-
-                  {/* County (optional) */}
-                  <div className="space-y-2">
-                    <Label htmlFor="county" className="text-sm font-medium">County (optional)</Label>
-                    <Input
-                      id="county"
-                      value={editData.county || ''}
-                      onChange={(e) => handleFieldChange('county', e.target.value)}
-                      placeholder="e.g. Cook County"
-                      className="h-11"
-                    />
-                  </div>
-
-                  {/* Parcel ID / APN (optional) */}
-                  <div className="space-y-2">
-                    <Label htmlFor="parcelId" className="text-sm font-medium">Parcel ID / APN (optional)</Label>
-                    <Input
-                      id="parcelId"
-                      value={editData.parcelId || ''}
-                      onChange={(e) => handleFieldChange('parcelId', e.target.value)}
-                      placeholder="e.g. 14-21-106-017-0000"
-                      className="h-11"
-                    />
-                  </div>
-
-                  {/* Save as Draft - Bottom padding */}
-                  <div className="pt-6 pb-8">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleSave}
-                      disabled={saveMutation.isPending}
-                      className="w-full"
-                    >
-                      {saveMutation.isPending ? 'Saving as Draft...' : 'Save as Draft'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Step 2: Media */}
-            {activeSection === 'media' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <ImageIcon className="h-5 w-5" />
-                    <span>Step 2: Media</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-8 pt-6">
-                  {/* Primary Image */}
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Primary Image (upload/dropzone)</Label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
-                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                      <div className="mt-4">
-                        <Label htmlFor="primary-image" className="cursor-pointer">
-                          <span className="mt-2 block text-sm font-medium text-gray-900">
-                            Upload primary property image
-                          </span>
-                          <span className="mt-1 block text-xs text-gray-500">
-                            PNG, JPG, GIF up to 10MB
-                          </span>
-                        </Label>
-                        <Input id="primary-image" type="file" accept="image/*" className="hidden" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Gallery Images */}
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">Gallery Images (multi-upload)</Label>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
-                      <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                      <div className="mt-4">
-                        <Label htmlFor="gallery-images" className="cursor-pointer">
-                          <span className="mt-2 block text-sm font-medium text-gray-900">
-                            Upload gallery images
-                          </span>
-                          <span className="mt-1 block text-xs text-gray-500">
-                            Select multiple images, PNG, JPG, GIF up to 10MB each
-                          </span>
-                        </Label>
-                        <Input id="gallery-images" type="file" accept="image/*" multiple className="hidden" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Video Walkthrough */}
-                  <div className="space-y-4">
-                    <Label className="text-sm font-medium">Video Walkthrough</Label>
-                    
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Option 1: Paste YouTube/Vimeo/Drive link</Label>
+                  {/* City / State / Zip */}
+                  <div>
+                    <Label className="text-base font-medium mb-2 block">Location Details</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="city">City</Label>
                         <Input
-                          value={editData.videoUrl || ''}
-                          onChange={(e) => handleFieldChange('videoUrl', e.target.value)}
-                          placeholder="https://youtube.com/watch?v=..."
-                          className="h-11"
+                          id="city"
+                          value={editData.city}
+                          onChange={(e) => handleFieldChange('city', e.target.value)}
+                          placeholder="e.g. Chicago"
                         />
                       </div>
+                      <div>
+                        <Label htmlFor="state">State</Label>
+                        <Input
+                          id="state"
+                          value={editData.state}
+                          onChange={(e) => handleFieldChange('state', e.target.value)}
+                          placeholder="e.g. IL"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="zipCode">Zip Code</Label>
+                        <Input
+                          id="zipCode"
+                          value={editData.zipCode}
+                          onChange={(e) => handleFieldChange('zipCode', e.target.value)}
+                          placeholder="e.g. 60601"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-                      <div className="text-center text-sm text-gray-500">— OR —</div>
+                  <Separator />
 
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Option 2: Upload MP4/WebM</Label>
-                        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                          <Video className="mx-auto h-8 w-8 text-gray-400" />
-                          <div className="mt-2">
-                            <Label htmlFor="video-upload" className="cursor-pointer">
-                              <span className="block text-sm font-medium text-gray-900">
-                                Upload video file
-                              </span>
-                              <span className="block text-xs text-gray-500">
-                                MP4, WebM up to 100MB
-                              </span>
-                            </Label>
-                            <Input id="video-upload" type="file" accept="video/*" className="hidden" />
+                  {/* Bedrooms / Bathrooms / Year Built */}
+                  <div>
+                    <Label className="text-base font-medium mb-2 block">Property Features</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="bedrooms" className="flex items-center gap-2">
+                          <Bed className="h-4 w-4 text-muted-foreground" />
+                          Bedrooms
+                        </Label>
+                        <Input
+                          id="bedrooms"
+                          type="number"
+                          value={editData.bedrooms}
+                          onChange={(e) => handleFieldChange('bedrooms', parseInt(e.target.value) || 0)}
+                          placeholder="e.g. 3"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="bathrooms" className="flex items-center gap-2">
+                          <Bath className="h-4 w-4 text-muted-foreground" />
+                          Bathrooms
+                        </Label>
+                        <Input
+                          id="bathrooms"
+                          type="number"
+                          step="0.5"
+                          value={editData.bathrooms}
+                          onChange={(e) => handleFieldChange('bathrooms', parseFloat(e.target.value) || 0)}
+                          placeholder="e.g. 2.5"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="yearBuilt" className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          Year Built
+                        </Label>
+                        <Input
+                          id="yearBuilt"
+                          type="number"
+                          value={editData.yearBuilt || ''}
+                          onChange={(e) => handleFieldChange('yearBuilt', parseInt(e.target.value) || undefined)}
+                          placeholder="e.g. 1990"
+                          min="1800"
+                          max={new Date().getFullYear()}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Square Footage / Lot Size */}
+                  <div>
+                    <Label className="text-base font-medium mb-2 block">Size Information</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="squareFeet" className="flex items-center gap-2">
+                          <Square className="h-4 w-4 text-muted-foreground" />
+                          Square Footage
+                        </Label>
+                        <Input
+                          id="squareFeet"
+                          type="number"
+                          value={editData.squareFeet}
+                          onChange={(e) => handleFieldChange('squareFeet', parseInt(e.target.value) || 0)}
+                          placeholder="e.g. 2500"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="lotSize">Lot Size</Label>
+                        <Input
+                          id="lotSize"
+                          value={editData.lotSize || ''}
+                          onChange={(e) => handleFieldChange('lotSize', e.target.value)}
+                          placeholder="e.g. 0.25 acres"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* County / Parcel ID */}
+                  <div>
+                    <Label className="text-base font-medium mb-2 block">Additional Information (Optional)</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="county">County</Label>
+                        <Input
+                          id="county"
+                          value={editData.county || ''}
+                          onChange={(e) => handleFieldChange('county', e.target.value)}
+                          placeholder="e.g. Cook County"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="parcelId">Parcel ID / APN</Label>
+                        <Input
+                          id="parcelId"
+                          value={editData.parcelId || ''}
+                          onChange={(e) => handleFieldChange('parcelId', e.target.value)}
+                          placeholder="e.g. 14-21-106-017-0000"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Step 2: Media */}
+          {activeSection === 'media' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Camera className="h-5 w-5" />
+                  <span>Step 2: Media</span>
+                </CardTitle>
+                <p className="text-sm text-gray-600">Upload images and videos to showcase your property</p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Primary Image */}
+                <div className="space-y-4">
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                      Primary Image
+                    </Label>
+                    <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-6">
+                      <div className="text-center">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <div className="mt-4">
+                          <Button variant="outline" className="hover:bg-gray-50">
+                            Upload Primary Image
+                          </Button>
+                        </div>
+                        <p className="mt-2 text-sm text-gray-500">
+                          PNG, JPG, GIF up to 10MB
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Gallery Images */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                      Gallery Images
+                    </Label>
+                    <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-6">
+                      <div className="text-center">
+                        <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                        <div className="mt-4">
+                          <Button variant="outline" className="hover:bg-gray-50">
+                            Upload Multiple Images
+                          </Button>
+                        </div>
+                        <p className="mt-2 text-sm text-gray-500">
+                          Select multiple images to create a gallery
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Video Walkthrough */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <Video className="h-4 w-4 text-muted-foreground" />
+                      Video Walkthrough
+                    </Label>
+                    <div className="mt-2 space-y-4">
+                      <div>
+                        <Label htmlFor="videoUrl">YouTube / Vimeo / Drive Link</Label>
+                        <Input
+                          id="videoUrl"
+                          value={editData.videoUrl || ''}
+                          onChange={(e) => handleFieldChange('videoUrl', e.target.value)}
+                          placeholder="https://www.youtube.com/watch?v=..."
+                        />
+                      </div>
+                      <div className="text-center text-gray-500">or</div>
+                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                        <div className="text-center">
+                          <Video className="mx-auto h-12 w-12 text-gray-400" />
+                          <div className="mt-4">
+                            <Button variant="outline" className="hover:bg-gray-50">
+                              Upload Video File
+                            </Button>
+                          </div>
+                          <p className="mt-2 text-sm text-gray-500">
+                            MP4, WEBM up to 100MB
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Step 3: Finance */}
+          {activeSection === 'finance' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <DollarSign className="h-5 w-5" />
+                  <span>Step 3: Finance</span>
+                </CardTitle>
+                <p className="text-sm text-gray-600">Set pricing and financial details for your property</p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Pricing */}
+                <div className="space-y-4">
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                      Pricing Information
+                    </Label>
+                    <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="listingPrice">Listing Price *</Label>
+                        <Input
+                          id="listingPrice"
+                          type="number"
+                          value={editData.listingPrice}
+                          onChange={(e) => handleFieldChange('listingPrice', parseInt(e.target.value) || 0)}
+                          placeholder="e.g. 275000"
+                          min="0"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="purchasePrice">Purchase Price</Label>
+                        <Input
+                          id="purchasePrice"
+                          type="number"
+                          value={editData.purchasePrice || ''}
+                          onChange={(e) => handleFieldChange('purchasePrice', parseInt(e.target.value) || undefined)}
+                          placeholder="e.g. 225000"
+                          min="0"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Rental Income */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <PiggyBank className="h-4 w-4 text-muted-foreground" />
+                      Rental Income
+                    </Label>
+                    <div className="mt-2 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">Total Monthly Rent</div>
+                          <div className="text-2xl font-bold text-green-600">
+                            ${calculateTotalRent().toLocaleString()}
                           </div>
                         </div>
+                        <Button
+                          onClick={addRentalUnit}
+                          variant="outline"
+                          className="hover:bg-gray-50"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Unit
+                        </Button>
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Save as Draft - Bottom padding */}
-                  <div className="pt-6 pb-8">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleSave}
-                      disabled={saveMutation.isPending}
-                      className="w-full"
-                    >
-                      {saveMutation.isPending ? 'Saving as Draft...' : 'Save as Draft'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Step 3: Finance */}
-            {activeSection === 'finance' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <DollarSign className="h-5 w-5" />
-                    <span>Step 3: Finance</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-8 pt-6">
-                  {/* Rental Income */}
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label className="text-sm font-medium">Rental Income</Label>
-                      <Label htmlFor="totalMonthlyRent" className="text-sm text-gray-600">Total Monthly Rent</Label>
-                      <Input
-                        id="totalMonthlyRent"
-                        type="number"
-                        value={editData.totalMonthlyRent || ''}
-                        onChange={(e) => handleFieldChange('totalMonthlyRent', parseFloat(e.target.value) || undefined)}
-                        placeholder="e.g. 2500"
-                        className="h-11"
-                      />
-                      <p className="text-sm text-gray-500">
-                        Enter the total monthly rental income for this property
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Unit Breakdown */}
-                  <div className="space-y-4">
-                    <Label className="text-sm font-medium">Unit Breakdown (Required for Multi-family)</Label>
-                    <div className="border rounded-lg p-4">
-                      {(!editData.units || editData.units.length === 0) ? (
-                        <div className="text-center py-8">
-                          <p className="text-gray-500 mb-4">No units added yet.</p>
-                          <Button variant="outline">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Unit
+                      
+                      {rentalUnits.map((unit) => (
+                        <div key={unit.id} className="flex items-center space-x-2 p-3 border rounded-lg">
+                          <div className="flex-1">
+                            <Label>Unit Rent (Monthly)</Label>
+                            <Input
+                              type="number"
+                              value={unit.rent}
+                              onChange={(e) => updateRentalUnit(unit.id, parseInt(e.target.value) || 0)}
+                              placeholder="e.g. 1200"
+                              min="0"
+                            />
+                          </div>
+                          <Button
+                            onClick={() => removeRentalUnit(unit.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
-                      ) : (
-                        <div className="space-y-4">
-                          {editData.units.map((unit, index) => (
-                            <div key={unit.id} className="border rounded p-4 space-y-2">
-                              <div className="flex justify-between items-center">
-                                <h4 className="font-medium">Unit {index + 1}</h4>
-                                <Button variant="ghost" size="sm">
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                              {/* Unit details would go here */}
-                            </div>
-                          ))}
-                          <Button variant="outline">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Unit
-                          </Button>
-                        </div>
-                      )}
+                      ))}
                     </div>
                   </div>
+
+                  <Separator />
 
                   {/* Expenses */}
-                  <div className="space-y-4">
-                    <Label className="text-sm font-medium">Expenses</Label>
-                    <div className="border rounded-lg overflow-hidden">
-                      <div className="bg-gray-50 px-4 py-2 border-b">
-                        <div className="grid grid-cols-3 gap-4 text-sm font-medium text-gray-700">
-                          <span>Expense Name</span>
-                          <span>Amount</span>
-                          <span>Frequency</span>
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <Calculator className="h-4 w-4 text-muted-foreground" />
+                      Property Expenses
+                    </Label>
+                    <div className="mt-2 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <div className="text-sm text-gray-600">Monthly Total</div>
+                            <div className="text-lg font-semibold">${calculateMonthlyExpenses().toLocaleString()}</div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-gray-600">Annual Total</div>
+                            <div className="text-lg font-semibold">${calculateAnnualExpenses().toLocaleString()}</div>
+                          </div>
                         </div>
-                      </div>
-                      <div className="divide-y">
-                        {/* Default expense rows */}
-                        <div className="grid grid-cols-3 gap-4 p-4 items-center">
-                          <Input placeholder="Property Tax" defaultValue="Property Tax" />
-                          <Input type="number" placeholder="0" />
-                          <Select defaultValue="annually">
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="monthly">Monthly</SelectItem>
-                              <SelectItem value="quarterly">Quarterly</SelectItem>
-                              <SelectItem value="annually">Annually</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4 p-4 items-center">
-                          <Input placeholder="Insurance" defaultValue="Insurance" />
-                          <Input type="number" placeholder="0" />
-                          <Select defaultValue="annually">
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="monthly">Monthly</SelectItem>
-                              <SelectItem value="quarterly">Quarterly</SelectItem>
-                              <SelectItem value="annually">Annually</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid grid-cols-3 gap-4 p-4 items-center">
-                          <Input placeholder="Utilities" defaultValue="Utilities" />
-                          <Input type="number" placeholder="0" />
-                          <Select defaultValue="monthly">
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="monthly">Monthly</SelectItem>
-                              <SelectItem value="quarterly">Quarterly</SelectItem>
-                              <SelectItem value="annually">Annually</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <div className="p-4 border-t bg-gray-50">
-                        <Button variant="outline" size="sm">
+                        <Button
+                          onClick={addExpense}
+                          variant="outline"
+                          className="hover:bg-gray-50"
+                        >
                           <Plus className="h-4 w-4 mr-2" />
                           Add Expense
                         </Button>
                       </div>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Monthly Total: $0</span>
-                      <span>Annual Total: $0</span>
+
+                      {expenses.map((expense) => (
+                        <div key={expense.id} className="flex items-center space-x-2 p-3 border rounded-lg">
+                          <div className="flex-1">
+                            <Label>Expense Name</Label>
+                            <Input
+                              value={expense.name}
+                              onChange={(e) => updateExpense(expense.id, 'name', e.target.value)}
+                              placeholder="e.g. Property Tax"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <Label>Amount</Label>
+                            <Input
+                              type="number"
+                              value={expense.amount}
+                              onChange={(e) => updateExpense(expense.id, 'amount', parseInt(e.target.value) || 0)}
+                              placeholder="e.g. 500"
+                              min="0"
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <Label>Frequency</Label>
+                            <Select
+                              value={expense.frequency}
+                              onValueChange={(value) => updateExpense(expense.id, 'frequency', value)}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="Monthly">Monthly</SelectItem>
+                                <SelectItem value="Annual">Annual</SelectItem>
+                                <SelectItem value="Quarterly">Quarterly</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <Button
+                            onClick={() => removeExpense(expense.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Property Condition & Repairs */}
-                  <div className="space-y-4">
-                    <Label className="text-sm font-medium">Property Condition & Repairs</Label>
-                    
-                    <div className="space-y-4">
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Condition</Label>
-                        <Select value={editData.condition} onValueChange={(value) => handleFieldChange('condition', value)}>
-                          <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Select condition" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Excellent">Excellent</SelectItem>
-                            <SelectItem value="Good – Minor Repairs Needed">Good – Minor Repairs Needed</SelectItem>
-                            <SelectItem value="Fair – Some Repairs Needed">Fair – Some Repairs Needed</SelectItem>
-                            <SelectItem value="Poor – Major Repairs Needed">Poor – Major Repairs Needed</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <p className="text-sm text-gray-500">
-                          Accurately describe the condition to set buyer expectations
-                        </p>
+                  <Separator />
+
+                  {/* Repairs */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <Wrench className="h-4 w-4 text-muted-foreground" />
+                      Needed Repairs
+                    </Label>
+                    <div className="mt-2 space-y-4">
+                      <div className="flex justify-end">
+                        <Button
+                          onClick={addRepair}
+                          variant="outline"
+                          className="hover:bg-gray-50"
+                        >
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add Repair
+                        </Button>
                       </div>
 
-                      <div className="space-y-2">
-                        <Label className="text-sm font-medium">Repair Projects</Label>
-                        <div className="border rounded-lg p-4">
-                          <p className="text-gray-500 mb-4">No repair projects added yet.</p>
-                          <Button variant="outline">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Repair
-                          </Button>
+                      {repairs.map((repair) => (
+                        <div key={repair.id} className="p-4 border rounded-lg space-y-3">
+                          <div className="flex items-center space-x-2">
+                            <div className="flex-1">
+                              <Label>Repair Name</Label>
+                              <Input
+                                value={repair.name}
+                                onChange={(e) => updateRepair(repair.id, 'name', e.target.value)}
+                                placeholder="e.g. Kitchen Renovation"
+                              />
+                            </div>
+                            <div className="w-32">
+                              <Label>Cost</Label>
+                              <Input
+                                type="number"
+                                value={repair.cost}
+                                onChange={(e) => updateRepair(repair.id, 'cost', parseInt(e.target.value) || 0)}
+                                placeholder="e.g. 5000"
+                                min="0"
+                              />
+                            </div>
+                            <Button
+                              onClick={() => removeRepair(repair.id)}
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-600 hover:text-red-700 mt-6"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <div>
+                            <Label>Notes/Description</Label>
+                            <Textarea
+                              value={repair.notes}
+                              onChange={(e) => updateRepair(repair.id, 'notes', e.target.value)}
+                              placeholder="Describe the repair needed..."
+                              rows={2}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Step 4: Logistics */}
+          {activeSection === 'logistics' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Truck className="h-5 w-5" />
+                  <span>Step 4: Logistics</span>
+                </CardTitle>
+                <p className="text-sm text-gray-600">Manage property access, closing details, and partnerships</p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  {/* Assignment Fee */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <Calculator className="h-4 w-4 text-muted-foreground" />
+                      Assignment Fee
+                    </Label>
+                    <div className="mt-2">
+                      <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="text-sm text-gray-600 mb-1">Auto-calculated: Listing Price - Purchase Price</div>
+                        <div className="text-2xl font-bold text-green-600">
+                          ${calculateAssignmentFee().toLocaleString()}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {/* Save as Draft - Bottom padding */}
-                  <div className="pt-6 pb-8">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleSave}
-                      disabled={saveMutation.isPending}
-                      className="w-full"
-                    >
-                      {saveMutation.isPending ? 'Saving as Draft...' : 'Save as Draft'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Step 4: Logistics */}
-            {activeSection === 'logistics' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <MapPin className="h-5 w-5" />
-                    <span>Step 4: Logistics</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-8 pt-6">
-                  {/* Purchase Price */}
-                  <div className="space-y-2">
-                    <Label htmlFor="purchasePrice" className="text-sm font-medium">Purchase Price</Label>
-                    <Input
-                      id="purchasePrice"
-                      type="number"
-                      value={editData.purchasePrice || ''}
-                      onChange={(e) => handleFieldChange('purchasePrice', parseFloat(e.target.value) || undefined)}
-                      placeholder="e.g. 200000"
-                      className="h-11"
-                    />
-                  </div>
-
-                  {/* Listing Price */}
-                  <div className="space-y-2">
-                    <Label htmlFor="listingPrice" className="text-sm font-medium">Listing Price</Label>
-                    <Input
-                      id="listingPrice"
-                      type="number"
-                      value={editData.listingPrice || editData.price}
-                      onChange={(e) => handleFieldChange('listingPrice', parseFloat(e.target.value) || 0)}
-                      placeholder="e.g. 225000"
-                      className="h-11"
-                    />
-                  </div>
-
-                  {/* Assignment Fee */}
-                  <div className="space-y-2">
-                    <Label htmlFor="assignmentFee" className="text-sm font-medium">Assignment Fee</Label>
-                    <Input
-                      id="assignmentFee"
-                      type="number"
-                      value={
-                        editData.assignmentFee || 
-                        ((editData.listingPrice || editData.price || 0) - (editData.purchasePrice || 0)) || ''
-                      }
-                      onChange={(e) => handleFieldChange('assignmentFee', parseFloat(e.target.value) || undefined)}
-                      placeholder="Auto-calculated: Listing Price - Purchase Price"
-                      className="h-11"
-                      disabled
-                    />
-                    <p className="text-sm text-gray-500">
-                      Auto-calculated field: Listing Price - Purchase Price
-                    </p>
-                  </div>
+                  <Separator />
 
                   {/* Access Type */}
-                  <div className="space-y-2">
-                    <Label htmlFor="accessType" className="text-sm font-medium">Access Type</Label>
-                    <Input
-                      id="accessType"
-                      value={editData.accessType || ''}
-                      onChange={(e) => handleFieldChange('accessType', e.target.value)}
-                      placeholder="How can buyers access the property?"
-                      className="h-11"
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <Key className="h-4 w-4 text-muted-foreground" />
+                      Property Access Instructions
+                    </Label>
+                    <Textarea
+                      value={editData.accessInstructions || ''}
+                      onChange={(e) => handleFieldChange('accessInstructions', e.target.value)}
+                      placeholder="How can buyers access the property? (e.g., Contact me 24 hours in advance, Key in lockbox code 1234, etc.)"
+                      rows={3}
+                      className="mt-2"
                     />
                   </div>
 
+                  <Separator />
+
                   {/* Closing Date */}
-                  <div className="space-y-2">
-                    <Label htmlFor="closingDate" className="text-sm font-medium">Closing Date (Optional)</Label>
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      Closing Date (Optional)
+                    </Label>
                     <Input
-                      id="closingDate"
                       type="date"
                       value={editData.closingDate || ''}
                       onChange={(e) => handleFieldChange('closingDate', e.target.value)}
-                      className="h-11"
+                      className="mt-2"
                     />
-                    <p className="text-sm text-gray-500">
-                      Expected closing date (if known)
-                    </p>
                   </div>
 
-                  {/* Documentation Upload */}
-                  <div className="space-y-4">
-                    <Label className="text-sm font-medium">Documentation Upload</Label>
-                    <div className="space-y-2">
-                      <Label className="text-sm text-gray-600">Purchase Agreement</Label>
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                        <Upload className="mx-auto h-8 w-8 text-gray-400" />
-                        <div className="mt-2">
-                          <Label htmlFor="purchase-agreement" className="cursor-pointer">
-                            <span className="block text-sm font-medium text-gray-900">
-                              Drag & drop or click to upload
-                            </span>
-                            <span className="block text-xs text-gray-500">
-                              Accept PDF, DOC, DOCX, max 10MB
-                            </span>
-                          </Label>
-                          <Input id="purchase-agreement" type="file" accept=".pdf,.doc,.docx" className="hidden" />
+                  <Separator />
+
+                  {/* Purchase Agreement Upload */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <FileUp className="h-4 w-4 text-muted-foreground" />
+                      Purchase Agreement
+                    </Label>
+                    <div className="mt-2 border-2 border-dashed border-gray-300 rounded-lg p-6">
+                      <div className="text-center">
+                        <FileUp className="mx-auto h-12 w-12 text-gray-400" />
+                        <div className="mt-4">
+                          <Button variant="outline" className="hover:bg-gray-50">
+                            Upload Purchase Agreement
+                          </Button>
                         </div>
+                        <p className="mt-2 text-sm text-gray-500">
+                          PDF, DOC, DOCX up to 10MB
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-500">
-                        You can upload this later, but it's required before publishing.
-                      </p>
                     </div>
                   </div>
 
-                  {/* Partners & Notes */}
-                  <div className="space-y-6">
-                    <div className="space-y-4">
-                      <Label className="text-sm font-medium">Partners</Label>
-                      <div className="flex gap-2">
-                        <Input placeholder="Enter partner name" className="h-11" />
-                        <Button variant="outline">
+                  <Separator />
+
+                  {/* Partners */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <Users className="h-4 w-4 text-muted-foreground" />
+                      Deal Partners
+                    </Label>
+                    <div className="mt-2 space-y-4">
+                      <div className="flex justify-end">
+                        <Button
+                          onClick={addPartner}
+                          variant="outline"
+                          className="hover:bg-gray-50"
+                        >
                           <Plus className="h-4 w-4 mr-2" />
-                          Add
+                          Add Partner
                         </Button>
                       </div>
-                      <p className="text-sm text-gray-500">No partners added yet</p>
-                    </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="notes" className="text-sm font-medium">Notes</Label>
-                      <Textarea
-                        id="notes"
-                        value={editData.description}
-                        onChange={(e) => handleFieldChange('description', e.target.value)}
-                        placeholder="Special conditions, instructions for buyers, or other important details... This information will be shown to potential buyers"
-                        rows={4}
-                        className="resize-none"
-                      />
+                      {partners.map((partner) => (
+                        <div key={partner.id} className="flex items-center space-x-2 p-3 border rounded-lg">
+                          <div className="flex-1">
+                            <Label>Partner Name</Label>
+                            <Input
+                              value={partner.name}
+                              onChange={(e) => updatePartner(partner.id, e.target.value)}
+                              placeholder="e.g. John Smith"
+                            />
+                          </div>
+                          <Button
+                            onClick={() => removePartner(partner.id)}
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-600 hover:text-red-700 mt-6"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Save as Draft - Bottom padding */}
-                  <div className="pt-6 pb-8">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleSave}
-                      disabled={saveMutation.isPending}
-                      className="w-full"
-                    >
-                      {saveMutation.isPending ? 'Saving as Draft...' : 'Save as Draft'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                  <Separator />
 
-            {/* Step 5: Property Description */}
-            {activeSection === 'description' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <FileText className="h-5 w-5" />
-                    <span>Step 5: Property Description</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-8 pt-6">
-                  {/* AI-Generated Description */}
-                  <div className="space-y-4">
-                    <Label className="text-sm font-medium">AI-Generated Description</Label>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label className="text-sm text-gray-600">Tone</Label>
-                        <Select defaultValue="professional">
-                          <SelectTrigger className="h-11">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="professional">Professional</SelectItem>
-                            <SelectItem value="casual">Casual</SelectItem>
-                            <SelectItem value="enthusiastic">Enthusiastic</SelectItem>
-                            <SelectItem value="luxury">Luxury</SelectItem>
-                          </SelectContent>
-                        </Select>
+                  {/* Notes */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <FileText className="h-4 w-4 text-muted-foreground" />
+                      Additional Notes
+                    </Label>
+                    <Textarea
+                      value={editData.notes || ''}
+                      onChange={(e) => handleFieldChange('notes', e.target.value)}
+                      placeholder="Special conditions, instructions for buyers, or other important details..."
+                      rows={4}
+                      className="mt-2"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Step 5: Property Description */}
+          {activeSection === 'description' && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <FileText className="h-5 w-5" />
+                  <span>Step 5: Property Description</span>
+                </CardTitle>
+                <p className="text-sm text-gray-600">Generate an engaging description for your property</p>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  {/* AI Description Generator */}
+                  <div>
+                    <Label className="flex items-center gap-2 text-base font-medium">
+                      <Edit3 className="h-4 w-4 text-muted-foreground" />
+                      AI Description Generator
+                    </Label>
+                    <div className="mt-2 space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="tone">Tone</Label>
+                          <Select value={descriptionTone} onValueChange={setDescriptionTone}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Professional">Professional</SelectItem>
+                              <SelectItem value="Casual">Casual</SelectItem>
+                              <SelectItem value="Luxury">Luxury</SelectItem>
+                              <SelectItem value="Investment">Investment-focused</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="type">Type</Label>
+                          <Select value={descriptionType} onValueChange={setDescriptionType}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Marketing">Marketing</SelectItem>
+                              <SelectItem value="Technical">Technical</SelectItem>
+                              <SelectItem value="Investment">Investment Analysis</SelectItem>
+                              <SelectItem value="Detailed">Detailed Features</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
-
-                      <div className="space-y-2">
-                        <Label className="text-sm text-gray-600">Type</Label>
-                        <Select defaultValue="standard">
-                          <SelectTrigger className="h-11">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="standard">Standard Listing</SelectItem>
-                            <SelectItem value="investment">Investment Focus</SelectItem>
-                            <SelectItem value="family">Family Oriented</SelectItem>
-                            <SelectItem value="luxury">Luxury Market</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    <Button variant="outline" className="w-full">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Regenerate Description
-                    </Button>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="aiDescription" className="text-sm font-medium">Description Output</Label>
-                      <Textarea
-                        id="aiDescription"
-                        value={editData.description}
-                        onChange={(e) => handleFieldChange('description', e.target.value)}
-                        placeholder="AI-generated property description will appear here..."
-                        rows={8}
-                        className="resize-none"
-                      />
-                      <p className="text-sm text-gray-500">
-                        You can edit this description or regenerate with different settings
-                      </p>
+                      
+                      <Button
+                        onClick={generateDescription}
+                        variant="outline"
+                        className="w-full hover:bg-gray-50"
+                      >
+                        <Edit3 className="h-4 w-4 mr-2" />
+                        Regenerate Description
+                      </Button>
                     </div>
                   </div>
 
-                  {/* Save as Draft - Bottom padding */}
-                  <div className="pt-6 pb-8">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleSave}
-                      disabled={saveMutation.isPending}
-                      className="w-full"
-                    >
-                      {saveMutation.isPending ? 'Saving as Draft...' : 'Save as Draft'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+                  <Separator />
 
-          {/* Global Save as Draft Button - Always visible at bottom */}
-          <div className="fixed bottom-6 right-6 lg:right-8 z-50">
-            <Button 
-              onClick={handleSave}
-              disabled={!hasUnsavedChanges || saveMutation.isPending}
-              className="bg-[#135341] hover:bg-[#09261E] text-white shadow-lg"
-              size="lg"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              {saveMutation.isPending ? 'Saving...' : 'Save as Draft'}
-            </Button>
-          </div>
+                  {/* Generated Description */}
+                  <div>
+                    <Label htmlFor="description" className="text-base font-medium">
+                      Property Description
+                    </Label>
+                    <Textarea
+                      id="description"
+                      value={generatedDescription}
+                      onChange={(e) => {
+                        setGeneratedDescription(e.target.value);
+                        handleFieldChange('description', e.target.value);
+                      }}
+                      placeholder="Enter or generate a description for your property..."
+                      rows={8}
+                      className="mt-2"
+                    />
+                    <p className="text-sm text-gray-500 mt-1">
+                      This description will be displayed to potential buyers
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </SellerDashboardLayout>
