@@ -197,23 +197,21 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
                     {/* Action Buttons */}
                     <div className="flex gap-3">
                       <Button 
+                        onClick={handleProfileClick}
+                        className="flex-1 bg-[#803344] hover:bg-[#803344]/90 text-white rounded-xl py-3 text-sm font-medium"
+                      >
+                        View Profile
+                      </Button>
+                      <Button 
                         onClick={() => {
                           setIsExpanded(false);
                           if (onOfferClick) {
                             onOfferClick();
                           }
                         }}
-                        className="flex-1 bg-[#803344] hover:bg-[#803344]/90 text-white rounded-xl py-3 text-sm font-medium"
-                      >
-                        <DollarSign className="h-4 w-4 mr-2" />
-                        Make Offer
-                      </Button>
-                      <Button 
-                        onClick={handleProfileClick}
                         className="flex-1 bg-[#09261E] hover:bg-[#09261E]/90 text-white rounded-xl py-3 text-sm font-medium"
                       >
-                        <User className="h-4 w-4 mr-2" />
-                        View Profile
+                        Make Offer
                       </Button>
                     </div>
                   </div>
