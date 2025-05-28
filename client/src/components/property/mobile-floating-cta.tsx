@@ -54,8 +54,8 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
 
   const handleProfileClick = () => {
     setIsExpanded(false);
-    // Navigate to profile page
-    console.log('View Profile clicked');
+    // Navigate to seller's public profile page
+    window.location.href = '/reps/michael-johnson';
   };
 
   const toggleExpand = () => {
@@ -137,7 +137,7 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
             <AnimatePresence>
               {isExpanded && (
                 <motion.div
-                  className="fixed bottom-28 left-1/2 transform -translate-x-1/2 z-50"
+                  className="fixed bottom-28 left-4 right-4 z-50 flex justify-center"
                   initial={{ 
                     opacity: 0, 
                     scale: 0.3, 
@@ -197,7 +197,12 @@ const MobileFloatingCTA: React.FC<MobileFloatingCTAProps> = ({
                     {/* Action Buttons */}
                     <div className="flex gap-3">
                       <Button 
-                        onClick={onOfferClick}
+                        onClick={() => {
+                          setIsExpanded(false);
+                          if (onOfferClick) {
+                            onOfferClick();
+                          }
+                        }}
                         className="flex-1 bg-[#803344] hover:bg-[#803344]/90 text-white rounded-xl py-3"
                       >
                         <DollarSign className="h-4 w-4 mr-2" />
