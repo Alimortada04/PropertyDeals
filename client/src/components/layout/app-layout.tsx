@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { MessagePopup } from "@/components/popups/MessagePopup";
 import { NotificationPopup } from "@/components/popups/NotificationPopup";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { GlobalSearchInput } from "@/components/search/global-search";
 
 interface AppLayoutProps {
@@ -19,11 +19,16 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
+  const [location] = useLocation();
+  
   // States for popups
   const [showMenu, setShowMenu] = useState(false);
   const [showMessagePopup, setShowMessagePopup] = useState(false);
   const [showNotificationPopup, setShowNotificationPopup] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  
+  // Check if current page should hide mobile navigation
+  const shouldHideMobileNav = location.startsWith('/properties/') || location.startsWith('/p/');
   
   // Handle keyboard shortcut for search
   useEffect(() => {
@@ -208,7 +213,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <MobileBottomNav />
+      {!shouldHideMobileNav && <MobileBottomNav />}
       
       {/* Message Popup */}
       <MessagePopup 

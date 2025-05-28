@@ -252,9 +252,9 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             variant="ghost"
             size="sm"
             onClick={onBack}
-            className="h-9 w-9 p-0 rounded-full bg-white/30 backdrop-blur-sm shadow-sm hover:bg-white/50"
+            className="h-9 w-9 p-0 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80"
           >
-            <ArrowRight className="h-5 w-5 text-white rotate-180" />
+            <ArrowRight className="h-5 w-5 text-gray-700 rotate-180" />
           </Button>
           
           <div className="flex items-center space-x-3">
@@ -262,10 +262,14 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               variant="ghost"
               size="sm"
               onClick={toggleFavorite}
-              className="h-9 w-9 p-0 rounded-full bg-white/30 backdrop-blur-sm shadow-sm hover:bg-white/50"
+              className={`h-9 w-9 p-0 rounded-full backdrop-blur-sm shadow-sm ${
+                isFavorite 
+                  ? 'bg-[#803344] hover:bg-[#803344]/90' 
+                  : 'bg-gray-200/80 hover:bg-gray-300/80'
+              }`}
             >
               <Heart 
-                className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-white'}`} 
+                className={`h-5 w-5 ${isFavorite ? 'fill-white text-white' : 'text-gray-700'}`} 
               />
             </Button>
             
@@ -273,9 +277,9 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               variant="ghost"
               size="sm"
               onClick={() => setShareModalOpen(true)}
-              className="h-9 w-9 p-0 rounded-full backdrop-blur-sm shadow-sm hover:bg-white/50 bg-[#697280]"
+              className="h-9 w-9 p-0 rounded-full bg-gray-200/80 backdrop-blur-sm shadow-sm hover:bg-gray-300/80"
             >
-              <Share className="h-5 w-5 text-white" />
+              <Share className="h-5 w-5 text-gray-700" />
             </Button>
           </div>
         </div>
