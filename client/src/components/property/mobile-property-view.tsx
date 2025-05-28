@@ -1299,7 +1299,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         </div>
         
         {/* Similar Deals You Might Like */}
-        <div className="py-6 border-t border-gray-200">
+        <div className="py-6 border-t border-gray-200 pl-[16px] pr-[16px]">
           <h3 className="text-lg font-heading font-bold text-[#09261E] mb-4 px-4">Similar Deals You Might Like</h3>
           <div className="flex overflow-x-auto gap-4 px-4 pb-2 snap-x snap-mandatory hide-scrollbar">
             {sellerProperties.slice().reverse().map((prop) => (
