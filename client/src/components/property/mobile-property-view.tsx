@@ -1343,7 +1343,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             ))}
           </div>
           <div className="text-center mt-4 px-4">
-            <Button className="bg-[#09261E] hover:bg-[#135341] w-full">
+            <Button variant="outline" className="border-[#09261E] text-[#09261E] hover:bg-[#09261E]/10 w-full">
               View All Similar Properties
             </Button>
           </div>
