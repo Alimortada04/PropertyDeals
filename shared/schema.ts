@@ -46,7 +46,7 @@ export const propertyProfile = pgTable("property_profile", {
   sellerId: integer("seller_id").notNull(),
   
   // Property Information (Step 1)
-  title: text("title"),
+  name: text("name"), // Property Name field
   address: text("address"),
   city: text("city"),
   state: text("state"),
@@ -56,41 +56,55 @@ export const propertyProfile = pgTable("property_profile", {
   propertyType: text("property_type"),
   bedrooms: integer("bedrooms"),
   bathrooms: doublePrecision("bathrooms"),
-  squareFeet: integer("square_feet"),
+  sqft: integer("sqft"), // Square Footage
   lotSize: text("lot_size"),
   yearBuilt: integer("year_built"),
+  parking: text("parking"), // New parking field
   condition: text("condition"),
   occupancyStatus: text("occupancy_status"),
   
   // Media (Step 2)
-  images: jsonb("images"), // Array of image URLs
-  videoUrl: text("video_url"),
+  primaryImage: text("primary_image"), // Primary image URL
+  galleryImages: jsonb("gallery_images"), // Array of gallery image URLs
+  videoWalkthrough: text("video_walkthrough"), // Video file or link
   
   // Finance (Step 3)
-  listingPrice: integer("listing_price"),
-  purchasePrice: integer("purchase_price"),
-  arv: integer("arv"),
-  estimatedRepairs: integer("estimated_repairs"),
-  monthlyRent: integer("monthly_rent"),
-  rentalUnits: jsonb("rental_units"), // Array of rental unit data
-  expenses: jsonb("expenses"), // Array of expense data
-  repairs: jsonb("repairs"), // Array of repair data
+  arv: integer("arv"), // ARV field above rent section
+  rentTotalMonthly: integer("rent_total_monthly"),
+  rentTotalAnnual: integer("rent_total_annual"),
+  rentUnit: jsonb("rent_unit"), // JSON: unit name, amount, frequency
+  expensesTotalMonthly: integer("expenses_total_monthly"),
+  expensesTotalAnnual: integer("expenses_total_annual"),
+  expenseItems: jsonb("expense_items"), // JSON: name, amount, frequency
   
   // Logistics (Step 4)
-  assignmentFee: integer("assignment_fee"),
-  accessInstructions: text("access_instructions"),
+  accessType: text("access_type"),
   closingDate: text("closing_date"),
+  comps: jsonb("comps"), // Array of comp addresses
   purchaseAgreement: text("purchase_agreement"), // File URL
-  partners: jsonb("partners"), // Array of partner data
-  notes: text("notes"),
+  assignmentAgreement: text("assignment_agreement"), // File URL
   
-  // Property Description (Step 5)
+  // Final Details (Step 5)
+  purchasePrice: integer("purchase_price"),
+  listingPrice: integer("listing_price"),
+  assignmentFee: integer("assignment_fee"),
+  repairProjects: jsonb("repair_projects"), // JSON: name, cost, description, contractor, file
+  repairCostsTotal: integer("repair_costs_total"),
+  jvPartners: jsonb("jv_partners"), // UUID array
   description: text("description"),
+  additionalNotes: text("additional_notes"),
+  tags: jsonb("tags"), // Array of tags
+  featuredProperty: boolean("featured_property").default(false).notNull(),
   
   // Status and visibility
-  status: text("status").default("draft").notNull(), // draft, live, under_contract, sold, hidden
-  isPublic: boolean("is_public").default(false).notNull(),
-  featuredProperty: boolean("featured_property").default(false).notNull(),
+  status: text("status").default("draft").notNull(), // draft, active
+  createdBy: integer("created_by").notNull(), // User ID of creator
+  
+  // Engagement stats
+  viewCount: integer("view_count").default(0).notNull(),
+  saveCount: integer("save_count").default(0).notNull(),
+  offerCount: integer("offer_count").default(0).notNull(),
+  offerIds: jsonb("offer_ids"), // Array of offer IDs
   
   // Timestamps
   createdAt: timestamp("created_at").defaultNow().notNull(),
