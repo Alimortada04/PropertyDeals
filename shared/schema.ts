@@ -40,6 +40,64 @@ export const properties = pgTable("properties", {
   createdAt: text("createdAt").notNull(),
 });
 
+// Enhanced property profile table for full listing management
+export const propertyProfile = pgTable("property_profile", {
+  id: serial("id").primaryKey(),
+  sellerId: integer("seller_id").notNull(),
+  
+  // Property Information (Step 1)
+  title: text("title"),
+  address: text("address"),
+  city: text("city"),
+  state: text("state"),
+  zipCode: text("zip_code"),
+  county: text("county"),
+  parcelId: text("parcel_id"),
+  propertyType: text("property_type"),
+  bedrooms: integer("bedrooms"),
+  bathrooms: doublePrecision("bathrooms"),
+  squareFeet: integer("square_feet"),
+  lotSize: text("lot_size"),
+  yearBuilt: integer("year_built"),
+  condition: text("condition"),
+  occupancyStatus: text("occupancy_status"),
+  
+  // Media (Step 2)
+  images: jsonb("images"), // Array of image URLs
+  videoUrl: text("video_url"),
+  
+  // Finance (Step 3)
+  listingPrice: integer("listing_price"),
+  purchasePrice: integer("purchase_price"),
+  arv: integer("arv"),
+  estimatedRepairs: integer("estimated_repairs"),
+  monthlyRent: integer("monthly_rent"),
+  rentalUnits: jsonb("rental_units"), // Array of rental unit data
+  expenses: jsonb("expenses"), // Array of expense data
+  repairs: jsonb("repairs"), // Array of repair data
+  
+  // Logistics (Step 4)
+  assignmentFee: integer("assignment_fee"),
+  accessInstructions: text("access_instructions"),
+  closingDate: text("closing_date"),
+  purchaseAgreement: text("purchase_agreement"), // File URL
+  partners: jsonb("partners"), // Array of partner data
+  notes: text("notes"),
+  
+  // Property Description (Step 5)
+  description: text("description"),
+  
+  // Status and visibility
+  status: text("status").default("draft").notNull(), // draft, live, under_contract, sold, hidden
+  isPublic: boolean("is_public").default(false).notNull(),
+  featuredProperty: boolean("featured_property").default(false).notNull(),
+  
+  // Timestamps
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  publishedAt: timestamp("published_at"),
+});
+
 export const propertyInquiries = pgTable("propertyInquiries", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -153,6 +211,13 @@ export const insertPropertySchema = createInsertSchema(properties).omit({
   createdAt: true,
 });
 
+export const insertPropertyProfileSchema = createInsertSchema(propertyProfile).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  publishedAt: true,
+});
+
 export const insertPropertyInquirySchema = createInsertSchema(propertyInquiries).omit({
   id: true,
   createdAt: true,
@@ -168,6 +233,9 @@ export type User = typeof users.$inferSelect;
 
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
 export type Property = typeof properties.$inferSelect;
+
+export type InsertPropertyProfile = z.infer<typeof insertPropertyProfileSchema>;
+export type PropertyProfile = typeof propertyProfile.$inferSelect;
 
 export type InsertPropertyInquiry = z.infer<typeof insertPropertyInquirySchema>;
 export type PropertyInquiry = typeof propertyInquiries.$inferSelect;

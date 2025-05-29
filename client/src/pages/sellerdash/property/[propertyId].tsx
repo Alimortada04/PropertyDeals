@@ -86,13 +86,13 @@ export default function PropertyEditor() {
   const [descriptionType, setDescriptionType] = useState('Marketing');
 
   const { data: property, isLoading } = useQuery({
-    queryKey: ['/api/properties', propertyId],
+    queryKey: ['/api/property-profiles', propertyId],
     enabled: !!propertyId,
   });
 
   const updatePropertyMutation = useMutation({
     mutationFn: (data: Partial<Property>) =>
-      apiRequest(`/api/properties/${propertyId}`, {
+      apiRequest(`/api/property-profiles/${propertyId}`, {
         method: 'PATCH',
         body: JSON.stringify(data),
       }),
@@ -101,12 +101,33 @@ export default function PropertyEditor() {
         title: "Property Updated",
         description: "Your changes have been saved successfully.",
       });
-      queryClient.invalidateQueries({ queryKey: ['/api/properties', propertyId] });
+      queryClient.invalidateQueries({ queryKey: ['/api/property-profiles', propertyId] });
     },
     onError: (error: any) => {
       toast({
         title: "Save Failed",
         description: error.message || "Failed to save property changes.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const publishPropertyMutation = useMutation({
+    mutationFn: () =>
+      apiRequest(`/api/property-profiles/${propertyId}/publish`, {
+        method: 'POST',
+      }),
+    onSuccess: () => {
+      toast({
+        title: "Property Published",
+        description: "Your listing is now live!",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/property-profiles', propertyId] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Publish Failed",
+        description: error.message || "Failed to publish property.",
         variant: "destructive",
       });
     },
@@ -302,14 +323,26 @@ export default function PropertyEditor() {
               <p className="text-gray-600">{property.address}</p>
             </div>
           </div>
-          <Button
-            onClick={handleSave}
-            disabled={updatePropertyMutation.isPending}
-            className="bg-green-600 hover:bg-green-700"
-          >
-            <Save className="h-4 w-4 mr-2" />
-            {updatePropertyMutation.isPending ? 'Saving...' : 'Save'}
-          </Button>
+          <div className="flex space-x-2">
+            <Button
+              onClick={handleSave}
+              disabled={updatePropertyMutation.isPending}
+              className="bg-green-600 hover:bg-green-700"
+            >
+              <Save className="h-4 w-4 mr-2" />
+              {updatePropertyMutation.isPending ? 'Saving...' : 'Save'}
+            </Button>
+            {property?.status === 'draft' && (
+              <Button
+                onClick={() => publishPropertyMutation.mutate()}
+                disabled={publishPropertyMutation.isPending}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                {publishPropertyMutation.isPending ? 'Publishing...' : 'Publish Listing'}
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Tab Navigation */}

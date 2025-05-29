@@ -1,6 +1,7 @@
 import { 
   users, type User, type InsertUser, 
   properties, type Property, type InsertProperty, 
+  propertyProfile, type PropertyProfile, type InsertPropertyProfile,
   propertyInquiries, type PropertyInquiry, type InsertPropertyInquiry, 
   reps, type Rep, type InsertRep,
   systemLogs, type SystemLog, type InsertSystemLog,
@@ -30,6 +31,15 @@ export interface IStorage {
   createProperty(property: InsertProperty): Promise<Property>;
   updateProperty(id: number, property: Partial<Property>): Promise<Property | undefined>;
   deleteProperty(id: number): Promise<boolean>;
+  
+  // Property Profile operations (for draft/live listings)
+  getPropertyProfiles(): Promise<PropertyProfile[]>;
+  getPropertyProfile(id: number): Promise<PropertyProfile | undefined>;
+  getPropertyProfilesBySeller(sellerId: number): Promise<PropertyProfile[]>;
+  createPropertyProfile(propertyProfile: InsertPropertyProfile): Promise<PropertyProfile>;
+  updatePropertyProfile(id: number, propertyProfile: Partial<PropertyProfile>): Promise<PropertyProfile | undefined>;
+  deletePropertyProfile(id: number): Promise<boolean>;
+  publishPropertyProfile(id: number): Promise<PropertyProfile | undefined>;
   
   // Property inquiry operations
   getPropertyInquiries(propertyId: number): Promise<PropertyInquiry[]>;
@@ -149,6 +159,59 @@ export class DatabaseStorage implements IStorage {
   async deleteProperty(id: number): Promise<boolean> {
     const result = await db.delete(properties).where(eq(properties.id, id));
     return !!result;
+  }
+
+  // Property Profile operations (for draft/live listings)
+  async getPropertyProfiles(): Promise<PropertyProfile[]> {
+    return await db.select().from(propertyProfile);
+  }
+
+  async getPropertyProfile(id: number): Promise<PropertyProfile | undefined> {
+    const [profile] = await db.select().from(propertyProfile).where(eq(propertyProfile.id, id));
+    return profile || undefined;
+  }
+
+  async getPropertyProfilesBySeller(sellerId: number): Promise<PropertyProfile[]> {
+    return await db.select().from(propertyProfile).where(eq(propertyProfile.sellerId, sellerId));
+  }
+
+  async createPropertyProfile(profile: InsertPropertyProfile): Promise<PropertyProfile> {
+    const [newProfile] = await db
+      .insert(propertyProfile)
+      .values(profile)
+      .returning();
+    return newProfile;
+  }
+
+  async updatePropertyProfile(id: number, profile: Partial<PropertyProfile>): Promise<PropertyProfile | undefined> {
+    const [updatedProfile] = await db
+      .update(propertyProfile)
+      .set({
+        ...profile,
+        updatedAt: new Date()
+      })
+      .where(eq(propertyProfile.id, id))
+      .returning();
+    return updatedProfile || undefined;
+  }
+
+  async deletePropertyProfile(id: number): Promise<boolean> {
+    const result = await db.delete(propertyProfile).where(eq(propertyProfile.id, id));
+    return !!result;
+  }
+
+  async publishPropertyProfile(id: number): Promise<PropertyProfile | undefined> {
+    const [publishedProfile] = await db
+      .update(propertyProfile)
+      .set({
+        status: 'live',
+        isPublic: true,
+        publishedAt: new Date(),
+        updatedAt: new Date()
+      })
+      .where(eq(propertyProfile.id, id))
+      .returning();
+    return publishedProfile || undefined;
   }
 
   // Property inquiry operations
@@ -787,6 +850,66 @@ export class MemStorage implements IStorage {
 
   async deleteProperty(id: number): Promise<boolean> {
     return this.properties.delete(id);
+  }
+
+  // Property Profile operations (for MemStorage)
+  private propertyProfiles: Map<number, PropertyProfile> = new Map();
+  private currentPropertyProfileId = 1;
+
+  async getPropertyProfiles(): Promise<PropertyProfile[]> {
+    return Array.from(this.propertyProfiles.values());
+  }
+
+  async getPropertyProfile(id: number): Promise<PropertyProfile | undefined> {
+    return this.propertyProfiles.get(id);
+  }
+
+  async getPropertyProfilesBySeller(sellerId: number): Promise<PropertyProfile[]> {
+    return Array.from(this.propertyProfiles.values()).filter(profile => profile.sellerId === sellerId);
+  }
+
+  async createPropertyProfile(profile: InsertPropertyProfile): Promise<PropertyProfile> {
+    const id = this.currentPropertyProfileId++;
+    const newProfile: PropertyProfile = { 
+      ...profile, 
+      id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    this.propertyProfiles.set(id, newProfile);
+    return newProfile;
+  }
+
+  async updatePropertyProfile(id: number, profile: Partial<PropertyProfile>): Promise<PropertyProfile | undefined> {
+    const existing = this.propertyProfiles.get(id);
+    if (!existing) return undefined;
+    
+    const updated: PropertyProfile = { 
+      ...existing, 
+      ...profile, 
+      id, 
+      updatedAt: new Date().toISOString()
+    };
+    this.propertyProfiles.set(id, updated);
+    return updated;
+  }
+
+  async deletePropertyProfile(id: number): Promise<boolean> {
+    return this.propertyProfiles.delete(id);
+  }
+
+  async publishPropertyProfile(id: number): Promise<PropertyProfile | undefined> {
+    const profile = this.propertyProfiles.get(id);
+    if (!profile) return undefined;
+    
+    const published: PropertyProfile = { 
+      ...profile, 
+      status: 'live',
+      isPublic: true,
+      updatedAt: new Date().toISOString()
+    };
+    this.propertyProfiles.set(id, published);
+    return published;
   }
 
   // Property inquiry operations

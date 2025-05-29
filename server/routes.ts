@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertPropertyInquirySchema, insertPropertySchema, insertRepSchema, insertSystemLogSchema, insertUserReportSchema } from "@shared/schema";
+import { insertPropertyInquirySchema, insertPropertySchema, insertPropertyProfileSchema, insertRepSchema, insertSystemLogSchema, insertUserReportSchema } from "@shared/schema";
 import { RecommendationEngine } from "./recommendation";
 import { db } from "./db";
 import { reps } from "@shared/schema";
@@ -100,6 +100,128 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     const properties = await storage.getPropertyBySeller(req.user.id);
     res.json(properties);
+  });
+
+  // Property Profile endpoints (for draft/live listings)
+  app.get("/api/property-profiles", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const profiles = await storage.getPropertyProfilesBySeller(req.user.id);
+      res.json(profiles);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch property profiles" });
+    }
+  });
+
+  app.get("/api/property-profiles/:id", async (req, res) => {
+    const profileId = parseInt(req.params.id);
+    const profile = await storage.getPropertyProfile(profileId);
+
+    if (!profile) {
+      return res.status(404).json({ message: "Property profile not found" });
+    }
+
+    // Check if user owns this profile or if it's public
+    if (!req.isAuthenticated() || (profile.sellerId !== req.user.id && !profile.isPublic)) {
+      return res.status(403).json({ message: "Not authorized to view this property" });
+    }
+
+    res.json(profile);
+  });
+
+  app.post("/api/property-profiles", async (req, res) => {
+    if (!req.isAuthenticated() || req.user.activeRole !== "seller") {
+      return res.status(403).json({ message: "Not authorized to create property profiles" });
+    }
+
+    try {
+      const profileData = insertPropertyProfileSchema.parse({
+        ...req.body,
+        sellerId: req.user.id,
+        status: "draft",
+        isPublic: false
+      });
+      
+      const profile = await storage.createPropertyProfile(profileData);
+      res.status(201).json(profile);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid property profile data", error });
+    }
+  });
+
+  app.patch("/api/property-profiles/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const profileId = parseInt(req.params.id);
+    const profile = await storage.getPropertyProfile(profileId);
+
+    if (!profile) {
+      return res.status(404).json({ message: "Property profile not found" });
+    }
+
+    if (profile.sellerId !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to update this property" });
+    }
+
+    try {
+      const updatedProfile = await storage.updatePropertyProfile(profileId, req.body);
+      res.json(updatedProfile);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid property profile data", error });
+    }
+  });
+
+  app.post("/api/property-profiles/:id/publish", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const profileId = parseInt(req.params.id);
+    const profile = await storage.getPropertyProfile(profileId);
+
+    if (!profile) {
+      return res.status(404).json({ message: "Property profile not found" });
+    }
+
+    if (profile.sellerId !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to publish this property" });
+    }
+
+    try {
+      const publishedProfile = await storage.publishPropertyProfile(profileId);
+      res.json(publishedProfile);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to publish property profile" });
+    }
+  });
+
+  app.delete("/api/property-profiles/:id", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const profileId = parseInt(req.params.id);
+    const profile = await storage.getPropertyProfile(profileId);
+
+    if (!profile) {
+      return res.status(404).json({ message: "Property profile not found" });
+    }
+
+    if (profile.sellerId !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to delete this property" });
+    }
+
+    const success = await storage.deletePropertyProfile(profileId);
+    if (success) {
+      res.status(204).send();
+    } else {
+      res.status(500).json({ message: "Failed to delete property profile" });
+    }
   });
 
   // Property inquiries
