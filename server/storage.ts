@@ -518,9 +518,11 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.properties = new Map();
     this.propertyInquiries = new Map();
+    this.propertyProfiles = new Map();
     this.currentUserId = 1;
     this.currentPropertyId = 1;
     this.currentInquiryId = 1;
+    this.currentPropertyProfileId = 1;
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // prune expired entries every 24h
     });
@@ -538,6 +540,7 @@ export class MemStorage implements IStorage {
       password: "$2b$10$7O7BgKCexvkgIXR.OJNyEOQgwmRNzWw1Z1zXx3Zd2YEZjg1UhGnkK", // "password"
       fullName: "John Seller",
       email: "seller@propertydeals.com",
+      isAdmin: false,
       activeRole: "seller",
       roles: {
         buyer: { status: "approved", approvedAt: new Date().toISOString() },
@@ -555,6 +558,7 @@ export class MemStorage implements IStorage {
       password: "$2b$10$7O7BgKCexvkgIXR.OJNyEOQgwmRNzWw1Z1zXx3Zd2YEZjg1UhGnkK", // "password"
       fullName: "Sarah Investor",
       email: "sarah@propertydeals.com",
+      isAdmin: false,
       activeRole: "seller",
       roles: {
         buyer: { status: "approved", approvedAt: new Date().toISOString() },
@@ -873,8 +877,8 @@ export class MemStorage implements IStorage {
     const newProfile: PropertyProfile = { 
       ...profile, 
       id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
     this.propertyProfiles.set(id, newProfile);
     return newProfile;
@@ -888,7 +892,7 @@ export class MemStorage implements IStorage {
       ...existing, 
       ...profile, 
       id, 
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date()
     };
     this.propertyProfiles.set(id, updated);
     return updated;

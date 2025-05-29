@@ -28,8 +28,5 @@ export async function createDraftProperty(data: CreateDraftPropertyData): Promis
     isPublic: false,
   };
 
-  return await apiRequest('/api/property-profiles', {
-    method: 'POST',
-    body: JSON.stringify(propertyProfileData),
-  });
+  return await apiRequest('/api/property-profiles', 'POST', propertyProfileData);
 }
