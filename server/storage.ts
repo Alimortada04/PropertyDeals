@@ -256,33 +256,38 @@ export class DatabaseStorage implements IStorage {
 
   // UUID-based buyer profile operations for Supabase integration
   async getBuyerProfileByUuid(uuid: string): Promise<BuyerProfile | undefined> {
-    const [profile] = await db.select().from(buyerProfiles).where(eq(buyerProfiles.id, uuid));
-    return profile || undefined;
+    // Use the correct table name: buyer_profile (singular)
+    const results = await db.execute(sql`SELECT * FROM buyer_profile WHERE user_id::text = ${uuid}`);
+    return results.rows[0] as BuyerProfile || undefined;
   }
 
   async createBuyerProfileByUuid(uuid: string, profile: any): Promise<BuyerProfile> {
-    const [newProfile] = await db
-      .insert(buyerProfiles)
-      .values({
-        ...profile,
-        id: uuid,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      })
-      .returning();
-    return newProfile;
+    // Insert with UUID directly as user_id - use correct table name: buyer_profile (singular)
+    const results = await db.execute(sql`
+      INSERT INTO buyer_profile (user_id, phone, bio, business_name, type_of_buyer, website, instagram, facebook, linkedin, created_at, updated_at)
+      VALUES (${uuid}::integer, ${profile.phone}, ${profile.bio}, ${profile.business_name}, ${profile.type_of_buyer}, ${profile.website}, ${profile.instagram}, ${profile.facebook}, ${profile.linkedin}, NOW(), NOW())
+      RETURNING *
+    `);
+    return results.rows[0] as BuyerProfile;
   }
 
   async updateBuyerProfileByUuid(uuid: string, profile: any): Promise<BuyerProfile | undefined> {
-    const [updatedProfile] = await db
-      .update(buyerProfiles)
-      .set({
-        ...profile,
-        updatedAt: new Date()
-      })
-      .where(eq(buyerProfiles.id, uuid))
-      .returning();
-    return updatedProfile || undefined;
+    // Update profile where user_id matches UUID - use correct table name: buyer_profile (singular)
+    const results = await db.execute(sql`
+      UPDATE buyer_profile 
+      SET phone = ${profile.phone}, 
+          bio = ${profile.bio}, 
+          business_name = ${profile.business_name}, 
+          type_of_buyer = ${profile.type_of_buyer}, 
+          website = ${profile.website}, 
+          instagram = ${profile.instagram}, 
+          facebook = ${profile.facebook}, 
+          linkedin = ${profile.linkedin}, 
+          updated_at = NOW()
+      WHERE user_id::text = ${uuid}
+      RETURNING *
+    `);
+    return results.rows[0] as BuyerProfile || undefined;
   }
 
   // Property inquiry operations

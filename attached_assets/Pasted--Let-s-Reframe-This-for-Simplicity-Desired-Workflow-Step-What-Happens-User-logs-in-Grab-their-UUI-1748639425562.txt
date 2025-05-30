@@ -1,0 +1,65 @@
+ Let’s Reframe This for Simplicity
+🔄 Desired Workflow
+Step	What Happens
+User logs in	Grab their UUID via Supabase
+/profile loads	GET /api/buyer-profile/:uuid fetches data from DB
+User edits field	Form state updates
+User clicks "Save"	PATCH /api/buyer-profile/:uuid sends updated fields
+DB updates	DB row for that UUID is updated via SQL or ORM
+
+✅ Minimum Working Example
+🔧 Express Route (server/routes.ts)
+ts
+Copy
+Edit
+app.get('/api/buyer-profile/:id', async (req, res) => {
+  const { id } = req.params;
+  const profile = await db.query('SELECT * FROM buyer_profile WHERE id = $1', [id]);
+  if (profile.rowCount === 0) return res.status(404).send('Profile not found');
+  res.status(200).json(profile.rows[0]);
+});
+
+app.patch('/api/buyer-profile/:id', async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body; // Only allow whitelisted fields here
+  const fields = Object.keys(updates);
+  const values = Object.values(updates);
+
+  const setClause = fields.map((field, i) => `${field} = $${i + 2}`).join(', ');
+  const sql = `UPDATE buyer_profile SET ${setClause} WHERE id = $1 RETURNING *`;
+
+  const result = await db.query(sql, [id, ...values]);
+  res.status(200).json(result.rows[0]);
+});
+🧠 Frontend Hook
+ts
+Copy
+Edit
+const [profile, setProfile] = useState<BuyerProfile>();
+
+useEffect(() => {
+  const loadProfile = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    const res = await fetch(`/api/buyer-profile/${user.id}`);
+    const data = await res.json();
+    setProfile(data);
+  };
+  loadProfile();
+}, []);
+
+const saveProfile = async (updated) => {
+  await fetch(`/api/buyer-profile/${user.id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updated),
+  });
+};
+✅ Final Recommendations
+✅ Use only UUID (Supabase Auth ID) as your profile key
+
+✅ Make sure the frontend maps directly to the fields in buyer_profile
+
+✅ Drop any "local user ID" or users table logic
+
+✅ Clean up Express routes to just serve/fetch/update profile data
+
