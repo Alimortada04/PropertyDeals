@@ -203,36 +203,7 @@ function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
 
-  // Show login prompt if user is not authenticated
-  if (!authLoading && !user) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Sign In Required</CardTitle>
-            <CardDescription>
-              You need to be signed in to access your profile page.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button 
-              className="w-full bg-[#803344] hover:bg-[#803344]/90"
-              onClick={() => window.location.href = '/signin'}
-            >
-              Sign In
-            </Button>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => window.location.href = '/register'}
-            >
-              Create Account
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+
   
   // Loading states
   const [loading, setLoading] = useState(false);
