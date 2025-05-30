@@ -370,6 +370,29 @@ function ProfilePage() {
     enabled: !!user
   });
 
+  // Create mutation for updating buyer profile
+  const updateProfileMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await fetch('/api/buyer-profile', {
+        method: buyerProfile ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update profile');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['buyer-profile'] });
+    },
+  });
+
   // Handle buyer profile data when fetched
   useEffect(() => {
     if (buyerProfile) {
@@ -713,27 +736,19 @@ function ProfilePage() {
       setLoading(true);
       
       const profilePayload = {
-        full_name: profileData.full_name,
-        username: profileData.username,
-        bio: profileData.bio,
         phone: profileData.phone,
+        bio: profileData.bio,
         in_real_estate_since: profileData.in_real_estate_since,
         business_name: profileData.business_name,
         type_of_buyer: profileData.type_of_buyer,
         website: profileData.website,
         instagram: profileData.instagram,
         facebook: profileData.facebook,
-        linkedin: profileData.linkedin,
-        showProfile: profileData.showProfile
+        linkedin: profileData.linkedin
       };
       
-      // Save to database
-      const { error } = await supabase
-        .from('profiles')
-        .update(profilePayload)
-        .eq('id', user?.id);
-      
-      if (error) throw error;
+      // Save to database using backend API
+      await updateProfileMutation.mutateAsync(profilePayload);
       
       toast({
         title: "Profile updated",
@@ -771,16 +786,15 @@ function ProfilePage() {
         ideal_budget_max: profileData.ideal_budget_max,
         financing_methods: profileData.financing_methods,
         preferred_financing_method: profileData.preferred_financing_method,
-        closing_timeline: profileData.closing_timeline
+        closing_timeline: profileData.closing_timeline,
+        number_of_deals_last_12_months: profileData.number_of_deals_last_12_months,
+        goal_deals_next_12_months: profileData.goal_deals_next_12_months,
+        total_deals_done: profileData.total_deals_done,
+        current_portfolio_count: profileData.current_portfolio_count
       };
       
-      // Save to database
-      const { error } = await supabase
-        .from('profiles')
-        .update(propertyPayload)
-        .eq('id', user?.id);
-      
-      if (error) throw error;
+      // Save to database using backend API
+      await updateProfileMutation.mutateAsync(propertyPayload);
       
       toast({
         title: "Property preferences updated",
