@@ -116,45 +116,7 @@ export default function FavoritesPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-  // Example properties when user has no favorites
-  const exampleProperties = [
-    {
-      id: "example-1",
-      title: "Modern Downtown Condo",
-      address: "123 Main Street, Downtown",
-      price: "$485,000",
-      beds: 2,
-      baths: 2,
-      sqft: "1,250",
-      status: "For Sale",
-      thumbnail: "/api/placeholder/400/300",
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: "example-2", 
-      title: "Suburban Family Home",
-      address: "456 Oak Avenue, Riverside",
-      price: "$675,000",
-      beds: 4,
-      baths: 3,
-      sqft: "2,100",
-      status: "For Sale",
-      thumbnail: "/api/placeholder/400/300",
-      createdAt: new Date().toISOString()
-    },
-    {
-      id: "example-3",
-      title: "Investment Duplex",
-      address: "789 Pine Street, Westside", 
-      price: "$395,000",
-      beds: 3,
-      baths: 2,
-      sqft: "1,800",
-      status: "For Sale",
-      thumbnail: "/api/placeholder/400/300",
-      createdAt: new Date().toISOString()
-    }
-  ];
+
 
   // Fetch user's favorited properties from Supabase
   const { data: favoriteProperties, isLoading, error } = useQuery({
@@ -194,10 +156,8 @@ export default function FavoritesPage() {
     enabled: !!user
   });
 
-  // Use example properties if user has no favorites
-  const displayProperties = favoriteProperties && favoriteProperties.length > 0 
-    ? favoriteProperties 
-    : exampleProperties;
+  // Only show actual favorited properties
+  const displayProperties = favoriteProperties || [];
 
   // Apply client-side filtering and sorting
   const filteredProperties = React.useMemo(() => {
@@ -566,15 +526,33 @@ export default function FavoritesPage() {
         </div>
         
         {filteredProperties.length === 0 ? (
-          <Empty 
-            title="No properties match your filters"
-            description="Try adjusting your search criteria to find more properties."
-            icon="search"
-            action={{
-              label: "Clear Filters",
-              onClick: clearFilters
-            }}
-          />
+          <Card className="p-12 text-center">
+            <div className="flex flex-col items-center space-y-4">
+              <Heart className="h-16 w-16 text-gray-300" />
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {displayProperties.length === 0 ? "No Favorite Properties Yet" : "No properties match your filters"}
+                </h3>
+                <p className="text-gray-500 mb-4">
+                  {displayProperties.length === 0 
+                    ? "Start browsing properties and save your favorites to see them here."
+                    : "Try adjusting your search criteria to find more properties."
+                  }
+                </p>
+                {displayProperties.length === 0 ? (
+                  <Link href="/properties">
+                    <Button className="bg-[#135341] hover:bg-[#0f4735] text-white">
+                      Browse Properties
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button onClick={clearFilters} variant="outline">
+                    Clear Filters
+                  </Button>
+                )}
+              </div>
+            </div>
+          </Card>
         ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProperties.map((property: Property) => (
