@@ -354,56 +354,95 @@ function ProfilePage() {
     showProfile: true
   });
 
-  // Fetch buyer profile data directly from Supabase using user_id
+  // Fetch buyer profile data directly from Supabase using Supabase user ID
   const { data: buyerProfile, isLoading, error } = useQuery({
     queryKey: ['buyer-profile'],
     queryFn: async () => {
-      if (!user?.id) throw new Error('Not authenticated');
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+      if (!supabaseUser) throw new Error('Not authenticated');
       
-      console.log('Fetching profile for user ID:', user.id);
+      console.log('Fetching profile for Supabase user ID:', supabaseUser.id);
       
-      // Fetch profile using the user_id field that links to our users table
-      const { data, error } = await supabase
-        .from('buyer_profiles')
-        .select('*')
-        .eq('user_id', user.id)
+      // Check if we have a users table record for this Supabase user
+      const { data: userRecord } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', supabaseUser.email)
         .single();
       
-      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-        console.error('Profile fetch error:', error);
-        throw error;
+      if (userRecord) {
+        // If we have a user record, fetch by user_id
+        const { data, error } = await supabase
+          .from('buyer_profiles')
+          .select('*')
+          .eq('user_id', userRecord.id)
+          .single();
+        
+        if (error && error.code !== 'PGRST116') {
+          console.error('Profile fetch error:', error);
+          throw error;
+        }
+        
+        console.log('Fetched profile data:', data);
+        return data;
+      } else {
+        // No user record found, return null to create new profile
+        console.log('No user record found, will create new profile on save');
+        return null;
       }
-      
-      console.log('Fetched profile data:', data);
-      return data;
     },
-    enabled: !!user?.id,
+    enabled: true,
     retry: 1
   });
 
   // Create mutation for updating buyer profile directly in Supabase
   const updateProfileMutation = useMutation({
     mutationFn: async (data: any) => {
-      if (!user?.id) throw new Error('Not authenticated');
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+      if (!supabaseUser) throw new Error('Not authenticated');
       
-      console.log('Updating profile for user ID:', user.id);
+      console.log('Updating profile for Supabase user:', supabaseUser.email);
       console.log('Profile data to save:', data);
       
+      // First ensure we have a user record
+      let userRecord = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', supabaseUser.email)
+        .single();
+      
+      if (!userRecord.data) {
+        // Create user record first
+        const { data: newUser, error: userError } = await supabase
+          .from('users')
+          .insert({
+            email: supabaseUser.email,
+            full_name: supabaseUser.user_metadata?.full_name || '',
+            username: supabaseUser.user_metadata?.username || supabaseUser.email.split('@')[0],
+            active_role: 'buyer'
+          })
+          .select('id')
+          .single();
+        
+        if (userError) throw userError;
+        userRecord.data = newUser;
+      }
+      
       if (buyerProfile) {
-        // Update existing profile using the profile's id
+        // Update existing profile
         const { data: updatedData, error } = await supabase
           .from('buyer_profiles')
           .update(data)
-          .eq('user_id', user.id)
+          .eq('user_id', userRecord.data.id)
           .select()
           .single();
         
         if (error) throw error;
         return updatedData;
       } else {
-        // Create new profile with user_id linking to our users table
+        // Create new profile
         const profileData = {
-          user_id: user.id,
+          user_id: userRecord.data.id,
           ...data
         };
         
@@ -434,18 +473,23 @@ function ProfilePage() {
     },
   });
 
-  // Load user data from auth system
+  // Load user data directly from Supabase auth
   useEffect(() => {
-    if (user) {
-      setProfileData(prev => ({
-        ...prev,
-        id: user.id?.toString() || "",
-        full_name: user.fullName || "",
-        username: user.username || "",
-        email: user.email || ""
-      }));
-    }
-  }, [user]);
+    const loadUserData = async () => {
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+      if (supabaseUser) {
+        setProfileData(prev => ({
+          ...prev,
+          id: supabaseUser.id,
+          full_name: supabaseUser.user_metadata?.full_name || supabaseUser.user_metadata?.name || "",
+          username: supabaseUser.user_metadata?.username || "",
+          email: supabaseUser.email || ""
+        }));
+      }
+    };
+    
+    loadUserData();
+  }, []);
 
   // Handle buyer profile data when fetched
   useEffect(() => {
