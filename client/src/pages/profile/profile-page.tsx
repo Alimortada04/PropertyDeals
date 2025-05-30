@@ -354,42 +354,62 @@ function ProfilePage() {
     showProfile: true
   });
 
-  // Fetch buyer profile data from backend
+  // Fetch buyer profile data directly from Supabase
   const { data: buyerProfile, isLoading, error } = useQuery({
     queryKey: ['buyer-profile'],
     queryFn: async () => {
-      const response = await fetch('/api/buyer-profile', {
-        credentials: 'include'
-      });
-      if (!response.ok) {
-        if (response.status === 404) {
-          return null; // No profile exists yet
-        }
-        throw new Error('Failed to fetch buyer profile');
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+      if (!supabaseUser) throw new Error('Not authenticated');
+      
+      const { data, error } = await supabase
+        .from('buyer_profiles')
+        .select('*')
+        .eq('user_id', supabaseUser.id)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        throw error;
       }
-      return response.json();
+      
+      return data;
     },
     enabled: !!user,
     retry: 1
   });
 
-  // Create mutation for updating buyer profile
+  // Create mutation for updating buyer profile directly in Supabase
   const updateProfileMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await fetch('/api/buyer-profile', {
-        method: buyerProfile ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
+      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
+      if (!supabaseUser) throw new Error('Not authenticated');
       
-      if (!response.ok) {
-        throw new Error('Failed to update profile');
+      const profileData = {
+        user_id: supabaseUser.id,
+        ...data
+      };
+      
+      if (buyerProfile) {
+        // Update existing profile
+        const { data: updatedData, error } = await supabase
+          .from('buyer_profiles')
+          .update(profileData)
+          .eq('user_id', supabaseUser.id)
+          .select()
+          .single();
+        
+        if (error) throw error;
+        return updatedData;
+      } else {
+        // Create new profile
+        const { data: newData, error } = await supabase
+          .from('buyer_profiles')
+          .insert(profileData)
+          .select()
+          .single();
+        
+        if (error) throw error;
+        return newData;
       }
-      
-      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['buyer-profile'] });
