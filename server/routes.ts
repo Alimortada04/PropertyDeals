@@ -8,10 +8,14 @@ import { db } from "./db";
 import { reps } from "@shared/schema";
 import { eq, like } from "drizzle-orm";
 import { requireAdmin, logAdminAction } from "./middleware/adminAuth";
+import { supabaseAuthMiddleware } from "./middleware/supabase-auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Set up authentication routes
   setupAuth(app);
+
+  // Add Supabase authentication middleware globally
+  app.use(supabaseAuthMiddleware);
 
   // Properties endpoints
   app.get("/api/properties", async (_req, res) => {
