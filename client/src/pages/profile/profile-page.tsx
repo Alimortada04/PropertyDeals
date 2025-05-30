@@ -494,34 +494,60 @@ function ProfilePage() {
   // Handle buyer profile data when fetched
   useEffect(() => {
     if (buyerProfile) {
+      console.log('Loading buyer profile data:', buyerProfile);
       setProfileData(prev => ({
         ...prev,
+        // Basic info
         phone: buyerProfile.phone || null,
         location: buyerProfile.location || null,
         bio: buyerProfile.bio || null,
-        business_name: buyerProfile.business_name,
-        in_real_estate_since: buyerProfile.in_real_estate_since,
-        type_of_buyer: buyerProfile.type_of_buyer || [],
-        website: buyerProfile.website,
-        instagram: buyerProfile.instagram,
-        facebook: buyerProfile.facebook,
-        linkedin: buyerProfile.linkedin,
-        profile_photo_url: buyerProfile.profile_photo,
-        profile_banner_url: buyerProfile.banner_image,
-        markets: buyerProfile.markets || [],
-        property_types: buyerProfile.property_types || [],
-        property_conditions: buyerProfile.property_conditions || [],
-        ideal_budget_min: buyerProfile.ideal_budget_min,
-        ideal_budget_max: buyerProfile.ideal_budget_max,
-        financing_methods: buyerProfile.financing_methods || [],
-        preferred_financing_method: buyerProfile.preferred_financing_method,
-        closing_timeline: buyerProfile.closing_timeline,
-        number_of_deals_last_12_months: buyerProfile.number_of_deals_last_12_months,
-        goal_deals_next_12_months: buyerProfile.goal_deals_next_12_months,
-        total_deals_done: buyerProfile.total_deals_done,
-        current_portfolio_count: buyerProfile.current_portfolio_count,
-        proof_of_funds_url: buyerProfile.proof_of_funds,
-        past_properties: buyerProfile.past_properties || []
+        business_name: buyerProfile.business_name || null,
+        in_real_estate_since: buyerProfile.in_real_estate_since || null,
+        
+        // Arrays - ensure they're arrays
+        type_of_buyer: Array.isArray(buyerProfile.type_of_buyer) ? buyerProfile.type_of_buyer : [],
+        markets: Array.isArray(buyerProfile.markets) ? buyerProfile.markets : [],
+        property_types: Array.isArray(buyerProfile.property_types) ? buyerProfile.property_types : [],
+        property_conditions: Array.isArray(buyerProfile.property_conditions) ? buyerProfile.property_conditions : [],
+        financing_methods: Array.isArray(buyerProfile.financing_methods) ? buyerProfile.financing_methods : [],
+        
+        // Social media
+        website: buyerProfile.website || null,
+        instagram: buyerProfile.instagram || null,
+        facebook: buyerProfile.facebook || null,
+        linkedin: buyerProfile.linkedin || null,
+        
+        // Images - correct field names
+        profile_photo_url: buyerProfile.profile_photo || null,
+        profile_banner_url: buyerProfile.banner_image || null,
+        
+        // Investment preferences
+        ideal_budget_min: buyerProfile.ideal_budget_min || null,
+        ideal_budget_max: buyerProfile.ideal_budget_max || null,
+        preferred_financing_method: buyerProfile.preferred_financing_method || null,
+        closing_timeline: buyerProfile.closing_timeline || null,
+        
+        // Experience
+        number_of_deals_last_12_months: buyerProfile.number_of_deals_last_12_months || null,
+        goal_deals_next_12_months: buyerProfile.goal_deals_next_12_months || null,
+        total_deals_done: buyerProfile.total_deals_done || null,
+        current_portfolio_count: buyerProfile.current_portfolio_count || null,
+        
+        // Verification
+        proof_of_funds_url: buyerProfile.proof_of_funds_url || null,
+        proof_of_funds_verified: buyerProfile.proof_of_funds_verified || false,
+        buyer_verification_tag: buyerProfile.buyer_verification_tag || null,
+        
+        // Professional networks (UUIDs) and past properties
+        preferred_inspectors: Array.isArray(buyerProfile.preferred_inspectors) ? buyerProfile.preferred_inspectors : [],
+        preferred_agents: Array.isArray(buyerProfile.preferred_agents) ? buyerProfile.preferred_agents : [],
+        preferred_contractors: Array.isArray(buyerProfile.preferred_contractors) ? buyerProfile.preferred_contractors : [],
+        preferred_lenders: Array.isArray(buyerProfile.preferred_lenders) ? buyerProfile.preferred_lenders : [],
+        past_properties: Array.isArray(buyerProfile.past_properties) ? buyerProfile.past_properties : [],
+        
+        // Profile settings
+        showProfile: buyerProfile.is_public !== false,
+        profile_completion_score: buyerProfile.profile_completion_score || 0
       }));
     }
   }, [buyerProfile]);
