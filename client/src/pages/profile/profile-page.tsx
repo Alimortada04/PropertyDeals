@@ -354,21 +354,19 @@ function ProfilePage() {
     showProfile: true
   });
 
-  // Fetch buyer profile data directly from Supabase
+  // Fetch buyer profile data directly from Supabase using user_id
   const { data: buyerProfile, isLoading, error } = useQuery({
     queryKey: ['buyer-profile'],
     queryFn: async () => {
-      // Get the current Supabase user
-      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-      if (!supabaseUser) throw new Error('Not authenticated');
+      if (!user?.id) throw new Error('Not authenticated');
       
-      console.log('Fetching profile for user ID:', supabaseUser.id);
+      console.log('Fetching profile for user ID:', user.id);
       
-      // Fetch profile using the Supabase user ID
+      // Fetch profile using the user_id field that links to our users table
       const { data, error } = await supabase
         .from('buyer_profiles')
         .select('*')
-        .eq('id', supabaseUser.id)
+        .eq('user_id', user.id)
         .single();
       
       if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
@@ -379,35 +377,33 @@ function ProfilePage() {
       console.log('Fetched profile data:', data);
       return data;
     },
-    enabled: !!user,
+    enabled: !!user?.id,
     retry: 1
   });
 
   // Create mutation for updating buyer profile directly in Supabase
   const updateProfileMutation = useMutation({
     mutationFn: async (data: any) => {
-      // Get the current Supabase user
-      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-      if (!supabaseUser) throw new Error('Not authenticated');
+      if (!user?.id) throw new Error('Not authenticated');
       
-      console.log('Updating profile for user ID:', supabaseUser.id);
+      console.log('Updating profile for user ID:', user.id);
       console.log('Profile data to save:', data);
       
       if (buyerProfile) {
-        // Update existing profile
+        // Update existing profile using the profile's id
         const { data: updatedData, error } = await supabase
           .from('buyer_profiles')
           .update(data)
-          .eq('id', supabaseUser.id)
+          .eq('user_id', user.id)
           .select()
           .single();
         
         if (error) throw error;
         return updatedData;
       } else {
-        // Create new profile
+        // Create new profile with user_id linking to our users table
         const profileData = {
-          id: supabaseUser.id,
+          user_id: user.id,
           ...data
         };
         
