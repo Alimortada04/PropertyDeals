@@ -2509,7 +2509,7 @@ function ProfilePage() {
                               <Button
                                 type="button"
                                 onClick={() => {/* Handle proof of funds upload */}}
-                                className="w-full py-4 flex flex-col items-center justify-center bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 rounded-md transition-colors duration-200 hover:border-gray-400"
+                                className="w-full py-4 flex flex-col items-center justify-center bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 rounded-md transition-colors duration-200 hover:border-gray-400 pt-[50px] pb-[50px]"
                               >
                                 <Upload className="h-5 w-5 text-gray-400 mb-1" />
                                 <span className="font-medium text-gray-700 text-sm">Upload Proof of Funds</span>
