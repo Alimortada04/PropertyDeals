@@ -248,6 +248,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(profile);
   });
 
+  // Get buyer profile by UUID (Supabase user ID)
+  app.get("/api/buyer-profile/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const profile = await storage.getBuyerProfileByUuid(userId);
+      
+      if (!profile) {
+        return res.status(404).json({ message: "Profile not found" });
+      }
+      
+      res.json(profile);
+    } catch (error) {
+      console.error('Error fetching buyer profile by UUID:', error);
+      res.status(500).json({ message: "Failed to fetch profile" });
+    }
+  });
+
   app.post("/api/buyer-profile", async (req, res) => {
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Not authenticated" });
@@ -261,6 +278,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const profile = await storage.createBuyerProfile(profileData);
       res.status(201).json(profile);
     } catch (error) {
+      res.status(400).json({ message: "Invalid profile data", error });
+    }
+  });
+
+  // Create or update buyer profile by UUID
+  app.post("/api/buyer-profile/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const profileData = {
+        ...req.body,
+        id: userId, // Use Supabase UUID as primary key
+      };
+      
+      const profile = await storage.createBuyerProfileByUuid(userId, profileData);
+      res.status(201).json(profile);
+    } catch (error) {
+      console.error('Error creating buyer profile by UUID:', error);
+      res.status(400).json({ message: "Invalid profile data", error });
+    }
+  });
+
+  // Update buyer profile by UUID
+  app.put("/api/buyer-profile/:userId", async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const profile = await storage.updateBuyerProfileByUuid(userId, req.body);
+      
+      if (!profile) {
+        return res.status(404).json({ message: "Profile not found" });
+      }
+      
+      res.json(profile);
+    } catch (error) {
+      console.error('Error updating buyer profile by UUID:', error);
       res.status(400).json({ message: "Invalid profile data", error });
     }
   });

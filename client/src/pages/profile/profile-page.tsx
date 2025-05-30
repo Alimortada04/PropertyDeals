@@ -354,7 +354,7 @@ function ProfilePage() {
     showProfile: true
   });
 
-  // Fetch buyer profile data directly from Supabase using the Supabase user ID as primary key
+  // Fetch buyer profile data from local database via Express API
   const { data: buyerProfile, isLoading, error } = useQuery({
     queryKey: ['buyer-profile'],
     queryFn: async () => {
@@ -363,18 +363,17 @@ function ProfilePage() {
       
       console.log('Fetching profile for Supabase user ID:', supabaseUser.id);
       
-      // Fetch profile directly using Supabase user ID
-      const { data, error } = await supabase
-        .from('buyer_profiles')
-        .select('*')
-        .eq('id', supabaseUser.id)
-        .single();
-      
-      if (error && error.code !== 'PGRST116') {
-        console.error('Profile fetch error:', error);
-        throw error;
+      // Fetch profile from local database via Express API
+      const response = await fetch(`/api/buyer-profile/${supabaseUser.id}`);
+      if (response.status === 404) {
+        console.log('No profile found, will create new one on save');
+        return null;
+      }
+      if (!response.ok) {
+        throw new Error('Failed to fetch profile');
       }
       
+      const data = await response.json();
       console.log('Fetched profile data:', data);
       return data;
     },
@@ -382,7 +381,7 @@ function ProfilePage() {
     retry: 1
   });
 
-  // Create mutation for updating buyer profile directly in Supabase
+  // Create mutation for updating buyer profile via Express API
   const updateProfileMutation = useMutation({
     mutationFn: async (data: any) => {
       const { data: { user: supabaseUser } } = await supabase.auth.getUser();
@@ -391,38 +390,27 @@ function ProfilePage() {
       console.log('Updating profile for Supabase user:', supabaseUser.email);
       console.log('Profile data to save:', data);
       
-      // Convert arrays to text for database storage
+      // Convert arrays to text for database storage if needed
       const processedData = { ...data };
       if (Array.isArray(processedData.type_of_buyer)) {
         processedData.type_of_buyer = processedData.type_of_buyer.join(',');
       }
       
-      if (buyerProfile) {
-        // Update existing profile
-        const { data: updatedData, error } = await supabase
-          .from('buyer_profiles')
-          .update(processedData)
-          .eq('id', supabaseUser.id)
-          .select()
-          .single();
-        
-        if (error) throw error;
-        return updatedData;
-      } else {
-        // Create new profile with just the fields that exist in buyer_profiles table
-        const profileData = {
-          ...processedData
-        };
-        
-        const { data: newData, error } = await supabase
-          .from('buyer_profiles')
-          .insert(profileData)
-          .select()
-          .single();
-        
-        if (error) throw error;
-        return newData;
+      const response = await fetch(`/api/buyer-profile/${supabaseUser.id}`, {
+        method: buyerProfile ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(processedData),
+      });
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Profile update failed:', errorText);
+        throw new Error(`Failed to update profile: ${errorText}`);
       }
+      
+      return await response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['buyer-profile'] });

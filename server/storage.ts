@@ -45,8 +45,11 @@ export interface IStorage {
   
   // Buyer profile operations
   getBuyerProfile(userId: number): Promise<BuyerProfile | undefined>;
+  getBuyerProfileByUuid(uuid: string): Promise<BuyerProfile | undefined>;
   createBuyerProfile(profile: InsertBuyerProfile): Promise<BuyerProfile>;
+  createBuyerProfileByUuid(uuid: string, profile: any): Promise<BuyerProfile>;
   updateBuyerProfile(userId: number, profile: Partial<BuyerProfile>): Promise<BuyerProfile | undefined>;
+  updateBuyerProfileByUuid(uuid: string, profile: any): Promise<BuyerProfile | undefined>;
   
   // Property inquiry operations
   getPropertyInquiries(propertyId: number): Promise<PropertyInquiry[]>;
@@ -247,6 +250,37 @@ export class DatabaseStorage implements IStorage {
         updatedAt: new Date()
       })
       .where(eq(buyerProfiles.userId, userId))
+      .returning();
+    return updatedProfile || undefined;
+  }
+
+  // UUID-based buyer profile operations for Supabase integration
+  async getBuyerProfileByUuid(uuid: string): Promise<BuyerProfile | undefined> {
+    const [profile] = await db.select().from(buyerProfiles).where(eq(buyerProfiles.id, uuid));
+    return profile || undefined;
+  }
+
+  async createBuyerProfileByUuid(uuid: string, profile: any): Promise<BuyerProfile> {
+    const [newProfile] = await db
+      .insert(buyerProfiles)
+      .values({
+        ...profile,
+        id: uuid,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+      .returning();
+    return newProfile;
+  }
+
+  async updateBuyerProfileByUuid(uuid: string, profile: any): Promise<BuyerProfile | undefined> {
+    const [updatedProfile] = await db
+      .update(buyerProfiles)
+      .set({
+        ...profile,
+        updatedAt: new Date()
+      })
+      .where(eq(buyerProfiles.id, uuid))
       .returning();
     return updatedProfile || undefined;
   }
