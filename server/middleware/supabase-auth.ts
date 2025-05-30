@@ -38,17 +38,38 @@ export async function supabaseAuthMiddleware(req: Request, res: Response, next: 
     }
 
     // Find the user in our database
-    const dbUser = await storage.getUserByEmail(user.email!);
+    let dbUser = await storage.getUserByEmail(user.email!);
     
-    // Attach user to request (even if not in our DB yet)
-    req.user = dbUser || {
-      id: parseInt(user.id),
-      email: user.email!,
-      username: user.user_metadata?.username || user.email!.split('@')[0],
-      fullName: user.user_metadata?.full_name || user.email!.split('@')[0],
-      role: 'buyer',
-      created_at: new Date().toISOString()
-    };
+    // If user doesn't exist in our database, create them
+    if (!dbUser) {
+      try {
+        const newUser = await storage.createUser({
+          username: user.user_metadata?.username || user.email!.split('@')[0],
+          email: user.email!,
+          password: '', // Empty since auth is handled by Supabase
+          fullName: user.user_metadata?.full_name || user.email!.split('@')[0],
+          activeRole: 'buyer',
+          isAdmin: false
+        });
+        dbUser = newUser;
+      } catch (error) {
+        console.error('Error creating user in database:', error);
+        // Continue with a temporary user object
+        dbUser = {
+          id: 0, // Temporary ID
+          username: user.user_metadata?.username || user.email!.split('@')[0],
+          email: user.email!,
+          password: '',
+          fullName: user.user_metadata?.full_name || user.email!.split('@')[0],
+          activeRole: 'buyer',
+          isAdmin: false,
+          roles: { buyer: { status: "approved" }, seller: { status: "not_applied" }, rep: { status: "not_applied" } }
+        };
+      }
+    }
+    
+    // Attach user to request
+    req.user = dbUser;
     req.isAuthenticated = () => true;
 
     next();
