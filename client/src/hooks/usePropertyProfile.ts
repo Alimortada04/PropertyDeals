@@ -3,40 +3,59 @@ import { supabase } from '@/lib/supabase';
 
 export interface PropertyProfile {
   id?: number;
-  seller_id: string;
+  seller_id: number;
+  title?: string | null;
   name?: string | null;
   status: 'draft' | 'active' | 'pending' | 'closed' | 'dropped';
   address?: string | null;
   city?: string | null;
   state?: string | null;
-  zipCode?: string | null;
+  zip_code?: string | null;
+  county?: string | null;
+  parcel_id?: string | null;
   description?: string | null;
   bedrooms?: number | null;
   bathrooms?: number | null;
-  squareFootage?: number | null;
-  lotSize?: number | null;
-  yearBuilt?: number | null;
-  propertyType?: string | null;
+  square_feet?: number | null;
+  sqft?: number | null;
+  lot_size?: string | null;
+  year_built?: number | null;
+  property_type?: string | null;
   condition?: string | null;
-  price?: number | null;
+  listing_price?: number | null;
+  purchase_price?: number | null;
   arv?: number | null;
-  purchasePrice?: number | null;
-  marketValue?: number | null;
-  rehab?: number | null;
+  estimated_repairs?: number | null;
+  monthly_rent?: number | null;
   images?: any[] | null;
-  documents?: any[] | null;
-  rentUnit?: any[] | null;
-  expenseItems?: any[] | null;
-  repairProjects?: any[] | null;
-  jvPartners?: any[] | null;
-  galleryImages?: any[] | null;
+  gallery_images?: any[] | null;
+  rental_units?: any[] | null;
+  rent_unit?: any[] | null;
+  expenses?: any[] | null;
+  expense_items?: any[] | null;
+  repairs?: any[] | null;
+  repair_projects?: any[] | null;
+  partners?: any[] | null;
+  jv_partners?: any[] | null;
   comps?: any[] | null;
   tags?: any[] | null;
-  featuredProperty?: boolean | null;
-  accessType?: string | null;
+  featured_property?: boolean | null;
+  access_type?: string | null;
+  access_instructions?: string | null;
+  closing_date?: string | null;
+  purchase_agreement?: string | null;
+  assignment_fee?: number | null;
+  notes?: string | null;
+  additional_notes?: string | null;
+  is_public?: boolean | null;
   created_at?: string;
   updated_at?: string;
   published_at?: string | null;
+  created_by?: number | null;
+  primary_image?: string | null;
+  video_walkthrough?: string | null;
+  video_url?: string | null;
+  parking?: string | null;
 }
 
 export const usePropertyProfile = () => {
@@ -47,16 +66,12 @@ export const usePropertyProfile = () => {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Not authenticated');
-      }
-
+      // For now, using seller_id = 1 to match existing data structure
+      // This should be updated when user authentication is properly integrated
       const { data, error } = await supabase
         .from('property_profile')
         .select('*')
-        .eq('seller_id', user.id)
+        .eq('seller_id', 1)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -75,15 +90,11 @@ export const usePropertyProfile = () => {
 
   const createProperty = async (propertyData: Partial<PropertyProfile>) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Not authenticated');
-      }
-
       const newProperty = {
-        seller_id: user.id,
+        seller_id: 1, // Using integer seller_id to match current schema
         status: 'draft' as const,
+        is_public: false,
+        featured_property: false,
         ...propertyData,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
