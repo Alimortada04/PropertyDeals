@@ -310,13 +310,13 @@ function ProfilePage() {
     };
   }, [activeTab]);
   
-  // Default profile data
+  // Initialize profile data with user information
   const [profileData, setProfileData] = useState<ProfileData>({
-    id: user?.id?.toString() || "",
-    full_name: user?.fullName || "",
+    id: "",
+    full_name: "",
     bio: null,
-    username: user?.username || "",
-    email: user?.email || "",
+    username: "",
+    email: "",
     phone: null,
     in_real_estate_since: null,
     business_name: null,
@@ -369,7 +369,8 @@ function ProfilePage() {
       }
       return response.json();
     },
-    enabled: !!user
+    enabled: !!user,
+    retry: 1
   });
 
   // Create mutation for updating buyer profile
@@ -394,6 +395,19 @@ function ProfilePage() {
       queryClient.invalidateQueries({ queryKey: ['buyer-profile'] });
     },
   });
+
+  // Load user data from auth system
+  useEffect(() => {
+    if (user) {
+      setProfileData(prev => ({
+        ...prev,
+        id: user.id?.toString() || "",
+        full_name: user.fullName || "",
+        username: user.username || "",
+        email: user.email || ""
+      }));
+    }
+  }, [user]);
 
   // Handle buyer profile data when fetched
   useEffect(() => {
