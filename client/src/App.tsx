@@ -438,11 +438,18 @@ function Router() {
         )}
       </Route>
       
-      {/* Property detail page for seller dashboard - temporarily allowed without authentication */}
+      {/* Property editor page for seller dashboard - temporarily allowed without authentication */}
       <Route path="/sellerdash/:userId/property/:propertyId">
         {params => (
           <AppLayout>
-            <SellerPropertyDetailPage />
+            {(() => {
+              const PropertyEditorPage = React.lazy(() => import('./pages/sellerdash/[userId]/property/[propertyId]'));
+              return (
+                <React.Suspense fallback={<div>Loading...</div>}>
+                  <PropertyEditorPage />
+                </React.Suspense>
+              );
+            })()}
           </AppLayout>
         )}
       </Route>
