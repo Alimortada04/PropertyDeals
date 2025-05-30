@@ -1203,7 +1203,7 @@ export default function ManagePage() {
             {/* Add Property button */}
             <Button 
               className="bg-[#135341] hover:bg-[#09261E] text-white font-medium px-4"
-              onClick={() => setIsAddPropertyModalOpen(true)}
+              onClick={handleCreateListing}
             >
               <Plus className="h-4 w-4 mr-1.5" />
               Add Property
@@ -1394,7 +1394,7 @@ export default function ManagePage() {
                       {/* If column is empty */}
                       {(!propertiesByStatus[column.id] || propertiesByStatus[column.id].length === 0) && (
                         column.id === 'listed' 
-                          ? <AddPropertyCard onClick={() => setIsAddPropertyModalOpen(true)} />
+                          ? <AddPropertyCard onClick={handleCreateListing} />
                           : <EmptyColumnPlaceholder />
                       )}
                       
@@ -1495,7 +1495,7 @@ export default function ManagePage() {
           <DropdownMenuContent className="w-60 p-1" align="end" sideOffset={5}>
             <DropdownMenuItem 
               className="cursor-pointer py-2.5 pl-3 rounded-md focus:bg-[#135341]/10 focus:text-[#135341]"
-              onClick={() => setIsAddPropertyModalOpen(true)}
+              onClick={handleCreateListing}
             >
               <DollarSign className="h-4 w-4 mr-2" />
               <span>Add Deal</span>
