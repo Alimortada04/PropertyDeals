@@ -405,27 +405,19 @@ function ProfilePage() {
       console.log('Profile data to save:', data);
       
       // First ensure we have a user record
-      let userRecord = await supabase
+      const { data: userRecord, error: userFetchError } = await supabase
         .from('users')
         .select('id')
         .eq('email', supabaseUser.email)
         .single();
       
-      if (!userRecord.data) {
-        // Create user record first
-        const { data: newUser, error: userError } = await supabase
-          .from('users')
-          .insert({
-            email: supabaseUser.email || '',
-            full_name: supabaseUser.user_metadata?.full_name || '',
-            username: supabaseUser.user_metadata?.username || supabaseUser.email?.split('@')[0] || '',
-            active_role: 'buyer'
-          })
-          .select('id')
-          .single();
-        
-        if (userError) throw userError;
-        userRecord.data = newUser;
+      if (userFetchError) {
+        console.error('Error fetching user record:', userFetchError);
+        throw new Error('Could not find user record');
+      }
+      
+      if (!userRecord) {
+        throw new Error('User record not found');
       }
       
       if (buyerProfile) {
@@ -433,7 +425,7 @@ function ProfilePage() {
         const { data: updatedData, error } = await supabase
           .from('buyer_profiles')
           .update(data)
-          .eq('user_id', userRecord.data.id)
+          .eq('user_id', userRecord.id)
           .select()
           .single();
         
@@ -441,9 +433,15 @@ function ProfilePage() {
         return updatedData;
       } else {
         // Create new profile
+        // Convert arrays to text for database storage
+        const processedData = { ...data };
+        if (Array.isArray(processedData.type_of_buyer)) {
+          processedData.type_of_buyer = processedData.type_of_buyer.join(',');
+        }
+        
         const profileData = {
-          user_id: userRecord.data.id,
-          ...data
+          user_id: userRecord.id,
+          ...processedData
         };
         
         const { data: newData, error } = await supabase
@@ -465,9 +463,10 @@ function ProfilePage() {
     },
     onError: (error) => {
       console.error('Profile update error:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       toast({
         title: "Error updating profile",
-        description: "There was an error saving your profile. Please try again.",
+        description: `There was an error saving your profile: ${error.message || 'Unknown error'}`,
         variant: "destructive",
       });
     },
