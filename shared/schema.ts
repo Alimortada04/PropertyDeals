@@ -17,6 +17,46 @@ export const users = pgTable("users", {
   }).notNull(), // Roles with statuses
 });
 
+// Buyer profile table for extended user account settings
+export const buyerProfiles = pgTable("buyer_profiles", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().unique(),
+  
+  // Account Settings
+  phone: text("phone"),
+  location: text("location"),
+  bio: text("bio"),
+  inRealEstateSince: text("in_real_estate_since"),
+  businessName: text("business_name"),
+  typeOfBuyer: text("type_of_buyer"),
+  website: text("website"),
+  instagram: text("instagram"),
+  facebook: text("facebook"),
+  linkedin: text("linkedin"),
+  profilePhoto: text("profile_photo"),
+  bannerImage: text("banner_image"),
+  
+  // Property Preferences
+  markets: jsonb("markets"), // Array of target markets
+  propertyTypes: jsonb("property_types"), // Array of property types
+  propertyConditions: jsonb("property_conditions"), // Array of conditions
+  idealBudgetMin: integer("ideal_budget_min"),
+  idealBudgetMax: integer("ideal_budget_max"),
+  financingMethods: jsonb("financing_methods"), // Array of financing methods
+  preferredFinancingMethod: text("preferred_financing_method"),
+  closingTimeline: text("closing_timeline"),
+  numberOfDealsLast12Months: integer("number_of_deals_last_12_months"),
+  goalDealsNext12Months: integer("goal_deals_next_12_months"),
+  totalDealsCompleted: integer("total_deals_done"),
+  currentPortfolioCount: integer("current_portfolio_count"),
+  proofOfFunds: text("proof_of_funds"), // File URL
+  pastProperties: jsonb("past_properties"), // Array of past properties
+  
+  // Timestamps
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 export const properties = pgTable("properties", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -242,8 +282,17 @@ export const insertRepSchema = createInsertSchema(reps).omit({
 });
 
 // Types
+export const insertBuyerProfileSchema = createInsertSchema(buyerProfiles).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+export type InsertBuyerProfile = z.infer<typeof insertBuyerProfileSchema>;
+export type BuyerProfile = typeof buyerProfiles.$inferSelect;
 
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
 export type Property = typeof properties.$inferSelect;

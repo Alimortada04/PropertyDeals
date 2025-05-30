@@ -1,5 +1,6 @@
 import { 
   users, type User, type InsertUser, 
+  buyerProfiles, type BuyerProfile, type InsertBuyerProfile,
   properties, type Property, type InsertProperty, 
   propertyProfile, type PropertyProfile, type InsertPropertyProfile,
   propertyInquiries, type PropertyInquiry, type InsertPropertyInquiry, 
@@ -40,6 +41,11 @@ export interface IStorage {
   updatePropertyProfile(id: number, propertyProfile: Partial<PropertyProfile>): Promise<PropertyProfile | undefined>;
   deletePropertyProfile(id: number): Promise<boolean>;
   publishPropertyProfile(id: number): Promise<PropertyProfile | undefined>;
+  
+  // Buyer profile operations
+  getBuyerProfile(userId: number): Promise<BuyerProfile | undefined>;
+  createBuyerProfile(profile: InsertBuyerProfile): Promise<BuyerProfile>;
+  updateBuyerProfile(userId: number, profile: Partial<BuyerProfile>): Promise<BuyerProfile | undefined>;
   
   // Property inquiry operations
   getPropertyInquiries(propertyId: number): Promise<PropertyInquiry[]>;
