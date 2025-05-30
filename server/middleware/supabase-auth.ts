@@ -40,11 +40,16 @@ export async function supabaseAuthMiddleware(req: Request, res: Response, next: 
     // Find the user in our database
     const dbUser = await storage.getUserByEmail(user.email!);
     
-    if (dbUser) {
-      // Attach user to request
-      req.user = dbUser;
-      req.isAuthenticated = () => true;
-    }
+    // Attach user to request (even if not in our DB yet)
+    req.user = dbUser || {
+      id: parseInt(user.id),
+      email: user.email!,
+      username: user.user_metadata?.username || user.email!.split('@')[0],
+      fullName: user.user_metadata?.full_name || user.email!.split('@')[0],
+      role: 'buyer',
+      created_at: new Date().toISOString()
+    };
+    req.isAuthenticated = () => true;
 
     next();
   } catch (error) {
