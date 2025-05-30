@@ -45,57 +45,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
 
-// Placeholder data for demonstration - in production this would come from your API
-const MOCK_PROPERTIES = [
-  {
-    id: 'prop1',
-    title: 'Colonial Revival',
-    address: '123 Main St, Milwaukee, WI 53201',
-    price: 625000,
-    status: 'Live',
-    thumbnail: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2670&auto=format&fit=crop',
-    views: 42,
-    leads: 8,
-    daysListed: 12,
-    beds: 5,
-    baths: 3.5,
-    sqft: 3200,
-    arv: 725000,
-    offers: 3
-  },
-  {
-    id: 'prop2',
-    title: 'Modern Farmhouse',
-    address: '456 Oak St, Madison, WI 53703',
-    price: 459000,
-    status: 'Under Contract',
-    thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2670&auto=format&fit=crop',
-    views: 68,
-    leads: 12,
-    daysListed: 5,
-    beds: 4,
-    baths: 3,
-    sqft: 2800,
-    arv: 550000,
-    offers: 2
-  },
-  {
-    id: 'prop3',
-    title: 'Suburban Ranch',
-    address: '789 Pine Rd, Green Bay, WI 54301',
-    price: 385000,
-    status: 'Closed',
-    thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2675&auto=format&fit=crop',
-    views: 37,
-    leads: 3,
-    daysListed: 30,
-    beds: 3,
-    baths: 2,
-    sqft: 2200,
-    arv: 420000,
-    offers: 4
-  },
-];
+// Property data will be fetched from the backend API
 
 // Sample recent activity data
 const RECENT_ACTIVITY = [
@@ -157,6 +107,24 @@ export default function SellerDashboardPage() {
     enabled: !!user?.id
   });
 
+  // Fetch property profiles for the current seller
+  const { data: properties, isLoading: isLoadingProperties } = useQuery({
+    queryKey: ['property-profiles', userId],
+    queryFn: async () => {
+      const response = await fetch('/api/property-profiles', {
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch properties');
+      }
+      
+      return response.json();
+    },
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
   // Determine if we should show the seller application modal
   const shouldShowSellerModal = !isCheckingStatus && (!sellerStatus || sellerStatus.status !== 'active');
 
@@ -166,25 +134,74 @@ export default function SellerDashboardPage() {
     }
   }, [shouldShowSellerModal]);
   
-  // Get seller stats for the top cards
+  // Calculate stats from real property data
   const stats = {
-    activeListings: 2,
-    offersPending: 3,
-    assignmentRevenue: '$12,500',
-    avgDaysOnMarket: 15
+    activeListings: properties?.filter(p => p.status === 'active' || p.status === 'live').length || 0,
+    offersPending: 3, // TODO: Calculate from offers data when available
+    assignmentRevenue: '$12,500', // TODO: Calculate from closed deals
+    avgDaysOnMarket: 15 // TODO: Calculate from property data
   };
   
-  // Filter properties based on search and status
-  const filteredProperties = MOCK_PROPERTIES.filter(property => {
-    const matchesSearch = 
-      !searchQuery || 
-      property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      property.address.toLowerCase().includes(searchQuery.toLowerCase());
+  // Transform property data for display
+  const transformPropertyForDisplay = (property: any) => {
+    const fullAddress = [property.address, property.city, property.state, property.zipCode]
+      .filter(Boolean)
+      .join(', ');
     
-    const matchesStatus = statusFilter === 'All' || property.status === statusFilter;
-    
-    return matchesSearch && matchesStatus;
-  });
+    const getDaysLeft = (closingDate: string | null) => {
+      if (!closingDate) return 'N/A';
+      const today = new Date();
+      const closing = new Date(closingDate);
+      const diffTime = closing.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays > 0 ? `${diffDays} days left` : 'Overdue';
+    };
+
+    const getStatusDisplayName = (status: string) => {
+      switch(status?.toLowerCase()) {
+        case 'draft': return 'Draft';
+        case 'active': return 'Live';
+        case 'live': return 'Live';
+        case 'under_contract': return 'Under Contract';
+        case 'closed': return 'Closed';
+        case 'pending': return 'Pending';
+        default: return status || 'Unknown';
+      }
+    };
+
+    return {
+      id: property.id,
+      title: property.name || 'Unnamed Property',
+      address: fullAddress || 'No Address',
+      price: property.listingPrice || property.purchasePrice || 0,
+      status: getStatusDisplayName(property.status),
+      thumbnail: property.primaryImage || '/api/placeholder/400/300',
+      views: property.viewCount || 0,
+      leads: 0, // TODO: Calculate from inquiries when available
+      daysListed: getDaysLeft(property.closingDate),
+      beds: property.bedrooms || 0,
+      baths: property.bathrooms || 0,
+      sqft: property.sqft || 0,
+      arv: property.arv || 0,
+      offers: 0, // TODO: Calculate from offers when available
+      assignmentFee: property.assignmentFee || (property.listingPrice && property.purchasePrice ? property.listingPrice - property.purchasePrice : 0)
+    };
+  };
+
+  // Filter and transform properties based on search and status
+  const filteredProperties = (properties || [])
+    .map(transformPropertyForDisplay)
+    .filter(property => {
+      const matchesSearch = 
+        !searchQuery || 
+        property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        property.address.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesStatus = statusFilter === 'All' || property.status === statusFilter;
+      
+      return matchesSearch && matchesStatus;
+    })
+    .slice(0, 20); // Limit to 20 properties initially
   
   // Get status badge style based on status
   const getStatusBadgeClass = (status: string) => {
@@ -428,7 +445,25 @@ export default function SellerDashboardPage() {
           </div>
           
           {/* Properties Grid */}
-          {filteredProperties.length > 0 ? (
+          {isLoadingProperties ? (
+            // Loading state with skeleton cards
+            <div className="grid grid-cols-1 min-[600px]:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <Card key={i} className="animate-pulse">
+                  <div className="h-48 bg-gray-200 rounded-t-lg"></div>
+                  <CardContent className="p-4">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded w-full mb-4"></div>
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+                      <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+                    </div>
+                    <div className="h-8 bg-gray-200 rounded w-full"></div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : filteredProperties.length > 0 ? (
             <div className="grid grid-cols-1 min-[600px]:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
               {filteredProperties.map(property => (
                 <PropertyCard
@@ -457,7 +492,7 @@ export default function SellerDashboardPage() {
             </div>
           ) : (
             // Empty state
-            (<div className="py-16 text-center bg-white rounded-lg border border-dashed border-gray-300">
+            <div className="py-16 text-center bg-white rounded-lg border border-dashed border-gray-300">
               <Building className="h-12 w-12 mx-auto text-gray-400 mb-4" />
               <h3 className="text-xl font-medium text-gray-900 mb-2">You haven't listed any properties yet.</h3>
               <p className="text-gray-500 mb-6">Get started by adding your first deal.</p>
@@ -468,7 +503,7 @@ export default function SellerDashboardPage() {
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Property
               </Button>
-            </div>)
+            </div>
           )}
         </div>
         
