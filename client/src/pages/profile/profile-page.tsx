@@ -367,7 +367,7 @@ function ProfilePage() {
       const { data: userRecord } = await supabase
         .from('users')
         .select('id')
-        .eq('email', supabaseUser.email)
+        .eq('email', supabaseUser.email || '')
         .single();
       
       if (userRecord) {
@@ -416,9 +416,9 @@ function ProfilePage() {
         const { data: newUser, error: userError } = await supabase
           .from('users')
           .insert({
-            email: supabaseUser.email,
+            email: supabaseUser.email || '',
             full_name: supabaseUser.user_metadata?.full_name || '',
-            username: supabaseUser.user_metadata?.username || supabaseUser.email.split('@')[0],
+            username: supabaseUser.user_metadata?.username || supabaseUser.email?.split('@')[0] || '',
             active_role: 'buyer'
           })
           .select('id')
