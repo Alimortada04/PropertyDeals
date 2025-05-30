@@ -605,25 +605,59 @@ function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file || !user?.id) return;
     
+    // Show immediate preview using local URL
+    const previewUrl = URL.createObjectURL(file);
+    setProfileData(prev => ({
+      ...prev,
+      profile_photo_url: previewUrl
+    }));
+    
     setLoading(true);
     
     try {
-      const photoUrl = await uploadProfilePhoto(file, user.id);
+      // Upload to storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
       
-      // Update profile data locally
+      const { error: uploadError } = await supabase.storage
+        .from('profiles')
+        .upload(filePath, file);
+      
+      if (uploadError) {
+        throw uploadError;
+      }
+      
+      // Get public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('profiles')
+        .getPublicUrl(filePath);
+      
+      // Replace preview URL with actual uploaded URL
       setProfileData(prev => ({
         ...prev,
-        profile_photo_url: photoUrl
+        profile_photo_url: publicUrlData.publicUrl
       }));
       
-      // Save to database
-      await saveProfileMutation.mutateAsync({
-        profile_photo_url: photoUrl
+      // Update profile in database
+      await supabase
+        .from('profiles')
+        .update({ profile_photo_url: publicUrlData.publicUrl })
+        .eq('id', user.id);
+      
+      toast({
+        title: "Profile photo updated",
+        description: "Your profile photo has been updated successfully.",
       });
       
-      setIsProfileSectionModified(false);
+      setIsProfileSectionModified(true);
     } catch (error) {
       console.error('Error uploading photo:', error);
+      // Revert to original state on error
+      setProfileData(prev => ({
+        ...prev,
+        profile_photo_url: profileData.profile_photo_url
+      }));
       toast({
         title: "Error updating profile photo",
         description: "There was an error uploading your profile photo. Please try again.",
@@ -631,6 +665,8 @@ function ProfilePage() {
       });
     } finally {
       setLoading(false);
+      // Clean up the preview URL
+      URL.revokeObjectURL(previewUrl);
     }
   };
   
@@ -676,25 +712,59 @@ function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file || !user?.id) return;
     
+    // Show immediate preview using local URL
+    const previewUrl = URL.createObjectURL(file);
+    setProfileData(prev => ({
+      ...prev,
+      profile_banner_url: previewUrl
+    }));
+    
     setLoading(true);
     
     try {
-      const bannerUrl = await uploadBannerImage(file, user.id);
+      // Upload to storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-banner-${Date.now()}.${fileExt}`;
+      const filePath = `banners/${fileName}`;
       
-      // Update profile data locally
+      const { error: uploadError } = await supabase.storage
+        .from('profiles')
+        .upload(filePath, file);
+      
+      if (uploadError) {
+        throw uploadError;
+      }
+      
+      // Get public URL
+      const { data: publicUrlData } = supabase.storage
+        .from('profiles')
+        .getPublicUrl(filePath);
+      
+      // Replace preview URL with actual uploaded URL
       setProfileData(prev => ({
         ...prev,
-        profile_banner_url: bannerUrl
+        profile_banner_url: publicUrlData.publicUrl
       }));
       
-      // Save to database
-      await saveProfileMutation.mutateAsync({
-        banner_image_url: bannerUrl
+      // Update profile in database
+      await supabase
+        .from('profiles')
+        .update({ profile_banner_url: publicUrlData.publicUrl })
+        .eq('id', user.id);
+      
+      toast({
+        title: "Banner image updated",
+        description: "Your banner image has been updated successfully.",
       });
       
-      setIsProfileSectionModified(false);
+      setIsProfileSectionModified(true);
     } catch (error) {
       console.error('Error uploading banner:', error);
+      // Revert to original state on error
+      setProfileData(prev => ({
+        ...prev,
+        profile_banner_url: profileData.profile_banner_url
+      }));
       toast({
         title: "Error updating banner image",
         description: "There was an error uploading your banner image. Please try again.",
@@ -702,6 +772,8 @@ function ProfilePage() {
       });
     } finally {
       setLoading(false);
+      // Clean up the preview URL
+      URL.revokeObjectURL(previewUrl);
     }
   };
   
