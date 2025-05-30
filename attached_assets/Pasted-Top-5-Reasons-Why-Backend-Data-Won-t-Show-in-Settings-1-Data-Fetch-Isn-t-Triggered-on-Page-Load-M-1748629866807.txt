@@ -1,0 +1,103 @@
+Top 5 Reasons Why Backend Data Won’t Show in Settings
+✅ 1. Data Fetch Isn’t Triggered on Page Load
+Make sure you're calling the Supabase fetch inside a useEffect() (or equivalent):
+
+ts
+Copy
+Edit
+useEffect(() => {
+  const fetchProfile = async () => {
+    const { data, error } = await supabase
+      .from('buyer_profile')
+      .select('*')
+      .eq('id', user.id) // or use auth.uid() if needed
+      .single();
+
+    if (data) {
+      setProfile(data);
+    }
+
+    if (error) console.error('Error fetching profile:', error);
+  };
+
+  fetchProfile();
+}, []);
+✅ 2. You're Using the Wrong Key in setValue() or useState()
+If you’re using a form library (like react-hook-form or a custom form), make sure the values are set correctly:
+
+ts
+Copy
+Edit
+setValue('full_name', profile.full_name);
+setValue('past_properties', profile.past_properties || []);
+Or if you're using state:
+
+ts
+Copy
+Edit
+<input value={profile.full_name || ''} />
+If the key doesn’t match the column name in Supabase, it will stay blank.
+
+✅ 3. Supabase Query Is Empty Because of RLS
+If Row Level Security (RLS) is on and the profile query returns nothing:
+
+Check if the user is authorized to read their own profile.
+
+Fix:
+
+sql
+Copy
+Edit
+-- Example for buyer_profile
+CREATE POLICY "Allow user to read own profile"
+ON buyer_profile
+FOR SELECT
+TO authenticated
+USING (id = auth.uid());
+Without this, .select() will return null even if the row exists.
+
+✅ 4. No Data Exists in Supabase Yet
+This happens a lot:
+
+The table exists
+
+The form is live
+
+But there’s no row for that user yet
+
+Fix:
+
+Insert a row on registration (or on first login)
+
+Or check:
+
+ts
+Copy
+Edit
+if (!data) {
+  // Prompt to create profile or show blank form
+}
+✅ 5. Async Fetch Is Too Late for Initial Render
+If your form renders before setValue() or useState() fires, fields will stay blank.
+
+Fix:
+
+Use a loading state or conditional rendering:
+
+ts
+Copy
+Edit
+if (!profile) return <SkeletonLoader />;
+✅ What You Should Do Now
+Confirm the buyer_profile row exists for the user
+
+Ensure you have the correct .select().eq('id', user.id) call
+
+Double-check that RLS isn't blocking data
+
+Print to console:
+
+ts
+Copy
+Edit
+console.log('Fetched Profile:', data);
