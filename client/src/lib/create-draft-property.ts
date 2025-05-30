@@ -23,6 +23,7 @@ export async function createDraftProperty(data: CreateDraftPropertyData): Promis
     propertyType: data.propertyType,
     listingPrice: data.listingPrice,
     status: 'draft',
+    createdBy: 1, // Default seller ID for now
   };
 
   return await apiRequest('/api/property-profiles', 'POST', propertyProfileData);
