@@ -358,33 +358,33 @@ function ProfilePage() {
   const { data: buyerProfile, isLoading, error } = useQuery({
     queryKey: ['buyer-profile'],
     queryFn: async () => {
-      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-      if (!supabaseUser) throw new Error('Not authenticated');
+      if (!user?.id) throw new Error('Not authenticated');
       
+      // First check if a profile exists for this user
       const { data, error } = await supabase
         .from('buyer_profiles')
         .select('*')
-        .eq('user_id', supabaseUser.id)
+        .eq('user_id', user.id)
         .single();
       
       if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+        console.error('Profile fetch error:', error);
         throw error;
       }
       
       return data;
     },
-    enabled: !!user,
+    enabled: !!user?.id,
     retry: 1
   });
 
   // Create mutation for updating buyer profile directly in Supabase
   const updateProfileMutation = useMutation({
     mutationFn: async (data: any) => {
-      const { data: { user: supabaseUser } } = await supabase.auth.getUser();
-      if (!supabaseUser) throw new Error('Not authenticated');
+      if (!user?.id) throw new Error('Not authenticated');
       
       const profileData = {
-        user_id: supabaseUser.id,
+        user_id: user.id,
         ...data
       };
       
@@ -393,7 +393,7 @@ function ProfilePage() {
         const { data: updatedData, error } = await supabase
           .from('buyer_profiles')
           .update(profileData)
-          .eq('user_id', supabaseUser.id)
+          .eq('user_id', user.id)
           .select()
           .single();
         
@@ -413,6 +413,18 @@ function ProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['buyer-profile'] });
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been saved successfully.",
+      });
+    },
+    onError: (error) => {
+      console.error('Profile update error:', error);
+      toast({
+        title: "Error updating profile",
+        description: "There was an error saving your profile. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
