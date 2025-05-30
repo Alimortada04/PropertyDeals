@@ -15,18 +15,44 @@ export interface CreateDraftPropertyData {
 
 export async function createDraftProperty(data: CreateDraftPropertyData): Promise<any> {
   const propertyProfileData: Partial<InsertPropertyProfile> = {
-    title: data.title,
+    name: data.title,
     address: data.address,
     city: data.city,
     state: data.state,
     zipCode: data.zipCode,
     propertyType: data.propertyType,
     listingPrice: data.listingPrice,
-    condition: data.condition,
-    occupancyStatus: data.occupancyStatus,
     status: 'draft',
-    isPublic: false,
   };
 
   return await apiRequest('/api/property-profiles', 'POST', propertyProfileData);
+}
+
+// Simplified function for immediate draft creation with minimal data
+export async function createMinimalDraft(sellerId: number): Promise<any> {
+  try {
+    const minimalDraftData = {
+      sellerId,
+      name: '',
+      address: '',
+      city: '',
+      state: '',
+      zipCode: '',
+      propertyType: '',
+      status: 'draft',
+      bedrooms: null,
+      bathrooms: null,
+      sqft: null,
+      listingPrice: null,
+      purchasePrice: null,
+      arv: null,
+      description: '',
+    };
+
+    const response = await apiRequest('/api/property-profiles', 'POST', minimalDraftData);
+    return response;
+  } catch (error) {
+    console.error('Failed to create minimal draft:', error);
+    return null;
+  }
 }
