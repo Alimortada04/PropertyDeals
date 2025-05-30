@@ -354,7 +354,7 @@ function ProfilePage() {
     showProfile: true
   });
 
-  // Fetch buyer profile data directly from Supabase using Supabase user ID
+  // Fetch buyer profile data directly from Supabase using the Supabase user ID as primary key
   const { data: buyerProfile, isLoading, error } = useQuery({
     queryKey: ['buyer-profile'],
     queryFn: async () => {
@@ -363,33 +363,20 @@ function ProfilePage() {
       
       console.log('Fetching profile for Supabase user ID:', supabaseUser.id);
       
-      // Check if we have a users table record for this Supabase user
-      const { data: userRecord } = await supabase
-        .from('users')
-        .select('id')
-        .eq('email', supabaseUser.email || '')
+      // Fetch profile directly using Supabase user ID
+      const { data, error } = await supabase
+        .from('buyer_profiles')
+        .select('*')
+        .eq('id', supabaseUser.id)
         .single();
       
-      if (userRecord) {
-        // If we have a user record, fetch by user_id
-        const { data, error } = await supabase
-          .from('buyer_profiles')
-          .select('*')
-          .eq('user_id', userRecord.id)
-          .single();
-        
-        if (error && error.code !== 'PGRST116') {
-          console.error('Profile fetch error:', error);
-          throw error;
-        }
-        
-        console.log('Fetched profile data:', data);
-        return data;
-      } else {
-        // No user record found, return null to create new profile
-        console.log('No user record found, will create new profile on save');
-        return null;
+      if (error && error.code !== 'PGRST116') {
+        console.error('Profile fetch error:', error);
+        throw error;
       }
+      
+      console.log('Fetched profile data:', data);
+      return data;
     },
     enabled: true,
     retry: 1
@@ -404,43 +391,26 @@ function ProfilePage() {
       console.log('Updating profile for Supabase user:', supabaseUser.email);
       console.log('Profile data to save:', data);
       
-      // First ensure we have a user record
-      const { data: userRecord, error: userFetchError } = await supabase
-        .from('users')
-        .select('id')
-        .eq('email', supabaseUser.email)
-        .single();
-      
-      if (userFetchError) {
-        console.error('Error fetching user record:', userFetchError);
-        throw new Error('Could not find user record');
-      }
-      
-      if (!userRecord) {
-        throw new Error('User record not found');
+      // Convert arrays to text for database storage
+      const processedData = { ...data };
+      if (Array.isArray(processedData.type_of_buyer)) {
+        processedData.type_of_buyer = processedData.type_of_buyer.join(',');
       }
       
       if (buyerProfile) {
         // Update existing profile
         const { data: updatedData, error } = await supabase
           .from('buyer_profiles')
-          .update(data)
-          .eq('user_id', userRecord.id)
+          .update(processedData)
+          .eq('id', supabaseUser.id)
           .select()
           .single();
         
         if (error) throw error;
         return updatedData;
       } else {
-        // Create new profile
-        // Convert arrays to text for database storage
-        const processedData = { ...data };
-        if (Array.isArray(processedData.type_of_buyer)) {
-          processedData.type_of_buyer = processedData.type_of_buyer.join(',');
-        }
-        
+        // Create new profile with just the fields that exist in buyer_profiles table
         const profileData = {
-          user_id: userRecord.id,
           ...processedData
         };
         
@@ -496,19 +466,29 @@ function ProfilePage() {
       console.log('Loading buyer profile data:', buyerProfile);
       setProfileData(prev => ({
         ...prev,
-        // Basic info
+        // Basic info from buyer_profile table
+        full_name: buyerProfile.full_name || prev.full_name || "",
+        username: buyerProfile.username || prev.username || "",
+        email: buyerProfile.email || prev.email || "",
         phone: buyerProfile.phone || null,
         location: buyerProfile.location || null,
         bio: buyerProfile.bio || null,
         business_name: buyerProfile.business_name || null,
         in_real_estate_since: buyerProfile.in_real_estate_since || null,
         
-        // Arrays - ensure they're arrays
-        type_of_buyer: Array.isArray(buyerProfile.type_of_buyer) ? buyerProfile.type_of_buyer : [],
+        // Handle type_of_buyer - convert from text to array if needed
+        type_of_buyer: buyerProfile.type_of_buyer ? 
+          (typeof buyerProfile.type_of_buyer === 'string' ? 
+            buyerProfile.type_of_buyer.split(',').filter(Boolean) : 
+            Array.isArray(buyerProfile.type_of_buyer) ? buyerProfile.type_of_buyer : []
+          ) : [],
+        
+        // Arrays from JSONB fields
         markets: Array.isArray(buyerProfile.markets) ? buyerProfile.markets : [],
         property_types: Array.isArray(buyerProfile.property_types) ? buyerProfile.property_types : [],
         property_conditions: Array.isArray(buyerProfile.property_conditions) ? buyerProfile.property_conditions : [],
         financing_methods: Array.isArray(buyerProfile.financing_methods) ? buyerProfile.financing_methods : [],
+        past_properties: Array.isArray(buyerProfile.past_properties) ? buyerProfile.past_properties : [],
         
         // Social media
         website: buyerProfile.website || null,
@@ -516,7 +496,7 @@ function ProfilePage() {
         facebook: buyerProfile.facebook || null,
         linkedin: buyerProfile.linkedin || null,
         
-        // Images - correct field names
+        // Images
         profile_photo_url: buyerProfile.profile_photo || null,
         profile_banner_url: buyerProfile.banner_image || null,
         
@@ -533,20 +513,10 @@ function ProfilePage() {
         current_portfolio_count: buyerProfile.current_portfolio_count || null,
         
         // Verification
-        proof_of_funds_url: buyerProfile.proof_of_funds_url || null,
-        proof_of_funds_verified: buyerProfile.proof_of_funds_verified || false,
-        buyer_verification_tag: buyerProfile.buyer_verification_tag || null,
-        
-        // Professional networks (UUIDs) and past properties
-        preferred_inspectors: Array.isArray(buyerProfile.preferred_inspectors) ? buyerProfile.preferred_inspectors : [],
-        preferred_agents: Array.isArray(buyerProfile.preferred_agents) ? buyerProfile.preferred_agents : [],
-        preferred_contractors: Array.isArray(buyerProfile.preferred_contractors) ? buyerProfile.preferred_contractors : [],
-        preferred_lenders: Array.isArray(buyerProfile.preferred_lenders) ? buyerProfile.preferred_lenders : [],
-        past_properties: Array.isArray(buyerProfile.past_properties) ? buyerProfile.past_properties : [],
+        proof_of_funds_url: buyerProfile.proof_of_funds || null,
         
         // Profile settings
-        showProfile: buyerProfile.is_public !== false,
-        profile_completion_score: buyerProfile.profile_completion_score || 0
+        showProfile: true
       }));
     }
   }, [buyerProfile]);
