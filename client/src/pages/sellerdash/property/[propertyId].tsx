@@ -313,10 +313,10 @@ export default function PropertyEditor() {
               variant="ghost"
               size="sm"
               onClick={() => setLocation('/sellerdash/1')}
-              className="flex items-center space-x-2"
+              className="flex items-center space-x-2 hover:bg-transparent group"
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back to Dashboard</span>
+              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+              <span className="transition-colors group-hover:text-[#135341]">Back to Dashboard</span>
             </Button>
             <div>
               <h1 className="text-2xl font-bold">Edit Property</h1>
