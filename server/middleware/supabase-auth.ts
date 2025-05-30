@@ -18,6 +18,7 @@ export async function supabaseAuthMiddleware(req: Request, res: Response, next: 
   }
 
   if (!supabase) {
+    console.log('Supabase client not available, skipping auth middleware');
     return next();
   }
 
@@ -33,7 +34,13 @@ export async function supabaseAuthMiddleware(req: Request, res: Response, next: 
     // Verify the token with Supabase
     const { data: { user }, error } = await supabase.auth.getUser(token);
     
-    if (error || !user) {
+    if (error) {
+      console.log('Supabase auth error:', error.message);
+      return next();
+    }
+    
+    if (!user) {
+      console.log('No user found from token');
       return next();
     }
 
