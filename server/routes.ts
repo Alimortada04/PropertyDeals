@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
-import { insertPropertyInquirySchema, insertPropertySchema, insertPropertyProfileSchema, insertRepSchema, insertSystemLogSchema, insertUserReportSchema } from "@shared/schema";
+import { insertPropertyInquirySchema, insertPropertySchema, insertPropertyProfileSchema, insertRepSchema, insertSystemLogSchema, insertUserReportSchema, insertBuyerProfileSchema } from "@shared/schema";
 import { RecommendationEngine } from "./recommendation";
 import { db } from "./db";
 import { reps } from "@shared/schema";
@@ -231,6 +231,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } else {
       res.status(500).json({ message: "Failed to delete property profile" });
+    }
+  });
+
+  // Buyer profile endpoints
+  app.get("/api/buyer-profile", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const profile = await storage.getBuyerProfile(req.user.id);
+    res.json(profile);
+  });
+
+  app.post("/api/buyer-profile", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const profileData = insertBuyerProfileSchema.parse({
+        ...req.body,
+        userId: req.user.id,
+      });
+      const profile = await storage.createBuyerProfile(profileData);
+      res.status(201).json(profile);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid profile data", error });
+    }
+  });
+
+  app.put("/api/buyer-profile", async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    try {
+      const profileData = insertBuyerProfileSchema.partial().parse(req.body);
+      const profile = await storage.updateBuyerProfile(req.user.id, profileData);
+      if (!profile) {
+        return res.status(404).json({ message: "Profile not found" });
+      }
+      res.json(profile);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid profile data", error });
     }
   });
 

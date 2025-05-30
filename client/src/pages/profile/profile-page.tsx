@@ -352,11 +352,22 @@ function ProfilePage() {
     showProfile: true
   });
 
-  // Fetch buyer profile data from Supabase
+  // Fetch buyer profile data from backend
   const { data: buyerProfile, isLoading, error } = useQuery({
-    queryKey: ['buyer-profile', user?.id],
-    queryFn: () => user?.id ? getBuyerProfile(user.id) : null,
-    enabled: !!user?.id
+    queryKey: ['buyer-profile'],
+    queryFn: async () => {
+      const response = await fetch('/api/buyer-profile', {
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null; // No profile exists yet
+        }
+        throw new Error('Failed to fetch buyer profile');
+      }
+      return response.json();
+    },
+    enabled: !!user
   });
 
   // Handle buyer profile data when fetched
@@ -364,12 +375,9 @@ function ProfilePage() {
     if (buyerProfile) {
       setProfileData(prev => ({
         ...prev,
-        full_name: buyerProfile.full_name || prev.full_name,
-        username: buyerProfile.username || prev.username,
         phone: buyerProfile.phone || null,
         location: buyerProfile.location || null,
         bio: buyerProfile.bio || null,
-        is_public: buyerProfile.is_public || false,
         business_name: buyerProfile.business_name,
         in_real_estate_since: buyerProfile.in_real_estate_since,
         type_of_buyer: buyerProfile.type_of_buyer || [],
@@ -377,8 +385,8 @@ function ProfilePage() {
         instagram: buyerProfile.instagram,
         facebook: buyerProfile.facebook,
         linkedin: buyerProfile.linkedin,
-        profile_photo_url: buyerProfile.profile_photo_url,
-        profile_banner_url: buyerProfile.banner_image_url,
+        profile_photo_url: buyerProfile.profile_photo,
+        profile_banner_url: buyerProfile.banner_image,
         markets: buyerProfile.markets || [],
         property_types: buyerProfile.property_types || [],
         property_conditions: buyerProfile.property_conditions || [],
@@ -391,8 +399,8 @@ function ProfilePage() {
         goal_deals_next_12_months: buyerProfile.goal_deals_next_12_months,
         total_deals_done: buyerProfile.total_deals_done,
         current_portfolio_count: buyerProfile.current_portfolio_count,
-        proof_of_funds_url: buyerProfile.proof_of_funds_url,
-        proof_of_funds_verified: buyerProfile.proof_of_funds_verified || false
+        proof_of_funds_url: buyerProfile.proof_of_funds,
+        past_properties: buyerProfile.past_properties || []
       }));
     }
   }, [buyerProfile]);

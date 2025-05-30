@@ -211,13 +211,38 @@ export class DatabaseStorage implements IStorage {
       .update(propertyProfile)
       .set({
         status: 'live',
-        isPublic: true,
         publishedAt: new Date(),
         updatedAt: new Date()
       })
       .where(eq(propertyProfile.id, id))
       .returning();
     return publishedProfile || undefined;
+  }
+
+  // Buyer profile operations
+  async getBuyerProfile(userId: number): Promise<BuyerProfile | undefined> {
+    const [profile] = await db.select().from(buyerProfiles).where(eq(buyerProfiles.userId, userId));
+    return profile || undefined;
+  }
+
+  async createBuyerProfile(profile: InsertBuyerProfile): Promise<BuyerProfile> {
+    const [newProfile] = await db
+      .insert(buyerProfiles)
+      .values(profile)
+      .returning();
+    return newProfile;
+  }
+
+  async updateBuyerProfile(userId: number, profile: Partial<BuyerProfile>): Promise<BuyerProfile | undefined> {
+    const [updatedProfile] = await db
+      .update(buyerProfiles)
+      .set({
+        ...profile,
+        updatedAt: new Date()
+      })
+      .where(eq(buyerProfiles.userId, userId))
+      .returning();
+    return updatedProfile || undefined;
   }
 
   // Property inquiry operations
