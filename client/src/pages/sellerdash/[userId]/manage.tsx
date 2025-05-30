@@ -51,6 +51,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
+import { createMinimalDraft } from '@/lib/create-draft-property';
 
 // Mock property data for visualization
 const MOCK_PROPERTIES = [
@@ -797,6 +798,31 @@ export default function ManagePage() {
   
   // Toast
   const { toast } = useToast();
+
+  // Handler to create a new draft property and redirect to editor
+  const handleCreateListing = async () => {
+    try {
+      const draftResponse = await createMinimalDraft(1); // Using seller ID = 1 for now
+      
+      if (draftResponse && draftResponse.id) {
+        toast({
+          title: "Draft Created",
+          description: "Your property draft has been saved. You can now fill in the details.",
+        });
+        // Redirect to the property editor page
+        setLocation(`/sellerdash/${userId}/property/${draftResponse.id}`);
+      } else {
+        throw new Error('Failed to create draft');
+      }
+    } catch (error) {
+      console.error('Error creating draft:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create property draft. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
   
   // Adjust the container height for vertical scrolling
   useEffect(() => {

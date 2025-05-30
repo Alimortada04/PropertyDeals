@@ -83,6 +83,7 @@ export default function SellerDashboardPage() {
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   const marketingCenterModal = useMarketingCenterModal();
   const [isOffersInboxOpen, setIsOffersInboxOpen] = useState(false);
+  const { toast } = useToast();
   
   // In real implementation, check if the current user matches the userId param
   // If not, redirect to their own dashboard or show an authorization error
@@ -135,6 +136,40 @@ export default function SellerDashboardPage() {
       setIsSellerModalOpen(true);
     }
   }, [shouldShowSellerModal]);
+
+  // Handler to create a new draft property and redirect to editor
+  const handleCreateListing = async () => {
+    try {
+      if (!user?.id) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to create a property listing.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const draftResponse = await createMinimalDraft(1); // Using seller ID = 1 for now
+      
+      if (draftResponse && draftResponse.id) {
+        toast({
+          title: "Draft Created",
+          description: "Your property draft has been saved. You can now fill in the details.",
+        });
+        // Redirect to the property editor page
+        setLocation(`/sellerdash/${userId}/property/${draftResponse.id}`);
+      } else {
+        throw new Error('Failed to create draft');
+      }
+    } catch (error) {
+      console.error('Error creating draft:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create property draft. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
   
   // Calculate stats from real property data
   const stats = {
@@ -404,7 +439,7 @@ export default function SellerDashboardPage() {
                 {/* List a Property CTA Card */}
                 <Button 
                   className="flex items-center gap-2 bg-[#135341] hover:bg-[#09261E] text-white"
-                  onClick={() => setIsAddPropertyModalOpen(true)}
+                  onClick={handleCreateListing}
                 >
                   <Plus className="h-4 w-4" />
                   <span>List a Property</span>
@@ -500,7 +535,7 @@ export default function SellerDashboardPage() {
               <p className="text-gray-500 mb-6">Get started by adding your first deal.</p>
               <Button 
                 className="bg-[#135341] hover:bg-[#09261E] text-white"
-                onClick={() => setIsAddPropertyModalOpen(true)}
+                onClick={handleCreateListing}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Property
