@@ -1326,25 +1326,7 @@ function ProfilePage() {
                           </p>
                         </div>
                         
-                        {/* Profile Visibility Toggle */}
-                        <div className="pt-4 mt-4 border-t">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <label className="text-sm font-medium text-gray-700 block mb-1" htmlFor="showProfile">
-                                Show Public Profile
-                              </label>
-                              <p className="text-xs text-gray-500">
-                                When enabled, your profile will be visible to other PropertyDeals users
-                              </p>
-                            </div>
-                            <Switch
-                              id="showProfile"
-                              checked={profileData.showProfile}
-                              onCheckedChange={(checked) => handleCheckboxChange(checked, 'showProfile', 'profile')}
-                              className="data-[state=checked]:bg-[#09261E]"
-                            />
-                          </div>
-                        </div>
+
                       </div>
                       
                       {/* Business Information Section */}
@@ -2527,26 +2509,25 @@ function ProfilePage() {
                               <Button
                                 type="button"
                                 onClick={() => {/* Handle proof of funds upload */}}
-                                className="w-full py-8 flex flex-col items-center justify-center bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 rounded-md transition-colors duration-200 hover:border-gray-400"
+                                className="w-full py-4 flex flex-col items-center justify-center bg-white hover:bg-gray-50 border-2 border-dashed border-gray-300 rounded-md transition-colors duration-200 hover:border-gray-400"
                               >
-                                <Upload className="h-8 w-8 text-gray-400 mb-2" />
-                                <span className="font-medium text-gray-700">Upload Proof of Funds</span>
-                                <span className="text-xs text-gray-500 mt-1">PDF, JPG, or PNG (Max 5MB)</span>
+                                <Upload className="h-5 w-5 text-gray-400 mb-1" />
+                                <span className="font-medium text-gray-700 text-sm">Upload Proof of Funds</span>
+                                <span className="text-xs text-gray-500">PDF, JPG, or PNG (Max 5MB)</span>
                               </Button>
                             )}
                           </div>
                         </div>
                         
-                        {/* Section 2: Past Properties */}
+                        {/* Section 2: Portfolio */}
                         <div className="bg-gray-50/80 p-4 rounded-md border border-gray-200">
                           <h4 className="font-medium text-gray-800 text-base mb-3 flex items-center">
                             <Building className="mr-2 h-5 w-5 text-[#09261E]" />
-                            Past Properties
+                            Portfolio
                           </h4>
                           
                           <p className="text-sm text-gray-700 mb-3">
-                            List up to 5 past properties you've purchased under your name or business entity.
-                            These will be reviewed for verification purposes.
+                            List up to 5 current or past properties you've purchased under your name or business entity. These will be reviewed for verification purposes.
                           </p>
                           
                           <div className="space-y-3">
