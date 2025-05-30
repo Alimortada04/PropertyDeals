@@ -256,15 +256,15 @@ export class DatabaseStorage implements IStorage {
 
   // UUID-based buyer profile operations for Supabase integration
   async getBuyerProfileByUuid(uuid: string): Promise<BuyerProfile | undefined> {
-    // Use the correct table name: buyer_profile (singular)
-    const results = await db.execute(sql`SELECT * FROM buyer_profile WHERE user_id::text = ${uuid}`);
+    // Use the correct table name: buyer_profiles (plural)
+    const results = await db.execute(sql`SELECT * FROM buyer_profiles WHERE user_id::text = ${uuid}`);
     return results.rows[0] as BuyerProfile || undefined;
   }
 
   async createBuyerProfileByUuid(uuid: string, profile: any): Promise<BuyerProfile> {
-    // Insert with UUID directly as user_id - use correct table name: buyer_profile (singular)
+    // Insert with UUID directly as user_id - use correct table name: buyer_profiles (plural)
     const results = await db.execute(sql`
-      INSERT INTO buyer_profile (user_id, phone, bio, business_name, type_of_buyer, website, instagram, facebook, linkedin, created_at, updated_at)
+      INSERT INTO buyer_profiles (user_id, phone, bio, business_name, type_of_buyer, website, instagram, facebook, linkedin, created_at, updated_at)
       VALUES (${uuid}::integer, ${profile.phone}, ${profile.bio}, ${profile.business_name}, ${profile.type_of_buyer}, ${profile.website}, ${profile.instagram}, ${profile.facebook}, ${profile.linkedin}, NOW(), NOW())
       RETURNING *
     `);
@@ -272,9 +272,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateBuyerProfileByUuid(uuid: string, profile: any): Promise<BuyerProfile | undefined> {
-    // Update profile where user_id matches UUID - use correct table name: buyer_profile (singular)
+    // Update profile where user_id matches UUID - use correct table name: buyer_profiles (plural)
     const results = await db.execute(sql`
-      UPDATE buyer_profile 
+      UPDATE buyer_profiles 
       SET phone = ${profile.phone}, 
           bio = ${profile.bio}, 
           business_name = ${profile.business_name}, 
