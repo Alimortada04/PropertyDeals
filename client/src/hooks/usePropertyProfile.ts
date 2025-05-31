@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 
 export interface PropertyProfile {
   id?: number;
-  seller_id: number;
+  seller_id: string;
   title?: string | null;
   name?: string | null;
   status: 'draft' | 'active' | 'pending' | 'closed' | 'dropped';
@@ -66,12 +66,16 @@ export const usePropertyProfile = () => {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      // For now, using seller_id = 1 to match existing data structure
-      // This should be updated when user authentication is properly integrated
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Not authenticated');
+      }
+
       const { data, error } = await supabase
         .from('property_profile')
         .select('*')
-        .eq('seller_id', 1)
+        .eq('seller_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -90,8 +94,14 @@ export const usePropertyProfile = () => {
 
   const createProperty = async (propertyData: Partial<PropertyProfile>) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Not authenticated');
+      }
+
       const newProperty = {
-        seller_id: 1, // Using integer seller_id to match current schema
+        seller_id: user.id,
         status: 'draft' as const,
         is_public: false,
         featured_property: false,
@@ -174,6 +184,42 @@ export const usePropertyProfile = () => {
     }
   };
 
+  const getProperty = async (id: number) => {
+    try {
+      const { data, error } = await supabase
+        .from('property_profile')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const checkForExistingDraft = async (address?: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) return null;
+
+      const { data, error } = await supabase
+        .from('property_profile')
+        .select('*')
+        .eq('seller_id', user.id)
+        .eq('status', 'draft')
+        .eq('address', address || '')
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      return data;
+    } catch (err) {
+      return null;
+    }
+  };
+
   useEffect(() => {
     fetchProperties();
   }, []);
@@ -186,6 +232,8 @@ export const usePropertyProfile = () => {
     updateProperty,
     publishProperty,
     deleteProperty,
+    getProperty,
+    checkForExistingDraft,
     refetch: fetchProperties
   };
 };

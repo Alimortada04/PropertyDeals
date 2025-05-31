@@ -344,6 +344,20 @@ function Router() {
         </AppLayout>
       </Route>
       
+      {/* New unified seller dashboard route */}
+      <ProtectedRoute path="/sellerdash/dashboard" component={() => (
+        <AppLayout>
+          {(() => {
+            const SellerDashboardIndex = React.lazy(() => import('./pages/sellerdash/index'));
+            return (
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <SellerDashboardIndex />
+              </React.Suspense>
+            );
+          })()}
+        </AppLayout>
+      )} />
+      
       {/* Seller dashboard private route - temporarily allowed without authentication */}
       <Route path="/sellerdash/:userId">
         {params => (
@@ -453,6 +467,13 @@ function Router() {
           </AppLayout>
         )}
       </Route>
+      
+      {/* Simplified property editor route */}
+      <ProtectedRoute path="/sellerdash/property/:propertyId" component={({params}: any) => (
+        <AppLayout>
+          <SellerPropertyDetailPage />
+        </AppLayout>
+      )} />
       <Route path="/forgot-password">
         <ForgotPasswordPage />
       </Route>
