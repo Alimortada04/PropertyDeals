@@ -410,9 +410,11 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       });
       onClose();
       
-      // Redirect to seller dashboard
+      // Redirect to seller dashboard with user ID
       setTimeout(() => {
-        setLocation(`/sellerdash/dashboard`);
+        if (user?.id) {
+          setLocation(`/sellerdash/${user.id}`);
+        }
       }, 1000);
       
     } catch (error) {
