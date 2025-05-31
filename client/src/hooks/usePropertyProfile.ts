@@ -102,9 +102,9 @@ export const usePropertyProfile = () => {
 
       // Check if user has an active seller profile
       const { data: sellerProfile, error: sellerError } = await supabase
-        .from('sellers')
+        .from('seller_profile')
         .select('status')
-        .eq('userId', user.id)
+        .eq('id', user.id)
         .single();
 
       if (sellerError && sellerError.code !== 'PGRST116') {
