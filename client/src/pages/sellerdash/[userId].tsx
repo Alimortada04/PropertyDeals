@@ -577,7 +577,7 @@ export default function SellerDashboardPage() {
                 {/* List a Property CTA Card */}
                 <Button 
                   className="flex items-center gap-2 bg-[#135341] hover:bg-[#09261E] text-white"
-                  onClick={handleCreateListing}
+                  onClick={() => setIsAddPropertyModalOpen(true)}
                 >
                   <Plus className="h-4 w-4" />
                   <span>List a Property</span>
@@ -673,7 +673,7 @@ export default function SellerDashboardPage() {
               <p className="text-gray-500 mb-6">Get started by adding your first deal.</p>
               <Button 
                 className="bg-[#135341] hover:bg-[#09261E] text-white"
-                onClick={handleCreateListing}
+                onClick={() => setIsAddPropertyModalOpen(true)}
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Property
