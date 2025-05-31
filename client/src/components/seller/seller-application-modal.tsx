@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
 import { useSellerProfile } from '@/hooks/useSellerProfile';
+import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 import {
@@ -321,6 +322,15 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   // Handle submit application
   const handleSubmitApplication = async () => {
+    if (!user?.id) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to submit your seller application.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!acceptedTerms) {
       setErrors(prev => ({
         ...prev,
@@ -375,31 +385,86 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       // Save seller application to Supabase
       console.log('Submitting seller application to Supabase', formData);
       
-      // Create seller profile using the new system
+      // Check if profile already exists for upsert logic
+      const { data: existingProfile, error: checkError } = await supabase
+        .from('seller_profile')
+        .select('id, status')
+        .eq('id', user!.id)
+        .single();
+
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('Error checking existing profile:', checkError);
+        throw new Error('Failed to check existing profile');
+      }
+
+      // Prepare seller profile data for Supabase
       const profileData = {
-        fullName: formData.fullName,
+        id: user!.id, // Supabase Auth UUID
+        full_name: formData.fullName,
         email: formData.email,
-        phone: formData.phoneNumber,
-        businessName: formData.businessName,
-        yearsInRealEstate: formData.realEstateSince,
-        businessType: formData.businessTypes.join(', '),
-        targetMarkets: formData.targetMarkets,
-        dealTypes: formData.dealTypes,
-        maxDealVolume: formData.maxDealVolume,
-        hasBuyerList: formData.hasBuyerList,
-        isDirectToSeller: formData.isDirectToSeller,
-        notes: formData.notes,
-        website: formData.websiteUrl,
-        socialLinks: {
-          facebook: formData.facebookProfile,
-          instagram: formData.instagramProfile,
-          linkedin: formData.linkedinProfile
+        phone_number: formData.phoneNumber,
+        business_name: formData.businessName || null,
+        years_in_real_estate: formData.realEstateSince,
+        business_type: formData.businessTypes.join(', '),
+        target_markets: formData.targetMarkets,
+        deal_types: formData.dealTypes,
+        max_deal_volume: formData.maxDealVolume,
+        has_buyer_list: formData.hasBuyerList,
+        is_direct_to_seller: formData.isDirectToSeller,
+        notes: formData.notes || null,
+        website: formData.websiteUrl || null,
+        social_links: {
+          facebook: formData.facebookProfile || null,
+          instagram: formData.instagramProfile || null,
+          linkedin: formData.linkedinProfile || null
         },
-        hasProofOfFunds: formData.hasProofOfFunds,
-        usesTitleCompany: formData.usesTitleCompany
+        has_proof_of_funds: formData.hasProofOfFunds,
+        uses_title_company: formData.usesTitleCompany,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       };
 
-      await createSellerProfile(profileData);
+      console.log('Submitting seller profile data:', profileData);
+
+      let result;
+      if (existingProfile) {
+        // Update existing profile
+        console.log('Updating existing seller profile');
+        const { data, error } = await supabase
+          .from('seller_profile')
+          .update({
+            ...profileData,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', user!.id)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Seller profile update error:', error);
+          console.error('Error details:', error.details, error.hint, error.code);
+          throw new Error(`Update failed: ${error.message}`);
+        }
+        result = data;
+      } else {
+        // Insert new profile
+        console.log('Creating new seller profile');
+        const { data, error } = await supabase
+          .from('seller_profile')
+          .insert([profileData])
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Seller profile insert error:', error);
+          console.error('Error details:', error.details, error.hint, error.code);
+          throw new Error(`Insert failed: ${error.message}`);
+        }
+        result = data;
+      }
+
+      console.log('Seller profile saved successfully:', result);
 
       // Success - display success message and close modal
       setIsSubmitting(false);
