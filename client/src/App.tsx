@@ -346,115 +346,96 @@ function Router() {
       
 
       
-      {/* Seller dashboard private route - temporarily allowed without authentication */}
-      <Route path="/sellerdash/:userId">
-        {params => (
-          <AppLayout>
-            <SellerDashboardPage />
-          </AppLayout>
-        )}
-      </Route>
+      {/* Seller dashboard private route - requires authentication */}
+      <ProtectedRoute path="/sellerdash/:userId" component={() => (
+        <AppLayout>
+          <SellerDashboardPage />
+        </AppLayout>
+      )} />
       
       {/* Seller dashboard manage route */}
-      <Route path="/sellerdash/:userId/manage">
-        {params => (
-          <AppLayout>
-            {/* Using dynamic import to resolve at runtime */}
-            {(() => {
-              const ManagePage = React.lazy(() => import('./pages/sellerdash/[userId]/manage'));
-              return (
-                <React.Suspense fallback={<div>Loading...</div>}>
-                  <ManagePage />
-                </React.Suspense>
-              );
-            })()}
-          </AppLayout>
-        )}
-      </Route>
+      <ProtectedRoute path="/sellerdash/:userId/manage" component={() => (
+        <AppLayout>
+          {(() => {
+            const ManagePage = React.lazy(() => import('./pages/sellerdash/[userId]/manage'));
+            return (
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <ManagePage />
+              </React.Suspense>
+            );
+          })()}
+        </AppLayout>
+      )} />
       
       {/* Seller dashboard engagement route */}
-      <Route path="/sellerdash/:userId/engagement">
-        {params => (
-          <AppLayout>
-            {/* Using Zillow-style split-screen layout */}
-            {(() => {
-              const EngagementZillowPage = React.lazy(() => import('./pages/sellerdash/[userId]/engagement.zillow'));
-              return (
-                <React.Suspense fallback={<div>Loading...</div>}>
-                  <EngagementZillowPage />
-                </React.Suspense>
-              );
-            })()}
-          </AppLayout>
-        )}
-      </Route>
+      <ProtectedRoute path="/sellerdash/:userId/engagement" component={() => (
+        <AppLayout>
+          {(() => {
+            const EngagementZillowPage = React.lazy(() => import('./pages/sellerdash/[userId]/engagement.zillow'));
+            return (
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <EngagementZillowPage />
+              </React.Suspense>
+            );
+          })()}
+        </AppLayout>
+      )} />
       
       {/* Seller dashboard analytics route */}
-      <Route path="/sellerdash/:userId/analytics">
-        {params => (
-          <AppLayout>
-            {/* Using dynamic import to resolve at runtime */}
-            {(() => {
-              const AnalyticsPage = React.lazy(() => import('./pages/sellerdash/[userId]/analytics'));
-              return (
-                <React.Suspense fallback={<div>Loading...</div>}>
-                  <AnalyticsPage />
-                </React.Suspense>
-              );
-            })()}
-          </AppLayout>
-        )}
-      </Route>
+      <ProtectedRoute path="/sellerdash/:userId/analytics" component={() => (
+        <AppLayout>
+          {(() => {
+            const AnalyticsPage = React.lazy(() => import('./pages/sellerdash/[userId]/analytics'));
+            return (
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <AnalyticsPage />
+              </React.Suspense>
+            );
+          })()}
+        </AppLayout>
+      )} />
       
       {/* Seller dashboard marketing route */}
-      <Route path="/sellerdash/:userId/marketing">
-        {params => (
-          <AppLayout>
-            {/* Using dynamic import to resolve at runtime */}
-            {(() => {
-              const MarketingPage = React.lazy(() => import('./pages/sellerdash/[userId]/marketing'));
-              return (
-                <React.Suspense fallback={<div>Loading...</div>}>
-                  <MarketingPage />
-                </React.Suspense>
-              );
-            })()}
-          </AppLayout>
-        )}
-      </Route>
+      <ProtectedRoute path="/sellerdash/:userId/marketing" component={() => (
+        <AppLayout>
+          {(() => {
+            const MarketingPage = React.lazy(() => import('./pages/sellerdash/[userId]/marketing'));
+            return (
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <MarketingPage />
+              </React.Suspense>
+            );
+          })()}
+        </AppLayout>
+      )} />
       
       {/* Seller dashboard offers route */}
-      <Route path="/sellerdash/:userId/offers">
-        {params => (
-          <AppLayout>
-            {/* Using dynamic import to resolve at runtime */}
-            {(() => {
-              const OffersPage = React.lazy(() => import('./pages/sellerdash/[userId]/offers'));
-              return (
-                <React.Suspense fallback={<div>Loading...</div>}>
-                  <OffersPage />
-                </React.Suspense>
-              );
-            })()}
-          </AppLayout>
-        )}
-      </Route>
+      <ProtectedRoute path="/sellerdash/:userId/offers" component={() => (
+        <AppLayout>
+          {(() => {
+            const OffersPage = React.lazy(() => import('./pages/sellerdash/[userId]/offers'));
+            return (
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <OffersPage />
+              </React.Suspense>
+            );
+          })()}
+        </AppLayout>
+      )} />
       
-      {/* Property editor page for seller dashboard - temporarily allowed without authentication */}
-      <Route path="/sellerdash/:userId/property/:propertyId">
-        {params => (
-          <AppLayout>
-            {(() => {
-              const PropertyEditorPage = React.lazy(() => import('./pages/sellerdash/[userId]/property/[propertyId]'));
-              return (
-                <React.Suspense fallback={<div>Loading...</div>}>
-                  <PropertyEditorPage />
-                </React.Suspense>
-              );
-            })()}
-          </AppLayout>
-        )}
-      </Route>
+      {/* Property editor page for seller dashboard */}
+      <ProtectedRoute path="/sellerdash/:userId/property/:propertyId" component={() => (
+        <AppLayout>
+          {(() => {
+            const PropertyEditorPage = React.lazy(() => import('./pages/sellerdash/[userId]/property/[propertyId]'));
+            return (
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <PropertyEditorPage />
+              </React.Suspense>
+            );
+          })()}
+        </AppLayout>
+      )} />
       
       {/* Simplified property editor route */}
       <ProtectedRoute path="/sellerdash/property/:propertyId" component={() => (
