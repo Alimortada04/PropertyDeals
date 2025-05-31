@@ -381,7 +381,7 @@ export default function SellerDashboardPage() {
               {sellerStatus !== 'no_profile' && (
                 <Button 
                   variant="ghost"
-                  className="w-full text-gray-500 hover:text-gray-700"
+                  className="w-full text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-all duration-200"
                   onClick={() => setLocation('/help')}
                 >
                   Need Help?
