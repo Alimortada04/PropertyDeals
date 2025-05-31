@@ -469,7 +469,7 @@ function Router() {
       </Route>
       
       {/* Simplified property editor route */}
-      <ProtectedRoute path="/sellerdash/property/:propertyId" component={({params}: any) => (
+      <ProtectedRoute path="/sellerdash/property/:propertyId" component={() => (
         <AppLayout>
           <SellerPropertyDetailPage />
         </AppLayout>
