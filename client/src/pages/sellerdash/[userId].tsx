@@ -358,34 +358,12 @@ export default function SellerDashboardPage() {
     );
   }
 
-  // Show status modal for non-active sellers
-  if (!hasSellerAccess) {
-    return (
-      <SellerDashboardLayout userId={userId}>
-        <div className="container mx-auto p-6">
-          <div className="text-center py-12">
-            <div className="max-w-md mx-auto">
-              <AlertCircle className="h-16 w-16 mx-auto text-orange-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Seller Access Required</h3>
-              <p className="text-gray-600 mb-6">
-                Complete your seller application to access the property management dashboard.
-              </p>
-              <Button onClick={() => setIsSellerModalOpen(true)}>
-                View Application Status
-              </Button>
-            </div>
-          </div>
-          {renderStatusModal()}
-          
-          {/* Seller Application Modal */}
-          <SellerApplicationModal
-            isOpen={isSellerModalOpen && sellerStatus === 'no_profile'}
-            onClose={() => setIsSellerModalOpen(false)}
-          />
-        </div>
-      </SellerDashboardLayout>
-    );
-  }
+  // Show status modal automatically for non-active sellers but keep the full dashboard layout visible
+  useEffect(() => {
+    if (!isLoadingProfile && !hasSellerAccess) {
+      setIsSellerModalOpen(true);
+    }
+  }, [isLoadingProfile, hasSellerAccess]);
   
   return (
     <SellerDashboardLayout userId={userId}>
@@ -396,18 +374,21 @@ export default function SellerDashboardPage() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Welcome back, {(user || mockUser)?.fullName?.split(' ')[0] || 'Seller'} 👋</h1>
             <p className="text-gray-600 mt-1">
-              Here's how your real estate business is performing today.
+              {hasSellerAccess 
+                ? "Here's how your real estate business is performing today."
+                : "Complete your seller application to unlock your PropertyDeals dashboard."
+              }
             </p>
           </div>
           
           <div className="mt-4 sm:mt-0">
             <div className="flex items-center gap-2">
-              {getSellerStatusIcon(sellerProfile?.status || 'active')}
-              <Badge className={`px-3 py-1 text-sm ${getStatusBadgeClass(sellerProfile?.status || 'active')}`}>
+              {getSellerStatusIcon(sellerProfile?.status || 'pending')}
+              <Badge className={`px-3 py-1 text-sm ${getStatusBadgeClass(sellerProfile?.status || 'pending')}`}>
                 {sellerProfile?.status === 'active' ? 'Active Seller' : 
                  sellerProfile?.status === 'pending' ? 'Pending Approval' : 
                  sellerProfile?.status === 'rejected' ? 'Approval Rejected' : 
-                 sellerProfile?.status === 'paused' ? 'Account Paused' : 'Active Seller'}
+                 sellerProfile?.status === 'paused' ? 'Account Paused' : 'Pending Application'}
               </Badge>
             </div>
           </div>
