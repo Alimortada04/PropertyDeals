@@ -60,6 +60,19 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+
+  // Auth protection - redirect to sign in if not authenticated
+  useEffect(() => {
+    if (isOpen && !user) {
+      onClose();
+      setLocation('/auth/signin?redirect=' + encodeURIComponent(window.location.pathname));
+    }
+  }, [isOpen, user, onClose, setLocation]);
+
+  // Don't render modal if user is not authenticated
+  if (!user) {
+    return null;
+  }
   
   // Form state
   const [formData, setFormData] = useState({
@@ -322,15 +335,6 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   // Handle submit application
   const handleSubmitApplication = async () => {
-    if (!user?.id) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to submit your seller application.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if (!acceptedTerms) {
       setErrors(prev => ({
         ...prev,
@@ -385,11 +389,19 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       // Save seller application to Supabase
       console.log('Submitting seller application to Supabase', formData);
       
+      // Get current user from Supabase auth
+      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !authUser) {
+        console.error('Authentication error:', authError);
+        throw new Error('Authentication required. Please log in and try again.');
+      }
+
       // Check if profile already exists for upsert logic
       const { data: existingProfile, error: checkError } = await supabase
         .from('seller_profile')
         .select('id, status')
-        .eq('id', user!.id)
+        .eq('id', authUser.id)
         .single();
 
       if (checkError && checkError.code !== 'PGRST116') {
@@ -399,7 +411,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
 
       // Prepare seller profile data for Supabase
       const profileData = {
-        id: user!.id, // Supabase Auth UUID
+        id: authUser.id, // Supabase Auth UUID
         full_name: formData.fullName,
         email: formData.email,
         phone_number: formData.phoneNumber,
@@ -437,7 +449,7 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
             ...profileData,
             updated_at: new Date().toISOString()
           })
-          .eq('id', user!.id)
+          .eq('id', authUser.id)
           .select()
           .single();
 
