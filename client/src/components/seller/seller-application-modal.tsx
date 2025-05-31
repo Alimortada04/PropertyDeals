@@ -382,24 +382,19 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         });
       }
       
-      // Save seller application to Supabase
-      console.log('Submitting seller application to Supabase', formData);
+      // Get authenticated user from Supabase
+      const { data: { user } } = await supabase.auth.getUser();
       
-      // Check if profile already exists for upsert logic
-      const { data: existingProfile, error: checkError } = await supabase
-        .from('seller_profile')
-        .select('id, status')
-        .eq('id', user!.id)
-        .single();
-
-      if (checkError && checkError.code !== 'PGRST116') {
-        console.error('Error checking existing profile:', checkError);
-        throw new Error('Failed to check existing profile');
+      if (!user) {
+        throw new Error('Authentication required');
       }
 
-      // Prepare seller profile data for Supabase
+      console.log('Submitting seller application to Supabase for user:', user.id);
+
+      // Prepare seller profile data for Supabase upsert
       const profileData = {
-        id: user!.id, // Supabase Auth UUID
+        id: user.id, // Supabase Auth UUID
+        status: 'pending' as const,
         full_name: formData.fullName,
         email: formData.email,
         phone_number: formData.phoneNumber,
@@ -420,51 +415,26 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
         },
         has_proof_of_funds: formData.hasProofOfFunds,
         uses_title_company: formData.usesTitleCompany,
-        status: 'pending',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
 
       console.log('Submitting seller profile data:', profileData);
 
-      let result;
-      if (existingProfile) {
-        // Update existing profile
-        console.log('Updating existing seller profile');
-        const { data, error } = await supabase
-          .from('seller_profile')
-          .update({
-            ...profileData,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', user!.id)
-          .select()
-          .single();
+      // Use upsert to handle both insert and update cases
+      const { data, error } = await supabase
+        .from('seller_profile')
+        .upsert([profileData])
+        .select()
+        .single();
 
-        if (error) {
-          console.error('Seller profile update error:', error);
-          console.error('Error details:', error.details, error.hint, error.code);
-          throw new Error(`Update failed: ${error.message}`);
-        }
-        result = data;
-      } else {
-        // Insert new profile
-        console.log('Creating new seller profile');
-        const { data, error } = await supabase
-          .from('seller_profile')
-          .insert([profileData])
-          .select()
-          .single();
-
-        if (error) {
-          console.error('Seller profile insert error:', error);
-          console.error('Error details:', error.details, error.hint, error.code);
-          throw new Error(`Insert failed: ${error.message}`);
-        }
-        result = data;
+      if (error) {
+        console.error('Seller profile submission failed:', error);
+        console.error('Error details:', error.details, error.hint, error.code);
+        throw new Error(`Submission failed: ${error.message}`);
       }
 
-      console.log('Seller profile saved successfully:', result);
+      console.log('Seller profile saved successfully:', data);
 
       // Success - display success message and close modal
       setIsSubmitting(false);

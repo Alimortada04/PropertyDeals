@@ -100,24 +100,6 @@ export default function SellerDashboardPage() {
     }
   }, [user, userId, setLocation]);
 
-  // Fetch property profiles for the current seller
-  const { data: properties, isLoading: isLoadingProperties } = useQuery({
-    queryKey: ['property-profiles', userId],
-    queryFn: async () => {
-      const response = await fetch('/api/property-profiles', {
-        credentials: 'include'
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch properties');
-      }
-      
-      return response.json();
-    },
-    enabled: !!userId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
-
   // Status-based access control
   const getSellerAccessStatus = () => {
     if (isLoadingProfile) return 'loading';
@@ -127,6 +109,32 @@ export default function SellerDashboardPage() {
 
   const sellerStatus = getSellerAccessStatus();
   const hasSellerAccess = sellerStatus === 'active';
+
+  // Fetch property profiles directly from Supabase
+  const { data: properties, isLoading: isLoadingProperties } = useQuery({
+    queryKey: ['seller-property-profiles', userId],
+    queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Authentication required');
+      }
+
+      const { data, error } = await supabase
+        .from('property_profile')
+        .select('*')
+        .eq('seller_id', user.id);
+
+      if (error) {
+        console.error('Error fetching property profiles:', error);
+        throw new Error('Failed to fetch property profiles');
+      }
+
+      return data || [];
+    },
+    enabled: !!userId && hasSellerAccess,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
   // Show status modal for non-active sellers
   useEffect(() => {

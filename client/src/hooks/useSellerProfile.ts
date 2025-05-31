@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
-export type SellerStatus = 'none' | 'pending' | 'rejected' | 'paused' | 'banned' | 'active';
+export type SellerStatus = 'none' | 'pending' | 'rejected' | 'paused' | 'active';
 
 export interface SellerProfileData {
   id?: string;
@@ -60,6 +60,7 @@ export const useSellerProfile = () => {
         .single();
 
       if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching seller profile:', error);
         throw error;
       }
 
