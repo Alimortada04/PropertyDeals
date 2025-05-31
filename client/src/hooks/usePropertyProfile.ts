@@ -100,6 +100,21 @@ export const usePropertyProfile = () => {
         throw new Error('Not authenticated');
       }
 
+      // Check if user has an active seller profile
+      const { data: sellerProfile, error: sellerError } = await supabase
+        .from('sellers')
+        .select('status')
+        .eq('userId', user.id)
+        .single();
+
+      if (sellerError && sellerError.code !== 'PGRST116') {
+        throw new Error('Error checking seller profile');
+      }
+
+      if (!sellerProfile || sellerProfile.status !== 'active') {
+        throw new Error('You need an active seller profile to create properties. Please complete your seller application first.');
+      }
+
       const newProperty = {
         seller_id: user.id,
         status: 'draft' as const,
