@@ -280,36 +280,73 @@ export default function SellerDashboardPage() {
     }
   };
   
-  // Render status-based modal
+  // Render status-based modal with proper branding and functionality
   const renderStatusModal = () => {
+    if (sellerStatus === 'active' || sellerStatus === 'loading') return null;
+
+    const handleStatusAction = () => {
+      switch (sellerStatus) {
+        case 'no_profile':
+          // Open seller application modal
+          setIsSellerModalOpen(false);
+          // Will trigger application modal from useEffect
+          break;
+        case 'pending':
+          // Navigate to help
+          setLocation('/help');
+          break;
+        case 'rejected':
+          // Open seller application modal for reapplication
+          setIsSellerModalOpen(false);
+          // Will trigger application modal from useEffect
+          break;
+        case 'paused':
+          // TODO: Implement reactivation request
+          setLocation('/help');
+          break;
+      }
+    };
+
     const statusConfig = {
       no_profile: {
-        icon: <AlertCircle className="h-12 w-12 text-orange-500 mx-auto mb-4" />,
+        icon: "❗",
         title: "Seller Application Required",
         message: "To access the seller dashboard and list properties, you need to complete the seller application process.",
         action: "Apply as Seller",
-        actionVariant: "default" as const
+        bgColor: "bg-orange-50",
+        borderColor: "border-orange-200",
+        iconColor: "text-orange-500",
+        buttonColor: "bg-orange-600 hover:bg-orange-700"
       },
       pending: {
-        icon: <Clock3 className="h-12 w-12 text-yellow-500 mx-auto mb-4" />,
+        icon: "⏳",
         title: "Application Pending",
-        message: "Your seller application is under review. We'll notify you once it's approved.",
+        message: "Your seller application is being reviewed. We'll notify you once approved.",
         action: "Contact Support",
-        actionVariant: "outline" as const
+        bgColor: "bg-yellow-50",
+        borderColor: "border-yellow-200",
+        iconColor: "text-yellow-600",
+        buttonColor: "bg-yellow-600 hover:bg-yellow-700"
       },
       rejected: {
-        icon: <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />,
+        icon: "🛑",
         title: "Application Rejected",
-        message: "Your seller application was not approved. You can reapply or contact support for more information.",
+        message: sellerProfile?.notes || "Your seller application was not approved. You can reapply or contact support for more information.",
         action: "Reapply",
-        actionVariant: "default" as const
+        bgColor: "bg-red-50",
+        borderColor: "border-red-200",
+        iconColor: "text-red-600",
+        buttonColor: "bg-[#803344] hover:bg-[#6d2938]"
       },
       paused: {
-        icon: <Pause className="h-12 w-12 text-blue-500 mx-auto mb-4" />,
+        icon: "🔒",
         title: "Account Paused",
-        message: "Your seller account has been temporarily paused. Contact support to reactivate.",
-        action: "Contact Support",
-        actionVariant: "outline" as const
+        message: "Your seller account has been paused. Contact support to reactivate your account.",
+        action: "Reactivate Account",
+        bgColor: "bg-blue-50",
+        borderColor: "border-blue-200",
+        iconColor: "text-blue-600",
+        buttonColor: "bg-blue-600 hover:bg-blue-700"
       }
     };
 
@@ -317,26 +354,43 @@ export default function SellerDashboardPage() {
     if (!config) return null;
 
     return (
-      <Dialog open={isSellerModalOpen} onOpenChange={setIsSellerModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-center">
-              {config.icon}
-              {config.title}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="text-center space-y-4">
-            <p className="text-gray-600">{config.message}</p>
-            <Button 
-              variant={config.actionVariant} 
-              className="w-full hover:bg-gray-100 transition-all duration-200 hover:scale-105 active:scale-95"
-              onClick={() => setLocation('/help')}
-            >
-              {config.action}
-            </Button>
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div className={`bg-white rounded-lg shadow-xl border-2 ${config.borderColor} max-w-md w-full mx-auto`}>
+          <div className={`${config.bgColor} p-6 rounded-t-lg border-b ${config.borderColor}`}>
+            <div className="text-center">
+              <div className="text-4xl mb-3">{config.icon}</div>
+              <h2 className={`text-xl font-semibold ${config.iconColor}`}>
+                {config.title}
+              </h2>
+            </div>
           </div>
-        </DialogContent>
-      </Dialog>
+          
+          <div className="p-6 text-center space-y-6">
+            <p className="text-gray-700 leading-relaxed">
+              {config.message}
+            </p>
+            
+            <div className="space-y-3">
+              <Button 
+                className={`w-full text-white ${config.buttonColor} transition-all duration-200 hover:scale-105 active:scale-95`}
+                onClick={handleStatusAction}
+              >
+                {config.action}
+              </Button>
+              
+              {sellerStatus !== 'no_profile' && (
+                <Button 
+                  variant="ghost"
+                  className="w-full text-gray-500 hover:text-gray-700"
+                  onClick={() => setLocation('/help')}
+                >
+                  Need Help?
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     );
   };
 
@@ -362,8 +416,8 @@ export default function SellerDashboardPage() {
   
   return (
     <SellerDashboardLayout userId={userId}>
-      {/* Main content container */}
-      <div className="-mt-6 -mx-4 p-4 rounded-lg">
+      {/* Main content container with conditional blur */}
+      <div className={`-mt-6 -mx-4 p-4 rounded-lg ${!hasSellerAccess ? 'blur-sm pointer-events-none' : ''}`}>
         {/* Top welcome & status bar */}
         <div className="flex flex-wrap justify-between items-center mb-8">
           <div>
@@ -636,15 +690,24 @@ export default function SellerDashboardPage() {
         isOpen={isAddPropertyModalOpen}
         onClose={() => setIsAddPropertyModalOpen(false)}
       />
-      {/* Seller Application Modal - Shows for non-active sellers */}
-      <SellerApplicationModal
-        isOpen={isSellerModalOpen}
-        onClose={() => setIsSellerModalOpen(false)}
-      />
       {/* Offers Inbox Modal */}
       <OffersInboxModal
         isOpen={isOffersInboxOpen}
         onClose={() => setIsOffersInboxOpen(false)}
+      />
+
+      {/* Status-based Modal Overlay */}
+      {renderStatusModal()}
+
+      {/* Seller Application Modal - Shows for no_profile and rejected statuses when modal is dismissed */}
+      <SellerApplicationModal
+        isOpen={(sellerStatus === 'no_profile' || sellerStatus === 'rejected') && !isSellerModalOpen}
+        onClose={() => {
+          // For no_profile, don't allow closing - they must complete application
+          if (sellerStatus === 'no_profile') return;
+          // For rejected, they can close and see the modal again
+          setIsSellerModalOpen(true);
+        }}
       />
     </SellerDashboardLayout>
   );
