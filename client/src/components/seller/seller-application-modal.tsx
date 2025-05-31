@@ -322,15 +322,6 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   
   // Handle submit application
   const handleSubmitApplication = async () => {
-    if (!user?.id) {
-      toast({
-        title: "Authentication Required",
-        description: "Please log in to submit your seller application.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if (!acceptedTerms) {
       setErrors(prev => ({
         ...prev,
@@ -386,7 +377,17 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        throw new Error('Authentication required');
+        // If not authenticated, prompt user to log in first
+        setIsSubmitting(false);
+        toast({
+          title: "Please Log In",
+          description: "You need to log in before submitting your seller application. Please sign in and try again.",
+          variant: "default",
+        });
+        
+        // Redirect to login page or show login modal
+        setLocation('/auth/signin');
+        return;
       }
 
       console.log('Submitting seller application to Supabase for user:', user.id);
