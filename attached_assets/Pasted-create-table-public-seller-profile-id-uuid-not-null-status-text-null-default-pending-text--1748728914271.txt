@@ -1,0 +1,69 @@
+create table public.seller_profile (
+  id uuid not null,
+  status text null default 'pending'::text,
+  account_type text null,
+  full_name text null,
+  phone_number text null,
+  email text null,
+  website text null,
+  profile_image text null,
+  business_name text null,
+  years_experience integer null,
+  license_number text null,
+  target_markets text[] null,
+  deal_types text[] null,
+  avg_assignment_fee numeric null,
+  avg_days_on_market numeric null,
+  deals_submitted_this_month integer null default 0,
+  deals_closed_this_month integer null default 0,
+  total_deals_closed integer null default 0,
+  total_profit_generated numeric null default 0,
+  buyer_list jsonb null,
+  last_blast_sent timestamp without time zone null,
+  blast_count_total integer null default 0,
+  preferred_buyer_tags text[] null,
+  auto_assign_to_buyers boolean null default false,
+  tracking_pixel_id text null,
+  utm_campaigns jsonb null,
+  approved_by uuid null,
+  created_at timestamp with time zone null default now(),
+  updated_at timestamp with time zone null default now(),
+  username text null,
+  max_deals_per_month text null,
+  direct_to_seller boolean null,
+  title_companies text[] null,
+  credibility_documents jsonb null,
+  business_type text null,
+  has_buyer_list boolean null default false,
+  facebook_link text null,
+  instagram_link text null,
+  linkedin_link text null,
+  constraint sellers_pkey primary key (id),
+  constraint seller_profile_username_key unique (username),
+  constraint sellers_approved_by_fkey foreign KEY (approved_by) references auth.users (id),
+  constraint sellers_id_fkey foreign KEY (id) references auth.users (id) on delete CASCADE,
+  constraint sellers_account_type_check check (
+    (
+      account_type = any (
+        array[
+          'wholesaler'::text,
+          'agent'::text,
+          'owner'::text,
+          'company'::text
+        ]
+      )
+    )
+  ),
+  constraint sellers_status_check check (
+    (
+      status = any (
+        array[
+          'pending'::text,
+          'active'::text,
+          'rejected'::text,
+          'paused'::text
+        ]
+      )
+    )
+  )
+) TABLESPACE pg_default;

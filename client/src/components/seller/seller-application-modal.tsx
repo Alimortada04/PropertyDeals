@@ -95,6 +95,69 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
   // Custom input states
   const [newBusinessType, setNewBusinessType] = useState('');
   const [newTargetMarket, setNewTargetMarket] = useState('');
+
+  // Load existing seller profile if available for draft resume
+  useEffect(() => {
+    const loadExistingProfile = async () => {
+      if (!user?.id) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('seller_profile')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error loading seller profile:', error);
+          return;
+        }
+
+        if (data) {
+          // Pre-fill form with existing data using correct field mapping
+          setFormData({
+            fullName: data.full_name || '',
+            username: data.username || '',
+            email: data.email || '',
+            phoneNumber: data.phone_number || '',
+            realEstateSince: data.years_experience?.toString() || '',
+            businessName: data.business_name || '',
+            businessTypes: data.business_type ? [data.business_type] : [],
+            targetMarkets: data.target_markets || [],
+            dealTypes: data.deal_types || [],
+            maxDealVolume: data.max_deals_per_month || '',
+            hasBuyerList: data.has_buyer_list || false,
+            isDirectToSeller: data.direct_to_seller || false,
+            purchaseAgreements: [],
+            assignmentContracts: [],
+            notes: data.credibility_documents?.notes || '',
+            websiteUrl: data.website || '',
+            facebookProfile: data.facebook_link || '',
+            instagramProfile: data.instagram_link || '',
+            linkedinProfile: data.linkedin_link || '',
+            titleCompanies: data.title_companies || [],
+            hasProofOfFunds: data.credibility_documents?.has_proof_of_funds || false,
+            usesTitleCompany: (data.title_companies?.length || 0) > 0,
+          });
+          
+          // If profile exists and has pending status, show that it's been submitted
+          if (data.status === 'pending') {
+            toast({
+              title: "Application Found",
+              description: "Your seller application has been submitted and is under review.",
+              variant: "default",
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error loading existing profile:', error);
+      }
+    };
+
+    if (isOpen) {
+      loadExistingProfile();
+    }
+  }, [user?.id, isOpen, toast]);
   const [newTitleCompany, setNewTitleCompany] = useState('');
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
   const [checkingUsername, setCheckingUsername] = useState(false);
@@ -392,30 +455,34 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
 
       console.log('Submitting seller application to Supabase for user:', user.id);
 
-      // Prepare seller profile data for Supabase upsert
+      // Prepare seller profile data for Supabase upsert - mapping to exact backend schema
       const profileData = {
         id: user.id, // Supabase Auth UUID
         status: 'pending' as const,
+        username: formData.username || null,
         full_name: formData.fullName,
         email: formData.email,
         phone_number: formData.phoneNumber,
         business_name: formData.businessName || null,
-        years_in_real_estate: formData.realEstateSince,
-        business_type: formData.businessTypes.join(', '),
-        target_markets: formData.targetMarkets,
-        deal_types: formData.dealTypes,
-        max_deal_volume: formData.maxDealVolume,
-        has_buyer_list: formData.hasBuyerList,
-        is_direct_to_seller: formData.isDirectToSeller,
-        notes: formData.notes || null,
+        years_experience: parseInt(formData.realEstateSince) || null,
+        business_type: formData.businessTypes?.[0] || null,
+        account_type: formData.businessTypes?.[0]?.toLowerCase() || null,
+        target_markets: formData.targetMarkets || [],
+        deal_types: formData.dealTypes || [],
+        max_deals_per_month: formData.maxDealVolume || null,
+        has_buyer_list: formData.hasBuyerList || false,
+        direct_to_seller: formData.isDirectToSeller || false,
         website: formData.websiteUrl || null,
-        social_links: {
-          facebook: formData.facebookProfile || null,
-          instagram: formData.instagramProfile || null,
-          linkedin: formData.linkedinProfile || null
+        facebook_link: formData.facebookProfile || null,
+        instagram_link: formData.instagramProfile || null,
+        linkedin_link: formData.linkedinProfile || null,
+        title_companies: formData.titleCompanies || [],
+        credibility_documents: {
+          purchase_agreements: formData.purchaseAgreements || [],
+          assignment_contracts: formData.assignmentContracts || [],
+          notes: formData.notes || null,
+          has_proof_of_funds: formData.hasProofOfFunds || false
         },
-        has_proof_of_funds: formData.hasProofOfFunds,
-        uses_title_company: formData.usesTitleCompany,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
