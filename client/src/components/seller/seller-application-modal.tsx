@@ -373,52 +373,33 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       }
       
       // Save seller application to Supabase
-      console.log('Submitting seller application to Supabase', sellerApplicationData);
+      console.log('Submitting seller application to Supabase', formData);
       
-      // Log the data being submitted for debugging
-      const submissionData = {
-        userId: user?.id,
-        fullName: sellerApplicationData.fullName,
-        email: sellerApplicationData.email,
-        phone: sellerApplicationData.phoneNumber,
-        businessName: sellerApplicationData.businessName || null,
-        yearsInRealEstate: sellerApplicationData.realEstateSince,
-        businessType: sellerApplicationData.businessTypes.join(', '),
-        targetMarkets: sellerApplicationData.targetMarkets,
-        dealTypes: sellerApplicationData.dealTypes,
-        maxDealVolume: sellerApplicationData.maxDealVolume,
-        hasBuyerList: sellerApplicationData.hasBuyerList,
-        isDirectToSeller: sellerApplicationData.isDirectToSeller,
-        purchaseAgreements: null,
-        assignmentContracts: null,
-        notes: sellerApplicationData.notes,
-        websiteUrl: sellerApplicationData.websiteUrl,
-        socialFacebook: sellerApplicationData.facebookProfile,
-        socialInstagram: sellerApplicationData.instagramProfile,
-        socialLinkedin: sellerApplicationData.linkedinProfile,
-        hasProofOfFunds: true,
-        usesTitleCompany: sellerApplicationData.titleCompanies.length > 0,
-        isDraft: false,
-        status: 'pending'
+      // Create seller profile using the new system
+      const profileData = {
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phoneNumber,
+        businessName: formData.businessName,
+        yearsInRealEstate: formData.realEstateSince,
+        businessType: formData.businessTypes.join(', '),
+        targetMarkets: formData.targetMarkets,
+        dealTypes: formData.dealTypes,
+        maxDealVolume: formData.maxDealVolume,
+        hasBuyerList: formData.hasBuyerList,
+        isDirectToSeller: formData.isDirectToSeller,
+        notes: formData.notes,
+        website: formData.websiteUrl,
+        socialLinks: {
+          facebook: formData.facebookProfile,
+          instagram: formData.instagramProfile,
+          linkedin: formData.linkedinProfile
+        },
+        hasProofOfFunds: formData.hasProofOfFunds,
+        usesTitleCompany: formData.usesTitleCompany
       };
-      
-      console.log('Submitting seller application with data:', submissionData);
-      
-      // Submit directly to Supabase sellers table
-      const { data, error } = await supabase
-        .from('sellers')
-        .insert(submissionData);
-      
-      if (error) {
-        console.error('Error submitting seller application:', error);
-        setIsSubmitting(false);
-        toast({
-          title: "Submission Failed",
-          description: error.message || "There was an error submitting your application. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
+
+      await createSellerProfile(profileData);
 
       // Success - display success message and close modal
       setIsSubmitting(false);
@@ -429,17 +410,19 @@ export default function SellerApplicationModal({ isOpen, onClose }: SellerApplic
       });
       onClose();
       
-      // Redirect to seller dashboard with their user ID
+      // Redirect to seller dashboard
       setTimeout(() => {
-        if (user?.id) {
-          setLocation(`/sellerdash/${user.id}`);
-        }
+        setLocation(`/sellerdash/dashboard`);
       }, 1000);
       
     } catch (error) {
       console.error('Error submitting application:', error);
       setIsSubmitting(false);
-      // Would set appropriate error message here
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "There was an error submitting your application. Please try again.",
+        variant: "destructive",
+      });
     }
   };
   
