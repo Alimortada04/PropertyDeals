@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "wouter";
 import { usePropertyProfile } from "@/hooks/usePropertyProfile";
+import { useSellerProfile } from "@/hooks/useSellerProfile";
 import { useBuyerProfile } from "@/hooks/useBuyerProfile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Eye, Share, BarChart3, MapPin, DollarSign, Home } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Plus, Edit, Eye, Share, BarChart3, MapPin, DollarSign, Home, AlertCircle, Clock, XCircle, Pause } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 export default function SellerDashboard() {
   const { properties, loading, error, refetch } = usePropertyProfile();
+  const { profile: sellerProfile, loading: sellerLoading } = useSellerProfile();
   const { profile } = useBuyerProfile();
+  const [showStatusModal, setShowStatusModal] = useState(false);
 
   // Group properties by status
   const draftProperties = properties.filter(p => p.status === 'draft');
@@ -26,6 +30,111 @@ export default function SellerDashboard() {
       minimumFractionDigits: 0,
     }).format(price);
   };
+
+  // Determine seller access status
+  const getSellerAccessStatus = () => {
+    if (sellerLoading) return 'loading';
+    if (!sellerProfile) return 'no_profile';
+    return sellerProfile.status;
+  };
+
+  const renderStatusModal = () => {
+    const status = getSellerAccessStatus();
+
+    const statusConfig = {
+      no_profile: {
+        icon: <AlertCircle className="h-12 w-12 text-orange-500 mx-auto mb-4" />,
+        title: "Seller Application Required",
+        message: "To access the seller dashboard and list properties, you need to complete the seller application process.",
+        action: "Apply as Seller",
+        actionVariant: "default" as const
+      },
+      pending: {
+        icon: <Clock className="h-12 w-12 text-yellow-500 mx-auto mb-4" />,
+        title: "Application Pending",
+        message: "Your seller application is under review. We'll notify you once it's approved.",
+        action: "Contact Support",
+        actionVariant: "outline" as const
+      },
+      rejected: {
+        icon: <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />,
+        title: "Application Rejected",
+        message: "Your seller application was not approved. You can reapply or contact support for more information.",
+        action: "Reapply",
+        actionVariant: "default" as const
+      },
+      paused: {
+        icon: <Pause className="h-12 w-12 text-blue-500 mx-auto mb-4" />,
+        title: "Account Paused",
+        message: "Your seller account has been temporarily paused. Contact support to reactivate.",
+        action: "Contact Support",
+        actionVariant: "outline" as const
+      }
+    };
+
+    const config = statusConfig[status as keyof typeof statusConfig];
+    if (!config) return null;
+
+    return (
+      <Dialog open={showStatusModal} onOpenChange={setShowStatusModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              {config.icon}
+              {config.title}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center space-y-4">
+            <p className="text-gray-600">{config.message}</p>
+            <Button variant={config.actionVariant} className="w-full">
+              {config.action}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
+  // Show loading state
+  if (sellerLoading || loading) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="h-48 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Check seller access
+  const sellerStatus = getSellerAccessStatus();
+  const hasSellerAccess = sellerStatus === 'active';
+
+  // Show status modal for non-active sellers
+  if (!hasSellerAccess) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="text-center py-12">
+          <div className="max-w-md mx-auto">
+            <AlertCircle className="h-16 w-16 mx-auto text-orange-500 mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Seller Access Required</h3>
+            <p className="text-gray-600 mb-6">
+              Complete your seller application to access the property management dashboard.
+            </p>
+            <Button onClick={() => setShowStatusModal(true)}>
+              View Application Status
+            </Button>
+          </div>
+        </div>
+        {renderStatusModal()}
+      </div>
+    );
+  }
 
   const PropertyCard = ({ property, isDraft = false }: { property: any; isDraft?: boolean }) => (
     <Card className="hover:shadow-lg transition-shadow">

@@ -83,7 +83,7 @@ export const properties = pgTable("properties", {
 // Enhanced property profile table for full listing management
 export const propertyProfile = pgTable("property_profile", {
   id: serial("id").primaryKey(),
-  sellerId: integer("seller_id").notNull(),
+  seller_id: text("seller_id").notNull(), // UUID reference to seller_profile.id
   
   // Property Information (Step 1)
   name: text("name"), // Property Name field
@@ -308,46 +308,42 @@ export type Rep = typeof reps.$inferSelect;
 
 // System logs for admin activity tracking
 // Seller profiles and application data
-export const sellers = pgTable("sellers", {
-  id: serial("id").primaryKey(),
-  userId: integer("userId").notNull().unique(), // Links to auth.users.id
-  fullName: text("fullName").notNull(),
+export const sellerProfile = pgTable("seller_profile", {
+  id: text("id").primaryKey(), // Supabase Auth UUID
+  // userId field removed - using id directly as UUID
+  fullName: text("full_name").notNull(),
   email: text("email").notNull(),
-  phone: text("phone").notNull(),
-  businessName: text("businessName"),
-  yearsInRealEstate: text("yearsInRealEstate").notNull(),
-  businessType: text("businessType").notNull(),
+  phone: text("phone_number").notNull(),
+  businessName: text("business_name"),
+  yearsInRealEstate: text("years_in_real_estate").notNull(),
+  businessType: text("business_type").notNull(),
   
   // Step 2 data
-  targetMarkets: text("targetMarkets").array().notNull(),
-  dealTypes: text("dealTypes").array().notNull(),
-  maxDealVolume: text("maxDealVolume").notNull(),
-  hasBuyerList: boolean("hasBuyerList").default(false).notNull(),
-  isDirectToSeller: boolean("isDirectToSeller").default(false).notNull(),
+  targetMarkets: text("target_markets").array().notNull(),
+  dealTypes: text("deal_types").array().notNull(),
+  maxDealVolume: text("max_deal_volume").notNull(),
+  hasBuyerList: boolean("has_buyer_list").default(false).notNull(),
+  isDirectToSeller: boolean("is_direct_to_seller").default(false).notNull(),
   
   // Step 3 data
-  purchaseAgreements: jsonb("purchaseAgreements"), // File metadata
-  assignmentContracts: jsonb("assignmentContracts"), // File metadata
+  purchaseAgreements: jsonb("purchase_agreements"), // File metadata
+  assignmentContracts: jsonb("assignment_contracts"), // File metadata
   notes: text("notes"),
-  websiteUrl: text("websiteUrl"),
-  socialFacebook: text("socialFacebook"),
-  socialInstagram: text("socialInstagram"),
-  socialLinkedin: text("socialLinkedin"),
-  hasProofOfFunds: boolean("hasProofOfFunds").default(false).notNull(),
-  usesTitleCompany: boolean("usesTitleCompany").default(false).notNull(),
+  website: text("website"),
+  socialLinks: jsonb("social_links"), // {instagram, facebook, linkedin}
+  hasProofOfFunds: boolean("has_proof_of_funds").default(false).notNull(),
+  usesTitleCompany: boolean("uses_title_company").default(false).notNull(),
   
   // Application state
-  isDraft: boolean("isDraft").default(true).notNull(),
   status: text("status").default("pending").notNull(), // pending, active, paused, banned, rejected
-  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   reviewedAt: timestamp("reviewedAt"),
   reviewedBy: integer("reviewedBy"), // Admin who reviewed the application
   adminNotes: text("adminNotes"),
 });
 
-export const insertSellerSchema = createInsertSchema(sellers).omit({
-  id: true,
+export const insertSellerProfileSchema = createInsertSchema(sellerProfile).omit({
   createdAt: true,
   updatedAt: true,
   reviewedAt: true,
@@ -355,8 +351,8 @@ export const insertSellerSchema = createInsertSchema(sellers).omit({
   adminNotes: true,
 });
 
-export type InsertSeller = z.infer<typeof insertSellerSchema>;
-export type Seller = typeof sellers.$inferSelect;
+export type InsertSellerProfile = z.infer<typeof insertSellerProfileSchema>;
+export type SellerProfile = typeof sellerProfile.$inferSelect;
 
 export const systemLogs = pgTable("systemLogs", {
   id: serial("id").primaryKey(),
