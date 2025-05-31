@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { useAuth } from '@/hooks/use-auth';
 import { useQuery } from '@tanstack/react-query';
+import { useSellerProfile } from '@/hooks/useSellerProfile';
 import { supabase } from '@/lib/supabase';
 import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
 import SellerApplicationModal from '@/components/seller/seller-application-modal';
@@ -37,12 +38,16 @@ import {
   MoreHorizontal,
   Share2,
   File,
-  FileText
+  FileText,
+  AlertCircle,
+  XCircle,
+  Pause
 } from 'lucide-react';
 import { PropertyCard } from '@/components/property/property-card';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
 import { createMinimalDraft } from '@/lib/create-draft-property';
 import { useToast } from '@/hooks/use-toast';
@@ -75,40 +80,25 @@ const RECENT_ACTIVITY = [
 export default function SellerDashboardPage() {
   const params = useParams();
   const { user } = useAuth();
+  const { profile: sellerProfile, loading: isLoadingProfile } = useSellerProfile();
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
-  // Property modal is now handled through the global Quick Action Selector
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   const marketingCenterModal = useMarketingCenterModal();
   const [isOffersInboxOpen, setIsOffersInboxOpen] = useState(false);
   const { toast } = useToast();
   
-  // In real implementation, check if the current user matches the userId param
-  // If not, redirect to their own dashboard or show an authorization error
   const userId = params.userId || '';
 
-  // Check seller status for current user
-  const { data: sellerStatus, isLoading: isCheckingStatus } = useQuery({
-    queryKey: ['seller-status', user?.id],
-    queryFn: async () => {
-      if (!user?.id) return null;
-      const { data, error } = await supabase
-        .from('sellers')
-        .select('status, businessName')
-        .eq('userId', user.id)
-        .single();
-      
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching seller status:', error);
-        return null;
-      }
-      
-      return data;
-    },
-    enabled: !!user?.id
-  });
+  // Check if current user can access this dashboard
+  useEffect(() => {
+    if (user && userId !== user.id) {
+      // Redirect to user's own dashboard
+      setLocation(`/sellerdash/${user.id}`);
+    }
+  }, [user, userId, setLocation]);
 
   // Fetch property profiles for the current seller
   const { data: properties, isLoading: isLoadingProperties } = useQuery({
@@ -128,14 +118,22 @@ export default function SellerDashboardPage() {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Determine if we should show the seller application modal
-  const shouldShowSellerModal = !isCheckingStatus && (!sellerStatus || sellerStatus.status !== 'active');
+  // Status-based access control
+  const getSellerAccessStatus = () => {
+    if (isLoadingProfile) return 'loading';
+    if (!sellerProfile) return 'no_profile';
+    return sellerProfile.status;
+  };
 
+  const sellerStatus = getSellerAccessStatus();
+  const hasSellerAccess = sellerStatus === 'active';
+
+  // Show status modal for non-active sellers
   useEffect(() => {
-    if (shouldShowSellerModal) {
+    if (!isLoadingProfile && !hasSellerAccess) {
       setIsSellerModalOpen(true);
     }
-  }, [shouldShowSellerModal]);
+  }, [isLoadingProfile, hasSellerAccess]);
 
   // Handler to create a new draft property and redirect to editor
   const handleCreateListing = async () => {
@@ -274,11 +272,108 @@ export default function SellerDashboardPage() {
     }
   };
   
-  // For development/testing without auth, we'll use mock data if user is missing
-  const mockUser = {
-    fullName: 'Demo Seller',
-    sellerStatus: 'active'
+  // Render status-based modal
+  const renderStatusModal = () => {
+    const statusConfig = {
+      no_profile: {
+        icon: <AlertCircle className="h-12 w-12 text-orange-500 mx-auto mb-4" />,
+        title: "Seller Application Required",
+        message: "To access the seller dashboard and list properties, you need to complete the seller application process.",
+        action: "Apply as Seller",
+        actionVariant: "default" as const
+      },
+      pending: {
+        icon: <Clock3 className="h-12 w-12 text-yellow-500 mx-auto mb-4" />,
+        title: "Application Pending",
+        message: "Your seller application is under review. We'll notify you once it's approved.",
+        action: "Contact Support",
+        actionVariant: "outline" as const
+      },
+      rejected: {
+        icon: <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />,
+        title: "Application Rejected",
+        message: "Your seller application was not approved. You can reapply or contact support for more information.",
+        action: "Reapply",
+        actionVariant: "default" as const
+      },
+      paused: {
+        icon: <Pause className="h-12 w-12 text-blue-500 mx-auto mb-4" />,
+        title: "Account Paused",
+        message: "Your seller account has been temporarily paused. Contact support to reactivate.",
+        action: "Contact Support",
+        actionVariant: "outline" as const
+      }
+    };
+
+    const config = statusConfig[sellerStatus as keyof typeof statusConfig];
+    if (!config) return null;
+
+    return (
+      <Dialog open={isSellerModalOpen} onOpenChange={setIsSellerModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              {config.icon}
+              {config.title}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center space-y-4">
+            <p className="text-gray-600">{config.message}</p>
+            <Button variant={config.actionVariant} className="w-full">
+              {config.action}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
   };
+
+  // Show loading state
+  if (isLoadingProfile) {
+    return (
+      <SellerDashboardLayout userId={userId}>
+        <div className="container mx-auto p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-48 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </SellerDashboardLayout>
+    );
+  }
+
+  // Show status modal for non-active sellers
+  if (!hasSellerAccess) {
+    return (
+      <SellerDashboardLayout userId={userId}>
+        <div className="container mx-auto p-6">
+          <div className="text-center py-12">
+            <div className="max-w-md mx-auto">
+              <AlertCircle className="h-16 w-16 mx-auto text-orange-500 mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Seller Access Required</h3>
+              <p className="text-gray-600 mb-6">
+                Complete your seller application to access the property management dashboard.
+              </p>
+              <Button onClick={() => setIsSellerModalOpen(true)}>
+                View Application Status
+              </Button>
+            </div>
+          </div>
+          {renderStatusModal()}
+          
+          {/* Seller Application Modal */}
+          <SellerApplicationModal
+            isOpen={isSellerModalOpen && sellerStatus === 'no_profile'}
+            onClose={() => setIsSellerModalOpen(false)}
+          />
+        </div>
+      </SellerDashboardLayout>
+    );
+  }
   
   return (
     <SellerDashboardLayout userId={userId}>
@@ -295,11 +390,12 @@ export default function SellerDashboardPage() {
           
           <div className="mt-4 sm:mt-0">
             <div className="flex items-center gap-2">
-              {getSellerStatusIcon((user || mockUser)?.sellerStatus || 'active')}
-              <Badge className={`px-3 py-1 text-sm ${getStatusBadgeClass((user || mockUser)?.sellerStatus || 'active')}`}>
-                {(user || mockUser)?.sellerStatus === 'active' ? 'Active Seller' : 
-                 (user || mockUser)?.sellerStatus === 'pending' ? 'Pending Approval' : 
-                 (user || mockUser)?.sellerStatus === 'rejected' ? 'Approval Rejected' : 'Active Seller'}
+              {getSellerStatusIcon(sellerProfile?.status || 'active')}
+              <Badge className={`px-3 py-1 text-sm ${getStatusBadgeClass(sellerProfile?.status || 'active')}`}>
+                {sellerProfile?.status === 'active' ? 'Active Seller' : 
+                 sellerProfile?.status === 'pending' ? 'Pending Approval' : 
+                 sellerProfile?.status === 'rejected' ? 'Approval Rejected' : 
+                 sellerProfile?.status === 'paused' ? 'Account Paused' : 'Active Seller'}
               </Badge>
             </div>
           </div>
