@@ -327,7 +327,11 @@ export default function SellerDashboardPage() {
           </DialogHeader>
           <div className="text-center space-y-4">
             <p className="text-gray-600">{config.message}</p>
-            <Button variant={config.actionVariant} className="w-full">
+            <Button 
+              variant={config.actionVariant} 
+              className="w-full hover:bg-gray-100 transition-all duration-200 hover:scale-105 active:scale-95"
+              onClick={() => setLocation('/help')}
+            >
               {config.action}
             </Button>
           </div>
