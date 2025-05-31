@@ -1,77 +1,90 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from './use-auth';
 import { supabase } from '@/lib/supabase';
+import { useToast } from './use-toast';
 
 export interface PropertyProfile {
   id?: number;
   seller_id: string;
-  title?: string | null;
-  name?: string | null;
-  status: 'draft' | 'active' | 'pending' | 'closed' | 'dropped';
-  address?: string | null;
-  city?: string | null;
-  state?: string | null;
-  zip_code?: string | null;
-  county?: string | null;
-  parcel_id?: string | null;
-  description?: string | null;
-  bedrooms?: number | null;
-  bathrooms?: number | null;
-  square_feet?: number | null;
-  sqft?: number | null;
-  lot_size?: string | null;
-  year_built?: number | null;
-  property_type?: string | null;
-  condition?: string | null;
-  listing_price?: number | null;
-  purchase_price?: number | null;
-  arv?: number | null;
-  estimated_repairs?: number | null;
-  monthly_rent?: number | null;
-  images?: any[] | null;
-  gallery_images?: any[] | null;
-  rental_units?: any[] | null;
-  rent_unit?: any[] | null;
-  expenses?: any[] | null;
-  expense_items?: any[] | null;
-  repairs?: any[] | null;
-  repair_projects?: any[] | null;
-  partners?: any[] | null;
-  jv_partners?: any[] | null;
-  comps?: any[] | null;
-  tags?: any[] | null;
-  featured_property?: boolean | null;
-  access_type?: string | null;
-  access_instructions?: string | null;
-  closing_date?: string | null;
-  purchase_agreement?: string | null;
-  assignment_fee?: number | null;
-  notes?: string | null;
-  additional_notes?: string | null;
-  is_public?: boolean | null;
+  name?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zip_code?: string;
+  county?: string;
+  parcel_id?: string;
+  property_type?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  sqft?: number;
+  lot_size?: string;
+  year_built?: number;
+  parking?: string;
+  condition?: string;
+  occupancy_status?: string;
+  
+  // Media
+  primary_image?: string;
+  gallery_images?: string[];
+  video_walkthrough?: string;
+  
+  // Finance
+  arv?: number;
+  rent_total_monthly?: number;
+  rent_total_annual?: number;
+  rent_unit?: any;
+  expenses_total_monthly?: number;
+  expenses_total_annual?: number;
+  expense_items?: any;
+  
+  // Logistics
+  access_type?: string;
+  closing_date?: string;
+  comps?: string[];
+  purchase_agreement?: string;
+  assignment_agreement?: string;
+  
+  // Final Details
+  purchase_price?: number;
+  listing_price?: number;
+  assignment_fee?: number;
+  repair_projects?: any;
+  repair_costs_total?: number;
+  jv_partners?: string[];
+  description?: string;
+  additional_notes?: string;
+  tags?: string[];
+  featured_property?: boolean;
+  
+  // Status and visibility
+  status: 'draft' | 'active' | 'pending' | 'sold';
+  is_public?: boolean;
+  created_by?: number;
+  
+  // Engagement stats
+  view_count?: number;
+  save_count?: number;
+  offer_count?: number;
+  offer_ids?: string[];
+  
+  // Timestamps
   created_at?: string;
   updated_at?: string;
-  published_at?: string | null;
-  created_by?: number | null;
-  primary_image?: string | null;
-  video_walkthrough?: string | null;
-  video_url?: string | null;
-  parking?: string | null;
+  published_at?: string;
 }
 
-export const usePropertyProfile = () => {
+export function usePropertyProfile() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
   const [properties, setProperties] = useState<PropertyProfile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchProperties = async () => {
+  // Fetch all properties for the current seller
+  const fetchSellerProperties = async () => {
+    if (!user?.id) return;
+
+    setIsLoading(true);
     try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Not authenticated');
-      }
-
       const { data, error } = await supabase
         .from('property_profile')
         .select('*')
@@ -79,176 +92,301 @@ export const usePropertyProfile = () => {
         .order('created_at', { ascending: false });
 
       if (error) {
-        throw error;
+        console.error('Error fetching property profiles:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load your properties.",
+          variant: "destructive",
+        });
+        return;
       }
 
       setProperties(data || []);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch properties');
-      setProperties([]);
+    } catch (error) {
+      console.error('Error fetching property profiles:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load your properties.",
+        variant: "destructive",
+      });
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const createProperty = async (propertyData: Partial<PropertyProfile>) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Not authenticated');
-      }
-
-      // Check if user has an active seller profile
-      const { data: sellerProfile, error: sellerError } = await supabase
-        .from('seller_profile')
-        .select('status')
-        .eq('id', user.id)
-        .single();
-
-      if (sellerError && sellerError.code !== 'PGRST116') {
-        throw new Error('Error checking seller profile');
-      }
-
-      if (!sellerProfile || sellerProfile.status !== 'active') {
-        throw new Error('You need an active seller profile to create properties. Please complete your seller application first.');
-      }
-
-      const newProperty = {
-        seller_id: user.id,
-        status: 'draft' as const,
-        is_public: false,
-        featured_property: false,
-        ...propertyData,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-
-      const { data, error } = await supabase
-        .from('property_profile')
-        .insert(newProperty)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setProperties(prev => [data, ...prev]);
-      return data;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const updateProperty = async (id: number, updates: Partial<PropertyProfile>) => {
-    try {
-      const { data, error } = await supabase
-        .from('property_profile')
-        .update({ ...updates, updated_at: new Date().toISOString() })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setProperties(prev => 
-        prev.map(prop => prop.id === id ? data : prop)
-      );
-      return data;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const publishProperty = async (id: number) => {
-    try {
-      const { data, error } = await supabase
-        .from('property_profile')
-        .update({ 
-          status: 'active',
-          published_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      setProperties(prev => 
-        prev.map(prop => prop.id === id ? data : prop)
-      );
-      return data;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const deleteProperty = async (id: number) => {
-    try {
-      const { error } = await supabase
-        .from('property_profile')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setProperties(prev => prev.filter(prop => prop.id !== id));
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const getProperty = async (id: number) => {
+  // Fetch a single property by ID
+  const fetchPropertyById = async (propertyId: number): Promise<PropertyProfile | null> => {
     try {
       const { data, error } = await supabase
         .from('property_profile')
         .select('*')
-        .eq('id', id)
+        .eq('id', propertyId)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching property:', error);
+        return null;
+      }
+
       return data;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  const checkForExistingDraft = async (address?: string) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) return null;
-
-      const { data, error } = await supabase
-        .from('property_profile')
-        .select('*')
-        .eq('seller_id', user.id)
-        .eq('status', 'draft')
-        .eq('address', address || '')
-        .single();
-
-      if (error && error.code !== 'PGRST116') throw error;
-      return data;
-    } catch (err) {
+    } catch (error) {
+      console.error('Error fetching property:', error);
       return null;
     }
   };
 
+  // Create a new property draft
+  const createPropertyDraft = async (initialData: Partial<PropertyProfile>) => {
+    if (!user?.id) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to create a property listing.",
+        variant: "destructive",
+      });
+      return null;
+    }
+
+    setIsLoading(true);
+    try {
+      const propertyData = {
+        seller_id: user.id,
+        status: 'draft' as const,
+        is_public: false,
+        created_by: 1, // Temporary - will be updated with proper user system
+        view_count: 0,
+        save_count: 0,
+        offer_count: 0,
+        featured_property: false,
+        ...initialData,
+      };
+
+      const { data, error } = await supabase
+        .from('property_profile')
+        .insert([propertyData])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating property draft:', error);
+        toast({
+          title: "Error",
+          description: "Failed to create property draft.",
+          variant: "destructive",
+        });
+        return null;
+      }
+
+      toast({
+        title: "Draft Created",
+        description: "Your property draft has been saved.",
+      });
+
+      // Refresh the properties list
+      await fetchSellerProperties();
+      
+      return data;
+    } catch (error) {
+      console.error('Error creating property draft:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create property draft.",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Update an existing property
+  const updateProperty = async (propertyId: number, updates: Partial<PropertyProfile>) => {
+    if (!user?.id) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to update properties.",
+        variant: "destructive",
+      });
+      return null;
+    }
+
+    setIsLoading(true);
+    try {
+      const updateData = {
+        ...updates,
+        updated_at: new Date().toISOString(),
+      };
+
+      const { data, error } = await supabase
+        .from('property_profile')
+        .update(updateData)
+        .eq('id', propertyId)
+        .eq('seller_id', user.id) // Ensure user owns the property
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating property:', error);
+        toast({
+          title: "Error",
+          description: "Failed to update property.",
+          variant: "destructive",
+        });
+        return null;
+      }
+
+      toast({
+        title: "Property Updated",
+        description: "Your changes have been saved.",
+      });
+
+      // Refresh the properties list
+      await fetchSellerProperties();
+      
+      return data;
+    } catch (error) {
+      console.error('Error updating property:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update property.",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Publish a property (make it active and public)
+  const publishProperty = async (propertyId: number) => {
+    if (!user?.id) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to publish properties.",
+        variant: "destructive",
+      });
+      return null;
+    }
+
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('property_profile')
+        .update({
+          status: 'active',
+          is_public: true,
+          published_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', propertyId)
+        .eq('seller_id', user.id) // Ensure user owns the property
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error publishing property:', error);
+        toast({
+          title: "Error",
+          description: "Failed to publish property.",
+          variant: "destructive",
+        });
+        return null;
+      }
+
+      toast({
+        title: "Property Published",
+        description: "Your property is now live and visible to buyers.",
+      });
+
+      // Refresh the properties list
+      await fetchSellerProperties();
+      
+      return data;
+    } catch (error) {
+      console.error('Error publishing property:', error);
+      toast({
+        title: "Error",
+        description: "Failed to publish property.",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Delete a property
+  const deleteProperty = async (propertyId: number) => {
+    if (!user?.id) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to delete properties.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('property_profile')
+        .delete()
+        .eq('id', propertyId)
+        .eq('seller_id', user.id); // Ensure user owns the property
+
+      if (error) {
+        console.error('Error deleting property:', error);
+        toast({
+          title: "Error",
+          description: "Failed to delete property.",
+          variant: "destructive",
+        });
+        return false;
+      }
+
+      toast({
+        title: "Property Deleted",
+        description: "The property has been removed.",
+      });
+
+      // Refresh the properties list
+      await fetchSellerProperties();
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting property:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete property.",
+        variant: "destructive",
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Load properties when user changes
   useEffect(() => {
-    fetchProperties();
-  }, []);
+    if (user?.id) {
+      fetchSellerProperties();
+    } else {
+      setProperties([]);
+    }
+  }, [user?.id]);
 
   return {
     properties,
-    loading,
-    error,
-    createProperty,
+    isLoading,
+    fetchSellerProperties,
+    fetchPropertyById,
+    createPropertyDraft,
     updateProperty,
     publishProperty,
     deleteProperty,
-    getProperty,
-    checkForExistingDraft,
-    refetch: fetchProperties
+    
+    // Computed values
+    draftProperties: properties.filter(p => p.status === 'draft'),
+    activeProperties: properties.filter(p => p.status === 'active'),
+    totalProperties: properties.length,
   };
-};
+}

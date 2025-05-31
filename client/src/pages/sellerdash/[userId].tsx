@@ -44,6 +44,7 @@ import {
   Pause
 } from 'lucide-react';
 import { PropertyCard } from '@/components/property/property-card';
+import { usePropertyProfile } from '@/hooks/usePropertyProfile';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
