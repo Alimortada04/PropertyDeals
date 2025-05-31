@@ -136,13 +136,6 @@ export default function SellerDashboardPage() {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Show status modal for non-active sellers
-  useEffect(() => {
-    if (!isLoadingProfile && !hasSellerAccess) {
-      setIsSellerModalOpen(true);
-    }
-  }, [isLoadingProfile, hasSellerAccess]);
-
   // Handler to create a new draft property and redirect to editor
   const handleCreateListing = async () => {
     try {
@@ -176,6 +169,13 @@ export default function SellerDashboardPage() {
       });
     }
   };
+
+  // Show status modal for non-active sellers
+  useEffect(() => {
+    if (!isLoadingProfile && !hasSellerAccess) {
+      setIsSellerModalOpen(true);
+    }
+  }, [isLoadingProfile, hasSellerAccess]);
   
   // Calculate stats from real property data
   const stats = {
@@ -358,12 +358,7 @@ export default function SellerDashboardPage() {
     );
   }
 
-  // Show status modal automatically for non-active sellers but keep the full dashboard layout visible
-  useEffect(() => {
-    if (!isLoadingProfile && !hasSellerAccess) {
-      setIsSellerModalOpen(true);
-    }
-  }, [isLoadingProfile, hasSellerAccess]);
+
   
   return (
     <SellerDashboardLayout userId={userId}>
@@ -372,7 +367,7 @@ export default function SellerDashboardPage() {
         {/* Top welcome & status bar */}
         <div className="flex flex-wrap justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Welcome back, {(user || mockUser)?.fullName?.split(' ')[0] || 'Seller'} 👋</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user?.fullName?.split(' ')[0] || 'Seller'} 👋</h1>
             <p className="text-gray-600 mt-1">
               {hasSellerAccess 
                 ? "Here's how your real estate business is performing today."
