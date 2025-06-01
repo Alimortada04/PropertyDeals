@@ -1084,11 +1084,10 @@ function ProfilePage() {
       <div className="flex flex-1">
         {/* Settings Menu Sidebar - hidden on mobile, fixed on desktop */}
         <div 
-          className="hidden md:block w-[220px] fixed top-0 left-16 bg-white border-r flex flex-col shadow-sm z-[300]" 
+          className="hidden md:block w-[220px] fixed top-0 left-16 bottom-0 bg-white border-r flex flex-col shadow-sm z-[300]" 
           style={{
-            height: 'calc(100vh - 48px) !important',
-            maxHeight: 'calc(100vh - 48px) !important',
-            bottom: '48px !important'
+            height: '100vh !important',
+            maxHeight: '100vh !important'
           }}
         >
           {/* User Profile Section - Redesigned to match screenshot */}
