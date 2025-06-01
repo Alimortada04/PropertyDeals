@@ -9,9 +9,11 @@ import {
   CreditCard, 
   HelpCircle, 
   ArrowRight,
-  LogOut
+  LogOut,
+  Briefcase
 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
+import { useSellerProfile } from '@/hooks/useSellerProfile';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,15 +32,29 @@ interface MobileSettingsMenuProps {
 
 const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
   const { logoutMutation } = useAuth();
+  const { profile: sellerProfile } = useSellerProfile();
+  
+  const hasSellerProfile = sellerProfile && sellerProfile.status === 'active';
 
-  const settingsItems = [
+  const baseSettingsItems = [
     {
       id: 'account',
       title: 'Account',
       description: 'Personal information and security',
       icon: User,
       href: '/profile/account'
-    },
+    }
+  ];
+
+  const sellerSettingsItem = hasSellerProfile ? [{
+    id: 'seller_settings',
+    title: 'Seller Settings',
+    description: 'Business profile and preferences',
+    icon: Briefcase,
+    href: '/profile/seller_settings'
+  }] : [];
+
+  const remainingSettingsItems = [
     {
       id: 'property_preferences',
       title: 'Property Preferences',
@@ -82,6 +98,8 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
       href: '/profile/help'
     }
   ];
+
+  const settingsItems = [...baseSettingsItems, ...sellerSettingsItem, ...remainingSettingsItems];
 
   const handleLogout = () => {
     logoutMutation.mutate();
