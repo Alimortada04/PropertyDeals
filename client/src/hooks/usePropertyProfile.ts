@@ -348,7 +348,7 @@ export function usePropertyProfile() {
 
   // Publish a property (make it active and public)
   const publishProperty = async (propertyId: number) => {
-    if (!user?.id) {
+    if (!supabaseUser?.id) {
       toast({
         title: "Authentication Required",
         description: "Please log in to publish properties.",
@@ -368,7 +368,7 @@ export function usePropertyProfile() {
           updated_at: new Date().toISOString(),
         })
         .eq('id', propertyId)
-        .eq('created_by', user.id) // Ensure user owns the property
+        .eq('created_by', supabaseUser.id) // Ensure user owns the property
         .select()
         .single();
 
@@ -406,7 +406,7 @@ export function usePropertyProfile() {
 
   // Delete a property
   const deleteProperty = async (propertyId: number) => {
-    if (!user?.id) {
+    if (!supabaseUser?.id) {
       toast({
         title: "Authentication Required",
         description: "Please log in to delete properties.",
@@ -421,7 +421,7 @@ export function usePropertyProfile() {
         .from('property_profile')
         .delete()
         .eq('id', propertyId)
-        .eq('created_by', user.id); // Ensure user owns the property
+        .eq('created_by', supabaseUser.id); // Ensure user owns the property
 
       if (error) {
         console.error('Error deleting property:', error);
@@ -457,12 +457,12 @@ export function usePropertyProfile() {
 
   // Load properties when user changes - use default status filters
   useEffect(() => {
-    if (user?.id) {
+    if (supabaseUser?.id) {
       fetchSellerProperties(['draft', 'live', 'under contract']);
     } else {
       setProperties([]);
     }
-  }, [user?.id]);
+  }, [supabaseUser?.id]);
 
   return {
     properties,
