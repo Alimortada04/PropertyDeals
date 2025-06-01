@@ -1126,8 +1126,8 @@ function ProfilePage() {
           </div>
         
           {/* Menu Items Section */}
-          <div className="px-3 pt-4 flex-1 overflow-y-auto">
-            <div className="space-y-2">
+          <div className="px-3 pt-4 flex-1 overflow-y-auto scrollbar-hide">
+            <div className="space-y-2 pb-4">
               <ProfileMenuItem
                 icon={<User size={18} />}
                 label="Account"
@@ -2942,8 +2942,12 @@ function ProfilePage() {
                           <Checkbox
                             id="hasBuyerList"
                             checked={sellerProfile.hasBuyerList}
-                            onCheckedChange={() => setIsSellerSectionModified(true)}
-                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                            onCheckedChange={(checked) => {
+                              const updatedProfile = { ...sellerProfile, hasBuyerList: !!checked };
+                              updateSellerProfile(updatedProfile);
+                              setIsSellerSectionModified(true);
+                            }}
+                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
                           />
                           <label htmlFor="hasBuyerList" className="text-sm font-medium text-gray-700">
                             I have my own buyer list
@@ -2953,8 +2957,12 @@ function ProfilePage() {
                           <Checkbox
                             id="isDirectToSeller"
                             checked={sellerProfile.isDirectToSeller}
-                            onCheckedChange={() => setIsSellerSectionModified(true)}
-                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                            onCheckedChange={(checked) => {
+                              const updatedProfile = { ...sellerProfile, isDirectToSeller: !!checked };
+                              updateSellerProfile(updatedProfile);
+                              setIsSellerSectionModified(true);
+                            }}
+                            className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
                           />
                           <label htmlFor="isDirectToSeller" className="text-sm font-medium text-gray-700">
                             I work directly with property owners/sellers

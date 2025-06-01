@@ -355,7 +355,7 @@ export default function SellerDashboardPage() {
     if (!config) return null;
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-30 flex items-center justify-center p-4">
         <div className={`bg-white rounded-lg shadow-xl border-2 ${config.borderColor} max-w-md w-full mx-auto`}>
           <div className={`${config.bgColor} p-6 rounded-t-lg border-b ${config.borderColor}`}>
             <div className="text-center">
