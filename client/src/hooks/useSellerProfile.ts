@@ -122,22 +122,22 @@ export const useSellerProfile = () => {
           email: data.email,
           phone: data.phone_number,
           businessName: data.business_name,
-          yearsInRealEstate: data.years_experience?.toString() || '',
+          yearsInRealEstate: data.years_in_real_estate || '',
           businessType: data.business_type,
           targetMarkets: data.target_markets || [],
           dealTypes: data.deal_types || [],
-          maxDealVolume: data.max_deals_per_month,
+          maxDealVolume: data.max_deal_volume,
           hasBuyerList: data.has_buyer_list,
-          isDirectToSeller: data.direct_to_seller,
-          notes: data.credibility_documents?.notes || '',
+          isDirectToSeller: data.is_direct_to_seller,
+          notes: data.notes || '',
           website: data.website,
-          socialLinks: {
-            facebook: data.facebook_link,
-            instagram: data.instagram_link,
-            linkedin: data.linkedin_link
+          socialLinks: data.social_links || {
+            facebook: null,
+            instagram: null,
+            linkedin: null
           },
-          hasProofOfFunds: data.credibility_documents?.has_proof_of_funds || false,
-          usesTitleCompany: (data.title_companies?.length || 0) > 0,
+          hasProofOfFunds: data.has_proof_of_funds || false,
+          usesTitleCompany: data.uses_title_company || false,
           status: data.status as SellerStatus,
           createdAt: data.created_at
         };
@@ -221,22 +221,28 @@ export const useSellerProfile = () => {
 
       const updates: any = {};
       
-      if (profileData.fullName) updates.full_name = profileData.fullName;
-      if (profileData.email) updates.email = profileData.email;
-      if (profileData.phone) updates.phone_number = profileData.phone;
-      if (profileData.businessName !== undefined) updates.business_name = profileData.businessName;
-      if (profileData.yearsInRealEstate) updates.years_in_real_estate = profileData.yearsInRealEstate;
-      if (profileData.businessType) updates.business_type = profileData.businessType;
-      if (profileData.targetMarkets) updates.target_markets = profileData.targetMarkets;
-      if (profileData.dealTypes) updates.deal_types = profileData.dealTypes;
-      if (profileData.maxDealVolume) updates.max_deal_volume = profileData.maxDealVolume;
+      // Only include fields that are explicitly defined and exist in the database
+      if (profileData.fullName !== undefined) updates.full_name = profileData.fullName;
+      if (profileData.email !== undefined) updates.email = profileData.email;
+      if (profileData.phone !== undefined) updates.phone_number = profileData.phone;
+      if (profileData.businessName !== undefined) updates.business_name = profileData.businessName || null;
+      if (profileData.yearsInRealEstate !== undefined) updates.years_in_real_estate = profileData.yearsInRealEstate;
+      if (profileData.businessType !== undefined) updates.business_type = profileData.businessType;
+      if (profileData.targetMarkets !== undefined) updates.target_markets = profileData.targetMarkets;
+      if (profileData.dealTypes !== undefined) updates.deal_types = profileData.dealTypes;
+      if (profileData.maxDealVolume !== undefined) updates.max_deal_volume = profileData.maxDealVolume;
       if (profileData.hasBuyerList !== undefined) updates.has_buyer_list = profileData.hasBuyerList;
       if (profileData.isDirectToSeller !== undefined) updates.is_direct_to_seller = profileData.isDirectToSeller;
-      if (profileData.notes !== undefined) updates.notes = profileData.notes;
-      if (profileData.website !== undefined) updates.website = profileData.website;
+      if (profileData.notes !== undefined) updates.notes = profileData.notes || null;
+      if (profileData.website !== undefined) updates.website = profileData.website || null;
       if (profileData.socialLinks !== undefined) updates.social_links = profileData.socialLinks;
       if (profileData.hasProofOfFunds !== undefined) updates.has_proof_of_funds = profileData.hasProofOfFunds;
       if (profileData.usesTitleCompany !== undefined) updates.uses_title_company = profileData.usesTitleCompany;
+
+      // Add updated_at timestamp
+      updates.updated_at = new Date().toISOString();
+
+      console.log('Updating seller profile with:', updates);
 
       const { data, error } = await supabase
         .from('seller_profile')
@@ -245,7 +251,12 @@ export const useSellerProfile = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase update error:', error);
+        throw error;
+      }
+
+      console.log('Successfully updated seller profile:', data);
 
       // Update local state and cache
       if (profile) {
@@ -260,6 +271,7 @@ export const useSellerProfile = () => {
 
       return data;
     } catch (err) {
+      console.error('Error updating seller profile:', err);
       throw err;
     }
   };

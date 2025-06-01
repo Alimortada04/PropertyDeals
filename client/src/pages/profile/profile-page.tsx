@@ -3048,12 +3048,21 @@ function ProfilePage() {
                     </div>
                   </CardHeader>
                   <CardContent className="pt-6">
-                    <form onSubmit={(e) => {
+                    <form onSubmit={async (e) => {
                       e.preventDefault();
-                      if (sellerProfile) {
-                        updateSellerProfile(sellerProfile);
+                      if (!sellerProfile) return;
+                      
+                      try {
+                        await updateSellerProfile(sellerProfile);
                         toast({ title: "Seller settings updated successfully" });
                         setIsSellerSectionModified(false);
+                      } catch (error) {
+                        console.error('Error updating seller settings:', error);
+                        toast({ 
+                          title: "Error updating settings", 
+                          description: "Something went wrong. Please try again.",
+                          variant: "destructive"
+                        });
                       }
                     }}>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
