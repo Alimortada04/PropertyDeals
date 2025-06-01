@@ -8,14 +8,18 @@ import {
   Wrench, 
   CreditCard, 
   HelpCircle, 
-  ArrowRight 
+  ArrowRight,
+  LogOut
 } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
 
 interface MobileSettingsMenuProps {
   currentSection?: string;
 }
 
 const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
+  const { logoutMutation } = useAuth();
+
   const settingsItems = [
     {
       id: 'account',
@@ -68,6 +72,12 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
     }
   ];
 
+  const handleLogout = () => {
+    if (confirm("Are you sure you want to log out?")) {
+      logoutMutation.mutate();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 md:hidden">
       {/* Header */}
@@ -99,6 +109,26 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
             </Link>
           );
         })}
+        
+        {/* Logout Button */}
+        <button 
+          onClick={handleLogout}
+          className="w-full bg-white rounded-lg border border-gray-200 p-4 active:bg-gray-50 transition-colors min-h-[48px] flex items-center justify-between mt-[5px] mb-[5px]"
+        >
+          <div className="flex items-center space-x-3">
+            <div className="flex-shrink-0">
+              <LogOut className="h-5 w-5 text-red-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-base font-medium text-red-600 truncate">
+                Log Out
+              </p>
+              <p className="text-sm text-gray-500 truncate">
+                Sign out of your account
+              </p>
+            </div>
+          </div>
+        </button>
       </div>
 
     </div>
