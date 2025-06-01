@@ -128,7 +128,7 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
                   <LogOut className="h-5 w-5 text-red-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-base font-medium text-red-600 truncate">
+                  <p className="text-base font-medium text-red-600 truncate text-left">
                     Log Out
                   </p>
                   <p className="text-sm text-gray-500 truncate">
@@ -157,7 +157,6 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-
     </div>
   );
 };
