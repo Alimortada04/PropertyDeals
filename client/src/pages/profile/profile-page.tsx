@@ -2851,7 +2851,7 @@ function ProfilePage() {
                         setIsSellerSectionModified(false);
                       }
                     }}>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
                           <label className="block text-sm font-medium mb-2 text-gray-700">
                             Deals closed in last 12 months
@@ -2909,6 +2909,55 @@ function ProfilePage() {
                         </div>
                       </div>
                       
+                      {/* Max Deal Volume */}
+                      <div className="mb-6">
+                        <label className="block text-base font-medium mb-3 text-gray-700">
+                          Max Deal Volume (per month) <span className="text-red-500">*</span>
+                        </label>
+                        <div className="flex gap-3">
+                          {['1-2', '3-5', '6-10', '10+'].map((volume) => (
+                            <button
+                              key={volume}
+                              type="button"
+                              onClick={() => setIsSellerSectionModified(true)}
+                              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                                sellerProfile.maxDealVolume === volume
+                                  ? 'bg-green-600 text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                              }`}
+                            >
+                              {volume}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Checkboxes */}
+                      <div className="space-y-4 mb-6">
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            id="hasBuyerList"
+                            checked={sellerProfile.hasBuyerList}
+                            onCheckedChange={() => setIsSellerSectionModified(true)}
+                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                          />
+                          <label htmlFor="hasBuyerList" className="text-sm font-medium text-gray-700">
+                            I have my own buyer list
+                          </label>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            id="isDirectToSeller"
+                            checked={sellerProfile.isDirectToSeller}
+                            onCheckedChange={() => setIsSellerSectionModified(true)}
+                            className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                          />
+                          <label htmlFor="isDirectToSeller" className="text-sm font-medium text-gray-700">
+                            I work directly with property owners/sellers
+                          </label>
+                        </div>
+                      </div>
+                      
                       <div className="pt-6 flex justify-end border-t mt-6">
                         <Button 
                           type="submit" 
@@ -2948,38 +2997,151 @@ function ProfilePage() {
                     </div>
                   </CardHeader>
                   <CardContent className="pt-6">
-                    <div className="space-y-6">
+                    <div className="space-y-8">
+                      {/* Business Type */}
                       <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-700">
-                          Target markets
+                        <label className="block text-base font-medium mb-3 text-gray-700">
+                          Business Type <span className="text-red-500">*</span>
                         </label>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          {sellerProfile.businessType?.split(',').filter(Boolean).map((type, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-full text-sm"
+                            >
+                              {type.trim()}
+                              <button
+                                type="button"
+                                onClick={() => setIsSellerSectionModified(true)}
+                                className="ml-1 hover:bg-green-700 rounded-full p-0.5"
+                              >
+                                <X size={12} />
+                              </button>
+                            </span>
+                          ))}
+                        </div>
                         <div className="flex flex-wrap gap-2">
+                          {['Wholesaler', 'Agent', 'Flipper', 'Developer', 'Investor'].map((type) => {
+                            const currentTypes = sellerProfile.businessType?.split(',').filter(Boolean) || [];
+                            const isSelected = currentTypes.includes(type);
+                            
+                            return (
+                              <button
+                                key={type}
+                                type="button"
+                                onClick={() => setIsSellerSectionModified(true)}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                  isSelected
+                                    ? 'bg-green-600 text-white'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border'
+                                }`}
+                              >
+                                {type}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Target Markets */}
+                      <div>
+                        <label className="block text-base font-medium mb-3 text-gray-700">
+                          Target Markets <span className="text-red-500">*</span>
+                        </label>
+                        <p className="text-sm text-gray-600 mb-3">Select all that apply</p>
+                        <div className="flex flex-wrap gap-2 mb-4">
                           {sellerProfile.targetMarkets?.map((market, index) => (
-                            <Badge key={index} variant="secondary" className="bg-green-100 text-green-800">
+                            <span
+                              key={index}
+                              className="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-full text-sm"
+                            >
                               {market}
-                            </Badge>
+                              <button
+                                type="button"
+                                onClick={() => setIsSellerSectionModified(true)}
+                                className="ml-1 hover:bg-green-700 rounded-full p-0.5"
+                              >
+                                <X size={12} />
+                              </button>
+                            </span>
                           ))}
                         </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-700">
-                          Types of deals you typically sell
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {sellerProfile.dealTypes?.map((type, index) => (
-                            <Badge key={index} variant="secondary" className="bg-blue-100 text-blue-800">
-                              {type}
-                            </Badge>
-                          ))}
+                        <div className="space-y-3">
+                          <p className="text-sm text-gray-600">Default markets:</p>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {['Milwaukee WI', 'Madison WI', 'Green Bay WI'].map((market) => {
+                              const isSelected = sellerProfile.targetMarkets?.includes(market);
+                              
+                              return (
+                                <button
+                                  key={market}
+                                  type="button"
+                                  onClick={() => setIsSellerSectionModified(true)}
+                                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    isSelected
+                                      ? 'bg-green-600 text-white'
+                                      : 'bg-white text-gray-700 hover:bg-gray-50 border'
+                                  }`}
+                                >
+                                  {market}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <div className="flex gap-2">
+                            <Input
+                              placeholder="Add another market..."
+                              className="flex-1 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="border-gray-300 hover:bg-gray-50"
+                            >
+                              Add
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                      
+
+                      {/* Deal Types */}
                       <div>
-                        <label className="block text-sm font-medium mb-2 text-gray-700">
-                          Typical buyer timeline
+                        <label className="block text-base font-medium mb-3 text-gray-700">
+                          Deal Types <span className="text-red-500">*</span>
                         </label>
-                        <p className="text-gray-600 text-sm">{sellerProfile.maxDealVolume || 'Not specified'}</p>
+                        <p className="text-sm text-gray-600 mb-4">Select all that apply</p>
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { value: 'assignments', label: 'Assignments' },
+                            { value: 'subto', label: 'Sub-to' },
+                            { value: 'flip', label: 'Flip' },
+                            { value: 'buyhold', label: 'Buy & Hold' },
+                            { value: 'newconstruction', label: 'New Construction' },
+                            { value: 'other', label: 'Other' }
+                          ].map((deal) => {
+                            const isSelected = sellerProfile.dealTypes?.includes(deal.value);
+                            
+                            return (
+                              <button
+                                key={deal.value}
+                                type="button"
+                                onClick={() => setIsSellerSectionModified(true)}
+                                className={`p-3 rounded-lg text-sm font-medium transition-colors text-left flex items-center ${
+                                  isSelected
+                                    ? 'bg-green-600 text-white'
+                                    : 'bg-white text-gray-700 hover:bg-gray-50 border'
+                                }`}
+                              >
+                                {deal.label}
+                                {deal.value !== 'other' && (
+                                  <div className="ml-auto">
+                                    <div className="w-4 h-4 rounded-full border border-current opacity-50"></div>
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   </CardContent>
