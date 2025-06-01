@@ -85,11 +85,11 @@ export function usePropertyProfile() {
 
     setIsLoading(true);
     try {
-      // Use user's UUID from auth
+      // Use user's UUID from auth - query by created_by field
       let query = supabase
         .from('property_profile')
         .select('*')
-        .eq('seller_id', user.id);
+        .eq('created_by', user.id);
 
       // Apply status filtering if provided
       if (statusFilters && statusFilters.length > 0) {
@@ -310,7 +310,7 @@ export function usePropertyProfile() {
         .from('property_profile')
         .update(updateData)
         .eq('id', propertyId)
-        .eq('seller_id', user.id) // Ensure user owns the property
+        .eq('created_by', user.id) // Ensure user owns the property
         .select()
         .single();
 
@@ -368,7 +368,7 @@ export function usePropertyProfile() {
           updated_at: new Date().toISOString(),
         })
         .eq('id', propertyId)
-        .eq('seller_id', user.id) // Ensure user owns the property
+        .eq('created_by', user.id) // Ensure user owns the property
         .select()
         .single();
 
