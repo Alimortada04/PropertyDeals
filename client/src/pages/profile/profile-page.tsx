@@ -1083,7 +1083,7 @@ function ProfilePage() {
       {/* Main content with sidebar */}
       <div className="flex flex-1">
         {/* Settings Menu Sidebar - hidden on mobile, fixed on desktop */}
-        <div className="hidden md:block w-[220px] fixed top-0 left-16 bottom-0 bg-white border-r flex flex-col shadow-sm">
+        <div className="hidden md:block w-[220px] fixed top-0 left-16 bottom-12 bg-white border-r flex flex-col shadow-sm">
           {/* User Profile Section - Redesigned to match screenshot */}
           <div className="px-6 pt-8 pb-6 border-b flex flex-col items-center">
             <div className="relative mb-2">
@@ -1125,9 +1125,9 @@ function ProfilePage() {
             </Button>
           </div>
         
-          {/* Menu Items Section - Full height with bottom padding to clear bottom bar */}
+          {/* Menu Items Section - Full height scrollable */}
           <div className="px-3 pt-4 flex-1 overflow-y-auto scrollbar-hide">
-            <div className="space-y-2 pb-20">
+            <div className="space-y-2 pb-4">
               <ProfileMenuItem
                 icon={<User size={18} />}
                 label="Account"
