@@ -2919,10 +2919,14 @@ function ProfilePage() {
                             <button
                               key={volume}
                               type="button"
-                              onClick={() => setIsSellerSectionModified(true)}
+                              onClick={() => {
+                                const updatedProfile = { ...sellerProfile, maxDealVolume: volume };
+                                updateSellerProfile(updatedProfile);
+                                setIsSellerSectionModified(true);
+                              }}
                               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                                 sellerProfile.maxDealVolume === volume
-                                  ? 'bg-green-600 text-white'
+                                  ? 'bg-[#09261E] text-white'
                                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                               }`}
                             >
@@ -3007,13 +3011,19 @@ function ProfilePage() {
                           {sellerProfile.businessType?.split(',').filter(Boolean).map((type, index) => (
                             <span
                               key={index}
-                              className="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-full text-sm"
+                              className="inline-flex items-center gap-1 px-3 py-1 bg-[#09261E] text-white rounded-full text-sm"
                             >
                               {type.trim()}
                               <button
                                 type="button"
-                                onClick={() => setIsSellerSectionModified(true)}
-                                className="ml-1 hover:bg-green-700 rounded-full p-0.5"
+                                onClick={() => {
+                                  const types = sellerProfile.businessType?.split(',').filter(Boolean) || [];
+                                  const newTypes = types.filter(t => t.trim() !== type.trim());
+                                  const updatedProfile = { ...sellerProfile, businessType: newTypes.join(',') };
+                                  updateSellerProfile(updatedProfile);
+                                  setIsSellerSectionModified(true);
+                                }}
+                                className="ml-1 hover:bg-[#0a2f23] rounded-full p-0.5"
                               >
                                 <X size={12} />
                               </button>
@@ -3029,10 +3039,21 @@ function ProfilePage() {
                               <button
                                 key={type}
                                 type="button"
-                                onClick={() => setIsSellerSectionModified(true)}
+                                onClick={() => {
+                                  const currentTypes = sellerProfile.businessType?.split(',').filter(Boolean) || [];
+                                  let newTypes;
+                                  if (isSelected) {
+                                    newTypes = currentTypes.filter(t => t !== type);
+                                  } else {
+                                    newTypes = [...currentTypes, type];
+                                  }
+                                  const updatedProfile = { ...sellerProfile, businessType: newTypes.join(',') };
+                                  updateSellerProfile(updatedProfile);
+                                  setIsSellerSectionModified(true);
+                                }}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                                   isSelected
-                                    ? 'bg-green-600 text-white'
+                                    ? 'bg-[#09261E] text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border'
                                 }`}
                               >
@@ -3053,13 +3074,18 @@ function ProfilePage() {
                           {sellerProfile.targetMarkets?.map((market, index) => (
                             <span
                               key={index}
-                              className="inline-flex items-center gap-1 px-3 py-1 bg-green-600 text-white rounded-full text-sm"
+                              className="inline-flex items-center gap-1 px-3 py-1 bg-[#09261E] text-white rounded-full text-sm"
                             >
                               {market}
                               <button
                                 type="button"
-                                onClick={() => setIsSellerSectionModified(true)}
-                                className="ml-1 hover:bg-green-700 rounded-full p-0.5"
+                                onClick={() => {
+                                  const newMarkets = sellerProfile.targetMarkets?.filter((_, i) => i !== index) || [];
+                                  const updatedProfile = { ...sellerProfile, targetMarkets: newMarkets };
+                                  updateSellerProfile(updatedProfile);
+                                  setIsSellerSectionModified(true);
+                                }}
+                                className="ml-1 hover:bg-[#0a2f23] rounded-full p-0.5"
                               >
                                 <X size={12} />
                               </button>
@@ -3076,10 +3102,21 @@ function ProfilePage() {
                                 <button
                                   key={market}
                                   type="button"
-                                  onClick={() => setIsSellerSectionModified(true)}
+                                  onClick={() => {
+                                    const currentMarkets = sellerProfile.targetMarkets || [];
+                                    let newMarkets;
+                                    if (isSelected) {
+                                      newMarkets = currentMarkets.filter(m => m !== market);
+                                    } else {
+                                      newMarkets = [...currentMarkets, market];
+                                    }
+                                    const updatedProfile = { ...sellerProfile, targetMarkets: newMarkets };
+                                    updateSellerProfile(updatedProfile);
+                                    setIsSellerSectionModified(true);
+                                  }}
                                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                                     isSelected
-                                      ? 'bg-green-600 text-white'
+                                      ? 'bg-[#09261E] text-white'
                                       : 'bg-white text-gray-700 hover:bg-gray-50 border'
                                   }`}
                                 >
@@ -3125,10 +3162,21 @@ function ProfilePage() {
                               <button
                                 key={deal.value}
                                 type="button"
-                                onClick={() => setIsSellerSectionModified(true)}
+                                onClick={() => {
+                                  const currentDeals = sellerProfile.dealTypes || [];
+                                  let newDeals;
+                                  if (isSelected) {
+                                    newDeals = currentDeals.filter(d => d !== deal.value);
+                                  } else {
+                                    newDeals = [...currentDeals, deal.value];
+                                  }
+                                  const updatedProfile = { ...sellerProfile, dealTypes: newDeals };
+                                  updateSellerProfile(updatedProfile);
+                                  setIsSellerSectionModified(true);
+                                }}
                                 className={`p-3 rounded-lg text-sm font-medium transition-colors text-left flex items-center ${
                                   isSelected
-                                    ? 'bg-green-600 text-white'
+                                    ? 'bg-[#09261E] text-white'
                                     : 'bg-white text-gray-700 hover:bg-gray-50 border'
                                 }`}
                               >
