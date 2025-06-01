@@ -17,9 +17,9 @@ const MobileSettingsSection = ({ section, title, children }: MobileSettingsSecti
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 md:hidden">
+    <div className="flex flex-col h-screen bg-gray-50 md:hidden">
       {/* Back Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
+      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 flex-shrink-0">
         <Button
           variant="ghost"
           size="sm"
@@ -33,7 +33,7 @@ const MobileSettingsSection = ({ section, title, children }: MobileSettingsSecti
       </div>
 
       {/* Section Content */}
-      <div className="p-4 pb-24">
+      <div className="flex-1 overflow-y-auto p-4 pb-24">
         {children}
       </div>
     </div>
