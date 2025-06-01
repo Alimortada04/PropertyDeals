@@ -33,7 +33,7 @@ const MobileSettingsSection = ({ section, title, children }: MobileSettingsSecti
       </div>
 
       {/* Section Content */}
-      <div className="p-4 pb-20">
+      <div className="p-4 pb-24">
         {children}
       </div>
     </div>

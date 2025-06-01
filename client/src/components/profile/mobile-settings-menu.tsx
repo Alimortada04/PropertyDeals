@@ -115,7 +115,7 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
         <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
       </div>
       {/* Settings Menu Items */}
-      <div className="mt-6 px-4 space-y-3 pb-20">
+      <div className="mt-6 px-4 space-y-3 pb-24">
         {settingsItems.map((item) => {
           const IconComponent = item.icon;
           return (
