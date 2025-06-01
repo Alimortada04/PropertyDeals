@@ -280,7 +280,7 @@ function ProfilePage() {
       const path = window.location.pathname;
       const pathSegments = path.split('/');
       const lastSegment = pathSegments[pathSegments.length - 1];
-      const validTabs = ["account", "property_preferences", "connections", "notifications", "integrations", "memberships", "security", "help"];
+      const validTabs = ["account", "seller_settings", "property_preferences", "connections", "notifications", "integrations", "memberships", "security", "help"];
       
       if (validTabs.includes(lastSegment)) {
         setActiveTab(lastSegment);
@@ -2815,6 +2815,217 @@ function ProfilePage() {
                         </Button>
                       </div>
                     </form>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {activeTab === "seller_settings" && sellerProfile && (
+              <>
+                {/* Deal History & Goals Section */}
+                <Card className="border-gray-200 shadow-sm mb-6">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <TrendingUp className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Deal History & Goals</CardTitle>
+                        <CardDescription>Your deal performance and targets</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      if (sellerProfile) {
+                        updateSellerProfile(sellerProfile);
+                        toast({ title: "Seller settings updated successfully" });
+                        setIsSellerSectionModified(false);
+                      }
+                    }}>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-medium mb-2 text-gray-700">
+                            Deals closed in last 12 months
+                          </label>
+                          <Input 
+                            type="number"
+                            value={sellerProfile.totalDealsCompleted || ''}
+                            onChange={(e) => {
+                              if (sellerProfile) {
+                                setIsSellerSectionModified(true);
+                              }
+                            }}
+                            className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                            placeholder="0"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium mb-2 text-gray-700">
+                            Deal goal for next 12 months
+                          </label>
+                          <Input 
+                            type="number"
+                            value=""
+                            onChange={(e) => setIsSellerSectionModified(true)}
+                            className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                            placeholder="0"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium mb-2 text-gray-700">
+                            Total deals done
+                          </label>
+                          <Input 
+                            type="number"
+                            value=""
+                            onChange={(e) => setIsSellerSectionModified(true)}
+                            className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                            placeholder="0"
+                          />
+                        </div>
+                        
+                        <div>
+                          <label className="block text-sm font-medium mb-2 text-gray-700">
+                            Properties currently owned
+                          </label>
+                          <Input 
+                            type="number"
+                            value=""
+                            onChange={(e) => setIsSellerSectionModified(true)}
+                            className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
+                            placeholder="0"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="pt-6 flex justify-end border-t mt-6">
+                        <Button 
+                          type="submit" 
+                          className={`flex items-center transition-all duration-200 ${
+                            loading ? "bg-gray-400" : isSellerSectionModified ? "bg-[#09261E] hover:bg-[#09261E]/90" : "bg-gray-200 text-gray-500"
+                          } text-white`}
+                          disabled={loading || !isSellerSectionModified}
+                        >
+                          {loading ? (
+                            <>
+                              <span className="h-4 w-4 mr-2 rounded-full border-2 border-t-transparent border-white animate-spin"></span>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="mr-2 h-4 w-4" />
+                              Save Deal History
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </form>
+                  </CardContent>
+                </Card>
+
+                {/* Deal Preferences Section */}
+                <Card className="border-gray-200 shadow-sm mb-6">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <Building className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Deal Preferences</CardTitle>
+                        <CardDescription>Your typical deal characteristics</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-medium mb-2 text-gray-700">
+                          Target markets
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {sellerProfile.targetMarkets?.map((market, index) => (
+                            <Badge key={index} variant="secondary" className="bg-green-100 text-green-800">
+                              {market}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-2 text-gray-700">
+                          Types of deals you typically sell
+                        </label>
+                        <div className="flex flex-wrap gap-2">
+                          {sellerProfile.dealTypes?.map((type, index) => (
+                            <Badge key={index} variant="secondary" className="bg-blue-100 text-blue-800">
+                              {type}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-2 text-gray-700">
+                          Typical buyer timeline
+                        </label>
+                        <p className="text-gray-600 text-sm">{sellerProfile.maxDealVolume || 'Not specified'}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Status & Access Section */}
+                <Card className="border-gray-200 shadow-sm">
+                  <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+                    <div className="flex items-center">
+                      <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                        <Shield className="h-5 w-5 text-[#09261E]" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">Status & Access</CardTitle>
+                        <CardDescription>Your seller account status</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                          <h4 className="font-medium text-gray-900">Seller Status</h4>
+                          <p className="text-sm text-gray-600">Your current seller verification status</p>
+                        </div>
+                        <Badge 
+                          className={
+                            sellerProfile.status === 'active' ? 'bg-green-100 text-green-800' :
+                            sellerProfile.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                            sellerProfile.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }
+                        >
+                          {sellerProfile.status?.charAt(0).toUpperCase() + sellerProfile.status?.slice(1)}
+                        </Badge>
+                      </div>
+                      
+                      {(sellerProfile.status === 'rejected' || sellerProfile.status === 'paused') && (
+                        <Button 
+                          className="w-full bg-[#09261E] hover:bg-[#09261E]/90"
+                          onClick={async () => {
+                            try {
+                              await updateSellerProfile({ ...sellerProfile, status: 'pending' });
+                              toast({ title: "Application resubmitted for review" });
+                            } catch (error) {
+                              toast({ title: "Failed to resubmit application", variant: "destructive" });
+                            }
+                          }}
+                        >
+                          Resubmit Application
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </>
