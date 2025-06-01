@@ -207,25 +207,11 @@ function ProfilePage() {
   // Seller profile hook
   const { profile: sellerProfile, loading: sellerLoading, updateSellerProfile, getSellerStatus } = useSellerProfile();
   
-  // Check if user has seller profile for stable tab visibility
-  const [hasSellerProfile, setHasSellerProfile] = useState(false);
-  
-  useEffect(() => {
-    const checkSellerProfile = async () => {
-      if (user?.id) {
-        console.log('Checking seller status for user:', user.id);
-        try {
-          const status = await getSellerStatus();
-          console.log('Seller status result:', status);
-          setHasSellerProfile(status !== 'none');
-        } catch (err) {
-          console.error('Error checking seller profile:', err);
-          setHasSellerProfile(false);
-        }
-      }
-    };
-    checkSellerProfile();
-  }, [user?.id, getSellerStatus]);
+  // Check if user has seller profile for stable tab visibility  
+  const hasSellerProfile = useMemo(() => {
+    console.log('Checking seller profile state:', { sellerProfile, sellerLoading });
+    return !sellerLoading && sellerProfile !== null;
+  }, [sellerProfile, sellerLoading]);
 
 
   
