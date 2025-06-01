@@ -8,18 +8,14 @@ import {
   Wrench, 
   CreditCard, 
   HelpCircle, 
-  ArrowRight,
-  LogOut
+  ArrowRight 
 } from 'lucide-react';
-import { useAuth } from '@/hooks/use-auth';
 
 interface MobileSettingsMenuProps {
   currentSection?: string;
 }
 
 const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
-  const { user, logoutMutation } = useAuth();
-  
   const settingsItems = [
     {
       id: 'account',
@@ -79,7 +75,7 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
         <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
       </div>
       {/* Settings Menu Items */}
-      <div className="mt-6 px-4 space-y-3 pb-20">
+      <div className="mt-6 px-4 space-y-3">
         {settingsItems.map((item) => {
           const IconComponent = item.icon;
           return (
@@ -103,33 +99,6 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
             </Link>
           );
         })}
-        
-        {/* Logout Button - Only show if user is authenticated */}
-        {user && (
-          <div 
-            onClick={() => {
-              if (confirm("Are you sure you want to log out?")) {
-                logoutMutation.mutate();
-              }
-            }}
-            className="bg-white rounded-lg border border-gray-200 p-4 active:bg-gray-50 transition-colors min-h-[48px] flex items-center justify-between mt-[5px] mb-[5px] cursor-pointer"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="flex-shrink-0">
-                <LogOut className="h-5 w-5 text-red-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-base font-medium text-gray-900 truncate">
-                  Logout
-                </p>
-                <p className="text-sm text-gray-500 truncate">
-                  Sign out of your account
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="h-4 w-4 text-gray-400" />
-          </div>
-        )}
       </div>
 
     </div>
