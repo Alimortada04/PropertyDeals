@@ -1083,7 +1083,7 @@ function ProfilePage() {
       {/* Main content with sidebar */}
       <div className="flex flex-1">
         {/* Settings Menu Sidebar - hidden on mobile, fixed on desktop */}
-        <div className="hidden md:block w-[220px] fixed top-0 left-16 bottom-20 bg-white border-r flex flex-col shadow-sm">
+        <div className="hidden md:block w-[220px] fixed top-0 left-16 bottom-0 bg-white border-r flex flex-col shadow-sm">
           {/* User Profile Section - Redesigned to match screenshot */}
           <div className="px-6 pt-8 pb-6 border-b flex flex-col items-center">
             <div className="relative mb-2">
@@ -1125,9 +1125,9 @@ function ProfilePage() {
             </Button>
           </div>
         
-          {/* Menu Items Section */}
+          {/* Menu Items Section - Full height with bottom padding to clear bottom bar */}
           <div className="px-3 pt-4 flex-1 overflow-y-auto scrollbar-hide">
-            <div className="space-y-2 pb-4">
+            <div className="space-y-2 pb-20">
               <ProfileMenuItem
                 icon={<User size={18} />}
                 label="Account"
@@ -1185,36 +1185,33 @@ function ProfilePage() {
                 active={activeTab === "help"}
                 onClick={() => handleTabChange("help")}
               />
+              
+              {/* Logout as menu item */}
+              <div className="pt-2 border-t border-gray-200">
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <button className="w-full text-left px-4 py-3 rounded-lg hover:bg-red-50/50 transition-colors flex items-center gap-3 text-red-600 hover:text-red-700">
+                      <LogOut size={18} />
+                      <span className="font-medium text-sm">Log Out</span>
+                    </button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        You will need to sign in again to access your account.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>No, take me back</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white">
+                        Yes, I'm sure
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </div>
-          </div>
-          
-          {/* Logout Button - Sticky bottom with red text/icon but no red background */}
-          <div className="px-4 py-2 border-t sticky bottom-0 bg-white mt-auto">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button 
-                  variant="ghost"
-                  className="w-full text-red-600 hover:text-red-700 hover:bg-red-50/50 flex items-center justify-start gap-2 px-4 py-2"
-                >
-                  <LogOut size={18} className="text-red-600 mr-1" />
-                  <span className="font-medium text-sm">Log Out</span>
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    You will need to sign in again to access your account.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>No, take me back</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleLogout} className="bg-red-600 hover:bg-red-700 text-white">
-                    Yes, I'm sure
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
           </div>
         </div>
         
