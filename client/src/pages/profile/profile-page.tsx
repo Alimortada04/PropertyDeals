@@ -457,6 +457,31 @@ function ProfilePage() {
   
   // Track active settings tab and help section
   const [activeTab, setActiveTab] = useState(initialTab);
+  
+  // Update active tab when location changes
+  useEffect(() => {
+    const validTabs = ["account", "seller_settings", "property_preferences", "connections", "notifications", "integrations", "memberships", "security", "help"];
+    
+    // Check hash-based routing first (#help, #account, etc.)
+    if (location.includes('#')) {
+      const hash = location.split('#')[1];
+      if (validTabs.includes(hash)) {
+        setActiveTab(hash);
+        return;
+      }
+    }
+    
+    // Then check path-based routing (/profile/help, etc.)
+    const pathSegments = location.split('/');
+    const lastSegment = pathSegments[pathSegments.length - 1];
+    if (validTabs.includes(lastSegment)) {
+      setActiveTab(lastSegment);
+      return;
+    }
+    
+    // Default to account tab
+    setActiveTab("account");
+  }, [location]);
   const [activeHelpSection, setActiveHelpSection] = useState<string>('main');
   
   // For the Connections tab
