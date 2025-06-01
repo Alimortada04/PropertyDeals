@@ -153,15 +153,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log("Incoming request body:", JSON.stringify(req.body, null, 2));
       
-      const profileData = insertPropertyProfileSchema.parse({
+      // Transform the payload to match database schema
+      const transformedData = {
         ...req.body,
-        seller_id: req.body.seller_id || (req.isAuthenticated() ? req.user.id : "temp-user-id"),
+        // Map seller_id to the UUID field and created_by to integer ID
+        seller_id: req.body.seller_id || "temp-user-id",
+        created_by: req.isAuthenticated() ? req.user.id : 1, // Use integer user ID
         status: req.body.status || "draft"
-      });
+      };
+      
+      console.log("Transformed data for validation:", JSON.stringify(transformedData, null, 2));
+      
+      const profileData = insertPropertyProfileSchema.parse(transformedData);
       
       console.log("Parsed profile data:", JSON.stringify(profileData, null, 2));
       
       const profile = await storage.createPropertyProfile(profileData);
+      console.log("Created profile:", JSON.stringify(profile, null, 2));
       res.status(201).json(profile);
     } catch (error) {
       console.error("Property profile creation error:", error);
