@@ -12,7 +12,7 @@ import { Plus, Edit, Eye, Share, BarChart3, MapPin, DollarSign, Home, AlertCircl
 import { toast } from "@/hooks/use-toast";
 
 export default function SellerDashboard() {
-  const { user } = useAuth();
+  const { user, supabaseUser } = useAuth();
   const { profile: sellerProfile, loading: sellerLoading } = useSellerProfile();
   const { profile } = useBuyerProfile();
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -23,10 +23,10 @@ export default function SellerDashboard() {
   // Fetch properties from Supabase
   const fetchProperties = async () => {
     console.log('Auth state - user:', user);
-    console.log('Auth state - supabaseUser:', user);
+    console.log('Auth state - supabaseUser:', supabaseUser);
     
-    // Use supabaseUser.id if available, fallback to user.id
-    const userId = user?.supabaseId || user?.id;
+    // Use supabaseUser.id directly for UUID compatibility
+    const userId = supabaseUser?.id;
     console.log('Using userId for query:', userId);
     
     if (!userId) {
@@ -69,7 +69,7 @@ export default function SellerDashboard() {
   // Fetch properties on component mount and user change
   useEffect(() => {
     fetchProperties();
-  }, [user?.id]);
+  }, [supabaseUser?.id]);
 
   // Group properties by status
   const draftProperties = properties.filter((p: any) => p.status === 'draft');

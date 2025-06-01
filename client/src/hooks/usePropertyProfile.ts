@@ -74,14 +74,14 @@ export interface PropertyProfile {
 }
 
 export function usePropertyProfile() {
-  const { user } = useAuth();
+  const { user, supabaseUser } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [properties, setProperties] = useState<PropertyProfile[]>([]);
 
   // Fetch all properties for the current seller
   const fetchSellerProperties = async (statusFilters?: string[]) => {
-    if (!user?.id) return;
+    if (!supabaseUser?.id) return;
 
     setIsLoading(true);
     try {
@@ -89,7 +89,7 @@ export function usePropertyProfile() {
       let query = supabase
         .from('property_profile')
         .select('*')
-        .eq('created_by', user.id);
+        .eq('created_by', supabaseUser.id);
 
       // Apply status filtering if provided
       if (statusFilters && statusFilters.length > 0) {
@@ -147,7 +147,7 @@ export function usePropertyProfile() {
     return {
       // Required fields - match actual database schema
       seller_id: userId,
-      created_by: 1, // database uses created_by
+      created_by: userId, // database uses created_by with UUID
       status: 'draft',
       is_public: false,
       featured_property: false,
@@ -225,7 +225,7 @@ export function usePropertyProfile() {
 
   // Create a new property draft
   const createPropertyDraft = async (initialData: Partial<PropertyProfile>) => {
-    if (!user?.id) {
+    if (!supabaseUser?.id) {
       toast({
         title: "Authentication Required",
         description: "Please log in to create a property listing.",
@@ -237,7 +237,7 @@ export function usePropertyProfile() {
     setIsLoading(true);
     try {
       // Clean the data to match Supabase schema
-      const cleanPayload = cleanPropertyPayload(initialData, String(user.id));
+      const cleanPayload = cleanPropertyPayload(initialData, supabaseUser.id);
       
       console.log('Creating property with payload:', cleanPayload);
 
@@ -290,7 +290,7 @@ export function usePropertyProfile() {
 
   // Update an existing property
   const updateProperty = async (propertyId: number, updates: Partial<PropertyProfile>) => {
-    if (!user?.id) {
+    if (!supabaseUser?.id) {
       toast({
         title: "Authentication Required",
         description: "Please log in to update properties.",
@@ -310,7 +310,7 @@ export function usePropertyProfile() {
         .from('property_profile')
         .update(updateData)
         .eq('id', propertyId)
-        .eq('created_by', user.id) // Ensure user owns the property
+        .eq('created_by', supabaseUser.id) // Ensure user owns the property
         .select()
         .single();
 
