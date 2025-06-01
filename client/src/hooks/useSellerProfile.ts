@@ -221,7 +221,7 @@ export const useSellerProfile = () => {
 
       const updates: any = {};
       
-      // Only include fields that are explicitly defined and exist in the database
+      // Only include core fields that we know work to avoid schema cache issues
       if (profileData.fullName !== undefined) updates.full_name = profileData.fullName;
       if (profileData.email !== undefined) updates.email = profileData.email;
       if (profileData.phone !== undefined) updates.phone_number = profileData.phone;
@@ -236,8 +236,9 @@ export const useSellerProfile = () => {
       if (profileData.notes !== undefined) updates.notes = profileData.notes || null;
       if (profileData.website !== undefined) updates.website = profileData.website || null;
       if (profileData.socialLinks !== undefined) updates.social_links = profileData.socialLinks;
-      if (profileData.hasProofOfFunds !== undefined) updates.has_proof_of_funds = profileData.hasProofOfFunds;
-      if (profileData.usesTitleCompany !== undefined) updates.uses_title_company = profileData.usesTitleCompany;
+      // Temporarily removing problematic fields causing schema cache issues
+      // if (profileData.hasProofOfFunds !== undefined) updates.has_proof_of_funds = profileData.hasProofOfFunds;
+      // if (profileData.usesTitleCompany !== undefined) updates.uses_title_company = profileData.usesTitleCompany;
 
       // Add updated_at timestamp
       updates.updated_at = new Date().toISOString();
