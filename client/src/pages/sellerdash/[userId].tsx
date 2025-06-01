@@ -124,7 +124,7 @@ export default function SellerDashboardPage() {
       const { data, error } = await supabase
         .from('property_profile')
         .select('*')
-        .eq('created_by', 1); // Using temporary user ID system
+        .eq('created_by', user.id); // Use authenticated user's UUID
 
       if (error) {
         console.error('Error fetching property profiles:', error);
@@ -149,7 +149,7 @@ export default function SellerDashboardPage() {
         return;
       }
 
-      const draftResponse = await createMinimalDraft(1); // Using seller ID = 1 for now
+      const draftResponse = await createMinimalDraft(supabaseUser.id); // Use authenticated user's UUID
       
       if (draftResponse && draftResponse.id) {
         toast({

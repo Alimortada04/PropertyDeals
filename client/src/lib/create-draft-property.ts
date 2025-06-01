@@ -23,14 +23,14 @@ export async function createDraftProperty(data: CreateDraftPropertyData): Promis
     propertyType: data.propertyType,
     listingPrice: data.listingPrice,
     status: 'draft',
-    createdBy: 1, // Default seller ID for now
+    createdBy: '', // Will be set by the API with proper UUID
   };
 
   return await apiRequest('/api/property-profiles', 'POST', propertyProfileData);
 }
 
 // Simplified function for immediate draft creation with minimal data
-export async function createMinimalDraft(sellerId: number): Promise<any> {
+export async function createMinimalDraft(sellerId: string): Promise<any> {
   try {
     const minimalDraftData = {
       sellerId,
