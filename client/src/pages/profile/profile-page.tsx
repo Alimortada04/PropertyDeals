@@ -598,7 +598,7 @@ const ProfileMenuItem = ({ icon, label, href, active, onClick, danger, className
   );
 };
 
-function ProfilePage() {
+function ProfilePage({ activeTabOverride, hideLayout }: { activeTabOverride?: string; hideLayout?: boolean } = {}) {
   // Get the current route for active menu tracking
   const [location] = useLocation();
   const { toast } = useToast();
@@ -653,10 +653,15 @@ function ProfilePage() {
   }, [location]);
   
   // Track active settings tab and help section
-  const [activeTab, setActiveTab] = useState(initialTab);
+  const [activeTab, setActiveTab] = useState(activeTabOverride || initialTab);
   
-  // Update active tab when location changes
+  // Update active tab when location changes or override changes
   useEffect(() => {
+    if (activeTabOverride) {
+      setActiveTab(activeTabOverride);
+      return;
+    }
+    
     const validTabs = ["account", "seller_settings", "property_preferences", "connections", "notifications", "integrations", "memberships", "security", "help"];
     
     // Check hash-based routing first (#help, #account, etc.)
@@ -678,7 +683,7 @@ function ProfilePage() {
     
     // Default to account tab
     setActiveTab("account");
-  }, [location]);
+  }, [location, activeTabOverride]);
   const [activeHelpSection, setActiveHelpSection] = useState<string>('main');
   
   // For the Connections tab
@@ -1511,10 +1516,11 @@ function ProfilePage() {
       />
       {/* Main content with sidebar */}
       <div className="flex flex-1">
-        {/* Settings Menu Sidebar - hidden on mobile, fixed on desktop */}
-        <div 
-          className="hidden md:block w-[220px] fixed top-0 left-16 bg-white border-r flex flex-col shadow-sm z-[30] h-screen" 
-        >
+        {/* Settings Menu Sidebar - hidden on mobile, fixed on desktop, or when hideLayout is true */}
+        {!hideLayout && (
+          <div 
+            className="hidden md:block w-[220px] fixed top-0 left-16 bg-white border-r flex flex-col shadow-sm z-[30] h-screen" 
+          >
           {/* User Profile Section - Redesigned to match screenshot */}
           <div className="px-6 pt-8 pb-6 border-b flex flex-col items-center">
             <div className="relative mb-2">
@@ -1645,9 +1651,10 @@ function ProfilePage() {
             </div>
           </div>
         </div>
+        )}
         
         {/* Main content area - Responsive margin for mobile/desktop */}
-        <div className="md:ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-24 md:pb-8 pl-[0px] pr-[0px] max-h-screen">
+        <div className={`${hideLayout ? '' : 'md:ml-[236px]'} flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-24 md:pb-8 pl-[0px] pr-[0px] max-h-screen`}>
           <div className="max-w-3xl mx-auto space-y-6">
             
             {/* Tab Content - We'll conditionally show different content based on the active sidebar menu item */}
@@ -4620,7 +4627,7 @@ export default function ProfilePageWithMobileRouting() {
             section={currentSection}
             title={getSectionTitle(currentSection)}
           >
-            <MobileSectionContent section={currentSection} />
+            <ProfilePage activeTabOverride={currentSection} hideLayout={true} />
           </MobileSettingsSection>
         </div>
         
