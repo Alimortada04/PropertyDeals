@@ -1185,12 +1185,10 @@ function ProfilePage() {
                 active={activeTab === "help"}
                 onClick={() => handleTabChange("help")}
               />
-            </div>
-          </div>
-          
-          {/* Logout Button - Sticky bottom with red text/icon but no red background */}
-          <div className="px-4 py-2 border-t sticky bottom-0 bg-white mt-auto">
-            <AlertDialog>
+              
+              {/* Logout Button - Now in scrollable area */}
+              <div className="px-4 py-2 border-t mt-4">
+                <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button 
                   variant="ghost"
@@ -1214,9 +1212,10 @@ function ProfilePage() {
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
-            </AlertDialog>
+                </AlertDialog>
+              </div>
+            </div>
           </div>
-        </div>
         
         {/* Main content area - Responsive margin for mobile/desktop */}
         <div className="md:ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20 pl-[0px] pr-[0px]">
