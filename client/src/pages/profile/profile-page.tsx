@@ -50,6 +50,212 @@ import {
 } from "@/lib/buyer-profile";
 import { useSellerProfile } from "@/hooks/useSellerProfile";
 
+// Mobile Section Content Component
+function MobileSectionContent({ section }: { section: string }) {
+  const { profile: sellerProfile, loading: sellerLoading, updateSellerProfile } = useSellerProfile();
+  const { toast } = useToast();
+  const [isSellerSectionModified, setIsSellerSectionModified] = useState(false);
+
+  if (section === 'seller_settings' && sellerProfile) {
+    return (
+      <div className="space-y-6">
+        {/* Deal History & Goals Section */}
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+            <div className="flex items-center">
+              <div className="mr-2 p-1.5 rounded-md bg-green-50">
+                <TrendingUp className="h-5 w-5 text-[#09261E]" />
+              </div>
+              <div>
+                <CardTitle className="text-lg">Deal History & Goals</CardTitle>
+                <CardDescription>Your deal performance and targets</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              if (sellerProfile) {
+                updateSellerProfile(sellerProfile);
+                toast({ title: "Seller settings updated successfully" });
+                setIsSellerSectionModified(false);
+              }
+            }}>
+              <div className="grid grid-cols-1 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                    Deals closed in last 12 months
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={(sellerProfile as any).totalDealsCompleted || 0}
+                    onChange={(e) => {
+                      const updatedProfile = { ...sellerProfile, totalDealsCompleted: parseInt(e.target.value) };
+                      updateSellerProfile(updatedProfile as any);
+                      setIsSellerSectionModified(true);
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent"
+                    placeholder="0"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">
+                    Goal deals for next 12 months
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={(sellerProfile as any).goalDealsNext12Months || 0}
+                    onChange={(e) => {
+                      const updatedProfile = { ...sellerProfile, goalDealsNext12Months: parseInt(e.target.value) };
+                      updateSellerProfile(updatedProfile as any);
+                      setIsSellerSectionModified(true);
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent"
+                    placeholder="0"
+                  />
+                </div>
+              </div>
+
+              {/* Business Preferences */}
+              <div className="space-y-4 mb-6">
+                <div className="flex items-center space-x-3">
+                  <Checkbox
+                    id="hasBuyerList"
+                    checked={sellerProfile.hasBuyerList}
+                    onCheckedChange={(checked) => {
+                      const updatedProfile = { ...sellerProfile, hasBuyerList: !!checked };
+                      updateSellerProfile(updatedProfile);
+                      setIsSellerSectionModified(true);
+                    }}
+                    className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                  />
+                  <label htmlFor="hasBuyerList" className="text-sm font-medium text-gray-700">
+                    I have my own buyer list
+                  </label>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Checkbox
+                    id="isDirectToSeller"
+                    checked={sellerProfile.isDirectToSeller}
+                    onCheckedChange={(checked) => {
+                      const updatedProfile = { ...sellerProfile, isDirectToSeller: !!checked };
+                      updateSellerProfile(updatedProfile);
+                      setIsSellerSectionModified(true);
+                    }}
+                    className="data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E]"
+                  />
+                  <label htmlFor="isDirectToSeller" className="text-sm font-medium text-gray-700">
+                    I work directly with property owners/sellers
+                  </label>
+                </div>
+              </div>
+              
+              {isSellerSectionModified && (
+                <div className="pt-6 flex justify-end border-t">
+                  <Button type="submit" className="bg-[#09261E] hover:bg-[#0a2f23] text-white">
+                    Save Changes
+                  </Button>
+                </div>
+              )}
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Target Markets Section */}
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="border-b pb-4 bg-gradient-to-r from-gray-50/80 to-white">
+            <div className="flex items-center">
+              <div className="mr-2 p-1.5 rounded-md bg-blue-50">
+                <MapPin className="h-5 w-5 text-[#09261E]" />
+              </div>
+              <div>
+                <CardTitle className="text-lg">Target Markets</CardTitle>
+                <CardDescription>Areas where you focus your business</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-base font-medium mb-3 text-gray-700">
+                  Target Markets <span className="text-red-500">*</span>
+                </label>
+                <p className="text-sm text-gray-600 mb-3">Select all that apply</p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {sellerProfile.targetMarkets?.map((market, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center gap-1 px-3 py-1 bg-[#09261E] text-white rounded-full text-sm"
+                    >
+                      {market}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newMarkets = sellerProfile.targetMarkets?.filter((_, i) => i !== index) || [];
+                          const updatedProfile = { ...sellerProfile, targetMarkets: newMarkets };
+                          updateSellerProfile(updatedProfile);
+                          setIsSellerSectionModified(true);
+                        }}
+                        className="ml-1 hover:bg-[#0a2f23] rounded-full p-0.5"
+                      >
+                        <X size={12} />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600">Default markets:</p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {['Milwaukee WI', 'Madison WI', 'Green Bay WI'].map((market) => {
+                      const isSelected = sellerProfile.targetMarkets?.includes(market);
+                      
+                      return (
+                        <button
+                          key={market}
+                          type="button"
+                          onClick={() => {
+                            const currentMarkets = sellerProfile.targetMarkets || [];
+                            let newMarkets;
+                            if (isSelected) {
+                              newMarkets = currentMarkets.filter(m => m !== market);
+                            } else {
+                              newMarkets = [...currentMarkets, market];
+                            }
+                            const updatedProfile = { ...sellerProfile, targetMarkets: newMarkets };
+                            updateSellerProfile(updatedProfile);
+                            setIsSellerSectionModified(true);
+                          }}
+                          className={`px-3 py-1 rounded-full text-sm border transition-colors ${
+                            isSelected
+                              ? 'bg-[#09261E] text-white border-[#09261E]'
+                              : 'bg-white text-gray-600 border-gray-300 hover:border-[#09261E] hover:text-[#09261E]'
+                          }`}
+                        >
+                          {market}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // For other sections, show placeholder content
+  return (
+    <div className="text-center py-8">
+      <p className="text-gray-600">This section is under development.</p>
+      <p className="text-sm text-gray-500 mt-2">Check back soon for more features.</p>
+    </div>
+  );
+}
+
 // Import icons
 import {
   User,
@@ -4119,9 +4325,7 @@ export default function ProfilePageWithMobileRouting() {
             section={currentSection}
             title={getSectionTitle(currentSection)}
           >
-            <div className="space-y-6">
-              <ProfilePage />
-            </div>
+            <MobileSectionContent section={currentSection} />
           </MobileSettingsSection>
         </div>
         

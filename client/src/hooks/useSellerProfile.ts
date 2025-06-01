@@ -33,6 +33,10 @@ export interface SellerProfileData {
   // Application state
   status: SellerStatus;
   createdAt?: string;
+  
+  // Additional fields for deal tracking
+  totalDealsCompleted?: number;
+  goalDealsNext12Months?: number;
 }
 
 // Cache key for localStorage
