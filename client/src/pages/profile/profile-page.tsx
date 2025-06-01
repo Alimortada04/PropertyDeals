@@ -1334,7 +1334,7 @@ function ProfilePage() {
           </div>
         
           {/* Menu Items Section - Full height scrollable */}
-          <div className="px-3 pt-4 flex-1 overflow-y-auto scrollbar-hide">
+          <div className="px-3 pt-4 flex-1 overflow-y-auto scrollbar-hide max-h-[calc(100vh-280px)]">
             <div className="space-y-2 pb-6">
               <ProfileMenuItem
                 icon={<User size={18} />}
@@ -1424,7 +1424,7 @@ function ProfilePage() {
         </div>
         
         {/* Main content area - Responsive margin for mobile/desktop */}
-        <div className="md:ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-20 pl-[0px] pr-[0px]">
+        <div className="md:ml-[236px] flex-1 bg-gray-50/60 p-4 md:p-8 overflow-y-auto pb-24 md:pb-8 pl-[0px] pr-[0px] max-h-screen">
           <div className="max-w-3xl mx-auto space-y-6">
             
             {/* Tab Content - We'll conditionally show different content based on the active sidebar menu item */}
