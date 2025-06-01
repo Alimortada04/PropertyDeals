@@ -18,30 +18,22 @@ import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, ArrowRight, Eye, EyeOff, CheckCircle2, Mail, AlertCircle, Copy, RefreshCw } from "lucide-react";
 import { supabase, checkEmailExists } from "@/lib/supabase";
-import { SiGoogle, SiFacebook, SiApple } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
-// Enhanced password validation
-const passwordSchema = z
-  .string()
-  .min(8, "Password must be at least 8 characters")
-  .refine((val) => /[A-Z]/.test(val), { message: "Must include an uppercase letter" })
-  .refine((val) => /[a-z]/.test(val), { message: "Must include a lowercase letter" })
-  .refine((val) => /\d/.test(val), { message: "Must include a number" });
-
-// Registration schema (username is auto-generated)
 const registerSchema = z
   .object({
-    fullName: z
-      .string()
-      .min(2, "Full name is required")
-      .regex(/^[a-zA-Z\s'-]+$/, "Full name can only contain letters, spaces, hyphens, and apostrophes"),
+    fullName: z.string().min(2, "Full name must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),
-    password: passwordSchema,
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+      ),
     confirmPassword: z.string(),
     agreeToTerms: z.boolean().refine((val) => val === true, {
-      message: "You must agree to the terms and privacy policy",
+      message: "You must agree to the terms of service",
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -146,71 +138,13 @@ export default function RegisterPage() {
   if (user) return <Redirect to="/" />;
 
   const onRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
-    // Reset all state before attempting registration
     setFormError(null);
     setFormSuccess(null);
     setVerificationRequired(false);
     setLoading(true);
-    
-    // Clear any existing email error
     registerForm.clearErrors("email");
 
     try {
-      // Check if the email already exists in the Auth system
-      console.log("Checking if email already exists:", values.email);
-      
-      // Direct check with Supabase Auth Admin API
-      const { data: adminAuthCheck, error: adminAuthError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('email', values.email)
-        .maybeSingle();
-      
-      console.log("Admin auth check result:", { adminAuthCheck, adminAuthError });
-      
-      // If we found a match, the email exists
-      if (adminAuthCheck) {
-        console.log("Email already exists in users table");
-        registerForm.setError("email", {
-          type: "manual",
-          message: "Email already exists. Try signing in instead.",
-        });
-        setLoading(false);
-        // Show toast
-        toast({
-          title: "Email already registered",
-          description: "This email is already registered. Please sign in instead.",
-          variant: "destructive",
-        });
-        return; // Exit early, don't proceed with registration
-      }
-      
-      // Fall back to our checkEmailExists function as a secondary check
-      try {
-        // Pass true as the second parameter to indicate this is a registration check
-        const emailExists = await checkEmailExists(values.email, true);
-        
-        if (emailExists) {
-          console.log("Email already exists via OTP check");
-          registerForm.setError("email", {
-            type: "manual",
-            message: "Email already exists. Try signing in instead.",
-          });
-          setLoading(false);
-          toast({
-            title: "Email already registered",
-            description: "This email is already registered. Please sign in instead.",
-            variant: "destructive",
-          });
-          return; // Exit early
-        }
-        
-        console.log("Email is available, proceeding with registration");
-      } catch (emailCheckError) {
-        // If checks are inconclusive, we'll let Supabase Auth handle duplicates
-        console.log("Email check function failed, relying on Auth API check:", emailCheckError);
-      }
-      
       // 1. Generate a username from the full name
       const baseUsername = generateUsername(values.fullName);
       if (!baseUsername) {
@@ -220,7 +154,7 @@ export default function RegisterPage() {
       const finalUsername = await findAvailableUsername(baseUsername);
       console.log("Generated username:", finalUsername);
       
-      // 2. Use local database registration (bypassing Supabase Auth temporarily)
+      // 2. Use local database registration
       console.log("Using local database registration...");
       
       const response = await fetch("/api/register", {
@@ -244,113 +178,42 @@ export default function RegisterPage() {
       const userData = await response.json();
       console.log("Local registration successful:", userData);
       
-      // Registration successful - set success state
-          localUserError = true;
-        } else {
-          console.log("User created successfully in local database");
-          
-          // 2. Create a matching profile in the profiles table if it exists
-          try {
-            // Try to insert into profiles table (will only work if table exists)
-            const { error: profileError } = await supabase.from("profiles").insert({
-              id: data.user.id, // Use Supabase auth ID
-              user_id: data.user.id,
-              username: finalUsername,
-              full_name: values.fullName,
-              email: values.email,
-              avatar_url: null,
-              active_role: "buyer",
-              roles: { 
-                buyer: { status: "approved" }, 
-                seller: { status: "not_applied" }, 
-                rep: { status: "not_applied" } 
-              },
-              created_at: new Date().toISOString(),
-            });
-            
-            if (profileError) {
-              // If the error is related to table not existing, just log it
-              if (profileError.message?.includes("relation") && profileError.message?.includes("does not exist")) {
-                console.log("Profiles table doesn't exist - skipping profile creation");
-              } else {
-                console.warn("Profile creation failed:", profileError);
-              }
-            } else {
-              console.log("Profile created successfully");
-            }
-          } catch (profileError) {
-            // This might happen if the profiles table doesn't exist
-            console.log("Profile creation error:", profileError);
-          }
-        }
-      } catch (localDbError) {
-        console.error("Error with local database:", localDbError);
-        localUserError = true;
-      }
+      // Registration successful - show success message and redirect
+      setFormSuccess("Account created successfully! You can now sign in.");
+      setVerificationRequired(false);
+      setGeneratedUsername(finalUsername);
+      toast({
+        title: "Registration successful",
+        description: "Your account has been created. You can now sign in.",
+        variant: "default",
+      });
       
-      if (localUserError) {
-        console.warn("User created in Supabase Auth but failed to sync with local database");
-      }
+      // Redirect to sign in page after a short delay
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
 
-      // Step 3: Check if email confirmation is required
-      if (data.user && !data.user.confirmed_at) {
-        setVerificationRequired(true);
-        setGeneratedUsername(finalUsername);
-        setFormSuccess("Account created! Please check your email to verify your account.");
-        toast({
-          title: "Verification required",
-          description: "We've sent a verification link to your email",
-        });
-      } else {
-        // Auto-login on successful registration if verification not required
-        setFormSuccess("Account created successfully!");
-        toast({
-          title: "Registration successful",
-          description: "Your account has been created! Redirecting to dashboard...",
-        });
-        
-        // Show a smooth transition animation before redirecting
-        const overlay = document.createElement('div');
-        overlay.className = 'fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500';
-        overlay.innerHTML = `
-          <div class="text-center">
-            <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#09261E] border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
-            <p class="text-[#09261E] font-medium text-lg">Setting up your account...</p>
-          </div>
-        `;
-        document.body.appendChild(overlay);
-        
-        // Redirect to home page after a short delay
-        setTimeout(() => navigate("/"), 1500);
-      }
     } catch (error: any) {
       console.error("Registration error:", error);
       
-      // Handle user-friendly error messages
-      let errorMessage = error.message || "An unexpected error occurred";
-      
-      // Only set form error if it's not already captured as a field error
-      if (errorMessage.includes("already exists") || errorMessage.includes("already registered")) {
-        // Don't set formError for email errors - these are already handled by the form field
-        // Just set a toast notification
+      // Handle specific error cases
+      if (error.message.includes("already exists") || 
+          error.message.includes("already registered") ||
+          error.message.includes("User already registered")) {
+        registerForm.setError("email", {
+          type: "manual",
+          message: "Email already exists. Try signing in instead.",
+        });
         toast({
           title: "Email already registered",
           description: "This email is already registered. Please sign in instead.",
           variant: "destructive",
         });
-      } else if (errorMessage.includes("sign up")) {
-        errorMessage = "Unable to create your account. Please try again later.";
-        setFormError(errorMessage);
-        toast({
-          title: "Registration failed",
-          description: errorMessage,
-          variant: "destructive",
-        });
       } else {
-        setFormError(errorMessage);
+        setFormError(error.message || "Registration failed. Please try again.");
         toast({
           title: "Registration failed",
-          description: errorMessage,
+          description: error.message || "An error occurred during registration.",
           variant: "destructive",
         });
       }
@@ -359,477 +222,259 @@ export default function RegisterPage() {
     }
   };
 
-  const handleSocialRegistration = async (provider: "google" | "facebook") => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback?type=signup&redirect=/`,
-        },
-      });
-      if (error) throw error;
-    } catch (error: any) {
+  const copyUsername = () => {
+    if (generatedUsername) {
+      navigator.clipboard.writeText(generatedUsername);
       toast({
-        title: "Social login failed",
-        description: error.message || "Problem with your social login",
-        variant: "destructive",
+        title: "Username copied",
+        description: "Your generated username has been copied to clipboard.",
       });
     }
   };
 
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const x = (clientX / width) - 0.5;
-      const y = (clientY / height) - 0.5;
-      setMousePosition({ x, y });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-  
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-6 bg-white overflow-hidden">
-      {/* Background Blobs - Animated with staggered animation */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Primary dark green large blob - top right */}
-        <div
-          className="absolute w-[700px] h-[700px] bg-[#09261E]/40 rounded-full blur-3xl -top-[10%] -right-[10%] animate-breathe"
-          style={{ 
-            transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
-            '--blur-amount': '120px'
-          } as React.CSSProperties}
-        />
-        
-        {/* Wine accent blob - bottom left */}
-        <div
-          className="absolute w-[600px] h-[600px] bg-[#803344]/35 rounded-full blur-3xl -bottom-[15%] -left-[10%] animate-float"
-          style={{ 
-            transform: `translate(${mousePosition.x * 30}px, ${mousePosition.y * -20}px)`,
-          }}
-        />
-        
-        {/* Salmon accent blob - mid center */}
-        <div
-          className="absolute w-[500px] h-[500px] bg-[#E59F9F]/30 rounded-full blur-3xl top-[40%] left-[30%] animate-pulse-slow"
-          style={{ 
-            transform: `translate(${mousePosition.x * -15}px, ${mousePosition.y * 15}px)`,
-          }}
-        />
-        
-        {/* Silver blob - top left */}
-        <div
-          className="absolute w-[400px] h-[400px] bg-[#D8D8D8]/40 rounded-full blur-3xl top-[10%] left-[5%] animate-float-slow"
-          style={{ 
-            transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * 15}px)`,
-          }}
-        />
-      </div>
-      
-      <div className="relative bg-white/90 backdrop-blur-lg p-8 rounded-xl shadow-lg border border-gray-100/50 w-full max-w-md z-10">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-[#09261E] mb-2">Create Your Account</h1>
-          <p className="text-gray-500 text-sm">Join PropertyDeals to discover off-market properties</p>
-        </div>
-        
-        {verificationRequired ? (
-          /* Email Verification Success View */
-          <div className="w-full bg-[#f7f9f7] p-6 rounded-xl border border-gray-100 shadow-sm">
-            {/* Success Icon */}
-            <div className="flex justify-center mb-5">
-              <div className="w-16 h-16 rounded-full bg-[#f0f5f2] flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-[#09261E]" />
-              </div>
-            </div>
-            
-            {/* Headline */}
-            <h2 className="text-2xl font-bold text-center text-[#09261E] mb-3">Verify Your Email</h2>
-            
-            {/* Message */}
-            <p className="text-center text-gray-600 mb-7">
-              We've sent a verification link to <span className="font-medium text-[#09261E]">{registerForm.getValues("email")}</span>. 
-              <br />Please check your inbox to complete your registration.
-            </p>
-            
-            {/* Username Box */}
-            {generatedUsername && (
-              <div className="bg-white p-5 rounded-lg border border-gray-100 mb-8">
-                <p className="text-sm text-gray-700 mb-2">
-                  This is your username — you can change it later in your profile settings.
-                </p>
-                <div className="flex items-center bg-[#f7f9f7] p-3 rounded border border-gray-200">
-                  <p className="text-[#135341] flex-grow font-medium">{generatedUsername}</p>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      navigator.clipboard.writeText(generatedUsername || "");
-                      toast({
-                        title: "Username copied",
-                        description: "Username copied to clipboard"
-                      });
-                    }}
-                    className="text-gray-500 hover:text-[#09261E] hover:bg-[#09261E]/5"
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            )}
-            
-            {/* Email Provider Buttons */}
-            <div className="mb-8">
-              <p className="text-sm text-center text-gray-600 mb-3">Need help checking your inbox?</p>
-              <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
-                <a 
-                  href="https://mail.google.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
-                >
-                  <SiGoogle className="h-4 w-4 text-[#4285F4]" />
-                  <span className="font-medium">Gmail</span>
-                </a>
-                <a 
-                  href="https://outlook.live.com/mail/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
-                >
-                  <Mail className="h-4 w-4 text-[#0078D4]" />
-                  <span className="font-medium">Outlook</span>
-                </a>
-                <a 
-                  href="https://mail.yahoo.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
-                >
-                  <Mail className="h-4 w-4 text-[#6001D2]" />
-                  <span className="font-medium">Yahoo</span>
-                </a>
-                <a 
-                  href="https://www.icloud.com/mail" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors text-sm"
-                >
-                  <SiApple className="h-4 w-4" />
-                  <span className="font-medium">iCloud</span>
-                </a>
-              </div>
-            </div>
-            
-            {/* Resend Button */}
-            <div className="mb-6">
-              <Button 
-                variant="outline"
-                className="w-full border-gray-200 h-11 mb-2 font-medium text-sm gap-2 hover:bg-gray-50"
-                onClick={async () => {
-                  const email = registerForm.getValues("email");
-                  if (!email) return;
-                  
-                  try {
-                    const { error } = await supabase.auth.resend({
-                      type: 'signup',
-                      email,
-                      options: {
-                        emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
-                      }
-                    });
-                    
-                    if (error) throw error;
-                    
-                    toast({
-                      title: "Verification email resent",
-                      description: "Please check your inbox for the new verification link.",
-                    });
-                  } catch (error: any) {
-                    console.error("Failed to resend verification:", error);
-                    toast({
-                      title: "Failed to resend verification",
-                      description: error.message || "Please try again or contact support.",
-                      variant: "destructive",
-                    });
-                  }
-                }}
-              >
-                <RefreshCw className="h-4 w-4" />
-                Resend verification email
-              </Button>
-              <p className="text-xs text-center text-gray-500">
-                Didn't receive the email? Click above to resend it.
-              </p>
-            </div>
-            
-            {/* CTA Button */}
-            <Button 
-              onClick={() => navigate("/signin")}
-              className="w-full h-12 bg-[#09261E] hover:bg-[#0c3a2d] text-white font-medium inline-flex items-center justify-center"
-            >
-              Go to Sign In
-              <ArrowRight className="ml-2 h-4 w-4" />
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+            <p className="text-gray-600">Join PropertyDeals today</p>
+          </div>
+
+          {/* Social Login Buttons */}
+          <div className="space-y-3 mb-6">
+            <Button variant="outline" className="w-full h-12 text-sm font-medium">
+              <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Continue with Google
+            </Button>
+
+            <Button variant="outline" className="w-full h-12 text-sm font-medium">
+              <svg className="w-5 h-5 mr-3" fill="#1877F2" viewBox="0 0 24 24">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+              Continue with Facebook
             </Button>
           </div>
-        ) : (
-          <>
-            {/* Field-Level Email Error Message */}
-            {registerForm.formState.errors.email && registerForm.formState.errors.email.message?.includes("already exists") && (
-              <div className="border border-red-300 rounded-md p-3 mb-4 bg-red-50 flex items-start gap-2">
-                <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-red-700 text-sm font-medium">Email already registered</p>
-                  <p className="text-red-600 text-xs mt-1">
-                    An account with this email already exists, please <Link to="/signin" className="underline font-medium">sign in</Link> instead.
-                  </p>
-                </div>
-              </div>
-            )}
-            
-            {/* Success Message (non-verification case) */}
-            {formSuccess && !verificationRequired && (
-              <Alert className="mb-6 bg-green-50 border-green-200 text-green-800">
-                <CheckCircle2 className="h-4 w-4" />
-                <AlertTitle className="text-green-800 font-medium">Success</AlertTitle>
-                <AlertDescription className="text-green-700">{formSuccess}</AlertDescription>
-              </Alert>
-            )}
 
-            {/* Social Login Buttons */}
-            <div className="space-y-3 mb-6">
-              <Button
-                type="button"
-                onClick={() => handleSocialRegistration("google")}
-                variant="outline"
-                className="w-full h-11 border-gray-200 hover:bg-red-50 hover:border-red-200 transition-all group"
-              >
-                <SiGoogle className="mr-2 text-[#4285F4] group-hover:scale-110 transition-transform" /> 
-                <span className="group-hover:text-gray-800 transition-colors">Continue with Google</span>
-              </Button>
-              <Button
-                type="button"
-                onClick={() => handleSocialRegistration("facebook")}
-                variant="outline"
-                className="w-full h-11 border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-all group"
-              >
-                <SiFacebook className="mr-2 text-[#1877F2] group-hover:scale-110 transition-transform" /> 
-                <span className="group-hover:text-gray-800 transition-colors">Continue with Facebook</span>
-              </Button>
+          <div className="relative mb-6">
+            <div className="absolute inset-0 flex items-center">
+              <Separator className="w-full" />
             </div>
-
-            {/* Separator */}
-            <div className="relative mb-6">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-2 text-gray-500">OR CONTINUE WITH EMAIL</span>
-              </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-2 text-gray-500">Or continue with email</span>
             </div>
+          </div>
 
-            {/* Registration Form */}
-            <Form {...registerForm}>
-              <form
-                onSubmit={registerForm.handleSubmit(onRegisterSubmit)}
-                className="space-y-4"
-                noValidate
-              >
-                {/* Full Name Field */}
-                <FormField
-                  name="fullName"
-                  control={registerForm.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input 
-                          {...field} 
-                          className="h-11" 
-                          placeholder="John Doe"
-                          aria-required="true"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <Form {...registerForm}>
+            <form onSubmit={registerForm.handleSubmit(onRegisterSubmit)} className="space-y-4">
+              <FormField
+                control={registerForm.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700">Full Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        placeholder="Vinci"
+                        className="h-12 text-base"
+                        disabled={loading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                {/* Email Field */}
-                <FormField
-                  name="email"
-                  control={registerForm.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email Address</FormLabel>
-                      <FormControl>
+              <FormField
+                control={registerForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700">Email Address</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="thevincimarketing@gmail.com"
+                        className="h-12 text-base"
+                        disabled={loading}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={registerForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700">Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
                         <Input
                           {...field}
-                          type="email"
-                          className="h-11"
-                          placeholder="you@example.com"
-                          onChange={(e) => {
-                            field.onChange(e);
-                            // Clear any manual errors when the user types
-                            if (registerForm.formState.errors.email?.type === "manual") {
-                              registerForm.clearErrors("email");
-                            }
-                          }}
-                          onBlur={(e) => {
-                            field.onBlur();
-                            // Don't check for duplicates on every blur - too aggressive
-                            // This will now happen only on form submission
-                          }}
-                          aria-required="true"
-                          aria-invalid={!!registerForm.formState.errors.email}
-                          aria-describedby={!!registerForm.formState.errors.email ? "email-error" : undefined}
+                          type={showPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          className="h-12 text-base pr-12"
+                          disabled={loading}
                         />
-                      </FormControl>
-                      <FormMessage id="email-error" />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Password Field */}
-                <FormField
-                  name="password"
-                  control={registerForm.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            className="h-11 pr-16"
-                            placeholder="••••••••"
-                            {...field}
-                            aria-required="true"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-700 p-1 rounded"
-                            aria-label={showPassword ? "Hide password" : "Show password"}
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-4 w-4" />
-                            ) : (
-                              <Eye className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                      <FormDescription className="text-xs text-gray-500">
-                        8+ characters with uppercase, lowercase, and numbers
-                      </FormDescription>
-                    </FormItem>
-                  )}
-                />
-
-                {/* Confirm Password Field */}
-                <FormField
-                  name="confirmPassword"
-                  control={registerForm.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showConfirmPassword ? "text" : "password"}
-                            className="h-11 pr-16"
-                            placeholder="••••••••"
-                            {...field}
-                            aria-required="true"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-700 p-1 rounded"
-                            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                          >
-                            {showConfirmPassword ? (
-                              <EyeOff className="h-4 w-4" />
-                            ) : (
-                              <Eye className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {/* Terms Checkbox */}
-                <FormField
-                  name="agreeToTerms"
-                  control={registerForm.control}
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md p-4 bg-gray-50">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="mt-0.5 data-[state=checked]:bg-[#09261E] data-[state=checked]:border-[#09261E] transition-all hover:border-[#09261E]"
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-sm font-normal">
-                          I agree to the <Link to="/legal/terms" className="text-[#135341] hover:underline">Terms of Service</Link> and <Link to="/legal/privacy" className="text-[#135341] hover:underline">Privacy Policy</Link>
-                        </FormLabel>
-                        <FormMessage />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                          onClick={() => setShowPassword(!showPassword)}
+                          disabled={loading}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4 text-gray-400" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-gray-400" />
+                          )}
+                        </Button>
                       </div>
-                    </FormItem>
-                  )}
-                />
+                    </FormControl>
+                    <FormDescription className="text-xs text-gray-500">
+                      8+ characters with uppercase, lowercase, and numbers
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                {/* Submit Button */}
-                <Button 
-                  type="submit" 
-                  className="w-full h-12 mt-2 bg-[#09261E] hover:bg-[#0c3a2d] text-white"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <div className="flex items-center justify-center">
-                      <Loader2 className="h-5 w-5 animate-spin mr-2" /> 
-                      <span>Creating Account...</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center">
-                      <span>Create Account</span>
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </div>
-                  )}
-                </Button>
-              </form>
-            </Form>
-            
-            {/* Username hint message */}
-            {!verificationRequired && registerForm.watch("fullName") && registerForm.watch("fullName").length > 2 && (
-              <div className="mt-3 border border-gray-200 rounded-md bg-[#f7fff9] p-3 flex items-center">
-                <CheckCircle2 className="h-4 w-4 text-green-600 mr-2 flex-shrink-0" />
-                <p className="text-xs text-gray-700">
-                  A unique username will be automatically generated from your name when you register
-                </p>
-              </div>
-            )}
+              <FormField
+                control={registerForm.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-gray-700">Confirm Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="••••••••"
+                          className="h-12 text-base pr-12"
+                          disabled={loading}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          disabled={loading}
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff className="h-4 w-4 text-gray-400" />
+                          ) : (
+                            <Eye className="h-4 w-4 text-gray-400" />
+                          )}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Footer */}
-            <p className="text-sm text-center mt-6 text-gray-600">
+              <FormField
+                control={registerForm.control}
+                name="agreeToTerms"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                        disabled={loading}
+                        className="mt-1"
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-sm text-gray-700">
+                        I agree to the{" "}
+                        <Link href="/terms" className="text-green-600 hover:text-green-700 underline">
+                          Terms of Service
+                        </Link>{" "}
+                        and{" "}
+                        <Link href="/privacy" className="text-green-600 hover:text-green-700 underline">
+                          Privacy Policy
+                        </Link>
+                      </FormLabel>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                className="w-full h-12 bg-green-600 hover:bg-green-700 text-white font-medium text-base"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Creating Account...
+                  </>
+                ) : (
+                  <>
+                    Create Account
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </>
+                )}
+              </Button>
+
+              {generatedUsername && (
+                <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-sm text-green-700">
+                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      A unique username will be automatically generated from your name when you register
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {formError && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center text-sm text-red-700">
+                    <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span>{formError}</span>
+                  </div>
+                </div>
+              )}
+
+              {formSuccess && (
+                <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center text-sm text-green-700">
+                    <CheckCircle2 className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span>{formSuccess}</span>
+                  </div>
+                </div>
+              )}
+            </form>
+          </Form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <Link to="/signin" className="text-[#135341] font-medium hover:underline">
+              <Link href="/signin" className="text-green-600 hover:text-green-700 font-medium">
                 Sign in
               </Link>
             </p>
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
