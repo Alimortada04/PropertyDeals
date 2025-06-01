@@ -48,6 +48,7 @@ import {
   uploadProofOfFunds,
   type BuyerProfile 
 } from "@/lib/buyer-profile";
+import { useSellerProfile } from "@/hooks/useSellerProfile";
 
 // Import icons
 import {
@@ -202,6 +203,9 @@ function ProfilePage() {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
+  
+  // Seller profile hook
+  const { profile: sellerProfile, loading: sellerLoading, updateSellerProfile, getSellerStatus } = useSellerProfile();
 
 
   
@@ -215,10 +219,11 @@ function ProfilePage() {
   const [isProfileSectionModified, setIsProfileSectionModified] = useState(false);
   const [isPropertySectionModified, setIsPropertySectionModified] = useState(false);
   const [isProfessionalSectionModified, setIsProfessionalSectionModified] = useState(false);
+  const [isSellerSectionModified, setIsSellerSectionModified] = useState(false);
   
   // Determine active tab from URL (either from hash or path segments)
   const initialTab = useMemo(() => {
-    const validTabs = ["account", "property_preferences", "connections", "notifications", "integrations", "connected", "memberships", "security", "help"];
+    const validTabs = ["account", "seller_settings", "property_preferences", "connections", "notifications", "integrations", "connected", "memberships", "security", "help"];
     
     // Check hash-based routing first (#help, #account, etc.)
     if (location.includes('#')) {
@@ -1122,6 +1127,15 @@ function ProfilePage() {
                 active={activeTab === "account"}
                 onClick={() => handleTabChange("account")}
               />
+              
+              {sellerProfile && (
+                <ProfileMenuItem
+                  icon={<Briefcase size={18} />}
+                  label="Seller Settings"
+                  active={activeTab === "seller_settings"}
+                  onClick={() => handleTabChange("seller_settings")}
+                />
+              )}
               
               <ProfileMenuItem
                 icon={<Building size={18} />}
