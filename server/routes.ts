@@ -151,17 +151,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     try {
+      console.log("Incoming request body:", JSON.stringify(req.body, null, 2));
+      
       const profileData = insertPropertyProfileSchema.parse({
         ...req.body,
-        sellerId: req.isAuthenticated() ? req.user.id : 1,
-        createdBy: req.isAuthenticated() ? req.user.id : 1,
+        seller_id: req.body.seller_id || (req.isAuthenticated() ? req.user.id : "temp-user-id"),
         status: req.body.status || "draft"
       });
+      
+      console.log("Parsed profile data:", JSON.stringify(profileData, null, 2));
       
       const profile = await storage.createPropertyProfile(profileData);
       res.status(201).json(profile);
     } catch (error) {
       console.error("Property profile creation error:", error);
+      if (error && typeof error === 'object' && 'issues' in error) {
+        console.error("Validation issues:", JSON.stringify(error.issues, null, 2));
+      }
       res.status(400).json({ message: "Invalid property profile data", error: error instanceof Error ? error.message : String(error) });
     }
   });
