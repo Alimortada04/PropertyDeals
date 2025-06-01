@@ -73,6 +73,33 @@ export interface PropertyProfile {
   published_at?: string;
 }
 
+// File upload utility function
+const uploadFileToSupabase = async (file: File, bucket: string, folder: string): Promise<string | null> => {
+  try {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `${folder}/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file);
+
+    if (error) {
+      console.error('File upload error:', error);
+      return null;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  } catch (error) {
+    console.error('File upload failed:', error);
+    return null;
+  }
+};
+
 export function usePropertyProfile() {
   const { user, supabaseUser } = useAuth();
   const { toast } = useToast();
@@ -142,84 +169,75 @@ export function usePropertyProfile() {
     }
   };
 
-  // Clean property data to match actual database schema (snake_case)
+  // Clean property data to match Supabase schema exactly
   const cleanPropertyPayload = (data: any, userId: string) => {
     return {
-      // Required fields - match actual database schema
-      seller_id: userId,
-      created_by: userId, // database uses created_by with UUID
+      // Required fields
+      created_by: userId,
       status: 'draft',
       is_public: false,
-      featured_property: false,
+      featured_property: data.featuredProperty || false,
       
-      // Basic property info - match actual database field names (snake_case)
+      // Basic property info - exact field mapping per your requirements
       name: data.name || null,
       address: data.address || null,
       city: data.city || null,
       state: data.state || null,
-      zip_code: data.zipCode || null, // database uses zip_code
+      zipcode: data.zipCode || null, // zipCode → zipcode
       county: data.county || null,
-      parcel_id: data.parcelId || null, // database uses parcel_id
-      property_type: data.propertyType || null, // database uses property_type
+      parcel_id: data.parcelId || null, // parcelId → parcel_id
+      property_type: data.propertyType || null, // propertyType → property_type
       bedrooms: data.bedrooms ? Number(data.bedrooms) : null,
       bathrooms: data.bathrooms ? Number(data.bathrooms) : null,
-      sqft: data.sqft ? Number(data.sqft) : null,
-      square_feet: data.sqft ? Number(data.sqft) : null, // database has both sqft and square_feet
-      lot_size: data.lotSize || null, // database uses lot_size
-      year_built: data.yearBuilt ? Number(data.yearBuilt) : null, // database uses year_built
+      sqft: data.sqft ? Number(data.sqft) : null, // Square Footage → sqft
+      lot_size: data.lotSize || null, // lotSize → lot_size
+      year_built: data.yearBuilt ? Number(data.yearBuilt) : null, // yearBuilt → year_built
       parking: data.parking || null,
-      condition: data.condition || null,
-      occupancy_status: data.occupancyStatus || null, // database uses occupancy_status
+      property_condition: data.condition || null, // condition → property_condition
       
-      // Media - match actual database field names
-      primary_image: data.primaryImage || null, // database uses primary_image
-      gallery_images: data.galleryImages || [], // database uses gallery_images
-      images: data.galleryImages || [], // database also has images field
-      video_walkthrough: data.videoWalkthrough || null, // database uses video_walkthrough
-      video_url: data.videoWalkthrough || null, // database also has video_url
+      // Media fields - upload files first, store URLs
+      primary_image: data.primaryImage || null, // Upload file → store URL
+      gallery_images: Array.isArray(data.galleryImages) ? data.galleryImages : [], // Upload files → store URL array
+      video_walkthrough: data.videoWalkthrough || null, // Upload file or link → store URL
       
-      // Financial details - match actual database field names
-      arv: data.arv ? Number(data.arv) : null,
-      rent_total_monthly: data.rentTotalMonthly ? Number(data.rentTotalMonthly) : null, // database uses rent_total_monthly
-      monthly_rent: data.rentTotalMonthly ? Number(data.rentTotalMonthly) : null, // database also has monthly_rent
-      rent_total_annual: data.rentTotalAnnual ? Number(data.rentTotalAnnual) : null, // database uses rent_total_annual
-      rent_unit: data.rentUnit || [], // database uses rent_unit
-      rental_units: data.rentUnit || [], // database also has rental_units
-      expenses_total_monthly: data.expensesTotalMonthly ? Number(data.expensesTotalMonthly) : null, // database uses expenses_total_monthly
-      expenses_total_annual: data.expensesTotalAnnual ? Number(data.expensesTotalAnnual) : null, // database uses expenses_total_annual
-      expense_items: data.expenseItems || [], // database uses expense_items
-      expenses: data.expenseItems || [], // database also has expenses
+      // Financial details
+      arv: data.arv ? Number(String(data.arv).replace(/[^0-9.]/g, '')) : null, // After Repair Value → arv
+      rent_total_monthly: data.rentTotalMonthly ? Number(String(data.rentTotalMonthly).replace(/[^0-9.]/g, '')) : null, // Total Monthly Rent → rent_total_monthly
+      rent_units: Array.isArray(data.rentUnit) ? data.rentUnit : [], // Unit Rent Breakdown → rent_units
+      expense_items: Array.isArray(data.expenseItems) ? data.expenseItems : [], // Expenses → expense_items
       
-      // Deal information - match actual database field names
-      access_type: data.accessType || null, // database uses access_type
-      access_instructions: data.accessType || null, // database also has access_instructions
-      closing_date: data.closingDate ? data.closingDate.toISOString().split('T')[0] : null, // database stores as text date
-      comps: data.comps || [],
-      purchase_agreement: data.purchaseAgreement || null, // database uses purchase_agreement
-      assignment_agreement: data.assignmentAgreement || null, // database uses assignment_agreement
+      // Deal information
+      purchase_price: data.purchasePrice ? Number(String(data.purchasePrice).replace(/[^0-9.]/g, '')) : null, // Purchase Price → purchase_price
+      listing_price: data.listingPrice ? Number(String(data.listingPrice).replace(/[^0-9.]/g, '')) : null, // Listing Price → listing_price
+      assignment_fee: data.assignmentFee ? Number(String(data.assignmentFee).replace(/[^0-9.]/g, '')) : null, // Assignment Fee → assignment_fee
+      closing_date: data.closingDate ? (data.closingDate instanceof Date ? data.closingDate.toISOString().split('T')[0] : data.closingDate) : null, // Closing Date → closing_date
+      access_type: data.accessType || null, // Access Type → access_type
       
-      // Pricing - match actual database field names
-      purchase_price: data.purchasePrice ? Number(String(data.purchasePrice).replace(/[^0-9]/g, '')) : null, // database uses purchase_price
-      listing_price: data.listingPrice ? Number(String(data.listingPrice).replace(/[^0-9]/g, '')) : null, // database uses listing_price
-      assignment_fee: data.assignmentFee ? Number(String(data.assignmentFee).replace(/[^0-9]/g, '')) : null, // database uses assignment_fee
+      // Structured data fields
+      repair_projects: Array.isArray(data.repairProjects) ? data.repairProjects.map((project: any) => ({
+        project_name: project.project_name || project.name || '',
+        description: project.description || '',
+        estimated_cost: project.estimated_cost ? Number(project.estimated_cost) : 0,
+        supporting_file_url: project.supporting_file_url || project.fileUrl || ''
+      })) : [], // Repairs & Renovations → repair_projects (structured array)
       
-      // Additional details - match actual database field names
-      repair_projects: data.repairProjects || [], // database uses repair_projects
-      repairs: data.repairProjects || [], // database also has repairs
-      repair_costs_total: data.repairCostsTotal ? Number(data.repairCostsTotal) : null, // database uses repair_costs_total
-      estimated_repairs: data.repairCostsTotal ? Number(data.repairCostsTotal) : null, // database also has estimated_repairs
-      jv_partners: data.jvPartners || [], // database uses jv_partners
-      partners: data.jvPartners || [], // database also has partners
-      description: data.description || null,
-      additional_notes: data.additionalNotes || null, // database uses additional_notes
-      notes: data.additionalNotes || null, // database also has notes
-      tags: data.tags || [],
+      comps: Array.isArray(data.comps) ? data.comps : [], // Comparable Properties → comps
+      additional_notes: data.additionalNotes || data.notes || null, // Additional Notes → additional_notes
+      description: data.description || null, // Property Description → description
+      tags: Array.isArray(data.tags) ? data.tags : [],
       
-      // Visibility and stats - match actual database field names
-      view_count: 0, // database uses view_count
-      save_count: 0, // database uses save_count
-      offer_count: 0, // database uses offer_count
-      offer_ids: [], // database uses offer_ids
+      // File uploads - store URLs after upload
+      purchase_agreement: data.purchaseAgreement || null, // Upload file → store URL
+      assignment_agreement: data.assignmentAgreement || null, // Upload file → store URL
+      
+      // UUID arrays
+      jv_partners: Array.isArray(data.jvPartners) ? data.jvPartners.filter((id: any) => id && typeof id === 'string') : [], // Deal Partners → jv_partners (uuid[])
+      offer_ids: Array.isArray(data.offerIds) ? data.offerIds.filter((id: any) => id && typeof id === 'string') : [], // offer_ids (uuid[])
+      
+      // Stats (initialize to 0)
+      view_count: 0,
+      save_count: 0,
+      offer_count: 0,
     };
   };
 
