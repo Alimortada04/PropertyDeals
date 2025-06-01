@@ -448,10 +448,10 @@ export function usePropertyProfile() {
     }
   };
 
-  // Load properties when user changes
+  // Load properties when user changes - use default status filters
   useEffect(() => {
     if (user?.id) {
-      fetchSellerProperties();
+      fetchSellerProperties(['draft', 'live', 'under contract']);
     } else {
       setProperties([]);
     }
@@ -469,7 +469,11 @@ export function usePropertyProfile() {
     
     // Computed values
     draftProperties: properties.filter(p => p.status === 'draft'),
-    activeProperties: properties.filter(p => p.status === 'active'),
+    liveProperties: properties.filter(p => p.status === 'live'),
+    underContractProperties: properties.filter(p => p.status === 'under contract'),
+    closedProperties: properties.filter(p => p.status === 'closed'),
+    droppedProperties: properties.filter(p => p.status === 'dropped'),
+    archivedProperties: properties.filter(p => p.status === 'archived'),
     totalProperties: properties.length,
   };
 }
