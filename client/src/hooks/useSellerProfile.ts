@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
 export type SellerStatus = 'none' | 'pending' | 'rejected' | 'paused' | 'active';
@@ -35,22 +35,55 @@ export interface SellerProfileData {
   createdAt?: string;
 }
 
-// Simple cache to prevent flickering
-let cachedProfile: SellerProfileData | null = null;
-let cacheExpiry: number = 0;
+// Cache key for localStorage
+const SELLER_PROFILE_CACHE_KEY = 'seller_profile_cache';
 const CACHE_DURATION = 30000; // 30 seconds
 
+// Helper functions for localStorage cache
+const getCachedProfile = (): SellerProfileData | null => {
+  try {
+    const cached = localStorage.getItem(SELLER_PROFILE_CACHE_KEY);
+    if (!cached) return null;
+    
+    const { data, timestamp } = JSON.parse(cached);
+    if (Date.now() - timestamp > CACHE_DURATION) {
+      localStorage.removeItem(SELLER_PROFILE_CACHE_KEY);
+      return null;
+    }
+    
+    return data;
+  } catch {
+    return null;
+  }
+};
+
+const setCachedProfile = (profile: SellerProfileData | null) => {
+  try {
+    if (profile) {
+      localStorage.setItem(SELLER_PROFILE_CACHE_KEY, JSON.stringify({
+        data: profile,
+        timestamp: Date.now()
+      }));
+    } else {
+      localStorage.removeItem(SELLER_PROFILE_CACHE_KEY);
+    }
+  } catch {
+    // Ignore storage errors
+  }
+};
+
 export const useSellerProfile = () => {
-  const [profile, setProfile] = useState<SellerProfileData | null>(cachedProfile);
-  const [loading, setLoading] = useState(!cachedProfile);
+  const cachedData = getCachedProfile();
+  const [profile, setProfile] = useState<SellerProfileData | null>(cachedData);
+  const [loading, setLoading] = useState(!cachedData);
   const [error, setError] = useState<string | null>(null);
-  const hasFetched = useRef(false);
 
   const fetchSellerProfile = async () => {
     try {
       // Check cache first
-      if (cachedProfile && Date.now() < cacheExpiry) {
-        setProfile(cachedProfile);
+      const cached = getCachedProfile();
+      if (cached) {
+        setProfile(cached);
         setLoading(false);
         return;
       }
@@ -62,7 +95,7 @@ export const useSellerProfile = () => {
       
       if (!user) {
         setProfile(null);
-        cachedProfile = null;
+        setCachedProfile(null);
         setLoading(false);
         return;
       }
@@ -106,12 +139,11 @@ export const useSellerProfile = () => {
         };
         
         // Update cache
-        cachedProfile = profileData;
-        cacheExpiry = Date.now() + CACHE_DURATION;
+        setCachedProfile(profileData);
         setProfile(profileData);
       } else {
         setProfile(null);
-        cachedProfile = null;
+        setCachedProfile(null);
       }
     } catch (err) {
       console.error('Error fetching seller profile:', err);
@@ -166,8 +198,7 @@ export const useSellerProfile = () => {
         createdAt: data.created_at
       };
       
-      cachedProfile = createdProfile;
-      cacheExpiry = Date.now() + CACHE_DURATION;
+      setCachedProfile(createdProfile);
       setProfile(createdProfile);
 
       return data;
@@ -219,8 +250,7 @@ export const useSellerProfile = () => {
           ...profileData
         };
         
-        cachedProfile = updatedProfile;
-        cacheExpiry = Date.now() + CACHE_DURATION;
+        setCachedProfile(updatedProfile);
         setProfile(updatedProfile);
       }
 
@@ -256,13 +286,17 @@ export const useSellerProfile = () => {
   };
 
   const refetch = () => {
-    queryClient.invalidateQueries({ queryKey: ['seller-profile'] });
+    fetchSellerProfile();
   };
+
+  useEffect(() => {
+    fetchSellerProfile();
+  }, []);
 
   return {
     profile,
     loading,
-    error: error as Error | null,
+    error,
     createSellerProfile,
     updateSellerProfile,
     getSellerStatus,
