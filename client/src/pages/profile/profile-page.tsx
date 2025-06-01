@@ -213,7 +213,9 @@ function ProfilePage() {
   useEffect(() => {
     const checkSellerProfile = async () => {
       if (user?.id) {
+        console.log('Checking seller status for user:', user.id);
         const status = await getSellerStatus();
+        console.log('Seller status result:', status);
         setHasSellerProfile(status !== 'none');
       }
     };
