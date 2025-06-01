@@ -220,7 +220,7 @@ export default function MobileBottomNav() {
   return (
     <>
       {/* Mobile Bottom Navigation - Only visible on screens < 768px */}
-      <div className="fixed bottom-0 left-0 right-0 md:hidden z-40 bg-white border-t border-gray-200 shadow-lg rounded-t-2xl" 
+      <div className="fixed bottom-0 left-0 right-0 md:hidden z-[100] bg-white border-t border-gray-200 shadow-lg rounded-t-2xl" 
            style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <div className="flex items-center justify-around h-16 px-2">
           {navItems.map((item, index) => {
