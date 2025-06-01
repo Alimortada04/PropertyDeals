@@ -220,64 +220,31 @@ export default function RegisterPage() {
       const finalUsername = await findAvailableUsername(baseUsername);
       console.log("Generated username:", finalUsername);
       
-      // 2. Call Supabase Auth signup directly
-      console.log("Attempting registration with Supabase Auth...");
-      const { data, error } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-        options: {
-          data: {
-            full_name: values.fullName,
-            username: finalUsername,
-          },
-          emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
+      // 2. Use local database registration (bypassing Supabase Auth temporarily)
+      console.log("Using local database registration...");
+      
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      });
-
-      if (error) {
-        console.error("Supabase signup error:", error);
-        // Handle specific error cases
-        if (error.message.includes("already exists") || 
-            error.message.includes("already registered") ||
-            error.message.includes("User already registered")) {
-          registerForm.setError("email", {
-            type: "manual",
-            message: "Email already exists. Try signing in instead.",
-          });
-          setLoading(false);
-          toast({
-            title: "Email already registered",
-            description: "This email is already registered. Please sign in instead.",
-            variant: "destructive",
-          });
-          return; // Exit early and don't throw error, so user stays on same page
-        } else {
-          throw new Error(error.message);
-        }
-      }
-      
-      console.log("Supabase signup successful:", data);
-      
-      if (!data.user) {
-        throw new Error("Failed to create user account");
-      }
-      
-      // Step 2: Create both a user record and profile record
-      let localUserError = false;
-      
-      try {
-        // 1. Create user in the users table
-        const { error: userError } = await supabase.from("users").insert({
+        body: JSON.stringify({
           username: finalUsername,
-          password: values.password, // This is a duplicate but required by our schema
+          password: values.password,
           fullName: values.fullName,
           email: values.email,
-          userType: "buyer", // Using userType as per the actual database schema
-          isAdmin: false
-        });
-        
-        if (userError) {
-          console.log("Local user creation failed, but auth account was created:", userError);
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Registration failed");
+      }
+
+      const userData = await response.json();
+      console.log("Local registration successful:", userData);
+      
+      // Registration successful - set success state
           localUserError = true;
         } else {
           console.log("User created successfully in local database");
