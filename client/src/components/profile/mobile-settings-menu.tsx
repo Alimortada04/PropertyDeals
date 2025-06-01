@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'wouter';
 import { 
   User, 
@@ -8,14 +8,20 @@ import {
   Wrench, 
   CreditCard, 
   HelpCircle, 
-  ArrowRight 
+  ArrowRight,
+  LogIn
 } from 'lucide-react';
+import { useAuth } from '@/hooks/use-auth';
+import AuthModal from '@/components/auth/auth-modal';
 
 interface MobileSettingsMenuProps {
   currentSection?: string;
 }
 
 const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
+  const { user } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  
   const settingsItems = [
     {
       id: 'account',
@@ -99,7 +105,39 @@ const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
             </Link>
           );
         })}
+        
+        {/* Login Button - Only show if user is not authenticated */}
+        {!user && (
+          <div 
+            onClick={() => setShowAuthModal(true)}
+            className="bg-white rounded-lg border border-gray-200 p-4 active:bg-gray-50 transition-colors min-h-[48px] flex items-center justify-between mt-[5px] mb-[5px] cursor-pointer"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="flex-shrink-0">
+                <LogIn className="h-5 w-5 text-[#135341]" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-medium text-gray-900 truncate">
+                  Login
+                </p>
+                <p className="text-sm text-gray-500 truncate">
+                  Sign in to your account
+                </p>
+              </div>
+            </div>
+            <ArrowRight className="h-4 w-4 text-gray-400" />
+          </div>
+        )}
       </div>
+      
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)} 
+        hideCloseButton={false}
+        title="Sign In"
+        description="Sign in to your PropertyDeals account"
+      />
 
     </div>
   );
