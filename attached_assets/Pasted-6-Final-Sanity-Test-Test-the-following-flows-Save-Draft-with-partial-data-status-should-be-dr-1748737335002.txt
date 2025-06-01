@@ -1,0 +1,59 @@
+6. ✅ Final Sanity Test
+Test the following flows:
+
+ Save Draft with partial data (status should be draft)
+
+ Submit full listing (status should be active)
+
+ Confirm the listing appears in Seller Dashboard with correct data
+
+ Confirm all optional fields handle null or empty values gracefully
+
+✅ Optional Utility: Clean Payload Function
+Create a utility function to clean up the raw form data before submission:
+
+ts
+Copy
+Edit
+function cleanPropertyPayload(form, userId) {
+  return {
+    created_by: userId,
+    status: isComplete(form) ? "active" : "draft",
+    name: form.name || null,
+    address: form.address || null,
+    city: form.city || null,
+    state: form.state || null,
+    zipcode: form.zipcode || null,
+    bedrooms: form.bedrooms || null,
+    bathrooms: form.bathrooms || null,
+    year_built: form.year_built || null,
+    sqft: form.sqft || null,
+    lot_size: form.lot_size || null,
+    parking: form.parking || null,
+    county: form.county || null,
+    parcel_id: form.parcel_id || null,
+    primary_image: form.primary_image || null,
+    gallery_images: form.gallery_images || [],
+    video_walkthrough: form.video_walkthrough || null,
+    rent_total_monthly: Number(form.rent_total_monthly) || null,
+    rent_total_annual: Number(form.rent_total_annual) || null,
+    rent_units: form.rent_units || [],
+    expenses_total_monthly: Number(form.expenses_total_monthly) || null,
+    expenses_total_annual: Number(form.expenses_total_annual) || null,
+    expense_items: form.expense_items || [],
+    property_condition: form.property_condition || null,
+    repair_projects: form.repair_projects || [],
+    repair_costs_total: Number(form.repair_costs_total) || null,
+    purchase_price: Number(form.purchase_price) || null,
+    listing_price: Number(form.listing_price) || null,
+    assignment_fee: Number(form.assignment_fee) || null,
+    access_type: form.access_type || null,
+    closing_date: form.closing_date || null,
+    arv: Number(form.arv) || null,
+    comps: form.comps || null,
+    description: form.description || null,
+    additional_notes: form.additional_notes || null,
+    jv_partners: form.jv_partners || [],
+    offer_ids: form.offer_ids || null,
+  };
+}
