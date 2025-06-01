@@ -1084,7 +1084,7 @@ function ProfilePage() {
       <div className="flex flex-1">
         {/* Settings Menu Sidebar - hidden on mobile, fixed on desktop */}
         <div 
-          className="hidden md:block w-[220px] fixed top-0 left-16 bg-white border-r flex flex-col shadow-sm z-[300]" 
+          className="hidden md:block w-[220px] fixed top-0 left-16 bg-white border-r flex flex-col shadow-sm z-[30]" 
           style={{
             height: 'calc(100vh - 64px) !important',
             maxHeight: 'calc(100vh - 64px) !important'

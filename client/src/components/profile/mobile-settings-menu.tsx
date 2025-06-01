@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'wouter';
 import { 
   User, 
@@ -32,9 +32,12 @@ interface MobileSettingsMenuProps {
 
 const MobileSettingsMenu = ({ currentSection }: MobileSettingsMenuProps) => {
   const { logoutMutation } = useAuth();
-  const { profile: sellerProfile } = useSellerProfile();
+  const { profile: sellerProfile, loading: sellerLoading } = useSellerProfile();
   
-  const hasSellerProfile = sellerProfile && sellerProfile.status === 'active';
+  // Check if user has seller profile for stable menu visibility - matches desktop logic
+  const hasSellerProfile = useMemo(() => {
+    return !sellerLoading && sellerProfile !== null && sellerProfile.status === 'active';
+  }, [sellerProfile, sellerLoading]);
 
   const baseSettingsItems = [
     {
