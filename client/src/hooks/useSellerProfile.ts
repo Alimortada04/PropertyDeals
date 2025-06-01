@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 
 export type SellerStatus = 'none' | 'pending' | 'rejected' | 'paused' | 'active';
@@ -35,13 +35,26 @@ export interface SellerProfileData {
   createdAt?: string;
 }
 
+// Simple cache to prevent flickering
+let cachedProfile: SellerProfileData | null = null;
+let cacheExpiry: number = 0;
+const CACHE_DURATION = 30000; // 30 seconds
+
 export const useSellerProfile = () => {
-  const [profile, setProfile] = useState<SellerProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<SellerProfileData | null>(cachedProfile);
+  const [loading, setLoading] = useState(!cachedProfile);
   const [error, setError] = useState<string | null>(null);
+  const hasFetched = useRef(false);
 
   const fetchSellerProfile = async () => {
     try {
+      // Check cache first
+      if (cachedProfile && Date.now() < cacheExpiry) {
+        setProfile(cachedProfile);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError(null);
 
@@ -49,6 +62,7 @@ export const useSellerProfile = () => {
       
       if (!user) {
         setProfile(null);
+        cachedProfile = null;
         setLoading(false);
         return;
       }
@@ -65,7 +79,7 @@ export const useSellerProfile = () => {
       }
 
       if (data) {
-        setProfile({
+        const profileData = {
           id: data.id,
           fullName: data.full_name,
           email: data.email,
@@ -89,9 +103,15 @@ export const useSellerProfile = () => {
           usesTitleCompany: (data.title_companies?.length || 0) > 0,
           status: data.status as SellerStatus,
           createdAt: data.created_at
-        });
+        };
+        
+        // Update cache
+        cachedProfile = profileData;
+        cacheExpiry = Date.now() + CACHE_DURATION;
+        setProfile(profileData);
       } else {
         setProfile(null);
+        cachedProfile = null;
       }
     } catch (err) {
       console.error('Error fetching seller profile:', err);
@@ -138,13 +158,17 @@ export const useSellerProfile = () => {
 
       if (error) throw error;
 
-      // Update local state
-      setProfile({
+      // Update local state and cache
+      const createdProfile = {
         ...profileData,
         id: data.id,
-        status: 'pending',
+        status: 'pending' as SellerStatus,
         createdAt: data.created_at
-      });
+      };
+      
+      cachedProfile = createdProfile;
+      cacheExpiry = Date.now() + CACHE_DURATION;
+      setProfile(createdProfile);
 
       return data;
     } catch (err) {
@@ -188,12 +212,16 @@ export const useSellerProfile = () => {
 
       if (error) throw error;
 
-      // Update local state
+      // Update local state and cache
       if (profile) {
-        setProfile({
+        const updatedProfile = {
           ...profile,
           ...profileData
-        });
+        };
+        
+        cachedProfile = updatedProfile;
+        cacheExpiry = Date.now() + CACHE_DURATION;
+        setProfile(updatedProfile);
       }
 
       return data;
@@ -227,17 +255,17 @@ export const useSellerProfile = () => {
     }
   };
 
-  useEffect(() => {
-    fetchSellerProfile();
-  }, []);
+  const refetch = () => {
+    queryClient.invalidateQueries({ queryKey: ['seller-profile'] });
+  };
 
   return {
     profile,
     loading,
-    error,
+    error: error as Error | null,
     createSellerProfile,
     updateSellerProfile,
     getSellerStatus,
-    refetch: fetchSellerProfile
+    refetch
   };
 };
