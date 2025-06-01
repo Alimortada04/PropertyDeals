@@ -1,0 +1,63 @@
+ Fix the “List a Property” Modal Upload Issue
+Right now, when a user reaches Step 5 of the listing modal and clicks “Save Draft” or “Submit Listing”, it fails with the error:
+
+“Failed to create property listing. Please try again.”
+
+Your job is to figure out exactly why this is happening and fix it so that the entire listing flow works smoothly from front to back—including uploading all property details to Supabase without errors.
+
+✅ What you need to do:
+Log the Property Payload
+
+Add a console log right before the Supabase .insert() call to see exactly what data is being sent.
+
+Double check that all required fields are present (like created_by, status, name, etc.).
+
+Use .throwOnError() in Supabase Query
+
+Make sure your Supabase .insert() query includes .throwOnError() so any backend error becomes visible in the console.
+
+Example:
+
+js
+Copy
+Edit
+const { error } = await supabase
+  .from('property_profile')
+  .insert(newProperty)
+  .throwOnError();
+Also add a fallback .catch() to make sure no error gets swallowed.
+
+Double Check Field Types and Values
+
+Make sure every value being sent matches your Supabase table’s column type.
+
+For example:
+
+status should match one of your enum values (like 'draft', 'active').
+
+created_by must be a real auth.users.id.
+
+arv, parking, and comps must match the backend types (e.g., comps may need to be an array of strings).
+
+Avoid sending any undefined or incorrect data types.
+
+Add Default or Fallback Values
+
+If a user leaves something blank (like bathrooms, property condition, etc.), make sure you're still sending a fallback like 0 or null, not leaving it out or passing undefined.
+
+Confirm No Foreign Key or Enum Mismatches
+
+If created_by is a foreign key to the users table, make sure the value is actually valid.
+
+If the status is now an enum, make sure you are using a value that exists in the enum.
+
+Print Any Supabase Error
+
+If there's an error in the response, log it fully:
+
+js
+Copy
+Edit
+if (error) {
+  console.error("Supabase insert error:", error.message, error.details, error.hint);
+}
