@@ -82,25 +82,16 @@ export default function RegisterPage() {
   }, []);
 
   useEffect(() => {
-    // Generate username when full name changes
-    const fullName = registerForm.watch("fullName");
-    if (fullName && fullName.length > 2) {
-      setGeneratedUsername(generateUsername(fullName));
-    } else {
-      setGeneratedUsername(null);
-    }
-    // Register the watcher for fullName outside of useEffect's dependency array
+    // Watch for fullName changes and generate username
     const subscription = registerForm.watch((value, { name, type }) => {
-      // This will run whenever any form field changes
-      // But we'll only process fullName changes
-      if (name === "fullName" && value.fullName) {
-        // No need to do anything here, the effect above will handle it
+      if (name === "fullName" && value.fullName && value.fullName.length > 2) {
+        setGeneratedUsername(generateUsername(value.fullName));
+      } else if (name === "fullName") {
+        setGeneratedUsername(null);
       }
     });
     return () => subscription.unsubscribe();
-  }, []);
-
-  if (user) return <Redirect to="/" />;
+  }, [registerForm]);
 
   // Generate a username from full name without adding numbers initially
   const generateUsername = (fullName: string) => {
@@ -150,6 +141,9 @@ export default function RegisterPage() {
     // If all attempts fail, add current timestamp for uniqueness
     return `${baseUsername.replace(/\d+$/, '')}${Date.now() % 10000}`;
   };
+
+  // Early return after all hooks have been declared
+  if (user) return <Redirect to="/" />;
 
   const onRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
     // Reset all state before attempting registration
