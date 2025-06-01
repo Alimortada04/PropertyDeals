@@ -247,6 +247,203 @@ function MobileSectionContent({ section }: { section: string }) {
     );
   }
 
+  // For account section
+  if (section === 'account') {
+    return (
+      <div className="space-y-6">
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="border-b pb-4">
+            <CardTitle className="text-xl">Account Information</CardTitle>
+            <CardDescription>Manage your personal information and preferences</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-700">Email Address</label>
+                <Input 
+                  type="email" 
+                  defaultValue="alimortada7313@gmail.com"
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-700">Phone Number</label>
+                <Input 
+                  type="tel" 
+                  defaultValue="4144039077"
+                  className="w-full"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-700">Full Name</label>
+                <Input 
+                  type="text" 
+                  defaultValue="Ali Mortada"
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // For property preferences section
+  if (section === 'property_preferences') {
+    return (
+      <div className="space-y-6">
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="border-b pb-4">
+            <CardTitle className="text-xl">Property Preferences</CardTitle>
+            <CardDescription>Configure your investment criteria and preferences</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-700">Preferred Property Types</label>
+                <div className="flex flex-wrap gap-2">
+                  {['Single-Family', 'Condo', 'Land'].map((type) => (
+                    <Badge key={type} variant="secondary" className="bg-green-100 text-green-800">
+                      {type}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-700">Budget Range</label>
+                <div className="flex gap-2 items-center">
+                  <Input type="number" placeholder="Min" defaultValue="10000" />
+                  <span>-</span>
+                  <Input type="number" placeholder="Max" defaultValue="100000" />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // For connections section
+  if (section === 'connections') {
+    return <ConnectionsTab />;
+  }
+
+  // For notifications section
+  if (section === 'notifications') {
+    return (
+      <div className="space-y-6">
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="border-b pb-4">
+            <CardTitle className="text-xl">Notification Preferences</CardTitle>
+            <CardDescription>Choose how you want to receive updates and alerts</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-medium">Email Notifications</h4>
+                  <p className="text-sm text-gray-500">Receive updates via email</p>
+                </div>
+                <Switch defaultChecked />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-medium">Push Notifications</h4>
+                  <p className="text-sm text-gray-500">Receive browser notifications</p>
+                </div>
+                <Switch />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // For integrations section
+  if (section === 'integrations') {
+    return (
+      <div className="space-y-6">
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="border-b pb-4">
+            <CardTitle className="text-xl">Connected Accounts</CardTitle>
+            <CardDescription>Manage your connected third-party services</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-md">
+              <div className="flex items-center">
+                <div className="bg-[#4285F4] h-10 w-10 rounded flex items-center justify-center">
+                  <span className="text-white font-bold">G</span>
+                </div>
+                <div className="ml-4">
+                  <h4 className="text-sm font-medium text-gray-900">Google</h4>
+                  <p className="text-xs text-gray-500">Not connected</p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm">Connect</Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // For memberships section
+  if (section === 'memberships') {
+    return (
+      <div className="space-y-6">
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="border-b pb-4">
+            <CardTitle className="text-xl">Memberships & Billing</CardTitle>
+            <CardDescription>Manage your subscription and payment information</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-6">
+            <div className="rounded-md border border-gray-200 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-lg font-medium text-gray-900">Free Plan</h4>
+                  <p className="text-sm text-gray-500">Basic access to PropertyDeals</p>
+                </div>
+                <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-100">Current Plan</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // For help section
+  if (section === 'help') {
+    return (
+      <div className="space-y-6">
+        <Card className="border-gray-200 shadow-sm">
+          <CardHeader className="border-b pb-4">
+            <CardTitle className="text-xl">Help Center</CardTitle>
+            <CardDescription>Get assistance and find answers to your questions</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-4">
+            <div className="space-y-3">
+              <h3 className="font-medium text-gray-900">Quick Actions</h3>
+              <div className="space-y-2">
+                <Button variant="outline" className="w-full justify-start">
+                  <HelpCircle className="h-4 w-4 mr-2" />
+                  Contact Support
+                </Button>
+                <Button variant="outline" className="w-full justify-start">
+                  <FileCheck className="h-4 w-4 mr-2" />
+                  View Documentation
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // For other sections, show placeholder content
   return (
     <div className="text-center py-8">
