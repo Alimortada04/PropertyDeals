@@ -255,6 +255,12 @@ function Router() {
         </AppLayout>
       )} />
 
+      <ProtectedRoute path="/profile/seller_settings" component={() => (
+        <AppLayout>
+          <ProfilePage />
+        </AppLayout>
+      )} />
+
       <ProtectedRoute path="/profile/connections" component={() => (
         <AppLayout>
           <ProfilePage />
