@@ -59,20 +59,40 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/register", async (req, res, next) => {
-    const existingUser = await storage.getUserByUsername(req.body.username);
-    if (existingUser) {
-      return res.status(400).send("Username already exists");
+    try {
+      const { username, password, fullName, email } = req.body;
+      
+      // Check if username already exists
+      const existingUser = await storage.getUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already exists" });
+      }
+
+      // Create user with proper data structure
+      const userData = {
+        username,
+        password: await hashPassword(password),
+        fullName: fullName || '',
+        email: email || '',
+        activeRole: 'buyer',
+        isAdmin: false,
+        roles: {
+          buyer: { status: "approved" },
+          seller: { status: "not_applied" },
+          rep: { status: "not_applied" }
+        }
+      };
+
+      const user = await storage.createUser(userData);
+
+      req.login(user, (err) => {
+        if (err) return next(err);
+        res.status(201).json(user);
+      });
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ message: "Database error saving new user" });
     }
-
-    const user = await storage.createUser({
-      ...req.body,
-      password: await hashPassword(req.body.password),
-    });
-
-    req.login(user, (err) => {
-      if (err) return next(err);
-      res.status(201).json(user);
-    });
   });
 
   app.post("/api/login", passport.authenticate("local"), (req, res) => {
