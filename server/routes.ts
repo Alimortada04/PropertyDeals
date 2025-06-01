@@ -143,9 +143,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/property-profiles", async (req, res) => {
-    // Temporary bypass for development - remove in production
+    // For development, we'll use the seller_id from the request body (Supabase auth UUID)
+    // In production, proper authentication should be enforced
     const developmentMode = process.env.NODE_ENV !== 'production';
     
+    // Allow creation with proper seller_id even without backend authentication
     if (!developmentMode && (!req.isAuthenticated() || req.user.activeRole !== "seller")) {
       return res.status(403).json({ message: "Not authorized to create property profiles" });
     }
@@ -156,9 +158,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Transform the payload to match database schema
       const transformedData = {
         ...req.body,
-        // Map seller_id to the UUID field and created_by to integer ID
-        seller_id: req.body.seller_id || "temp-user-id",
-        created_by: req.isAuthenticated() ? req.user.id : 1, // Use integer user ID
+        // Always use the seller_id from the request body (Supabase auth UUID from frontend)
+        seller_id: req.body.seller_id, // This comes from frontend with authenticated user's UUID
+        created_by: req.isAuthenticated() ? req.user.id : 1, // Keep created_by as integer for backend compatibility
         status: req.body.status || "draft"
       };
       
