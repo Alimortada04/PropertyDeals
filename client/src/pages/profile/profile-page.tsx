@@ -432,6 +432,7 @@ function ProfilePage() {
   const [isPropertySectionModified, setIsPropertySectionModified] = useState(false);
   const [isProfessionalSectionModified, setIsProfessionalSectionModified] = useState(false);
   const [isSellerSectionModified, setIsSellerSectionModified] = useState(false);
+  const [newMarketInput, setNewMarketInput] = useState('');
   
   // Determine active tab from URL (either from hash or path segments)
   const initialTab = useMemo(() => {
@@ -3223,7 +3224,24 @@ function ProfilePage() {
                     </div>
                   </CardHeader>
                   <CardContent className="pt-6">
-                    <div className="space-y-8">
+                    <form onSubmit={async (e) => {
+                      e.preventDefault();
+                      if (!sellerProfile) return;
+                      
+                      try {
+                        await updateSellerProfile(sellerProfile);
+                        toast({ title: "Deal preferences updated successfully" });
+                        setIsSellerSectionModified(false);
+                      } catch (error) {
+                        console.error('Error updating deal preferences:', error);
+                        toast({ 
+                          title: "Error updating preferences", 
+                          description: "Something went wrong. Please try again.",
+                          variant: "destructive"
+                        });
+                      }
+                    }}>
+                      <div className="space-y-8">
                       {/* Business Type */}
                       <div>
                         <label className="block text-base font-medium mb-3 text-gray-700">
@@ -3350,12 +3368,39 @@ function ProfilePage() {
                           <div className="flex gap-2">
                             <Input
                               placeholder="Add another market..."
+                              value={newMarketInput}
+                              onChange={(e) => setNewMarketInput(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.preventDefault();
+                                  if (newMarketInput.trim() && !sellerProfile.targetMarkets?.includes(newMarketInput.trim())) {
+                                    const updatedProfile = { 
+                                      ...sellerProfile, 
+                                      targetMarkets: [...(sellerProfile.targetMarkets || []), newMarketInput.trim()] 
+                                    };
+                                    updateSellerProfile(updatedProfile);
+                                    setIsSellerSectionModified(true);
+                                    setNewMarketInput('');
+                                  }
+                                }
+                              }}
                               className="flex-1 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/50"
                             />
                             <Button
                               type="button"
                               variant="outline"
                               className="border-gray-300 hover:bg-gray-50"
+                              onClick={() => {
+                                if (newMarketInput.trim() && !sellerProfile.targetMarkets?.includes(newMarketInput.trim())) {
+                                  const updatedProfile = { 
+                                    ...sellerProfile, 
+                                    targetMarkets: [...(sellerProfile.targetMarkets || []), newMarketInput.trim()] 
+                                  };
+                                  updateSellerProfile(updatedProfile);
+                                  setIsSellerSectionModified(true);
+                                  setNewMarketInput('');
+                                }
+                              }}
                             >
                               Add
                             </Button>
@@ -3413,7 +3458,30 @@ function ProfilePage() {
                           })}
                         </div>
                       </div>
-                    </div>
+                      </div>
+                      
+                      <div className="pt-6 flex justify-end border-t mt-8">
+                        <Button 
+                          type="submit" 
+                          className={`flex items-center transition-all duration-200 ${
+                            loading ? "bg-gray-400" : isSellerSectionModified ? "bg-[#09261E] hover:bg-[#09261E]/90" : "bg-gray-200 text-gray-500"
+                          } text-white`}
+                          disabled={loading || !isSellerSectionModified}
+                        >
+                          {loading ? (
+                            <>
+                              <span className="h-4 w-4 mr-2 rounded-full border-2 border-t-transparent border-white animate-spin"></span>
+                              Saving...
+                            </>
+                          ) : (
+                            <>
+                              <Save className="mr-2 h-4 w-4" />
+                              Save Deal Preferences
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </form>
                   </CardContent>
                 </Card>
 
