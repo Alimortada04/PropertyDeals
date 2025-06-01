@@ -421,7 +421,7 @@ export function usePropertyProfile() {
         .from('property_profile')
         .delete()
         .eq('id', propertyId)
-        .eq('seller_id', user.id); // Ensure user owns the property
+        .eq('created_by', user.id); // Ensure user owns the property
 
       if (error) {
         console.error('Error deleting property:', error);
