@@ -206,6 +206,19 @@ function ProfilePage() {
   
   // Seller profile hook
   const { profile: sellerProfile, loading: sellerLoading, updateSellerProfile, getSellerStatus } = useSellerProfile();
+  
+  // Check if user has seller profile for stable tab visibility
+  const [hasSellerProfile, setHasSellerProfile] = useState(false);
+  
+  useEffect(() => {
+    const checkSellerProfile = async () => {
+      if (user?.id) {
+        const status = await getSellerStatus();
+        setHasSellerProfile(status !== 'none');
+      }
+    };
+    checkSellerProfile();
+  }, [user?.id, getSellerStatus]);
 
 
   
@@ -264,8 +277,8 @@ function ProfilePage() {
   // Handle tab change without full page reload
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    // Use our navigation utility to update URL without page reload
-    navigateToProfileTab(tab);
+    // Use hash-based navigation to prevent 404 errors
+    window.history.pushState({}, '', `/profile#${tab}`);
     
     // Reset help section when switching tabs
     if (tab === 'help') {
@@ -276,15 +289,16 @@ function ProfilePage() {
   // Listen for path changes and update UI accordingly
   useEffect(() => {
     const handlePathChanged = () => {
-      // Update active tab based on current URL
+      // Update active tab based on hash or path
+      const hash = window.location.hash.substring(1);
       const path = window.location.pathname;
       const pathSegments = path.split('/');
       const lastSegment = pathSegments[pathSegments.length - 1];
       const validTabs = ["account", "seller_settings", "property_preferences", "connections", "notifications", "integrations", "memberships", "security", "help"];
       
-      if (validTabs.includes(lastSegment)) {
-        setActiveTab(lastSegment);
-      }
+      // Prefer hash over path segment
+      const tabToSet = hash && validTabs.includes(hash) ? hash : (validTabs.includes(lastSegment) ? lastSegment : "account");
+      setActiveTab(tabToSet);
     };
     
     // Handle custom navigation events
@@ -1128,7 +1142,7 @@ function ProfilePage() {
                 onClick={() => handleTabChange("account")}
               />
               
-              {sellerProfile && (
+              {hasSellerProfile && (
                 <ProfileMenuItem
                   icon={<Briefcase size={18} />}
                   label="Seller Settings"
