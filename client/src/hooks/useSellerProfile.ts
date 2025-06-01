@@ -219,31 +219,27 @@ export const useSellerProfile = () => {
         throw new Error('Not authenticated');
       }
 
+      // Create minimal update object with only confirmed working fields
       const updates: any = {};
       
-      // Only include core fields that we know work to avoid schema cache issues
-      if (profileData.fullName !== undefined) updates.full_name = profileData.fullName;
-      if (profileData.email !== undefined) updates.email = profileData.email;
-      if (profileData.phone !== undefined) updates.phone_number = profileData.phone;
-      if (profileData.businessName !== undefined) updates.business_name = profileData.businessName || null;
-      if (profileData.yearsInRealEstate !== undefined) updates.years_in_real_estate = profileData.yearsInRealEstate;
-      if (profileData.businessType !== undefined) updates.business_type = profileData.businessType;
-      if (profileData.targetMarkets !== undefined) updates.target_markets = profileData.targetMarkets;
-      if (profileData.dealTypes !== undefined) updates.deal_types = profileData.dealTypes;
-      if (profileData.maxDealVolume !== undefined) updates.max_deal_volume = profileData.maxDealVolume;
-      if (profileData.hasBuyerList !== undefined) updates.has_buyer_list = profileData.hasBuyerList;
-      if (profileData.isDirectToSeller !== undefined) updates.is_direct_to_seller = profileData.isDirectToSeller;
-      if (profileData.notes !== undefined) updates.notes = profileData.notes || null;
-      if (profileData.website !== undefined) updates.website = profileData.website || null;
-      if (profileData.socialLinks !== undefined) updates.social_links = profileData.socialLinks;
-      // Temporarily removing problematic fields causing schema cache issues
-      // if (profileData.hasProofOfFunds !== undefined) updates.has_proof_of_funds = profileData.hasProofOfFunds;
-      // if (profileData.usesTitleCompany !== undefined) updates.uses_title_company = profileData.usesTitleCompany;
-
-      // Add updated_at timestamp
+      // Only add fields that have been modified and are safe
+      if (profileData.businessType !== undefined) {
+        updates.business_type = profileData.businessType;
+      }
+      if (profileData.targetMarkets !== undefined) {
+        updates.target_markets = profileData.targetMarkets;
+      }
+      if (profileData.dealTypes !== undefined) {
+        updates.deal_types = profileData.dealTypes;
+      }
+      if (profileData.hasBuyerList !== undefined) {
+        updates.has_buyer_list = profileData.hasBuyerList;
+      }
+      
+      // Always add timestamp
       updates.updated_at = new Date().toISOString();
 
-      console.log('Updating seller profile with:', updates);
+      console.log('Updating seller profile with minimal fields:', updates);
 
       const { data, error } = await supabase
         .from('seller_profile')
