@@ -1,85 +1,43 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useLocation } from 'wouter';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'wouter';
 import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Input } from '@/components/ui/input';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { usePropertyProfile } from '@/hooks/usePropertyProfile';
+import { useAuth } from '@/hooks/use-auth';
+import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
 import { 
   Plus, 
+  Search,
   LayoutGrid, 
   ListIcon, 
   KanbanSquare,
-  Clock,
-  PlusCircle,
-  ExternalLink,
-  Edit,
-  Share,
-  MoreHorizontal, 
-  FileText,
-  AlertCircle,
-  File,
-  CheckCircle,
-  Eye,
-  Globe,
-  Users,
-  Database,
+  MapPin,
   DollarSign,
-  Paperclip,
-  MessageCircle,
-  MailCheck,
-  Loader2,
-  GripVertical,
-  ArrowUpDown,
-  X,
-  Pencil,
-  MapPin
+  Eye,
+  Edit,
+  MoreHorizontal,
+  Home,
+  Calendar,
+  Filter
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Toast, ToastAction } from '@/components/ui/toast';
-import { useToast } from '@/hooks/use-toast';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle
-} from "@/components/ui/sheet";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
-import { createMinimalDraft } from '@/lib/create-draft-property';
 
-// Mock property data for visualization
-const MOCK_PROPERTIES = [
-  {
-    id: 'prop1',
-    title: 'Colonial Revival',
-    address: '123 Main St, Milwaukee, WI 53201',
-    listPrice: 625000,
-    purchasePrice: 589000,
-    assignmentProfit: 36000,
-    status: 'Listed',
-    thumbnail: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=2670&auto=format&fit=crop',
-    daysSinceActivity: 1,
-    hasOffers: true,
-    newOffer: true,
-    hasDocuments: true,
-    hasPADocument: true,
-    beds: 5,
-    baths: 3.5,
-    sqft: 3200,
-    arv: 725000,
-    views: 42,
-    leads: 8,
-    daysOnMarket: 12,
-    offers: 3,
-    priority: 'High',
-    hasNewMessage: true
-  },
+// Status options for multi-select filtering
+const STATUS_OPTIONS = [
+  { value: 'draft', label: 'Draft' },
+  { value: 'live', label: 'Live' },
+  { value: 'under contract', label: 'Under Contract' },
+  { value: 'closed', label: 'Closed' },
+  { value: 'dropped', label: 'Dropped' },
+  { value: 'archived', label: 'Archived' }
+];
+
+// Default selected statuses
+const DEFAULT_STATUS_FILTERS = ['draft', 'live', 'under contract'];
   {
     id: 'prop2',
     title: 'Modern Farmhouse',

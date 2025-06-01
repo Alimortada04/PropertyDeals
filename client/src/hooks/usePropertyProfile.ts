@@ -57,7 +57,7 @@ export interface PropertyProfile {
   featured_property?: boolean;
   
   // Status and visibility
-  status: 'draft' | 'active' | 'pending' | 'sold';
+  status: 'draft' | 'live' | 'under contract' | 'closed' | 'dropped' | 'archived';
   is_public?: boolean;
   created_by?: number;
   
@@ -80,16 +80,23 @@ export function usePropertyProfile() {
   const [properties, setProperties] = useState<PropertyProfile[]>([]);
 
   // Fetch all properties for the current seller
-  const fetchSellerProperties = async () => {
+  const fetchSellerProperties = async (statusFilters?: string[]) => {
     if (!user?.id) return;
 
     setIsLoading(true);
     try {
-      const { data, error } = await supabase
+      // Use user's UUID from auth
+      let query = supabase
         .from('property_profile')
         .select('*')
-        .eq('seller_id', user.id)
-        .order('created_at', { ascending: false });
+        .eq('seller_id', user.id);
+
+      // Apply status filtering if provided
+      if (statusFilters && statusFilters.length > 0) {
+        query = query.in('status', statusFilters);
+      }
+
+      const { data, error } = await query.order('created_at', { ascending: false });
 
       if (error) {
         console.error('Error fetching property profiles:', error);
