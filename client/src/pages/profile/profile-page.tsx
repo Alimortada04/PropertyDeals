@@ -1127,7 +1127,7 @@ function ProfilePage() {
         
           {/* Menu Items Section */}
           <div className="px-3 pt-4 flex-1 overflow-y-auto scrollbar-hide">
-            <div className="space-y-2 pb-4">
+            <div className="space-y-2 pb-24 md:pb-4">
               <ProfileMenuItem
                 icon={<User size={18} />}
                 label="Account"
