@@ -350,7 +350,7 @@ export function usePropertyProfile() {
         .from('property_profile')
         .update(updateData)
         .eq('id', propertyId)
-        .eq('created_by', supabaseUser.id) // Ensure user owns the property
+        .eq('seller_id', supabaseUser.id) // Ensure user owns the property
         .select()
         .single();
 
@@ -408,7 +408,7 @@ export function usePropertyProfile() {
           updated_at: new Date().toISOString(),
         })
         .eq('id', propertyId)
-        .eq('created_by', supabaseUser.id) // Ensure user owns the property
+        .eq('seller_id', supabaseUser.id) // Ensure user owns the property
         .select()
         .single();
 
