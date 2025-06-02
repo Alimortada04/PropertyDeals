@@ -191,10 +191,11 @@ export function usePropertyProfile() {
       return String(date);
     };
     
-    // Create payload with ONLY verified schema fields
-    const payload = {
-      // Authentication & Status
+    // Create payload with ONLY fields that exist in the database
+    const rawPayload = {
+      // Authentication & Status - seller_id is required NOT NULL
       created_by: userId,
+      seller_id: userId, // Required field that cannot be null
       status: formData.status || 'draft',
       
       // Basic Property Info
@@ -242,6 +243,11 @@ export function usePropertyProfile() {
       description: safe(formData.description),
       additional_notes: safe(formData.additionalNotes)
     };
+
+    // Remove any undefined or null values and extra fields
+    const payload = Object.fromEntries(
+      Object.entries(rawPayload).filter(([_, value]) => value !== null && value !== undefined)
+    );
     
     console.log("Clean payload for Supabase insert:", payload);
     return payload;
