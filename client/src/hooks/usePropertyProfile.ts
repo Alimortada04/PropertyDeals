@@ -112,11 +112,11 @@ export function usePropertyProfile() {
 
     setIsLoading(true);
     try {
-      // Use user's UUID from auth - query by created_by field
+      // Use user's UUID from auth - query by seller_id field (text field for UUIDs)
       let query = supabase
         .from('property_profile')
         .select('*')
-        .eq('created_by', supabaseUser.id);
+        .eq('seller_id', supabaseUser.id);
 
       // Apply status filtering if provided
       if (statusFilters && statusFilters.length > 0) {
@@ -459,7 +459,7 @@ export function usePropertyProfile() {
         .from('property_profile')
         .delete()
         .eq('id', propertyId)
-        .eq('created_by', supabaseUser.id); // Ensure user owns the property
+        .eq('seller_id', supabaseUser.id); // Ensure user owns the property
 
       if (error) {
         console.error('Error deleting property:', error);
