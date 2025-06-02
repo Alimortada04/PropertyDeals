@@ -210,10 +210,11 @@ export function usePropertyProfile() {
       additional_notes: sanitize(payload.additional_notes),
       description: sanitize(payload.description),
       created_by: sanitize(payload.created_by),
-      status: sanitize(payload.status),
+      status: sanitize(payload.status) || 'draft',
       seller_id: sanitize(payload.seller_id),
-      is_public: sanitize(payload.is_public),
-      featured_property: sanitize(payload.featured_property)
+      // Required boolean fields with defaults
+      is_public: payload.is_public === true ? true : false,
+      featured_property: payload.featured_property === true ? true : false
     };
   };
 
@@ -309,7 +310,7 @@ export function usePropertyProfile() {
       view_count: 0,
       save_count: 0,
       offer_count: 0,
-      offer_ids: Array.isArray(data.offerIds) ? data.offerIds : [], // Offer IDs → offer_ids
+      offer_ids: Array.isArray(data.offerIds) ? data.offerIds : [] // Offer IDs → offer_ids
     };
   };
 

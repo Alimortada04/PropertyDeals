@@ -1,0 +1,352 @@
+Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+enhanced-property-listing-modal.tsx:1324 Google Places API Key: undefined
+general.js:205 [LaunchDarkly] LaunchDarkly client initialized
+general.js:379 Creating Chat UI component
+/api/user:1 
+            
+            
+           Failed to load resource: the server responded with a status of 401 (Unauthorized)Understand this error
+enhanced-property-listing-modal.tsx:1324 Google Places API Key: undefined
+wgmchhvlwtvznwjttmvu.supabase.co/rest/v1/property_profile?select=*&seller_id=eq.0a1e4a08-0566-4b39-86b0-f47004fc8ee1&status=in.%28draft%2Clive%2Cunder+contract%29&order=created_at.desc:1 
+            
+            
+           Failed to load resource: the server responded with a status of 400 ()Understand this error
+usePropertyProfile.ts:129 Error fetching property profiles: Object
+fetchSellerProperties @ usePropertyProfile.ts:129Understand this error
+enhanced-property-listing-modal.tsx:1324 Google Places API Key: undefined
+wgmchhvlwtvznwjttmvu.supabase.co/rest/v1/property_profile?select=*&seller_id=eq.0a1e4a08-0566-4b39-86b0-f47004fc8ee1&status=in.%28draft%2Clive%2Cunder+contract%29&order=created_at.desc:1 
+            
+            
+           Failed to load resource: the server responded with a status of 400 ()Understand this error
+usePropertyProfile.ts:129 Error fetching property profiles: Object
+fetchSellerProperties @ usePropertyProfile.ts:129Understand this error
+wgmchhvlwtvznwjttmvu.supabase.co/rest/v1/property_profile?select=*&created_by=eq.1:1 
+            
+            
+           Failed to load resource: the server responded with a status of 400 ()Understand this error
+[userId].tsx:130 Error fetching property profiles: Object
+queryFn @ [userId].tsx:130Understand this error
+0a1e4a08-0566-4b39-86b0-f47004fc8ee1:1 Unchecked runtime.lastError: The message port closed before a response was received.Understand this error
+0a1e4a08-0566-4b39-86b0-f47004fc8ee1:1 Unchecked runtime.lastError: The message port closed before a response was received.Understand this error
+chunk-W4CM5O5P.js?v=37eab9fd:338 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+(anonymous) @ chunk-W4CM5O5P.js?v=37eab9fd:338
+commitHookEffectListMount @ chunk-276SZO74.js?v=37eab9fd:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=37eab9fd:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=37eab9fd:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=37eab9fd:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=37eab9fd:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=37eab9fd:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=37eab9fd:19447
+commitRootImpl @ chunk-276SZO74.js?v=37eab9fd:19416
+commitRoot @ chunk-276SZO74.js?v=37eab9fd:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=37eab9fd:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=37eab9fd:9119
+commitRootImpl @ chunk-276SZO74.js?v=37eab9fd:19432
+commitRoot @ chunk-276SZO74.js?v=37eab9fd:19277
+finishConcurrentRender @ chunk-276SZO74.js?v=37eab9fd:18805
+performConcurrentWorkOnRoot @ chunk-276SZO74.js?v=37eab9fd:18718
+workLoop @ chunk-276SZO74.js?v=37eab9fd:197
+flushWork @ chunk-276SZO74.js?v=37eab9fd:176
+performWorkUntilDeadline @ chunk-276SZO74.js?v=37eab9fd:384Understand this warning
+chunk-276SZO74.js?v=37eab9fd:521 Warning: A component is changing an uncontrolled input to be controlled. This is likely caused by the value changing from undefined to a defined value, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component. More info: https://reactjs.org/link/controlled-components
+    at input
+    at _c (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/ui/input.tsx:20:11)
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-D3CTYCI6.js?v=37eab9fd:52:11
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-D3CTYCI6.js?v=37eab9fd:33:11
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/ui/form.tsx:129:9
+    at div
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/ui/form.tsx:71:6
+    at Controller (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-BW5TH624.js?v=37eab9fd:313:35)
+    at FormField (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/ui/form.tsx:32:6)
+    at div
+    at div
+    at form
+    at FormProvider (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-BW5TH624.js?v=37eab9fd:102:11)
+    at div
+    at div
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-QCAFA6Y2.js?v=37eab9fd:41:13
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-NUDZVE4E.js?v=37eab9fd:61:7
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-D3CTYCI6.js?v=37eab9fd:52:11
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-D3CTYCI6.js?v=37eab9fd:33:11
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-QCAFA6Y2.js?v=37eab9fd:41:13
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-4DOFKXAX.js?v=37eab9fd:57:5
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-W4CM5O5P.js?v=37eab9fd:234:13
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-W4CM5O5P.js?v=37eab9fd:157:58
+    at Presence (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-IYFCVA3S.js?v=37eab9fd:24:11)
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-W4CM5O5P.js?v=37eab9fd:148:64
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-D3CTYCI6.js?v=37eab9fd:52:11
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-D3CTYCI6.js?v=37eab9fd:33:11
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-QCAFA6Y2.js?v=37eab9fd:41:13
+    at https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-NUDZVE4E.js?v=37eab9fd:260:22
+    at Presence (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-IYFCVA3S.js?v=37eab9fd:24:11)
+    at Provider (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-ICA7ZJMY.js?v=37eab9fd:38:15)
+    at DialogPortal (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-W4CM5O5P.js?v=37eab9fd:111:11)
+    at _c3 (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/ui/dialog.tsx:51:12)
+    at Provider (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-ICA7ZJMY.js?v=37eab9fd:38:15)
+    at Dialog (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-W4CM5O5P.js?v=37eab9fd:52:5)
+    at EnhancedPropertyListingModal (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/property/enhanced-property-listing-modal.tsx:208:48)
+    at Suspense
+    at div
+    at div
+    at div
+    at SellerDashboardLayoutWithUserId (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/layout/seller-dashboard-layout.tsx:62:3)
+    at SellerDashboardLayout (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/layout/seller-dashboard-layout.tsx:25:3)
+    at SellerDashboardPage (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/pages/sellerdash/[userId].tsx:75:18)
+    at div
+    at div
+    at div
+    at AppLayout (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/components/layout/app-layout.tsx:33:37)
+    at component
+    at Route (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=37eab9fd:323:16)
+    at ProtectedRoute (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/lib/protected-route.tsx:24:3)
+    at Switch (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=37eab9fd:379:17)
+    at Router (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/App.tsx?v=75LAufTm2xzCY5qFLPawW:82:9)
+    at AuthProvider (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/src/hooks/use-auth.tsx:35:32)
+    at QueryClientProvider (https://b8c0b1b9-8fbf-4a04-840e-519ebe621dec-00-r3f10q81zfu8.worf.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=37eab9fd:2805:3)
+    at App
+printWarning @ chunk-276SZO74.js?v=37eab9fd:521
+error @ chunk-276SZO74.js?v=37eab9fd:505
+updateWrapper @ chunk-276SZO74.js?v=37eab9fd:1968
+updateProperties @ chunk-276SZO74.js?v=37eab9fd:7762
+commitUpdate @ chunk-276SZO74.js?v=37eab9fd:8419
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17763
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17813
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17851
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17818
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17737
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17896
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17699
+recursivelyTraverseMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17685
+commitMutationEffectsOnFiber @ chunk-276SZO74.js?v=37eab9fd:17794
+commitMutationEffects @ chunk-276SZO74.js?v=37eab9fd:17663
+commitRootImpl @ chunk-276SZO74.js?v=37eab9fd:19347
+commitRoot @ chunk-276SZO74.js?v=37eab9fd:19277
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=37eab9fd:18895
+flushSyncCallbacks @ chunk-276SZO74.js?v=37eab9fd:9119
+flushSync @ chunk-276SZO74.js?v=37eab9fd:18959
+finishEventHandler @ chunk-276SZO74.js?v=37eab9fd:3569
+batchedUpdates @ chunk-276SZO74.js?v=37eab9fd:3582
+dispatchEventForPluginEventSystem @ chunk-276SZO74.js?v=37eab9fd:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-276SZO74.js?v=37eab9fd:5478
+dispatchEvent @ chunk-276SZO74.js?v=37eab9fd:5472
+dispatchDiscreteEvent @ chunk-276SZO74.js?v=37eab9fd:5449Understand this error
+content-all.js:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
+    at y (content-all.js:1:49334)
+y @ content-all.js:1Understand this error
+enhanced-property-listing-modal.tsx:1075 Auto-saving draft... {name: 'Property at 11553 N Creekside Ct.', address: '11553 N Creekside Ct.', city: 'Mequon', state: 'WI', zipCode: '53092', …}
+enhanced-property-listing-modal.tsx:1063 Error saving draft: ReferenceError: user is not defined
+    at saveDraft (enhanced-property-listing-modal.tsx:1040:20)
+    at enhanced-property-listing-modal.tsx:1076:9
+saveDraft @ enhanced-property-listing-modal.tsx:1063
+(anonymous) @ enhanced-property-listing-modal.tsx:1076
+setInterval
+(anonymous) @ enhanced-property-listing-modal.tsx:1073
+commitHookEffectListMount @ chunk-276SZO74.js?v=37eab9fd:16915
+commitPassiveMountOnFiber @ chunk-276SZO74.js?v=37eab9fd:18156
+commitPassiveMountEffects_complete @ chunk-276SZO74.js?v=37eab9fd:18129
+commitPassiveMountEffects_begin @ chunk-276SZO74.js?v=37eab9fd:18119
+commitPassiveMountEffects @ chunk-276SZO74.js?v=37eab9fd:18109
+flushPassiveEffectsImpl @ chunk-276SZO74.js?v=37eab9fd:19490
+flushPassiveEffects @ chunk-276SZO74.js?v=37eab9fd:19447
+performSyncWorkOnRoot @ chunk-276SZO74.js?v=37eab9fd:18868
+flushSyncCallbacks @ chunk-276SZO74.js?v=37eab9fd:9119
+commitRootImpl @ chunk-276SZO74.js?v=37eab9fd:19432
+commitRoot @ chunk-276SZO74.js?v=37eab9fd:19277
+finishConcurrentRender @ chunk-276SZO74.js?v=37eab9fd:18805
+performConcurrentWorkOnRoot @ chunk-276SZO74.js?v=37eab9fd:18718
+workLoop @ chunk-276SZO74.js?v=37eab9fd:197
+flushWork @ chunk-276SZO74.js?v=37eab9fd:176
+performWorkUntilDeadline @ chunk-276SZO74.js?v=37eab9fd:384Understand this error
+general.js:992 Loading plugin $g
+general.js:1742 Creating InlineText component
+general.js:992 Loading plugin $g
+general.js:1742 Creating InlineText component
+enhanced-property-listing-modal.tsx:1150 Property data payload: {name: 'Untitled Property', address: '', city: '', state: '', zip_code: '', …}
+enhanced-property-listing-modal.tsx:1155 Authenticated user: {id: '0a1e4a08-0566-4b39-86b0-f47004fc8ee1', aud: 'authenticated', role: 'authenticated', email: 'alimortada7313@gmail.com', email_confirmed_at: '2025-05-06T16:53:24.881519Z', …}
+enhanced-property-listing-modal.tsx:1235 Property payload: {seller_id: '0a1e4a08-0566-4b39-86b0-f47004fc8ee1', created_by: '0a1e4a08-0566-4b39-86b0-f47004fc8ee1', name: 'Untitled Property', address: '', city: '', …}
+usePropertyProfile.ts:225 Input data for cleaning: {seller_id: '0a1e4a08-0566-4b39-86b0-f47004fc8ee1', created_by: '0a1e4a08-0566-4b39-86b0-f47004fc8ee1', name: 'Untitled Property', address: '', city: '', …}
+usePropertyProfile.ts:335 Raw payload from cleanPropertyPayload: {seller_id: '0a1e4a08-0566-4b39-86b0-f47004fc8ee1', status: 'draft', is_public: false, featured_property: false, name: 'Untitled Property', …}
+usePropertyProfile.ts:336 Sanitized payload for Supabase: {name: 'Untitled Property', address: '', city: '', state: '', zipcode: null, …}
+usePropertyProfile.ts:337 Critical field verification: {seller_id: '0a1e4a08-0566-4b39-86b0-f47004fc8ee1', name: 'Untitled Property', address: '', city: '', state: '', …}
+@supabase_supabase-js.js?v=37eab9fd:3900 
+            
+            
+           POST https://wgmchhvlwtvznwjttmvu.supabase.co/rest/v1/property_profile?columns=%22name%22%2C%22address%22%2C%22city%22%2C%22state%22%2C%22zipcode%22%2C%22county%22%2C%22parcel_id%22%2C%22property_type%22%2C%22bedrooms%22%2C%22bathrooms%22%2C%22sqft%22%2C%22lot_size%22%2C%22year_built%22%2C%22parking%22%2C%22primary_image%22%2C%22gallery_images%22%2C%22video_walkthrough%22%2C%22arv%22%2C%22rent_total_monthly%22%2C%22rent_total_annual%22%2C%22rent_units%22%2C%22expense_items%22%2C%22repair_projects%22%2C%22property_condition%22%2C%22access_type%22%2C%22closing_date%22%2C%22purchase_price%22%2C%22listing_price%22%2C%22assignment_fee%22%2C%22purchase_agreement%22%2C%22assignment_agreement%22%2C%22offer_ids%22%2C%22jv_partners%22%2C%22additional_notes%22%2C%22description%22%2C%22created_by%22%2C%22status%22%2C%22seller_id%22%2C%22is_public%22%2C%22featured_property%22&select=* 400 (Bad Request)
+(anonymous) @ @supabase_supabase-js.js?v=37eab9fd:3900
+(anonymous) @ @supabase_supabase-js.js?v=37eab9fd:3921
+fulfilled @ @supabase_supabase-js.js?v=37eab9fd:3873
+Promise.then
+step @ @supabase_supabase-js.js?v=37eab9fd:3886
+(anonymous) @ @supabase_supabase-js.js?v=37eab9fd:3888
+__awaiter6 @ @supabase_supabase-js.js?v=37eab9fd:3870
+(anonymous) @ @supabase_supabase-js.js?v=37eab9fd:3911
+then @ @supabase_supabase-js.js?v=37eab9fd:89Understand this error
+usePropertyProfile.ts:364 Supabase insert result: {data: null, error: {…}}
+usePropertyProfile.ts:376 ❌ Property insert failed with Supabase error: {code: 'PGRST204', details: null, hint: null, message: "Could not find the 'is_public' column of 'property_profile' in the schema cache"}
+createPropertyDraft @ usePropertyProfile.ts:376
+await in createPropertyDraft
+onSubmit @ enhanced-property-listing-modal.tsx:1238
+await in onSubmit
+(anonymous) @ chunk-BW5TH624.js?v=37eab9fd:1675
+await in (anonymous)
+callCallback2 @ chunk-276SZO74.js?v=37eab9fd:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=37eab9fd:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=37eab9fd:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-276SZO74.js?v=37eab9fd:3736
+executeDispatch @ chunk-276SZO74.js?v=37eab9fd:7014
+processDispatchQueueItemsInOrder @ chunk-276SZO74.js?v=37eab9fd:7034
+processDispatchQueue @ chunk-276SZO74.js?v=37eab9fd:7043
+dispatchEventsForPlugins @ chunk-276SZO74.js?v=37eab9fd:7051
+(anonymous) @ chunk-276SZO74.js?v=37eab9fd:7174
+batchedUpdates$1 @ chunk-276SZO74.js?v=37eab9fd:18913
+batchedUpdates @ chunk-276SZO74.js?v=37eab9fd:3579
+dispatchEventForPluginEventSystem @ chunk-276SZO74.js?v=37eab9fd:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-276SZO74.js?v=37eab9fd:5478
+dispatchEvent @ chunk-276SZO74.js?v=37eab9fd:5472
+dispatchDiscreteEvent @ chunk-276SZO74.js?v=37eab9fd:5449Understand this error
+usePropertyProfile.ts:377 Error details: {message: "Could not find the 'is_public' column of 'property_profile' in the schema cache", details: null, hint: null, code: 'PGRST204'}code: "PGRST204"details: nullhint: nullmessage: "Could not find the 'is_public' column of 'property_profile' in the schema cache"[[Prototype]]: Object
+createPropertyDraft @ usePropertyProfile.ts:377
+await in createPropertyDraft
+onSubmit @ enhanced-property-listing-modal.tsx:1238
+await in onSubmit
+(anonymous) @ chunk-BW5TH624.js?v=37eab9fd:1675
+await in (anonymous)
+callCallback2 @ chunk-276SZO74.js?v=37eab9fd:3674
+invokeGuardedCallbackDev @ chunk-276SZO74.js?v=37eab9fd:3699
+invokeGuardedCallback @ chunk-276SZO74.js?v=37eab9fd:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-276SZO74.js?v=37eab9fd:3736
+executeDispatch @ chunk-276SZO74.js?v=37eab9fd:7014
+processDispatchQueueItemsInOrder @ chunk-276SZO74.js?v=37eab9fd:7034
+processDispatchQueue @ chunk-276SZO74.js?v=37eab9fd:7043
+dispatchEventsForPlugins @ chunk-276SZO74.js?v=37eab9fd:7051
+(anonymous) @ chunk-276SZO74.js?v=37eab9fd:7174
+batchedUpdates$1 @ chunk-276SZO74.js?v=37eab9fd:18913
+batchedUpdates @ chunk-276SZO74.js?v=37eab9fd:3579
+dispatchEventForPluginEventSystem @ chunk-276SZO74.js?v=37eab9fd:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-276SZO74.js?v=37eab9fd:5478
+dispatchEvent @ chunk-276SZO74.js?v=37eab9fd:5472
+dispatchDiscreteEvent @ chunk-276SZO74.js?v=37eab9fd:5449Understand this error
