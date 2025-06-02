@@ -211,7 +211,7 @@ export function usePropertyProfile() {
         'primary_image', 'gallery_images', 'video_walkthrough',
         'monthly_rent', 'rent_total_monthly', 'rent_total_annual', 'rent_unit',
         'expenses_total_monthly', 'expenses_total_annual', 'expense_items',
-        'condition', 'repair_costs_total', 'occupancy_status',
+        'repair_costs_total', 'occupancy_status',
         'purchase_price', 'listing_price', 'assignment_fee', 'arv',
         'access_type', 'closing_date', 'comps', 'tags',
         'purchase_agreement', 'assignment_agreement',
@@ -256,7 +256,6 @@ export function usePropertyProfile() {
       lot_size: safe(formData.lotSize),
       year_built: parseNum(formData.yearBuilt),
       parking: safe(formData.parking),
-      condition: safe(formData.condition),
       occupancy_status: safe(formData.occupancyStatus),
       
       // Media Files - exact DB column names only
@@ -343,6 +342,9 @@ export function usePropertyProfile() {
     try {
       // Create clean payload using direct field mapping
       const payload = createPropertyPayload(initialData, supabaseUser.id);
+      
+      // Final safety: ensure condition field is completely removed
+      delete payload.condition;
       
       console.log('Final payload for Supabase insert:', payload);
       
