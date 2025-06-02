@@ -169,6 +169,54 @@ export function usePropertyProfile() {
     }
   };
 
+  // Sanitize payload utility function
+  const sanitizePayload = (payload: any) => {
+    const sanitize = (val: any) => (val === undefined ? null : val);
+
+    return {
+      name: sanitize(payload.name),
+      address: sanitize(payload.address),
+      city: sanitize(payload.city),
+      state: sanitize(payload.state),
+      zipcode: sanitize(payload.zipcode),
+      county: sanitize(payload.county),
+      parcel_id: sanitize(payload.parcel_id),
+      property_type: sanitize(payload.property_type),
+      bedrooms: sanitize(payload.bedrooms),
+      bathrooms: sanitize(payload.bathrooms),
+      sqft: sanitize(payload.sqft),
+      lot_size: sanitize(payload.lot_size),
+      year_built: sanitize(payload.year_built),
+      parking: sanitize(payload.parking),
+      primary_image: sanitize(payload.primary_image),
+      gallery_images: Array.isArray(payload.gallery_images) ? payload.gallery_images : [],
+      video_walkthrough: sanitize(payload.video_walkthrough),
+      arv: sanitize(payload.arv),
+      rent_total_monthly: sanitize(payload.rent_total_monthly),
+      rent_total_annual: sanitize(payload.rent_total_annual),
+      rent_units: Array.isArray(payload.rent_units) ? payload.rent_units : [],
+      expense_items: Array.isArray(payload.expense_items) ? payload.expense_items : [],
+      repair_projects: Array.isArray(payload.repair_projects) ? payload.repair_projects : [],
+      property_condition: sanitize(payload.property_condition),
+      access_type: sanitize(payload.access_type),
+      closing_date: sanitize(payload.closing_date),
+      purchase_price: sanitize(payload.purchase_price),
+      listing_price: sanitize(payload.listing_price),
+      assignment_fee: sanitize(payload.assignment_fee),
+      purchase_agreement: sanitize(payload.purchase_agreement),
+      assignment_agreement: sanitize(payload.assignment_agreement),
+      offer_ids: Array.isArray(payload.offer_ids) ? payload.offer_ids : [],
+      jv_partners: Array.isArray(payload.jv_partners) ? payload.jv_partners.map(String) : [],
+      additional_notes: sanitize(payload.additional_notes),
+      description: sanitize(payload.description),
+      created_by: sanitize(payload.created_by),
+      status: sanitize(payload.status),
+      seller_id: sanitize(payload.seller_id),
+      is_public: sanitize(payload.is_public),
+      featured_property: sanitize(payload.featured_property)
+    };
+  };
+
   // Clean property data to match actual Supabase schema
   const cleanPropertyPayload = (data: any, userId: string) => {
     // Utility function to safely handle undefined values
@@ -279,28 +327,59 @@ export function usePropertyProfile() {
     setIsLoading(true);
     try {
       // Clean the data to match Supabase schema
-      const cleanPayload = cleanPropertyPayload(initialData, supabaseUser.id);
+      const rawPayload = cleanPropertyPayload(initialData, supabaseUser.id);
       
-      console.log('Submitting payload to Supabase:', cleanPayload);
-      console.log('Payload structure verification:', {
+      // Use sanitizePayload to ensure no undefined values
+      const cleanPayload = sanitizePayload(rawPayload);
+      
+      console.log('Raw payload from cleanPropertyPayload:', rawPayload);
+      console.log('Sanitized payload for Supabase:', cleanPayload);
+      console.log('Critical field verification:', {
         seller_id: cleanPayload.seller_id,
         name: cleanPayload.name,
         address: cleanPayload.address,
         city: cleanPayload.city,
         state: cleanPayload.state,
+        zipcode: cleanPayload.zipcode,
+        property_type: cleanPayload.property_type,
+        bedrooms: cleanPayload.bedrooms,
+        bathrooms: cleanPayload.bathrooms,
         purchase_price: cleanPayload.purchase_price,
         listing_price: cleanPayload.listing_price,
-        assignment_fee: cleanPayload.assignment_fee,
-        status: cleanPayload.status
+        status: cleanPayload.status,
+        closing_date: cleanPayload.closing_date,
+        jv_partners: cleanPayload.jv_partners
       });
 
-      const { data, error } = await supabase
-        .from('property_profile')
-        .insert([cleanPayload])
-        .select();
+      let data, error;
+      try {
+        const result = await supabase
+          .from('property_profile')
+          .insert([cleanPayload])
+          .select();
+        
+        data = result.data;
+        error = result.error;
+        
+        console.log('Supabase insert result:', { data, error });
+      } catch (insertError) {
+        console.error('❌ Supabase insert threw exception:', insertError);
+        toast({
+          title: "Error",
+          description: `Insert failed with exception: ${insertError}`,
+          variant: "destructive",
+        });
+        return null;
+      }
 
       if (error) {
-        console.error('❌ Property insert failed:', error);
+        console.error('❌ Property insert failed with Supabase error:', error);
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         toast({
           title: "Error",
           description: `Failed to create property draft: ${error.message}`,
