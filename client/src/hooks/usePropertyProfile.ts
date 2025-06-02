@@ -232,9 +232,8 @@ export function usePropertyProfile() {
       condition: safe(formData.condition),
       occupancy_status: safe(formData.occupancyStatus),
       
-      // Media Files - exact DB column names
+      // Media Files - exact DB column names only
       primary_image: safe(formData.primaryImage),
-      images: Array.isArray(formData.galleryImages) ? formData.galleryImages : null,
       gallery_images: Array.isArray(formData.galleryImages) ? formData.galleryImages : null,
       video_walkthrough: safe(formData.videoWalkthrough),
       video_url: safe(formData.videoWalkthrough),
