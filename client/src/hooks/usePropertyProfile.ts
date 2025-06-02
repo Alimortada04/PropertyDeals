@@ -255,14 +255,13 @@ export function usePropertyProfile() {
       rental_units: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
       rent_unit: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
       
-      // Expenses - exact DB column names
-      expenses: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
+      // Expenses - exact DB column names only
+      expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
       expenses_total_monthly: parseNum(formData.expensesTotalMonthly),
       expenses_total_annual: (() => {
         const monthly = parseNum(formData.expensesTotalMonthly);
         return monthly ? monthly * 12 : null;
       })(),
-      expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
       
       // Repairs & Improvements - exact DB column names
       repair_costs_total: parseNum(formData.repairCostsTotal),
