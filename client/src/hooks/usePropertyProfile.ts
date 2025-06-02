@@ -6,6 +6,8 @@ import { useToast } from './use-toast';
 export interface PropertyProfile {
   id?: number;
   seller_id: string;
+  
+  // Basic Property Info
   name?: string;
   address?: string;
   city?: string;
@@ -14,6 +16,8 @@ export interface PropertyProfile {
   county?: string;
   parcel_id?: string;
   property_type?: string;
+  
+  // Property Details
   bedrooms?: number;
   bathrooms?: number;
   sqft?: number;
@@ -25,47 +29,56 @@ export interface PropertyProfile {
   
   // Media
   primary_image?: string;
-  gallery_images?: string[];
+  gallery_images?: string[] | null;
   video_walkthrough?: string;
   
-  // Finance
+  // Financial Data
   arv?: number;
-  rent_total_monthly?: number;
-  rent_total_annual?: number;
-  rent_unit?: any;
-  expenses_total_monthly?: number;
-  expenses_total_annual?: number;
-  expense_items?: any;
-  
-  // Logistics
-  access_type?: string;
-  closing_date?: string;
-  comps?: string[];
-  purchase_agreement?: string;
-  assignment_agreement?: string;
-  
-  // Final Details
   purchase_price?: number;
   listing_price?: number;
   assignment_fee?: number;
-  repair_projects?: any;
+  
+  // Rental Income
+  rent_total_monthly?: number;
+  rent_total_annual?: number;
+  rent_unit?: any[] | null;
+  
+  // Expenses
+  expenses_total_monthly?: number;
+  expenses_total_annual?: number;
+  expense_items?: any[] | null;
+  
+  // Repairs & Improvements
   repair_costs_total?: number;
-  jv_partners?: string[];
+  repair_projects?: any[] | null;
+  
+  // Partnership & Legal
+  jv_partners?: string[] | null;
+  purchase_agreement?: string;
+  assignment_agreement?: string;
+  
+  // Access & Logistics
+  access_type?: string;
+  closing_date?: string;
+  
+  // Marketing & Description
   description?: string;
   additional_notes?: string;
-  tags?: string[];
-  featured_property?: boolean;
+  tags?: string[] | null;
+  comps?: string;
   
-  // Status and visibility
-  status: 'draft' | 'live' | 'under contract' | 'closed' | 'dropped' | 'archived';
+  // Visibility Settings
+  featured_property?: boolean;
   is_public?: boolean;
-  created_by?: number;
+  
+  // Status
+  status: 'draft' | 'live' | 'under contract' | 'closed' | 'dropped' | 'archived';
   
   // Engagement stats
   view_count?: number;
   save_count?: number;
   offer_count?: number;
-  offer_ids?: string[];
+  offer_ids?: string[] | null;
   
   // Timestamps
   created_at?: string;
@@ -191,56 +204,99 @@ export function usePropertyProfile() {
       return String(date);
     };
     
-    // Create payload with ONLY fields that exist in the database
+    // Create payload with ALL database fields (matching exact column names)
     const rawPayload = {
       // Authentication & Status
       seller_id: userId, // Required NOT NULL field for ownership
       status: formData.status || 'draft',
       
-      // Basic Property Info
+      // Basic Property Info - matching DB column names
       name: safe(formData.name),
+      title: safe(formData.name), // some queries might use title instead of name
       address: safe(formData.address),
       property_type: safe(formData.propertyType),
       city: safe(formData.city),
       state: safe(formData.state),
       zip_code: safe(formData.zipCode),
-      bedrooms: safe(formData.bedrooms),
-      bathrooms: safe(formData.bathrooms),
-      year_built: safe(formData.yearBuilt),
-      sqft: safe(formData.sqft),
-      lot_size: safe(formData.lotSize),
-      parking: safe(formData.parking),
       county: safe(formData.county),
       parcel_id: safe(formData.parcelId),
       
-      // Media
-      primary_image: safe(formData.primaryImage),
-      gallery_images: Array.isArray(formData.galleryImages) ? formData.galleryImages : [],
-      video_walkthrough: safe(formData.videoWalkthrough),
+      // Property Details - exact DB column names
+      bedrooms: parseNum(formData.bedrooms),
+      bathrooms: parseNum(formData.bathrooms),
+      sqft: parseNum(formData.sqft),
+      square_feet: parseNum(formData.sqft), // alternative column name
+      lot_size: safe(formData.lotSize),
+      year_built: parseNum(formData.yearBuilt),
+      parking: safe(formData.parking),
+      condition: safe(formData.condition),
+      occupancy_status: safe(formData.occupancyStatus),
       
-      // Financial
+      // Media Files - exact DB column names
+      primary_image: safe(formData.primaryImage),
+      images: Array.isArray(formData.galleryImages) ? formData.galleryImages : null,
+      gallery_images: Array.isArray(formData.galleryImages) ? formData.galleryImages : null,
+      video_walkthrough: safe(formData.videoWalkthrough),
+      video_url: safe(formData.videoWalkthrough),
+      
+      // Financial Data - exact DB column names
       arv: parseNum(formData.arv),
-      rent_total_monthly: parseNum(formData.rentTotalMonthly),
       purchase_price: parseNum(formData.purchasePrice),
       listing_price: parseNum(formData.listingPrice),
       assignment_fee: parseNum(formData.assignmentFee),
+      
+      // Rental Income - exact DB column names
+      monthly_rent: parseNum(formData.rentTotalMonthly),
+      rent_total_monthly: parseNum(formData.rentTotalMonthly),
+      rent_total_annual: (() => {
+        const monthly = parseNum(formData.rentTotalMonthly);
+        return monthly ? monthly * 12 : null;
+      })(),
+      rental_units: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
+      rent_unit: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
+      
+      // Expenses - exact DB column names
+      expenses: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
+      expenses_total_monthly: parseNum(formData.expensesTotalMonthly),
+      expenses_total_annual: (() => {
+        const monthly = parseNum(formData.expensesTotalMonthly);
+        return monthly ? monthly * 12 : null;
+      })(),
+      expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
+      
+      // Repairs & Improvements - exact DB column names
+      estimated_repairs: parseNum(formData.repairCostsTotal),
       repair_costs_total: parseNum(formData.repairCostsTotal),
+      repairs: Array.isArray(formData.repairProjects) ? formData.repairProjects : null,
+      repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : null,
       
-      // Structured Data (JSON)
-      rent_units: Array.isArray(formData.rentUnit) ? formData.rentUnit : [],
-      expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : [],
-      repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : [],
-      jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : [],
-      
-      // Additional Details
-      condition: safe(formData.condition),
-      access_type: safe(formData.accessType),
-      closing_date: formatDate(formData.closingDate),
+      // Partnership & Legal - exact DB column names
+      partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : null,
+      jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : null,
       purchase_agreement: safe(formData.purchaseAgreement),
       assignment_agreement: safe(formData.assignmentAgreement),
-      comps: safe(formData.comps),
+      
+      // Access & Logistics - exact DB column names
+      access_type: safe(formData.accessType),
+      access_instructions: safe(formData.accessType),
+      closing_date: formatDate(formData.closingDate),
+      
+      // Marketing & Description - exact DB column names
       description: safe(formData.description),
-      additional_notes: safe(formData.additionalNotes)
+      notes: safe(formData.additionalNotes),
+      additional_notes: safe(formData.additionalNotes),
+      tags: Array.isArray(formData.tags) ? formData.tags : null,
+      comps: Array.isArray(formData.comps) ? [formData.comps] : null,
+      
+      // Visibility Settings - exact DB column names
+      featured_property: formData.featuredProperty || false,
+      is_public: formData.isPublic || false,
+      
+      // Engagement Tracking - exact DB column names
+      view_count: 0,
+      save_count: 0,
+      offer_count: 0,
+      offer_ids: null
     };
 
     // Remove any undefined or null values and extra fields
