@@ -267,7 +267,6 @@ export function usePropertyProfile() {
       repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : null,
       
       // Partnership & Legal - exact DB column names
-      partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : null,
       jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : null,
       purchase_agreement: safe(formData.purchaseAgreement),
       assignment_agreement: safe(formData.assignmentAgreement),
