@@ -124,7 +124,7 @@ export default function SellerDashboardPage() {
       const { data, error } = await supabase
         .from('property_profile')
         .select('*')
-        .eq('created_by', 1); // Using temporary user ID system
+        .eq('seller_id', user.id); // Using seller_id for ownership
 
       if (error) {
         console.error('Error fetching property profiles:', error);

@@ -41,7 +41,7 @@ export default function SellerDashboard() {
       const { data, error } = await supabase
         .from('property_profile')
         .select('*')
-        .eq('created_by', userId)
+        .eq('seller_id', userId)
         .order('created_at', { ascending: false });
 
       if (error) {
