@@ -169,147 +169,90 @@ export function usePropertyProfile() {
     }
   };
 
-  // Sanitize payload utility function
-  const sanitizePayload = (payload: any) => {
-    const sanitize = (val: any) => (val === undefined ? null : val);
-
-    return {
-      name: sanitize(payload.name),
-      address: sanitize(payload.address),
-      city: sanitize(payload.city),
-      state: sanitize(payload.state),
-      zipcode: sanitize(payload.zipcode),
-      county: sanitize(payload.county),
-      parcel_id: sanitize(payload.parcel_id),
-      property_type: sanitize(payload.property_type),
-      bedrooms: sanitize(payload.bedrooms),
-      bathrooms: sanitize(payload.bathrooms),
-      sqft: sanitize(payload.sqft),
-      lot_size: sanitize(payload.lot_size),
-      year_built: sanitize(payload.year_built),
-      parking: sanitize(payload.parking),
-      primary_image: sanitize(payload.primary_image),
-      gallery_images: Array.isArray(payload.gallery_images) ? payload.gallery_images : [],
-      video_walkthrough: sanitize(payload.video_walkthrough),
-      arv: sanitize(payload.arv),
-      rent_total_monthly: sanitize(payload.rent_total_monthly),
-      rent_total_annual: sanitize(payload.rent_total_annual),
-      rent_units: Array.isArray(payload.rent_units) ? payload.rent_units : [],
-      expense_items: Array.isArray(payload.expense_items) ? payload.expense_items : [],
-      repair_projects: Array.isArray(payload.repair_projects) ? payload.repair_projects : [],
-      property_condition: sanitize(payload.property_condition),
-      access_type: sanitize(payload.access_type),
-      closing_date: sanitize(payload.closing_date),
-      purchase_price: sanitize(payload.purchase_price),
-      listing_price: sanitize(payload.listing_price),
-      assignment_fee: sanitize(payload.assignment_fee),
-      purchase_agreement: sanitize(payload.purchase_agreement),
-      assignment_agreement: sanitize(payload.assignment_agreement),
-      offer_ids: Array.isArray(payload.offer_ids) ? payload.offer_ids : [],
-      jv_partners: Array.isArray(payload.jv_partners) ? payload.jv_partners.map(String) : [],
-      additional_notes: sanitize(payload.additional_notes),
-      description: sanitize(payload.description),
-      created_by: sanitize(payload.created_by),
-      status: sanitize(payload.status) || 'draft',
-      seller_id: sanitize(payload.seller_id),
-      // Required boolean fields with defaults
-      featured_property: payload.featured_property === true ? true : false
+  // Direct field mapping from frontend form to Supabase property_profile table
+  const createPropertyPayload = (formData: any, sellerId: string) => {
+    console.log("Raw form data:", formData);
+    
+    // Helper function to sanitize values (replace undefined with null)
+    const sanitize = (value: any) => value === undefined ? null : value;
+    
+    // Helper function to parse numbers and remove currency formatting
+    const parseNumber = (value: any) => {
+      if (!value) return null;
+      const cleaned = String(value).replace(/[$,]/g, '');
+      const parsed = Number(cleaned);
+      return isNaN(parsed) ? null : parsed;
     };
-  };
-
-  // Clean property data to match actual Supabase schema
-  const cleanPropertyPayload = (data: any, userId: string) => {
-    // Utility function to safely handle undefined values
-    const safe = (val: any) => val === undefined ? null : val;
     
-    console.log("Input data for cleaning:", data);
+    // Helper function to format date
+    const formatDate = (date: any) => {
+      if (!date) return null;
+      if (date instanceof Date) return date.toISOString().split('T')[0];
+      return String(date);
+    };
     
-    return {
-      // Required fields - match actual database schema
-      seller_id: userId, // seller_id is text field in DB (UUID)
-      // Note: created_by is integer field - leaving it null for now
-      status: 'draft',
-      featured_property: safe(data.featuredProperty) || false,
+    // Direct field mapping as specified
+    const payload = {
+      // Required fields
+      seller_id: sellerId,
+      status: 'draft', // Default status for new listings
+      featured_property: false, // Default to not featured
       
-      // Basic property info - exact field mapping as requested
-      name: safe(data.name) || 'Untitled Property', // Property Title → name
-      title: safe(data.name) || 'Untitled Property', // DB has both name and title
-      address: safe(data.address), // Address → address
-      city: safe(data.city), // City → city
-      state: safe(data.state), // State → state
-      zip_code: safe(data.zipCode), // Zip Code → zipcode (DB field is zip_code)
-      county: safe(data.county), // County → county
-      parcel_id: safe(data.parcelId), // Parcel ID → parcel_id
-      property_type: safe(data.propertyType), // Property Type → property_type
-      bedrooms: data.bedrooms ? Number(data.bedrooms) : null, // Bedrooms → bedrooms
-      bathrooms: data.bathrooms ? Number(data.bathrooms) : null, // Bathrooms → bathrooms
-      sqft: data.sqft ? Number(data.sqft) : null, // Square Footage → sqft
-      square_feet: data.sqft ? Number(data.sqft) : null, // DB has both fields
-      lot_size: safe(data.lotSize), // Lot Size → lot_size
-      year_built: data.yearBuilt ? Number(data.yearBuilt) : null, // Year Built → year_built
-      parking: safe(data.parking), // Parking → parking
-      condition: safe(data.condition), // Property Condition → condition (not property_condition)
+      // Basic property information
+      name: sanitize(formData.name) || 'Untitled Property', // Property Title → name
+      address: sanitize(formData.address), // Address → address
+      city: sanitize(formData.city), // City → city
+      state: sanitize(formData.state), // State → state
+      zip_code: sanitize(formData.zipCode), // Zip Code → zip_code
+      county: sanitize(formData.county), // County → county
+      parcel_id: sanitize(formData.parcelId), // Parcel ID → parcel_id
+      property_type: sanitize(formData.propertyType), // Property Type → property_type
+      bedrooms: parseNumber(formData.bedrooms), // Bedrooms → bedrooms
+      bathrooms: parseNumber(formData.bathrooms), // Bathrooms → bathrooms
+      sqft: parseNumber(formData.sqft), // Square Footage → sqft
+      lot_size: sanitize(formData.lotSize), // Lot Size → lot_size
+      year_built: parseNumber(formData.yearBuilt), // Year Built → year_built
+      parking: sanitize(formData.parking), // Parking → parking
       
-      // Media fields - file URLs after upload processing
-      primary_image: safe(data.primaryImage), // Primary Image → primary_image
-      gallery_images: Array.isArray(data.galleryImages) ? data.galleryImages : [], // Gallery Images → gallery_images
-      images: Array.isArray(data.galleryImages) ? data.galleryImages : [], // DB has images field too
-      video_walkthrough: safe(data.videoWalkthrough), // Video Walkthrough → video_walkthrough
-      video_url: safe(data.videoWalkthrough), // DB has video_url field too
+      // Media files (URLs after upload)
+      primary_image: sanitize(formData.primaryImage), // Primary Image → primary_image
+      gallery_images: Array.isArray(formData.galleryImages) ? formData.galleryImages : [], // Gallery Images → gallery_images
+      video_walkthrough: sanitize(formData.videoWalkthrough), // Video Walkthrough → video_walkthrough
       
-      // Financial details - convert strings to numbers and clean currency formatting
-      arv: data.arv ? Number(String(data.arv).replace(/[$,]/g, '')) : null, // After Repair Value → arv
-      listing_price: data.listingPrice ? Number(String(data.listingPrice).replace(/[$,]/g, '')) : null, // Listing Price → listing_price
-      purchase_price: data.purchasePrice ? Number(String(data.purchasePrice).replace(/[$,]/g, '')) : null, // Purchase Price → purchase_price
-      assignment_fee: data.assignmentFee ? Number(String(data.assignmentFee).replace(/[$,]/g, '')) : null, // Assignment Fee → assignment_fee
-      estimated_repairs: data.repairCostsTotal ? Number(String(data.repairCostsTotal).replace(/[$,]/g, '')) : null,
-      monthly_rent: data.rentTotalMonthly ? Number(String(data.rentTotalMonthly).replace(/[$,]/g, '')) : null, // Monthly Rent → monthly_rent
-      rent_total_monthly: data.rentTotalMonthly ? Number(String(data.rentTotalMonthly).replace(/[$,]/g, '')) : null, // Monthly Rent → rent_total_monthly
-      rent_total_annual: data.rentTotalAnnual ? Number(String(data.rentTotalAnnual).replace(/[$,]/g, '')) : null,
-      expenses_total_monthly: data.expensesTotalMonthly ? Number(String(data.expensesTotalMonthly).replace(/[$,]/g, '')) : null,
-      expenses_total_annual: data.expensesTotalAnnual ? Number(String(data.expensesTotalAnnual).replace(/[$,]/g, '')) : null,
+      // Financial information
+      arv: parseNumber(formData.arv), // After Repair Value → arv
+      rent_total_monthly: parseNumber(formData.rentTotalMonthly), // Monthly Rent → rent_total_monthly
+      rent_total_annual: parseNumber(formData.rentTotalAnnual), // Annual Rent → rent_total_annual
+      purchase_price: parseNumber(formData.purchasePrice), // Purchase Price → purchase_price
+      listing_price: parseNumber(formData.listingPrice), // Listing Price → listing_price
+      assignment_fee: parseNumber(formData.assignmentFee), // Assignment Fee → assignment_fee
       
-      // JSONB fields - structured arrays
-      rental_units: Array.isArray(data.rentUnit) ? data.rentUnit : [], // Unit Rent Breakdown → rental_units
-      rent_unit: Array.isArray(data.rentUnit) ? data.rentUnit : [], // Unit Rent Breakdown → rent_unit  
-      expenses: Array.isArray(data.expenseItems) ? data.expenseItems : [], // Expense Items → expenses
-      expense_items: Array.isArray(data.expenseItems) ? data.expenseItems : [], // Expense Items → expense_items
-      repairs: Array.isArray(data.repairProjects) ? data.repairProjects.map((project: any) => ({
-        project_name: project.project_name || project.name || '',
-        description: project.description || '',
-        estimated_cost: project.estimated_cost ? Number(project.estimated_cost) : 0,
-        supporting_file_url: project.supporting_file_url || project.fileUrl || ''
-      })) : [], // Repair Projects → repairs
-      repair_projects: Array.isArray(data.repairProjects) ? data.repairProjects.map((project: any) => ({
-        project_name: project.project_name || project.name || '',
-        description: project.description || '',
-        estimated_cost: project.estimated_cost ? Number(project.estimated_cost) : 0,
-        supporting_file_url: project.supporting_file_url || project.fileUrl || ''
-      })) : [], // Repair Projects → repair_projects
-      repair_costs_total: data.repairCostsTotal ? Number(String(data.repairCostsTotal).replace(/[$,]/g, '')) : null,
+      // Structured data (JSON arrays)
+      rent_unit: Array.isArray(formData.rentUnit) ? formData.rentUnit : [], // Unit Rent Breakdown → rent_unit
+      expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : [], // Expenses → expense_items
+      repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : [], // Repair Projects → repair_projects
       
-      // Deal and access details
-      access_instructions: safe(data.accessType), // Access Type → access_instructions
-      access_type: safe(data.accessType), // Access Type → access_type
-      closing_date: data.closingDate ? (data.closingDate instanceof Date ? data.closingDate.toISOString().split('T')[0] : data.closingDate) : null, // Closing Date → closing_date
-      comps: Array.isArray(data.comps) ? data.comps : [], // Comparable Properties → comps
-      purchase_agreement: safe(data.purchaseAgreement), // Purchase Agreement → purchase_agreement (file URL)
-      assignment_agreement: safe(data.assignmentAgreement), // Assignment Agreement → assignment_agreement (file URL)
+      // Additional details
+      condition: sanitize(formData.condition), // Property Condition → condition
+      access_type: sanitize(formData.accessType), // Access Type → access_type
+      closing_date: formatDate(formData.closingDate), // Closing Date → closing_date
+      purchase_agreement: sanitize(formData.purchaseAgreement), // Purchase Agreement → purchase_agreement
+      assignment_agreement: sanitize(formData.assignmentAgreement), // Assignment Agreement → assignment_agreement
+      comps: Array.isArray(formData.comps) ? formData.comps : [], // Comparable Properties → comps
+      offer_ids: Array.isArray(formData.offerIds) ? formData.offerIds : [], // Offer IDs → offer_ids
+      jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners.map(String) : [], // JV Partners → jv_partners
+      additional_notes: sanitize(formData.additionalNotes), // Additional Notes → additional_notes
+      description: sanitize(formData.description), // Property Description → description
       
-      // Partners and notes
-      partners: Array.isArray(data.jvPartners) ? data.jvPartners : [], // JV Partners → partners
-      jv_partners: Array.isArray(data.jvPartners) ? data.jvPartners : [], // JV Partners → jv_partners
-      notes: safe(data.additionalNotes) || safe(data.notes), // Additional Notes → notes
-      additional_notes: safe(data.additionalNotes) || safe(data.notes), // Additional Notes → additional_notes
-      description: safe(data.description), // Property Description → description
-      tags: Array.isArray(data.tags) ? data.tags : [],
-      
-      // Stats and IDs
+      // Metadata
+      created_by: null, // Set to null for now, can be updated later
       view_count: 0,
       save_count: 0,
-      offer_count: 0,
-      offer_ids: Array.isArray(data.offerIds) ? data.offerIds : [] // Offer IDs → offer_ids
+      offer_count: 0
     };
+    
+    console.log("Sanitized payload for Supabase:", payload);
+    return payload;
   };
 
   // Create a new property draft
@@ -325,81 +268,50 @@ export function usePropertyProfile() {
 
     setIsLoading(true);
     try {
-      // Clean the data to match Supabase schema
-      const rawPayload = cleanPropertyPayload(initialData, supabaseUser.id);
+      // Create clean payload using direct field mapping
+      const payload = createPropertyPayload(initialData, supabaseUser.id);
       
-      // Use sanitizePayload to ensure no undefined values
-      const cleanPayload = sanitizePayload(rawPayload);
+      console.log('Final payload for Supabase insert:', payload);
       
-      console.log('Raw payload from cleanPropertyPayload:', rawPayload);
-      console.log('Sanitized payload for Supabase:', cleanPayload);
-      console.log('Critical field verification:', {
-        seller_id: cleanPayload.seller_id,
-        name: cleanPayload.name,
-        address: cleanPayload.address,
-        city: cleanPayload.city,
-        state: cleanPayload.state,
-        zipcode: cleanPayload.zipcode,
-        property_type: cleanPayload.property_type,
-        bedrooms: cleanPayload.bedrooms,
-        bathrooms: cleanPayload.bathrooms,
-        purchase_price: cleanPayload.purchase_price,
-        listing_price: cleanPayload.listing_price,
-        status: cleanPayload.status,
-        closing_date: cleanPayload.closing_date,
-        jv_partners: cleanPayload.jv_partners
-      });
-
-      let data, error;
-      try {
-        const result = await supabase
-          .from('property_profile')
-          .insert([cleanPayload])
-          .select();
-        
-        data = result.data;
-        error = result.error;
-        
-        console.log('Supabase insert result:', { data, error });
-      } catch (insertError) {
-        console.error('❌ Supabase insert threw exception:', insertError);
-        toast({
-          title: "Error",
-          description: `Insert failed with exception: ${insertError}`,
-          variant: "destructive",
-        });
-        return null;
-      }
+      // Insert into Supabase with detailed error handling
+      const { data, error } = await supabase
+        .from('property_profile')
+        .insert([payload])
+        .select();
 
       if (error) {
-        console.error('❌ Property insert failed with Supabase error:', error);
+        console.error('❌ Supabase insert error:', error);
         console.error('Error details:', {
           message: error.message,
           details: error.details,
           hint: error.hint,
           code: error.code
         });
+        
         toast({
           title: "Error",
-          description: `Failed to create property draft: ${error.message}`,
+          description: `Failed to create property listing: ${error.message}`,
           variant: "destructive",
         });
         return null;
       }
 
       if (!data || data.length === 0) {
-        console.warn('⚠️ Insert response had no data:', data);
+        console.warn('⚠️ No data returned from insert');
         toast({
-          title: "Error",
-          description: "Something went wrong. Draft not saved.",
+          title: "Warning", 
+          description: "Property was created but no data was returned.",
           variant: "destructive",
         });
         return null;
       }
 
+      const createdProperty = data[0];
+      console.log('✅ Property created successfully:', createdProperty);
+
       toast({
-        title: "Draft Created!",
-        description: "Your property draft has been saved.",
+        title: "Success",
+        description: "Property listing created successfully!",
       });
 
       // Refresh the properties list
