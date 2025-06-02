@@ -251,7 +251,6 @@ export function usePropertyProfile() {
         return monthly ? monthly * 12 : null;
       })(),
       rental_units: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
-      rent_unit: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
       
       // Expenses - exact DB column names only
       expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
