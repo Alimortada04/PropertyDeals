@@ -1,59 +1,13 @@
-import { apiRequest } from '@/lib/queryClient';
-import type { InsertPropertyProfile } from '@shared/schema';
+// DEPRECATED: Use usePropertyProfile.createPropertyDraft() instead
+// This file contains legacy creation logic that conflicts with the sanitized payload system
+// All property creation should go through the single sanitized pathway
 
-export interface CreateDraftPropertyData {
-  title: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  propertyType: string;
-  listingPrice: number;
-  condition: string;
-  occupancyStatus: string;
-}
+/*
+LEGACY CODE - DO NOT USE
+This file has been deprecated to prevent payload conflicts.
+Use: usePropertyProfile.createPropertyDraft(rawFormData) instead
+*/
 
-export async function createDraftProperty(data: CreateDraftPropertyData): Promise<any> {
-  const propertyProfileData: Partial<InsertPropertyProfile> = {
-    name: data.title,
-    address: data.address,
-    city: data.city,
-    state: data.state,
-    zipCode: data.zipCode,
-    propertyType: data.propertyType,
-    listingPrice: data.listingPrice,
-    status: 'draft',
-    createdBy: 1, // Default seller ID for now
-  };
-
-  return await apiRequest('/api/property-profiles', 'POST', propertyProfileData);
-}
-
-// Simplified function for immediate draft creation with minimal data
-export async function createMinimalDraft(sellerId: number): Promise<any> {
-  try {
-    const minimalDraftData = {
-      sellerId,
-      name: '',
-      address: '',
-      city: '',
-      state: '',
-      zipCode: '',
-      propertyType: '',
-      status: 'draft',
-      bedrooms: null,
-      bathrooms: null,
-      sqft: null,
-      listingPrice: null,
-      purchasePrice: null,
-      arv: null,
-      description: '',
-    };
-
-    const response = await apiRequest('/api/property-profiles', 'POST', minimalDraftData);
-    return response;
-  } catch (error) {
-    console.error('Failed to create minimal draft:', error);
-    return null;
-  }
+export function deprecatedNotice() {
+  console.warn("This file is deprecated. Use usePropertyProfile.createPropertyDraft() instead");
 }

@@ -50,7 +50,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EnhancedPropertyListingModal } from '@/components/property/enhanced-property-listing-modal';
-import { createMinimalDraft } from '@/lib/create-draft-property';
 import { useToast } from '@/hooks/use-toast';
 
 // Property data will be fetched from the backend API
