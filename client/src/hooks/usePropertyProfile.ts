@@ -213,7 +213,6 @@ export function usePropertyProfile() {
       status: sanitize(payload.status) || 'draft',
       seller_id: sanitize(payload.seller_id),
       // Required boolean fields with defaults
-      is_public: payload.is_public === true ? true : false,
       featured_property: payload.featured_property === true ? true : false
     };
   };
@@ -230,7 +229,6 @@ export function usePropertyProfile() {
       seller_id: userId, // seller_id is text field in DB (UUID)
       // Note: created_by is integer field - leaving it null for now
       status: 'draft',
-      is_public: false,
       featured_property: safe(data.featuredProperty) || false,
       
       // Basic property info - exact field mapping as requested
