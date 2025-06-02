@@ -69,7 +69,6 @@ export interface PropertyProfile {
   
   // Visibility Settings
   featured_property?: boolean;
-  is_public?: boolean;
   
   // Status
   status: 'draft' | 'live' | 'under contract' | 'closed' | 'dropped' | 'archived';
@@ -287,7 +286,6 @@ export function usePropertyProfile() {
       
       // Visibility Settings - exact DB column names
       featured_property: formData.featuredProperty || false,
-      is_public: formData.isPublic || false,
       
       // Engagement Tracking - exact DB column names
       view_count: 0,
