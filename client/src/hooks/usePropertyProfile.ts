@@ -193,9 +193,9 @@ export function usePropertyProfile() {
     
     // Create payload with ONLY fields that exist in the database
     const rawPayload = {
-      // Authentication & Status - seller_id is required NOT NULL
+      // Authentication & Status
       created_by: userId,
-      seller_id: userId, // Required field that cannot be null
+      seller_id: userId, // Required NOT NULL field
       status: formData.status || 'draft',
       
       // Basic Property Info
