@@ -202,6 +202,34 @@ export function usePropertyProfile() {
       if (date instanceof Date) return date.toISOString().split('T')[0];
       return String(date);
     };
+
+    // Sanitize payload to only include valid database fields
+    const sanitizePayload = (payload: any) => {
+      const allowedKeys = new Set([
+        'id', 'created_at', 'status', 'name', 'address', 'property_type', 'city', 'state', 'zip_code',
+        'bedrooms', 'bathrooms', 'year_built', 'sqft', 'lot_size', 'parking', 'county', 'parcel_id',
+        'primary_image', 'gallery_images', 'video_walkthrough',
+        'monthly_rent', 'rent_total_monthly', 'rent_total_annual', 'rent_unit',
+        'expenses_total_monthly', 'expenses_total_annual', 'expense_items',
+        'condition', 'repair_costs_total', 'occupancy_status',
+        'purchase_price', 'listing_price', 'assignment_fee', 'arv',
+        'access_type', 'closing_date', 'comps', 'tags',
+        'purchase_agreement', 'assignment_agreement',
+        'jv_partners', 'description', 'additional_notes',
+        'featured_property', 'view_count', 'save_count', 'offer_count',
+        'offer_ids', 'seller_id'
+      ]);
+
+      const cleanPayload: any = {};
+
+      for (const key in payload) {
+        if (allowedKeys.has(key)) {
+          cleanPayload[key] = payload[key] ?? null;
+        }
+      }
+
+      return cleanPayload;
+    };
     
     // Create payload with ALL database fields (matching exact column names)
     const rawPayload = {
@@ -292,13 +320,12 @@ export function usePropertyProfile() {
       offer_ids: null
     };
 
-    // Remove any undefined or null values and extra fields
-    const payload = Object.fromEntries(
-      Object.entries(rawPayload).filter(([_, value]) => value !== null && value !== undefined)
-    );
+    // Apply sanitization to remove invalid fields
+    const sanitizedPayload = sanitizePayload(rawPayload);
     
-    console.log("Clean payload for Supabase insert:", payload);
-    return payload;
+    console.log("Raw payload before sanitization:", rawPayload);
+    console.log("Sanitized payload for Supabase insert:", sanitizedPayload);
+    return sanitizedPayload;
   };
 
   // Create a new property draft
