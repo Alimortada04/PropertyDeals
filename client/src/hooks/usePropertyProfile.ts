@@ -169,103 +169,81 @@ export function usePropertyProfile() {
     }
   };
 
-  // Direct field mapping from frontend form to Supabase property_profile table
+  // Rebuild property payload with exact field mapping to verified Supabase schema
   const createPropertyPayload = (formData: any, userId: string) => {
-    console.log("Raw form data:", formData);
+    console.log("Raw form data for property creation:", formData);
     
-    // Helper function to sanitize values (replace undefined with null)
-    const sanitize = (value: any) => value === undefined ? null : value;
+    // Helper to safely handle null/undefined values
+    const safe = (value: any) => value === undefined || value === '' ? null : value;
     
-    // Helper function to parse numbers and remove currency formatting
-    const parseNumber = (value: any) => {
-      if (!value) return null;
+    // Helper to parse numbers
+    const parseNum = (value: any) => {
+      if (!value || value === '') return null;
       const cleaned = String(value).replace(/[$,]/g, '');
       const parsed = Number(cleaned);
       return isNaN(parsed) ? null : parsed;
     };
     
-    // Helper function to format date
+    // Helper to format dates
     const formatDate = (date: any) => {
       if (!date) return null;
       if (date instanceof Date) return date.toISOString().split('T')[0];
       return String(date);
     };
     
-    // Direct field mapping to match exact database schema
+    // Create payload with ONLY verified schema fields
     const payload = {
-      // Required fields - using created_by instead of seller_id
+      // Authentication & Status
       created_by: userId,
-      status: 'draft',
-      featured_property: false,
+      status: formData.status || 'draft',
       
-      // Basic property information - exact column names from schema
-      name: sanitize(formData.name) || 'Untitled Property',
-      title: sanitize(formData.name) || 'Untitled Property', // DB has both name and title
-      address: sanitize(formData.address),
-      city: sanitize(formData.city),
-      state: sanitize(formData.state),
-      zip_code: sanitize(formData.zipCode),
-      county: sanitize(formData.county),
-      parcel_id: sanitize(formData.parcelId),
-      property_type: sanitize(formData.propertyType),
-      bedrooms: parseNumber(formData.bedrooms),
-      bathrooms: parseNumber(formData.bathrooms),
-      sqft: parseNumber(formData.sqft),
-      square_feet: parseNumber(formData.sqft), // DB has both sqft and square_feet
-      lot_size: sanitize(formData.lotSize),
-      year_built: parseNumber(formData.yearBuilt),
-      parking: sanitize(formData.parking),
-      condition: sanitize(formData.condition), // Schema shows 'condition', not 'property_condition'
+      // Basic Property Info
+      name: safe(formData.name),
+      address: safe(formData.address),
+      property_type: safe(formData.propertyType),
+      city: safe(formData.city),
+      state: safe(formData.state),
+      zip_code: safe(formData.zipCode),
+      bedrooms: safe(formData.bedrooms),
+      bathrooms: safe(formData.bathrooms),
+      year_built: safe(formData.yearBuilt),
+      sqft: safe(formData.sqft),
+      lot_size: safe(formData.lotSize),
+      parking: safe(formData.parking),
+      county: safe(formData.county),
+      parcel_id: safe(formData.parcelId),
       
-      // Media files
-      primary_image: sanitize(formData.primaryImage),
+      // Media
+      primary_image: safe(formData.primaryImage),
       gallery_images: Array.isArray(formData.galleryImages) ? formData.galleryImages : [],
-      images: Array.isArray(formData.galleryImages) ? formData.galleryImages : [], // DB has both
-      video_walkthrough: sanitize(formData.videoWalkthrough),
-      video_url: sanitize(formData.videoWalkthrough), // DB has both
+      video_walkthrough: safe(formData.videoWalkthrough),
       
-      // Financial information
-      arv: parseNumber(formData.arv),
-      listing_price: parseNumber(formData.listingPrice),
-      purchase_price: parseNumber(formData.purchasePrice),
-      assignment_fee: parseNumber(formData.assignmentFee),
-      estimated_repairs: parseNumber(formData.repairCostsTotal),
-      monthly_rent: parseNumber(formData.rentTotalMonthly),
-      rent_total_monthly: parseNumber(formData.rentTotalMonthly), // DB has both
-      rent_total_annual: parseNumber(formData.rentTotalAnnual),
-      expenses_total_monthly: parseNumber(formData.expensesTotalMonthly),
-      expenses_total_annual: parseNumber(formData.expensesTotalAnnual),
+      // Financial
+      arv: parseNum(formData.arv),
+      rent_total_monthly: parseNum(formData.rentTotalMonthly),
+      purchase_price: parseNum(formData.purchasePrice),
+      listing_price: parseNum(formData.listingPrice),
+      assignment_fee: parseNum(formData.assignmentFee),
+      repair_costs_total: parseNum(formData.repairCostsTotal),
       
-      // Structured data (JSONB)
-      rental_units: Array.isArray(formData.rentUnit) ? formData.rentUnit : [],
-      rent_unit: Array.isArray(formData.rentUnit) ? formData.rentUnit : [], // DB has both
-      expenses: Array.isArray(formData.expenseItems) ? formData.expenseItems : [],
-      expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : [], // DB has both
-      repairs: Array.isArray(formData.repairProjects) ? formData.repairProjects : [],
-      repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : [], // DB has both
-      repair_costs_total: parseNumber(formData.repairCostsTotal),
+      // Structured Data (JSON)
+      rent_units: Array.isArray(formData.rentUnit) ? formData.rentUnit : [],
+      expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : [],
+      repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : [],
+      jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : [],
       
-      // Additional details - using access_type only (no access_instructions)
-      access_type: sanitize(formData.accessType),
+      // Additional Details
+      condition: safe(formData.condition),
+      access_type: safe(formData.accessType),
       closing_date: formatDate(formData.closingDate),
-      purchase_agreement: sanitize(formData.purchaseAgreement),
-      assignment_agreement: sanitize(formData.assignmentAgreement),
-      comps: Array.isArray(formData.comps) ? formData.comps : [],
-      partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : [],
-      jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : [], // DB has both
-      notes: sanitize(formData.additionalNotes),
-      additional_notes: sanitize(formData.additionalNotes), // DB has both
-      description: sanitize(formData.description),
-      tags: Array.isArray(formData.tags) ? formData.tags : [],
-      
-      // Stats and metadata
-      offer_ids: Array.isArray(formData.offerIds) ? formData.offerIds : [],
-      view_count: 0,
-      save_count: 0,
-      offer_count: 0
+      purchase_agreement: safe(formData.purchaseAgreement),
+      assignment_agreement: safe(formData.assignmentAgreement),
+      comps: safe(formData.comps),
+      description: safe(formData.description),
+      additional_notes: safe(formData.additionalNotes)
     };
     
-    console.log("Sanitized payload for Supabase:", payload);
+    console.log("Clean payload for Supabase insert:", payload);
     return payload;
   };
 
