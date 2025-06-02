@@ -136,6 +136,9 @@ export default function SellerDashboardPage() {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
+  // Initialize the property profile hook
+  const { createPropertyDraft } = usePropertyProfile();
+
   // Handler to create a new draft property and redirect to editor
   const handleCreateListing = async () => {
     try {
@@ -148,7 +151,18 @@ export default function SellerDashboardPage() {
         return;
       }
 
-      const draftResponse = await createMinimalDraft(1); // Using seller ID = 1 for now
+      // Create minimal draft using the sanitized pathway
+      const minimalDraftData = {
+        name: "New Property Draft",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        propertyType: "",
+        status: "draft"
+      };
+
+      const draftResponse = await createPropertyDraft(minimalDraftData);
       
       if (draftResponse && draftResponse.id) {
         toast({
