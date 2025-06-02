@@ -170,7 +170,7 @@ export function usePropertyProfile() {
   };
 
   // Direct field mapping from frontend form to Supabase property_profile table
-  const createPropertyPayload = (formData: any, sellerId: string) => {
+  const createPropertyPayload = (formData: any, userId: string) => {
     console.log("Raw form data:", formData);
     
     // Helper function to sanitize values (replace undefined with null)
@@ -193,8 +193,8 @@ export function usePropertyProfile() {
     
     // Direct field mapping to match exact database schema
     const payload = {
-      // Required fields
-      seller_id: sellerId,
+      // Required fields - using created_by instead of seller_id
+      created_by: userId,
       status: 'draft',
       featured_property: false,
       
@@ -245,9 +245,8 @@ export function usePropertyProfile() {
       repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : [], // DB has both
       repair_costs_total: parseNumber(formData.repairCostsTotal),
       
-      // Additional details
-      access_instructions: sanitize(formData.accessType),
-      access_type: sanitize(formData.accessType), // DB has both
+      // Additional details - using access_type only (no access_instructions)
+      access_type: sanitize(formData.accessType),
       closing_date: formatDate(formData.closingDate),
       purchase_agreement: sanitize(formData.purchaseAgreement),
       assignment_agreement: sanitize(formData.assignmentAgreement),
@@ -263,8 +262,7 @@ export function usePropertyProfile() {
       offer_ids: Array.isArray(formData.offerIds) ? formData.offerIds : [],
       view_count: 0,
       save_count: 0,
-      offer_count: 0,
-      created_by: null
+      offer_count: 0
     };
     
     console.log("Sanitized payload for Supabase:", payload);
