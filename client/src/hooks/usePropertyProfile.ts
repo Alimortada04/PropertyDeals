@@ -209,7 +209,7 @@ export function usePropertyProfile() {
         'id', 'created_at', 'status', 'name', 'address', 'property_type', 'city', 'state', 'zip_code',
         'bedrooms', 'bathrooms', 'year_built', 'sqft', 'lot_size', 'parking', 'county', 'parcel_id',
         'primary_image', 'gallery_images', 'video_walkthrough',
-        'monthly_rent', 'rent_total_monthly', 'rent_total_annual', 'rent_unit',
+        'rent_total_monthly', 'rent_total_annual', 'rent_unit',
         'expenses_total_monthly', 'expenses_total_annual', 'expense_items',
         'repair_costs_total', 'occupancy_status',
         'purchase_price', 'listing_price', 'assignment_fee', 'arv',
@@ -217,7 +217,7 @@ export function usePropertyProfile() {
         'purchase_agreement', 'assignment_agreement',
         'jv_partners', 'description', 'additional_notes',
         'featured_property', 'view_count', 'save_count', 'offer_count',
-        'offer_ids', 'seller_id'
+        'offer_ids', 'seller_id', 'created_by'
       ]);
 
       const cleanPayload: any = {};
@@ -233,8 +233,9 @@ export function usePropertyProfile() {
     
     // Create payload with ALL database fields (matching exact column names)
     const rawPayload = {
-      // Authentication & Status
+      // Authentication & Status - Required fields
       seller_id: userId, // Required NOT NULL field for ownership
+      created_by: parseInt(userId) || 1, // Required integer field for user ID
       status: formData.status || 'draft',
       
       // Basic Property Info - matching DB column names
@@ -270,8 +271,7 @@ export function usePropertyProfile() {
       listing_price: parseNum(formData.listingPrice),
       assignment_fee: parseNum(formData.assignmentFee),
       
-      // Rental Income - exact DB column names
-      monthly_rent: parseNum(formData.rentTotalMonthly),
+      // Rental Income - correct DB column names
       rent_total_monthly: parseNum(formData.rentTotalMonthly),
       rent_total_annual: (() => {
         const monthly = parseNum(formData.rentTotalMonthly);
