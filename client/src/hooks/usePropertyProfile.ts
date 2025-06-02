@@ -265,7 +265,6 @@ export function usePropertyProfile() {
       expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
       
       // Repairs & Improvements - exact DB column names
-      estimated_repairs: parseNum(formData.repairCostsTotal),
       repair_costs_total: parseNum(formData.repairCostsTotal),
       repairs: Array.isArray(formData.repairProjects) ? formData.repairProjects : null,
       repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : null,
