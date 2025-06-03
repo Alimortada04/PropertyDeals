@@ -138,7 +138,6 @@ export const propertyProfile = pgTable("property_profile", {
   
   // Status and visibility
   status: text("status").default("draft").notNull(), // draft, active
-  createdBy: integer("created_by").notNull(), // User ID of creator
   
   // Engagement stats
   viewCount: integer("view_count").default(0).notNull(),

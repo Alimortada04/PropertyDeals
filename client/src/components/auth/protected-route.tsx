@@ -35,8 +35,20 @@ export default function ProtectedRoute({
       return;
     }
     
-    // Show auth modal if user is not authenticated
-    setShowAuthModal(!user && !supabaseUser);
+    // Only show modal if we're certain there's no authenticated user
+    // Add a small delay to prevent flash when authentication is still initializing
+    const timer = setTimeout(() => {
+      if (!isLoading && !user && !supabaseUser) {
+        setShowAuthModal(true);
+      }
+    }, 100);
+    
+    // If user is authenticated, immediately hide modal
+    if (user || supabaseUser) {
+      setShowAuthModal(false);
+    }
+    
+    return () => clearTimeout(timer);
   }, [user, supabaseUser, isLoading, location]);
   
   // Show loading spinner while checking authentication

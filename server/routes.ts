@@ -135,7 +135,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     // Check if user owns this profile or if it's public
     // Temporarily allow access for development - in production, proper auth should be enforced
-    if (req.isAuthenticated() && profile.sellerId !== req.user.id && profile.status !== 'live') {
+    if (req.isAuthenticated() && profile.seller_id !== req.user.id && profile.status !== 'live') {
       return res.status(403).json({ message: "Not authorized to view this property" });
     }
 
@@ -160,7 +160,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...req.body,
         // Always use the seller_id from the request body (Supabase auth UUID from frontend)
         seller_id: req.body.seller_id, // This comes from frontend with authenticated user's UUID
-        created_by: req.isAuthenticated() ? req.user.id : 1, // Keep created_by as integer for backend compatibility
         status: req.body.status || "draft"
       };
       
