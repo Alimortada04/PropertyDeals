@@ -193,7 +193,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Property profile not found" });
     }
 
-    if (profile.sellerId !== req.user.id) {
+    if (profile.seller_id !== req.user.id) {
       return res.status(403).json({ message: "Not authorized to update this property" });
     }
 
@@ -217,7 +217,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Property profile not found" });
     }
 
-    if (profile.sellerId !== req.user.id) {
+    if (profile.seller_id !== req.user.id) {
       return res.status(403).json({ message: "Not authorized to publish this property" });
     }
 
@@ -241,7 +241,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Property profile not found" });
     }
 
-    if (profile.sellerId !== req.user.id) {
+    if (profile.seller_id !== req.user.id) {
       return res.status(403).json({ message: "Not authorized to delete this property" });
     }
 
