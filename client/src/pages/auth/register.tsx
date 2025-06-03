@@ -272,9 +272,8 @@ export default function RegisterPage() {
       
       // Step 2: Create buyer profile
       try {
-        const { error: profileError } = await supabase.from("buyer_profiles").insert({
+        const { error: profileError } = await supabase.from("buyer_profile").insert({
           id: data.user.id,
-          user_id: data.user.id,
           full_name: values.fullName,
           email: values.email,
           username: finalUsername,

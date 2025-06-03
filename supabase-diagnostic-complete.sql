@@ -42,7 +42,7 @@ DROP FUNCTION IF EXISTS public.handle_new_user CASCADE;
 DROP FUNCTION IF EXISTS public.create_user_profile CASCADE;
 DROP FUNCTION IF EXISTS public.handle_new_user_profile CASCADE;
 
--- STEP 6: Verify buyer_profiles table structure
+-- STEP 6: Verify buyer_profile table structure
 SELECT 
     'COLUMN:' as type,
     column_name, 
@@ -50,17 +50,16 @@ SELECT
     is_nullable,
     column_default
 FROM information_schema.columns
-WHERE table_name = 'buyer_profiles' AND table_schema = 'public'
+WHERE table_name = 'buyer_profile' AND table_schema = 'public'
 ORDER BY ordinal_position;
 
--- STEP 7: Create new working function for buyer_profiles
+-- STEP 7: Create new working function for buyer_profile
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
-  -- Insert into buyer_profiles with minimal required fields
-  INSERT INTO public.buyer_profiles (
+  -- Insert into buyer_profile with minimal required fields
+  INSERT INTO public.buyer_profile (
     id,
-    user_id,
     email,
     full_name,
     username,
@@ -70,7 +69,6 @@ BEGIN
     profile_completion_score
   )
   VALUES (
-    NEW.id,
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
