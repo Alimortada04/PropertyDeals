@@ -242,9 +242,10 @@ export default function RegisterPage() {
       const finalUsername = await findAvailableUsername(baseUsername);
       console.log("Generated username:", finalUsername);
       
-      // 2. Supabase Auth signup with proper metadata for trigger
-      console.log("Attempting Supabase Auth signup...");
-      console.log("Metadata being sent:", {
+      // 2. Clean Supabase Auth signup test (no triggers)
+      console.log("Testing CLEAN Supabase Auth signup (no triggers)...");
+      console.log("Email:", values.email);
+      console.log("Metadata:", {
         full_name: values.fullName,
         username: finalUsername
       });
@@ -260,20 +261,21 @@ export default function RegisterPage() {
         },
       });
 
-      console.log("Supabase signup result:", { data, error });
+      console.log("Raw Supabase response:", { data, error });
 
       if (error) {
-        console.error("Registration failed:", error.message || error, error);
-        throw new Error("Failed to create user account: " + (error.message || "Unknown error"));
+        console.error("CLEAN signup failed:", error);
+        console.error("Error details:", JSON.stringify(error, null, 2));
+        throw new Error("Clean signup failed: " + (error.message || "Unknown error"));
       }
 
       if (!data.user) {
-        console.error("Supabase signup succeeded but returned null user");
-        throw new Error("Failed to create user account: User creation returned null");
+        console.error("Clean signup returned null user");
+        throw new Error("Clean signup returned null user");
       }
 
-      console.log("✅ User registered successfully! ID:", data.user.id);
-      console.log("User should now exist in auth.users and buyer_profile tables");
+      console.log("✅ CLEAN signup successful! User ID:", data.user.id);
+      console.log("User created in auth.users (no profile yet)");
 
       // Step 3: Check if email confirmation is required
       if (data.user && !data.user.confirmed_at) {
