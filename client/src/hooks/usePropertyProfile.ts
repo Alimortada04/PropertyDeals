@@ -244,7 +244,7 @@ export function usePropertyProfile() {
       property_type: safe(formData.propertyType),
       city: safe(formData.city),
       state: safe(formData.state),
-      zip_code: safe(formData.zipCode),
+      zipCode: safe(formData.zipCode),
       county: safe(formData.county),
       parcel_id: safe(formData.parcelId),
       
