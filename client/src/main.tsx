@@ -1,6 +1,10 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import { supabase } from "./lib/supabase";
+
+// Make supabase available globally for debugging
+(window as any).supabase = supabase;
 
 // Import Google Fonts
 const loadFonts = () => {

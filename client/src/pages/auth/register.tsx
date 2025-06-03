@@ -244,6 +244,13 @@ export default function RegisterPage() {
       
       // 2. Call Supabase Auth signup directly
       console.log("Attempting registration with Supabase Auth...");
+      console.log("Registration data:", {
+        email: values.email,
+        passwordLength: values.password?.length,
+        fullName: values.fullName,
+        username: finalUsername
+      });
+      
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
