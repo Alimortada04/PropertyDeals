@@ -297,12 +297,12 @@ export default function RegisterPage() {
       try {
         // 1. Create user in the users table
         const { error: userError } = await supabase.from("users").insert({
+          id: data.user.id, // Use the Supabase auth user ID
           username: finalUsername,
-          password: values.password, // This is a duplicate but required by our schema
-          fullName: values.fullName,
+          full_name: values.fullName,
           email: values.email,
-          userType: "buyer", // Using userType as per the actual database schema
-          isAdmin: false
+          active_role: "buyer",
+          is_admin: false
         });
         
         if (userError) {
