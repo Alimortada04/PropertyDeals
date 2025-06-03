@@ -242,31 +242,33 @@ export default function RegisterPage() {
       const finalUsername = await findAvailableUsername(baseUsername);
       console.log("Generated username:", finalUsername);
       
-      // 2. Create user directly in our database (bypassing Supabase Auth for now)
-      console.log("Creating user directly in database...");
+      // 2. Test Supabase Auth signup with comprehensive logging
+      console.log("Testing Supabase Auth signup with full logging...");
       
-      // Generate a UUID for the user
-      const userId = crypto.randomUUID();
-      
-      // Hash password (in production, use proper bcrypt)
-      const hashedPassword = btoa(values.password); // Basic encoding for demo
-      
-      const { data: newUser, error: userCreationError } = await supabase.from("users").insert({
-        id: userId,
-        username: finalUsername,
-        full_name: values.fullName,
+      const { data, error } = await supabase.auth.signUp({
         email: values.email,
-        active_role: "buyer",
-        is_admin: false
-      }).select().single();
+        password: values.password,
+        options: {
+          data: {
+            full_name: values.fullName,
+            username: finalUsername,
+          },
+        },
+      });
 
-      if (userCreationError) {
-        console.error("User creation error:", userCreationError);
-        throw new Error("Failed to create user account: " + userCreationError.message);
+      console.log("Supabase signup →", { data, error });
+
+      if (error) {
+        console.error("Registration failed:", error.message || error, error);
+        throw new Error("Failed to create user account: " + (error.message || "Unknown error"));
+      } else {
+        console.log("✅ User registered!", data);
       }
-      
-      console.log("User created successfully:", newUser);
-      const data = { user: newUser };
+
+      if (!data.user) {
+        console.error("Supabase signup succeeded but returned null user");
+        throw new Error("Failed to create user account: User creation returned null");
+      }
       
       // Step 2: Create buyer profile
       try {
