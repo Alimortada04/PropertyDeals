@@ -256,7 +256,6 @@ export function usePropertyProfile() {
       lot_size: safe(formData.lotSize),
       year_built: parseNum(formData.yearBuilt),
       parking: safe(formData.parking),
-      occupancy_status: safe(formData.occupancyStatus),
       
       // Media Files - exact DB column names only
       primary_image: safe(formData.primaryImage),
