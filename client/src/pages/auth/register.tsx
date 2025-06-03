@@ -242,8 +242,12 @@ export default function RegisterPage() {
       const finalUsername = await findAvailableUsername(baseUsername);
       console.log("Generated username:", finalUsername);
       
-      // 2. Test Supabase Auth signup with comprehensive logging
-      console.log("Testing Supabase Auth signup with full logging...");
+      // 2. Supabase Auth signup with proper metadata for trigger
+      console.log("Attempting Supabase Auth signup...");
+      console.log("Metadata being sent:", {
+        full_name: values.fullName,
+        username: finalUsername
+      });
       
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
@@ -256,41 +260,20 @@ export default function RegisterPage() {
         },
       });
 
-      console.log("Supabase signup →", { data, error });
+      console.log("Supabase signup result:", { data, error });
 
       if (error) {
         console.error("Registration failed:", error.message || error, error);
         throw new Error("Failed to create user account: " + (error.message || "Unknown error"));
-      } else {
-        console.log("✅ User registered!", data);
       }
 
       if (!data.user) {
         console.error("Supabase signup succeeded but returned null user");
         throw new Error("Failed to create user account: User creation returned null");
       }
-      
-      // Step 2: Create buyer profile
-      try {
-        const { error: profileError } = await supabase.from("buyer_profile").insert({
-          id: data.user.id,
-          full_name: values.fullName,
-          email: values.email,
-          username: finalUsername,
-          user_type: "buyer",
-          status: "active",
-          is_public: true,
-          profile_completion_score: 25
-        });
-        
-        if (profileError) {
-          console.warn("Profile creation failed:", profileError);
-        } else {
-          console.log("Buyer profile created successfully");
-        }
-      } catch (error) {
-        console.log("Profile creation error:", error);
-      }
+
+      console.log("✅ User registered successfully! ID:", data.user.id);
+      console.log("User should now exist in auth.users and buyer_profile tables");
 
       // Step 3: Check if email confirmation is required
       if (data.user && !data.user.confirmed_at) {
