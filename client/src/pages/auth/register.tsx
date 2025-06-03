@@ -59,6 +59,7 @@ export default function RegisterPage() {
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [verificationRequired, setVerificationRequired] = useState(false);
   const [generatedUsername, setGeneratedUsername] = useState<string | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { toast } = useToast();
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
@@ -100,6 +101,21 @@ export default function RegisterPage() {
     return () => subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const x = (clientX / width) - 0.5;
+      const y = (clientY / height) - 0.5;
+      setMousePosition({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // Early return AFTER all hooks are declared
   if (user) return <Redirect to="/" />;
 
   // Generate a username from full name without adding numbers initially
@@ -415,21 +431,6 @@ export default function RegisterPage() {
       });
     }
   };
-
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const x = (clientX / width) - 0.5;
-      const y = (clientY / height) - 0.5;
-      setMousePosition({ x, y });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
   
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6 bg-white overflow-hidden">
