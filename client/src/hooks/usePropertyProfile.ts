@@ -235,7 +235,6 @@ export function usePropertyProfile() {
     const rawPayload = {
       // Authentication & Status - Required fields
       seller_id: userId, // Required NOT NULL field for ownership
-      created_by: parseInt(userId) || 1, // Required integer field for user ID
       status: formData.status || 'draft',
       
       // Basic Property Info - matching DB column names
