@@ -239,14 +239,13 @@ export function usePropertyProfile() {
       
       // Basic Property Info - matching DB column names
       name: safe(formData.name),
-      title: safe(formData.name), // some queries might use title instead of name
       address: safe(formData.address),
-      property_type: safe(formData.propertyType),
+      propertyType: safe(formData.propertyType),
       city: safe(formData.city),
       state: safe(formData.state),
       zipCode: safe(formData.zipCode),
       county: safe(formData.county),
-      parcel_id: safe(formData.parcelId),
+      parcelId: safe(formData.parcelId),
       
       // Property Details - exact DB column names
       bedrooms: parseNum(formData.bedrooms),
