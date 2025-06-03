@@ -268,68 +268,7 @@ export default function RegisterPage() {
         throw new Error("Failed to create user account");
       }
       
-      // Step 2: Create both a user record and profile record
-      let localUserError = false;
-      
-      try {
-        // 1. Create user in the users table
-        const { error: userError } = await supabase.from("users").insert({
-          username: finalUsername,
-          password: values.password, // This is a duplicate but required by our schema
-          fullName: values.fullName,
-          email: values.email,
-          userType: "buyer", // Using userType as per the actual database schema
-          isAdmin: false
-        });
-        
-        if (userError) {
-          console.log("Local user creation failed, but auth account was created:", userError);
-          localUserError = true;
-        } else {
-          console.log("User created successfully in local database");
-          
-          // 2. Create a matching profile in the profiles table if it exists
-          try {
-            // Try to insert into profiles table (will only work if table exists)
-            const { error: profileError } = await supabase.from("profiles").insert({
-              id: data.user.id, // Use Supabase auth ID
-              user_id: data.user.id,
-              username: finalUsername,
-              full_name: values.fullName,
-              email: values.email,
-              avatar_url: null,
-              active_role: "buyer",
-              roles: { 
-                buyer: { status: "approved" }, 
-                seller: { status: "not_applied" }, 
-                rep: { status: "not_applied" } 
-              },
-              created_at: new Date().toISOString(),
-            });
-            
-            if (profileError) {
-              // If the error is related to table not existing, just log it
-              if (profileError.message?.includes("relation") && profileError.message?.includes("does not exist")) {
-                console.log("Profiles table doesn't exist - skipping profile creation");
-              } else {
-                console.warn("Profile creation failed:", profileError);
-              }
-            } else {
-              console.log("Profile created successfully");
-            }
-          } catch (profileError) {
-            // This might happen if the profiles table doesn't exist
-            console.log("Profile creation error:", profileError);
-          }
-        }
-      } catch (localDbError) {
-        console.error("Error with local database:", localDbError);
-        localUserError = true;
-      }
-      
-      if (localUserError) {
-        console.warn("User created in Supabase Auth but failed to sync with local database");
-      }
+      // No manual database inserts needed - Supabase triggers handle user/profile creation
 
       // Step 3: Check if email confirmation is required
       if (data.user && !data.user.confirmed_at) {

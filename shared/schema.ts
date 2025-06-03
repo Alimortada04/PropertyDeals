@@ -1,20 +1,20 @@
-import { pgTable, text, serial, integer, boolean, doublePrecision, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, doublePrecision, timestamp, jsonb, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
-  fullName: text("fullName"),
-  email: text("email"),
-  isAdmin: boolean("isAdmin").default(false).notNull(),
-  activeRole: text("activeRole").default("buyer"), // Current active role
+  id: uuid("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  username: text("username"),
+  full_name: text("full_name"),
+  active_role: text("active_role").default("buyer"),
+  is_admin: boolean("is_admin").default(false).notNull(),
   roles: jsonb("roles").default({ 
     buyer: { status: "approved" }, 
     seller: { status: "not_applied" }, 
     rep: { status: "not_applied" } 
-  }).notNull(), // Roles with statuses
+  }).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
 // Buyer profile table for extended user account settings

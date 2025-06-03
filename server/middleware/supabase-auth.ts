@@ -51,26 +51,26 @@ export async function supabaseAuthMiddleware(req: Request, res: Response, next: 
     if (!dbUser) {
       try {
         const newUser = await storage.createUser({
+          id: user.id,
           username: user.user_metadata?.username || user.email!.split('@')[0],
           email: user.email!,
-          password: '', // Empty since auth is handled by Supabase
-          fullName: user.user_metadata?.full_name || user.email!.split('@')[0],
-          activeRole: 'buyer',
-          isAdmin: false
+          full_name: user.user_metadata?.full_name || user.email!.split('@')[0],
+          active_role: 'buyer',
+          is_admin: false
         });
         dbUser = newUser;
       } catch (error) {
         console.error('Error creating user in database:', error);
         // Continue with a temporary user object
         dbUser = {
-          id: 0, // Temporary ID
+          id: user.id,
           username: user.user_metadata?.username || user.email!.split('@')[0],
           email: user.email!,
-          password: '',
-          fullName: user.user_metadata?.full_name || user.email!.split('@')[0],
-          activeRole: 'buyer',
-          isAdmin: false,
-          roles: { buyer: { status: "approved" }, seller: { status: "not_applied" }, rep: { status: "not_applied" } }
+          full_name: user.user_metadata?.full_name || user.email!.split('@')[0],
+          active_role: 'buyer',
+          is_admin: false,
+          roles: { buyer: { status: "approved" }, seller: { status: "not_applied" }, rep: { status: "not_applied" } },
+          created_at: new Date()
         };
       }
     }
