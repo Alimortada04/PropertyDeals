@@ -59,7 +59,6 @@ export default function RegisterPage() {
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [verificationRequired, setVerificationRequired] = useState(false);
   const [generatedUsername, setGeneratedUsername] = useState<string | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { toast } = useToast();
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
@@ -101,21 +100,6 @@ export default function RegisterPage() {
     return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const { clientX, clientY } = e;
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const x = (clientX / width) - 0.5;
-      const y = (clientY / height) - 0.5;
-      setMousePosition({ x, y });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
-  // Early return AFTER all hooks are declared
   if (user) return <Redirect to="/" />;
 
   // Generate a username from full name without adding numbers initially
@@ -242,14 +226,8 @@ export default function RegisterPage() {
       const finalUsername = await findAvailableUsername(baseUsername);
       console.log("Generated username:", finalUsername);
       
-      // 2. Clean Supabase Auth signup test (no triggers)
-      console.log("Testing CLEAN Supabase Auth signup (no triggers)...");
-      console.log("Email:", values.email);
-      console.log("Metadata:", {
-        full_name: values.fullName,
-        username: finalUsername
-      });
-      
+      // 2. Call Supabase Auth signup directly
+      console.log("Attempting registration with Supabase Auth...");
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
@@ -258,24 +236,100 @@ export default function RegisterPage() {
             full_name: values.fullName,
             username: finalUsername,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
         },
       });
 
-      console.log("Raw Supabase response:", { data, error });
-
       if (error) {
-        console.error("CLEAN signup failed:", error);
-        console.error("Error details:", JSON.stringify(error, null, 2));
-        throw new Error("Clean signup failed: " + (error.message || "Unknown error"));
+        console.error("Supabase signup error:", error);
+        // Handle specific error cases
+        if (error.message.includes("already exists") || 
+            error.message.includes("already registered") ||
+            error.message.includes("User already registered")) {
+          registerForm.setError("email", {
+            type: "manual",
+            message: "Email already exists. Try signing in instead.",
+          });
+          setLoading(false);
+          toast({
+            title: "Email already registered",
+            description: "This email is already registered. Please sign in instead.",
+            variant: "destructive",
+          });
+          return; // Exit early and don't throw error, so user stays on same page
+        } else {
+          throw new Error(error.message);
+        }
       }
-
+      
+      console.log("Supabase signup successful:", data);
+      
       if (!data.user) {
-        console.error("Clean signup returned null user");
-        throw new Error("Clean signup returned null user");
+        throw new Error("Failed to create user account");
       }
-
-      console.log("✅ CLEAN signup successful! User ID:", data.user.id);
-      console.log("User created in auth.users (no profile yet)");
+      
+      // Step 2: Create both a user record and profile record
+      let localUserError = false;
+      
+      try {
+        // 1. Create user in the users table
+        const { error: userError } = await supabase.from("users").insert({
+          username: finalUsername,
+          password: values.password, // This is a duplicate but required by our schema
+          fullName: values.fullName,
+          email: values.email,
+          userType: "buyer", // Using userType as per the actual database schema
+          isAdmin: false
+        });
+        
+        if (userError) {
+          console.log("Local user creation failed, but auth account was created:", userError);
+          localUserError = true;
+        } else {
+          console.log("User created successfully in local database");
+          
+          // 2. Create a matching profile in the profiles table if it exists
+          try {
+            // Try to insert into profiles table (will only work if table exists)
+            const { error: profileError } = await supabase.from("profiles").insert({
+              id: data.user.id, // Use Supabase auth ID
+              user_id: data.user.id,
+              username: finalUsername,
+              full_name: values.fullName,
+              email: values.email,
+              avatar_url: null,
+              active_role: "buyer",
+              roles: { 
+                buyer: { status: "approved" }, 
+                seller: { status: "not_applied" }, 
+                rep: { status: "not_applied" } 
+              },
+              created_at: new Date().toISOString(),
+            });
+            
+            if (profileError) {
+              // If the error is related to table not existing, just log it
+              if (profileError.message?.includes("relation") && profileError.message?.includes("does not exist")) {
+                console.log("Profiles table doesn't exist - skipping profile creation");
+              } else {
+                console.warn("Profile creation failed:", profileError);
+              }
+            } else {
+              console.log("Profile created successfully");
+            }
+          } catch (profileError) {
+            // This might happen if the profiles table doesn't exist
+            console.log("Profile creation error:", profileError);
+          }
+        }
+      } catch (localDbError) {
+        console.error("Error with local database:", localDbError);
+        localUserError = true;
+      }
+      
+      if (localUserError) {
+        console.warn("User created in Supabase Auth but failed to sync with local database");
+      }
 
       // Step 3: Check if email confirmation is required
       if (data.user && !data.user.confirmed_at) {
@@ -361,6 +415,21 @@ export default function RegisterPage() {
       });
     }
   };
+
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const x = (clientX / width) - 0.5;
+      const y = (clientY / height) - 0.5;
+      setMousePosition({ x, y });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
   
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6 bg-white overflow-hidden">
