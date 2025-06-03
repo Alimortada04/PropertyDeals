@@ -242,25 +242,17 @@ export default function RegisterPage() {
       const finalUsername = await findAvailableUsername(baseUsername);
       console.log("Generated username:", finalUsername);
       
-      // 2. Call Supabase Auth signup directly
-      console.log("Attempting registration with Supabase Auth...");
+      // 2. Call Supabase Auth signup with minimal data to avoid triggers
+      console.log("Attempting minimal registration with Supabase Auth...");
       console.log("Registration data:", {
         email: values.email,
-        passwordLength: values.password?.length,
-        fullName: values.fullName,
-        username: finalUsername
+        passwordLength: values.password?.length
       });
       
+      // Try minimal signup first without user_metadata that might trigger database functions
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
-        password: values.password,
-        options: {
-          data: {
-            full_name: values.fullName,
-            username: finalUsername,
-          },
-          emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
-        },
+        password: values.password
       });
 
       if (error) {
