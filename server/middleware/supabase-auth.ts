@@ -2,6 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { storage } from '../storage';
 
+interface AuthenticatedRequest extends Request {
+  user?: any;
+  isAuthenticated(): boolean;
+}
+
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
 
@@ -77,7 +82,7 @@ export async function supabaseAuthMiddleware(req: Request, res: Response, next: 
     
     // Attach user to request
     req.user = dbUser;
-    req.isAuthenticated = () => true;
+    req.isAuthenticated = function(this: any): this is AuthenticatedRequest { return true; };
 
     next();
   } catch (error) {

@@ -152,72 +152,14 @@ export default function RegisterPage() {
   };
 
   const onRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
-    // Reset all state before attempting registration
     setFormError(null);
     setFormSuccess(null);
     setVerificationRequired(false);
     setLoading(true);
-    
-    // Clear any existing email error
     registerForm.clearErrors("email");
 
     try {
-      // Check if the email already exists in the Auth system
-      console.log("Checking if email already exists:", values.email);
-      
-      // Direct check with Supabase Auth Admin API
-      const { data: adminAuthCheck, error: adminAuthError } = await supabase
-        .from('users')
-        .select('email')
-        .eq('email', values.email)
-        .maybeSingle();
-      
-      console.log("Admin auth check result:", { adminAuthCheck, adminAuthError });
-      
-      // If we found a match, the email exists
-      if (adminAuthCheck) {
-        console.log("Email already exists in users table");
-        registerForm.setError("email", {
-          type: "manual",
-          message: "Email already exists. Try signing in instead.",
-        });
-        setLoading(false);
-        // Show toast
-        toast({
-          title: "Email already registered",
-          description: "This email is already registered. Please sign in instead.",
-          variant: "destructive",
-        });
-        return; // Exit early, don't proceed with registration
-      }
-      
-      // Fall back to our checkEmailExists function as a secondary check
-      try {
-        // Pass true as the second parameter to indicate this is a registration check
-        const emailExists = await checkEmailExists(values.email, true);
-        
-        if (emailExists) {
-          console.log("Email already exists via OTP check");
-          registerForm.setError("email", {
-            type: "manual",
-            message: "Email already exists. Try signing in instead.",
-          });
-          setLoading(false);
-          toast({
-            title: "Email already registered",
-            description: "This email is already registered. Please sign in instead.",
-            variant: "destructive",
-          });
-          return; // Exit early
-        }
-        
-        console.log("Email is available, proceeding with registration");
-      } catch (emailCheckError) {
-        // If checks are inconclusive, we'll let Supabase Auth handle duplicates
-        console.log("Email check function failed, relying on Auth API check:", emailCheckError);
-      }
-      
-      // 1. Generate a username from the full name
+      // Generate username
       const baseUsername = generateUsername(values.fullName);
       if (!baseUsername) {
         throw new Error("Could not generate a valid username");
@@ -226,8 +168,7 @@ export default function RegisterPage() {
       const finalUsername = await findAvailableUsername(baseUsername);
       console.log("Generated username:", finalUsername);
       
-      // 2. Call Supabase Auth signup directly
-      console.log("Attempting registration with Supabase Auth...");
+      // Call Supabase Auth signup
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
@@ -242,7 +183,6 @@ export default function RegisterPage() {
 
       if (error) {
         console.error("Supabase signup error:", error);
-        // Handle specific error cases
         if (error.message.includes("already exists") || 
             error.message.includes("already registered") ||
             error.message.includes("User already registered")) {
@@ -256,21 +196,17 @@ export default function RegisterPage() {
             description: "This email is already registered. Please sign in instead.",
             variant: "destructive",
           });
-          return; // Exit early and don't throw error, so user stays on same page
+          return;
         } else {
           throw new Error(error.message);
         }
       }
       
-      console.log("Supabase signup successful:", data);
-      
       if (!data.user) {
         throw new Error("Failed to create user account");
       }
       
-      // No manual database inserts needed - Supabase triggers handle user/profile creation
-
-      // Step 3: Check if email confirmation is required
+      // Check if email confirmation is required
       if (data.user && !data.user.confirmed_at) {
         setVerificationRequired(true);
         setGeneratedUsername(finalUsername);
@@ -280,25 +216,12 @@ export default function RegisterPage() {
           description: "We've sent a verification link to your email",
         });
       } else {
-        // Auto-login on successful registration if verification not required
         setFormSuccess("Account created successfully!");
         toast({
           title: "Registration successful",
           description: "Your account has been created! Redirecting to dashboard...",
         });
         
-        // Show a smooth transition animation before redirecting
-        const overlay = document.createElement('div');
-        overlay.className = 'fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500';
-        overlay.innerHTML = `
-          <div class="text-center">
-            <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#09261E] border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
-            <p class="text-[#09261E] font-medium text-lg">Setting up your account...</p>
-          </div>
-        `;
-        document.body.appendChild(overlay);
-        
-        // Redirect to home page after a short delay
         setTimeout(() => navigate("/"), 1500);
       }
     } catch (error: any) {

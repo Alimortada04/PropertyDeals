@@ -225,15 +225,10 @@ export interface UserRoles {
 }
 
 // Schemas
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
-  fullName: true,
-  email: true,
-  isAdmin: true,
-  activeRole: true,
-  roles: true,
-}).omit({ roles: true }).extend({
+export const insertUserSchema = createInsertSchema(users).omit({ 
+  created_at: true,
+  roles: true 
+}).extend({
   roles: z.object({
     buyer: z.object({
       status: z.enum(["approved", "pending", "denied", "not_applied"]),
