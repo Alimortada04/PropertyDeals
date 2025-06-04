@@ -206,18 +206,18 @@ export function usePropertyProfile() {
     // Sanitize payload to only include valid database fields
     const sanitizePayload = (payload: any) => {
       const allowedKeys = new Set([
-        'id', 'created_at', 'status', 'name', 'address', 'property_type', 'city', 'state', 'zip_code',
+        'id', 'created_at', 'status', 'name', 'address', 'property_type', 'city', 'state', 'zipcode',
         'bedrooms', 'bathrooms', 'year_built', 'sqft', 'lot_size', 'parking', 'county', 'parcel_id',
         'primary_image', 'gallery_images', 'video_walkthrough',
         'rent_total_monthly', 'rent_total_annual', 'rent_unit',
         'expenses_total_monthly', 'expenses_total_annual', 'expense_items',
-        'repair_costs_total', 'occupancy_status',
+        'repair_costs_total', 'repairs',
         'purchase_price', 'listing_price', 'assignment_fee', 'arv',
-        'access_type', 'closing_date', 'comps', 'tags',
+        'access_type', 'closing_date', 'comps',
         'purchase_agreement', 'assignment_agreement',
         'jv_partners', 'description', 'additional_notes',
-        'featured_property', 'view_count', 'save_count', 'offer_count',
-        'offer_ids', 'seller_id', 'created_by'
+        'view_count', 'save_count', 'offer_count',
+        'offer_ids', 'seller_id'
       ]);
 
       const cleanPayload: any = {};
@@ -233,83 +233,76 @@ export function usePropertyProfile() {
     
     // Create payload with ALL database fields (matching exact column names)
     const rawPayload = {
-      // Authentication & Status - Required fields
-      seller_id: userId, // Required NOT NULL field for ownership
+      // Required System Fields
+      seller_id: userId,
       status: formData.status || 'draft',
-      
-      // Basic Property Info - matching DB column names
+
+      // Property Info
       name: safe(formData.name),
       address: safe(formData.address),
-      propertyType: safe(formData.propertyType),
       city: safe(formData.city),
       state: safe(formData.state),
-      zipCode: safe(formData.zipCode),
+      zipcode: safe(formData.zipCode),
       county: safe(formData.county),
-      parcelId: safe(formData.parcelId),
-      
-      // Property Details - exact DB column names
-      bedrooms: parseNum(formData.bedrooms),
-      bathrooms: parseNum(formData.bathrooms),
-      sqft: parseNum(formData.sqft),
-      square_feet: parseNum(formData.sqft), // alternative column name
+      parcel_id: safe(formData.parcelId),
+      property_type: safe(formData.propertyType),
+
+      // Property Details
+      bedrooms: safe(formData.bedrooms),
+      bathrooms: safe(formData.bathrooms),
+      sqft: safe(formData.sqft),
       lot_size: safe(formData.lotSize),
-      year_built: parseNum(formData.yearBuilt),
+      year_built: safe(formData.yearBuilt),
       parking: safe(formData.parking),
-      
-      // Media Files - exact DB column names only
+
+      // Media
       primary_image: safe(formData.primaryImage),
-      gallery_images: Array.isArray(formData.galleryImages) ? formData.galleryImages : null,
-      video_walkthrough: safe(formData.videoWalkthrough),
-      video_url: safe(formData.videoWalkthrough),
-      
-      // Financial Data - exact DB column names
+      gallery_images: Array.isArray(formData.galleryImages) && formData.galleryImages.length > 0
+        ? formData.galleryImages
+        : null,
+      video_walkthrough: safe(formData.videoLink),
+
+      // Financials
       arv: parseNum(formData.arv),
       purchase_price: parseNum(formData.purchasePrice),
       listing_price: parseNum(formData.listingPrice),
       assignment_fee: parseNum(formData.assignmentFee),
-      
-      // Rental Income - correct DB column names
+
+      // Rental Info (JSON & Calculated)
       rent_total_monthly: parseNum(formData.rentTotalMonthly),
-      rent_total_annual: (() => {
-        const monthly = parseNum(formData.rentTotalMonthly);
-        return monthly ? monthly * 12 : null;
-      })(),
+      rent_total_annual: parseNum(formData.rentTotalMonthly) ? parseNum(formData.rentTotalMonthly) * 12 : null,
       rent_unit: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
-      
-      // Expenses - exact DB column names only
+
+      // Expenses (JSON & Calculated)
       expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
       expenses_total_monthly: parseNum(formData.expensesTotalMonthly),
-      expenses_total_annual: (() => {
-        const monthly = parseNum(formData.expensesTotalMonthly);
-        return monthly ? monthly * 12 : null;
-      })(),
-      
-      // Repairs & Improvements - exact DB column names
+      expenses_total_annual: parseNum(formData.expensesTotalMonthly) ? parseNum(formData.expensesTotalMonthly) * 12 : null,
+
+      // Repairs (JSON & Calculated)
+      repairs: Array.isArray(formData.repairProjects) ? formData.repairProjects.map(repair => ({
+        name: repair.name,
+        description: repair.description,
+        cost: parseNum(repair.cost),
+        contractor: repair.contractor,
+        quote: repair.quote ? repair.quote.name : null
+      })) : null,
       repair_costs_total: parseNum(formData.repairCostsTotal),
-      repairs: Array.isArray(formData.repairProjects) ? formData.repairProjects : null,
-      repair_projects: Array.isArray(formData.repairProjects) ? formData.repairProjects : null,
-      
-      // Partnership & Legal - exact DB column names
-      jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : null,
+
+      // Legal Docs & JV
       purchase_agreement: safe(formData.purchaseAgreement),
       assignment_agreement: safe(formData.assignmentAgreement),
-      
-      // Access & Logistics - exact DB column names
+      jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : null,
+
+      // Logistics
       access_type: safe(formData.accessType),
-      access_instructions: safe(formData.accessType),
       closing_date: formatDate(formData.closingDate),
-      
-      // Marketing & Description - exact DB column names
+
+      // Description & Comps
       description: safe(formData.description),
-      notes: safe(formData.additionalNotes),
       additional_notes: safe(formData.additionalNotes),
-      tags: Array.isArray(formData.tags) ? formData.tags : null,
-      comps: Array.isArray(formData.comps) ? [formData.comps] : null,
-      
-      // Visibility Settings - exact DB column names
-      featured_property: formData.featuredProperty || false,
-      
-      // Engagement Tracking - exact DB column names
+      comps: Array.isArray(formData.comps) ? formData.comps.join(', ') : null,
+
+      // Engagement Defaults
       view_count: 0,
       save_count: 0,
       offer_count: 0,
@@ -339,9 +332,6 @@ export function usePropertyProfile() {
     try {
       // Create clean payload using direct field mapping
       const payload = createPropertyPayload(initialData, supabaseUser.id);
-      
-      // Final safety: ensure condition field is completely removed
-      delete payload.condition;
       
       console.log('Final payload for Supabase insert:', payload);
       
