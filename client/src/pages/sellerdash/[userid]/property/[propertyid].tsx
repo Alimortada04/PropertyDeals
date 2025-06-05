@@ -399,6 +399,44 @@ export default function PropertyEditor() {
     setRepairs(updated);
   };
 
+  const handleStatusChange = async (newStatus: string) => {
+    if (!propertyId) return;
+    
+    try {
+      setSaving(true);
+      const response = await fetch(`/api/property-profiles/${propertyId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update status');
+      }
+
+      // Update local property data
+      if (property) {
+        property.status = newStatus;
+      }
+      
+      toast({
+        title: "Status Updated",
+        description: `Property status changed to ${newStatus}`,
+      });
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update property status",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -1594,7 +1632,7 @@ export default function PropertyEditor() {
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Status:</span>
               <select
-                value={propertyData?.status || "draft"}
+                value={property?.status || "draft"}
                 onChange={(e) => handleStatusChange(e.target.value)}
                 className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent"
               >
@@ -1643,7 +1681,7 @@ export default function PropertyEditor() {
             <div className="space-y-4">
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Edit Property</h1>
-                <p className="text-gray-600 mt-1">{propertyData?.address || "Property Editor"}</p>
+                <p className="text-gray-600 mt-1">{property?.address || "Property Editor"}</p>
               </div>
               
               <div className="space-y-3">
@@ -1651,7 +1689,7 @@ export default function PropertyEditor() {
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-700 min-w-0">Status:</span>
                   <select
-                    value={propertyData?.status || "draft"}
+                    value={property?.status || "draft"}
                     onChange={(e) => handleStatusChange(e.target.value)}
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent"
                   >
@@ -1698,42 +1736,62 @@ export default function PropertyEditor() {
 
           {/* Navigation */}
           <div className="p-4">
-            <h3 className="text-sm font-medium text-gray-900 mb-3">Edit Sections</h3>
-            <div className="space-y-1">
-              <SidebarItem
-                icon={<Home className="h-5 w-5" />}
-                label="Property Details"
-                isActive={activeSection === 'overview'}
+            <h3 className="text-sm font-medium text-gray-900 mb-4">Edit Sections</h3>
+            <div className="space-y-2">
+              <button
                 onClick={() => setActiveSection('overview')}
-              />
-              <SidebarItem
-                icon={<ImageIcon className="h-5 w-5" />}
-                label="Media"
-                isActive={activeSection === 'media'}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === 'overview'
+                    ? 'bg-[#09261E] text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Home className="h-5 w-5" />
+                <span className="font-medium">Property Details</span>
+              </button>
+              <button
                 onClick={() => setActiveSection('media')}
-              />
-              <SidebarItem
-                icon={<DollarSign className="h-5 w-5" />}
-                label="Finances"
-                isActive={activeSection === 'finances'}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === 'media'
+                    ? 'bg-[#09261E] text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <ImageIcon className="h-5 w-5" />
+                <span className="font-medium">Media</span>
+              </button>
+              <button
                 onClick={() => setActiveSection('finances')}
-              />
-              <SidebarItem
-                icon={<MapPin className="h-5 w-5" />}
-                label="Logistics"
-                isActive={activeSection === 'logistics'}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === 'finances'
+                    ? 'bg-[#09261E] text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <DollarSign className="h-5 w-5" />
+                <span className="font-medium">Finances</span>
+              </button>
+              <button
                 onClick={() => setActiveSection('logistics')}
-              />
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === 'logistics'
+                    ? 'bg-[#09261E] text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <MapPin className="h-5 w-5" />
+                <span className="font-medium">Logistics</span>
+              </button>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-4 lg:p-8 overflow-y-auto">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSave)} className="space-y-8">
-              <Card>
-                <CardContent className="p-6">
+              <Card className="shadow-sm border-gray-200">
+                <CardContent className="p-6 lg:p-8">
                   {renderActiveSection()}
                 </CardContent>
               </Card>
