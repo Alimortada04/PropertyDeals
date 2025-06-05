@@ -178,10 +178,10 @@ export default function PropertyEditor() {
 
         // Fetch property data
         const { data: propertyData, error: propertyError } = await supabase
-          .from("property_profiles")
+          .from("property_profile")
           .select("*")
           .eq("id", propertyId)
-          .eq("user_id", currentUser.id)
+          .eq("seller_id", currentUser.id)
           .single();
 
         if (propertyError || !propertyData) {
@@ -254,10 +254,10 @@ export default function PropertyEditor() {
       };
 
       const { error } = await supabase
-        .from("property_profiles")
+        .from("property_profile")
         .update(updateData)
         .eq("id", propertyId)
-        .eq("user_id", user.id);
+        .eq("seller_id", user.id);
 
       if (error) throw error;
 
@@ -288,10 +288,10 @@ export default function PropertyEditor() {
 
     try {
       const { error } = await supabase
-        .from("property_profiles")
+        .from("property_profile")
         .delete()
         .eq("id", propertyId)
-        .eq("user_id", user.id);
+        .eq("seller_id", user.id);
 
       if (error) throw error;
 
