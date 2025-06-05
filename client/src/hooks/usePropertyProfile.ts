@@ -139,22 +139,12 @@ export function usePropertyProfile() {
 
       if (error) {
         console.error('Error fetching property profiles:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load your properties.",
-          variant: "destructive",
-        });
         return;
       }
 
       setProperties(data || []);
     } catch (error) {
       console.error('Error fetching property profiles:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load your properties.",
-        variant: "destructive",
-      });
     } finally {
       setIsLoading(false);
     }
