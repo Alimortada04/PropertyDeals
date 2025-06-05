@@ -137,6 +137,9 @@ export default function PropertyEditor() {
   ]);
   const [repairs, setRepairs] = useState<{ name: string; description: string; cost: string; contractor: string }[]>([]);
   const [units, setUnits] = useState<{ label: string; rent: string; occupied: boolean }[]>([]);
+  const [comps, setComps] = useState<string[]>([""]);
+  const [partners, setPartners] = useState<string[]>([]);
+  const [newPartner, setNewPartner] = useState("");
 
   const userId = params?.userId;
   const propertyId = params?.propertyId;
@@ -351,24 +354,49 @@ export default function PropertyEditor() {
     setRepairs(repairs.filter((_, i) => i !== index));
   };
 
-  const updateRepair = (index: number, field: string, value: string) => {
-    const updated = [...repairs];
-    updated[index] = { ...updated[index], [field]: value };
-    setRepairs(updated);
+  const addUnit = () => {
+    setUnits([...units, { label: `Unit ${units.length + 1}`, rent: "", occupied: false }]);
   };
 
-  const addUnit = () => {
-    setUnits([...units, { label: "", rent: "", occupied: false }]);
+  const updateUnit = (index: number, field: string, value: any) => {
+    const updated = [...units];
+    updated[index] = { ...updated[index], [field]: value };
+    setUnits(updated);
   };
 
   const removeUnit = (index: number) => {
     setUnits(units.filter((_, i) => i !== index));
   };
 
-  const updateUnit = (index: number, field: string, value: string | boolean) => {
-    const updated = [...units];
+  const addComp = () => {
+    setComps([...comps, ""]);
+  };
+
+  const updateComp = (index: number, value: string) => {
+    const updated = [...comps];
+    updated[index] = value;
+    setComps(updated);
+  };
+
+  const removeComp = (index: number) => {
+    setComps(comps.filter((_, i) => i !== index));
+  };
+
+  const addPartner = () => {
+    if (newPartner.trim()) {
+      setPartners([...partners, newPartner.trim()]);
+      setNewPartner("");
+    }
+  };
+
+  const removePartner = (index: number) => {
+    setPartners(partners.filter((_, i) => i !== index));
+  };
+
+  const updateRepair = (index: number, field: string, value: string) => {
+    const updated = [...repairs];
     updated[index] = { ...updated[index], [field]: value };
-    setUnits(updated);
+    setRepairs(updated);
   };
 
   if (loading) {
