@@ -14,7 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { toast } from "@/hooks/use-toast";
 import { usePropertyProfile } from "@/hooks/usePropertyProfile";
 import { supabase } from "@/lib/supabase";
-import { Trash2, Archive, Globe, Save, ArrowLeft } from "lucide-react";
+import { Trash2, Archive, Globe, Save, ArrowLeft, AlertCircle } from "lucide-react";
 import { useLocation } from "wouter";
 
 // Property editor schema
@@ -47,6 +47,7 @@ export default function PropertyEditorPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
+  const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
     resolver: zodResolver(propertyEditorSchema),
@@ -149,12 +150,8 @@ export default function PropertyEditorPage() {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching property:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load property data",
-          variant: "destructive",
-        });
-        navigate(`/sellerdash/${userId}`);
+        setError("We couldn't load this property. It may not exist or you may not have permission to edit it.");
+        setLoading(false);
       }
     };
 
@@ -285,16 +282,32 @@ export default function PropertyEditorPage() {
     );
   }
 
-  if (!property) {
+  if (error || !property) {
     return (
-      <div className="container mx-auto p-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Property Not Found</h1>
-          <p className="text-gray-600 mb-4">The property you're looking for doesn't exist or you don't have permission to edit it.</p>
-          <Button onClick={() => navigate(`/sellerdash/${userId}`)}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          <Card className="border-0 shadow-lg">
+            <CardContent className="p-8 text-center">
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <AlertCircle className="w-8 h-8 text-red-600" />
+                </div>
+                <h1 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Property</h1>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  {error || "We couldn't load this property. It may not exist or you may not have permission to edit it."}
+                </p>
+              </div>
+              
+              <Button 
+                onClick={() => navigate(`/sellerdash/${userId}`)}
+                variant="outline"
+                className="w-full"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Dashboard
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
