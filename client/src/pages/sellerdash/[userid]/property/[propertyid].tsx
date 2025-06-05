@@ -23,91 +23,76 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { 
   ArrowLeft, 
   Save, 
   Eye, 
-  Trash2, 
-  AlertCircle, 
-  ChevronDown, 
-  ChevronUp,
+  ExternalLink,
   Home,
   Building,
   DollarSign,
   FileText,
   Image,
-  MapPin,
-  Upload,
-  ExternalLink
+  MapPin
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
-// Property form schema based on database structure
+// Property form schema
 const propertySchema = z.object({
   name: z.string().optional(),
   address: z.string().min(1, "Address is required"),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  zipCode: z.string().optional(),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  zipCode: z.string().min(1, "ZIP code is required"),
   county: z.string().optional(),
-  propertyType: z.string().optional(),
+  propertyType: z.string().min(1, "Property type is required"),
   bedrooms: z.string().optional(),
   bathrooms: z.string().optional(),
   sqft: z.string().optional(),
   yearBuilt: z.string().optional(),
+  lotSize: z.string().optional(),
+  condition: z.string().optional(),
+  occupancyStatus: z.string().optional(),
   description: z.string().optional(),
+  shortSummary: z.string().optional(),
   purchasePrice: z.string().optional(),
   listingPrice: z.string().optional(),
   arv: z.string().optional(),
   estimatedRepairs: z.string().optional(),
   monthlyRent: z.string().optional(),
+  propertyTaxes: z.string().optional(),
+  insurance: z.string().optional(),
+  utilities: z.string().optional(),
+  hoaFees: z.string().optional(),
+  lockboxCode: z.string().optional(),
+  accessInstructions: z.string().optional(),
+  showingNotes: z.string().optional(),
+  videoUrl: z.string().optional(),
 });
 
 type PropertyFormData = z.infer<typeof propertySchema>;
 
-interface CollapsibleSectionProps {
-  title: string;
+interface SidebarItemProps {
   icon: React.ReactNode;
-  isOpen: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
 }
 
-const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
-  title,
-  icon,
-  isOpen,
-  onToggle,
-  children,
-}) => {
-  return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
-      <button
-        onClick={onToggle}
-        className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
-      >
-        <div className="flex items-center space-x-3">
-          {icon}
-          <span className="font-medium text-gray-900">{title}</span>
-        </div>
-        {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-gray-500" />
-        ) : (
-          <ChevronDown className="w-5 h-5 text-gray-500" />
-        )}
-      </button>
-      {isOpen && (
-        <div className="border-t border-gray-200 bg-white">
-          <div className="p-4 space-y-4">
-            {children}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, isActive, onClick }) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors ${
+      isActive 
+        ? 'bg-green-700 text-white' 
+        : 'text-gray-600 hover:bg-gray-100'
+    }`}
+  >
+    {icon}
+    <span className="font-medium">{label}</span>
+  </button>
+);
 
 export default function PropertyEditor() {
   const [, params] = useRoute("/sellerdash/:userId/property/:propertyId");
@@ -117,16 +102,7 @@ export default function PropertyEditor() {
   const [property, setProperty] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
   const [saving, setSaving] = useState(false);
-
-  // Section states
-  const [openSections, setOpenSections] = useState({
-    overview: false,
-    details: false,
-    financial: true, // Default open like in screenshots
-    description: false,
-    media: false,
-    access: false,
-  });
+  const [activeSection, setActiveSection] = useState('overview');
 
   const userId = params?.userId;
   const propertyId = params?.propertyId;
@@ -153,13 +129,6 @@ export default function PropertyEditor() {
       monthlyRent: "",
     },
   });
-
-  const toggleSection = (section: keyof typeof openSections) => {
-    setOpenSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
 
   useEffect(() => {
     const fetchUserAndProperty = async () => {
@@ -198,19 +167,19 @@ export default function PropertyEditor() {
           address: propertyData.address || "",
           city: propertyData.city || "",
           state: propertyData.state || "",
-          zipCode: propertyData.zip_code || "",
+          zipCode: propertyData.zipCode || "",
           county: propertyData.county || "",
-          propertyType: propertyData.property_type || "",
+          propertyType: propertyData.propertyType || "",
           bedrooms: propertyData.bedrooms?.toString() || "",
           bathrooms: propertyData.bathrooms?.toString() || "",
           sqft: propertyData.sqft?.toString() || "",
-          yearBuilt: propertyData.year_built?.toString() || "",
+          yearBuilt: propertyData.yearBuilt?.toString() || "",
           description: propertyData.description || "",
-          purchasePrice: propertyData.purchase_price?.toString() || "",
-          listingPrice: propertyData.listing_price?.toString() || "",
+          purchasePrice: propertyData.purchasePrice?.toString() || "",
+          listingPrice: propertyData.listingPrice?.toString() || "",
           arv: propertyData.arv?.toString() || "",
-          estimatedRepairs: propertyData.estimated_repairs?.toString() || "",
-          monthlyRent: propertyData.monthly_rent?.toString() || "",
+          estimatedRepairs: propertyData.estimatedRepairs?.toString() || "",
+          monthlyRent: propertyData.rentTotalMonthly?.toString() || "",
         });
 
         setLoading(false);
@@ -237,20 +206,20 @@ export default function PropertyEditor() {
         address: data.address,
         city: data.city,
         state: data.state,
-        zip_code: data.zipCode,
+        zipCode: data.zipCode,
         county: data.county,
-        property_type: data.propertyType,
+        propertyType: data.propertyType,
         bedrooms: data.bedrooms ? parseInt(data.bedrooms) : null,
         bathrooms: data.bathrooms ? parseFloat(data.bathrooms) : null,
         sqft: data.sqft ? parseInt(data.sqft) : null,
-        year_built: data.yearBuilt ? parseInt(data.yearBuilt) : null,
+        yearBuilt: data.yearBuilt ? parseInt(data.yearBuilt) : null,
         description: data.description,
-        purchase_price: data.purchasePrice ? parseFloat(data.purchasePrice) : null,
-        listing_price: data.listingPrice ? parseFloat(data.listingPrice) : null,
+        purchasePrice: data.purchasePrice ? parseFloat(data.purchasePrice) : null,
+        listingPrice: data.listingPrice ? parseFloat(data.listingPrice) : null,
         arv: data.arv ? parseFloat(data.arv) : null,
-        estimated_repairs: data.estimatedRepairs ? parseFloat(data.estimatedRepairs) : null,
-        monthly_rent: data.monthlyRent ? parseFloat(data.monthlyRent) : null,
-        updated_at: new Date().toISOString(),
+        estimatedRepairs: data.estimatedRepairs ? parseFloat(data.estimatedRepairs) : null,
+        rentTotalMonthly: data.monthlyRent ? parseFloat(data.monthlyRent) : null,
+        updatedAt: new Date().toISOString(),
       };
 
       const { error } = await supabase
@@ -279,460 +248,580 @@ export default function PropertyEditor() {
   };
 
   const handlePreview = () => {
-    // Navigate to property detail page for preview
     window.open(`/property/${propertyId}`, '_blank');
   };
 
-  const handleDelete = async () => {
-    if (!user || !property || !confirm("Are you sure you want to delete this property?")) return;
-
-    try {
-      const { error } = await supabase
-        .from("property_profile")
-        .delete()
-        .eq("id", propertyId)
-        .eq("seller_id", user.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Property deleted successfully",
-      });
-
-      navigate(`/sellerdash/${userId}`);
-    } catch (error) {
-      console.error("Error deleting property:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete property",
-        variant: "destructive",
-      });
-    }
+  const handleBackToDashboard = () => {
+    navigate(`/sellerdash/${userId}`);
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#135341] mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading property...</p>
-        </div>
+        <div className="text-lg">Loading property...</div>
       </div>
     );
   }
 
-  if (error || !property) {
+  if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full">
-          <Card className="border-0 shadow-lg">
-            <CardContent className="p-8 text-center">
-              <div className="mb-6">
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <AlertCircle className="w-8 h-8 text-red-600" />
-                </div>
-                <h1 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Property</h1>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  {error || "We couldn't load this property. It may not exist or you may not have permission to edit it."}
-                </p>
-              </div>
-              
-              <Button 
-                onClick={() => navigate(`/sellerdash/${userId}`)}
-                variant="outline"
-                className="w-full hover:bg-gray-50 transition-colors duration-200"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 text-lg mb-4">{error}</div>
+          <Button onClick={handleBackToDashboard}>Back to Dashboard</Button>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(`/sellerdash/${userId}`)}
-            className="text-gray-600 hover:text-gray-900"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handlePreview}
-            className="text-gray-600 hover:text-gray-900"
-          >
-            <Eye className="w-4 h-4 mr-2" />
-            Preview Public Listing
-            <ExternalLink className="w-3 h-3 ml-1" />
-          </Button>
+  const renderPropertyOverview = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Property Title</label>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Modern Farmhouse" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
+          <FormField
+            control={form.control}
+            name="propertyType"
+            render={({ field }) => (
+              <FormItem>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Single Family" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="single-family">Single Family</SelectItem>
+                    <SelectItem value="multi-family">Multi Family</SelectItem>
+                    <SelectItem value="condo">Condo</SelectItem>
+                    <SelectItem value="townhouse">Townhouse</SelectItem>
+                    <SelectItem value="commercial">Commercial</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       </div>
 
-      {/* Content */}
-      <div className="max-w-2xl mx-auto p-4">
-        {/* Title Section */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Edit Property</h1>
-          <p className="text-gray-600">{property.address || "Property Editor"}</p>
-        </div>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
-            
-            {/* Property Overview Section */}
-            <CollapsibleSection
-              title="Property Overview"
-              icon={<Home className="w-5 h-5 text-gray-600" />}
-              isOpen={openSections.overview}
-              onToggle={() => toggleSection('overview')}
-            >
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Property Title</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Modern Farmhouse" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="propertyType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Property Type</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Single Family" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="single-family">Single Family</SelectItem>
-                          <SelectItem value="multi-family">Multi Family</SelectItem>
-                          <SelectItem value="condo">Condo</SelectItem>
-                          <SelectItem value="townhouse">Townhouse</SelectItem>
-                          <SelectItem value="commercial">Commercial</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Separator />
-                <div className="font-medium text-gray-900">Address</div>
-
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Street Address</FormLabel>
-                      <FormControl>
-                        <Input placeholder="123 Maple Street" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>City</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Milwaukee" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="state"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>State</FormLabel>
-                        <FormControl>
-                          <Input placeholder="WI" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="zipCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>ZIP Code</FormLabel>
-                        <FormControl>
-                          <Input placeholder="53202" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            </CollapsibleSection>
-
-            {/* Core Details Section */}
-            <CollapsibleSection
-              title="Core Details"
-              icon={<Building className="w-5 h-5 text-gray-600" />}
-              isOpen={openSections.details}
-              onToggle={() => toggleSection('details')}
-            >
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="bedrooms"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bedrooms</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="3" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="bathrooms"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Bathrooms</FormLabel>
-                      <FormControl>
-                        <Input type="number" step="0.5" placeholder="2" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="sqft"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Square Feet</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="2000" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="yearBuilt"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Year Built</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="1990" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CollapsibleSection>
-
-            {/* Financial Snapshot Section */}
-            <CollapsibleSection
-              title="Financial Snapshot"
-              icon={<DollarSign className="w-5 h-5 text-gray-600" />}
-              isOpen={openSections.financial}
-              onToggle={() => toggleSection('financial')}
-            >
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="listingPrice"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Asking Price</FormLabel>
-                      <FormControl>
-                        <Input placeholder="459000" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="arv"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>ARV (After Repair Value)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Optional" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="estimatedRepairs"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Estimated Repairs</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Optional" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="monthlyRent"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Monthly Rent</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Actual or projected" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CollapsibleSection>
-
-            {/* Description Section */}
-            <CollapsibleSection
-              title="Descriptions"
-              icon={<FileText className="w-5 h-5 text-gray-600" />}
-              isOpen={openSections.description}
-              onToggle={() => toggleSection('description')}
-            >
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900">Address</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="123 Maple Street" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
               <FormField
                 control={form.control}
-                name="description"
+                name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Property Description</FormLabel>
                     <FormControl>
-                      <Textarea 
-                        placeholder="Describe the property features, condition, and highlights..."
-                        className="min-h-[120px]"
-                        {...field} 
-                      />
+                      <Input placeholder="Milwaukee" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </CollapsibleSection>
-
-            {/* Media Section */}
-            <CollapsibleSection
-              title="Media"
-              icon={<Image className="w-5 h-5 text-gray-600" />}
-              isOpen={openSections.media}
-              onToggle={() => toggleSection('media')}
-            >
-              <div className="text-center py-8 border-2 border-dashed border-gray-300 rounded-lg">
-                <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-600 text-sm">Media upload functionality coming soon</p>
-              </div>
-            </CollapsibleSection>
-
-            {/* Access & Logistics Section */}
-            <CollapsibleSection
-              title="Access & Logistics"
-              icon={<MapPin className="w-5 h-5 text-gray-600" />}
-              isOpen={openSections.access}
-              onToggle={() => toggleSection('access')}
-            >
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="county"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>County</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Milwaukee County" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <div className="text-gray-600 text-sm">
-                  Additional access and logistics fields can be added here.
-                </div>
-              </div>
-            </CollapsibleSection>
-
-            {/* Action Buttons */}
-            <div className="pt-6 space-y-3">
-              <Button 
-                type="submit" 
-                className="w-full bg-[#135341] hover:bg-[#135341]/90 text-white"
-                disabled={saving}
-              >
-                {saving ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Saving Changes...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Save Changes
-                  </>
-                )}
-              </Button>
-
-              <Button 
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={handleDelete}
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Delete Property
-              </Button>
             </div>
-          </form>
-        </Form>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="WI" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code</label>
+              <FormField
+                control={form.control}
+                name="zipCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="53202" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900">Status & Visibility</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Listing Status</label>
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="live">Live</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="closed">Closed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">Public Listing</span>
+            <Switch />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderCoreDetails = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
+          <FormField
+            control={form.control}
+            name="bedrooms"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="4" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Bathrooms</label>
+          <FormField
+            control={form.control}
+            name="bathrooms"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="3" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Square Feet</label>
+          <FormField
+            control={form.control}
+            name="sqft"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="2450" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Lot Size (sq ft)</label>
+          <FormField
+            control={form.control}
+            name="lotSize"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Optional" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Year Built</label>
+          <FormField
+            control={form.control}
+            name="yearBuilt"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="2018" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Condition</label>
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Select condition" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="excellent">Excellent</SelectItem>
+              <SelectItem value="good">Good</SelectItem>
+              <SelectItem value="fair">Fair</SelectItem>
+              <SelectItem value="needs-work">Needs Work</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Occupancy Status</label>
+        <Select>
+          <SelectTrigger>
+            <SelectValue placeholder="Vacant" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="vacant">Vacant</SelectItem>
+            <SelectItem value="owner-occupied">Owner Occupied</SelectItem>
+            <SelectItem value="tenant-occupied">Tenant Occupied</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+
+  const renderFinancialSnapshot = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Asking Price</label>
+          <FormField
+            control={form.control}
+            name="listingPrice"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="459000" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">ARV (After Repair Value)</label>
+          <FormField
+            control={form.control}
+            name="arv"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Optional" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Repairs</label>
+          <FormField
+            control={form.control}
+            name="estimatedRepairs"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Optional" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Monthly Rent</label>
+          <FormField
+            control={form.control}
+            name="monthlyRent"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Actual or projected" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900">Operating Expenses</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Property Taxes (Annual)</label>
+            <Input placeholder="Optional" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Insurance (Annual)</label>
+            <Input placeholder="Optional" />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Utilities (Monthly)</label>
+            <Input placeholder="If owner pays" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">HOA Fees (Monthly)</label>
+            <Input placeholder="Optional" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderDescriptions = () => (
+    <div className="space-y-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Short Summary</label>
+        <Input placeholder='Brief hook headline (e.g., "Turnkey rental in desirable neighborhood")' />
+        <p className="text-sm text-gray-500 mt-1">0/100 characters</p>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Textarea 
+                  placeholder="Beautiful modern farmhouse with spacious rooms and updated kitchen."
+                  className="min-h-[120px]"
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <p className="text-sm text-gray-500 mt-1">Describe the property's features, condition, neighborhood, and investment potential.</p>
+      </div>
+    </div>
+  );
+
+  const renderMedia = () => (
+    <div className="space-y-6">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Property Images</label>
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+          <div className="flex flex-col items-center">
+            <Upload className="h-12 w-12 text-gray-400 mb-4" />
+            <p className="text-gray-600 mb-2">Drag and drop images or click to upload</p>
+            <Button variant="outline">Choose Files</Button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Video Walkthrough URL</label>
+        <Input placeholder="YouTube, Vimeo, or cloud storage link" />
+        <p className="text-sm text-gray-500 mt-1">Optional: Add a video tour or walkthrough</p>
+      </div>
+    </div>
+  );
+
+  const renderAccessLogistics = () => (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Lockbox Code</label>
+          <Input placeholder="Optional" />
+        </div>
+        <div className="flex items-center">
+          <input type="checkbox" className="mr-2" />
+          <span className="text-sm text-gray-700">Tenant is aware of sale</span>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Access Instructions</label>
+        <Textarea 
+          placeholder="How to access the property for showings..."
+          className="min-h-[100px]"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Showing Availability Notes</label>
+        <Textarea 
+          placeholder="Best times for showings, special requirements, etc."
+          className="min-h-[100px]"
+        />
+      </div>
+    </div>
+  );
+
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case 'overview':
+        return renderPropertyOverview();
+      case 'details':
+        return renderCoreDetails();
+      case 'financial':
+        return renderFinancialSnapshot();
+      case 'descriptions':
+        return renderDescriptions();
+      case 'media':
+        return renderMedia();
+      case 'access':
+        return renderAccessLogistics();
+      default:
+        return renderPropertyOverview();
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex">
+        {/* Sidebar */}
+        <div className="w-80 bg-white shadow-sm">
+          {/* Header */}
+          <div className="p-6 border-b border-gray-200">
+            <button
+              onClick={handleBackToDashboard}
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Dashboard
+            </button>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">Edit Property</h1>
+                <p className="text-gray-600">{property?.address || "123 Maple Street"}</p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePreview}
+                  className="flex items-center gap-1"
+                >
+                  <Eye className="h-4 w-4" />
+                  Preview Public Listing
+                  <ExternalLink className="h-3 w-3" />
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={form.handleSubmit(handleSave)}
+                  disabled={saving}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  <Save className="h-4 w-4 mr-1" />
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <div className="p-4">
+            <h3 className="text-sm font-medium text-gray-900 mb-3">Edit Sections</h3>
+            <div className="space-y-1">
+              <SidebarItem
+                icon={<Home className="h-5 w-5" />}
+                label="Property Overview"
+                isActive={activeSection === 'overview'}
+                onClick={() => setActiveSection('overview')}
+              />
+              <SidebarItem
+                icon={<Building className="h-5 w-5" />}
+                label="Core Details"
+                isActive={activeSection === 'details'}
+                onClick={() => setActiveSection('details')}
+              />
+              <SidebarItem
+                icon={<DollarSign className="h-5 w-5" />}
+                label="Financial Snapshot"
+                isActive={activeSection === 'financial'}
+                onClick={() => setActiveSection('financial')}
+              />
+              <SidebarItem
+                icon={<FileText className="h-5 w-5" />}
+                label="Descriptions"
+                isActive={activeSection === 'descriptions'}
+                onClick={() => setActiveSection('descriptions')}
+              />
+              <SidebarItem
+                icon={<Image className="h-5 w-5" />}
+                label="Media"
+                isActive={activeSection === 'media'}
+                onClick={() => setActiveSection('media')}
+              />
+              <SidebarItem
+                icon={<MapPin className="h-5 w-5" />}
+                label="Access & Logistics"
+                isActive={activeSection === 'access'}
+                onClick={() => setActiveSection('access')}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 p-8">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSave)} className="space-y-8">
+              <Card>
+                <CardContent className="p-6">
+                  {renderActiveSection()}
+                </CardContent>
+              </Card>
+            </form>
+          </Form>
+        </div>
       </div>
     </div>
   );
