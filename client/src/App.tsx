@@ -12,7 +12,7 @@ import SellerDashboard from "@/pages/seller-dashboard";
 import SellerDash from "@/pages/sellerdash";
 // Note: Dynamic route import will be used within the route definition
 import SellerDashboardPage from "@/pages/sellerdash/[userId]";
-import SellerPropertyDetailPage from "@/pages/sellerdash/property/[propertyId]";
+
 import DashboardNewPage from "@/pages/dashboard";
 import DashboardPage from "@/pages/dashboard-page";
 import ProfilePage from "@/pages/profile/profile-page";
@@ -433,7 +433,7 @@ function Router() {
       <ProtectedRoute path="/sellerdash/:userId/property/:propertyId" component={() => (
         <AppLayout>
           {(() => {
-            const PropertyEditorPage = React.lazy(() => import('./pages/sellerdash/[userId]/property/[propertyId]'));
+            const PropertyEditorPage = React.lazy(() => import('./pages/sellerdash/[userid]/property/[propertyid]'));
             return (
               <React.Suspense fallback={<div>Loading...</div>}>
                 <PropertyEditorPage />
@@ -446,7 +446,14 @@ function Router() {
       {/* Simplified property editor route */}
       <ProtectedRoute path="/sellerdash/property/:propertyId" component={() => (
         <AppLayout>
-          <SellerPropertyDetailPage />
+          {(() => {
+            const PropertyEditorPage = React.lazy(() => import('./pages/sellerdash/[userid]/property/[propertyid]'));
+            return (
+              <React.Suspense fallback={<div>Loading...</div>}>
+                <PropertyEditorPage />
+              </React.Suspense>
+            );
+          })()}
         </AppLayout>
       )} />
       <Route path="/forgot-password">
