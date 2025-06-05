@@ -975,16 +975,16 @@ export default function PropertyEditor() {
         
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-medium">Unit Breakdown</h4>
-              <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded">Recommended</span>
+            <div className="flex items-center gap-3">
+              <h4 className="font-medium text-gray-900">Unit Breakdown</h4>
+              <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded-md font-medium">Recommended</span>
             </div>
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={addUnit}
-              className="flex items-center gap-1 hover:bg-[#09261E] hover:text-white hover:border-[#09261E]"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-[#09261E] hover:text-white hover:border-[#09261E] transition-colors"
             >
               <Plus className="h-4 w-4" />
               Add Unit
@@ -992,7 +992,7 @@ export default function PropertyEditor() {
           </div>
           
           <div className="space-y-3">
-            <div className="grid grid-cols-4 gap-4 text-sm font-medium text-gray-700">
+            <div className="grid grid-cols-4 gap-4 text-sm font-medium text-gray-700 bg-gray-50 p-3 rounded-lg">
               <div>Unit Label</div>
               <div>Monthly Rent</div>
               <div>Occupied</div>
@@ -1000,33 +1000,37 @@ export default function PropertyEditor() {
             </div>
             
             {units.map((unit, index) => (
-              <div key={index} className="grid grid-cols-4 gap-4 items-center">
+              <div key={index} className="grid grid-cols-4 gap-4 items-center p-3 bg-white border border-gray-200 rounded-lg">
                 <Input
                   placeholder="Unit 1"
                   value={unit.label}
                   onChange={(e) => updateUnit(index, 'label', e.target.value)}
+                  className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]"
                 />
                 <Input
                   placeholder="e.g. $1,000"
                   value={unit.rent}
                   onChange={(e) => updateUnit(index, 'rent', e.target.value)}
+                  className="border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]"
                 />
                 <div className="flex items-center gap-2">
                   <Switch
                     checked={unit.occupied}
                     onCheckedChange={(checked) => updateUnit(index, 'occupied', checked)}
                   />
-                  <span className="text-sm">{unit.occupied ? 'Yes' : 'No'}</span>
+                  <span className="text-sm text-gray-600">{unit.occupied ? 'Yes' : 'No'}</span>
                 </div>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => removeUnit(index)}
-                  className="hover:bg-gray-100"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <div className="flex justify-center">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeUnit(index)}
+                    className="p-2 hover:bg-gray-100 border-gray-300"
+                  >
+                    <Trash2 className="h-4 w-4 text-gray-500" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -1192,7 +1196,7 @@ export default function PropertyEditor() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Contractor Quote (Optional)</label>
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" className="w-full hover:bg-gray-100">
                       <Upload className="h-4 w-4 mr-2" />
                       Upload Quote
                     </Button>
