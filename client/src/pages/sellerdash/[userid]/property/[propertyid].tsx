@@ -751,7 +751,7 @@ export default function PropertyEditor() {
                   <SelectItem value="minimalist">Minimalist</SelectItem>
                 </SelectContent>
               </Select>
-              <Button variant="outline" className="whitespace-nowrap">
+              <Button variant="outline" className="whitespace-nowrap hover:bg-[#09261E] hover:text-white hover:border-[#09261E]">
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Regenerate
               </Button>
@@ -984,7 +984,7 @@ export default function PropertyEditor() {
               variant="outline"
               size="sm"
               onClick={addUnit}
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 hover:bg-[#09261E] hover:text-white hover:border-[#09261E]"
             >
               <Plus className="h-4 w-4" />
               Add Unit
@@ -1023,6 +1023,7 @@ export default function PropertyEditor() {
                   variant="outline"
                   size="sm"
                   onClick={() => removeUnit(index)}
+                  className="hover:bg-gray-100"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -1078,6 +1079,7 @@ export default function PropertyEditor() {
                   variant="outline"
                   size="sm"
                   onClick={() => removeExpense(index)}
+                  className="hover:bg-gray-100"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -1089,7 +1091,7 @@ export default function PropertyEditor() {
             type="button"
             variant="outline"
             onClick={addExpense}
-            className="w-full flex items-center gap-2"
+            className="w-full flex items-center gap-2 hover:bg-[#09261E] hover:text-white hover:border-[#09261E]"
           >
             <Plus className="h-4 w-4" />
             Add Expense
@@ -1142,7 +1144,7 @@ export default function PropertyEditor() {
                 variant="outline"
                 size="sm"
                 onClick={addRepair}
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 hover:bg-[#09261E] hover:text-white hover:border-[#09261E]"
               >
                 <Plus className="h-4 w-4" />
                 Add Repair
@@ -1163,6 +1165,7 @@ export default function PropertyEditor() {
                     variant="outline"
                     size="sm"
                     onClick={() => removeRepair(index)}
+                    className="hover:bg-gray-100"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -1314,13 +1317,13 @@ export default function PropertyEditor() {
         
         <div className="flex gap-2 mb-4">
           <Button 
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            className="flex-1 bg-[#09261E] hover:bg-[#135341] text-white border-[#09261E]"
             variant="default"
           >
             YouTube / Video Link
           </Button>
           <Button 
-            className="flex-1" 
+            className="flex-1 hover:bg-[#09261E] hover:text-white hover:border-[#09261E]" 
             variant="outline"
           >
             Upload Video File
