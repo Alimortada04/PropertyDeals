@@ -137,7 +137,7 @@ export const propertyProfile = pgTable("property_profile", {
   featuredProperty: boolean("featured_property").default(false).notNull(),
   
   // Status and visibility
-  status: text("status").default("draft").notNull(), // draft, active
+  status: text("status").default("draft").notNull(), // draft, live, offer_accepted, under_contract, closed, archived, dropped
   
   // Engagement stats
   viewCount: integer("view_count").default(0).notNull(),

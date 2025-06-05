@@ -1566,43 +1566,132 @@ export default function PropertyEditor() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Mobile Header */}
+      <div className="lg:hidden bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="px-4 py-4">
+          <button
+            onClick={handleBackToDashboard}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </button>
+          
+          {/* Mobile Tab Selector */}
+          <select
+            value={activeSection}
+            onChange={(e) => setActiveSection(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent bg-white"
+          >
+            <option value="overview">Property Details</option>
+            <option value="media">Media</option>
+            <option value="finances">Finances</option>
+            <option value="logistics">Logistics</option>
+          </select>
+          
+          {/* Mobile Top Controls */}
+          <div className="flex items-center gap-2 mt-4 flex-wrap">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Status:</span>
+              <select
+                value={propertyData?.status || "draft"}
+                onChange={(e) => handleStatusChange(e.target.value)}
+                className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent"
+              >
+                <option value="draft">Draft</option>
+                <option value="live">Live</option>
+                <option value="offer_accepted">Offer Accepted</option>
+                <option value="under_contract">Under Contract</option>
+                <option value="closed">Closed</option>
+                <option value="archived">Archived</option>
+                <option value="dropped">Dropped</option>
+              </select>
+            </div>
+            <button
+              onClick={() => window.open(`/p/${propertyId}`, '_blank')}
+              className="inline-flex items-center px-3 py-2 border border-gray-300 rounded text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+            >
+              <Eye className="w-4 h-4 mr-1" />
+              Preview
+            </button>
+            <button
+              onClick={form.handleSubmit(handleSave)}
+              disabled={saving}
+              className="inline-flex items-center px-3 py-2 bg-[#09261E] border border-transparent rounded text-sm font-medium text-white hover:bg-[#135341] disabled:opacity-50"
+            >
+              <Save className="w-4 h-4 mr-1" />
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="flex">
-        {/* Sidebar */}
-        <div className="w-80 bg-white shadow-sm">
-          {/* Header */}
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block w-80 bg-white shadow-sm">
+          {/* Desktop Header */}
           <div className="p-6 border-b border-gray-200">
             <button
               onClick={handleBackToDashboard}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Dashboard
             </button>
-            <div className="flex items-center justify-between">
+            
+            {/* Desktop Top Controls */}
+            <div className="space-y-4">
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Edit Property</h1>
-                <p className="text-gray-600">{property?.address || "123 Maple Street"}</p>
+                <h1 className="text-2xl font-bold text-gray-900">Edit Property</h1>
+                <p className="text-gray-600 mt-1">{propertyData?.address || "Property Editor"}</p>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handlePreview}
-                  className="flex items-center gap-1"
+              
+              <div className="space-y-3">
+                {/* Status Dropdown */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-700 min-w-0">Status:</span>
+                  <select
+                    value={propertyData?.status || "draft"}
+                    onChange={(e) => handleStatusChange(e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent"
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="live">Live</option>
+                    <option value="offer_accepted">Offer Accepted</option>
+                    <option value="under_contract">Under Contract</option>
+                    <option value="closed">Closed</option>
+                    <option value="archived">Archived</option>
+                    <option value="dropped">Dropped</option>
+                  </select>
+                </div>
+                
+                {/* Preview Button */}
+                <button
+                  onClick={() => window.open(`/p/${propertyId}`, '_blank')}
+                  className="w-full inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:ring-offset-2"
                 >
-                  <Eye className="h-4 w-4" />
+                  <Eye className="w-4 h-4 mr-2" />
                   Preview Public Listing
-                  <ExternalLink className="h-3 w-3" />
-                </Button>
-                <Button
-                  size="sm"
+                </button>
+                
+                {/* Save Button */}
+                <button
                   onClick={form.handleSubmit(handleSave)}
                   disabled={saving}
-                  className="bg-green-600 hover:bg-green-700"
+                  className="w-full inline-flex items-center justify-center px-4 py-2 bg-[#09261E] border border-transparent rounded-md text-sm font-medium text-white hover:bg-[#135341] focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Save className="h-4 w-4 mr-1" />
-                  Save Changes
-                </Button>
+                  {saving ? (
+                    <>
+                      <div className="animate-spin -ml-1 mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
