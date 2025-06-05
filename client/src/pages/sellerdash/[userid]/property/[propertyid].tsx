@@ -851,123 +851,159 @@ export default function PropertyEditor() {
     </div>
   );
 
-  const renderFinancialSnapshot = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Asking Price</label>
-          <FormField
-            control={form.control}
-            name="listingPrice"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="459000" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+  const renderFinances = () => (
+    <div className="space-y-6 py-4">
+      {/* After Repair Value */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <DollarSign className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">After Repair Value</h3>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">ARV (After Repair Value)</label>
-          <FormField
-            control={form.control}
-            name="arv"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Optional" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        
+        <FormField
+          control={form.control}
+          name="arv"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">📈</span>
+                After Repair Value (ARV) (optional)
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. 450000" {...field} />
+              </FormControl>
+              <FormDescription>
+                The estimated value of the property after all repairs and improvements
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Repairs</label>
+      <Separator />
+
+      {/* Rental Income */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <DollarSign className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Rental Income</h3>
+        </div>
+        
+        <FormField
+          control={form.control}
+          name="rentTotalMonthly"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Total Monthly Rent</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. 2500" {...field} />
+              </FormControl>
+              <FormDescription>
+                Enter the total monthly rental income for this property
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="font-medium">Unit Breakdown</h4>
+              <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded">Recommended</span>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={addUnit}
+              className="flex items-center gap-1"
+            >
+              <Plus className="h-4 w-4" />
+              Add Unit
+            </Button>
+          </div>
+          
           <div className="space-y-3">
-            {repairs.map((repair, index) => (
-              <div key={index} className="flex gap-2">
-                <Input 
-                  placeholder="Repair item"
-                  value={repair.name}
-                  onChange={(e) => updateRepair(index, 'name', e.target.value)}
-                  className="flex-1"
+            <div className="grid grid-cols-4 gap-4 text-sm font-medium text-gray-700">
+              <div>Unit Label</div>
+              <div>Monthly Rent</div>
+              <div>Occupied</div>
+              <div></div>
+            </div>
+            
+            {units.map((unit, index) => (
+              <div key={index} className="grid grid-cols-4 gap-4 items-center">
+                <Input
+                  placeholder="Unit 1"
+                  value={unit.label}
+                  onChange={(e) => updateUnit(index, 'label', e.target.value)}
                 />
-                <Input 
-                  placeholder="Cost"
-                  value={repair.cost}
-                  onChange={(e) => updateRepair(index, 'cost', e.target.value)}
-                  className="w-24"
+                <Input
+                  placeholder="e.g. $1,000"
+                  value={unit.rent}
+                  onChange={(e) => updateUnit(index, 'rent', e.target.value)}
                 />
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={unit.occupied}
+                    onCheckedChange={(checked) => updateUnit(index, 'occupied', checked)}
+                  />
+                  <span className="text-sm">{unit.occupied ? 'Yes' : 'No'}</span>
+                </div>
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => removeRepair(index)}
+                  onClick={() => removeUnit(index)}
                 >
-                  <X className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             ))}
-            <Button
-              type="button"
-              variant="outline"
-              onClick={addRepair}
-              className="w-full"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Repair Item
-            </Button>
           </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Monthly Rent</label>
-          <FormField
-            control={form.control}
-            name="rentTotalMonthly"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Actual or projected" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
       </div>
 
+      <Separator />
+
+      {/* Expenses */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Operating Expenses</h3>
+        <div className="flex items-center gap-2">
+          <DollarSign className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Expenses</h3>
+        </div>
+        
         <div className="space-y-3">
+          <div className="grid grid-cols-3 gap-4 text-sm font-medium text-gray-700">
+            <div>Expense Name</div>
+            <div>Amount</div>
+            <div>Frequency</div>
+          </div>
+          
           {expenses.map((expense, index) => (
-            <div key={index} className="grid grid-cols-3 gap-2">
-              <Input 
-                placeholder="Expense name"
+            <div key={index} className="grid grid-cols-3 gap-4 items-center">
+              <Input
+                placeholder="Property Tax"
                 value={expense.name}
                 onChange={(e) => updateExpense(index, 'name', e.target.value)}
               />
-              <Input 
-                placeholder="Amount"
+              <Input
+                placeholder="e.g. $1,000"
                 value={expense.amount}
                 onChange={(e) => updateExpense(index, 'amount', e.target.value)}
               />
               <div className="flex gap-2">
-                <Select 
-                  value={expense.frequency} 
+                <Select
+                  value={expense.frequency}
                   onValueChange={(value) => updateExpense(index, 'frequency', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Annually" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="monthly">Monthly</SelectItem>
-                    <SelectItem value="quarterly">Quarterly</SelectItem>
                     <SelectItem value="annually">Annually</SelectItem>
                   </SelectContent>
                 </Select>
@@ -977,20 +1013,140 @@ export default function PropertyEditor() {
                   size="sm"
                   onClick={() => removeExpense(index)}
                 >
-                  <X className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           ))}
+          
           <Button
             type="button"
             variant="outline"
             onClick={addExpense}
-            className="w-full"
+            className="w-full flex items-center gap-2"
           >
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-4 w-4" />
             Add Expense
           </Button>
+        </div>
+        
+        <div className="flex justify-between items-center pt-4 border-t">
+          <div className="text-blue-600 font-medium">
+            Monthly Total: <span className="text-lg">$0</span>
+          </div>
+          <div className="text-blue-600 font-medium">
+            Annual Total: <span className="text-lg">$0</span>
+          </div>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Property Condition & Repairs */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Home className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Property Condition & Repairs</h3>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Property Condition</label>
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Good - Minor Repairs Needed" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="excellent">Excellent - Move-in Ready</SelectItem>
+                <SelectItem value="good">Good - Minor Repairs Needed</SelectItem>
+                <SelectItem value="fair">Fair - Moderate Repairs Needed</SelectItem>
+                <SelectItem value="poor">Poor - Major Repairs Needed</SelectItem>
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-gray-500 mt-1">
+              Accurately describe the condition to set buyer expectations
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="font-medium">Repairs & Renovations</h4>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addRepair}
+                className="flex items-center gap-1"
+              >
+                <Plus className="h-4 w-4" />
+                Add Repair
+              </Button>
+            </div>
+            
+            {repairs.map((repair, index) => (
+              <div key={index} className="space-y-4 p-4 border rounded-lg">
+                <div className="flex items-center justify-between">
+                  <Input
+                    placeholder="e.g. Roof Replacement"
+                    value={repair.name}
+                    onChange={(e) => updateRepair(index, 'name', e.target.value)}
+                    className="font-medium"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeRepair(index)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                  <Textarea
+                    placeholder="Describe the needed repairs"
+                    value={repair.description || ''}
+                    onChange={(e) => updateRepair(index, 'description', e.target.value)}
+                    className="min-h-[100px]"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Cost</label>
+                    <Input
+                      placeholder="e.g. $5,000"
+                      value={repair.cost}
+                      onChange={(e) => updateRepair(index, 'cost', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contractor Quote (Optional)</label>
+                    <Button variant="outline" className="w-full">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Quote
+                    </Button>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Contractor (Optional)</label>
+                  <Input
+                    placeholder="Search or enter contractor name"
+                    value={repair.contractor || ''}
+                    onChange={(e) => updateRepair(index, 'contractor', e.target.value)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-right">
+            <div className="text-red-600 font-medium text-lg">
+              Total Repair Costs: $0
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1048,90 +1204,319 @@ export default function PropertyEditor() {
   );
 
   const renderMedia = () => (
-    <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Property Images</label>
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+    <div className="space-y-6 py-4">
+      {/* Primary Image */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <ImageIcon className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Primary Image (Thumbnail)</h3>
+          <span className="text-red-500 text-sm">*Required</span>
+        </div>
+        
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center bg-gray-50/50">
           <div className="flex flex-col items-center">
-            <Upload className="h-12 w-12 text-gray-400 mb-4" />
-            <p className="text-gray-600 mb-2">Drag and drop images or click to upload</p>
-            <Button variant="outline">Choose Files</Button>
+            <ImageIcon className="h-12 w-12 text-gray-400 mb-4" />
+            <p className="text-sm text-gray-600 mb-2">Drag & drop your main property image or browse files</p>
+            <p className="text-xs text-gray-500">JPEG, PNG, or WebP up to 10MB</p>
           </div>
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Video Walkthrough URL</label>
-        <FormField
-          control={form.control}
-          name="videoWalkthrough"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="YouTube, Vimeo, or cloud storage link" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <p className="text-sm text-gray-500 mt-1">Optional: Add a video tour or walkthrough</p>
+      {/* Gallery Images */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <ImageIcon className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Gallery Images</h3>
+          <span className="text-red-500 text-sm">*Required</span>
+        </div>
+        
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center bg-gray-50/50">
+          <div className="flex flex-col items-center">
+            <Upload className="h-12 w-12 text-gray-400 mb-4" />
+            <p className="text-sm text-gray-600 mb-2">Drag & drop property photos here or browse files</p>
+            <p className="text-xs text-gray-500">Upload multiple images at once (up to 20)</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Video */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Youtube className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Video (Optional)</h3>
+        </div>
+        
+        <div className="flex gap-2 mb-4">
+          <Button 
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+            variant="default"
+          >
+            YouTube / Video Link
+          </Button>
+          <Button 
+            className="flex-1" 
+            variant="outline"
+          >
+            Upload Video File
+          </Button>
+        </div>
+        
+        <div className="space-y-2">
+          <FormField
+            control={form.control}
+            name="videoWalkthrough"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input 
+                    placeholder="Paste YouTube, Vimeo, or Google Drive link"
+                    className="w-full"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <p className="text-xs text-gray-500 flex items-center gap-1">
+            <span className="inline-block w-4 h-4 bg-gray-300 rounded-full text-center text-xs leading-4">?</span>
+            Add a virtual tour or walkthrough video link
+          </p>
+        </div>
       </div>
     </div>
   );
 
-  const renderAccessLogistics = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Lockbox Code</label>
-          <Input placeholder="Optional" />
+  const renderLogistics = () => (
+    <div className="space-y-6 py-4">
+      {/* Deal Terms */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <DollarSign className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Deal Terms</h3>
         </div>
-        <div className="flex items-center">
-          <input type="checkbox" className="mr-2" />
-          <span className="text-sm text-gray-700">Tenant is aware of sale</span>
-        </div>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Access Instructions</label>
-        <Textarea 
-          placeholder="How to access the property for showings..."
-          className="min-h-[100px]"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Showing Availability Notes</label>
-        <Textarea 
-          placeholder="Best times for showings, special requirements, etc."
-          className="min-h-[100px]"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Access Type</label>
-        <FormField
-          control={form.control}
-          name="accessType"
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <FormField
+            control={form.control}
+            name="purchasePrice"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Purchase Price</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select access type" />
-                  </SelectTrigger>
+                  <Input placeholder="e.g. 200000" {...field} />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="key">Key</SelectItem>
-                  <SelectItem value="lockbox">Lockbox</SelectItem>
-                  <SelectItem value="owner-present">Owner Present</SelectItem>
-                  <SelectItem value="agent-only">Agent Only</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormDescription>
+                  Buyers will not see your purchase price - this is used to calculate your assignment fee
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="listingPrice"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Listing Price</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 225000" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="assignmentFee"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Assignment Fee (Auto-calculated)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Calculated" {...field} disabled />
+                </FormControl>
+                <FormDescription>
+                  Listing Price - Purchase Price
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="accessType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Access Type</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="How can buyers access the property?" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="key">Key</SelectItem>
+                    <SelectItem value="lockbox">Lockbox</SelectItem>
+                    <SelectItem value="owner-present">Owner Present</SelectItem>
+                    <SelectItem value="agent-only">Agent Only</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="closingDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Closing Date (Optional)</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="date"
+                    value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+                    onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Expected closing date (if known)
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Comparable Properties (Comps) */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Building className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Comparable Properties (Comps)</h3>
+        </div>
+        
+        <div className="space-y-3">
+          {comps.map((comp, index) => (
+            <div key={index} className="flex gap-2">
+              <Input
+                placeholder="Add address of similar property sold recently"
+                value={comp}
+                onChange={(e) => updateComp(index, e.target.value)}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => removeComp(index)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          
+          <Button
+            type="button"
+            variant="outline"
+            onClick={addComp}
+            className="w-full flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Add Comparable Property
+          </Button>
+        </div>
+        
+        <p className="text-xs text-gray-500">
+          Add addresses of similar properties sold recently in the area (optional)
+        </p>
+      </div>
+
+      <Separator />
+
+      {/* Documentation */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <FileText className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Documentation</h3>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Purchase Agreement</label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50">
+              <div className="flex flex-col items-center">
+                <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                <p className="text-sm text-gray-600 mb-1">Drag & drop your agreement or browse files</p>
+                <p className="text-xs text-gray-500">PDF, DOC, or DOCX up to 10MB</p>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              You can upload this later, but it's required before publishing.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Partners & Notes */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <MapPin className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Partners & Notes</h3>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Deal Partners (Optional)</label>
+            <div className="space-y-2">
+              {partners.map((partner, index) => (
+                <div key={index} className="flex gap-2">
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    {partner}
+                    <X 
+                      className="h-3 w-3 cursor-pointer" 
+                      onClick={() => removePartner(index)}
+                    />
+                  </Badge>
+                </div>
+              ))}
+              
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter partner name"
+                  value={newPartner}
+                  onChange={(e) => setNewPartner(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addPartner();
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addPartner}
+                  disabled={!newPartner.trim()}
+                >
+                  Add
+                </Button>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              Add JV partners or other stakeholders in this deal
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -1140,16 +1525,12 @@ export default function PropertyEditor() {
     switch (activeSection) {
       case 'overview':
         return renderPropertyOverview();
-      case 'details':
-        return renderCoreDetails();
-      case 'financial':
-        return renderFinancialSnapshot();
-      case 'descriptions':
-        return renderDescriptions();
       case 'media':
         return renderMedia();
-      case 'access':
-        return renderAccessLogistics();
+      case 'finances':
+        return renderFinances();
+      case 'logistics':
+        return renderLogistics();
       default:
         return renderPropertyOverview();
     }
@@ -1209,34 +1590,22 @@ export default function PropertyEditor() {
                 onClick={() => setActiveSection('overview')}
               />
               <SidebarItem
-                icon={<Building className="h-5 w-5" />}
-                label="Core Details"
-                isActive={activeSection === 'details'}
-                onClick={() => setActiveSection('details')}
-              />
-              <SidebarItem
-                icon={<DollarSign className="h-5 w-5" />}
-                label="Financial Snapshot"
-                isActive={activeSection === 'financial'}
-                onClick={() => setActiveSection('financial')}
-              />
-              <SidebarItem
-                icon={<FileText className="h-5 w-5" />}
-                label="Descriptions"
-                isActive={activeSection === 'descriptions'}
-                onClick={() => setActiveSection('descriptions')}
-              />
-              <SidebarItem
                 icon={<ImageIcon className="h-5 w-5" />}
                 label="Media"
                 isActive={activeSection === 'media'}
                 onClick={() => setActiveSection('media')}
               />
               <SidebarItem
+                icon={<DollarSign className="h-5 w-5" />}
+                label="Finances"
+                isActive={activeSection === 'finances'}
+                onClick={() => setActiveSection('finances')}
+              />
+              <SidebarItem
                 icon={<MapPin className="h-5 w-5" />}
-                label="Access & Logistics"
-                isActive={activeSection === 'access'}
-                onClick={() => setActiveSection('access')}
+                label="Logistics"
+                isActive={activeSection === 'logistics'}
+                onClick={() => setActiveSection('logistics')}
               />
             </div>
           </div>

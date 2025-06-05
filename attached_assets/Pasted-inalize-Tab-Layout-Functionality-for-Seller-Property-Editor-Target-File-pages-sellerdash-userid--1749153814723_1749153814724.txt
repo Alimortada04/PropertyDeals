@@ -1,0 +1,95 @@
+inalize Tab Layout & Functionality for Seller Property Editor
+Target File
+pages/sellerdash/[userid]/property/[propertyid].tsx
+
+🧭 Objective
+Redesign and finalize the property editor page for sellers so it mirrors the step-by-step listing modal in full fidelity—preserving style, section layout, and field logic. The new structure should use four main tabs:
+
+✅ Tabs to Implement
+1. Property Details
+⚙️ Source: Use Step 1 of the property listing modal.
+
+📐 Design: Must exactly match listing modal design.
+
+🧠 Functionality:
+
+Editable fields with same validations.
+
+All fields connected to Supabase via property_profile.
+
+Includes:
+
+Property Title
+
+Property Type
+
+Address, City, State, ZIP
+
+County, Parcel ID
+
+Bedrooms, Bathrooms, Year Built
+
+Square Footage, Lot Size
+
+Parking
+
+✍️ Also include: AI Description + Additional Notes (from Step 5 and Step 4 of modal).
+
+💾 Fields must be editable and sync changes using supabase.from("property_profile").update(...).eq("id", propertyid).
+
+2. Media
+⚙️ Source: Use Step 2 of the property listing modal.
+
+📐 Design: Copy all media field styling and upload UX exactly.
+
+🧠 Functionality:
+
+Show primary image (thumbnail) and allow upload/removal.
+
+Show gallery images (multiple), allow reordering and removal.
+
+Video options:
+
+Tab switcher for video link vs file upload.
+
+Show thumbnail/file name if present.
+
+✅ All uploads use uploadFileToSupabase() and save back to the property_profile table.
+
+3. Finances
+⚙️ Source: Use Step 3 of the listing modal.
+
+📐 Design: Match styling exactly—ARV, rents, unit breakdown, expenses, repair section.
+
+🧠 Functionality:
+
+Dynamic add/remove rows for expenses and units.
+
+Monthly/annual repair cost calculation.
+
+Add repair file quote uploads via the existing logic.
+
+🔁 Sync changes to:
+
+arv, rent_unit, expense_items, repair_projects, expenses_total_monthly, repair_costs_total (snake_case in Supabase).
+
+4. Logistics
+⚙️ Source: Use Step 4 of listing modal.
+
+📐 Design: Reuse modal’s “Deal Terms,” “Comps,” “Documentation,” and “Partners & Notes”.
+
+🧠 Functionality:
+
+Purchase Price, Listing Price, Assignment Fee (auto-calculated)
+
+Access Type (dropdown), Closing Date (calendar)
+
+Comps: array of strings (manually add/remove)
+
+Upload Purchase Agreement + Assignment Agreement
+
+Add/remove partners dynamically
+
+🔁 Sync fields like:
+
+purchase_price, listing_price, assignment_fee, access_type, closing_date, comps, purchase_agreement, assignment_agreement, jv_partners.
