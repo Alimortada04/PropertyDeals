@@ -75,6 +75,18 @@ const RECENT_ACTIVITY = [
   }
 ];
 
+// Status options for multi-select filtering
+const STATUS_OPTIONS = [
+  { value: 'All', label: 'All' },
+  { value: 'Drafts', label: 'Drafts' },
+  { value: 'Live', label: 'Live' },
+  { value: 'Offer Accepted', label: 'Offer Accepted' },
+  { value: 'Pending', label: 'Pending' },
+  { value: 'Closed', label: 'Closed' },
+  { value: 'Dropped', label: 'Dropped' },
+  { value: 'Archived', label: 'Archived' }
+];
+
 /**
  * SellerDashboardPage - Main dashboard for sellers
  */
@@ -84,7 +96,7 @@ export default function SellerDashboardPage() {
   const { profile: sellerProfile, loading: isLoadingProfile } = useSellerProfile();
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>(['All']);
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
   const [isSellerModalOpen, setIsSellerModalOpen] = useState(false);
   const marketingCenterModal = useMarketingCenterModal();
@@ -255,7 +267,7 @@ export default function SellerDashboardPage() {
         property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         property.address.toLowerCase().includes(searchQuery.toLowerCase());
       
-      const matchesStatus = statusFilter === 'All' || property.status === statusFilter;
+      const matchesStatus = selectedStatuses.includes('All') || selectedStatuses.includes(property.status);
       
       return matchesSearch && matchesStatus;
     })
@@ -608,28 +620,15 @@ export default function SellerDashboardPage() {
                   />
                 </div>
                 
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="gap-2">
-                      <Filter className="h-4 w-4" />
-                      <span className="hidden sm:inline">Status: {statusFilter}</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setStatusFilter('All')}>
-                      All
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setStatusFilter('Listed')}>
-                      Listed
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setStatusFilter('Under Contract')}>
-                      Under Contract
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setStatusFilter('Closed')}>
-                      Closed
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="w-48">
+                  <MultiSelect
+                    options={STATUS_OPTIONS}
+                    selected={selectedStatuses}
+                    onSelectionChange={setSelectedStatuses}
+                    placeholder="Filter by status..."
+                    className="min-w-[200px]"
+                  />
+                </div>
               </div>
             </div>
           </div>

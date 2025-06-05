@@ -140,7 +140,7 @@ export function QuickActionSelector() {
     <div 
       id="quick-action-fab" 
       ref={fabRef}
-      className="fixed bottom-20 sm:bottom-16 md:bottom-20 lg:bottom-16 right-6 z-50"
+      className="fixed bottom-24 sm:bottom-20 md:bottom-24 lg:bottom-20 right-6 z-50"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
