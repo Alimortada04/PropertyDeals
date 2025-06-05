@@ -140,6 +140,7 @@ export default function PropertyEditor() {
   const [comps, setComps] = useState<string[]>([""]);
   const [partners, setPartners] = useState<string[]>([]);
   const [newPartner, setNewPartner] = useState("");
+  const [videoMode, setVideoMode] = useState<'link' | 'upload'>('link');
 
   const userId = params?.userId;
   const propertyId = params?.propertyId;
@@ -231,6 +232,10 @@ export default function PropertyEditor() {
           additionalNotes: propertyData.additionalNotes || "",
           tags: propertyData.tags || [],
           featuredProperty: propertyData.featuredProperty || false,
+          // Media fields
+          primaryImage: propertyData.primary_image || "",
+          galleryImages: propertyData.gallery_images || [],
+          videoWalkthrough: propertyData.video_walkthrough || "",
         });
 
         // Set expenses from property data
@@ -295,6 +300,10 @@ export default function PropertyEditor() {
         expenseItems: expenses,
         repairProjects: repairs,
         rentUnit: units,
+        // Media fields  
+        primary_image: data.primaryImage,
+        gallery_images: data.galleryImages || [],
+        video_walkthrough: data.videoWalkthrough,
         updatedAt: new Date().toISOString(),
       };
 
@@ -1321,41 +1330,72 @@ export default function PropertyEditor() {
         
         <div className="flex gap-2 mb-4">
           <Button 
-            className="flex-1 bg-[#09261E] hover:bg-[#135341] text-white border-[#09261E]"
-            variant="default"
+            type="button"
+            onClick={() => setVideoMode('link')}
+            className={`flex-1 transition-colors ${
+              videoMode === 'link' 
+                ? 'bg-[#09261E] hover:bg-[#135341] text-white border-[#09261E]' 
+                : 'border-gray-300 text-gray-700 hover:bg-[#09261E] hover:text-white hover:border-[#09261E]'
+            }`}
+            variant={videoMode === 'link' ? 'default' : 'outline'}
           >
             YouTube / Video Link
           </Button>
           <Button 
-            className="flex-1 hover:bg-[#09261E] hover:text-white hover:border-[#09261E]" 
-            variant="outline"
+            type="button"
+            onClick={() => setVideoMode('upload')}
+            className={`flex-1 transition-colors ${
+              videoMode === 'upload' 
+                ? 'bg-[#09261E] hover:bg-[#135341] text-white border-[#09261E]' 
+                : 'border-gray-300 text-gray-700 hover:bg-[#09261E] hover:text-white hover:border-[#09261E]'
+            }`}
+            variant={videoMode === 'upload' ? 'default' : 'outline'}
           >
             Upload Video File
           </Button>
         </div>
         
-        <div className="space-y-2">
-          <FormField
-            control={form.control}
-            name="videoWalkthrough"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input 
-                    placeholder="Paste YouTube, Vimeo, or Google Drive link"
-                    className="w-full"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <p className="text-xs text-gray-500 flex items-center gap-1">
-            <span className="inline-block w-4 h-4 bg-gray-300 rounded-full text-center text-xs leading-4">?</span>
-            Add a virtual tour or walkthrough video link
-          </p>
-        </div>
+        {videoMode === 'link' ? (
+          <div className="space-y-3">
+            <FormField
+              control={form.control}
+              name="videoWalkthrough"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input 
+                      placeholder="Paste YouTube, Vimeo, or Google Drive link"
+                      className="w-full border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex items-start gap-2 text-xs text-gray-500">
+              <div className="flex items-center justify-center w-4 h-4 bg-gray-300 rounded-full text-center text-xs leading-4 mt-0.5 flex-shrink-0">
+                ?
+              </div>
+              <span>Add a virtual tour or walkthrough video link</span>
+            </div>
+          </div>
+        ) : (
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50">
+            <div className="flex flex-col items-center">
+              <Upload className="h-8 w-8 text-gray-400 mb-3" />
+              <p className="text-sm text-gray-600 mb-1 font-medium">Upload a video file or browse files</p>
+              <p className="text-xs text-gray-500 mb-4">MP4, MOV, or WebM up to 100MB</p>
+              <Button
+                type="button"
+                variant="outline"
+                className="hover:bg-gray-100 border-gray-300"
+              >
+                Browse Files
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1673,7 +1713,7 @@ export default function PropertyEditor() {
 
       <div className="flex">
         {/* Desktop Sidebar */}
-        <div className="hidden lg:block w-80 bg-white shadow-sm">
+        <div className="hidden lg:block w-80 bg-white shadow-sm sticky top-0 h-screen overflow-y-auto">
           {/* Desktop Header */}
           <div className="p-6 border-b border-gray-200">
             <button
