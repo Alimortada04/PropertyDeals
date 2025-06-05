@@ -341,7 +341,7 @@ export default function PropertyEditor() {
               <Button 
                 onClick={() => navigate(`/sellerdash/${userId}`)}
                 variant="outline"
-                className="w-full"
+                className="w-full hover:bg-gray-50 transition-colors duration-200"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
