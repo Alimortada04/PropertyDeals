@@ -10,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import {
   Select,
@@ -23,6 +24,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
 import { 
   ArrowLeft, 
@@ -33,42 +36,61 @@ import {
   Building,
   DollarSign,
   FileText,
-  Image,
-  MapPin
+  Image as ImageIcon,
+  MapPin,
+  Upload,
+  Bed,
+  Bath,
+  Square,
+  Calendar,
+  Plus,
+  Trash2,
+  X,
+  Car,
+  Youtube
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
-// Property form schema
+// Property form schema matching the EnhancedPropertyListingModal
 const propertySchema = z.object({
+  // Step 1: Property Overview
   name: z.string().optional(),
   address: z.string().min(1, "Address is required"),
-  city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "State is required"),
-  zipCode: z.string().min(1, "ZIP code is required"),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
   county: z.string().optional(),
-  propertyType: z.string().min(1, "Property type is required"),
+  parcelId: z.string().optional(),
+  propertyType: z.string().optional(),
   bedrooms: z.string().optional(),
   bathrooms: z.string().optional(),
   sqft: z.string().optional(),
   yearBuilt: z.string().optional(),
   lotSize: z.string().optional(),
-  condition: z.string().optional(),
-  occupancyStatus: z.string().optional(),
-  description: z.string().optional(),
-  shortSummary: z.string().optional(),
+  parking: z.string().optional(),
+  
+  // Step 2: Media
+  primaryImage: z.any().optional(),
+  galleryImages: z.array(z.any()).optional(),
+  videoWalkthrough: z.string().optional(),
+  
+  // Step 3: Financial Snapshot
+  arv: z.string().optional(),
+  rentTotalMonthly: z.string().optional(),
   purchasePrice: z.string().optional(),
   listingPrice: z.string().optional(),
-  arv: z.string().optional(),
-  estimatedRepairs: z.string().optional(),
-  monthlyRent: z.string().optional(),
-  propertyTaxes: z.string().optional(),
-  insurance: z.string().optional(),
-  utilities: z.string().optional(),
-  hoaFees: z.string().optional(),
-  lockboxCode: z.string().optional(),
-  accessInstructions: z.string().optional(),
-  showingNotes: z.string().optional(),
-  videoUrl: z.string().optional(),
+  assignmentFee: z.string().optional(),
+  
+  // Step 4: Access & Logistics
+  accessType: z.string().optional(),
+  closingDate: z.any().optional(),
+  purchaseAgreement: z.any().optional(),
+  
+  // Step 5: Descriptions
+  description: z.string().optional(),
+  additionalNotes: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  featuredProperty: z.boolean().optional(),
 });
 
 type PropertyFormData = z.infer<typeof propertySchema>;
@@ -104,6 +126,15 @@ export default function PropertyEditor() {
   const [saving, setSaving] = useState(false);
   const [activeSection, setActiveSection] = useState('overview');
 
+  // State matching EnhancedPropertyListingModal
+  const [expenses, setExpenses] = useState<{ name: string; amount: string; frequency: string }[]>([
+    { name: "Property Tax", amount: "", frequency: "annually" },
+    { name: "Insurance", amount: "", frequency: "annually" },
+    { name: "Utilities", amount: "", frequency: "monthly" },
+  ]);
+  const [repairs, setRepairs] = useState<{ name: string; description: string; cost: string; contractor: string }[]>([]);
+  const [units, setUnits] = useState<{ label: string; rent: string; occupied: boolean }[]>([]);
+
   const userId = params?.userId;
   const propertyId = params?.propertyId;
 
@@ -116,17 +147,24 @@ export default function PropertyEditor() {
       state: "",
       zipCode: "",
       county: "",
+      parcelId: "",
       propertyType: "",
       bedrooms: "",
       bathrooms: "",
       sqft: "",
       yearBuilt: "",
-      description: "",
+      lotSize: "",
+      parking: "",
+      arv: "",
+      rentTotalMonthly: "",
       purchasePrice: "",
       listingPrice: "",
-      arv: "",
-      estimatedRepairs: "",
-      monthlyRent: "",
+      assignmentFee: "",
+      accessType: "",
+      description: "",
+      additionalNotes: "",
+      tags: [],
+      featuredProperty: false,
     },
   });
 
@@ -161,7 +199,7 @@ export default function PropertyEditor() {
 
         setProperty(propertyData);
 
-        // Populate form with property data
+        // Populate form with property data using correct field names from database
         form.reset({
           name: propertyData.name || "",
           address: propertyData.address || "",
@@ -169,18 +207,40 @@ export default function PropertyEditor() {
           state: propertyData.state || "",
           zipCode: propertyData.zipCode || "",
           county: propertyData.county || "",
+          parcelId: propertyData.parcelId || "",
           propertyType: propertyData.propertyType || "",
-          bedrooms: propertyData.bedrooms?.toString() || "",
-          bathrooms: propertyData.bathrooms?.toString() || "",
-          sqft: propertyData.sqft?.toString() || "",
-          yearBuilt: propertyData.yearBuilt?.toString() || "",
+          bedrooms: propertyData.bedrooms ? propertyData.bedrooms.toString() : "",
+          bathrooms: propertyData.bathrooms ? propertyData.bathrooms.toString() : "",
+          sqft: propertyData.sqft ? propertyData.sqft.toString() : "",
+          yearBuilt: propertyData.yearBuilt ? propertyData.yearBuilt.toString() : "",
+          lotSize: propertyData.lotSize || "",
+          parking: propertyData.parking || "",
+          arv: propertyData.arv ? propertyData.arv.toString() : "",
+          rentTotalMonthly: propertyData.rentTotalMonthly ? propertyData.rentTotalMonthly.toString() : "",
+          purchasePrice: propertyData.purchasePrice ? propertyData.purchasePrice.toString() : "",
+          listingPrice: propertyData.listingPrice ? propertyData.listingPrice.toString() : "",
+          assignmentFee: propertyData.assignmentFee ? propertyData.assignmentFee.toString() : "",
+          accessType: propertyData.accessType || "",
           description: propertyData.description || "",
-          purchasePrice: propertyData.purchasePrice?.toString() || "",
-          listingPrice: propertyData.listingPrice?.toString() || "",
-          arv: propertyData.arv?.toString() || "",
-          estimatedRepairs: propertyData.estimatedRepairs?.toString() || "",
-          monthlyRent: propertyData.rentTotalMonthly?.toString() || "",
+          additionalNotes: propertyData.additionalNotes || "",
+          tags: propertyData.tags || [],
+          featuredProperty: propertyData.featuredProperty || false,
         });
+
+        // Set expenses from property data
+        if (propertyData.expenseItems && propertyData.expenseItems.length > 0) {
+          setExpenses(propertyData.expenseItems);
+        }
+
+        // Set repair projects from property data
+        if (propertyData.repairProjects && propertyData.repairProjects.length > 0) {
+          setRepairs(propertyData.repairProjects);
+        }
+
+        // Set rent units from property data
+        if (propertyData.rentUnit && propertyData.rentUnit.length > 0) {
+          setUnits(propertyData.rentUnit);
+        }
 
         setLoading(false);
       } catch (error) {
@@ -208,17 +268,27 @@ export default function PropertyEditor() {
         state: data.state,
         zipCode: data.zipCode,
         county: data.county,
+        parcelId: data.parcelId,
         propertyType: data.propertyType,
         bedrooms: data.bedrooms ? parseInt(data.bedrooms) : null,
         bathrooms: data.bathrooms ? parseFloat(data.bathrooms) : null,
         sqft: data.sqft ? parseInt(data.sqft) : null,
         yearBuilt: data.yearBuilt ? parseInt(data.yearBuilt) : null,
+        lotSize: data.lotSize,
+        parking: data.parking,
+        arv: data.arv ? parseFloat(data.arv.replace(/[$,]/g, "")) : null,
+        rentTotalMonthly: data.rentTotalMonthly ? parseFloat(data.rentTotalMonthly.replace(/[$,]/g, "")) : null,
+        purchasePrice: data.purchasePrice ? parseFloat(data.purchasePrice.replace(/[$,]/g, "")) : null,
+        listingPrice: data.listingPrice ? parseFloat(data.listingPrice.replace(/[$,]/g, "")) : null,
+        assignmentFee: data.assignmentFee ? parseFloat(data.assignmentFee.replace(/[$,]/g, "")) : null,
+        accessType: data.accessType,
         description: data.description,
-        purchasePrice: data.purchasePrice ? parseFloat(data.purchasePrice) : null,
-        listingPrice: data.listingPrice ? parseFloat(data.listingPrice) : null,
-        arv: data.arv ? parseFloat(data.arv) : null,
-        estimatedRepairs: data.estimatedRepairs ? parseFloat(data.estimatedRepairs) : null,
-        rentTotalMonthly: data.monthlyRent ? parseFloat(data.monthlyRent) : null,
+        additionalNotes: data.additionalNotes,
+        tags: data.tags || [],
+        featuredProperty: data.featuredProperty || false,
+        expenseItems: expenses,
+        repairProjects: repairs,
+        rentUnit: units,
         updatedAt: new Date().toISOString(),
       };
 
@@ -253,6 +323,49 @@ export default function PropertyEditor() {
 
   const handleBackToDashboard = () => {
     navigate(`/sellerdash/${userId}`);
+  };
+
+  // Helper functions for managing dynamic arrays
+  const addExpense = () => {
+    setExpenses([...expenses, { name: "", amount: "", frequency: "monthly" }]);
+  };
+
+  const removeExpense = (index: number) => {
+    setExpenses(expenses.filter((_, i) => i !== index));
+  };
+
+  const updateExpense = (index: number, field: string, value: string) => {
+    const updated = [...expenses];
+    updated[index] = { ...updated[index], [field]: value };
+    setExpenses(updated);
+  };
+
+  const addRepair = () => {
+    setRepairs([...repairs, { name: "", description: "", cost: "", contractor: "" }]);
+  };
+
+  const removeRepair = (index: number) => {
+    setRepairs(repairs.filter((_, i) => i !== index));
+  };
+
+  const updateRepair = (index: number, field: string, value: string) => {
+    const updated = [...repairs];
+    updated[index] = { ...updated[index], [field]: value };
+    setRepairs(updated);
+  };
+
+  const addUnit = () => {
+    setUnits([...units, { label: "", rent: "", occupied: false }]);
+  };
+
+  const removeUnit = (index: number) => {
+    setUnits(units.filter((_, i) => i !== index));
+  };
+
+  const updateUnit = (index: number, field: string, value: string | boolean) => {
+    const updated = [...units];
+    updated[index] = { ...updated[index], [field]: value };
+    setUnits(updated);
   };
 
   if (loading) {
@@ -308,8 +421,10 @@ export default function PropertyEditor() {
                   <SelectContent>
                     <SelectItem value="single-family">Single Family</SelectItem>
                     <SelectItem value="multi-family">Multi Family</SelectItem>
+                    <SelectItem value="duplex">Duplex</SelectItem>
                     <SelectItem value="condo">Condo</SelectItem>
                     <SelectItem value="townhouse">Townhouse</SelectItem>
+                    <SelectItem value="land">Vacant Land</SelectItem>
                     <SelectItem value="commercial">Commercial</SelectItem>
                   </SelectContent>
                 </Select>
@@ -407,7 +522,17 @@ export default function PropertyEditor() {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-700">Public Listing</span>
-            <Switch />
+            <FormField
+              control={form.control}
+              name="featuredProperty"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
         </div>
       </div>
@@ -565,24 +690,47 @@ export default function PropertyEditor() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Repairs</label>
-          <FormField
-            control={form.control}
-            name="estimatedRepairs"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Optional" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="space-y-3">
+            {repairs.map((repair, index) => (
+              <div key={index} className="flex gap-2">
+                <Input 
+                  placeholder="Repair item"
+                  value={repair.name}
+                  onChange={(e) => updateRepair(index, 'name', e.target.value)}
+                  className="flex-1"
+                />
+                <Input 
+                  placeholder="Cost"
+                  value={repair.cost}
+                  onChange={(e) => updateRepair(index, 'cost', e.target.value)}
+                  className="w-24"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeRepair(index)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={addRepair}
+              className="w-full"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Repair Item
+            </Button>
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Monthly Rent</label>
           <FormField
             control={form.control}
-            name="monthlyRent"
+            name="rentTotalMonthly"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
@@ -597,25 +745,53 @@ export default function PropertyEditor() {
 
       <div className="space-y-4">
         <h3 className="text-lg font-semibold text-gray-900">Operating Expenses</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Property Taxes (Annual)</label>
-            <Input placeholder="Optional" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Insurance (Annual)</label>
-            <Input placeholder="Optional" />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Utilities (Monthly)</label>
-            <Input placeholder="If owner pays" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">HOA Fees (Monthly)</label>
-            <Input placeholder="Optional" />
-          </div>
+        <div className="space-y-3">
+          {expenses.map((expense, index) => (
+            <div key={index} className="grid grid-cols-3 gap-2">
+              <Input 
+                placeholder="Expense name"
+                value={expense.name}
+                onChange={(e) => updateExpense(index, 'name', e.target.value)}
+              />
+              <Input 
+                placeholder="Amount"
+                value={expense.amount}
+                onChange={(e) => updateExpense(index, 'amount', e.target.value)}
+              />
+              <div className="flex gap-2">
+                <Select 
+                  value={expense.frequency} 
+                  onValueChange={(value) => updateExpense(index, 'frequency', value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="quarterly">Quarterly</SelectItem>
+                    <SelectItem value="annually">Annually</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeExpense(index)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={addExpense}
+            className="w-full"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Add Expense
+          </Button>
         </div>
       </div>
     </div>
@@ -649,6 +825,26 @@ export default function PropertyEditor() {
         />
         <p className="text-sm text-gray-500 mt-1">Describe the property's features, condition, neighborhood, and investment potential.</p>
       </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+        <FormField
+          control={form.control}
+          name="additionalNotes"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Textarea 
+                  placeholder="Any additional information about the property..."
+                  className="min-h-[80px]"
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
     </div>
   );
 
@@ -667,7 +863,18 @@ export default function PropertyEditor() {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Video Walkthrough URL</label>
-        <Input placeholder="YouTube, Vimeo, or cloud storage link" />
+        <FormField
+          control={form.control}
+          name="videoWalkthrough"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="YouTube, Vimeo, or cloud storage link" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <p className="text-sm text-gray-500 mt-1">Optional: Add a video tour or walkthrough</p>
       </div>
     </div>
@@ -699,6 +906,32 @@ export default function PropertyEditor() {
         <Textarea 
           placeholder="Best times for showings, special requirements, etc."
           className="min-h-[100px]"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Access Type</label>
+        <FormField
+          control={form.control}
+          name="accessType"
+          render={({ field }) => (
+            <FormItem>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select access type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="key">Key</SelectItem>
+                  <SelectItem value="lockbox">Lockbox</SelectItem>
+                  <SelectItem value="owner-present">Owner Present</SelectItem>
+                  <SelectItem value="agent-only">Agent Only</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
         />
       </div>
     </div>
@@ -795,7 +1028,7 @@ export default function PropertyEditor() {
                 onClick={() => setActiveSection('descriptions')}
               />
               <SidebarItem
-                icon={<Image className="h-5 w-5" />}
+                icon={<ImageIcon className="h-5 w-5" />}
                 label="Media"
                 isActive={activeSection === 'media'}
                 onClick={() => setActiveSection('media')}
