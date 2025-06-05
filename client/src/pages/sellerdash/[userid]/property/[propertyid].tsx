@@ -47,7 +47,9 @@ import {
   Trash2,
   X,
   Car,
-  Youtube
+  Youtube,
+  Sparkles,
+  RefreshCw
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
@@ -389,61 +391,8 @@ export default function PropertyEditor() {
 
   const renderPropertyOverview = () => (
     <div className="space-y-6 py-4">
-      {/* Property Information Section - Matching Listing Modal Step 1 */}
+      {/* Section 1: Details - Matching Modal Layout */}
       <div className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-2">
-                <Home className="h-4 w-4 text-muted-foreground" />
-                Property Title
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="e.g. Colonial Revival Single Family" {...field} />
-              </FormControl>
-              <FormDescription>
-                A descriptive title helps buyers identify your property quickly
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="propertyType"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-2">
-                <Building className="h-4 w-4 text-muted-foreground" />
-                Property Type
-              </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select property type" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="single-family">Single Family</SelectItem>
-                  <SelectItem value="multi-family">Multi-Family</SelectItem>
-                  <SelectItem value="duplex">Duplex</SelectItem>
-                  <SelectItem value="condo">Condo</SelectItem>
-                  <SelectItem value="land">Vacant Land</SelectItem>
-                  <SelectItem value="commercial">Commercial</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Categorizes your listing for better visibility
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
         <FormField
           control={form.control}
           name="address"
@@ -454,10 +403,10 @@ export default function PropertyEditor() {
                 Property Address
               </FormLabel>
               <FormControl>
-                <Input placeholder="Full street address" {...field} />
+                <Input placeholder="Enter the full property address" {...field} />
               </FormControl>
               <FormDescription>
-                Enter the complete address including zip code
+                Address information will be used to automatically fill property details
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -467,12 +416,64 @@ export default function PropertyEditor() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Home className="h-4 w-4 text-muted-foreground" />
+                  Property Title
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Colonial Single Family" {...field} />
+                </FormControl>
+                <FormDescription>
+                  A descriptive title helps buyers identify your property
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="propertyType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Building className="h-4 w-4 text-muted-foreground" />
+                  Property Type
+                </FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select property type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="single-family">Single Family</SelectItem>
+                    <SelectItem value="multi-family">Multi-Family</SelectItem>
+                    <SelectItem value="duplex">Duplex</SelectItem>
+                    <SelectItem value="condo">Condo</SelectItem>
+                    <SelectItem value="land">Vacant Land</SelectItem>
+                    <SelectItem value="commercial">Commercial</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <FormField
+            control={form.control}
             name="city"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>City</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Milwaukee" {...field} />
+                  <Input placeholder="e.g. Chicago" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -486,23 +487,7 @@ export default function PropertyEditor() {
               <FormItem>
                 <FormLabel>State</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. WI" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="zipCode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>ZIP Code</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. 53202" {...field} />
+                  <Input placeholder="e.g. IL" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -511,12 +496,12 @@ export default function PropertyEditor() {
           
           <FormField
             control={form.control}
-            name="county"
+            name="zipCode"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>County (optional)</FormLabel>
+                <FormLabel>Zip Code</FormLabel>
                 <FormControl>
-                  <Input placeholder="e.g. Milwaukee County" {...field} />
+                  <Input placeholder="e.g. 60601" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -524,28 +509,7 @@ export default function PropertyEditor() {
           />
         </div>
         
-        <FormField
-          control={form.control}
-          name="parcelId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Parcel ID (optional)</FormLabel>
-              <FormControl>
-                <Input placeholder="Property parcel identification number" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </div>
-
-      <Separator />
-
-      {/* Property Details Section */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Property Details</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormField
             control={form.control}
             name="bedrooms"
@@ -556,12 +520,7 @@ export default function PropertyEditor() {
                   Bedrooms
                 </FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    min="0"
-                    placeholder="e.g. 3"
-                    {...field} 
-                  />
+                  <Input placeholder="e.g. 3" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -578,52 +537,7 @@ export default function PropertyEditor() {
                   Bathrooms
                 </FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    min="0"
-                    step="0.5"
-                    placeholder="e.g. 2.5"
-                    {...field} 
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        
-        <FormField
-          control={form.control}
-          name="sqft"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-2">
-                <Square className="h-4 w-4 text-muted-foreground" />
-                Square Footage
-              </FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="e.g. 2500" 
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="lotSize"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2">
-                  <Square className="h-4 w-4 text-muted-foreground" />
-                  Lot Size (optional)
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. 0.25 acres" {...field} />
+                  <Input placeholder="e.g. 2.5" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -640,13 +554,43 @@ export default function PropertyEditor() {
                   Year Built
                 </FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number"
-                    min="1800"
-                    max={new Date().getFullYear()}
-                    placeholder="e.g. 2018"
-                    {...field} 
-                  />
+                  <Input placeholder="e.g. 1990" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="sqft"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Square className="h-4 w-4 text-muted-foreground" />
+                  Square Footage
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 2500" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="lotSize"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Square className="h-4 w-4 text-muted-foreground" />
+                  Lot Size
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 0.25 acres" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -664,38 +608,105 @@ export default function PropertyEditor() {
                 Parking (optional)
               </FormLabel>
               <FormControl>
-                <Input placeholder="e.g. 2-car garage, driveway" {...field} />
+                <Input placeholder="e.g. Street parking, 2-car garage, driveway" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="county"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>County (optional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Cook County" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="parcelId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Parcel ID / APN (optional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 14-21-106-017-0000" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
 
       <Separator />
 
-      {/* Description Section */}
+      {/* Section 2: Description */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Description</h3>
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="h-5 w-5 text-green-600" />
+          <h3 className="text-lg font-semibold text-gray-900">AI-Generated Description</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Tone</label>
+            <Select>
+              <SelectTrigger>
+                <SelectValue placeholder="Select tone" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="professional">Professional</SelectItem>
+                <SelectItem value="friendly">Friendly</SelectItem>
+                <SelectItem value="motivated">Motivated</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
+            <div className="flex gap-2">
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="investor">Investor</SelectItem>
+                  <SelectItem value="endbuyer">End Buyer</SelectItem>
+                  <SelectItem value="minimalist">Minimalist</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button variant="outline" className="whitespace-nowrap">
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Regenerate
+              </Button>
+            </div>
+          </div>
+        </div>
         
         <FormField
           control={form.control}
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-muted-foreground" />
-                Property Description
-              </FormLabel>
+              <FormLabel>Property Description</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Describe the property's features, condition, neighborhood, and investment potential..."
-                  className="min-h-[120px]"
+                  placeholder="AI-generated description will appear here"
+                  className="min-h-[200px]"
                   {...field} 
                 />
               </FormControl>
               <FormDescription>
-                Provide a detailed description that highlights the property's best features and investment potential
+                You can edit this description or regenerate with different settings
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -707,16 +718,16 @@ export default function PropertyEditor() {
           name="additionalNotes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Additional Notes (optional)</FormLabel>
+              <FormLabel>Additional Notes</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Any additional information, special considerations, or notes about the property..."
-                  className="min-h-[80px]"
+                  placeholder="Special conditions, instructions for buyers, or other important details..."
+                  className="min-h-[100px]"
                   {...field} 
                 />
               </FormControl>
               <FormDescription>
-                Include any important details not covered in the main description
+                This information will be shown to potential buyers
               </FormDescription>
               <FormMessage />
             </FormItem>
