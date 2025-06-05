@@ -52,6 +52,7 @@ import {
   RefreshCw
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { QuickActionSelector } from "@/components/seller/quick-action-selector";
 
 // Property form schema matching the EnhancedPropertyListingModal
 const propertySchema = z.object({
@@ -1254,6 +1255,9 @@ export default function PropertyEditor() {
           </Form>
         </div>
       </div>
+      
+      {/* Quick Action Selector */}
+      <QuickActionSelector />
     </div>
   );
 }
