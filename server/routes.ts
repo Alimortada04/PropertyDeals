@@ -127,6 +127,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/property-profiles/:id", async (req, res) => {
     const profileId = parseInt(req.params.id);
+    
+    if (isNaN(profileId)) {
+      return res.status(400).json({ message: "Invalid property ID" });
+    }
+    
     const profile = await storage.getPropertyProfile(profileId);
 
     if (!profile) {
@@ -187,6 +192,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     const profileId = parseInt(req.params.id);
+    
+    if (isNaN(profileId)) {
+      return res.status(400).json({ message: "Invalid property ID" });
+    }
+    
     const profile = await storage.getPropertyProfile(profileId);
 
     if (!profile) {
@@ -205,12 +215,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put("/api/property-profiles/:id", async (req, res) => {
+    const profileId = parseInt(req.params.id);
+    
+    if (isNaN(profileId)) {
+      return res.status(400).json({ message: "Invalid property ID" });
+    }
+
+    try {
+      const profile = await storage.getPropertyProfile(profileId);
+
+      if (!profile) {
+        return res.status(404).json({ message: "Property profile not found" });
+      }
+
+      const updatedProfile = await storage.updatePropertyProfile(profileId, req.body);
+      res.json(updatedProfile);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid property profile data", error });
+    }
+  });
+
   app.post("/api/property-profiles/:id/publish", async (req, res) => {
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Not authenticated" });
     }
 
     const profileId = parseInt(req.params.id);
+    
+    if (isNaN(profileId)) {
+      return res.status(400).json({ message: "Invalid property ID" });
+    }
+    
     const profile = await storage.getPropertyProfile(profileId);
 
     if (!profile) {
@@ -235,6 +271,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     const profileId = parseInt(req.params.id);
+    
+    if (isNaN(profileId)) {
+      return res.status(400).json({ message: "Invalid property ID" });
+    }
+    
     const profile = await storage.getPropertyProfile(profileId);
 
     if (!profile) {
