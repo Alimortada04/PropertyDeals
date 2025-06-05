@@ -388,153 +388,340 @@ export default function PropertyEditor() {
   }
 
   const renderPropertyOverview = () => (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Property Title</label>
+    <div className="space-y-6 py-4">
+      {/* Property Information Section - Matching Listing Modal Step 1 */}
+      <div className="space-y-4">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <Home className="h-4 w-4 text-muted-foreground" />
+                Property Title
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. Colonial Revival Single Family" {...field} />
+              </FormControl>
+              <FormDescription>
+                A descriptive title helps buyers identify your property quickly
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="propertyType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <Building className="h-4 w-4 text-muted-foreground" />
+                Property Type
+              </FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select property type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="single-family">Single Family</SelectItem>
+                  <SelectItem value="multi-family">Multi-Family</SelectItem>
+                  <SelectItem value="duplex">Duplex</SelectItem>
+                  <SelectItem value="condo">Condo</SelectItem>
+                  <SelectItem value="land">Vacant Land</SelectItem>
+                  <SelectItem value="commercial">Commercial</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>
+                Categorizes your listing for better visibility
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-muted-foreground" />
+                Property Address
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="Full street address" {...field} />
+              </FormControl>
+              <FormDescription>
+                Enter the complete address including zip code
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="name"
+            name="city"
             render={({ field }) => (
               <FormItem>
+                <FormLabel>City</FormLabel>
                 <FormControl>
-                  <Input placeholder="Modern Farmhouse" {...field} />
+                  <Input placeholder="e.g. Milwaukee" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="state"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>State</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. WI" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Property Type</label>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="propertyType"
+            name="zipCode"
             render={({ field }) => (
               <FormItem>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Single Family" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="single-family">Single Family</SelectItem>
-                    <SelectItem value="multi-family">Multi Family</SelectItem>
-                    <SelectItem value="duplex">Duplex</SelectItem>
-                    <SelectItem value="condo">Condo</SelectItem>
-                    <SelectItem value="townhouse">Townhouse</SelectItem>
-                    <SelectItem value="land">Vacant Land</SelectItem>
-                    <SelectItem value="commercial">Commercial</SelectItem>
-                  </SelectContent>
-                </Select>
+                <FormLabel>ZIP Code</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 53202" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="county"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>County (optional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. Milwaukee County" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
+        
+        <FormField
+          control={form.control}
+          name="parcelId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Parcel ID (optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="Property parcel identification number" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
 
+      <Separator />
+
+      {/* Property Details Section */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Address</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Street Address</label>
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="123 Maple Street" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">City</label>
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="Milwaukee" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="WI" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code</label>
-              <FormField
-                control={form.control}
-                name="zipCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="53202" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
+        <h3 className="text-lg font-semibold text-gray-900">Property Details</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="bedrooms"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Bed className="h-4 w-4 text-muted-foreground" />
+                  Bedrooms
+                </FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    min="0"
+                    placeholder="e.g. 3"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="bathrooms"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Bath className="h-4 w-4 text-muted-foreground" />
+                  Bathrooms
+                </FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    min="0"
+                    step="0.5"
+                    placeholder="e.g. 2.5"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
+        
+        <FormField
+          control={form.control}
+          name="sqft"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <Square className="h-4 w-4 text-muted-foreground" />
+                Square Footage
+              </FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="e.g. 2500" 
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="lotSize"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Square className="h-4 w-4 text-muted-foreground" />
+                  Lot Size (optional)
+                </FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 0.25 acres" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="yearBuilt"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  Year Built
+                </FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number"
+                    min="1800"
+                    max={new Date().getFullYear()}
+                    placeholder="e.g. 2018"
+                    {...field} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
+        <FormField
+          control={form.control}
+          name="parking"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <Car className="h-4 w-4 text-muted-foreground" />
+                Parking (optional)
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. 2-car garage, driveway" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
 
+      <Separator />
+
+      {/* Description Section */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Status & Visibility</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Listing Status</label>
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="live">Live</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">Public Listing</span>
-            <FormField
-              control={form.control}
-              name="featuredProperty"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
+        <h3 className="text-lg font-semibold text-gray-900">Description</h3>
+        
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-muted-foreground" />
+                Property Description
+              </FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="Describe the property's features, condition, neighborhood, and investment potential..."
+                  className="min-h-[120px]"
+                  {...field} 
+                />
+              </FormControl>
+              <FormDescription>
+                Provide a detailed description that highlights the property's best features and investment potential
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="additionalNotes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Additional Notes (optional)</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="Any additional information, special considerations, or notes about the property..."
+                  className="min-h-[80px]"
+                  {...field} 
+                />
+              </FormControl>
+              <FormDescription>
+                Include any important details not covered in the main description
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
     </div>
   );
@@ -1005,7 +1192,7 @@ export default function PropertyEditor() {
             <div className="space-y-1">
               <SidebarItem
                 icon={<Home className="h-5 w-5" />}
-                label="Property Overview"
+                label="Property Details"
                 isActive={activeSection === 'overview'}
                 onClick={() => setActiveSection('overview')}
               />
