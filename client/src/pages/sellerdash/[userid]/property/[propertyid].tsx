@@ -152,7 +152,9 @@ export default function PropertyEditor() {
   const [comps, setComps] = useState<string[]>([""]);
   const [partners, setPartners] = useState<string[]>([]);
   const [newPartner, setNewPartner] = useState("");
+  const [newTag, setNewTag] = useState("");
   const [videoMode, setVideoMode] = useState<'link' | 'upload'>('link');
+  const [activeLogisticsTab, setActiveLogisticsTab] = useState('access');
 
   // Live calculations
   const calculateAssignmentFee = () => {
@@ -1649,8 +1651,11 @@ export default function PropertyEditor() {
         </div>
       </div>
 
-      <Separator />
+    </div>
+  );
 
+  const renderCompsTab = () => (
+    <div className="space-y-6">
       {/* Comparable Properties (Comps) */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
@@ -1775,6 +1780,276 @@ export default function PropertyEditor() {
       </div>
     </div>
   );
+
+  const renderAnalyticsTab = () => {
+    const calculateTimeUntilClosing = () => {
+      const closingDate = form.getValues('closingDate');
+      if (!closingDate) return null;
+      
+      try {
+        const closing = new Date(closingDate);
+        const now = new Date();
+        const timeDiff = closing.getTime() - now.getTime();
+        
+        if (timeDiff <= 0) return "Closing date has passed";
+        
+        const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        if (days === 1) return "1 day remaining";
+        if (days < 30) return `${days} days remaining`;
+        
+        const months = Math.floor(days / 30);
+        const remainingDays = days % 30;
+        if (months === 1) {
+          return remainingDays > 0 ? `1 month, ${remainingDays} days remaining` : "1 month remaining";
+        }
+        return remainingDays > 0 ? `${months} months, ${remainingDays} days remaining` : `${months} months remaining`;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    return (
+      <div className="space-y-6">
+        {/* Featured Property Toggle */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Star className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-lg font-semibold text-gray-900">Property Visibility</h3>
+          </div>
+          
+          <FormField
+            control={form.control}
+            name="featuredProperty"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Featured Property</FormLabel>
+                  <FormDescription>
+                    Make this property stand out in search results and get more visibility
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <Separator />
+
+        {/* Performance Stats */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-lg font-semibold text-gray-900">Performance Stats</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-blue-900">Views</p>
+                  <p className="text-2xl font-bold text-blue-600">{property?.viewCount || 0}</p>
+                </div>
+                <Eye className="h-8 w-8 text-blue-500" />
+              </div>
+            </div>
+            
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-green-900">Saves</p>
+                  <p className="text-2xl font-bold text-green-600">{property?.saveCount || 0}</p>
+                </div>
+                <Bookmark className="h-8 w-8 text-green-500" />
+              </div>
+            </div>
+            
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-orange-900">Offers</p>
+                  <p className="text-2xl font-bold text-orange-600">{property?.offerCount || 0}</p>
+                </div>
+                <DollarSign className="h-8 w-8 text-orange-500" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Tags Input */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Tag className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-lg font-semibold text-gray-900">Property Tags</h3>
+          </div>
+          
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags (up to 3)</FormLabel>
+                <div className="space-y-3">
+                  {/* Current Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {(field.value || []).map((tag, index) => (
+                      <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                        {tag}
+                        <X 
+                          className="h-3 w-3 cursor-pointer" 
+                          onClick={() => {
+                            const newTags = [...(field.value || [])];
+                            newTags.splice(index, 1);
+                            field.onChange(newTags);
+                          }}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  {/* Tag Suggestions */}
+                  {(!field.value || field.value.length < 3) && (
+                    <div className="space-y-2">
+                      <p className="text-sm text-gray-600">Popular tags:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {["Fix & Flip", "Rental Property", "Wholesale", "BRRRR", "Off-Market", "Distressed"].map((suggestedTag) => (
+                          <Button
+                            key={suggestedTag}
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const currentTags = field.value || [];
+                              if (!currentTags.includes(suggestedTag) && currentTags.length < 3) {
+                                field.onChange([...currentTags, suggestedTag]);
+                              }
+                            }}
+                            disabled={(field.value || []).includes(suggestedTag) || (field.value || []).length >= 3}
+                            className="text-xs"
+                          >
+                            + {suggestedTag}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Custom Tag Input */}
+                  {(!field.value || field.value.length < 3) && (
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Add custom tag"
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (newTag.trim() && (!field.value || field.value.length < 3) && !field.value?.includes(newTag.trim())) {
+                              field.onChange([...(field.value || []), newTag.trim()]);
+                              setNewTag('');
+                            }
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          if (newTag.trim() && (!field.value || field.value.length < 3) && !field.value?.includes(newTag.trim())) {
+                            field.onChange([...(field.value || []), newTag.trim()]);
+                            setNewTag('');
+                          }
+                        }}
+                        disabled={!newTag.trim() || (field.value || []).length >= 3 || (field.value || []).includes(newTag.trim())}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                <FormDescription>
+                  Tags help buyers find your property. Maximum 3 tags allowed.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <Separator />
+
+        {/* Closing Countdown */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Clock className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-lg font-semibold text-gray-900">Closing Countdown</h3>
+          </div>
+          
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+            {calculateTimeUntilClosing() ? (
+              <div>
+                <p className="text-sm text-gray-600 mb-2">Time until closing:</p>
+                <p className="text-xl font-semibold text-gray-900">{calculateTimeUntilClosing()}</p>
+              </div>
+            ) : (
+              <div>
+                <Clock className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-gray-600">Set a closing date to enable countdown</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <Separator />
+
+        {/* Suggested CTAs */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Zap className="h-5 w-5 text-muted-foreground" />
+            <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Button
+              type="button"
+              className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
+              onClick={() => {
+                toast({
+                  title: "Campaign Creation",
+                  description: "Campaign creation modal will open here",
+                });
+              }}
+            >
+              <Megaphone className="h-4 w-4 mr-2" />
+              Launch Campaign
+            </Button>
+            
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
+              onClick={() => {
+                toast({
+                  title: "JV Collaboration",
+                  description: "Partner collaboration modal will open here",
+                });
+              }}
+            >
+              <Users className="h-4 w-4 mr-2" />
+              Partner on Deal
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderActiveSection = () => {
     switch (activeSection) {
