@@ -58,6 +58,7 @@ import {
   Clock,
   Zap,
   Megaphone,
+  Handshake,
   Users,
   Youtube,
   Sparkles,
@@ -2423,10 +2424,10 @@ export default function PropertyEditor() {
               type="button"
               variant="outline"
               className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
-              onClick={() => setShowListingModal(true)}
+              onClick={() => setShowCampaignModal(true)}
             >
-              <Plus className="h-4 w-4 mr-2" />
-              List New Property
+              <Handshake className="h-4 w-4 mr-2" />
+              JV This Deal
             </Button>
           </div>
         </div>
