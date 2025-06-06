@@ -62,7 +62,8 @@ import {
   Users,
   Youtube,
   Sparkles,
-  RefreshCw
+  RefreshCw,
+  ChevronDown
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { QuickActionSelector } from "@/components/seller/quick-action-selector";
@@ -2383,24 +2384,51 @@ export default function PropertyEditor() {
           </button>
           
           {/* Mobile Tab Selector */}
-          <select
-            value={activeSection}
-            onChange={(e) => setActiveSection(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-[#09261E] bg-white appearance-none"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
-              backgroundPosition: 'right 0.5rem center',
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: '1.5em 1.5em',
-              paddingRight: '2.5rem'
-            }}
-          >
-            <option value="overview">Property Details</option>
-            <option value="media">Media</option>
-            <option value="finances">Finances</option>
-            <option value="logistics">Logistics</option>
-            <option value="analytics">Analytics</option>
-          </select>
+          <Select value={activeSection} onValueChange={setActiveSection}>
+            <SelectTrigger className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-[#09261E] bg-white h-auto">
+              <div className="flex items-center gap-3 w-full">
+                {activeSection === 'overview' && <Home className="h-5 w-5 text-gray-600" />}
+                {activeSection === 'media' && <ImageIcon className="h-5 w-5 text-gray-600" />}
+                {activeSection === 'finances' && <DollarSign className="h-5 w-5 text-gray-600" />}
+                {activeSection === 'logistics' && <MapPin className="h-5 w-5 text-gray-600" />}
+                {activeSection === 'analytics' && <TrendingUp className="h-5 w-5 text-gray-600" />}
+                <SelectValue className="flex-1 text-left" />
+                <ChevronDown className="h-4 w-4 opacity-50 ml-auto" />
+              </div>
+            </SelectTrigger>
+            <SelectContent className="w-full">
+              <SelectItem value="overview">
+                <div className="flex items-center gap-3">
+                  <Home className="h-5 w-5 text-gray-600" />
+                  <span>Property Details</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="media">
+                <div className="flex items-center gap-3">
+                  <ImageIcon className="h-5 w-5 text-gray-600" />
+                  <span>Media</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="finances">
+                <div className="flex items-center gap-3">
+                  <DollarSign className="h-5 w-5 text-gray-600" />
+                  <span>Finances</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="logistics">
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-gray-600" />
+                  <span>Logistics</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="analytics">
+                <div className="flex items-center gap-3">
+                  <TrendingUp className="h-5 w-5 text-gray-600" />
+                  <span>Analytics</span>
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
           
           {/* Mobile Top Controls */}
           <div className="flex items-center gap-2 mt-4 flex-wrap">
