@@ -1678,19 +1678,55 @@ export default function PropertyEditor() {
           <div className="flex items-center gap-2 mt-4 flex-wrap">
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <span className="text-sm font-medium text-gray-700 whitespace-nowrap">Status:</span>
-              <select
-                value={property?.status || "draft"}
-                onChange={(e) => handleStatusChange(e.target.value)}
-                className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent"
-              >
-                <option value="draft">Draft</option>
-                <option value="live">Live</option>
-                <option value="offer_accepted">Offer Accepted</option>
-                <option value="under_contract">Under Contract</option>
-                <option value="closed">Closed</option>
-                <option value="archived">Archived</option>
-                <option value="dropped">Dropped</option>
-              </select>
+              <Select value={property?.status || "draft"} onValueChange={handleStatusChange}>
+                <SelectTrigger className="flex-1 h-8 text-sm border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                      <span>Draft</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="live">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                      <span>Live</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="offer_accepted">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                      <span>Offer Accepted</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="pending">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+                      <span>Pending</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="closed">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-green-800"></div>
+                      <span>Closed</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="archived">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+                      <span>Archive (Archived)</span>
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="dropped" className="text-red-600">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-red-600"></div>
+                      <span>Drop (Dropped)</span>
+                    </div>
+                  </SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <button
               onClick={() => window.open(`/p/${propertyId}`, '_blank')}
@@ -1735,19 +1771,55 @@ export default function PropertyEditor() {
                 {/* Status Dropdown */}
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-gray-700 min-w-0">Status:</span>
-                  <select
-                    value={property?.status || "draft"}
-                    onChange={(e) => handleStatusChange(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#09261E] focus:border-transparent"
-                  >
-                    <option value="draft">Draft</option>
-                    <option value="live">Live</option>
-                    <option value="offer_accepted">Offer Accepted</option>
-                    <option value="under_contract">Under Contract</option>
-                    <option value="closed">Closed</option>
-                    <option value="archived">Archived</option>
-                    <option value="dropped">Dropped</option>
-                  </select>
+                  <Select value={property?.status || "draft"} onValueChange={handleStatusChange}>
+                    <SelectTrigger className="flex-1 h-10 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                          <span>Draft</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="live">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                          <span>Live</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="offer_accepted">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                          <span>Offer Accepted</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="pending">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+                          <span>Pending</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="closed">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-800"></div>
+                          <span>Closed</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="archived">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+                          <span>Archive (Archived)</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="dropped" className="text-red-600">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-red-600"></div>
+                          <span>Drop (Dropped)</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 {/* Preview Button */}
