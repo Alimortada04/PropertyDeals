@@ -2403,34 +2403,7 @@ export default function PropertyEditor() {
 
         <Separator />
 
-        {/* Suggested CTAs */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-muted-foreground" />
-            <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Button
-              type="button"
-              className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
-              onClick={() => setShowCampaignModal(true)}
-            >
-              <Megaphone className="h-4 w-4 mr-2" />
-              Launch Campaign
-            </Button>
-            
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
-              onClick={() => setShowCampaignModal(true)}
-            >
-              <Handshake className="h-4 w-4 mr-2" />
-              JV This Deal
-            </Button>
-          </div>
-        </div>
+
       </div>
     );
   };
