@@ -118,9 +118,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // In development, use a default seller ID or fetch all profiles
       const sellerId = req.isAuthenticated() ? req.user.id : 1;
+      console.log('Fetching property profiles for seller:', sellerId);
       const profiles = await storage.getPropertyProfilesBySeller(sellerId);
+      console.log('Successfully fetched profiles:', profiles.length);
       res.json(profiles);
     } catch (error) {
+      console.error('Error fetching property profiles:', error);
       res.status(500).json({ message: "Failed to fetch property profiles" });
     }
   });

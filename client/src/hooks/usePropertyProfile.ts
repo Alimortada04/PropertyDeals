@@ -71,7 +71,7 @@ export interface PropertyProfile {
   featured_property?: boolean;
   
   // Status
-  status: 'draft' | 'live' | 'under contract' | 'closed' | 'dropped' | 'archived';
+  status: 'draft' | 'live' | 'under_contract' | 'closed' | 'dropped' | 'archived';
   
   // Engagement stats
   view_count?: number;
@@ -553,7 +553,7 @@ export function usePropertyProfile() {
   // Load properties when user changes - use default status filters
   useEffect(() => {
     if (supabaseUser?.id) {
-      fetchSellerProperties(['draft', 'live', 'under contract']);
+      fetchSellerProperties(['draft', 'live', 'under_contract']);
     } else {
       setProperties([]);
     }
@@ -572,7 +572,7 @@ export function usePropertyProfile() {
     // Computed values
     draftProperties: properties.filter(p => p.status === 'draft'),
     liveProperties: properties.filter(p => p.status === 'live'),
-    underContractProperties: properties.filter(p => p.status === 'under contract'),
+    underContractProperties: properties.filter(p => p.status === 'under_contract'),
     closedProperties: properties.filter(p => p.status === 'closed'),
     droppedProperties: properties.filter(p => p.status === 'dropped'),
     archivedProperties: properties.filter(p => p.status === 'archived'),
