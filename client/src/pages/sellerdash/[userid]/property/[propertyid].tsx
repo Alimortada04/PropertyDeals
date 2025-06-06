@@ -356,7 +356,7 @@ export default function PropertyEditor() {
           accessType: propertyData.accessType || "",
           description: propertyData.description || "",
           additionalNotes: propertyData.additionalNotes || "",
-          tags: propertyData.tags || [],
+          tags: Array.isArray(propertyData.tags) ? propertyData.tags : [],
           featuredProperty: propertyData.featuredProperty || false,
           // Media fields
           primaryImage: propertyData.primary_image || "",
@@ -2287,13 +2287,13 @@ export default function PropertyEditor() {
                 <div className="space-y-3">
                   {/* Current Tags */}
                   <div className="flex flex-wrap gap-2">
-                    {(field.value || []).map((tag, index) => (
+                    {Array.isArray(field.value) && field.value.map((tag, index) => (
                       <Badge key={index} variant="secondary" className="flex items-center gap-1">
                         {tag}
                         <X 
                           className="h-3 w-3 cursor-pointer" 
                           onClick={() => {
-                            const newTags = [...(field.value || [])];
+                            const newTags = Array.isArray(field.value) ? [...field.value] : [];
                             newTags.splice(index, 1);
                             field.onChange(newTags);
                           }}
