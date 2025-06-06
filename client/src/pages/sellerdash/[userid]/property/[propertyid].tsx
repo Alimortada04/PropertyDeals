@@ -155,6 +155,75 @@ export default function PropertyEditor() {
   const [newTag, setNewTag] = useState("");
   const [videoMode, setVideoMode] = useState<'link' | 'upload'>('link');
   const [activeLogisticsTab, setActiveLogisticsTab] = useState('access');
+  const [uploadedFiles, setUploadedFiles] = useState<{
+    primaryImage: File | null;
+    galleryImages: File[];
+    videoFile: File | null;
+    purchaseAgreement: File | null;
+    contractorQuotes: File[];
+  }>({
+    primaryImage: null,
+    galleryImages: [],
+    videoFile: null,
+    purchaseAgreement: null,
+    contractorQuotes: []
+  });
+
+  // File upload handlers
+  const handleFileUpload = (files: FileList | null, type: 'primaryImage' | 'galleryImages' | 'videoFile' | 'purchaseAgreement' | 'contractorQuotes') => {
+    if (!files) return;
+    
+    const fileArray = Array.from(files);
+    
+    if (type === 'primaryImage' && fileArray.length > 0) {
+      setUploadedFiles(prev => ({ ...prev, primaryImage: fileArray[0] }));
+    } else if (type === 'galleryImages') {
+      setUploadedFiles(prev => ({ ...prev, galleryImages: [...prev.galleryImages, ...fileArray] }));
+    } else if (type === 'videoFile' && fileArray.length > 0) {
+      setUploadedFiles(prev => ({ ...prev, videoFile: fileArray[0] }));
+    } else if (type === 'purchaseAgreement' && fileArray.length > 0) {
+      setUploadedFiles(prev => ({ ...prev, purchaseAgreement: fileArray[0] }));
+    } else if (type === 'contractorQuotes') {
+      setUploadedFiles(prev => ({ ...prev, contractorQuotes: [...prev.contractorQuotes, ...fileArray] }));
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent, type: 'primaryImage' | 'galleryImages' | 'videoFile' | 'purchaseAgreement' | 'contractorQuotes') => {
+    e.preventDefault();
+    e.stopPropagation();
+    const files = e.dataTransfer.files;
+    handleFileUpload(files, type);
+  };
+
+  const removeFile = (type: 'primaryImage' | 'galleryImages' | 'videoFile' | 'purchaseAgreement' | 'contractorQuotes', index?: number) => {
+    if (type === 'primaryImage') {
+      setUploadedFiles(prev => ({ ...prev, primaryImage: null }));
+    } else if (type === 'galleryImages' && typeof index === 'number') {
+      setUploadedFiles(prev => ({ 
+        ...prev, 
+        galleryImages: prev.galleryImages.filter((_, i) => i !== index) 
+      }));
+    } else if (type === 'videoFile') {
+      setUploadedFiles(prev => ({ ...prev, videoFile: null }));
+    } else if (type === 'purchaseAgreement') {
+      setUploadedFiles(prev => ({ ...prev, purchaseAgreement: null }));
+    } else if (type === 'contractorQuotes' && typeof index === 'number') {
+      setUploadedFiles(prev => ({ 
+        ...prev, 
+        contractorQuotes: prev.contractorQuotes.filter((_, i) => i !== index) 
+      }));
+    }
+  };
 
   // Live calculations
   const calculateAssignmentFee = () => {
