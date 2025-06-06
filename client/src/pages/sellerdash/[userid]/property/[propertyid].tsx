@@ -51,6 +51,14 @@ import {
   Trash2,
   X,
   Car,
+  Star,
+  TrendingUp,
+  Bookmark,
+  Tag,
+  Clock,
+  Zap,
+  Megaphone,
+  Users,
   Youtube,
   Sparkles,
   RefreshCw
@@ -1454,6 +1462,52 @@ export default function PropertyEditor() {
 
   const renderLogistics = () => (
     <div className="space-y-6 py-4">
+      {/* Logistics Tabs */}
+      <div className="flex bg-gray-50 rounded-lg p-1">
+        <button
+          type="button"
+          onClick={() => setActiveLogisticsTab('access')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            activeLogisticsTab === 'access'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Access & Closing
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveLogisticsTab('comps')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            activeLogisticsTab === 'comps'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Comparable Properties
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveLogisticsTab('analytics')}
+          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+            activeLogisticsTab === 'analytics'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Analytics
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      {activeLogisticsTab === 'access' && renderAccessClosingTab()}
+      {activeLogisticsTab === 'comps' && renderCompsTab()}
+      {activeLogisticsTab === 'analytics' && renderAnalyticsTab()}
+    </div>
+  );
+
+  const renderAccessClosingTab = () => (
+    <div className="space-y-6">
       {/* Deal Terms */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
@@ -1558,7 +1612,14 @@ export default function PropertyEditor() {
                         )}
                       >
                         {field.value ? (
-                          format(new Date(field.value), "MMMM do, yyyy")
+                          (() => {
+                            try {
+                              const date = new Date(field.value);
+                              return isNaN(date.getTime()) ? "Select date" : format(date, "MMMM do, yyyy");
+                            } catch (e) {
+                              return "Select date";
+                            }
+                          })()
                         ) : (
                           <span>Select date</span>
                         )}
