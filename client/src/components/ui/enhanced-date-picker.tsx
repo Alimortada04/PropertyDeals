@@ -2,7 +2,14 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { FormControl } from "@/components/ui/form";
+import { 
+  FormControl, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormMessage, 
+  FormDescription 
+} from "@/components/ui/form";
 import { format } from "date-fns";
 import { Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
