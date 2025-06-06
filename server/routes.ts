@@ -116,8 +116,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     try {
-      // In development, use a default seller ID or fetch all profiles
-      const sellerId = req.isAuthenticated() ? req.user.id : 1;
+      // In development, use a default seller UUID or fetch all profiles
+      const sellerId = req.isAuthenticated() ? req.user.id : "0a1e4a08-0566-4b39-86b0-f47004fc8ee1";
       console.log('Fetching property profiles for seller:', sellerId);
       const profiles = await storage.getPropertyProfilesBySeller(sellerId);
       console.log('Successfully fetched profiles:', profiles.length);

@@ -37,7 +37,7 @@ export interface IStorage {
   // Property Profile operations (for draft/live listings)
   getPropertyProfiles(): Promise<PropertyProfile[]>;
   getPropertyProfile(id: number): Promise<PropertyProfile | undefined>;
-  getPropertyProfilesBySeller(sellerId: number): Promise<PropertyProfile[]>;
+  getPropertyProfilesBySeller(sellerId: string): Promise<PropertyProfile[]>;
   createPropertyProfile(propertyProfile: InsertPropertyProfile): Promise<PropertyProfile>;
   updatePropertyProfile(id: number, propertyProfile: Partial<PropertyProfile>): Promise<PropertyProfile | undefined>;
   deletePropertyProfile(id: number): Promise<boolean>;
@@ -186,10 +186,10 @@ export class DatabaseStorage implements IStorage {
     return profile || undefined;
   }
 
-  async getPropertyProfilesBySeller(sellerId: number): Promise<PropertyProfile[]> {
+  async getPropertyProfilesBySeller(sellerId: string): Promise<PropertyProfile[]> {
     // Use raw SQL query due to schema mismatch issues
     const query = `SELECT * FROM property_profile WHERE seller_id = $1`;
-    const result = await pool.query(query, [sellerId.toString()]);
+    const result = await pool.query(query, [sellerId]);
     return result.rows as PropertyProfile[];
   }
 
@@ -947,8 +947,8 @@ export class MemStorage implements IStorage {
     return this.propertyProfiles.get(id);
   }
 
-  async getPropertyProfilesBySeller(sellerId: number): Promise<PropertyProfile[]> {
-    return Array.from(this.propertyProfiles.values()).filter(profile => profile.sellerId === sellerId);
+  async getPropertyProfilesBySeller(sellerId: string): Promise<PropertyProfile[]> {
+    return Array.from(this.propertyProfiles.values()).filter(profile => profile.seller_id === sellerId);
   }
 
   async createPropertyProfile(profile: InsertPropertyProfile): Promise<PropertyProfile> {
