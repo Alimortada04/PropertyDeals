@@ -65,6 +65,8 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { QuickActionSelector } from "@/components/seller/quick-action-selector";
+import { EnhancedPropertyListingModal } from "@/components/property/enhanced-property-listing-modal";
+import { MarketingCenterModal } from "@/components/seller/marketing-center-modal";
 
 // Property form schema matching the EnhancedPropertyListingModal
 const propertySchema = z.object({
@@ -154,6 +156,11 @@ export default function PropertyEditor() {
   const [newPartner, setNewPartner] = useState("");
   const [newTag, setNewTag] = useState("");
   const [videoMode, setVideoMode] = useState<'link' | 'upload'>('link');
+  
+  // Modal states
+  const [showListingModal, setShowListingModal] = useState(false);
+  const [showOffersModal, setShowOffersModal] = useState(false);
+  const [showCampaignModal, setShowCampaignModal] = useState(false);
 
   const [uploadedFiles, setUploadedFiles] = useState<{
     primaryImage: File | null;
@@ -2313,7 +2320,11 @@ export default function PropertyEditor() {
                               }
                             }}
                             disabled={Array.isArray(field.value) ? (field.value.includes(suggestedTag) || field.value.length >= 3) : false}
-                            className="text-xs"
+                            className={`text-xs transition-colors ${
+                              Array.isArray(field.value) && field.value.includes(suggestedTag)
+                                ? 'bg-[#09261E] text-white border-[#09261E] hover:bg-[#135341]'
+                                : 'hover:bg-gray-100 hover:border-gray-400'
+                            }`}
                           >
                             + {suggestedTag}
                           </Button>
@@ -2349,6 +2360,7 @@ export default function PropertyEditor() {
                           }
                         }}
                         disabled={!newTag.trim() || (field.value || []).length >= 3 || (field.value || []).includes(newTag.trim())}
+                        className="border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
                       >
                         Add
                       </Button>
@@ -2401,12 +2413,7 @@ export default function PropertyEditor() {
             <Button
               type="button"
               className="w-full bg-[#09261E] hover:bg-[#135341] text-white"
-              onClick={() => {
-                toast({
-                  title: "Campaign Creation",
-                  description: "Campaign creation modal will open here",
-                });
-              }}
+              onClick={() => setShowCampaignModal(true)}
             >
               <Megaphone className="h-4 w-4 mr-2" />
               Launch Campaign
@@ -2416,15 +2423,10 @@ export default function PropertyEditor() {
               type="button"
               variant="outline"
               className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white"
-              onClick={() => {
-                toast({
-                  title: "JV Collaboration",
-                  description: "Partner collaboration modal will open here",
-                });
-              }}
+              onClick={() => setShowListingModal(true)}
             >
-              <Users className="h-4 w-4 mr-2" />
-              Partner on Deal
+              <Plus className="h-4 w-4 mr-2" />
+              List New Property
             </Button>
           </div>
         </div>
