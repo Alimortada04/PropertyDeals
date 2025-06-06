@@ -2068,7 +2068,7 @@ export default function PropertyEditor() {
                         {field.value ? (
                           (() => {
                             try {
-                              const date = new Date(field.value);
+                              const date = new Date(field.value + "T00:00:00");
                               return isNaN(date.getTime()) ? "Select date" : format(date, "MMMM do, yyyy");
                             } catch (e) {
                               return "Select date";
@@ -2084,7 +2084,7 @@ export default function PropertyEditor() {
                   <PopoverContent className="w-auto p-0" align="start">
                     <CalendarComponent
                       mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
+                      selected={field.value ? new Date(field.value + "T00:00:00") : undefined}
                       onSelect={(date) => {
                         if (date) {
                           // Format date as YYYY-MM-DD to avoid timezone issues
@@ -2397,36 +2397,11 @@ export default function PropertyEditor() {
               </div>
             </SelectTrigger>
             <SelectContent className="w-full">
-              <SelectItem value="overview">
-                <div className="flex items-center gap-3">
-                  <Home className="h-5 w-5 text-gray-600" />
-                  <span>Property Details</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="media">
-                <div className="flex items-center gap-3">
-                  <ImageIcon className="h-5 w-5 text-gray-600" />
-                  <span>Media</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="finances">
-                <div className="flex items-center gap-3">
-                  <DollarSign className="h-5 w-5 text-gray-600" />
-                  <span>Finances</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="logistics">
-                <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-gray-600" />
-                  <span>Logistics</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="analytics">
-                <div className="flex items-center gap-3">
-                  <TrendingUp className="h-5 w-5 text-gray-600" />
-                  <span>Analytics</span>
-                </div>
-              </SelectItem>
+              <SelectItem value="overview">Property Details</SelectItem>
+              <SelectItem value="media">Media</SelectItem>
+              <SelectItem value="finances">Finances</SelectItem>
+              <SelectItem value="logistics">Logistics</SelectItem>
+              <SelectItem value="analytics">Analytics</SelectItem>
             </SelectContent>
           </Select>
           
