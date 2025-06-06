@@ -154,7 +154,7 @@ export default function PropertyEditor() {
   const [newPartner, setNewPartner] = useState("");
   const [newTag, setNewTag] = useState("");
   const [videoMode, setVideoMode] = useState<'link' | 'upload'>('link');
-  const [activeLogisticsTab, setActiveLogisticsTab] = useState('access');
+
   const [uploadedFiles, setUploadedFiles] = useState<{
     primaryImage: File | null;
     galleryImages: File[];
@@ -1490,12 +1490,67 @@ export default function PropertyEditor() {
           <span className="text-red-500 text-sm">*Required</span>
         </div>
         
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center bg-gray-50/50">
-          <div className="flex flex-col items-center">
-            <Upload className="h-12 w-12 text-gray-400 mb-4" />
-            <p className="text-sm text-gray-600 mb-2">Drag & drop property photos here or browse files</p>
-            <p className="text-xs text-gray-500">Upload multiple images at once (up to 20)</p>
-          </div>
+        <div 
+          className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50 hover:border-gray-400 hover:bg-gray-100/50 transition-colors cursor-pointer"
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragEnter}
+          onDrop={(e) => handleDrop(e, 'galleryImages')}
+          onClick={() => document.getElementById('gallery-images-input')?.click()}
+        >
+          <input
+            id="gallery-images-input"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+            className="hidden"
+            onChange={(e) => handleFileUpload(e.target.files, 'galleryImages')}
+          />
+          {uploadedFiles.galleryImages.length > 0 ? (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {uploadedFiles.galleryImages.map((file, index) => (
+                  <div key={index} className="relative">
+                    <img 
+                      src={URL.createObjectURL(file)} 
+                      alt={`Gallery preview ${index + 1}`}
+                      className="h-24 w-full object-cover rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFile('galleryImages', index);
+                      }}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center hover:bg-red-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="border-t pt-4">
+                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                <p className="text-sm text-gray-600">Add more images</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center">
+              <Upload className="h-12 w-12 text-gray-400 mb-4" />
+              <p className="text-sm text-gray-600 mb-2">Drag & drop property photos here or browse files</p>
+              <p className="text-xs text-gray-500 mb-4">Upload multiple images at once (up to 20)</p>
+              <Button
+                type="button"
+                variant="outline"
+                className="hover:bg-gray-100 border-gray-300"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  document.getElementById('gallery-images-input')?.click();
+                }}
+              >
+                Browse Files
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1559,19 +1614,63 @@ export default function PropertyEditor() {
             </div>
           </div>
         ) : (
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50">
-            <div className="flex flex-col items-center">
-              <Upload className="h-8 w-8 text-gray-400 mb-3" />
-              <p className="text-sm text-gray-600 mb-1 font-medium">Upload a video file or browse files</p>
-              <p className="text-xs text-gray-500 mb-4">MP4, MOV, or WebM up to 100MB</p>
-              <Button
-                type="button"
-                variant="outline"
-                className="hover:bg-gray-100 border-gray-300"
-              >
-                Browse Files
-              </Button>
-            </div>
+          <div 
+            className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50 hover:border-gray-400 hover:bg-gray-100/50 transition-colors cursor-pointer"
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDrop={(e) => handleDrop(e, 'videoFile')}
+            onClick={() => document.getElementById('video-file-input')?.click()}
+          >
+            <input
+              id="video-file-input"
+              type="file"
+              accept="video/mp4,video/mov,video/webm"
+              className="hidden"
+              onChange={(e) => handleFileUpload(e.target.files, 'videoFile')}
+            />
+            {uploadedFiles.videoFile ? (
+              <div className="flex flex-col items-center">
+                <div className="relative bg-gray-100 rounded-lg p-4 mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-blue-100 rounded-full p-2">
+                      <Upload className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-gray-900">{uploadedFiles.videoFile.name}</p>
+                      <p className="text-xs text-gray-500">{(uploadedFiles.videoFile.size / (1024 * 1024)).toFixed(1)} MB</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeFile('videoFile');
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500">Click to replace video</p>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center">
+                <Upload className="h-8 w-8 text-gray-400 mb-3" />
+                <p className="text-sm text-gray-600 mb-1 font-medium">Upload a video file or browse files</p>
+                <p className="text-xs text-gray-500 mb-4">MP4, MOV, or WebM up to 100MB</p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="hover:bg-gray-100 border-gray-300"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    document.getElementById('video-file-input')?.click();
+                  }}
+                >
+                  Browse Files
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -1580,47 +1679,331 @@ export default function PropertyEditor() {
 
   const renderLogistics = () => (
     <div className="space-y-6 py-4">
-      {/* Logistics Tabs */}
-      <div className="flex bg-gray-50 rounded-lg p-1">
-        <button
-          type="button"
-          onClick={() => setActiveLogisticsTab('access')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            activeLogisticsTab === 'access'
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Access & Closing
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveLogisticsTab('comps')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            activeLogisticsTab === 'comps'
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Comparable Properties
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveLogisticsTab('analytics')}
-          className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-            activeLogisticsTab === 'analytics'
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Analytics
-        </button>
+      {/* Deal Terms */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <DollarSign className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Deal Terms</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <FormField
+            control={form.control}
+            name="purchasePrice"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Purchase Price</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 200000" {...field} />
+                </FormControl>
+                <FormDescription>
+                  Buyers will not see your purchase price - this is used to calculate your assignment fee
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="listingPrice"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Listing Price</FormLabel>
+                <FormControl>
+                  <Input placeholder="e.g. 225000" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="assignmentFee"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Assignment Fee (Auto-calculated)</FormLabel>
+                <FormControl>
+                  <Input 
+                    placeholder="Calculated"
+                    value={calculateAssignmentFee() ? `$${Number(calculateAssignmentFee()).toLocaleString()}` : ''}
+                    disabled 
+                    className="bg-gray-50"
+                  />
+                </FormControl>
+                <FormDescription>
+                  Listing Price - Purchase Price
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="accessType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Access Type</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="How can buyers access the property?" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="key">Key</SelectItem>
+                    <SelectItem value="lockbox">Lockbox</SelectItem>
+                    <SelectItem value="owner-present">Owner Present</SelectItem>
+                    <SelectItem value="agent-only">Agent Only</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="closingDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Closing Date (Optional)</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full pl-3 text-left font-normal border-gray-300 hover:bg-gray-100 focus:border-[#09261E] focus:ring-[#09261E]",
+                          field.value ? "bg-[#09261E] text-white hover:bg-[#135341] border-[#09261E]" : "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          (() => {
+                            try {
+                              const date = new Date(field.value);
+                              return isNaN(date.getTime()) ? "Select date" : format(date, "MMMM do, yyyy");
+                            } catch (e) {
+                              return "Select date";
+                            }
+                          })()
+                        ) : (
+                          <span>Select date</span>
+                        )}
+                        <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent
+                      mode="single"
+                      selected={field.value ? new Date(field.value) : undefined}
+                      onSelect={(date) => {
+                        if (date) {
+                          // Format date as YYYY-MM-DD to avoid timezone issues
+                          const year = date.getFullYear();
+                          const month = String(date.getMonth() + 1).padStart(2, '0');
+                          const day = String(date.getDate()).padStart(2, '0');
+                          field.onChange(`${year}-${month}-${day}`);
+                        } else {
+                          field.onChange(null);
+                        }
+                      }}
+                      disabled={(date) => date < new Date("1900-01-01")}
+                      initialFocus
+                      className="rounded-md border"
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  Expected closing date (if known)
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </div>
 
-      {/* Tab Content */}
-      {activeLogisticsTab === 'access' && renderAccessClosingTab()}
-      {activeLogisticsTab === 'comps' && renderCompsTab()}
-      {activeLogisticsTab === 'analytics' && renderAnalyticsTab()}
+      <Separator />
+
+      {/* Comparable Properties (Comps) */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Building className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Comparable Properties (Comps)</h3>
+        </div>
+        
+        <div className="space-y-3">
+          {comps.map((comp, index) => (
+            <div key={index} className="flex gap-2">
+              <Input
+                placeholder="Add address of similar property sold recently"
+                value={comp}
+                onChange={(e) => updateComp(index, e.target.value)}
+                className="flex-1"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => removeComp(index)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+          
+          <Button
+            type="button"
+            variant="outline"
+            onClick={addComp}
+            className="w-full flex items-center gap-2 hover:bg-gray-100 border-gray-300"
+          >
+            <Plus className="h-4 w-4" />
+            Add Comparable Property
+          </Button>
+        </div>
+        
+        <p className="text-xs text-gray-500">
+          Add addresses of similar properties sold recently in the area (optional)
+        </p>
+      </div>
+
+      <Separator />
+
+      {/* Documentation */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <FileText className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Documentation</h3>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Purchase Agreement</label>
+            <div 
+              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50 hover:border-gray-400 hover:bg-gray-100/50 transition-colors cursor-pointer"
+              onDragOver={handleDragOver}
+              onDragEnter={handleDragEnter}
+              onDrop={(e) => handleDrop(e, 'purchaseAgreement')}
+              onClick={() => document.getElementById('purchase-agreement-input')?.click()}
+            >
+              <input
+                id="purchase-agreement-input"
+                type="file"
+                accept=".pdf,.doc,.docx"
+                className="hidden"
+                onChange={(e) => handleFileUpload(e.target.files, 'purchaseAgreement')}
+              />
+              {uploadedFiles.purchaseAgreement ? (
+                <div className="flex flex-col items-center">
+                  <div className="relative bg-gray-100 rounded-lg p-4 mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-red-100 rounded-full p-2">
+                        <FileText className="h-6 w-6 text-red-600" />
+                      </div>
+                      <div className="text-left">
+                        <p className="text-sm font-medium text-gray-900">{uploadedFiles.purchaseAgreement.name}</p>
+                        <p className="text-xs text-gray-500">{(uploadedFiles.purchaseAgreement.size / (1024 * 1024)).toFixed(1)} MB</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeFile('purchaseAgreement');
+                      }}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500">Click to replace document</p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                  <p className="text-sm text-gray-600 mb-1">Drag & drop your agreement or browse files</p>
+                  <p className="text-xs text-gray-500 mb-4">PDF, DOC, or DOCX up to 10MB</p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="hover:bg-gray-100 border-gray-300"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      document.getElementById('purchase-agreement-input')?.click();
+                    }}
+                  >
+                    Browse Files
+                  </Button>
+                </div>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              You can upload this later, but it's required before publishing.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Partners & Notes */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <MapPin className="h-5 w-5 text-muted-foreground" />
+          <h3 className="text-lg font-semibold text-gray-900">Partners & Notes</h3>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Deal Partners (Optional)</label>
+            <div className="space-y-2">
+              {partners.map((partner, index) => (
+                <div key={index} className="flex gap-2">
+                  <Badge variant="secondary" className="flex items-center gap-1">
+                    {partner}
+                    <X 
+                      className="h-3 w-3 cursor-pointer" 
+                      onClick={() => removePartner(index)}
+                    />
+                  </Badge>
+                </div>
+              ))}
+              
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter partner name"
+                  value={newPartner}
+                  onChange={(e) => setNewPartner(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addPartner();
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addPartner}
+                  disabled={!newPartner.trim()}
+                >
+                  Add
+                </Button>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              Add JV partners or other stakeholders in this deal
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 
@@ -1749,11 +2132,20 @@ export default function PropertyEditor() {
                     <CalendarComponent
                       mode="single"
                       selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => field.onChange(date?.toISOString().split('T')[0] || null)}
-                      disabled={(date) =>
-                        date < new Date("1900-01-01")
-                      }
+                      onSelect={(date) => {
+                        if (date) {
+                          // Format date as YYYY-MM-DD to avoid timezone issues
+                          const year = date.getFullYear();
+                          const month = String(date.getMonth() + 1).padStart(2, '0');
+                          const day = String(date.getDate()).padStart(2, '0');
+                          field.onChange(`${year}-${month}-${day}`);
+                        } else {
+                          field.onChange(null);
+                        }
+                      }}
+                      disabled={(date) => date < new Date("1900-01-01")}
                       initialFocus
+                      className="rounded-md border"
                     />
                   </PopoverContent>
                 </Popover>
@@ -1770,134 +2162,7 @@ export default function PropertyEditor() {
     </div>
   );
 
-  const renderCompsTab = () => (
-    <div className="space-y-6">
-      {/* Comparable Properties (Comps) */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <Building className="h-5 w-5 text-muted-foreground" />
-          <h3 className="text-lg font-semibold text-gray-900">Comparable Properties (Comps)</h3>
-        </div>
-        
-        <div className="space-y-3">
-          {comps.map((comp, index) => (
-            <div key={index} className="flex gap-2">
-              <Input
-                placeholder="Add address of similar property sold recently"
-                value={comp}
-                onChange={(e) => updateComp(index, e.target.value)}
-                className="flex-1"
-              />
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => removeComp(index)}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          ))}
-          
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addComp}
-            className="w-full flex items-center gap-2 hover:bg-gray-100 border-gray-300"
-          >
-            <Plus className="h-4 w-4" />
-            Add Comparable Property
-          </Button>
-        </div>
-        
-        <p className="text-xs text-gray-500">
-          Add addresses of similar properties sold recently in the area (optional)
-        </p>
-      </div>
-
-      <Separator />
-
-      {/* Documentation */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-muted-foreground" />
-          <h3 className="text-lg font-semibold text-gray-900">Documentation</h3>
-        </div>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Purchase Agreement</label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50">
-              <div className="flex flex-col items-center">
-                <Upload className="h-8 w-8 text-gray-400 mb-2" />
-                <p className="text-sm text-gray-600 mb-1">Drag & drop your agreement or browse files</p>
-                <p className="text-xs text-gray-500">PDF, DOC, or DOCX up to 10MB</p>
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 mt-2">
-              You can upload this later, but it's required before publishing.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* Partners & Notes */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-muted-foreground" />
-          <h3 className="text-lg font-semibold text-gray-900">Partners & Notes</h3>
-        </div>
-        
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Deal Partners (Optional)</label>
-            <div className="space-y-2">
-              {partners.map((partner, index) => (
-                <div key={index} className="flex gap-2">
-                  <Badge variant="secondary" className="flex items-center gap-1">
-                    {partner}
-                    <X 
-                      className="h-3 w-3 cursor-pointer" 
-                      onClick={() => removePartner(index)}
-                    />
-                  </Badge>
-                </div>
-              ))}
-              
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Enter partner name"
-                  value={newPartner}
-                  onChange={(e) => setNewPartner(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addPartner();
-                    }
-                  }}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={addPartner}
-                  disabled={!newPartner.trim()}
-                >
-                  Add
-                </Button>
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 mt-1">
-              Add JV partners or other stakeholders in this deal
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderAnalyticsTab = () => {
+  const renderAnalytics = () => {
     const calculateTimeUntilClosing = () => {
       const closingDate = form.getValues('closingDate');
       if (!closingDate) return null;
@@ -2433,6 +2698,17 @@ export default function PropertyEditor() {
               >
                 <MapPin className="h-5 w-5" />
                 <span className="font-medium">Logistics</span>
+              </button>
+              <button
+                onClick={() => setActiveSection('analytics')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === 'analytics'
+                    ? 'bg-[#09261E] text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <TrendingUp className="h-5 w-5" />
+                <span className="font-medium">Analytics</span>
               </button>
             </div>
           </div>
