@@ -247,7 +247,7 @@ export function PropertyCard({
               <DropdownMenuItem 
                 onClick={(e) => {
                   e.stopPropagation();
-                  setLocation(`/property/${id}`);
+                  window.open(`/p/${id}`, '_blank');
                 }}
                 className="hover:bg-gray-100 focus:bg-gray-100 focus:text-[#135341] text-gray-700 cursor-pointer transition-colors"
               >
@@ -257,7 +257,7 @@ export function PropertyCard({
               <DropdownMenuItem 
                 onClick={(e) => {
                   e.stopPropagation();
-                  const propertyUrl = `${window.location.origin}/property/${id}`;
+                  const propertyUrl = `${window.location.origin}/p/${id}`;
                   navigator.clipboard.writeText(propertyUrl);
                   // You can add a toast notification here if desired
                 }}
