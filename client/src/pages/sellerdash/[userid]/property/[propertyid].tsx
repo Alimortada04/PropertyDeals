@@ -2280,23 +2280,23 @@ export default function PropertyEditor() {
                 <div className="space-y-3">
                   {/* Current Tags */}
                   <div className="flex flex-wrap gap-2">
-                    {(field.value || []).map((tag, index) => (
+                    {Array.isArray(field.value) ? field.value.map((tag, index) => (
                       <Badge key={index} variant="secondary" className="flex items-center gap-1">
                         {tag}
                         <X 
                           className="h-3 w-3 cursor-pointer" 
                           onClick={() => {
-                            const newTags = [...(field.value || [])];
+                            const newTags = [...field.value];
                             newTags.splice(index, 1);
                             field.onChange(newTags);
                           }}
                         />
                       </Badge>
-                    ))}
+                    )) : null}
                   </div>
                   
                   {/* Tag Suggestions */}
-                  {(!field.value || field.value.length < 3) && (
+                  {(!Array.isArray(field.value) || field.value.length < 3) && (
                     <div className="space-y-2">
                       <p className="text-sm text-gray-600">Popular tags:</p>
                       <div className="flex flex-wrap gap-2">
@@ -2307,12 +2307,12 @@ export default function PropertyEditor() {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              const currentTags = field.value || [];
+                              const currentTags = Array.isArray(field.value) ? field.value : [];
                               if (!currentTags.includes(suggestedTag) && currentTags.length < 3) {
                                 field.onChange([...currentTags, suggestedTag]);
                               }
                             }}
-                            disabled={(field.value || []).includes(suggestedTag) || (field.value || []).length >= 3}
+                            disabled={Array.isArray(field.value) ? (field.value.includes(suggestedTag) || field.value.length >= 3) : false}
                             className="text-xs"
                           >
                             + {suggestedTag}
@@ -2442,6 +2442,8 @@ export default function PropertyEditor() {
         return renderFinances();
       case 'logistics':
         return renderLogistics();
+      case 'analytics':
+        return renderAnalytics();
       default:
         return renderPropertyOverview();
     }
@@ -2470,6 +2472,7 @@ export default function PropertyEditor() {
             <option value="media">Media</option>
             <option value="finances">Finances</option>
             <option value="logistics">Logistics</option>
+            <option value="analytics">Analytics</option>
           </select>
           
           {/* Mobile Top Controls */}
