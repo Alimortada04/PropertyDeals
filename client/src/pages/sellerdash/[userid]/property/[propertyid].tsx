@@ -409,26 +409,26 @@ export default function PropertyEditor() {
   };
 
   const handleStatusChange = async (newStatus: string) => {
-    if (!propertyId) return;
+    if (!propertyId || !user) return;
     
     try {
       setSaving(true);
-      const response = await fetch(`/api/property-profiles/${propertyId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      
+      const { error } = await supabase
+        .from("property_profile")
+        .update({ 
+          status: newStatus,
+          updatedAt: new Date().toISOString()
+        })
+        .eq("id", propertyId)
+        .eq("seller_id", user.id);
 
-      if (!response.ok) {
-        throw new Error('Failed to update status');
+      if (error) {
+        throw error;
       }
 
       // Update local property data
-      if (property) {
-        property.status = newStatus;
-      }
+      setProperty((prev: any) => prev ? { ...prev, status: newStatus } : prev);
       
       toast({
         title: "Status Updated",
@@ -1716,13 +1716,13 @@ export default function PropertyEditor() {
                   <SelectItem value="archived">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-gray-600"></div>
-                      <span>Archive (Archived)</span>
+                      <span>Archive</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="dropped" className="text-red-600">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-red-600"></div>
-                      <span>Drop (Dropped)</span>
+                      <span>Drop</span>
                     </div>
                   </SelectItem>
                 </SelectContent>
@@ -1809,13 +1809,13 @@ export default function PropertyEditor() {
                       <SelectItem value="archived">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-gray-600"></div>
-                          <span>Archive (Archived)</span>
+                          <span>Archive</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="dropped" className="text-red-600">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-red-600"></div>
-                          <span>Drop (Dropped)</span>
+                          <span>Drop</span>
                         </div>
                       </SelectItem>
                     </SelectContent>
