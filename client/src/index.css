@@ -40,13 +40,15 @@
     }
   }
 
-  /* Date picker custom styling */
+  /* Date picker custom styling - consistent across all calendars */
+  [data-testid="calendar"] .rdp-day:hover:not(.rdp-day_selected):not(.rdp-day_disabled),
   .rdp-day:hover:not(.rdp-day_selected):not(.rdp-day_disabled) {
-    background-color: #f3f4f6 !important; /* Grey background on hover */
+    background-color: #f3f4f6 !important; /* Soft grey background on hover */
     border-radius: 50% !important; /* Circular shape */
     color: #374151 !important; /* Dark grey text */
   }
   
+  [data-testid="calendar"] .rdp-day_selected,
   .rdp-day_selected {
     background-color: #09261E !important; /* Dark green for selected dates */
     color: white !important;
@@ -54,12 +56,27 @@
     font-weight: 600 !important;
   }
   
+  [data-testid="calendar"] .rdp-day_selected:hover,
   .rdp-day_selected:hover {
     background-color: #135341 !important; /* Slightly lighter green on hover */
   }
   
+  [data-testid="calendar"] .rdp-day_today:not(.rdp-day_selected),
   .rdp-day_today:not(.rdp-day_selected) {
     color: #09261E !important; /* Dark green for today */
+    font-weight: 600 !important;
+  }
+  
+  /* Additional styling for calendar buttons */
+  .calendar-day-button:hover:not(.calendar-day-selected) {
+    background-color: #f3f4f6 !important;
+    border-radius: 50% !important;
+  }
+  
+  .calendar-day-selected {
+    background-color: #09261E !important;
+    color: white !important;
+    border-radius: 50% !important;
     font-weight: 600 !important;
   }
 }

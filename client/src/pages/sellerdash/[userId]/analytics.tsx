@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useParams } from 'wouter';
 import SellerDashboardLayout from '@/components/layout/seller-dashboard-layout';
+import { useMarketingCenterModal } from '@/hooks/use-marketing-center-modal';
+import { MarketingCenterModal } from '@/components/seller/marketing-center-modal';
 import { 
   Card, 
   CardContent, 
@@ -132,6 +134,7 @@ export default function AnalyticsPage() {
   const [dateRange, setDateRange] = useState('last6Months');
   const [propertyFilter, setPropertyFilter] = useState('all');
   const [selectedProperty, setSelectedProperty] = useState(PROPERTY_PERFORMANCE[0]);
+  const marketingModal = useMarketingCenterModal();
   
   // Calculate summary metrics
   const totalViews = PROPERTY_PERFORMANCE.reduce((sum, prop) => sum + prop.totalViews, 0);
@@ -434,8 +437,7 @@ export default function AnalyticsPage() {
                   <Button
                     className="w-full bg-[#09261E] hover:bg-[#135341] text-white h-12"
                     onClick={() => {
-                      // TODO: Open campaign modal
-                      console.log('Launch Campaign clicked');
+                      marketingModal.onOpen();
                     }}
                   >
                     <Megaphone className="h-4 w-4 mr-2" />
@@ -446,8 +448,7 @@ export default function AnalyticsPage() {
                     variant="outline"
                     className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white h-12"
                     onClick={() => {
-                      // TODO: Open JV partners modal
-                      console.log('JV this Deal clicked');
+                      marketingModal.onOpen();
                     }}
                   >
                     <Handshake className="h-4 w-4 mr-2" />
@@ -459,6 +460,11 @@ export default function AnalyticsPage() {
           </Tabs>
         </div>
       </div>
+      
+      <MarketingCenterModal 
+        isOpen={marketingModal.isOpen} 
+        onClose={marketingModal.onClose} 
+      />
     </SellerDashboardLayout>
   );
 }
