@@ -187,7 +187,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getPropertyProfilesBySeller(sellerId: number): Promise<PropertyProfile[]> {
-    return await db.select().from(propertyProfile).where(eq(propertyProfile.sellerId, sellerId));
+    // Use raw SQL query due to schema mismatch issues
+    const query = `SELECT * FROM property_profile WHERE seller_id = $1`;
+    const result = await pool.query(query, [sellerId.toString()]);
+    return result.rows as PropertyProfile[];
   }
 
   async createPropertyProfile(profile: InsertPropertyProfile): Promise<PropertyProfile> {
