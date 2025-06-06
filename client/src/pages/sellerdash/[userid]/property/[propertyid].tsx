@@ -27,6 +27,10 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/hooks/use-toast";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import { 
   ArrowLeft, 
   Save, 
@@ -1543,13 +1547,37 @@ export default function PropertyEditor() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Closing Date (Optional)</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="date"
-                    value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
-                    onChange={(e) => field.onChange(e.target.value ? new Date(e.target.value) : null)}
-                  />
-                </FormControl>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full pl-3 text-left font-normal border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(new Date(field.value), "MMMM do, yyyy")
+                        ) : (
+                          <span>Select date</span>
+                        )}
+                        <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <CalendarComponent
+                      mode="single"
+                      selected={field.value ? new Date(field.value) : undefined}
+                      onSelect={(date) => field.onChange(date?.toISOString().split('T')[0] || null)}
+                      disabled={(date) =>
+                        date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
                 <FormDescription>
                   Expected closing date (if known)
                 </FormDescription>
@@ -1593,7 +1621,7 @@ export default function PropertyEditor() {
             type="button"
             variant="outline"
             onClick={addComp}
-            className="w-full flex items-center gap-2"
+            className="w-full flex items-center gap-2 hover:bg-gray-100 border-gray-300"
           >
             <Plus className="h-4 w-4" />
             Add Comparable Property

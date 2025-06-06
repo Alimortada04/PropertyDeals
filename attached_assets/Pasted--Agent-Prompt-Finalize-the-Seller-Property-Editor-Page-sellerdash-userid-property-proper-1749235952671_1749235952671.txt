@@ -1,0 +1,74 @@
+// 🛠️ Agent Prompt: Finalize the Seller Property Editor Page (/sellerdash/[userid]/property/[propertyid])
+
+// 🎯 Objective:
+Create a responsive and fully functional seller-side property editor view. It should mimic the UX and field grouping of the Property Listing Modal for consistency and ease of editing.
+
+// ✅ Scope:
+You're working on the page located at:
+**pages/sellerdash/[userid]/property/[propertyid].tsx**
+
+On mount:
+- Fetch `property_profile` by `id = propertyid`
+- Only allow edit access if `seller_id === userid`
+- Store and populate full editable state
+
+// 📐 Layout:
+1. **Header Bar (Sticky at Top):**
+   - Left: `Edit [property_title]`
+   - Right (desktop): Buttons:
+     - "Preview Listing" → opens `/p/[propertyid]` in new tab
+     - "Save Changes" → updates Supabase
+     - "Status: [status]" dropdown → updates status (`draft`, `live`, `offer_accepted`, `closed`, etc.)
+   - On mobile: stack preview/save/status vertically
+
+2. **Tabs (Sticky/Dropdown Responsive):**
+   - Desktop: Left sidebar nav (scrolls independently on small screens)
+   - Mobile: Sticky dropdown selector across top
+   - Tabs:
+     - Property Details → (page 1 fields + page 5 description)
+     - Media → (page 2 fields)
+     - Finances → (page 3 fields)
+     - Logistics → (page 4 fields, excluding notes)
+
+3. **Colors and UI Theme:**
+   - Dark Green: `#09261E`
+   - Light Green: `#135341`
+   - Follow all hover, border, shadow, and spacing rules from Property Listing Modal
+
+// 🧠 Functional Requirements:
+Each tab's content must:
+- Show values from `property_profile`
+- Use proper inputs and UI widgets (dropdowns, calendars, image upload, etc.)
+- Enable user edits
+- On Save: Update only changed fields in Supabase via `update().eq("id", propertyid)`
+- Support image previews and file uploads (same logic as `uploadFileToSupabase()`)
+- Description section includes:
+  - `descriptionTone`
+  - `descriptionType`
+  - `description`
+  - `additionalNotes`
+
+// ✅ Save Feedback:
+- On successful save, show toast
+- While saving, disable save button and show spinner
+
+// 📱 Responsiveness:
+- Mobile nav turns into a dropdown
+- Main content spacing adjusts
+- Top right buttons stack vertically
+- Maintain fixed margins for readability
+
+// ✳️ Additional Notes:
+- Only include "Drop Listing" if status !== closed/archived (marked red)
+- Auto-load listing title into header
+- If fetch fails or unauthorized, redirect to dashboard or show error
+
+// 🔄 Endpoint Reference:
+Supabase Table: `property_profile`
+Primary Key: `id`
+Auth: `seller_id` must match current user
+
+// 💾 Update Method:
+supabase.from("property_profile").update({ field: value }).eq("id", propertyid);
+
+// Let's keep this page clean, efficient, and aligned to the modal UX. Implement fully before moving to the public view (/p/[propertyid]).
