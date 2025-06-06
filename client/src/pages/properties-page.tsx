@@ -100,11 +100,8 @@ export default function PropertiesPage() {
   // Fallback data if API fails
   const displayProperties = properties || allProperties;
 
-  // Filter and sort properties - only show live listings by default
+  // Filter and sort properties
   const filteredProperties = displayProperties.filter(property => {
-    // Only show live properties by default (unless specific status filter is applied)
-    const defaultStatusMatch = !filters.status ? property.status === 'live' : property.status === filters.status;
-    
     // Search filter
     const searchMatch = !searchTerm || 
       property.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -136,7 +133,10 @@ export default function PropertiesPage() {
       bathsMatch = (property.bathrooms ?? 0) >= minBaths;
     }
     
-    return searchMatch && priceMatch && bedsMatch && bathsMatch && defaultStatusMatch;
+    // Status filter
+    const statusMatch = !filters.status || property.status === filters.status;
+    
+    return searchMatch && priceMatch && bedsMatch && bathsMatch && statusMatch;
   });
   
   // Sort properties

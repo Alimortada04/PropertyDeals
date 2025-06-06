@@ -129,11 +129,11 @@ function Router() {
       <Route path="/landingpage">
         <Redirect to="/" />
       </Route>
-      <Route path="/properties">
+      <ProtectedRoute path="/properties" component={() => (
         <AppLayout>
           <PropertiesPage />
         </AppLayout>
-      </Route>
+      )} />
       
       <ProtectedRoute path="/favorites" component={() => (
         <AppLayout>
