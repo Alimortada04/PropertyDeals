@@ -60,7 +60,12 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-semibold">Search PropertyDeals</h2>
-          <Button variant="ghost" size="sm" onClick={onClose}>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onClose}
+            className="rounded-full hover:bg-gray-100 p-2 h-8 w-8"
+          >
             ✕
           </Button>
         </div>
