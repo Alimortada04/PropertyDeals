@@ -1776,68 +1776,6 @@ export default function PropertyEditor() {
               </FormItem>
             )}
           />
-          
-          <FormField
-            control={form.control}
-            name="closingDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Closing Date (Optional)</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full pl-3 text-left font-normal border-gray-300 hover:bg-gray-100 focus:border-[#09261E] focus:ring-[#09261E]",
-                          field.value ? "bg-[#09261E] text-white hover:bg-[#135341] border-[#09261E]" : "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          (() => {
-                            try {
-                              const date = new Date(field.value);
-                              return isNaN(date.getTime()) ? "Select date" : format(date, "MMMM do, yyyy");
-                            } catch (e) {
-                              return "Select date";
-                            }
-                          })()
-                        ) : (
-                          <span>Select date</span>
-                        )}
-                        <Calendar className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <CalendarComponent
-                      mode="single"
-                      selected={field.value ? new Date(field.value) : undefined}
-                      onSelect={(date) => {
-                        if (date) {
-                          // Format date as YYYY-MM-DD to avoid timezone issues
-                          const year = date.getFullYear();
-                          const month = String(date.getMonth() + 1).padStart(2, '0');
-                          const day = String(date.getDate()).padStart(2, '0');
-                          field.onChange(`${year}-${month}-${day}`);
-                        } else {
-                          field.onChange(null);
-                        }
-                      }}
-                      disabled={(date) => date < new Date("1900-01-01")}
-                      initialFocus
-                      className="rounded-md border"
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormDescription>
-                  Expected closing date (if known)
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
           {/* Enhanced Closing Date Field with Custom Styling */}
           <ClosingDateField form={form} />
         </div>
