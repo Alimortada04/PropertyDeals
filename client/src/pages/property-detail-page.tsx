@@ -271,19 +271,23 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     );
   }
   
-  // Sample property photos for demo
-  const propertyImages = [
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-  ];
+  // Use property's actual image, with fallback to placeholder if none available
+  const propertyImages = property.imageUrl 
+    ? [property.imageUrl]
+    : ['/api/placeholder/800/600'];
   
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
   
-  // Calculate days since listed - in a real app this would come from the database
-  const daysOnMarket: number = 5;
+  // Calculate days since listed from property creation date
+  const daysOnMarket = Math.floor((Date.now() - new Date(property.createdAt).getTime()) / (1000 * 60 * 60 * 24));
+  
+  // Set dynamic page title
+  React.useEffect(() => {
+    document.title = `${property.address} - ${property.city}, ${property.state} | PropertyDeals`;
+    return () => {
+      document.title = 'PropertyDeals';
+    };
+  }, [property.address, property.city, property.state]);
   
   const handleWatchlistToggle = () => {
     setIsInWatchlist(!isInWatchlist);
