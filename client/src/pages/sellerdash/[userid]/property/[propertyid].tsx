@@ -142,6 +142,42 @@ export default function PropertyEditor() {
   const [newPartner, setNewPartner] = useState("");
   const [videoMode, setVideoMode] = useState<'link' | 'upload'>('link');
 
+  // Live calculations
+  const calculateAssignmentFee = () => {
+    const listing = parseFloat(form.watch('listingPrice')?.replace(/[$,]/g, '') || '0');
+    const purchase = parseFloat(form.watch('purchasePrice')?.replace(/[$,]/g, '') || '0');
+    const fee = listing - purchase;
+    return fee > 0 ? fee.toFixed(0) : '';
+  };
+
+  const calculateRepairTotal = () => {
+    return repairs.reduce((total, repair) => {
+      const cost = parseFloat(repair.cost?.replace(/[$,]/g, '') || '0');
+      return total + cost;
+    }, 0);
+  };
+
+  const calculateExpenseTotal = (frequency: 'monthly' | 'annually') => {
+    return expenses.reduce((total, expense) => {
+      const amount = parseFloat(expense.amount?.replace(/[$,]/g, '') || '0');
+      if (frequency === 'monthly') {
+        switch (expense.frequency) {
+          case 'monthly': return total + amount;
+          case 'quarterly': return total + (amount / 3);
+          case 'annually': return total + (amount / 12);
+          default: return total;
+        }
+      } else {
+        switch (expense.frequency) {
+          case 'monthly': return total + (amount * 12);
+          case 'quarterly': return total + (amount * 4);
+          case 'annually': return total + amount;
+          default: return total;
+        }
+      }
+    }, 0);
+  };
+
   const userId = params?.userId;
   const propertyId = params?.propertyId;
 
@@ -239,18 +275,28 @@ export default function PropertyEditor() {
         });
 
         // Set expenses from property data
-        if (propertyData.expenseItems && propertyData.expenseItems.length > 0) {
-          setExpenses(propertyData.expenseItems);
+        if (propertyData.expense_items && propertyData.expense_items.length > 0) {
+          setExpenses(propertyData.expense_items);
         }
 
         // Set repair projects from property data
-        if (propertyData.repairProjects && propertyData.repairProjects.length > 0) {
-          setRepairs(propertyData.repairProjects);
+        if (propertyData.repair_projects && propertyData.repair_projects.length > 0) {
+          setRepairs(propertyData.repair_projects);
         }
 
         // Set rent units from property data
-        if (propertyData.rentUnit && propertyData.rentUnit.length > 0) {
-          setUnits(propertyData.rentUnit);
+        if (propertyData.rent_unit && propertyData.rent_unit.length > 0) {
+          setUnits(propertyData.rent_unit);
+        }
+
+        // Set comparable properties from property data
+        if (propertyData.comps && propertyData.comps.length > 0) {
+          setComps(propertyData.comps);
+        }
+
+        // Set JV partners from property data
+        if (propertyData.jv_partners && propertyData.jv_partners.length > 0) {
+          setPartners(propertyData.jv_partners);
         }
 
         setLoading(false);
@@ -297,14 +343,16 @@ export default function PropertyEditor() {
         additionalNotes: data.additionalNotes,
         tags: data.tags || [],
         featuredProperty: data.featuredProperty || false,
-        expenseItems: expenses,
-        repairProjects: repairs,
-        rentUnit: units,
+        expense_items: expenses,
+        repair_projects: repairs,
+        rent_unit: units,
+        comps: comps,
+        jv_partners: partners,
         // Media fields  
         primary_image: data.primaryImage,
         gallery_images: data.galleryImages || [],
         video_walkthrough: data.videoWalkthrough,
-        updatedAt: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
 
       const { error } = await supabase
@@ -418,7 +466,7 @@ export default function PropertyEditor() {
         .from("property_profile")
         .update({ 
           status: newStatus,
-          updatedAt: new Date().toISOString()
+          updated_at: new Date().toISOString()
         })
         .eq("id", propertyId)
         .eq("seller_id", user.id);
@@ -1448,7 +1496,12 @@ export default function PropertyEditor() {
               <FormItem>
                 <FormLabel>Assignment Fee (Auto-calculated)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Calculated" {...field} disabled />
+                  <Input 
+                    placeholder="Calculated"
+                    value={calculateAssignmentFee() ? `$${Number(calculateAssignmentFee()).toLocaleString()}` : ''}
+                    disabled 
+                    className="bg-gray-50"
+                  />
                 </FormControl>
                 <FormDescription>
                   Listing Price - Purchase Price
