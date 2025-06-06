@@ -2287,19 +2287,19 @@ export default function PropertyEditor() {
                 <div className="space-y-3">
                   {/* Current Tags */}
                   <div className="flex flex-wrap gap-2">
-                    {Array.isArray(field.value) ? field.value.map((tag, index) => (
+                    {(field.value || []).map((tag, index) => (
                       <Badge key={index} variant="secondary" className="flex items-center gap-1">
                         {tag}
                         <X 
                           className="h-3 w-3 cursor-pointer" 
                           onClick={() => {
-                            const newTags = [...field.value];
+                            const newTags = [...(field.value || [])];
                             newTags.splice(index, 1);
                             field.onChange(newTags);
                           }}
                         />
                       </Badge>
-                    )) : null}
+                    ))}
                   </div>
                   
                   {/* Tag Suggestions */}
