@@ -43,7 +43,10 @@ import {
   HelpCircle, 
   Info,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Megaphone,
+  Handshake,
+  Zap
 } from 'lucide-react';
 
 // Mock data for analytics
@@ -418,6 +421,38 @@ export default function AnalyticsPage() {
                       <Bar dataKey="conversionRate" name="Conversion Rate" fill="#82ca9d" />
                     </BarChart>
                   </ResponsiveContainer>
+                </div>
+              </Card>
+              
+              {/* Quick Actions Section */}
+              <Card className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Zap className="h-5 w-5 text-[#09261E]" />
+                  <CardTitle className="text-lg">Quick Actions</CardTitle>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button
+                    className="w-full bg-[#09261E] hover:bg-[#135341] text-white h-12"
+                    onClick={() => {
+                      // TODO: Open campaign modal
+                      console.log('Launch Campaign clicked');
+                    }}
+                  >
+                    <Megaphone className="h-4 w-4 mr-2" />
+                    Launch Campaign
+                  </Button>
+                  
+                  <Button
+                    variant="outline"
+                    className="w-full border-[#09261E] text-[#09261E] hover:bg-[#09261E] hover:text-white h-12"
+                    onClick={() => {
+                      // TODO: Open JV partners modal
+                      console.log('JV this Deal clicked');
+                    }}
+                  >
+                    <Handshake className="h-4 w-4 mr-2" />
+                    JV this Deal
+                  </Button>
                 </div>
               </Card>
             </TabsContent>
