@@ -69,6 +69,8 @@ import { QuickActionSelector } from "@/components/seller/quick-action-selector";
 import { EnhancedPropertyListingModal } from "@/components/property/enhanced-property-listing-modal";
 import { MarketingCenterModal } from "@/components/seller/marketing-center-modal";
 
+
+
 // Property form schema matching the EnhancedPropertyListingModal
 const propertySchema = z.object({
   // Step 1: Property Overview
