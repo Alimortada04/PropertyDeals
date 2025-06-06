@@ -1426,12 +1426,59 @@ export default function PropertyEditor() {
           <span className="text-red-500 text-sm">*Required</span>
         </div>
         
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center bg-gray-50/50">
-          <div className="flex flex-col items-center">
-            <ImageIcon className="h-12 w-12 text-gray-400 mb-4" />
-            <p className="text-sm text-gray-600 mb-2">Drag & drop your main property image or browse files</p>
-            <p className="text-xs text-gray-500">JPEG, PNG, or WebP up to 10MB</p>
-          </div>
+        <div 
+          className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center bg-gray-50/50 hover:border-gray-400 hover:bg-gray-100/50 transition-colors cursor-pointer"
+          onDragOver={handleDragOver}
+          onDragEnter={handleDragEnter}
+          onDrop={(e) => handleDrop(e, 'primaryImage')}
+          onClick={() => document.getElementById('primary-image-input')?.click()}
+        >
+          <input
+            id="primary-image-input"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="hidden"
+            onChange={(e) => handleFileUpload(e.target.files, 'primaryImage')}
+          />
+          {uploadedFiles.primaryImage ? (
+            <div className="flex flex-col items-center">
+              <div className="relative">
+                <img 
+                  src={URL.createObjectURL(uploadedFiles.primaryImage)} 
+                  alt="Primary preview"
+                  className="h-32 w-32 object-cover rounded-lg mb-2"
+                />
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile('primaryImage');
+                  }}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-600">{uploadedFiles.primaryImage.name}</p>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center">
+              <ImageIcon className="h-12 w-12 text-gray-400 mb-4" />
+              <p className="text-sm text-gray-600 mb-2">Drag & drop your main property image or browse files</p>
+              <p className="text-xs text-gray-500">JPEG, PNG, or WebP up to 10MB</p>
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-3 hover:bg-gray-100 border-gray-300"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  document.getElementById('primary-image-input')?.click();
+                }}
+              >
+                Browse Files
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1678,8 +1725,8 @@ export default function PropertyEditor() {
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full pl-3 text-left font-normal border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]",
-                          !field.value && "text-muted-foreground"
+                          "w-full pl-3 text-left font-normal border-gray-300 hover:bg-gray-100 focus:border-[#09261E] focus:ring-[#09261E]",
+                          field.value ? "bg-[#09261E] text-white hover:bg-[#135341] border-[#09261E]" : "text-muted-foreground"
                         )}
                       >
                         {field.value ? (
