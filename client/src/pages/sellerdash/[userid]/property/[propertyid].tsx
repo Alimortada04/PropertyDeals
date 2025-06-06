@@ -290,13 +290,17 @@ export default function PropertyEditor() {
         }
 
         // Set comparable properties from property data
-        if (propertyData.comps && propertyData.comps.length > 0) {
+        if (propertyData.comps && Array.isArray(propertyData.comps) && propertyData.comps.length > 0) {
           setComps(propertyData.comps);
+        } else {
+          setComps([""]);
         }
 
         // Set JV partners from property data
-        if (propertyData.jv_partners && propertyData.jv_partners.length > 0) {
+        if (propertyData.jv_partners && Array.isArray(propertyData.jv_partners) && propertyData.jv_partners.length > 0) {
           setPartners(propertyData.jv_partners);
+        } else {
+          setPartners([]);
         }
 
         setLoading(false);
@@ -330,15 +334,15 @@ export default function PropertyEditor() {
         bedrooms: data.bedrooms ? parseInt(data.bedrooms) : null,
         bathrooms: data.bathrooms ? parseFloat(data.bathrooms) : null,
         sqft: data.sqft ? parseInt(data.sqft) : null,
-        yearBuilt: data.yearBuilt ? parseInt(data.yearBuilt) : null,
-        lotSize: data.lotSize,
+        year_built: data.yearBuilt ? parseInt(data.yearBuilt) : null,
+        lot_size: data.lotSize,
         parking: data.parking,
         arv: data.arv ? parseFloat(data.arv.replace(/[$,]/g, "")) : null,
-        rentTotalMonthly: data.rentTotalMonthly ? parseFloat(data.rentTotalMonthly.replace(/[$,]/g, "")) : null,
-        purchasePrice: data.purchasePrice ? parseFloat(data.purchasePrice.replace(/[$,]/g, "")) : null,
-        listingPrice: data.listingPrice ? parseFloat(data.listingPrice.replace(/[$,]/g, "")) : null,
-        assignmentFee: data.assignmentFee ? parseFloat(data.assignmentFee.replace(/[$,]/g, "")) : null,
-        accessType: data.accessType,
+        rent_total_monthly: data.rentTotalMonthly ? parseFloat(data.rentTotalMonthly.replace(/[$,]/g, "")) : null,
+        purchase_price: data.purchasePrice ? parseFloat(data.purchasePrice.replace(/[$,]/g, "")) : null,
+        listing_price: data.listingPrice ? parseFloat(data.listingPrice.replace(/[$,]/g, "")) : null,
+        assignment_fee: calculateAssignmentFee() ? parseFloat(calculateAssignmentFee()) : null,
+        access_type: data.accessType,
         description: data.description,
         additionalNotes: data.additionalNotes,
         tags: data.tags || [],
@@ -1161,10 +1165,10 @@ export default function PropertyEditor() {
         
         <div className="flex justify-between items-center pt-4 border-t">
           <div className="text-blue-600 font-medium">
-            Monthly Total: <span className="text-lg">$0</span>
+            Monthly Total: <span className="text-lg">${calculateExpenseTotal('monthly').toLocaleString()}</span>
           </div>
           <div className="text-blue-600 font-medium">
-            Annual Total: <span className="text-lg">$0</span>
+            Annual Total: <span className="text-lg">${calculateExpenseTotal('annually').toLocaleString()}</span>
           </div>
         </div>
       </div>
@@ -1274,7 +1278,7 @@ export default function PropertyEditor() {
           
           <div className="text-right">
             <div className="text-red-600 font-medium text-lg">
-              Total Repair Costs: $0
+              Total Repair Costs: ${calculateRepairTotal().toLocaleString()}
             </div>
           </div>
         </div>
