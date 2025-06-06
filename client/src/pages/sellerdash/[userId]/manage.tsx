@@ -22,9 +22,15 @@ import {
   MoreHorizontal,
   Home,
   Calendar,
-  Filter
+  Filter,
+  Share,
+  ExternalLink,
+  Copy,
+  Send
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { toast } from '@/hooks/use-toast';
 
 // Status options for multi-select filtering
 const STATUS_OPTIONS = [
@@ -57,6 +63,8 @@ export default function SellerManagePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilters, setStatusFilters] = useState<string[]>(DEFAULT_STATUS_FILTERS);
   const [isAddPropertyModalOpen, setIsAddPropertyModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
 
   // Load properties with current filters
   useEffect(() => {
@@ -80,15 +88,42 @@ export default function SellerManagePage() {
     setStatusFilters(newFilters);
   };
 
-  // Get status badge styling
+  // Handle property actions
+  const handleEditProperty = (property: any) => {
+    window.location.href = `/sellerdash/${userId}/property/${property.id}`;
+  };
+
+  const handlePreviewProperty = (property: any) => {
+    window.open(`/p/${property.id}`, '_blank');
+  };
+
+  const handleShareProperty = (property: any) => {
+    setSelectedProperty(property);
+    setShareModalOpen(true);
+  };
+
+  const handleCopyLink = () => {
+    if (selectedProperty) {
+      const shareUrl = `${window.location.origin}/p/${selectedProperty.id}`;
+      navigator.clipboard.writeText(shareUrl);
+      toast({
+        title: "Link copied!",
+        description: "Property link copied to clipboard",
+      });
+    }
+  };
+
+  // Get status badge styling with requested colors
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      'draft': { label: 'Draft', className: 'bg-gray-100 text-gray-800' },
+      'draft': { label: 'Draft', className: 'bg-yellow-100 text-yellow-800' },
       'live': { label: 'Live', className: 'bg-green-100 text-green-800' },
-      'under contract': { label: 'Under Contract', className: 'bg-blue-100 text-blue-800' },
-      'closed': { label: 'Closed', className: 'bg-purple-100 text-purple-800' },
-      'dropped': { label: 'Dropped', className: 'bg-red-100 text-red-800' },
-      'archived': { label: 'Archived', className: 'bg-gray-100 text-gray-600' }
+      'offer_accepted': { label: 'Offer Accepted', className: 'bg-blue-100 text-blue-800' },
+      'pending': { label: 'Pending', className: 'bg-orange-100 text-orange-800' },
+      'under_contract': { label: 'Pending', className: 'bg-orange-100 text-orange-800' },
+      'closed': { label: 'Closed', className: 'bg-green-800 text-white' },
+      'archived': { label: 'Archived', className: 'bg-gray-100 text-gray-600' },
+      'dropped': { label: 'Dropped', className: 'bg-red-100 text-red-800' }
     };
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
@@ -136,13 +171,17 @@ export default function SellerManagePage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleEditProperty(property)}>
                 <Edit className="h-4 w-4 mr-2" />
-                Edit Property
+                Edit
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Eye className="h-4 w-4 mr-2" />
-                View Details
+              <DropdownMenuItem onClick={() => handlePreviewProperty(property)}>
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Preview
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleShareProperty(property)}>
+                <Share className="h-4 w-4 mr-2" />
+                Share
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -336,6 +375,68 @@ export default function SellerManagePage() {
         isOpen={isAddPropertyModalOpen}
         onClose={() => setIsAddPropertyModalOpen(false)}
       />
+
+      {/* Share Property Modal */}
+      <Dialog open={shareModalOpen} onOpenChange={setShareModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Share Property</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {selectedProperty && (
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <h4 className="font-semibold text-gray-900">{selectedProperty.name || 'Property'}</h4>
+                <p className="text-sm text-gray-600">
+                  {selectedProperty.address}
+                  {selectedProperty.city && `, ${selectedProperty.city}`}
+                  {selectedProperty.state && `, ${selectedProperty.state}`}
+                </p>
+              </div>
+            )}
+            
+            <div className="space-y-3">
+              <Button 
+                onClick={handleCopyLink}
+                className="w-full justify-start"
+                variant="outline"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy Link
+              </Button>
+              
+              <Button 
+                onClick={() => {
+                  if (selectedProperty) {
+                    const shareUrl = `${window.location.origin}/p/${selectedProperty.id}`;
+                    const message = `Check out this property: ${selectedProperty.name || 'Property'} - ${shareUrl}`;
+                    window.open(`mailto:?subject=Property Listing&body=${encodeURIComponent(message)}`, '_blank');
+                  }
+                }}
+                className="w-full justify-start"
+                variant="outline"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Share via Email
+              </Button>
+              
+              <Button 
+                onClick={() => {
+                  if (selectedProperty) {
+                    const shareUrl = `${window.location.origin}/p/${selectedProperty.id}`;
+                    const message = `Check out this property: ${selectedProperty.name || 'Property'} ${shareUrl}`;
+                    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+                  }
+                }}
+                className="w-full justify-start"
+                variant="outline"
+              >
+                <Send className="h-4 w-4 mr-2" />
+                Share via WhatsApp
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </SellerDashboardLayout>
   );
 }
