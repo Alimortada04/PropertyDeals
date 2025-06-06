@@ -327,10 +327,10 @@ export default function PropertyEditor() {
         address: data.address,
         city: data.city,
         state: data.state,
-        zipCode: data.zipCode,
+        zipcode: data.zipCode,            // ✅ FIXED
         county: data.county,
-        parcelId: data.parcelId,
-        propertyType: data.propertyType,
+        parcel_id: data.parcelId,
+        property_type: data.propertyType,
         bedrooms: data.bedrooms ? parseInt(data.bedrooms) : null,
         bathrooms: data.bathrooms ? parseFloat(data.bathrooms) : null,
         sqft: data.sqft ? parseInt(data.sqft) : null,
@@ -342,21 +342,19 @@ export default function PropertyEditor() {
         purchase_price: data.purchasePrice ? parseFloat(data.purchasePrice.replace(/[$,]/g, "")) : null,
         listing_price: data.listingPrice ? parseFloat(data.listingPrice.replace(/[$,]/g, "")) : null,
         assignment_fee: calculateAssignmentFee() ? parseFloat(calculateAssignmentFee()) : null,
-        access_type: data.accessType,
+        access_type: data.accessType,               // ✅ FIXED
         description: data.description,
-        additionalNotes: data.additionalNotes,
+        additional_notes: data.additionalNotes,     // ✅ FIXED
         tags: data.tags || [],
-        featuredProperty: data.featuredProperty || false,
+        featured_property: data.featuredProperty || false,
         expense_items: expenses,
-        repair_projects: repairs,
+        repairs: repairs,
         rent_unit: units,
         comps: comps,
         jv_partners: partners,
-        // Media fields  
         primary_image: data.primaryImage,
         gallery_images: data.galleryImages || [],
-        video_walkthrough: data.videoWalkthrough,
-        updated_at: new Date().toISOString(),
+        video_walkthrough: data.videoWalkthrough
       };
 
       const { error } = await supabase
@@ -468,14 +466,12 @@ export default function PropertyEditor() {
       
       const { error } = await supabase
         .from("property_profile")
-        .update({ 
-          status: newStatus,
-          updated_at: new Date().toISOString()
-        })
+        .update({ status: newStatus })
         .eq("id", propertyId)
         .eq("seller_id", user.id);
 
       if (error) {
+        console.error('Supabase status update error:', error);
         throw error;
       }
 
