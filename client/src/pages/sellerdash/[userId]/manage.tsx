@@ -30,14 +30,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 const STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft' },
   { value: 'live', label: 'Live' },
-  { value: 'under contract', label: 'Under Contract' },
+  { value: 'under_contract', label: 'Under Contract' },
   { value: 'closed', label: 'Closed' },
   { value: 'dropped', label: 'Dropped' },
   { value: 'archived', label: 'Archived' }
 ];
 
 // Default selected statuses
-const DEFAULT_STATUS_FILTERS = ['draft', 'live', 'under contract'];
+const DEFAULT_STATUS_FILTERS = ['draft', 'live', 'under_contract'];
 
 export default function SellerManagePage() {
   const params = useParams();

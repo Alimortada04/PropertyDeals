@@ -2307,7 +2307,7 @@ export default function PropertyEditor() {
                     <div className="space-y-2">
                       <p className="text-sm text-gray-600">Popular tags:</p>
                       <div className="flex flex-wrap gap-2">
-                        {["Fix & Flip", "Rental Property", "Wholesale", "BRRRR", "Off-Market", "Distressed"].map((suggestedTag) => (
+                        {["BRRRR", "Fix & Flip", "Turnkey", "Cash Cow", "Vacant", "High Equity", "Subject-To", "Seller Financing", "Short Sale"].map((suggestedTag) => (
                           <Button
                             key={suggestedTag}
                             type="button"
