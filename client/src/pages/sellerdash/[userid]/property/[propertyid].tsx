@@ -1309,14 +1309,14 @@ export default function PropertyEditor() {
                     placeholder="e.g. Roof Replacement"
                     value={repair.name}
                     onChange={(e) => updateRepair(index, 'name', e.target.value)}
-                    className="font-medium"
+                    className="font-medium mr-3"
                   />
                   <Button
                     type="button"
                     variant="outline"
                     size="sm"
                     onClick={() => removeRepair(index)}
-                    className="hover:bg-gray-100"
+                    className="hover:bg-gray-100 flex-shrink-0"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -2742,6 +2742,18 @@ export default function PropertyEditor() {
       
       {/* Quick Action Selector */}
       <QuickActionSelector />
+      
+      {/* Modals */}
+      <EnhancedPropertyListingModal 
+        isOpen={showListingModal}
+        onClose={() => setShowListingModal(false)}
+      />
+      
+      <MarketingCenterModal
+        isOpen={showCampaignModal}
+        onClose={() => setShowCampaignModal(false)}
+        propertyId={propertyId}
+      />
     </div>
   );
 }
