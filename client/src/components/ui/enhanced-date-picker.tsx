@@ -81,3 +81,25 @@ export function EnhancedDatePicker({
     </Popover>
   );
 }
+
+// Simple wrapper component that can replace the entire FormField content
+export function ClosingDateField({ form }: { form: any }) {
+  return (
+    <FormField
+      control={form.control}
+      name="closingDate"
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Closing Date (Optional)</FormLabel>
+          <EnhancedDatePicker
+            value={field.value}
+            onChange={field.onChange}
+            placeholder="Select date"
+          />
+          <FormDescription>Expected closing date (if known)</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
