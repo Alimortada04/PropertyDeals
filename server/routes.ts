@@ -19,10 +19,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Properties endpoints
   app.get("/api/properties", async (_req, res) => {
-    // Only return live properties for public listing
-    const properties = await storage.getProperties();
-    const liveProperties = properties.filter(p => p.status === 'live');
-    res.json(liveProperties);
+    try {
+      // Get live properties from both legacy properties table and property profiles
+      const legacyProperties = await storage.getProperties();
+      const liveProperties = legacyProperties.filter(p => p.status === 'live');
+      console.log(`Found ${liveProperties.length} live legacy properties`);
+      
+      // Get live property profiles and convert them to property format
+      const propertyProfiles = await storage.getPropertyProfiles();
+      console.log(`Found ${propertyProfiles.length} total property profiles`);
+      
+      const liveProfiles = propertyProfiles.filter(p => p.status === 'live');
+      console.log(`Found ${liveProfiles.length} live property profiles`);
+      
+      // Convert property profiles to property format for consistency
+      const convertedProfiles = liveProfiles.map(profile => ({
+        id: profile.id,
+        title: profile.name || `Property at ${profile.address}`,
+        address: profile.address || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        zipCode: profile.zipCode || '',
+        price: profile.listingPrice || profile.purchasePrice || 0,
+        description: profile.description || '',
+        bedrooms: profile.bedrooms || 0,
+        bathrooms: profile.bathrooms || 0,
+        squareFeet: profile.sqft || 0,
+        lotSize: profile.lotSize || '',
+        yearBuilt: profile.yearBuilt || null,
+        propertyType: profile.propertyType || '',
+        status: profile.status,
+        condition: profile.condition || '',
+        features: profile.tags || [],
+        imageUrl: profile.primaryImage || '',
+        sellerId: profile.seller_id,
+        createdAt: profile.createdAt ? profile.createdAt.toISOString() : new Date().toISOString()
+      }));
+      
+      console.log(`Converted ${convertedProfiles.length} property profiles to property format`);
+      
+      // Combine both types of properties
+      const allLiveProperties = [...liveProperties, ...convertedProfiles];
+      console.log(`Returning ${allLiveProperties.length} total live properties`);
+      
+      res.json(allLiveProperties);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+      res.status(500).json({ message: 'Error fetching properties' });
+    }
   });
 
   app.get("/api/properties/:id", async (req, res) => {
