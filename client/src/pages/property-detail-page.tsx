@@ -153,7 +153,18 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     return <NotFoundPage />;
   }
 
-  const photos = property.gallery_images ? JSON.parse(property.gallery_images) : [];
+  let photos = [];
+  try {
+    if (property.gallery_images && typeof property.gallery_images === 'string' && property.gallery_images.trim() !== '') {
+      photos = JSON.parse(property.gallery_images);
+    } else if (Array.isArray(property.gallery_images)) {
+      photos = property.gallery_images;
+    }
+  } catch (error) {
+    console.warn('Failed to parse gallery_images:', error);
+    photos = [];
+  }
+  
   const mainImage = property.primary_image || "/placeholder-property.jpg";
 
   return (
