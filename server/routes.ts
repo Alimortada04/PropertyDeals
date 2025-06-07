@@ -23,14 +23,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get live properties from both legacy properties table and property profiles
       const legacyProperties = await storage.getProperties();
       const liveProperties = legacyProperties.filter(p => p.status === 'live');
-      console.log(`Found ${liveProperties.length} live legacy properties`);
       
       // Get live property profiles and convert them to property format
       const propertyProfiles = await storage.getPropertyProfiles();
-      console.log(`Found ${propertyProfiles.length} total property profiles`);
-      
       const liveProfiles = propertyProfiles.filter(p => p.status === 'live');
-      console.log(`Found ${liveProfiles.length} live property profiles`);
       
       // Convert property profiles to property format for consistency
       const convertedProfiles = liveProfiles.map(profile => ({
@@ -56,12 +52,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         createdAt: profile.createdAt ? profile.createdAt.toISOString() : new Date().toISOString()
       }));
       
-      console.log(`Converted ${convertedProfiles.length} property profiles to property format`);
-      
       // Combine both types of properties
       const allLiveProperties = [...liveProperties, ...convertedProfiles];
-      console.log(`Returning ${allLiveProperties.length} total live properties`);
-      
       res.json(allLiveProperties);
     } catch (error) {
       console.error('Error fetching properties:', error);
