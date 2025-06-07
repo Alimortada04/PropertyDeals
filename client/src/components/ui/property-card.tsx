@@ -60,7 +60,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         
         {/* Status badge - top right */}
         <div className="absolute top-3 right-3">
-          <Badge className={`px-3 py-1 font-medium ${getStatusBadgeClass(property.status)}`}>
+          <Badge className={`px-3 py-1 font-medium transition-transform duration-200 hover:scale-105 ${getStatusBadgeClass(property.status)}`}>
             {property.status}
           </Badge>
         </div>
@@ -82,32 +82,42 @@ export function PropertyCard({ property }: PropertyCardProps) {
         
         {/* Property specs - bedrooms, bathrooms, sqft */}
         <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
-          <div className="flex items-center gap-1">
-            <Bed className="h-4 w-4" />
-            <span>{property.bedrooms} bed{property.bedrooms !== 1 ? 's' : ''}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Bath className="h-4 w-4" />
-            <span>{property.bathrooms} bath{property.bathrooms !== 1 ? 's' : ''}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Square className="h-4 w-4" />
-            <span>{formatNumber(property.squareFeet)} sqft</span>
-          </div>
+          {property.bedrooms > 0 && (
+            <div className="flex items-center gap-1">
+              <Bed className="h-4 w-4" />
+              <span>{property.bedrooms} bed{property.bedrooms !== 1 ? 's' : ''}</span>
+            </div>
+          )}
+          {property.bathrooms > 0 && (
+            <div className="flex items-center gap-1">
+              <Bath className="h-4 w-4" />
+              <span>{property.bathrooms} bath{property.bathrooms !== 1 ? 's' : ''}</span>
+            </div>
+          )}
+          {property.squareFeet > 0 && (
+            <div className="flex items-center gap-1">
+              <Square className="h-4 w-4" />
+              <span>{formatNumber(property.squareFeet)} sqft</span>
+            </div>
+          )}
         </div>
         
         {/* Property tags */}
         {Array.isArray(property.tags) && property.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-3">
-            {property.tags.slice(0, 3).map((tag, index) => (
-              <Badge 
-                key={index} 
-                variant="outline" 
-                className="text-xs bg-gray-50 text-gray-700 border-gray-200"
-              >
-                {tag}
-              </Badge>
-            ))}
+            {property.tags.slice(0, 3).map((tag, index) => {
+              // Clean the tag text by removing quotes and brackets
+              const cleanTag = String(tag).replace(/["\[\]]/g, '').trim();
+              return cleanTag ? (
+                <Badge 
+                  key={index} 
+                  variant="outline" 
+                  className="text-xs bg-gray-50 text-gray-700 border-gray-200"
+                >
+                  {cleanTag}
+                </Badge>
+              ) : null;
+            })}
             {property.tags.length > 3 && (
               <Badge 
                 variant="outline" 
@@ -120,15 +130,19 @@ export function PropertyCard({ property }: PropertyCardProps) {
         )}
         
         {/* View count and favorites */}
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <div className="flex items-center gap-1">
-            <Eye className="h-4 w-4" />
-            <span>{formatNumber(property.viewCount)} views</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Heart className="h-4 w-4" />
-            <span>{formatNumber(property.saveCount)} saved</span>
-          </div>
+        <div className="flex items-center gap-4 text-sm text-gray-500">
+          {property.viewCount > 0 && (
+            <div className="flex items-center gap-1">
+              <Eye className="h-4 w-4" />
+              <span>{formatNumber(property.viewCount)} views</span>
+            </div>
+          )}
+          {property.saveCount > 0 && (
+            <div className="flex items-center gap-1">
+              <Heart className="h-4 w-4" />
+              <span>{formatNumber(property.saveCount)} saved</span>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
