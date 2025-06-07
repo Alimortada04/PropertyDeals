@@ -154,7 +154,7 @@ export default function PropertiesPage() {
         bedrooms: property.bedrooms || 0,
         bathrooms: property.bathrooms || 0,
         squareFeet: property.square_feet || 0,
-        tags: property.tags || []
+        tags: Array.isArray(property.tags) ? property.tags : (property.tags ? [property.tags] : [])
       }));
     },
   });
