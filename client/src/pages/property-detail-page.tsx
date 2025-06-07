@@ -59,7 +59,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const isMobile = useIsMobile();
 
   const [match] = useRoute("/p/:propertyId");
-  const propertyId = match?.params.propertyId || id;
+  const propertyId = match?.params?.propertyId || id;
   const [property, setProperty] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);

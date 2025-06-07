@@ -127,16 +127,28 @@ export default function PropertiesPage() {
     data: properties,
     isLoading,
     error,
-  } = useQuery<Property[]>({
+  } = useQuery({
     queryKey: ["properties", "live"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("property_profile")
         .select("*")
-        .in("status", ["live", "offer_accepted", "pending"]); // You can customize the status filter here
+        .in("status", ["live", "draft"]);
 
-      if (error) throw error;
-      return data || [];
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+      
+      // Map Supabase data to frontend structure
+      return (data || []).map((property: any) => ({
+        ...property,
+        title: property.name || property.address || "Untitled Property",
+        price: property.listing_price || 0,
+        imageUrl: property.primary_image || defaultPropertyImage,
+        propertyType: property.property_type || null,
+        sellerId: property.seller_id
+      }));
     },
   });
 
@@ -580,12 +592,7 @@ export default function PropertiesPage() {
                   onMouseLeave={() => setHoveredPropertyId(null)}
                 >
                   <Link href={`/p/${property.id}`}>
-                    <PropertyCard property={{ 
-                      ...property, 
-                      imageUrl: property.primary_image || defaultPropertyImage,
-                      title: property.name || property.address || "Untitled Property",
-                      price: property.listing_price || 0
-                    }} />
+                    <PropertyCard property={property} />
                   </Link>
                 </div>
               ))}
@@ -672,12 +679,7 @@ export default function PropertiesPage() {
                       )}
                     >
                       <Link href={`/p/${property.id}`}>
-                        <PropertyCard property={{ 
-                          ...property, 
-                          imageUrl: property.primary_image || defaultPropertyImage,
-                          title: property.name || property.address || "Untitled Property",
-                          price: property.listing_price || 0
-                        }} />
+                        <PropertyCard property={property} />
                       </Link>
                     </div>
                   ))}
