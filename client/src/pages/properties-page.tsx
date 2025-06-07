@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -27,7 +28,8 @@ import {
 } from "@/components/ui/select";
 import PropertySearchBar from "@/components/properties/property-search-bar";
 import Breadcrumbs from "@/components/common/breadcrumbs";
-import { allProperties } from "@/lib/data";
+// Default property image placeholder
+const defaultPropertyImage = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80";
 import {
   MapPin,
   List,
@@ -138,9 +140,7 @@ export default function PropertiesPage() {
     },
   });
 
-  // Default property image for fallback
-  const defaultPropertyImage =
-    "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
+
 
   const displayProperties = properties?.filter(p => p) ?? [];
 
@@ -671,7 +671,14 @@ export default function PropertiesPage() {
                           : "",
                       )}
                     >
-                      <PropertyCard property={property} />
+                      <Link href={`/p/${property.id}`}>
+                        <PropertyCard property={{ 
+                          ...property, 
+                          imageUrl: property.primary_image || defaultPropertyImage,
+                          title: property.name || property.address || "Untitled Property",
+                          price: property.listing_price || 0
+                        }} />
+                      </Link>
                     </div>
                   ))}
                 </div>
