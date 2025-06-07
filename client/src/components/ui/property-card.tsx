@@ -49,7 +49,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
   };
 
   return (
-    <Card className="overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.02] bg-white border border-gray-200 cursor-pointer">
+    <Card className="overflow-hidden transition-all duration-200 hover:shadow-lg hover:scale-[1.02] bg-white border border-gray-200 cursor-pointer h-full flex flex-col">
       <div className="relative">
         {/* Property image */}
         <img 
@@ -66,7 +66,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </div>
       </div>
       
-      <CardContent className="pt-4 pb-3">
+      <CardContent className="pt-4 pb-3 flex-grow flex flex-col justify-between">
         {/* Property title and address */}
         <div className="mb-3">
           <h3 className="text-lg font-bold text-gray-900 line-clamp-1">{property.title}</h3>

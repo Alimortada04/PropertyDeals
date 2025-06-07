@@ -468,7 +468,7 @@ export default function PropertiesPage() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-white md:pt-4 pt-[0px] pb-[0px]">
+    <div className="flex flex-col min-h-screen bg-white md:pt-4 pt-[0px] pb-16">
       {/* Breadcrumb and Header Section - White background */}
       <div className="w-full bg-white">
         <div className="bg-white container mx-auto px-4 pt-8 pb-6">
