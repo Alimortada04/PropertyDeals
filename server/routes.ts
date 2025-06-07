@@ -29,17 +29,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const id = req.params.id;
     let property;
 
-    // Try to parse as integer first (legacy properties)
+    console.log(`Looking up property with ID: ${id}`);
+
+    // Try to parse as integer first (could be legacy properties or property profile IDs)
     const intId = parseInt(id);
     if (!isNaN(intId)) {
+      // First try legacy properties table
       property = await storage.getProperty(intId);
+      console.log(`Legacy property lookup result:`, property ? 'found' : 'not found');
       
       // Check if property is live for public access
       if (property && property.status !== 'live') {
+        console.log(`Property ${intId} found but status is ${property.status}, not live`);
         return res.status(404).json({ message: "Property not found" });
       }
+      
+      // If not found in legacy table, try property profiles
+      if (!property) {
+        console.log(`Trying property profile lookup for ID: ${intId}`);
+        try {
+          const profile = await storage.getPropertyProfileByUuid(id);
+          console.log(`Property profile lookup result:`, profile ? `found (status: ${profile.status})` : 'not found');
+          
+          if (profile && profile.status === 'live') {
+            // Convert property profile to property format for compatibility
+            property = {
+              id: profile.id,
+              title: profile.name || `Property at ${profile.address}`,
+              address: profile.address || '',
+              city: profile.city || '',
+              state: profile.state || '',
+              zipCode: profile.zipCode || '',
+              price: profile.listingPrice || profile.purchasePrice || 0,
+              description: profile.description || '',
+              bedrooms: profile.bedrooms || 0,
+              bathrooms: profile.bathrooms || 0,
+              squareFeet: profile.sqft || 0,
+              lotSize: profile.lotSize || '',
+              yearBuilt: profile.yearBuilt || null,
+              propertyType: profile.propertyType || '',
+              status: profile.status,
+              condition: profile.condition || '',
+              features: profile.tags || [],
+              imageUrl: profile.primaryImage || '',
+              sellerId: profile.seller_id,
+              createdAt: profile.createdAt ? profile.createdAt.toISOString() : new Date().toISOString()
+            };
+            console.log(`Successfully converted property profile to property format`);
+          }
+        } catch (error) {
+          console.error('Error fetching property profile:', error);
+        }
+      }
     } else {
-      // Handle UUID-based property profile lookup
+      console.log(`ID ${id} is not a valid integer, treating as UUID`);
+      // Handle UUID-based property profile lookup (future expansion)
       try {
         const profile = await storage.getPropertyProfileByUuid(id);
         if (profile && profile.status === 'live') {
@@ -73,9 +117,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     if (!property) {
+      console.log(`No property found for ID: ${id}`);
       return res.status(404).json({ message: "Property not found" });
     }
     
+    console.log(`Returning property:`, property.title);
     res.json(property);
   });
 

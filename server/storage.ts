@@ -188,14 +188,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getPropertyProfileByUuid(uuid: string): Promise<PropertyProfile | undefined> {
-    // First try to find by UUID in case the property profile table uses UUIDs
-    try {
-      const [profile] = await db.select().from(propertyProfile).where(eq(propertyProfile.id, parseInt(uuid)));
+    // Try to parse as integer ID first (property profile uses integer IDs)
+    const intId = parseInt(uuid);
+    if (!isNaN(intId)) {
+      const [profile] = await db.select().from(propertyProfile).where(eq(propertyProfile.id, intId));
       return profile || undefined;
-    } catch {
-      // If UUID parsing fails, try direct string comparison
+    }
+    
+    // If it's not a valid integer, could be a future UUID-based system
+    try {
       const [profile] = await db.select().from(propertyProfile).where(sql`${propertyProfile.id}::text = ${uuid}`);
       return profile || undefined;
+    } catch (error) {
+      console.error('Error querying property profile by UUID:', error);
+      return undefined;
     }
   }
 
