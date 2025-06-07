@@ -19,15 +19,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Properties endpoints
   app.get("/api/properties", async (_req, res) => {
+    // Only return live properties for public listing
     const properties = await storage.getProperties();
-    res.json(properties);
+    const liveProperties = properties.filter(p => p.status === 'live');
+    res.json(liveProperties);
   });
 
   app.get("/api/properties/:id", async (req, res) => {
-    const property = await storage.getProperty(parseInt(req.params.id));
+    const id = req.params.id;
+    let property;
+
+    // Try to parse as integer first (legacy properties)
+    const intId = parseInt(id);
+    if (!isNaN(intId)) {
+      property = await storage.getProperty(intId);
+      
+      // Check if property is live for public access
+      if (property && property.status !== 'live') {
+        return res.status(404).json({ message: "Property not found" });
+      }
+    } else {
+      // Handle UUID-based property profile lookup
+      try {
+        const profile = await storage.getPropertyProfileByUuid(id);
+        if (profile && profile.status === 'live') {
+          // Convert property profile to property format for compatibility
+          property = {
+            id: profile.id,
+            title: profile.name || `Property at ${profile.address}`,
+            address: profile.address || '',
+            city: profile.city || '',
+            state: profile.state || '',
+            zipCode: profile.zipCode || '',
+            price: profile.listingPrice || profile.purchasePrice || 0,
+            description: profile.description || '',
+            bedrooms: profile.bedrooms || 0,
+            bathrooms: profile.bathrooms || 0,
+            squareFeet: profile.sqft || 0,
+            lotSize: profile.lotSize || '',
+            yearBuilt: profile.yearBuilt || null,
+            propertyType: profile.propertyType || '',
+            status: profile.status,
+            condition: profile.condition || '',
+            features: profile.tags || [],
+            imageUrl: profile.primaryImage || '',
+            sellerId: profile.seller_id,
+            createdAt: profile.createdAt ? profile.createdAt.toISOString() : new Date().toISOString()
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching property profile:', error);
+      }
+    }
+
     if (!property) {
       return res.status(404).json({ message: "Property not found" });
     }
+    
     res.json(property);
   });
 
