@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Property } from "@shared/schema";
-import PropertyCard from "@/components/properties/property-card";
+import { PropertyCard } from "@/components/ui/property-card";
 import PropertyMap from "@/components/properties/property-map";
 import PropertyRecommendations from "@/components/properties/property-recommendations";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -133,7 +133,7 @@ export default function PropertiesPage() {
       const { data, error } = await supabase
         .from("property_profile")
         .select("*")
-        .in("status", ["live", "draft"]);
+        .eq("status", "live");
 
       if (error) {
         console.error("Supabase error:", error);
@@ -147,7 +147,14 @@ export default function PropertiesPage() {
         price: property.listing_price || 0,
         imageUrl: property.primary_image || defaultPropertyImage,
         propertyType: property.property_type || null,
-        sellerId: property.seller_id
+        sellerId: property.seller_id,
+        status: property.status,
+        viewCount: property.view_count || 0,
+        saveCount: property.save_count || 0,
+        bedrooms: property.bedrooms || 0,
+        bathrooms: property.bathrooms || 0,
+        squareFeet: property.square_feet || 0,
+        tags: property.tags || []
       }));
     },
   });
