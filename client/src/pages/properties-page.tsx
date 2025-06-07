@@ -151,7 +151,7 @@ export default function PropertiesPage() {
       !searchTerm ||
       property.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.zipcode?.toLowerCase().includes(searchTerm.toLowerCase());
+      property.zip_code?.toLowerCase().includes(searchTerm.toLowerCase());
 
     // Price range filter
     let priceMatch = true;
@@ -194,9 +194,9 @@ export default function PropertiesPage() {
         new Date(a.created_at || "").getTime()
       );
     } else if (sortBy === "price-low") {
-      return (a.price || 0) - (b.price || 0);
+      return (a.listing_price || 0) - (b.listing_price || 0);
     } else if (sortBy === "price-high") {
-      return (b.price || 0) - (a.price || 0);
+      return (b.listing_price || 0) - (a.listing_price || 0);
     }
     return 0;
   });
@@ -579,7 +579,14 @@ export default function PropertiesPage() {
                   onMouseEnter={() => handlePropertyHover(property.id)}
                   onMouseLeave={() => setHoveredPropertyId(null)}
                 >
-                  <PropertyCard property={property} />
+                  <Link href={`/p/${property.id}`}>
+                    <PropertyCard property={{ 
+                      ...property, 
+                      imageUrl: property.primary_image || defaultPropertyImage,
+                      title: property.name || property.address || "Untitled Property",
+                      price: property.listing_price || 0
+                    }} />
+                  </Link>
                 </div>
               ))}
             </div>
