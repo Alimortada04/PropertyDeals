@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useParams } from "wouter";
 import { z } from "zod";
@@ -207,16 +207,23 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     })
   });
   
-  // Create form
+  // Create form with stable default values
   const form = useForm<z.infer<typeof inquirySchema>>({
     resolver: zodResolver(inquirySchema),
     defaultValues: {
       name: "",
       email: "",
       phone: "",
-      message: `Hi, I'm interested in ${property?.address}. Please contact me for more information.`
+      message: ""
     },
   });
+
+  // Update message when property loads
+  React.useEffect(() => {
+    if (property?.address) {
+      form.setValue("message", `Hi, I'm interested in ${property.address}. Please contact me for more information.`);
+    }
+  }, [property?.address, form]);
   
   // Create inquiry mutation
   const inquiryMutation = useMutation({
