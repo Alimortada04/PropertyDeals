@@ -131,18 +131,14 @@ export function PropertyCard({ property }: PropertyCardProps) {
         
         {/* View count and favorites */}
         <div className="flex items-center gap-4 text-sm text-gray-500">
-          {property.viewCount > 0 && (
-            <div className="flex items-center gap-1">
-              <Eye className="h-4 w-4" />
-              <span>{formatNumber(property.viewCount)} views</span>
-            </div>
-          )}
-          {property.saveCount > 0 && (
-            <div className="flex items-center gap-1">
-              <Heart className="h-4 w-4" />
-              <span>{formatNumber(property.saveCount)} saved</span>
-            </div>
-          )}
+          <div className="flex items-center gap-1">
+            <Eye className="h-4 w-4" />
+            <span>{formatNumber(property.viewCount || 0)} views</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Heart className="h-4 w-4" />
+            <span>{formatNumber(property.saveCount || 0)} saved</span>
+          </div>
         </div>
       </CardContent>
     </Card>
