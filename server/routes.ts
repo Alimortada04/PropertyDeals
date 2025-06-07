@@ -65,27 +65,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const id = req.params.id;
     let property;
 
-    console.log(`Looking up property with ID: ${id}`);
-
     // Try to parse as integer first (could be legacy properties or property profile IDs)
     const intId = parseInt(id);
     if (!isNaN(intId)) {
       // First try legacy properties table
       property = await storage.getProperty(intId);
-      console.log(`Legacy property lookup result:`, property ? 'found' : 'not found');
       
       // Check if property is live for public access
       if (property && property.status !== 'live') {
-        console.log(`Property ${intId} found but status is ${property.status}, not live`);
         return res.status(404).json({ message: "Property not found" });
       }
       
       // If not found in legacy table, try property profiles
       if (!property) {
-        console.log(`Trying property profile lookup for ID: ${intId}`);
         try {
           const profile = await storage.getPropertyProfileByUuid(id);
-          console.log(`Property profile lookup result:`, profile ? `found (status: ${profile.status})` : 'not found');
           
           if (profile && profile.status === 'live') {
             // Convert property profile to property format for compatibility
@@ -111,14 +105,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
               sellerId: profile.seller_id,
               createdAt: profile.createdAt ? profile.createdAt.toISOString() : new Date().toISOString()
             };
-            console.log(`Successfully converted property profile to property format`);
           }
         } catch (error) {
           console.error('Error fetching property profile:', error);
         }
       }
     } else {
-      console.log(`ID ${id} is not a valid integer, treating as UUID`);
       // Handle UUID-based property profile lookup (future expansion)
       try {
         const profile = await storage.getPropertyProfileByUuid(id);
@@ -153,11 +145,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     if (!property) {
-      console.log(`No property found for ID: ${id}`);
       return res.status(404).json({ message: "Property not found" });
     }
     
-    console.log(`Returning property:`, property.title);
     res.json(property);
   });
 
