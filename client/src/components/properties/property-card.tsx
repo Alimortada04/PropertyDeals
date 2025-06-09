@@ -81,7 +81,20 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   
   // Use actual Supabase data
   const propertyType = property_type || 'Single Family';
-  const propertyTags = Array.isArray(tags) ? tags : (tags ? [tags] : []);
+  
+  // Parse tags properly - handle both JSON array and regular array
+  let propertyTags = [];
+  if (tags) {
+    if (Array.isArray(tags)) {
+      propertyTags = tags;
+    } else if (typeof tags === 'string') {
+      try {
+        propertyTags = JSON.parse(tags);
+      } catch (e) {
+        propertyTags = [tags];
+      }
+    }
+  }
   const displayTags = propertyTags.slice(0, 3);
 
   // Use primary image or fallback
@@ -194,18 +207,24 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         
         {/* Property stats with icons - left-aligned */}
         <div className="flex justify-start text-sm text-gray-600 mb-3 gap-3 flex-wrap">
-          <div className="flex items-center gap-1.5">
-            <Bed size={16} />
-            <span>{bedrooms}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Bath size={16} />
-            <span>{bathrooms}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Move size={16} />
-            <span>{sqft?.toLocaleString()}</span>
-          </div>
+          {bedrooms && (
+            <div className="flex items-center gap-1.5">
+              <Bed size={16} />
+              <span>{bedrooms}</span>
+            </div>
+          )}
+          {bathrooms && (
+            <div className="flex items-center gap-1.5">
+              <Bath size={16} />
+              <span>{bathrooms}</span>
+            </div>
+          )}
+          {sqft && (
+            <div className="flex items-center gap-1.5">
+              <Move size={16} />
+              <span>{sqft.toLocaleString()}</span>
+            </div>
+          )}
           {year_built && (
             <div className="flex items-center gap-1.5">
               <Calendar size={16} />
