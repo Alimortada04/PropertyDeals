@@ -4,6 +4,7 @@ import { useParams } from "wouter";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { supabase } from "@/lib/supabase";
 import { 
   Share2, Heart, MapPin, MapPinned, Home, ChevronRight, ChevronLeft, ChevronDown, X, 
   ChevronsRight, Mail, MessageSquare, Phone, Calculator, HelpCircle, Info, 
@@ -179,15 +180,31 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     }
   };
   
-  // Get property data
+  // Get property data from Supabase
   const { data: property, isLoading, error } = useQuery({
-    queryKey: [`/api/properties/${propertyId}`],
+    queryKey: ["property", id],
     queryFn: async () => {
-      const response = await fetch(`/api/properties/${propertyId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch property');
+      const { data, error } = await supabase
+        .from("property_profile")
+        .select(`
+          *,
+          seller_profile:seller_id(
+            full_name,
+            profile_image_url,
+            bio,
+            phone,
+            email
+          )
+        `)
+        .eq("id", id)
+        .single();
+        
+      if (error) {
+        console.error("Error fetching property:", error);
+        throw new Error(error.message);
       }
-      return response.json();
+      
+      return data;
     }
   });
   

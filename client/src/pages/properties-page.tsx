@@ -91,31 +91,50 @@ export default function PropertiesPage() {
   }, [lastScrollY]);
 
   const { data: properties, isLoading, error } = useQuery<Property[]>({
-    queryKey: ["/api/properties"],
+    queryKey: ["properties", "live"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("property_profile")
+        .select(`
+          *,
+          seller_profile:seller_id(
+            full_name,
+            profile_image_url
+          )
+        `)
+        .eq("status", "live");
+        
+      if (error) {
+        console.error("Error fetching properties:", error);
+        throw new Error(error.message);
+      }
+      
+      return data || [];
+    }
   });
 
   // Default property image for fallback
   const defaultPropertyImage = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
 
-  // Fallback data if API fails
-  const displayProperties = properties || allProperties;
+  // Use only Supabase data
+  const displayProperties = properties || [];
 
   // Filter and sort properties
-  const filteredProperties = displayProperties.filter(property => {
+  const filteredProperties = displayProperties.filter((property: any) => {
     // Search filter
     const searchMatch = !searchTerm || 
       property.address?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      property.zipCode?.toLowerCase().includes(searchTerm.toLowerCase());
+      property.zip_code?.toLowerCase().includes(searchTerm.toLowerCase());
     
     // Price range filter
     let priceMatch = true;
     if (filters.priceRange) {
       if (filters.priceRange === "800000+") {
-        priceMatch = (property.price ?? 0) >= 800000;
+        priceMatch = (property.listing_price ?? 0) >= 800000;
       } else {
         const [min, max] = filters.priceRange.split('-').map(Number);
-        priceMatch = (property.price ?? 0) >= min && (property.price ?? 0) <= (max || Infinity);
+        priceMatch = (property.listing_price ?? 0) >= min && (property.listing_price ?? 0) <= (max || Infinity);
       }
     }
     
@@ -133,20 +152,20 @@ export default function PropertiesPage() {
       bathsMatch = (property.bathrooms ?? 0) >= minBaths;
     }
     
-    // Status filter
+    // Status filter - already filtered to "live" in the query
     const statusMatch = !filters.status || property.status === filters.status;
     
     return searchMatch && priceMatch && bedsMatch && bathsMatch && statusMatch;
   });
   
   // Sort properties
-  const sortedProperties = [...filteredProperties].sort((a, b) => {
+  const sortedProperties = [...filteredProperties].sort((a: any, b: any) => {
     if (sortBy === "newest") {
-      return new Date(b.createdAt || "").getTime() - new Date(a.createdAt || "").getTime();
+      return new Date(b.created_at || "").getTime() - new Date(a.created_at || "").getTime();
     } else if (sortBy === "price-low") {
-      return (a.price || 0) - (b.price || 0);
+      return (a.listing_price || 0) - (b.listing_price || 0);
     } else if (sortBy === "price-high") {
-      return (b.price || 0) - (a.price || 0);
+      return (b.listing_price || 0) - (a.listing_price || 0);
     }
     return 0;
   });

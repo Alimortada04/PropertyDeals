@@ -63,29 +63,30 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     address,
     city,
     state,
-    price,
+    listing_price,
     bedrooms,
     bathrooms,
-    squareFeet,
+    sqft,
     status,
-    imageUrl,
-    // Custom properties (would be in real schema)
-    propertyType: rawPropertyType,
-    // For demo purposes
-  } = property;
+    primary_image,
+    property_type,
+    view_count,
+    save_count,
+    seller_profile,
+  } = property as any;
   
-  // Default values for the demo
-  const propertyType = rawPropertyType || 'Single Family';
-  const investmentType = 'Flip'; // Demo value
+  // Use actual Supabase data
+  const propertyType = property_type || 'Single Family';
+  const investmentType = 'Flip'; // Demo value - would come from property tags
 
-  // For demo purposes (would come from API in real implementation)
+  // Use primary image or fallback
   const propertyImages = [
-    imageUrl || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    primary_image || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     ...demoSecondaryImages
   ];
   
-  const viewCount = Math.floor(Math.random() * 200) + 20; // Demo view count
-  const favoriteCount = Math.floor(Math.random() * 50); // Demo favorite count
+  const viewCount = view_count || 0;
+  const favoriteCount = save_count || 0;
   
   const handleImageNavigation = (e: React.MouseEvent, direction: 'prev' | 'next') => {
     e.stopPropagation();
@@ -187,7 +188,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
       <CardContent className="p-4">
         <h3 className="text-xl font-heading font-bold text-[#135341] mb-1">
-          ${price?.toLocaleString()}
+          ${listing_price?.toLocaleString()}
         </h3>
         <p className="text-gray-700 mb-2 text-sm">{address}, {city}, {state}</p>
         
@@ -203,7 +204,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           </div>
           <div className="flex items-center gap-1.5">
             <Move size={16} />
-            <span>{squareFeet?.toLocaleString()}</span>
+            <span>{sqft?.toLocaleString()}</span>
           </div>
           <div className="ml-auto">
             <Badge variant="outline" className="font-normal border-[#135341] text-[#135341]">
