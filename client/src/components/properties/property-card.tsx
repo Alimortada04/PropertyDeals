@@ -73,11 +73,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     view_count,
     save_count,
     seller_profile,
+    tags,
   } = property as any;
   
   // Use actual Supabase data
   const propertyType = property_type || 'Single Family';
-  const investmentType = 'Flip'; // Demo value - would come from property tags
+  const propertyTags = tags || [];
+  const displayTags = Array.isArray(propertyTags) ? propertyTags.slice(0, 3) : [];
 
   // Use primary image or fallback
   const propertyImages = [
@@ -206,10 +208,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <Move size={16} />
             <span>{sqft?.toLocaleString()}</span>
           </div>
-          <div className="ml-auto">
-            <Badge variant="outline" className="font-normal border-[#135341] text-[#135341]">
-              {investmentType}
-            </Badge>
+          <div className="ml-auto flex gap-1 flex-wrap">
+            {displayTags.map((tag: string, index: number) => (
+              <Badge key={index} variant="outline" className="font-normal border-[#135341] text-[#135341] text-xs">
+                {tag}
+              </Badge>
+            ))}
           </div>
         </div>
         
