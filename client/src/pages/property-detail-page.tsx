@@ -670,6 +670,46 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
           </div>
 
+          {/* Quick Property Info - Enhancement 3 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+            {property.sqft && (
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#09261E]">{property.sqft.toLocaleString()}</div>
+                <div className="text-sm text-gray-600">Sq Ft</div>
+              </div>
+            )}
+            {property.lot_size && (
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#09261E]">{property.lot_size.toLocaleString()}</div>
+                <div className="text-sm text-gray-600">Lot Size</div>
+              </div>
+            )}
+            {property.year_built && (
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#09261E]">{property.year_built}</div>
+                <div className="text-sm text-gray-600">Year Built</div>
+              </div>
+            )}
+            {property.property_type && (
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#09261E]">{property.property_type}</div>
+                <div className="text-sm text-gray-600">Type</div>
+              </div>
+            )}
+            {property.parking && (
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#09261E]">{property.parking}</div>
+                <div className="text-sm text-gray-600">Parking</div>
+              </div>
+            )}
+            {property.property_condition && (
+              <div className="text-center">
+                <div className="text-2xl font-bold text-[#09261E]">{property.property_condition}</div>
+                <div className="text-sm text-gray-600">Condition</div>
+              </div>
+            )}
+          </div>
+
           {/* Photo Gallery Grid */}
           <div className="grid grid-cols-3 grid-rows-2 gap-2 h-[400px] md:h-[500px] mb-4">
             {/* Main Large Photo - 2/3 width and full height */}
@@ -972,33 +1012,19 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       </div>
                     </div>
 
-                    <div className="border-t border-gray-200 pt-4 mt-6">
-                      <h3 className="font-medium text-[#09261E] mb-3 text-lg">
-                        Property Description
-                      </h3>
-                      <p className="text-gray-700 mb-3">
-                        This charming {property.propertyType || "single-family"}{" "}
-                        home is nestled in a highly sought-after neighborhood in{" "}
-                        {property.city}, {property.state}. With{" "}
-                        {property.bedrooms} spacious bedrooms and{" "}
-                        {property.bathrooms} modern bathrooms, this{" "}
-                        {property.squareFeet?.toLocaleString() || ""} square
-                        foot residence offers comfort and style.
-                      </p>
-                      <p className="text-gray-700 mb-3">
-                        The property features a well-maintained yard, perfect
-                        for outdoor entertaining. Recent upgrades include new
-                        energy-efficient appliances and updated fixtures
-                        throughout. The location provides easy access to local
-                        schools, shopping centers, and major highways.
-                      </p>
-                      <p className="text-gray-700">
-                        This property presents an excellent opportunity for both
-                        homeowners and investors looking for a solid return on
-                        investment in a stable market. Don't miss the chance to
-                        add this gem to your portfolio!
-                      </p>
-                    </div>
+                    {/* Property Description - Enhancement 4 */}
+                    {property.description && (
+                      <div className="border-t border-gray-200 pt-4 mt-6">
+                        <h3 className="font-medium text-[#09261E] mb-3 text-lg">
+                          Property Description
+                        </h3>
+                        <div className="prose prose-gray max-w-none">
+                          <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                            {property.description}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -2919,29 +2945,48 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             <div className="p-5">
+              {/* Seller Information - Enhancement 2 */}
               <div className="border-b border-gray-200 pb-4 mb-4">
-                <Link
-                  to="/sellers/michael-johnson"
-                  className="flex items-center group"
-                >
-                  <Avatar className="h-14 w-14 border border-gray-200">
-                    <AvatarImage
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"
-                      alt="Seller"
-                    />
-                    <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
-                      MJ
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3">
-                    <div className="font-medium text-lg text-[#09261E] group-hover:underline">
-                      Michael Johnson
+                {sellerProfile ? (
+                  <Link
+                    to={`/sellers/${sellerProfile.id}`}
+                    className="flex items-center group"
+                  >
+                    <Avatar className="h-14 w-14 border border-gray-200">
+                      <AvatarImage
+                        src={sellerProfile.profile_photo || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"}
+                        alt={sellerProfile.full_name || "Seller"}
+                      />
+                      <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
+                        {sellerProfile.full_name ? sellerProfile.full_name.split(' ').map(n => n[0]).join('') : 'S'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3">
+                      <div className="font-medium text-lg text-[#09261E] group-hover:underline">
+                        {sellerProfile.full_name || 'Seller'}
+                      </div>
+                      <div className="text-gray-500 flex items-center text-sm">
+                        Seller <span className="mx-2">•</span> {sellerProfile.email}
+                      </div>
                     </div>
-                    <div className="text-gray-500 flex items-center text-sm">
-                      Seller <span className="mx-2">•</span> Responds in 24hrs
+                  </Link>
+                ) : (
+                  <div className="flex items-center">
+                    <Avatar className="h-14 w-14 border border-gray-200">
+                      <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
+                        S
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3">
+                      <div className="font-medium text-lg text-[#09261E]">
+                        Property Seller
+                      </div>
+                      <div className="text-gray-500 flex items-center text-sm">
+                        Contact for details
+                      </div>
                     </div>
                   </div>
-                </Link>
+                )}
               </div>
 
               <Form {...form}>
