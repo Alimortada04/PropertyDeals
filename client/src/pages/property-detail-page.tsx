@@ -505,19 +505,19 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             <span className="h-2.5 w-2.5 bg-blue-500 rounded-full mr-1.5"></span>
                             <span className="text-gray-600">Location:</span>
                           </div>
-                          <div className="text-right font-medium">{Math.min(2, (propertyId % 5) % 2 + 1)}/2</div>
+                          <div className="text-right font-medium">{Math.min(2, (numericId % 5) % 2 + 1)}/2</div>
                           
                           <div className="flex items-center">
                             <span className="h-2.5 w-2.5 bg-purple-500 rounded-full mr-1.5"></span>
                             <span className="text-gray-600">Price vs Comps:</span>
                           </div>
-                          <div className="text-right font-medium">{Math.min(3, (propertyId % 7) % 3 + 1)}/3</div>
+                          <div className="text-right font-medium">{Math.min(3, (numericId % 7) % 3 + 1)}/3</div>
                           
                           <div className="flex items-center">
                             <span className="h-2.5 w-2.5 bg-amber-500 rounded-full mr-1.5"></span>
                             <span className="text-gray-600">Rental Income:</span>
                           </div>
-                          <div className="text-right font-medium">{Math.min(2, (propertyId % 4) % 2 + 1)}/2</div>
+                          <div className="text-right font-medium">{Math.min(2, (numericId % 4) % 2 + 1)}/2</div>
                         </div>
                       </div>
                       <p className="text-xs text-gray-500 mt-2">Our proprietary scoring system evaluates properties based on value, market conditions, and investment potential. A higher score indicates a better investment opportunity.</p>
