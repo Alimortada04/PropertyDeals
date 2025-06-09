@@ -392,6 +392,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Seller data endpoints
+  app.get("/api/seller-profile/:sellerId", async (req, res) => {
+    const sellerId = req.params.sellerId;
+    try {
+      const sellerProfile = await storage.getSellerProfile(sellerId);
+      if (!sellerProfile) {
+        return res.status(404).json({ message: "Seller profile not found" });
+      }
+      res.json(sellerProfile);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching seller profile", error });
+    }
+  });
+
+  app.get("/api/seller-properties/:sellerId", async (req, res) => {
+    const sellerId = req.params.sellerId;
+    const excludeId = req.query.exclude;
+    try {
+      const properties = await storage.getSellerProperties(sellerId, excludeId);
+      res.json(properties);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching seller properties", error });
+    }
+  });
+
   // Property inquiries
   app.post("/api/properties/:id/inquiries", async (req, res) => {
     const propertyId = parseInt(req.params.id);

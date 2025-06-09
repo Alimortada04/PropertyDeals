@@ -90,6 +90,10 @@ export interface IStorage {
   }): Promise<{ reports: UserReport[]; total: number }>;
   updateReportStatus(id: number, status: string, adminId: number, notes?: string): Promise<UserReport | undefined>;
   
+  // Seller data operations
+  getSellerProfile(sellerId: string): Promise<any | undefined>;
+  getSellerProperties(sellerId: string, excludeId?: string): Promise<PropertyProfile[]>;
+  
   // Session store
   sessionStore: any; // Temporarily using any type to resolve typings
 }
@@ -1244,6 +1248,41 @@ export class MemStorage implements IStorage {
     
     this.userReports.set(id, updatedReport);
     return updatedReport;
+  }
+
+  // Seller data operations
+  async getSellerProfile(sellerId: string) {
+    try {
+      const [result] = await db.select().from(users).where(eq(users.id, sellerId));
+      return result || null;
+    } catch (error) {
+      console.error('Error fetching seller profile:', error);
+      return null;
+    }
+  }
+
+  async getSellerProperties(sellerId: string, excludeId?: string) {
+    try {
+      let query = db.select().from(propertyProfile)
+        .where(and(
+          eq(propertyProfile.seller_id, sellerId),
+          eq(propertyProfile.status, 'live')
+        ));
+
+      if (excludeId) {
+        query = query.where(and(
+          eq(propertyProfile.seller_id, sellerId),
+          eq(propertyProfile.status, 'live'),
+          sql`${propertyProfile.id} != ${excludeId}`
+        ));
+      }
+
+      const results = await query;
+      return results;
+    } catch (error) {
+      console.error('Error fetching seller properties:', error);
+      return [];
+    }
   }
 }
 
