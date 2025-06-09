@@ -3218,6 +3218,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Mobile Floating CTA */}
+      <MobileFloatingCTA 
+        property={property}
+        onContact={() => setContactModalOpen(true)}
+        onSaveProperty={() => handleSaveProperty()}
+        onShare={() => setShareModalOpen(true)}
+        isSaved={savedProperties.includes(property.id)}
+      />
     </TooltipProvider>
   );
 }
