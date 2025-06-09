@@ -137,7 +137,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
   return (
     <Card 
-      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 property-card cursor-pointer"
+      className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 property-card cursor-pointer h-full flex flex-col"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
@@ -199,7 +199,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </Badge>
       </div>
 
-      <CardContent className="p-4">
+      <CardContent className="p-4 flex-grow flex flex-col">
         <h3 className="text-xl font-heading font-bold text-[#135341] mb-1">
           ${listing_price?.toLocaleString()}
         </h3>
