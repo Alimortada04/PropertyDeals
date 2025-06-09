@@ -510,7 +510,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </h1>
               <div className="flex items-center text-lg text-gray-700 mb-1">
                 <span>
-                  {property.city}, {property.state} {property.zipCode}
+                  {property.city}, {property.state?.toUpperCase()} {property.zipCode}
                 </span>
               </div>
 
@@ -660,13 +660,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </Tooltip>
                 </TooltipProvider>
               </div>
-              <div className="text-gray-600">
-                $
-                {property.squareFeet
-                  ? Math.round(property.listing_price / property.squareFeet)
-                  : "0"}
-                /sqft
-              </div>
+              
             </div>
           </div>
 
