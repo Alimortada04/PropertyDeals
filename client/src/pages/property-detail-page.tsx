@@ -483,40 +483,40 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       <div>
         {/* Property Hero Section with Photo Gallery */}
         <section className="relative bg-white pt-6">
-        <div className="container mx-auto px-4 pt-2 pb-4">
-          {/* Breadcrumb Navigation */}
-          <nav className="flex text-sm text-gray-500 mb-4 items-center">
-            <Link to="/" className="hover:text-[#09261E]">
-              Home
-            </Link>
-            <ChevronRight className="h-4 w-4 mx-1" />
-            <Link to="/properties" className="hover:text-[#09261E]">
-              Properties
-            </Link>
-            <ChevronRight className="h-4 w-4 mx-1" />
-            <span className="text-[#09261E] font-medium truncate">
-              {property.address}
-            </span>
-          </nav>
-
-          {/* Property Title and Key Details */}
-          <div className="md:flex justify-between items-start mb-4">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-2">
+          <div className="container mx-auto px-4 pt-2 pb-4">
+            {/* Breadcrumb Navigation */}
+            <nav className="flex text-sm text-gray-500 mb-4 items-center">
+              <Link to="/" className="hover:text-[#09261E]">
+                Home
+              </Link>
+              <ChevronRight className="h-4 w-4 mx-1" />
+              <Link to="/properties" className="hover:text-[#09261E]">
+                Properties
+              </Link>
+              <ChevronRight className="h-4 w-4 mx-1" />
+              <span className="text-[#09261E] font-medium truncate">
                 {property.address}
-              </h1>
-              <div className="flex items-center text-lg text-gray-700 mb-1">
-                <span>
-                  {property.city}, {property.state?.toUpperCase()} {property.zipcode}
-                </span>
-              </div>
+              </span>
+            </nav>
 
-              {/* Action Buttons (Relocated from below) */}
-              <div className="flex flex-wrap gap-2 mt-3">
-                <button
-                  className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
-                  onClick={() => setContactModalOpen(true)}
-                >
+            {/* Property Title and Key Details */}
+            <div className="md:flex justify-between items-start mb-4">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-2">
+                  {property.address}
+                </h1>
+                <div className="flex items-center text-lg text-gray-700 mb-1">
+                  <span>
+                    {property.city}, {property.state?.toUpperCase()} {property.zipcode}
+                  </span>
+                </div>
+
+                {/* Action Buttons (Relocated from below) */}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <button
+                    className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
+                    onClick={() => setContactModalOpen(true)}
+                  >
                   <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
                   Contact Seller
                 </button>
