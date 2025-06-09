@@ -11,7 +11,7 @@ import {
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { db } from "./db";
-import { eq, like, desc, and, or, sql } from "drizzle-orm";
+import { eq, like, desc, and, or, sql, ne } from "drizzle-orm";
 // import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 
@@ -585,6 +585,50 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return updatedReport || undefined;
+  }
+
+  // Seller data operations
+  async getSellerProfile(sellerId: string): Promise<any | undefined> {
+    try {
+      const [sellerProfile] = await db
+        .select({
+          id: users.id,
+          full_name: users.full_name,
+          email: users.email,
+          created_at: users.created_at
+        })
+        .from(users)
+        .where(eq(users.id, sellerId))
+        .limit(1);
+
+      return sellerProfile;
+    } catch (error) {
+      console.error('Error fetching seller profile:', error);
+      return undefined;
+    }
+  }
+
+  async getSellerProperties(sellerId: string, excludeId?: string): Promise<PropertyProfile[]> {
+    try {
+      let conditions = [
+        eq(propertyProfile.seller_id, sellerId),
+        eq(propertyProfile.status, 'live')
+      ];
+
+      if (excludeId) {
+        conditions.push(ne(propertyProfile.id, parseInt(excludeId)));
+      }
+
+      const properties = await db
+        .select()
+        .from(propertyProfile)
+        .where(and(...conditions));
+
+      return properties;
+    } catch (error) {
+      console.error('Error fetching seller properties:', error);
+      return [];
+    }
   }
 }
 

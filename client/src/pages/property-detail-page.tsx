@@ -670,45 +670,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
           </div>
 
-          {/* Quick Property Info - Enhancement 3 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-            {property.sqft && (
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#09261E]">{property.sqft.toLocaleString()}</div>
-                <div className="text-sm text-gray-600">Sq Ft</div>
-              </div>
-            )}
-            {property.lot_size && (
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#09261E]">{property.lot_size.toLocaleString()}</div>
-                <div className="text-sm text-gray-600">Lot Size</div>
-              </div>
-            )}
-            {property.year_built && (
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#09261E]">{property.year_built}</div>
-                <div className="text-sm text-gray-600">Year Built</div>
-              </div>
-            )}
-            {property.property_type && (
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#09261E]">{property.property_type}</div>
-                <div className="text-sm text-gray-600">Type</div>
-              </div>
-            )}
-            {property.parking && (
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#09261E]">{property.parking}</div>
-                <div className="text-sm text-gray-600">Parking</div>
-              </div>
-            )}
-            {property.property_condition && (
-              <div className="text-center">
-                <div className="text-2xl font-bold text-[#09261E]">{property.property_condition}</div>
-                <div className="text-sm text-gray-600">Condition</div>
-              </div>
-            )}
-          </div>
 
           {/* Photo Gallery Grid */}
           <div className="grid grid-cols-3 grid-rows-2 gap-2 h-[400px] md:h-[500px] mb-4">
@@ -806,13 +767,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             <div className="bg-[#09261E]/5 p-3 rounded-lg text-center">
               <div className="text-gray-600 text-sm mb-1">Square Feet</div>
               <div className="font-bold text-xl text-[#09261E]">
-                {property.squareFeet?.toLocaleString() || "N/A"}
+                {property.sqft?.toLocaleString() || "N/A"}
               </div>
             </div>
             <div className="bg-[#09261E]/5 p-3 rounded-lg text-center">
               <div className="text-gray-600 text-sm mb-1">Lot Size</div>
               <div className="font-bold text-xl text-[#09261E]">
-                {property.lotSize || "N/A"}
+                {property.lot_size?.toLocaleString() || "N/A"}
               </div>
             </div>
           </div>
@@ -939,8 +900,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             Square Feet
                           </div>
                           <div className="font-semibold">
-                            {property.squareFeet?.toLocaleString() || "3,500"}{" "}
-                            sq ft
+                            {property.sqft?.toLocaleString() || "N/A"} sq ft
                           </div>
                         </div>
                       </div>
@@ -950,7 +910,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         <div>
                           <div className="text-gray-600 text-xs">Lot Size</div>
                           <div className="font-semibold">
-                            {property.lotSize || "0.25 acres"}
+                            {property.lot_size?.toLocaleString() || "N/A"}
                           </div>
                         </div>
                       </div>
@@ -961,7 +921,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           <div className="text-gray-600 text-xs">
                             Year Built
                           </div>
-                          <div className="font-semibold">1886</div>
+                          <div className="font-semibold">{property.year_built || "N/A"}</div>
                         </div>
                       </div>
 
@@ -972,7 +932,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             Property Type
                           </div>
                           <div className="font-semibold">
-                            {property.propertyType || "Single-family"}
+                            {property.property_type || "N/A"}
                           </div>
                         </div>
                       </div>
@@ -985,11 +945,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           </div>
                           <div className="font-semibold">
                             $
-                            {property.squareFeet
-                              ? Math.round(
-                                  property.listing_price / property.squareFeet,
-                                )
-                              : "98"}
+                            {property.sqft
+                              ? Math.round(property.listing_price / property.sqft)
+                              : "N/A"}
                             /sq ft
                           </div>
                         </div>
@@ -999,15 +957,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         <Car className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
                           <div className="text-gray-600 text-xs">Parking</div>
-                          <div className="font-semibold">2-car garage</div>
+                          <div className="font-semibold">{property.parking || "N/A"}</div>
                         </div>
                       </div>
 
                       <div className="flex items-start">
                         <Building className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                         <div>
-                          <div className="text-gray-600 text-xs">Basement</div>
-                          <div className="font-semibold">Full, finished</div>
+                          <div className="text-gray-600 text-xs">Condition</div>
+                          <div className="font-semibold">{property.property_condition || "N/A"}</div>
                         </div>
                       </div>
                     </div>
