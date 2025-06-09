@@ -649,6 +649,9 @@ export default function PropertiesPage() {
           </div>)
         )}
       </div>
+      
+      {/* Bottom spacing for all screen sizes */}
+      <div className="h-16 md:h-20 lg:h-24"></div>
     </div>
   );
 }

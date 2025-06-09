@@ -475,7 +475,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
             
             <div className="mt-4 md:mt-0 flex flex-col items-end">
-              <div className="text-3xl md:text-4xl font-bold text-[#09261E]">${property.listing_price?.toLocaleString()}</div>
+              <div className="text-3xl md:text-4xl font-bold text-[#09261E]">${property?.listing_price?.toLocaleString() || "0"}</div>
               {/* PD Rating - Color coded by rating value with tooltip */}
               <div className={`font-medium flex items-center ${
                 // Color coding based on rating value

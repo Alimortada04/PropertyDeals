@@ -81,8 +81,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   
   // Use actual Supabase data
   const propertyType = property_type || 'Single Family';
-  const propertyTags = tags || [];
-  const displayTags = Array.isArray(propertyTags) ? propertyTags.slice(0, 3) : [];
+  const propertyTags = Array.isArray(tags) ? tags : (tags ? [tags] : []);
+  const displayTags = propertyTags.slice(0, 3);
 
   // Use primary image or fallback
   const propertyImages = [
@@ -176,7 +176,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         {/* Property status badge - pulls from status field */}
-        <Badge className="absolute top-2 right-2 bg-gray-800 text-white shadow-sm hover:scale-105 transition-transform duration-200">
+        <Badge className="absolute top-2 right-2 bg-[#135341] text-white shadow-sm hover:scale-105 transition-transform duration-200">
           {status || "Available"}
         </Badge>
         
@@ -249,7 +249,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                   onClick={(e) => {
                     e.stopPropagation();
                     if (seller_id) {
-                      setLocation(`/seller/${seller_id}`);
+                      setLocation(`/rep/${seller_id}`);
                     }
                   }}
                 >
