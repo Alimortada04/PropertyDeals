@@ -480,8 +480,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     </>
   ) : (
     <TooltipProvider>
-      {/* Property Hero Section with Photo Gallery */}
-      <section className="relative bg-white pt-6">
+      <div>
+        {/* Property Hero Section with Photo Gallery */}
+        <section className="relative bg-white pt-6">
         <div className="container mx-auto px-4 pt-2 pb-4">
           {/* Breadcrumb Navigation */}
           <nav className="flex text-sm text-gray-500 mb-4 items-center">
@@ -574,6 +575,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   ${property.ppsf}/sqft
                 </div>
               )}
+            </div>
+          </div>
         
           {/* Photo Gallery Grid */}
           <div className="grid grid-cols-3 grid-rows-2 gap-2 h-[400px] md:h-[500px] mb-4">
@@ -3218,6 +3221,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      </div>
     </TooltipProvider>
   );
 }
