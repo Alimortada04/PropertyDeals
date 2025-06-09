@@ -615,7 +615,7 @@ export class DatabaseStorage implements IStorage {
         eq(propertyProfile.status, 'live')
       ];
 
-      if (excludeId) {
+      if (excludeId && excludeId !== 'NaN' && !isNaN(parseInt(excludeId))) {
         conditions.push(ne(propertyProfile.id, parseInt(excludeId)));
       }
 

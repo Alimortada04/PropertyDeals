@@ -989,81 +989,66 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
               {/* More Deals by Seller - Enhancement 5 */}
               {sellerProperties && sellerProperties.length > 0 && (
-                <Accordion
-                  id="more-deals"
-                  type="single"
-                  defaultValue="more-deals"
-                  collapsible
-                  className="w-full"
-                >
-                  <AccordionItem
-                    value="more-deals"
-                    className="border-b border-gray-200"
-                  >
-                    <AccordionTrigger className="w-full py-4 text-2xl font-heading font-bold text-[#09261E] hover:no-underline hover:text-[#803344] transition-colors justify-between">
-                      <div className="flex items-center">
-                        <Building className="mr-3 h-6 w-6 text-[#09261E]" />
-                        <span>More Deals by {sellerProfile?.full_name || 'This Seller'}</span>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="px-6 py-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {sellerProperties.slice(0, 6).map((relatedProperty) => (
-                          <Link
-                            key={relatedProperty.id}
-                            to={`/property/${relatedProperty.id}`}
-                            className="group"
-                          >
-                            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                              <div className="aspect-video bg-gray-200 relative">
-                                {relatedProperty.image_urls?.[0] ? (
-                                  <img
-                                    src={relatedProperty.image_urls[0]}
-                                    alt={relatedProperty.title || relatedProperty.address}
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center">
-                                    <Home className="h-8 w-8 text-gray-400" />
-                                  </div>
-                                )}
-                                <div className="absolute top-2 left-2">
-                                  <span className="bg-[#09261E] text-white text-xs px-2 py-1 rounded">
-                                    {relatedProperty.status}
-                                  </span>
-                                </div>
+                <div className="w-full mb-8">
+                  <h3 className="text-2xl font-heading font-bold text-[#09261E] mb-6 flex items-center">
+                    <Building className="mr-3 h-6 w-6 text-[#09261E]" />
+                    More Deals by {sellerProfile?.full_name || 'This Seller'}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {sellerProperties.slice(0, 6).map((relatedProperty: any) => (
+                      <Link
+                        key={relatedProperty.id}
+                        to={`/property/${relatedProperty.id}`}
+                        className="group"
+                      >
+                        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                          <div className="aspect-video bg-gray-200 relative">
+                            {relatedProperty.image_urls?.[0] ? (
+                              <img
+                                src={relatedProperty.image_urls[0]}
+                                alt={relatedProperty.title || relatedProperty.address}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Home className="h-8 w-8 text-gray-400" />
                               </div>
-                              <div className="p-4">
-                                <div className="font-bold text-lg text-[#09261E] mb-1">
-                                  ${relatedProperty.listing_price?.toLocaleString()}
-                                </div>
-                                <div className="text-sm text-gray-600 mb-2">
-                                  {relatedProperty.address}, {relatedProperty.city}
-                                </div>
-                                <div className="flex justify-between text-xs text-gray-500">
-                                  <span>{relatedProperty.bedrooms} bed</span>
-                                  <span>{relatedProperty.bathrooms} bath</span>
-                                  <span>{relatedProperty.sqft?.toLocaleString()} sqft</span>
-                                </div>
-                              </div>
+                            )}
+                            <div className="absolute top-2 left-2">
+                              <span className="bg-[#09261E] text-white text-xs px-2 py-1 rounded">
+                                {relatedProperty.status}
+                              </span>
                             </div>
-                          </Link>
-                        ))}
-                      </div>
-                      {sellerProperties.length > 6 && (
-                        <div className="mt-4 text-center">
-                          <Link
-                            to={`/sellers/${property.seller_id}`}
-                            className="inline-flex items-center px-4 py-2 bg-[#09261E] text-white rounded-md hover:bg-[#135341] transition-colors"
-                          >
-                            View All {sellerProperties.length} Properties
-                            <ChevronRight className="h-4 w-4 ml-1" />
-                          </Link>
+                          </div>
+                          <div className="p-4">
+                            <div className="font-bold text-lg text-[#09261E] mb-1">
+                              ${relatedProperty.listing_price?.toLocaleString()}
+                            </div>
+                            <div className="text-sm text-gray-600 mb-2">
+                              {relatedProperty.address}, {relatedProperty.city}
+                            </div>
+                            <div className="flex justify-between text-xs text-gray-500">
+                              <span>{relatedProperty.bedrooms} bed</span>
+                              <span>{relatedProperty.bathrooms} bath</span>
+                              <span>{relatedProperty.sqft?.toLocaleString()} sqft</span>
+                            </div>
+                          </div>
                         </div>
-                      )}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                      </Link>
+                    ))}
+                  </div>
+                  {sellerProperties.length > 6 && (
+                    <div className="mt-4 text-center">
+                      <Link
+                        to={`/sellers/${property.seller_id}`}
+                        className="inline-flex items-center px-4 py-2 bg-[#09261E] text-white rounded-md hover:bg-[#135341] transition-colors"
+                      >
+                        View All {sellerProperties.length} Properties
+                        <ChevronRight className="h-4 w-4 ml-1" />
+                      </Link>
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* The Numbers Section */}
@@ -2995,7 +2980,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         alt={sellerProfile.full_name || "Seller"}
                       />
                       <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
-                        {sellerProfile.full_name ? sellerProfile.full_name.split(' ').map(n => n[0]).join('') : 'S'}
+                        {sellerProfile.full_name ? sellerProfile.full_name.split(' ').map((n: string) => n[0]).join('') : 'S'}
                       </AvatarFallback>
                     </Avatar>
                     <div className="ml-3">
