@@ -345,13 +345,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     );
   }
 
-  // Sample property photos for demo
   const propertyImages = [
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
-    "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    property.primary_image,
+    ...(property.gallery_images || []),
   ];
 
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
@@ -510,7 +506,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               </h1>
               <div className="flex items-center text-lg text-gray-700 mb-1">
                 <span>
-                  {property.city}, {property.state?.toUpperCase()} {property.zipCode}
+                  {property.city}, {property.state?.toUpperCase()} {property.zipcode}
                 </span>
               </div>
 
@@ -578,93 +574,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   ${property.ppsf}/sqft
                 </div>
               )}
-              {/* PD Rating - Color coded by rating value with tooltip */}
-              <div
-                className={`font-medium flex items-center ${
-                  // Color coding based on rating value
-                  numericId % 10 <= 3
-                    ? "text-[#803344]"
-                    : numericId % 10 <= 6
-                      ? "text-gray-600"
-                      : "text-[#135341]"
-                }`}
-              >
-                PD Rating: {numericId % 10}/10
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        className="inline-flex items-center justify-center h-4 w-4 ml-1 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300"
-                      >
-                        i
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-xs p-4 space-y-2 bg-white shadow-lg border z-50">
-                      <h4 className="font-bold text-[#09261E]">
-                        PD Rating Explanation
-                      </h4>
-                      <p>
-                        This score is based on repair costs, location, pricing
-                        vs comps, and projected rental income.
-                      </p>
-                      <div className="mt-3 space-y-2">
-                        <h5 className="text-sm font-medium text-[#09261E]">
-                          Rating Breakdown:
-                        </h5>
-                        <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs">
-                          <div className="flex items-center">
-                            <span className="h-2.5 w-2.5 bg-green-500 rounded-full mr-1.5"></span>
-                            <span className="text-gray-600">Repair Costs:</span>
-                          </div>
-                          <div className="text-right font-medium">
-                            {Math.min(3, (numericId % 3) + 1)}/3
-                          </div>
-
-                          <div className="flex items-center">
-                            <span className="h-2.5 w-2.5 bg-blue-500 rounded-full mr-1.5"></span>
-                            <span className="text-gray-600">Location:</span>
-                          </div>
-                          <div className="text-right font-medium">
-                            {Math.min(2, ((numericId % 5) % 2) + 1)}/2
-                          </div>
-
-                          <div className="flex items-center">
-                            <span className="h-2.5 w-2.5 bg-purple-500 rounded-full mr-1.5"></span>
-                            <span className="text-gray-600">
-                              Price vs Comps:
-                            </span>
-                          </div>
-                          <div className="text-right font-medium">
-                            {Math.min(3, ((numericId % 7) % 3) + 1)}/3
-                          </div>
-
-                          <div className="flex items-center">
-                            <span className="h-2.5 w-2.5 bg-amber-500 rounded-full mr-1.5"></span>
-                            <span className="text-gray-600">
-                              Rental Income:
-                            </span>
-                          </div>
-                          <div className="text-right font-medium">
-                            {Math.min(2, ((numericId % 4) % 2) + 1)}/2
-                          </div>
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-2">
-                        Our proprietary scoring system evaluates properties
-                        based on value, market conditions, and investment
-                        potential. A higher score indicates a better investment
-                        opportunity.
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              
-            </div>
-          </div>
-
-
+        
           {/* Photo Gallery Grid */}
           <div className="grid grid-cols-3 grid-rows-2 gap-2 h-[400px] md:h-[500px] mb-4">
             {/* Main Large Photo - 2/3 width and full height */}
