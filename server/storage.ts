@@ -37,7 +37,6 @@ export interface IStorage {
   // Property Profile operations (for draft/live listings)
   getPropertyProfiles(): Promise<PropertyProfile[]>;
   getPropertyProfile(id: number): Promise<PropertyProfile | undefined>;
-  getPropertyProfileByUuid(uuid: string): Promise<PropertyProfile | undefined>;
   getPropertyProfilesBySeller(sellerId: string): Promise<PropertyProfile[]>;
   createPropertyProfile(propertyProfile: InsertPropertyProfile): Promise<PropertyProfile>;
   updatePropertyProfile(id: number, propertyProfile: Partial<PropertyProfile>): Promise<PropertyProfile | undefined>;
@@ -185,24 +184,6 @@ export class DatabaseStorage implements IStorage {
   async getPropertyProfile(id: number): Promise<PropertyProfile | undefined> {
     const [profile] = await db.select().from(propertyProfile).where(eq(propertyProfile.id, id));
     return profile || undefined;
-  }
-
-  async getPropertyProfileByUuid(uuid: string): Promise<PropertyProfile | undefined> {
-    // Try to parse as integer ID first (property profile uses integer IDs)
-    const intId = parseInt(uuid);
-    if (!isNaN(intId)) {
-      const [profile] = await db.select().from(propertyProfile).where(eq(propertyProfile.id, intId));
-      return profile || undefined;
-    }
-    
-    // If it's not a valid integer, could be a future UUID-based system
-    try {
-      const [profile] = await db.select().from(propertyProfile).where(sql`${propertyProfile.id}::text = ${uuid}`);
-      return profile || undefined;
-    } catch (error) {
-      console.error('Error querying property profile by UUID:', error);
-      return undefined;
-    }
   }
 
   async getPropertyProfilesBySeller(sellerId: string): Promise<PropertyProfile[]> {
@@ -964,16 +945,6 @@ export class MemStorage implements IStorage {
 
   async getPropertyProfile(id: number): Promise<PropertyProfile | undefined> {
     return this.propertyProfiles.get(id);
-  }
-
-  async getPropertyProfileByUuid(uuid: string): Promise<PropertyProfile | undefined> {
-    // For MemStorage, try to parse as integer ID
-    const intId = parseInt(uuid);
-    if (!isNaN(intId)) {
-      return this.propertyProfiles.get(intId);
-    }
-    // If it's not a valid integer, return undefined (no UUID support in memory storage)
-    return undefined;
   }
 
   async getPropertyProfilesBySeller(sellerId: string): Promise<PropertyProfile[]> {
