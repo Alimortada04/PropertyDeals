@@ -3,7 +3,8 @@ import { useLocation } from "wouter";
 import { Property } from "@shared/schema";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Bed, Bath, Move, Heart, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bed, Bath, Move, Heart, Eye, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -74,6 +75,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     save_count,
     seller_profile,
     tags,
+    year_built,
+    seller_id,
   } = property as any;
   
   // Use actual Supabase data
@@ -172,19 +175,14 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           )}
         </div>
 
-        {/* Property status badge - color-coded by status */}
-        <Badge className={`absolute top-2 right-2 ${
-          status === 'sold' ? 'bg-[#E59F9F] text-white' : 
-          status === 'pending' ? 'bg-[#f5a742] text-white' : 
-          status === 'exclusive' ? 'bg-[#803344] text-white' :
-          'bg-[#135341] text-white'
-        } shadow-sm`}>
-          {status || "For Sale"}
+        {/* Property status badge - pulls from status field */}
+        <Badge className="absolute top-2 right-2 bg-gray-800 text-white shadow-sm hover:scale-105 transition-transform duration-200">
+          {status || "Available"}
         </Badge>
         
-        {/* Property type tag */}
-        <Badge className={`absolute top-2 left-2 ${getPropertyTypeColor(propertyType, status || undefined)}`}>
-          {getPropertyTypeTag(propertyType, status || undefined)}
+        {/* Property type tag - pulls from property_type field */}
+        <Badge className="absolute top-2 left-2 bg-gray-800 text-white shadow-sm hover:scale-105 transition-transform duration-200">
+          {property_type || "Property"}
         </Badge>
       </div>
 
@@ -195,7 +193,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         <p className="text-gray-700 mb-2 text-sm">{address}, {city}, {state}</p>
         
         {/* Property stats with icons - left-aligned */}
-        <div className="flex justify-start text-sm text-gray-600 mb-3 gap-3">
+        <div className="flex justify-start text-sm text-gray-600 mb-3 gap-3 flex-wrap">
           <div className="flex items-center gap-1.5">
             <Bed size={16} />
             <span>{bedrooms}</span>
@@ -208,14 +206,24 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <Move size={16} />
             <span>{sqft?.toLocaleString()}</span>
           </div>
-          <div className="ml-auto flex gap-1 flex-wrap">
+          {year_built && (
+            <div className="flex items-center gap-1.5">
+              <Calendar size={16} />
+              <span>{year_built}</span>
+            </div>
+          )}
+        </div>
+        
+        {/* Property tags */}
+        {displayTags.length > 0 && (
+          <div className="flex gap-1 flex-wrap mb-3">
             {displayTags.map((tag: string, index: number) => (
               <Badge key={index} variant="outline" className="font-normal border-[#135341] text-[#135341] text-xs">
                 {tag}
               </Badge>
             ))}
           </div>
-        </div>
+        )}
         
         {/* Engagement metrics - all left-aligned to make room for avatars */}
         <div className="flex items-center justify-start text-xs text-gray-500 mb-3 gap-3">
@@ -231,31 +239,35 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       </CardContent>
 
       <CardFooter className="px-4 pb-4 pt-0 flex items-center relative">
-        {/* REP Avatars peeking over the button by 60% */}
-        <div className="flex -space-x-3 absolute right-8 -top-5">
-          {demoReps.map((rep, index) => (
-            <div 
-              key={rep.id}
-              className={`transition-all duration-300 ${
-                activeAvatarIndex === index ? 'transform -translate-y-2 z-30' : 'z-1'
-              }`}
-              style={{ zIndex: activeAvatarIndex === index ? 30 : 1 }}
-              onMouseEnter={() => setActiveAvatarIndex(index)}
-              onMouseLeave={() => setActiveAvatarIndex(-1)}
-              onClick={(e) => handleAvatarClick(e, rep.id)}
-            >
-              <Avatar className="border-2 border-white h-8 w-8 cursor-pointer">
-                <AvatarImage src={rep.avatar} alt={rep.name} />
-                <AvatarFallback>{rep.name.substring(0, 2)}</AvatarFallback>
-              </Avatar>
-              {activeAvatarIndex === index && (
-                <div className="absolute bg-white text-xs text-gray-800 rounded shadow-md py-1 px-2 -mt-1 ml-1 z-50">
-                  {rep.role}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        {/* Single Seller Avatar with tooltip */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="absolute right-8 -top-5">
+                <Avatar 
+                  className="border-2 border-white h-8 w-8 cursor-pointer hover:scale-110 transition-transform duration-200"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (seller_id) {
+                      setLocation(`/seller/${seller_id}`);
+                    }
+                  }}
+                >
+                  <AvatarImage 
+                    src={seller_profile?.profile_image_url || "https://ui-avatars.com/api/?name=Seller&background=135341&color=ffffff"} 
+                    alt={seller_profile?.full_name || "Seller"} 
+                  />
+                  <AvatarFallback className="bg-[#135341] text-white">
+                    {seller_profile?.full_name ? seller_profile.full_name.substring(0, 2).toUpperCase() : "S"}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{seller_profile?.full_name || "Property Seller"}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         
         <Button 
           className="bg-[#135341] hover:bg-[#09261E] text-white w-full" 

@@ -151,7 +151,7 @@ interface PropertyDetailPageProps {
 }
 
 export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
-  const propertyId = parseInt(id);
+  const propertyId = id;
   const { toast } = useToast();
   const [viewingAllPhotos, setViewingAllPhotos] = useState(false);
   const [viewingMap, setViewingMap] = useState(false);
