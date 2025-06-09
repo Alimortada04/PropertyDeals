@@ -113,6 +113,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { allProperties, similarProperties } from "@/lib/data";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MobilePropertyView from "@/components/property/mobile-property-view";
+import { useSellerProfile, useSellerProperties } from "@/hooks/useSellerData";
+import PropertyCard from "@/components/properties/property-card";
 
 // Sample demographic data from unitedstateszipcodes.org
 const demographicData = {
@@ -253,6 +255,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       return data;
     },
   });
+
+  // Fetch seller data using seller hooks
+  const { data: sellerProfile } = useSellerProfile(property?.seller_id);
+  const { data: sellerProperties } = useSellerProperties(property?.seller_id, propertyId);
 
   // Create form schema with validation
   const inquirySchema = z.object({
@@ -566,6 +572,12 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   ? property.listing_price.toLocaleString()
                   : "Price not available"}
               </div>
+              {/* PPSF Display - Enhancement 1 */}
+              {property?.ppsf && (
+                <div className="text-lg text-gray-600 mt-1">
+                  ${property.ppsf}/sqft
+                </div>
+              )}
               {/* PD Rating - Color coded by rating value with tooltip */}
               <div
                 className={`font-medium flex items-center ${
