@@ -328,6 +328,9 @@ export const sellerProfile = pgTable("seller_profile", {
   hasProofOfFunds: boolean("has_proof_of_funds").default(false).notNull(),
   usesTitleCompany: boolean("uses_title_company").default(false).notNull(),
   
+  // Profile customization
+  profile_photo: text("profile_photo"), // Profile photo URL
+  
   // Application state
   status: text("status").default("pending").notNull(), // pending, active, paused, banned, rejected
   createdAt: timestamp("created_at").defaultNow().notNull(),
