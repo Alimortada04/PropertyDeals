@@ -1028,7 +1028,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               <span className="absolute left-3 top-2.5 text-gray-500">$</span>
                               <Input 
                                 type="text" 
-                                defaultValue={property?.listing_price ? property.listing_price.toLocaleString() : ""} 
+                                defaultValue={property.price.toLocaleString()} 
                                 className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20" 
                                 id="purchase-price-input"
                               />
@@ -1184,7 +1184,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               <span className="absolute left-3 top-2.5 text-gray-500">$</span>
                               <Input 
                                 type="text" 
-                                defaultValue={property?.listing_price ? property.listing_price.toLocaleString() : ""} 
+                                defaultValue={property.price.toLocaleString()} 
                                 className="bg-white pl-7 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/20" 
                                 id="rental-purchase-price-input"
                               />

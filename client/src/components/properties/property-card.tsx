@@ -199,7 +199,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
         </Badge>
       </div>
 
-      <CardContent className="p-4 flex-1 flex flex-col">
+      <CardContent className="p-4 flex-grow flex flex-col">
         <h3 className="text-xl font-heading font-bold text-[#135341] mb-1">
           ${listing_price?.toLocaleString()}
         </h3>
@@ -255,9 +255,6 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             <span>{favoriteCount} favorites</span>
           </div>
         </div>
-        
-        {/* Spacer to push footer to bottom */}
-        <div className="flex-1"></div>
       </CardContent>
 
       <CardFooter className="px-4 pb-4 pt-0 flex items-center relative">

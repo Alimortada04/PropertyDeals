@@ -507,13 +507,13 @@ export default function PropertiesPage() {
         ) : viewMode === 'grid' ? (
           // Grid View - Traditional Card Grid
           (<div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" style={{ gridAutoRows: '1fr' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
               {currentProperties.map((property) => (
                 <div 
                   key={property.id}
                   onMouseEnter={() => handlePropertyHover(property.id)}
                   onMouseLeave={() => setHoveredPropertyId(null)}
-                  className="flex"
+                  className="h-full"
                 >
                   <PropertyCard property={property} />
                 </div>
