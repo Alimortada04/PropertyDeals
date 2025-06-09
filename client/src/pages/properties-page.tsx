@@ -93,17 +93,37 @@ export default function PropertiesPage() {
   const { data: properties, isLoading, error } = useQuery<Property[]>({
     queryKey: ["properties", "live"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // First get properties
+      const { data: propertiesData, error: propertiesError } = await supabase
         .from("property_profile")
         .select("*")
         .eq("status", "live");
         
-      if (error) {
-        console.error("Error fetching properties:", error);
-        throw new Error(error.message);
+      if (propertiesError) {
+        console.error("Error fetching properties:", propertiesError);
+        throw new Error(propertiesError.message);
       }
       
-      return data || [];
+      // Then get seller data for each property
+      const propertiesWithSellers = await Promise.all(
+        (propertiesData || []).map(async (property) => {
+          if (property.seller_id) {
+            const { data: sellerData } = await supabase
+              .from("seller_profile")
+              .select("id, full_name")
+              .eq("id", property.seller_id)
+              .single();
+            
+            return {
+              ...property,
+              seller_profile: sellerData
+            };
+          }
+          return property;
+        })
+      );
+      
+      return propertiesWithSellers;
     }
   });
 

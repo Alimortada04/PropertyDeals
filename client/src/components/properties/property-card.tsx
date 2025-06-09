@@ -254,7 +254,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
                   }}
                 >
                   <AvatarImage 
-                    src={seller_profile?.profile_image_url || "https://ui-avatars.com/api/?name=Seller&background=135341&color=ffffff"} 
+                    src={`https://ui-avatars.com/api/?name=${encodeURIComponent(seller_profile?.full_name || "Seller")}&background=135341&color=ffffff`} 
                     alt={seller_profile?.full_name || "Seller"} 
                   />
                   <AvatarFallback className="bg-[#135341] text-white">

@@ -152,6 +152,7 @@ interface PropertyDetailPageProps {
 
 export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const propertyId = id;
+  const numericId = parseInt(id) || 0;
   const { toast } = useToast();
   const [viewingAllPhotos, setViewingAllPhotos] = useState(false);
   const [viewingMap, setViewingMap] = useState(false);
@@ -231,7 +232,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     mutationFn: async (data: z.infer<typeof inquirySchema>) => {
       const inquiryData: InsertPropertyInquiry = {
         ...data,
-        propertyId
+        propertyId: parseInt(propertyId) || 0
       };
       
       const res = await apiRequest("POST", "/api/inquiries", inquiryData);
@@ -478,11 +479,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               {/* PD Rating - Color coded by rating value with tooltip */}
               <div className={`font-medium flex items-center ${
                 // Color coding based on rating value
-                propertyId % 10 <= 3 ? 'text-[#803344]' : 
-                propertyId % 10 <= 6 ? 'text-gray-600' : 
+                numericId % 10 <= 3 ? 'text-[#803344]' : 
+                numericId % 10 <= 6 ? 'text-gray-600' : 
                 'text-[#135341]'
               }`}>
-                PD Rating: {propertyId % 10}/10
+                PD Rating: {numericId % 10}/10
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -498,7 +499,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             <span className="h-2.5 w-2.5 bg-green-500 rounded-full mr-1.5"></span>
                             <span className="text-gray-600">Repair Costs:</span>
                           </div>
-                          <div className="text-right font-medium">{Math.min(3, propertyId % 3 + 1)}/3</div>
+                          <div className="text-right font-medium">{Math.min(3, numericId % 3 + 1)}/3</div>
                           
                           <div className="flex items-center">
                             <span className="h-2.5 w-2.5 bg-blue-500 rounded-full mr-1.5"></span>
