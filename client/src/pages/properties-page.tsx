@@ -13,11 +13,11 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PropertySearchBar from "@/components/properties/property-search-bar";
 import Breadcrumbs from "@/components/common/breadcrumbs";
-import { allProperties } from "@/lib/data";
 import { MapPin, List, LayoutGrid, ChevronDown, Grid, Save, ChevronRight, BedDouble, Bath, Square as SquareFootIcon } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useLocation, Link } from 'wouter';
+import { supabase } from "@/lib/supabase";
 
 interface FilterOptions {
   priceRange: string;
