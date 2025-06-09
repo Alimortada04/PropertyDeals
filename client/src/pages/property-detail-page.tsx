@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { supabase } from "@/lib/supabase";
+import { MobileFloatingCTA } from "@/components/property/mobile-floating-cta";
 import {
   Share2,
   Heart,
@@ -216,7 +217,19 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const [messageText, setMessageText] = useState("");
   const [shareUrl, setShareUrl] = useState("");
   const [copySuccess, setCopySuccess] = useState(false);
+  const [savedProperties, setSavedProperties] = useState<number[]>([]);
   const isMobile = useIsMobile();
+
+  // Handle save property functionality
+  const handleSaveProperty = () => {
+    if (property) {
+      if (savedProperties.includes(property.id)) {
+        setSavedProperties(prev => prev.filter(id => id !== property.id));
+      } else {
+        setSavedProperties(prev => [...prev, property.id]);
+      }
+    }
+  };
 
   // Helper function for smooth scrolling with offset
   const scrollToSection = (elementId: string, customOffset?: number) => {
@@ -3227,6 +3240,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         onShare={() => setShareModalOpen(true)}
         isSaved={savedProperties.includes(property.id)}
       />
+            </div>
+          </div>
+        </div>
+      </section>
     </TooltipProvider>
   );
 }
