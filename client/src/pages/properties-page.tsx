@@ -95,13 +95,7 @@ export default function PropertiesPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("property_profile")
-        .select(`
-          *,
-          seller_profile:seller_id(
-            full_name,
-            profile_image_url
-          )
-        `)
+        .select("*")
         .eq("status", "live");
         
       if (error) {

@@ -186,16 +186,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("property_profile")
-        .select(`
-          *,
-          seller_profile:seller_id(
-            full_name,
-            profile_image_url,
-            bio,
-            phone,
-            email
-          )
-        `)
+        .select("*")
         .eq("id", id)
         .single();
         
