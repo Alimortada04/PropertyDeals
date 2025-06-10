@@ -714,7 +714,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
         style={{ position: "sticky" }}
       >
         <div className="container mx-auto px-4">
-          <div className="hidden md:flex items-center h-14 overflow-x-auto hide-scrollbar gap-x-1.5">
+          <div className="hidden md:flex items-center h-14 overflow-x-auto hide-scrollbar gap-x-1.5 pl-[5px] pr-[5px]">
             <button
               onClick={() => scrollToSection("numbers")}
               className="px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800 border border-gray-200 flex items-center"
