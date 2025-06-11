@@ -933,10 +933,19 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           {/* Dynamically list rent units */}
                           {property.rent_unit && Array.isArray(property.rent_unit) && property.rent_unit.length > 0 ? (
                             property.rent_unit.map((unit: any, index: number) => (
-                              <div key={index} className="flex justify-between text-sm">
-                                <span className="text-gray-500">{unit.name}</span>
-                                <span className="text-gray-700">
-                                  ${unit.amount ? parseInt(unit.amount).toLocaleString() : '0'}/mo — {unit.occupied ? 'Occupied' : 'Vacant'}
+                              <div key={index} className="flex justify-between items-center text-sm">
+                                <div className="flex items-center space-x-3">
+                                  <span className="text-gray-500">{unit.name}</span>
+                                  <span className="text-gray-700">
+                                    ${unit.amount ? parseInt(unit.amount).toLocaleString() : '0'}/mo
+                                  </span>
+                                </div>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium text-white ${
+                                  unit.occupied 
+                                    ? 'bg-green-600' 
+                                    : 'bg-red-600'
+                                }`}>
+                                  {unit.occupied ? 'Occupied' : 'Vacant'}
                                 </span>
                               </div>
                             ))
@@ -951,7 +960,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           {property.rent_total_annual && (
                             <div className="flex justify-between text-sm pt-2 border-t border-gray-100">
                               <span className="text-gray-500 font-medium">Annual Rent</span>
-                              <span className="text-gray-700 font-medium">
+                              <span className="text-gray-700 font-bold">
                                 ${property.rent_total_annual.toLocaleString()}/year
                               </span>
                             </div>
