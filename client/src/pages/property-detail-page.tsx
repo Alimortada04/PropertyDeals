@@ -1266,9 +1266,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             {(() => {
                               const annualRent = property.rent_total_annual || 0;
                               const annualExpenses = property.expenses_total_annual || 0;
-                              const noi = annualRent - annualExpenses;
                               const arv = property.arv || 0;
-                              const capRate = arv > 0 ? (noi / arv) * 100 : 0;
+                              const capRate = arv > 0 ? ((annualRent - annualExpenses) / arv) * 100 : 0;
                               return capRate.toFixed(1) + '%';
                             })()}
                           </p>
@@ -1284,11 +1283,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             {(() => {
                               const annualRent = property.rent_total_annual || 0;
                               const annualExpenses = property.expenses_total_annual || 0;
-                              const cashFlow = annualRent - annualExpenses;
                               const listingPrice = property.listing_price || 0;
                               const repairCosts = property.repair_costs_total || 0;
                               const totalInvestment = listingPrice + repairCosts;
-                              const cocReturn = totalInvestment > 0 ? (cashFlow / totalInvestment) * 100 : 0;
+                              const cocReturn = totalInvestment > 0 ? ((annualRent - annualExpenses) / totalInvestment) * 100 : 0;
                               return cocReturn.toFixed(1) + '%';
                             })()}
                           </p>
