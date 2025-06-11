@@ -1729,13 +1729,14 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               id="cap-rate-result"
                               className="text-[#09261E] font-bold"
                             >
-                              {(
-                                (((property.listing_price * 0.008 -
-                                  property.listing_price * 0.003) *
-                                  12) /
-                                  property.listing_price) *
-                                100
-                              ).toFixed(2)}
+                              {(() => {
+                                const monthlyRent = property.listing_price * 0.008;
+                                const monthlyExpenses = property.listing_price * 0.003;
+                                const annualNetIncome = (monthlyRent - monthlyExpenses) * 12;
+                                const arv = property.arv || property.listing_price;
+                                const capRate = arv > 0 ? (annualNetIncome / arv) * 100 : 0;
+                                return capRate.toFixed(2);
+                              })()}
                               %
                             </span>
                           </div>
