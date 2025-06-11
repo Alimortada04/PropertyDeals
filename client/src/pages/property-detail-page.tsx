@@ -307,11 +307,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       });
     },
     onSuccess: () => {
-      toast({
-        title: "Inquiry Sent",
-        description: "Your inquiry has been sent to the property seller.",
-      });
       setContactModalOpen(false);
+      setConfirmationModalOpen(true);
     },
   });
 
@@ -2628,7 +2625,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       <section className="py-8 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-heading font-bold text-[#09261E] mb-6">
-            More Deals by Michael
+            More Deals by {property.seller_profile?.full_name?.split(' ')[0] || 'This Seller'}
           </h2>
 
           {/* Location-based recommendations using recommendation engine */}
@@ -3264,6 +3261,65 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Confirmation Modal */}
+      {confirmationModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4"
+          onClick={() => setConfirmationModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-lg max-w-md w-full overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-green-50 p-5 text-center">
+              <div className="w-12 h-12 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                <CheckIcon className="h-6 w-6 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-[#09261E] mb-2">
+                Message Sent Successfully!
+              </h2>
+              <p className="text-gray-600">
+                Your message has been sent to {property.seller_profile?.full_name || 'the seller'}. They typically respond within 24 hours.
+              </p>
+            </div>
+
+            <div className="p-5">
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Seller Email:</span>
+                  <span className="font-medium">{property.seller_profile?.email || "Contact for email"}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Seller Phone:</span>
+                  <span className="font-medium">{property.seller_profile?.phone_number || "Contact for phone"}</span>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  className="flex-1 bg-white border-gray-200 text-[#09261E] hover:bg-gray-50"
+                  variant="outline"
+                  onClick={() =>
+                    (window.location.href = `tel:${property.seller_profile?.phone_number || ""}`)
+                  }
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Now
+                </Button>
+                <Button
+                  className="flex-1 bg-[#09261E] hover:bg-[#135341]"
+                  onClick={() => setConfirmationModalOpen(false)}
+                >
+                  Done
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       </div>
     </TooltipProvider>
   );
