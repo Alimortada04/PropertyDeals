@@ -2503,25 +2503,24 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <div className="bg-white p-4 border-y border-gray-200">
                   <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
                     <Link
-                      to="/sellers/michael-johnson"
+                      to={`/rep/${property.seller_profile?.id || property.seller_id}`}
                       className="flex items-center group"
                     >
                       <Avatar className="h-16 w-16 border border-gray-200">
                         <AvatarImage
-                          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"
-                          alt="Seller"
+                          src={property.seller_profile?.profile_image || `https://ui-avatars.com/api/?name=${encodeURIComponent(property.seller_profile?.full_name || "Seller")}&background=135341&color=ffffff`}
+                          alt={property.seller_profile?.full_name || "Seller"}
                         />
                         <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
-                          MJ
+                          {property.seller_profile?.full_name ? property.seller_profile.full_name.substring(0, 2).toUpperCase() : "S"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="ml-3">
                         <div className="font-medium text-xl text-[#09261E] group-hover:underline">
-                          Michael Johnson
+                          {property.seller_profile?.full_name || "Property Seller"}
                         </div>
                         <div className="text-gray-500 text-sm flex items-center">
-                          Seller <span className="mx-1">•</span> Responds in
-                          24hrs
+                          {property.seller_profile?.account_type || "Seller"} <span className="mx-1">•</span> Responds within 24hrs
                         </div>
                       </div>
                     </Link>
@@ -2542,34 +2541,44 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     Make an Offer
                   </Button>
 
-                  <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-center text-gray-500 text-sm">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    142 people viewed this property
+                  <div className="mt-4 pt-3 border-t border-gray-100">
+                    <div className="flex items-center justify-between text-gray-500 text-sm mb-2">
+                      <span>Email:</span>
+                      <span>{property.seller_profile?.email || "Contact for email"}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-gray-500 text-sm mb-3">
+                      <span>Phone:</span>
+                      <span>{property.seller_profile?.phone_number || "Contact for phone"}</span>
+                    </div>
+                    <div className="flex items-center justify-center text-gray-500 text-sm">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                      {property.view_count || 0} people viewed this property
+                    </div>
                   </div>
                 </div>
 
                 <div className="bg-gray-50 p-4 text-gray-600 text-sm space-y-1">
-                  <div>Property ID: 1</div>
-                  <div>Listed: 4/13/2025</div>
+                  <div>Property ID: {property.id}</div>
+                  <div>Closing Date: {property.closing_date ? new Date(property.closing_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not specified'}</div>
                 </div>
               </div>
 
@@ -2593,7 +2602,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       variant="outline"
                       size="icon"
                       onClick={() =>
-                        (window.location.href = "tel:+15555555555")
+                        (window.location.href = `tel:${property.seller_profile?.phone_number || ""}`)
                       }
                     >
                       <Phone className="h-5 w-5 text-[#09261E]" />
@@ -2850,48 +2859,30 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             <div className="p-5">
-              {/* Seller Information - Enhancement 2 */}
+              {/* Seller Information */}
               <div className="border-b border-gray-200 pb-4 mb-4">
-                {sellerProfile ? (
-                  <Link
-                    to={`/sellers/${sellerProfile.id}`}
-                    className="flex items-center group"
-                  >
-                    <Avatar className="h-14 w-14 border border-gray-200">
-                      <AvatarImage
-                        src={sellerProfile.profile_photo || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=120&h=120&auto=format&fit=crop"}
-                        alt={sellerProfile.full_name || "Seller"}
-                      />
-                      <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
-                        {sellerProfile.full_name ? sellerProfile.full_name.split(' ').map((n: string) => n[0]).join('') : 'S'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="ml-3">
-                      <div className="font-medium text-lg text-[#09261E] group-hover:underline">
-                        {sellerProfile.full_name || 'Seller'}
-                      </div>
-                      <div className="text-gray-500 flex items-center text-sm">
-                        Seller <span className="mx-2">•</span> {sellerProfile.email}
-                      </div>
+                <Link
+                  to={`/rep/${property.seller_profile?.id || property.seller_id}`}
+                  className="flex items-center group"
+                >
+                  <Avatar className="h-14 w-14 border border-gray-200">
+                    <AvatarImage
+                      src={property.seller_profile?.profile_image || `https://ui-avatars.com/api/?name=${encodeURIComponent(property.seller_profile?.full_name || "Seller")}&background=135341&color=ffffff`}
+                      alt={property.seller_profile?.full_name || "Seller"}
+                    />
+                    <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
+                      {property.seller_profile?.full_name ? property.seller_profile.full_name.substring(0, 2).toUpperCase() : "S"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="ml-3">
+                    <div className="font-medium text-lg text-[#09261E] group-hover:underline">
+                      {property.seller_profile?.full_name || "Property Seller"}
                     </div>
-                  </Link>
-                ) : (
-                  <div className="flex items-center">
-                    <Avatar className="h-14 w-14 border border-gray-200">
-                      <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
-                        S
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="ml-3">
-                      <div className="font-medium text-lg text-[#09261E]">
-                        Property Seller
-                      </div>
-                      <div className="text-gray-500 flex items-center text-sm">
-                        Contact for details
-                      </div>
+                    <div className="text-gray-500 flex items-center text-sm">
+                      {property.seller_profile?.account_type || "Seller"} <span className="mx-2">•</span> Responds within 24hrs
                     </div>
                   </div>
-                )}
+                </Link>
               </div>
 
               <Form {...form}>
