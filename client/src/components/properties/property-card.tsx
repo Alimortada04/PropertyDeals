@@ -99,11 +99,14 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   }
 
   // Create propertyImages array: always start with primary_image, then add gallery_images if they exist
-  const fallbackImage = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
-  const propertyImages = [
-    primary_image || fallbackImage,
-    ...(Array.isArray(galleryImages) ? galleryImages.filter(img => img && img !== primary_image) : [])
-  ];
+  const hasValidPrimaryImage = primary_image && primary_image.trim() !== '';
+  const validGalleryImages = Array.isArray(galleryImages) ? galleryImages.filter(img => img && img.trim() !== '' && img !== primary_image) : [];
+  
+  const propertyImages = [];
+  if (hasValidPrimaryImage) {
+    propertyImages.push(primary_image);
+  }
+  propertyImages.push(...validGalleryImages);
   
   const viewCount = view_count || 0;
   const favoriteCount = save_count || 0;
@@ -136,7 +139,11 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   return (
     <Card 
       className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 property-card cursor-pointer h-full flex flex-col"
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => {
+        if (validGalleryImages.length > 0) {
+          setIsHovered(true);
+        }
+      }}
       onMouseLeave={() => {
         setIsHovered(false);
         setCurrentImageIndex(0);
@@ -145,23 +152,33 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       onClick={handleCardClick}
     >
       <div className="relative">
-        <div className="w-full h-48 overflow-hidden relative rounded-xl">
-          {propertyImages.map((imgSrc, index) => (
-            <img 
-              key={index}
-              src={imgSrc}
-              alt={`${title || "Property"} - View ${index + 1}`}
-              className={`absolute top-0 left-0 w-full h-full object-cover rounded-xl transition-opacity duration-300 ${
-                currentImageIndex === index ? 'opacity-100' : 'opacity-0'
-              }`}
-              onError={(e) => {
-                e.currentTarget.src = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
-              }}
-            />
-          ))}
+        <div className="w-full h-48 overflow-hidden relative rounded-t-lg">
+          {propertyImages.length > 0 ? (
+            propertyImages.map((imgSrc, index) => (
+              <img 
+                key={index}
+                src={imgSrc}
+                alt={`${title || "Property"} - View ${index + 1}`}
+                className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ${
+                  currentImageIndex === index ? 'opacity-100' : 'opacity-0'
+                }`}
+              />
+            ))
+          ) : (
+            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+              <div className="text-center text-gray-500">
+                <div className="w-16 h-16 mx-auto mb-2 bg-gray-300 rounded-lg flex items-center justify-center">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <p className="text-sm font-medium">No Image</p>
+              </div>
+            </div>
+          )}
 
           {/* Image navigation arrows (only shown on hover and when gallery_images exist) */}
-          {isHovered && galleryImages.length > 0 && (
+          {isHovered && validGalleryImages.length > 0 && (
             <>
               <button 
                 onClick={(e) => handleImageNavigation(e, 'prev')}
@@ -179,7 +196,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           )}
 
           {/* Image count indicator (only when gallery images exist) */}
-          {galleryImages.length > 0 && (
+          {validGalleryImages.length > 0 && (
             <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 rounded-full px-2 py-1 text-xs text-white">
               {currentImageIndex + 1}/{propertyImages.length}
             </div>
