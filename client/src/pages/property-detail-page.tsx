@@ -1063,7 +1063,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               
                               return (
                                 <div key={index} className="flex justify-between items-center text-sm">
-                                  <div className="flex items-center">
+                                  <div className="flex items-center space-x-2">
                                     <span className="text-gray-500">{repair.name || 'Repair Item'}</span>
                                     {repair.description && (
                                       <TooltipProvider>
@@ -1071,7 +1071,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                           <TooltipTrigger asChild>
                                             <button
                                               type="button"
-                                              className="inline-flex items-center justify-center h-3 w-3 ml-1 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300"
+                                              className="inline-flex items-center justify-center h-3 w-3 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300"
                                             >
                                               i
                                             </button>
@@ -1087,21 +1087,39 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                     )}
                                   </div>
                                   
-                                  <div className="flex items-center">
-                                    <span className="text-gray-700 mr-2">
+                                  <div className="flex items-center space-x-2">
+                                    <span className="text-gray-700">
                                       ${repair.cost ? parseInt(repair.cost).toLocaleString() : '0'}
                                     </span>
                                     
-                                    {/* File icon for quote */}
+                                    {/* Document icon for quote - conditionally visible */}
                                     {repair.quote && (
-                                      <button className="h-4 w-4 text-gray-400 hover:text-gray-600 mr-1 transition-colors">
-                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                      </button>
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <button 
+                                              className="h-4 w-4 text-gray-400 hover:text-gray-600 hover:scale-110 transition-all"
+                                              onClick={() => {
+                                                // Handle quote file opening
+                                                console.log('Opening quote:', repair.quote);
+                                              }}
+                                            >
+                                              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                              </svg>
+                                            </button>
+                                          </TooltipTrigger>
+                                          <TooltipContent
+                                            side="top"
+                                            className="bg-white p-2 rounded shadow-lg border z-50"
+                                          >
+                                            <p className="text-sm">Quote</p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
                                     )}
                                     
-                                    {/* Contractor person icon with popup */}
+                                    {/* Person icon for contractor - conditionally visible */}
                                     {repair.contractor && (
                                       <Dialog>
                                         <DialogTrigger asChild>
@@ -1135,9 +1153,25 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                                   <strong>Description:</strong> {repair.description}
                                                 </p>
                                               )}
-                                              <p className="text-sm text-gray-600">
+                                              <p className="text-sm text-gray-600 mb-2">
                                                 <strong>Cost:</strong> ${repair.cost ? parseInt(repair.cost).toLocaleString() : '0'}
                                               </p>
+                                              {repair.quote && (
+                                                <div className="flex items-center">
+                                                  <button 
+                                                    className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                                                    onClick={() => {
+                                                      // Handle quote file opening
+                                                      console.log('Opening quote from popup:', repair.quote);
+                                                    }}
+                                                  >
+                                                    <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                    View Quote
+                                                  </button>
+                                                </div>
+                                              )}
                                             </div>
                                           </div>
                                         </DialogContent>
