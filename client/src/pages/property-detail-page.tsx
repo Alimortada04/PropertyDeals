@@ -210,6 +210,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [confirmationModalOpen, setConfirmationModalOpen] = useState(false);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [showMessageBox, setShowMessageBox] = useState(false);
@@ -2945,7 +2946,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         <FormLabel>Message</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="I'm interested in this property and would like to schedule a viewing."
+                            placeholder={`Hi ${property.seller_profile?.full_name || 'there'}, I'm interested in your property at ${property.address}, ${property.city}. The asking price of $${property.listing_price?.toLocaleString()} looks great. Could we schedule a time to discuss this opportunity?`}
                             {...field}
                             rows={4}
                           />
@@ -2962,15 +2963,26 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         className="bg-white border-gray-200 text-[#09261E] hover:bg-gray-50 py-6 flex-shrink-0"
                         variant="outline"
                         onClick={() =>
-                          (window.location.href = "tel:+15555555555")
+                          (window.location.href = `tel:${property.seller_profile?.phone_number || ""}`)
                         }
                       >
                         <Phone className="h-5 w-5 mr-1 text-[#09261E]" />
                         Call
                       </Button>
                       <Button
+                        type="button"
+                        className="bg-white border-gray-200 text-[#09261E] hover:bg-gray-50 py-6 flex-shrink-0"
+                        variant="outline"
+                        onClick={() =>
+                          (window.location.href = `sms:${property.seller_profile?.phone_number || ""}?body=${encodeURIComponent(`Hi ${property.seller_profile?.full_name || 'there'}, I'm interested in your property at ${property.address}, ${property.city}. Could we schedule a time to discuss?`)}`)
+                        }
+                      >
+                        <MessageCircle className="h-5 w-5 mr-1 text-[#09261E]" />
+                        Message
+                      </Button>
+                      <Button
                         type="submit"
-                        className="w-full bg-[#09261E] hover:bg-[#135341] py-6"
+                        className="flex-1 bg-[#09261E] hover:bg-[#135341] py-6"
                       >
                         {inquiryMutation.isPending ? (
                           <div className="flex items-center">
