@@ -942,8 +942,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                 </div>
                                 <span className={`px-2 py-1 rounded-full text-xs font-medium text-white ${
                                   unit.occupied 
-                                    ? 'bg-green-600' 
-                                    : 'bg-red-600'
+                                    ? 'bg-[#09261E]' 
+                                    : 'bg-[#803344]'
                                 }`}>
                                   {unit.occupied ? 'Occupied' : 'Vacant'}
                                 </span>
@@ -962,6 +962,66 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               <span className="text-gray-500 font-medium">Annual Rent</span>
                               <span className="text-gray-700 font-bold">
                                 ${property.rent_total_annual.toLocaleString()}/year
+                              </span>
+                            </div>
+                          )}
+                        </CollapsibleContent>
+                      </Collapsible>
+
+                      {/* Monthly Expenses with Dropdown */}
+                      <Collapsible className="border-b border-gray-100 pb-3">
+                        <CollapsibleTrigger className="w-full">
+                          <div className="flex justify-between items-center cursor-pointer hover:text-[#803344] group">
+                            <span className="text-gray-600 font-medium group-hover:text-[#803344]">
+                              Monthly Expenses
+                            </span>
+                            <div className="flex items-center">
+                              <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
+                                ${property.expenses_total_monthly ? property.expenses_total_monthly.toLocaleString() : '0'}/month
+                              </span>
+                              <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
+                            </div>
+                          </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-3 pl-6 space-y-2">
+                          {/* Dynamically list expense items */}
+                          {property.expense_items && Array.isArray(property.expense_items) && property.expense_items.length > 0 ? (
+                            property.expense_items.map((expense: any, index: number) => {
+                              if (!expense.name || !expense.amount) return null;
+                              const amount = parseInt(expense.amount) || 0;
+                              const frequency = expense.frequency || 'monthly';
+                              let displaySuffix = '/month';
+                              
+                              if (frequency === 'annually') {
+                                displaySuffix = '/year';
+                              } else if (frequency === 'quarterly') {
+                                displaySuffix = '/quarter';
+                              } else if (frequency === 'monthly') {
+                                displaySuffix = '/month';
+                              }
+                              
+                              return (
+                                <div key={index} className="flex justify-between text-sm">
+                                  <span className="text-gray-500">{expense.name}</span>
+                                  <span className="text-gray-700">
+                                    ${amount.toLocaleString()}{displaySuffix}
+                                  </span>
+                                </div>
+                              );
+                            })
+                          ) : (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-500">No expense items configured</span>
+                              <span className="text-gray-700">$0/mo</span>
+                            </div>
+                          )}
+                          
+                          {/* Annual Expenses */}
+                          {property.expenses_total_annual && (
+                            <div className="flex justify-between text-sm pt-2 border-t border-gray-100">
+                              <span className="text-gray-500 font-medium">Annual Expenses</span>
+                              <span className="text-gray-700 font-bold">
+                                ${property.expenses_total_annual.toLocaleString()}/year
                               </span>
                             </div>
                           )}
