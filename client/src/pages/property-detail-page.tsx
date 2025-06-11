@@ -1282,9 +1282,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </span>
                               <Input
                                 type="text"
-                                defaultValue={(
-                                  property.listing_price * 1.2
-                                ).toFixed(0)}
+                                defaultValue={property.arv ? property.arv.toLocaleString() : '0'}
                                 className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20"
                                 id="arv-input"
                               />
@@ -1302,11 +1300,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                 </span>
                                 <Input
                                   type="text"
-                                  defaultValue={(
-                                    property.listing_price * 0.02
-                                  ).toFixed(0)}
+                                  defaultValue="0"
                                   className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20"
                                   id="holding-costs-input"
+                                  placeholder="Enter holding costs"
                                 />
                               </div>
                             </div>
@@ -1320,11 +1317,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                 </span>
                                 <Input
                                   type="text"
-                                  defaultValue={(
-                                    property.listing_price * 0.06
-                                  ).toFixed(0)}
+                                  defaultValue="0"
                                   className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20"
                                   id="selling-costs-input"
+                                  placeholder="Enter selling costs"
                                 />
                               </div>
                             </div>
@@ -1336,32 +1332,31 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               Total Investment
                             </span>
                             <span className="text-[#09261E] font-semibold">
-                              $
-                              {(
-                                property.listing_price +
-                                property.listing_price * 0.05 +
-                                property.listing_price * 0.02
-                              ).toLocaleString()}
+                              ${(() => {
+                                const purchasePrice = property.listing_price || 0;
+                                const repairCosts = property.repair_costs_total || 0;
+                                const totalInvestment = purchasePrice + repairCosts;
+                                return totalInvestment.toLocaleString();
+                              })()}
                             </span>
                           </div>
                           <div className="flex justify-between items-center mb-2">
                             <span className="text-sm font-medium text-gray-700">
-                              Total Profit
+                              Potential Profit
                             </span>
                             <span
                               id="flip-result"
                               className="text-[#135341] font-bold text-lg"
                             >
-                              $
-                              {(
-                                property.listing_price * 1.2 -
-                                property.listing_price -
-                                property.listing_price * 0.05 -
-                                property.listing_price * 0.02 -
-                                property.listing_price * 0.06
-                              ).toLocaleString(undefined, {
-                                maximumFractionDigits: 0,
-                              })}
+                              ${(() => {
+                                const arv = property.arv || 0;
+                                const purchasePrice = property.listing_price || 0;
+                                const repairCosts = property.repair_costs_total || 0;
+                                // Estimate selling costs as 6% of ARV if not provided
+                                const sellingCosts = arv * 0.06;
+                                const profit = arv - purchasePrice - repairCosts - sellingCosts;
+                                return profit > 0 ? profit.toLocaleString() : '0';
+                              })()}
                             </span>
                           </div>
                           <div className="flex justify-between items-center">
@@ -1369,18 +1364,16 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               ROI
                             </span>
                             <span className="text-[#09261E] font-bold">
-                              {(
-                                ((property.listing_price * 1.2 -
-                                  property.listing_price -
-                                  property.listing_price * 0.05 -
-                                  property.listing_price * 0.02 -
-                                  property.listing_price * 0.06) /
-                                  (property.listing_price +
-                                    property.listing_price * 0.05 +
-                                    property.listing_price * 0.02)) *
-                                100
-                              ).toFixed(1)}
-                              %
+                              {(() => {
+                                const arv = property.arv || 0;
+                                const purchasePrice = property.listing_price || 0;
+                                const repairCosts = property.repair_costs_total || 0;
+                                const sellingCosts = arv * 0.06;
+                                const profit = arv - purchasePrice - repairCosts - sellingCosts;
+                                const totalInvestment = purchasePrice + repairCosts;
+                                const roi = totalInvestment > 0 ? (profit / totalInvestment) * 100 : 0;
+                                return roi.toFixed(1) + '%';
+                              })()}
                             </span>
                           </div>
                         </div>
