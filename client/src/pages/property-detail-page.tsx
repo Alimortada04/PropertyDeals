@@ -935,18 +935,32 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             property.rent_unit.map((unit: any, index: number) => (
                               <div key={index} className="flex justify-between items-center text-sm">
                                 <div className="flex items-center space-x-3">
-                                  <span className="text-gray-500">{unit.name}</span>
+                                  <span className="text-gray-500">{unit.label || unit.name}</span>
                                   <span className="text-gray-700">
-                                    ${unit.amount ? parseInt(unit.amount).toLocaleString() : '0'}/mo
+                                    ${unit.rent ? unit.rent.replace(/[$,]/g, '') : (unit.amount ? parseInt(unit.amount) : 0)}/mo
                                   </span>
                                 </div>
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium text-white ${
-                                  unit.occupied 
-                                    ? 'bg-[#09261E]' 
-                                    : 'bg-[#803344]'
-                                }`}>
-                                  {unit.occupied ? 'Occupied' : 'Vacant'}
-                                </span>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <span className={`px-2 py-1 rounded-full text-xs font-medium text-white cursor-default ${
+                                        unit.occupied 
+                                          ? 'bg-[#135341]' 
+                                          : 'bg-[#803344]'
+                                      }`}>
+                                        {unit.occupied ? 'O' : 'V'}
+                                      </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                      side="top"
+                                      className="bg-white p-2 rounded shadow-lg border z-50"
+                                    >
+                                      <p className="text-sm">
+                                        {unit.occupied ? 'Occupied' : 'Vacant'}
+                                      </p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
                               </div>
                             ))
                           ) : (
