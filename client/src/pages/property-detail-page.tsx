@@ -923,7 +923,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             </span>
                             <div className="flex items-center">
                               <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
-                                ${property.rent_total_monthly ? property.rent_total_monthly.toLocaleString() : '0'}/month
+                                {property.rent_total_monthly ? `$${property.rent_total_monthly.toLocaleString()}/month` : 'N/A'}
                               </span>
                               <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
                             </div>
@@ -964,9 +964,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </div>
                             ))
                           ) : (
-                            <div className="flex justify-between text-sm">
-                              <span className="text-gray-500">No rental units configured</span>
-                              <span className="text-gray-700">$0/mo</span>
+                            <div className="flex justify-center text-sm">
+                              <span className="text-gray-500">Contact Seller for Info</span>
                             </div>
                           )}
                           
@@ -991,7 +990,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             </span>
                             <div className="flex items-center">
                               <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
-                                ${property.expenses_total_monthly ? property.expenses_total_monthly.toLocaleString() : '0'}/month
+                                {property.expenses_total_monthly ? `$${property.expenses_total_monthly.toLocaleString()}/month` : 'N/A'}
                               </span>
                               <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
                             </div>
@@ -1024,9 +1023,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               );
                             })
                           ) : (
-                            <div className="flex justify-between text-sm">
-                              <span className="text-gray-500">No expense items configured</span>
-                              <span className="text-gray-700">$0/mo</span>
+                            <div className="flex justify-center text-sm">
+                              <span className="text-gray-500">Contact Seller for Info</span>
                             </div>
                           )}
                           
@@ -1042,21 +1040,25 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </CollapsibleContent>
                       </Collapsible>
 
-                      {/* Estimated Repair Costs */}
+                      {/* Estimated Repair Costs with Dropdown */}
                       <Collapsible className="border-b border-gray-100 pb-3">
-                        <div className="flex justify-between items-center">
-                          <span className="text-gray-600 font-medium">
-                            Estimated Repairs
-                          </span>
-                          <span className="font-semibold text-[#09261E]">
-                            ${property.repair_costs_total ? property.repair_costs_total.toLocaleString() : '0'}
-                          </span>
-                        </div>
-                        
-                        {/* List repair projects */}
-                        {property.repair_projects && Array.isArray(property.repair_projects) && property.repair_projects.length > 0 && (
-                          <div className="mt-3 pl-0 space-y-2">
-                            {property.repair_projects.map((repair: any, index: number) => {
+                        <CollapsibleTrigger className="w-full">
+                          <div className="flex justify-between items-center cursor-pointer hover:text-[#803344] group">
+                            <span className="text-gray-600 font-medium group-hover:text-[#803344]">
+                              Estimated Repairs
+                            </span>
+                            <div className="flex items-center">
+                              <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
+                                {property.repair_costs_total ? `$${property.repair_costs_total.toLocaleString()}` : 'N/A'}
+                              </span>
+                              <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
+                            </div>
+                          </div>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-3 pl-6 space-y-2">
+                          {/* Dynamically list repair projects */}
+                          {property.repair_projects && Array.isArray(property.repair_projects) && property.repair_projects.length > 0 ? (
+                            property.repair_projects.map((repair: any, index: number) => {
                               if (!repair.name && !repair.cost) return null;
                               
                               return (
@@ -1092,14 +1094,14 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                     
                                     {/* File icon for quote */}
                                     {repair.quote && (
-                                      <button className="h-4 w-4 text-gray-400 hover:text-gray-600 mr-1">
+                                      <button className="h-4 w-4 text-gray-400 hover:text-gray-600 mr-1 transition-colors">
                                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
                                       </button>
                                     )}
                                     
-                                    {/* Contractor avatar with popup */}
+                                    {/* Contractor person icon with popup */}
                                     {repair.contractor && (
                                       <Dialog>
                                         <DialogTrigger asChild>
@@ -1112,10 +1114,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                         <DialogContent className="sm:max-w-[425px]">
                                           <DialogHeader>
                                             <DialogTitle className="text-xl font-heading">
-                                              Contractor Quote
+                                              Contractor Details
                                             </DialogTitle>
                                             <DialogDescription className="text-gray-600">
-                                              Details for {repair.name}
+                                              Information for {repair.name}
                                             </DialogDescription>
                                           </DialogHeader>
                                           <div className="mt-2 space-y-4">
@@ -1144,9 +1146,13 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                   </div>
                                 </div>
                               );
-                            })}
-                          </div>
-                        )}
+                            })
+                          ) : (
+                            <div className="flex justify-center text-sm">
+                              <span className="text-gray-500">Contact Seller for Info</span>
+                            </div>
+                          )}
+                        </CollapsibleContent>
                       </Collapsible>
 
                       {/* ARV with Tooltip */}
