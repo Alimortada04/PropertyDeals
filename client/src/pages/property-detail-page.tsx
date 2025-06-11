@@ -923,257 +923,147 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             </span>
                             <div className="flex items-center">
                               <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
-                                ${(property.listing_price * 0.008).toFixed(0)}
-                                /month
+                                ${property.rent_total_monthly ? property.rent_total_monthly.toLocaleString() : '0'}/month
                               </span>
                               <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
                             </div>
                           </div>
                         </CollapsibleTrigger>
                         <CollapsibleContent className="mt-3 pl-6 space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Main Unit</span>
-                            <span className="text-gray-700">
-                              ${(property.listing_price * 0.008).toFixed(0)}/mo
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">
-                              Basement Apartment
-                            </span>
-                            <span className="text-gray-700">
-                              ${(property.listing_price * 0.003).toFixed(0)}/mo
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">
-                              Market Analysis
-                            </span>
-                            <span className="text-gray-700">
-                              $
-                              {(property.listing_price * 0.008 * 1.1).toFixed(
-                                0,
-                              )}
-                              /mo (potential)
-                            </span>
-                          </div>
+                          {/* Dynamically list rent units */}
+                          {property.rent_unit && Array.isArray(property.rent_unit) && property.rent_unit.length > 0 ? (
+                            property.rent_unit.map((unit: any, index: number) => (
+                              <div key={index} className="flex justify-between text-sm">
+                                <span className="text-gray-500">{unit.name}</span>
+                                <span className="text-gray-700">
+                                  ${unit.amount ? parseInt(unit.amount).toLocaleString() : '0'}/mo — {unit.occupied ? 'Occupied' : 'Vacant'}
+                                </span>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-500">No rental units configured</span>
+                              <span className="text-gray-700">$0/mo</span>
+                            </div>
+                          )}
+                          
+                          {/* Annual Rent */}
+                          {property.rent_total_annual && (
+                            <div className="flex justify-between text-sm pt-2 border-t border-gray-100">
+                              <span className="text-gray-500 font-medium">Annual Rent</span>
+                              <span className="text-gray-700 font-medium">
+                                ${property.rent_total_annual.toLocaleString()}/year
+                              </span>
+                            </div>
+                          )}
                         </CollapsibleContent>
                       </Collapsible>
 
-                      {/* Estimated Repair Costs with Clickable Contractor Avatar */}
-                      <div className="flex justify-between items-center border-b border-gray-100 pb-3">
-                        <span className="text-gray-600 font-medium">
-                          Estimated Repair Costs
-                        </span>
-                        <div className="flex flex-col">
-                          <div className="flex items-center">
-                            <span className="font-semibold text-[#09261E] mr-2">
-                              ${(property.listing_price * 0.05).toFixed(0)}
-                            </span>
-                          </div>
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <div className="flex items-center mt-1 cursor-pointer group">
-                                <Avatar className="h-6 w-6 mr-2 hover:ring-2 hover:ring-offset-1 hover:ring-[#09261E]/50 transition-all">
-                                  <AvatarImage
-                                    src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=120&h=120&auto=format&fit=crop"
-                                    alt="Contractor"
-                                  />
-                                  <AvatarFallback className="text-xs bg-gray-200">
-                                    MJ
-                                  </AvatarFallback>
-                                </Avatar>
-                                <div className="flex flex-col">
-                                  <span className="text-xs font-medium text-[#803344] group-hover:underline">
-                                    Real Job Quote
-                                  </span>
-                                  <span className="text-xs text-gray-500">
-                                    by Mike Johnson
-                                  </span>
-                                </div>
-                              </div>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[425px]">
-                              <DialogHeader>
-                                <DialogTitle className="text-xl font-heading">
-                                  Contractor Quote
-                                </DialogTitle>
-                                <DialogDescription className="text-gray-600">
-                                  Details from Mike Johnson, certified
-                                  contractor
-                                </DialogDescription>
-                              </DialogHeader>
-                              <div className="mt-2 space-y-4">
-                                <div className="flex items-center space-x-4">
-                                  <Avatar className="h-12 w-12">
-                                    <AvatarImage
-                                      src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=120&h=120&auto=format&fit=crop"
-                                      alt="Contractor"
-                                    />
-                                    <AvatarFallback className="bg-gray-200">
-                                      MJ
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  <div>
-                                    <h4 className="font-medium text-[#09261E]">
-                                      Mike Johnson
-                                    </h4>
-                                    <p className="text-sm text-gray-500">
-                                      Elite Contractors, LLC
-                                    </p>
-                                    <div className="flex items-center mt-1">
-                                      <span className="text-yellow-500">
-                                        ★★★★★
-                                      </span>
-                                      <span className="text-sm text-gray-500 ml-1">
-                                        (28 reviews)
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <div className="border-t border-b py-3">
-                                  <h5 className="font-medium mb-2">
-                                    Quote Details
-                                  </h5>
-                                  <div className="space-y-2 text-sm">
-                                    <div className="flex justify-between">
-                                      <span className="text-gray-600">
-                                        Materials
-                                      </span>
-                                      <span className="font-medium">
-                                        $
-                                        {(
-                                          property.listing_price * 0.025
-                                        ).toFixed(0)}
-                                      </span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                      <span className="text-gray-600">
-                                        Labor
-                                      </span>
-                                      <span className="font-medium">
-                                        $
-                                        {(
-                                          property.listing_price * 0.02
-                                        ).toFixed(0)}
-                                      </span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                      <span className="text-gray-600">
-                                        Permits & Fees
-                                      </span>
-                                      <span className="font-medium">
-                                        $
-                                        {(
-                                          property.listing_price * 0.005
-                                        ).toFixed(0)}
-                                      </span>
-                                    </div>
-                                    <div className="flex justify-between font-medium pt-2 border-t">
-                                      <span>Total</span>
-                                      <span>
-                                        $
-                                        {(
-                                          property.listing_price * 0.05
-                                        ).toFixed(0)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <div>
-                                  <h5 className="font-medium mb-2">
-                                    Work Summary
-                                  </h5>
-                                  <p className="text-sm text-gray-600">
-                                    Complete interior and exterior renovation
-                                    including new kitchen, bathrooms, flooring,
-                                    and roof repair. Timeline: 6-8 weeks.
-                                  </p>
-                                </div>
-
-                                <div className="flex space-x-2">
-                                  <Button
-                                    className="flex-1"
-                                    onClick={() =>
-                                      (window.location.href =
-                                        "/reps/mike-johnson")
-                                    }
-                                  >
-                                    <Info className="mr-2 h-4 w-4" />
-                                    View Profile
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    className="flex-1 hover:bg-gray-100 hover:text-gray-800 hover:border-gray-300"
-                                  >
-                                    <MessageSquare className="mr-2 h-4 w-4" />
-                                    Message
-                                  </Button>
-                                </div>
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
-                      </div>
-
-                      {/* Monthly Expenses with Dropdown */}
+                      {/* Estimated Repair Costs */}
                       <Collapsible className="border-b border-gray-100 pb-3">
-                        <CollapsibleTrigger className="w-full">
-                          <div className="flex justify-between items-center cursor-pointer hover:text-[#803344] group">
-                            <span className="text-gray-600 font-medium group-hover:text-[#803344]">
-                              Estimated Monthly Expenses
-                            </span>
-                            <div className="flex items-center">
-                              <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
-                                ${(property.listing_price * 0.003).toFixed(0)}
-                                /month
-                              </span>
-                              <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
-                            </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-600 font-medium">
+                            Estimated Repairs
+                          </span>
+                          <span className="font-semibold text-[#09261E]">
+                            ${property.repair_costs_total ? property.repair_costs_total.toLocaleString() : '0'}
+                          </span>
+                        </div>
+                        
+                        {/* List repair projects */}
+                        {property.repair_projects && Array.isArray(property.repair_projects) && property.repair_projects.length > 0 && (
+                          <div className="mt-3 pl-0 space-y-2">
+                            {property.repair_projects.map((repair: any, index: number) => {
+                              if (!repair.name && !repair.cost) return null;
+                              
+                              return (
+                                <div key={index} className="flex justify-between items-center text-sm">
+                                  <div className="flex items-center">
+                                    <span className="text-gray-500">{repair.name || 'Repair Item'}</span>
+                                    {repair.description && (
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger asChild>
+                                            <button
+                                              type="button"
+                                              className="inline-flex items-center justify-center h-3 w-3 ml-1 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300"
+                                            >
+                                              i
+                                            </button>
+                                          </TooltipTrigger>
+                                          <TooltipContent
+                                            side="top"
+                                            className="bg-white p-2 rounded shadow-lg border z-50 max-w-xs"
+                                          >
+                                            <p className="text-sm">{repair.description}</p>
+                                          </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    )}
+                                  </div>
+                                  
+                                  <div className="flex items-center">
+                                    <span className="text-gray-700 mr-2">
+                                      ${repair.cost ? parseInt(repair.cost).toLocaleString() : '0'}
+                                    </span>
+                                    
+                                    {/* File icon for quote */}
+                                    {repair.quote && (
+                                      <button className="h-4 w-4 text-gray-400 hover:text-gray-600 mr-1">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                        </svg>
+                                      </button>
+                                    )}
+                                    
+                                    {/* Contractor avatar with popup */}
+                                    {repair.contractor && (
+                                      <Dialog>
+                                        <DialogTrigger asChild>
+                                          <button className="h-4 w-4 text-gray-400 hover:text-gray-600 hover:scale-110 transition-all">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                          </button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-[425px]">
+                                          <DialogHeader>
+                                            <DialogTitle className="text-xl font-heading">
+                                              Contractor Quote
+                                            </DialogTitle>
+                                            <DialogDescription className="text-gray-600">
+                                              Details for {repair.name}
+                                            </DialogDescription>
+                                          </DialogHeader>
+                                          <div className="mt-2 space-y-4">
+                                            <div className="border-t border-b py-3">
+                                              <h5 className="font-medium mb-2">Contractor</h5>
+                                              <p className="text-sm text-gray-600">{repair.contractor}</p>
+                                            </div>
+                                            <div>
+                                              <h5 className="font-medium mb-2">Repair Details</h5>
+                                              <p className="text-sm text-gray-600 mb-2">
+                                                <strong>Project:</strong> {repair.name}
+                                              </p>
+                                              {repair.description && (
+                                                <p className="text-sm text-gray-600 mb-2">
+                                                  <strong>Description:</strong> {repair.description}
+                                                </p>
+                                              )}
+                                              <p className="text-sm text-gray-600">
+                                                <strong>Cost:</strong> ${repair.cost ? parseInt(repair.cost).toLocaleString() : '0'}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </DialogContent>
+                                      </Dialog>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent className="mt-3 pl-6 space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Property Tax</span>
-                            <span className="text-gray-700">
-                              $
-                              {Math.round(
-                                (property.listing_price * 0.01) / 12,
-                              ).toLocaleString()}
-                              /mo
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Insurance</span>
-                            <span className="text-gray-700">
-                              $
-                              {Math.round(
-                                (property.listing_price * 0.005) / 12,
-                              ).toLocaleString()}
-                              /mo
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">HOA</span>
-                            <span className="text-gray-700">$150/mo</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Maintenance</span>
-                            <span className="text-gray-700">
-                              $
-                              {Math.round(
-                                (property.listing_price * 0.001) / 12,
-                              ).toLocaleString()}
-                              /mo
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-500">Utilities</span>
-                            <span className="text-gray-700">$75/mo (est.)</span>
-                          </div>
-                        </CollapsibleContent>
+                        )}
                       </Collapsible>
 
                       {/* ARV with Tooltip */}
@@ -1202,49 +1092,82 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           </TooltipProvider>
                         </div>
                         <span className="font-semibold text-[#09261E]">
-                          ${(property.listing_price * 1.2).toFixed(0)}
+                          ${property.arv ? property.arv.toLocaleString() : '0'}
                         </span>
                       </div>
 
-                      {/* Investment metrics in a grid with Monthly Rent % */}
+                      {/* Investment metrics in a grid */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
                         <div>
                           <div className="flex items-center">
                             <PercentSquare className="h-4 w-4 mr-1 text-[#09261E]" />
                             <h4 className="text-sm font-medium text-gray-500">
-                              Cap Rate
+                              Annual Cash Flow
                             </h4>
                           </div>
                           <p className="text-lg font-semibold text-[#09261E]">
-                            5.2%
+                            ${(() => {
+                              const annualRent = property.rent_total_annual || 0;
+                              const annualExpenses = property.expenses_total_annual || 0;
+                              const cashFlow = annualRent - annualExpenses;
+                              return cashFlow.toLocaleString();
+                            })()}
                           </p>
                         </div>
                         <div>
                           <div className="flex items-center">
                             <MoveRight className="h-4 w-4 mr-1 text-[#09261E]" />
                             <h4 className="text-sm font-medium text-gray-500">
-                              Cash-on-Cash Return
+                              Cap Rate
                             </h4>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button
+                                    type="button"
+                                    className="inline-flex items-center justify-center h-3 w-3 ml-1 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300"
+                                  >
+                                    i
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent
+                                  side="top"
+                                  className="bg-white p-2 rounded shadow-lg border z-50"
+                                >
+                                  <p className="text-sm">Net Operating Income ÷ Property Value</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                           </div>
                           <p className="text-lg font-semibold text-[#09261E]">
-                            7.8%
+                            {(() => {
+                              const annualRent = property.rent_total_annual || 0;
+                              const annualExpenses = property.expenses_total_annual || 0;
+                              const noi = annualRent - annualExpenses;
+                              const arv = property.arv || 0;
+                              const capRate = arv > 0 ? (noi / arv) * 100 : 0;
+                              return capRate.toFixed(1) + '%';
+                            })()}
                           </p>
                         </div>
                         <div>
                           <div className="flex items-center">
                             <DollarSign className="h-4 w-4 mr-1 text-[#09261E]" />
                             <h4 className="text-sm font-medium text-gray-500">
-                              Monthly Rent %
+                              Cash on Cash Return
                             </h4>
                           </div>
                           <p className="text-lg font-semibold text-[#09261E]">
-                            {(
-                              ((property.listing_price * 0.008) /
-                                (property.listing_price +
-                                  property.listing_price * 0.05)) *
-                              100
-                            ).toFixed(2)}
-                            %
+                            {(() => {
+                              const annualRent = property.rent_total_annual || 0;
+                              const annualExpenses = property.expenses_total_annual || 0;
+                              const cashFlow = annualRent - annualExpenses;
+                              const listingPrice = property.listing_price || 0;
+                              const repairCosts = property.repair_costs_total || 0;
+                              const totalInvestment = listingPrice + repairCosts;
+                              const cocReturn = totalInvestment > 0 ? (cashFlow / totalInvestment) * 100 : 0;
+                              return cocReturn.toFixed(1) + '%';
+                            })()}
                           </p>
                         </div>
                       </div>
@@ -1309,7 +1232,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </span>
                               <Input
                                 type="text"
-                                defaultValue={property.listing_price.toLocaleString()}
+                                defaultValue={property.listing_price ? property.listing_price.toLocaleString() : '0'}
                                 className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20"
                                 id="purchase-price-input"
                               />
@@ -1329,9 +1252,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </span>
                               <Input
                                 type="text"
-                                defaultValue={(
-                                  property.listing_price * 0.05
-                                ).toFixed(0)}
+                                defaultValue={property.repair_costs_total ? property.repair_costs_total.toLocaleString() : '0'}
                                 className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20"
                                 id="repair-costs-input"
                               />
