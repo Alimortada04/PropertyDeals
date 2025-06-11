@@ -1057,135 +1057,138 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         </CollapsibleTrigger>
                         <CollapsibleContent className="mt-3 pl-6 space-y-2">
                           {/* Dynamically list repair projects */}
-                          {property.repair_projects && Array.isArray(property.repair_projects) && property.repair_projects.length > 0 ? (
-                            property.repair_projects.map((repair: any, index: number) => {
-                              if (!repair.name && !repair.cost) return null;
+                          {(() => {
+                            const repairProjects = property.repairProjects || property.repair_projects || [];
+                            if (Array.isArray(repairProjects) && repairProjects.length > 0) {
+                              return repairProjects.map((repair: any, index: number) => {
+                                if (!repair.name && !repair.cost) return null;
                               
-                              return (
-                                <div key={index} className="flex justify-between items-center text-sm">
-                                  <div className="flex items-center space-x-2">
-                                    <span className="text-gray-500">{repair.name || 'Repair Item'}</span>
-                                    {repair.description && (
-                                      <TooltipProvider>
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <button
-                                              type="button"
-                                              className="inline-flex items-center justify-center h-3 w-3 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300"
+                                return (
+                                  <div key={index} className="flex justify-between items-center text-sm">
+                                    <div className="flex items-center space-x-2">
+                                      <span className="text-gray-500">{repair.name || 'Repair Item'}</span>
+                                      {repair.description && (
+                                        <TooltipProvider>
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <button
+                                                type="button"
+                                                className="inline-flex items-center justify-center h-3 w-3 text-xs font-bold bg-gray-200 text-gray-600 rounded-full focus:outline-none hover:bg-gray-300"
+                                              >
+                                                i
+                                              </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent
+                                              side="top"
+                                              className="bg-white p-2 rounded shadow-lg border z-50 max-w-xs"
                                             >
-                                              i
-                                            </button>
-                                          </TooltipTrigger>
-                                          <TooltipContent
-                                            side="top"
-                                            className="bg-white p-2 rounded shadow-lg border z-50 max-w-xs"
-                                          >
-                                            <p className="text-sm">{repair.description}</p>
-                                          </TooltipContent>
-                                        </Tooltip>
-                                      </TooltipProvider>
-                                    )}
-                                  </div>
-                                  
-                                  <div className="flex items-center space-x-2">
-                                    <span className="text-gray-700">
-                                      ${repair.cost ? parseInt(repair.cost).toLocaleString() : '0'}
-                                    </span>
+                                              <p className="text-sm">{repair.description}</p>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </TooltipProvider>
+                                      )}
+                                    </div>
                                     
-                                    {/* Document icon for quote - conditionally visible */}
-                                    {repair.quote && (
-                                      <TooltipProvider>
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <button 
-                                              className="h-4 w-4 text-gray-400 hover:text-gray-600 hover:scale-110 transition-all"
-                                              onClick={() => {
-                                                // Handle quote file opening
-                                                console.log('Opening quote:', repair.quote);
-                                              }}
+                                    <div className="flex items-center space-x-2">
+                                      <span className="text-gray-700 font-medium">
+                                        ${repair.cost ? (typeof repair.cost === 'string' ? parseInt(repair.cost.replace(/[$,]/g, '')) : repair.cost).toLocaleString() : '0'}
+                                      </span>
+                                      
+                                      {/* Document icon for quote - conditionally visible */}
+                                      {repair.quote && (
+                                        <TooltipProvider>
+                                          <Tooltip>
+                                            <TooltipTrigger asChild>
+                                              <button 
+                                                className="h-4 w-4 text-gray-400 hover:text-gray-600 hover:scale-110 transition-all"
+                                                onClick={() => {
+                                                  console.log('Opening quote:', repair.quote);
+                                                }}
+                                              >
+                                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                              </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent
+                                              side="top"
+                                              className="bg-white p-2 rounded shadow-lg border z-50"
                                             >
+                                              <p className="text-sm">Quote</p>
+                                            </TooltipContent>
+                                          </Tooltip>
+                                        </TooltipProvider>
+                                      )}
+                                      
+                                      {/* Person icon for contractor - conditionally visible */}
+                                      {repair.contractor && (
+                                        <Dialog>
+                                          <DialogTrigger asChild>
+                                            <button className="h-4 w-4 text-gray-400 hover:text-gray-600 hover:scale-110 transition-all">
                                               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                               </svg>
                                             </button>
-                                          </TooltipTrigger>
-                                          <TooltipContent
-                                            side="top"
-                                            className="bg-white p-2 rounded shadow-lg border z-50"
-                                          >
-                                            <p className="text-sm">Quote</p>
-                                          </TooltipContent>
-                                        </Tooltip>
-                                      </TooltipProvider>
-                                    )}
-                                    
-                                    {/* Person icon for contractor - conditionally visible */}
-                                    {repair.contractor && (
-                                      <Dialog>
-                                        <DialogTrigger asChild>
-                                          <button className="h-4 w-4 text-gray-400 hover:text-gray-600 hover:scale-110 transition-all">
-                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                                          </button>
-                                        </DialogTrigger>
-                                        <DialogContent className="sm:max-w-[425px]">
-                                          <DialogHeader>
-                                            <DialogTitle className="text-xl font-heading">
-                                              Contractor Details
-                                            </DialogTitle>
-                                            <DialogDescription className="text-gray-600">
-                                              Information for {repair.name}
-                                            </DialogDescription>
-                                          </DialogHeader>
-                                          <div className="mt-2 space-y-4">
-                                            <div className="border-t border-b py-3">
-                                              <h5 className="font-medium mb-2">Contractor</h5>
-                                              <p className="text-sm text-gray-600">{repair.contractor}</p>
-                                            </div>
-                                            <div>
-                                              <h5 className="font-medium mb-2">Repair Details</h5>
-                                              <p className="text-sm text-gray-600 mb-2">
-                                                <strong>Project:</strong> {repair.name}
-                                              </p>
-                                              {repair.description && (
+                                          </DialogTrigger>
+                                          <DialogContent className="sm:max-w-[425px]">
+                                            <DialogHeader>
+                                              <DialogTitle className="text-xl font-heading">
+                                                Contractor Details
+                                              </DialogTitle>
+                                              <DialogDescription className="text-gray-600">
+                                                Information for {repair.name}
+                                              </DialogDescription>
+                                            </DialogHeader>
+                                            <div className="mt-2 space-y-4">
+                                              <div className="border-t border-b py-3">
+                                                <h5 className="font-medium mb-2">Contractor</h5>
+                                                <p className="text-sm text-gray-600">{repair.contractor}</p>
+                                              </div>
+                                              <div>
+                                                <h5 className="font-medium mb-2">Repair Details</h5>
                                                 <p className="text-sm text-gray-600 mb-2">
-                                                  <strong>Description:</strong> {repair.description}
+                                                  <strong>Project:</strong> {repair.name}
                                                 </p>
-                                              )}
-                                              <p className="text-sm text-gray-600 mb-2">
-                                                <strong>Cost:</strong> ${repair.cost ? parseInt(repair.cost).toLocaleString() : '0'}
-                                              </p>
-                                              {repair.quote && (
-                                                <div className="flex items-center">
-                                                  <button 
-                                                    className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors"
-                                                    onClick={() => {
-                                                      // Handle quote file opening
-                                                      console.log('Opening quote from popup:', repair.quote);
-                                                    }}
-                                                  >
-                                                    <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                    </svg>
-                                                    View Quote
-                                                  </button>
-                                                </div>
-                                              )}
+                                                {repair.description && (
+                                                  <p className="text-sm text-gray-600 mb-2">
+                                                    <strong>Description:</strong> {repair.description}
+                                                  </p>
+                                                )}
+                                                <p className="text-sm text-gray-600 mb-2">
+                                                  <strong>Cost:</strong> ${repair.cost ? (typeof repair.cost === 'string' ? parseInt(repair.cost.replace(/[$,]/g, '')) : repair.cost).toLocaleString() : '0'}
+                                                </p>
+                                                {repair.quote && (
+                                                  <div className="flex items-center">
+                                                    <button 
+                                                      className="flex items-center text-sm text-blue-600 hover:text-blue-800 transition-colors"
+                                                      onClick={() => {
+                                                        console.log('Opening quote from popup:', repair.quote);
+                                                      }}
+                                                    >
+                                                      <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                      </svg>
+                                                      View Quote
+                                                    </button>
+                                                  </div>
+                                                )}
+                                              </div>
                                             </div>
-                                          </div>
-                                        </DialogContent>
-                                      </Dialog>
-                                    )}
+                                          </DialogContent>
+                                        </Dialog>
+                                      )}
+                                    </div>
                                   </div>
+                                );
+                              });
+                            } else {
+                              return (
+                                <div className="flex justify-center text-sm">
+                                  <span className="text-gray-500">No repair information available</span>
                                 </div>
                               );
-                            })
-                          ) : (
-                            <div className="flex justify-center text-sm">
-                              <span className="text-gray-500">Contact Seller for Info</span>
-                            </div>
-                          )}
+                            }
+                          })()}
                         </CollapsibleContent>
                       </Collapsible>
 
@@ -1748,15 +1751,16 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               id="cash-on-cash-result"
                               className="text-[#09261E] font-bold text-lg"
                             >
-                              {(
-                                (((property.listing_price * 0.008 -
-                                  property.listing_price * 0.003) *
-                                  12 -
-                                  property.listing_price * 0.8 * 0.045) /
-                                  (property.listing_price * 0.2 +
-                                    property.listing_price * 0.03)) *
-                                100
-                              ).toFixed(2)}
+                              {(() => {
+                                const monthlyRent = property.listing_price * 0.008;
+                                const monthlyExpenses = property.listing_price * 0.003;
+                                const annualNetIncome = (monthlyRent - monthlyExpenses) * 12;
+                                const listingPrice = property.listing_price || 0;
+                                const repairCosts = property.repair_costs_total || 0;
+                                const totalInvestment = listingPrice + repairCosts;
+                                const cashOnCash = totalInvestment > 0 ? (annualNetIncome / totalInvestment) * 100 : 0;
+                                return cashOnCash.toFixed(2);
+                              })()}
                               %
                             </span>
                           </div>
