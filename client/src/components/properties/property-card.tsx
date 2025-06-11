@@ -8,20 +8,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-// Sample REP data for demonstration
-const demoReps = [
-  { id: 1, name: "John Smith", role: "Agent", avatar: "https://randomuser.me/api/portraits/men/1.jpg" },
-  { id: 2, name: "Sarah Johnson", role: "Contractor", avatar: "https://randomuser.me/api/portraits/women/2.jpg" },
-  { id: 3, name: "Mike Davis", role: "Wholesaler", avatar: "https://randomuser.me/api/portraits/men/3.jpg" },
-];
-
-// Secondary images for demonstration
-const demoSecondaryImages = [
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1600566753151-384129cf4e3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-];
-
 const propertyTypeColors: Record<string, string> = {
   "Single Family": "bg-blue-500",
   "Duplex": "bg-indigo-500",
@@ -70,6 +56,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     sqft,
     status,
     primary_image,
+    gallery_images,
     property_type,
     view_count,
     save_count,
@@ -97,10 +84,25 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   }
   const displayTags = propertyTags.slice(0, 3);
 
-  // Use primary image or fallback
+  // Parse gallery_images if it exists and is valid JSON
+  let galleryImages = [];
+  if (gallery_images) {
+    if (Array.isArray(gallery_images)) {
+      galleryImages = gallery_images;
+    } else if (typeof gallery_images === 'string') {
+      try {
+        galleryImages = JSON.parse(gallery_images);
+      } catch (e) {
+        galleryImages = [];
+      }
+    }
+  }
+
+  // Create propertyImages array: always start with primary_image, then add gallery_images if they exist
+  const fallbackImage = "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80";
   const propertyImages = [
-    primary_image || "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    ...demoSecondaryImages
+    primary_image || fallbackImage,
+    ...(Array.isArray(galleryImages) ? galleryImages.filter(img => img && img !== primary_image) : [])
   ];
   
   const viewCount = view_count || 0;
@@ -124,16 +126,12 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     setLocation(`/rep/${repId}`);
   };
   
-  // Add auto-fade effect on hover to show second image
+  // Reset to primary image (index 0) when not hovered
   useEffect(() => {
-    if (isHovered && propertyImages.length > 1) {
-      // Show the second image when hovered
-      setCurrentImageIndex(1);
-    } else {
-      // Reset to first image when not hovered
+    if (!isHovered) {
       setCurrentImageIndex(0);
     }
-  }, [isHovered, propertyImages.length]);
+  }, [isHovered]);
 
   return (
     <Card 
@@ -147,13 +145,13 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       onClick={handleCardClick}
     >
       <div className="relative">
-        <div className="w-full h-48 overflow-hidden relative">
+        <div className="w-full h-48 overflow-hidden relative rounded-xl">
           {propertyImages.map((imgSrc, index) => (
             <img 
               key={index}
               src={imgSrc}
               alt={`${title || "Property"} - View ${index + 1}`}
-              className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-300 ${
+              className={`absolute top-0 left-0 w-full h-full object-cover rounded-xl transition-opacity duration-300 ${
                 currentImageIndex === index ? 'opacity-100' : 'opacity-0'
               }`}
               onError={(e) => {
@@ -162,8 +160,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             />
           ))}
 
-          {/* Image navigation arrows (only shown on hover) */}
-          {isHovered && propertyImages.length > 1 && (
+          {/* Image navigation arrows (only shown on hover and when gallery_images exist) */}
+          {isHovered && galleryImages.length > 0 && (
             <>
               <button 
                 onClick={(e) => handleImageNavigation(e, 'prev')}
@@ -180,8 +178,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
             </>
           )}
 
-          {/* Image count indicator */}
-          {propertyImages.length > 1 && (
+          {/* Image count indicator (only when gallery images exist) */}
+          {galleryImages.length > 0 && (
             <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 rounded-full px-2 py-1 text-xs text-white">
               {currentImageIndex + 1}/{propertyImages.length}
             </div>
