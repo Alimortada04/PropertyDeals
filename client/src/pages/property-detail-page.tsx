@@ -510,8 +510,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   {/* Property Info Badge */}
                   <Badge
                     variant="outline"
-                    className="bg-gray-100 text-gray-700 border-0 flex items-center"
-                    style={{ marginLeft: '10px' }}
+                    className="rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-gray-100 text-gray-700 border-0 flex items-center ml-3 pt-[5px] pb-[5px] pl-[10px] pr-[10px]"
                   >
                     <Calendar className="h-3 w-3 mr-1" />
                     {daysOnMarket} {daysOnMarket === 1 ? "day" : "days"} on market
