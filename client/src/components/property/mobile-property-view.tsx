@@ -346,8 +346,8 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             variant={isFavorite ? "default" : "outline"} 
             size="sm" 
             className={`${isFavorite 
-              ? "bg-[#803344] text-white hover:bg-[#803344]/90" 
-              : "border-gray-200 text-gray-700 bg-[#f3f4f6] hover:bg-[#803344] hover:text-white hover:border-[#803344]"} flex-1 mr-2`}
+              ? "bg-[#803344] text-white hover:bg-[#803344]/90 rounded-full px-4 py-2" 
+              : "border-gray-200 text-gray-700 bg-[#f3f4f6] hover:bg-[#803344] hover:text-white hover:border-[#803344] rounded-md"} flex-1 mr-2`}
             onClick={toggleFavorite}
           >
             <Heart 
