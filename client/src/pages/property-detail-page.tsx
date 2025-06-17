@@ -2543,7 +2543,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 </div>
 
                 {/* Bottom Section */}
-                <div className="p-6 bg-gray-50">
+                <div className="p-6 bg-gray-50 pl-[16px] pr-[16px] pt-[16px] pb-[16px]">
                   <div className="flex items-center justify-center text-gray-500 text-sm mb-3">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
