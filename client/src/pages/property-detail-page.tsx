@@ -1085,7 +1085,6 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                         </TooltipProvider>
                                       )}
                                     </div>
-                                    
                                     <div className="flex items-center space-x-2">
                                       <span className="text-gray-700 font-medium">
                                         ${repair.cost ? (typeof repair.cost === 'string' ? parseInt(repair.cost.replace(/[$,]/g, '')) : repair.cost).toLocaleString() : '0'}
@@ -2489,9 +2488,8 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 style={{ zIndex: 40, minWidth: '320px' }}
               >
                 <div className="p-4">
-                  <h3 className="text-2xl font-bold text-[#09261E]">
-                    Interested in this property?
-                  </h3>
+                  <h3 className="text-2xl font-bold text-[#09261E]">Interested?
+</h3>
                   <p className="text-gray-600">
                     Contact the seller or schedule a viewing
                   </p>
