@@ -503,14 +503,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <h1 className="text-3xl md:text-4xl font-heading font-bold text-[#09261E] mb-2">
                   {property.address}
                 </h1>
-                <div className="flex items-center justify-between text-lg text-gray-700 mb-1">
+                <div className="flex items-center text-lg text-gray-700 mb-1">
                   <span>
                     {property.city}, {property.state?.toUpperCase()} {property.zipcode}
                   </span>
                   {/* Property Info Badge */}
                   <Badge
                     variant="outline"
-                    className="bg-gray-100 text-gray-700 border-0 flex items-center ml-3"
+                    className="bg-gray-100 text-gray-700 border-0 flex items-center"
+                    style={{ marginLeft: '10px' }}
                   >
                     <Calendar className="h-3 w-3 mr-1" />
                     {daysOnMarket} {daysOnMarket === 1 ? "day" : "days"} on market
