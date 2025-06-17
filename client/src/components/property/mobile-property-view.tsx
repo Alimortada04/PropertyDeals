@@ -343,15 +343,13 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         {/* Action Buttons */}
         <div className="flex justify-between mt-3">
           <Button 
-            variant={isFavorite ? "default" : "outline"} 
+            variant={isFavorite ? "default" : "default"} 
             size="sm" 
-            className={`${isFavorite 
-              ? "bg-[#803344] text-white hover:bg-[#803344]/90" 
-              : "border-[#803344] text-[#803344] hover:bg-[#803344]/10"} flex-1 mr-2`}
+            className="bg-[#803344] text-white hover:bg-[#803344]/90 flex-1 mr-2"
             onClick={toggleFavorite}
           >
             <Heart 
-              className={`h-4 w-4 mr-1.5 ${isFavorite ? 'fill-white' : ''}`} 
+              className="h-4 w-4 mr-1.5 fill-white text-white" 
             />
             {isFavorite ? 'Saved' : 'Save'}
           </Button>
