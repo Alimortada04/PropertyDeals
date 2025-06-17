@@ -2940,7 +2940,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                         <FormLabel>Message</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder={`Hi ${property.seller_profile?.full_name || 'there'}, I'm interested in your property at ${property.address}, ${property.city}. The asking price of $${property.listing_price?.toLocaleString()} looks great. Could we schedule a time to discuss this opportunity?`}
+                            defaultValue={`Hi, I'm interested. Please contact me for more information.`}
                             {...field}
                             rows={4}
                           />

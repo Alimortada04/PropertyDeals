@@ -358,7 +358,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           <Button 
             variant="outline" 
             size="sm" 
-            className="border-gray-200 text-gray-700 flex-1 mr-2 bg-[#f3f4f6]"
+            className="border-gray-200 text-gray-700 flex-1 mr-2 bg-[#f3f4f6] hover:bg-[#135341] hover:text-white hover:border-[#135341]"
             onClick={() => {
               generateShareableUrl();
               setShareModalOpen(true);
@@ -1419,7 +1419,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
               <Textarea 
                 id="message" 
                 rows={4}
-                placeholder="I'm interested in this property and would like to schedule a viewing." 
+                defaultValue="Hi, I'm interested. Please contact me for more information."
               />
             </div>
             
