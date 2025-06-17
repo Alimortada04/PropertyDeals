@@ -526,15 +526,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   Make an Offer
                 </button>
                 <button
-                  className={`px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#135341]/20 border border-gray-200 flex items-center ${
+                  className={`px-4 py-1.5 rounded-md text-sm whitespace-nowrap font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#803344]/20 border border-gray-200 flex items-center ${
                     isInWatchlist
-                      ? "bg-[#EAF2EF] text-[#135341] shadow-sm"
+                      ? "bg-[#803344]/10 text-[#803344] shadow-sm"
                       : "bg-white/70 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
                   }`}
                   onClick={handleWatchlistToggle}
                 >
                   <Heart
-                    className={`h-3.5 w-3.5 mr-1.5 ${isInWatchlist ? "fill-[#135341]" : ""}`}
+                    className={`h-3.5 w-3.5 mr-1.5 ${isInWatchlist ? "fill-[#803344]" : ""}`}
                   />
                   {isInWatchlist ? "Saved" : "Save"}
                 </button>
@@ -2574,10 +2574,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </div>
                 </div>
 
-                <div className="bg-gray-50 p-4 text-gray-600 text-sm space-y-1">
-                  <div>Property ID: {property.id}</div>
-                  <div>Closing Date: {property.closing_date ? new Date(property.closing_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not specified'}</div>
-                </div>
+                
               </div>
 
               {/* Contact Card - Mobile Version */}
@@ -3137,27 +3134,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
           </DialogHeader>
 
           <div className="grid gap-4 py-4">
-            <div className="rounded-lg border p-5">
-              <h3 className="font-medium mb-2 text-[#09261E]">Property</h3>
-              <div className="flex items-start gap-4">
-                <div className="w-16 h-16 flex-shrink-0 bg-gray-100 rounded overflow-hidden">
-                  <img
-                    src={propertyImages[0]}
-                    alt={property.address}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="font-medium">{property.address}</p>
-                  <p className="text-sm text-gray-500">
-                    {property.city}, {property.state} {property.zipCode}
-                  </p>
-                  <p className="text-sm font-medium mt-1">
-                    ${property.listing_price.toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            </div>
+            
 
             <div className="space-y-3">
               <h3 className="font-medium text-[#09261E]">Share Options</h3>
