@@ -12,11 +12,13 @@ import {
   Bath, Square as SquareIcon, Link as LinkIcon, Mail, Check as CheckIcon,
   Copy as CopyIcon, ChevronRight, Calculator, PercentSquare, Car, 
   ArrowRight, ChevronDown, Wrench, BedDouble, HelpCircle, MoveRight,
-  Info, MessageSquare, ChevronLeft
+  Info, MessageSquare, ChevronLeft, Share2, Download, Facebook, 
+  Twitter, Linkedin, MessageCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { SiPinterest } from "react-icons/si";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -40,6 +42,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
   const [offerModalOpen, setOfferModalOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
   
   // Property images - using actual images that match the property
   const propertyImages = [
@@ -81,23 +84,37 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
     setOfferModalOpen(true);
   };
   
-  // Share functionality
+  // Generate a shareable property report URL
+  const generateShareableUrl = () => {
+    const baseUrl = window.location.origin;
+    const shareableUrl = `${baseUrl}/properties/${property.id}/report`;
+    setShareUrl(shareableUrl);
+    return shareableUrl;
+  };
+
+  // Handle copy to clipboard
   const handleCopyToClipboard = () => {
-    const propertyUrl = `https://propertydeals.com/properties/${property.id}`;
-    navigator.clipboard.writeText(propertyUrl);
+    navigator.clipboard.writeText(shareUrl);
     setCopySuccess(true);
     setTimeout(() => setCopySuccess(false), 2000);
   };
-  
+
+  // Handle email share
   const handleEmailShare = () => {
-    const subject = `Check out this property: ${property.address}`;
-    const body = `I found this interesting property on PropertyDeals!\n\n${property.address}, ${property.city}, ${property.state}\nPrice: $${property.price?.toLocaleString()}\n\nSee more details here: https://propertydeals.com/properties/${property.id}`;
+    const subject = `Property Report: ${property.address}`;
+    const body = `Check out this property at ${property.address}, ${property.city}, ${property.state} ${property.zipCode}.\n\nPrice: $${property.price?.toLocaleString()}\nBedrooms: ${property.bedrooms}\nBathrooms: ${property.bathrooms}\nSquare Feet: ${property.squareFeet?.toLocaleString() || "N/A"}\n\nView the full property report here: ${shareUrl}`;
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
-  
+
+  // Generate PDF report
   const generatePdfReport = () => {
-    alert("PDF report will be generated and downloaded.");
-    // In a real implementation, this would call a backend API to generate a PDF
+    // In a real implementation, this would generate and download a PDF
+    const link = document.createElement('a');
+    link.href = '/api/properties/' + property.id + '/pdf';
+    link.download = `PropertyReport_${property.address.replace(/\s+/g, '_')}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Fetch zip code demographic data
@@ -342,9 +359,12 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             variant="outline" 
             size="sm" 
             className="border-gray-200 text-gray-700 flex-1 mr-2"
-            onClick={() => setShareModalOpen(true)}
+            onClick={() => {
+              generateShareableUrl();
+              setShareModalOpen(true);
+            }}
           >
-            <Share className="h-4 w-4 mr-1.5" />
+            <Share2 className="h-4 w-4 mr-1.5" />
             Share
           </Button>
           <Button 
