@@ -755,9 +755,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
       {/* Main Property Details Section */}
       <section className="py-6 bg-white">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row">
+          <div className="flex flex-col md:flex-row md:gap-6">
             {/* Left Column with Main Sections */}
-            <div className="w-full md:w-2/3 lg:w-2/3 xl:w-3/4 md:pr-6 space-y-6">
+            <div className="w-full md:flex-1 md:min-w-0 space-y-6">
               {/* Property Details Section */}
               <Accordion
                 id="details"
@@ -2484,10 +2484,10 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             {/* Right Sidebar - Contact Interested Card */}
-            <div className="hidden md:block w-full md:w-1/3 lg:w-1/3 xl:w-1/4 mt-8 md:mt-0 md:pl-6">
+            <div className="hidden md:block w-full md:w-1/3 lg:w-1/3 xl:w-1/4 mt-8 md:mt-0 md:flex-shrink-0">
               <div
-                className="sticky top-20 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md"
-                style={{ zIndex: 40 }}
+                className="sticky top-20 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md w-full"
+                style={{ zIndex: 40, minWidth: '320px' }}
               >
                 <div className="p-4">
                   <h3 className="text-2xl font-bold text-[#09261E]">
