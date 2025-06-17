@@ -510,7 +510,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   {/* Property Info Badge */}
                   <Badge
                     variant="outline"
-                    className="rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-gray-100 text-gray-700 border-0 flex items-center ml-3 pt-[5px] pb-[5px] pl-[10px] pr-[10px]"
+                    className="rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-gray-100 text-gray-700 border-0 flex items-center ml-3 pt-[5px] pb-[5px] pl-[9px] pr-[9px]"
                   >
                     <Calendar className="h-3 w-3 mr-1" />
                     {daysOnMarket} {daysOnMarket === 1 ? "day" : "days"} on market
@@ -2490,9 +2490,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <div className="p-4">
                   <h3 className="text-2xl font-bold text-[#09261E]">Interested?
 </h3>
-                  <p className="text-gray-600">
-                    Contact the seller or schedule a viewing
-                  </p>
+
                 </div>
 
                 <div className="bg-white p-4 border-y border-gray-200">
