@@ -343,13 +343,15 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         {/* Action Buttons */}
         <div className="flex justify-between mt-3">
           <Button 
-            variant={isFavorite ? "default" : "default"} 
+            variant={isFavorite ? "default" : "outline"} 
             size="sm" 
-            className="bg-[#803344] text-white hover:bg-[#803344]/90 flex-1 mr-2"
+            className={`${isFavorite 
+              ? "bg-[#803344] text-white hover:bg-[#803344]/90" 
+              : "border-gray-200 text-gray-700 bg-[#f3f4f6] hover:bg-[#803344] hover:text-white hover:border-[#803344]"} flex-1 mr-2`}
             onClick={toggleFavorite}
           >
             <Heart 
-              className="h-4 w-4 mr-1.5 fill-white text-white" 
+              className={`h-4 w-4 mr-1.5 ${isFavorite ? 'fill-white text-white' : ''}`} 
             />
             {isFavorite ? 'Saved' : 'Save'}
           </Button>
@@ -378,24 +380,24 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
       <div className="pb-24"> {/* Padding bottom for floating CTA */}
         {/* Property Stats - Quick Info (just icon and value on one line) */}
         <div className="px-4 py-4 border-b border-gray-200 grid grid-cols-4 gap-3">
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <BedDouble className="text-[#09261E] w-4 h-4 mr-1.5" />
             <span className="font-medium text-sm">{property.bedrooms}</span>
           </div>
           
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <Bath className="text-[#09261E] w-4 h-4 mr-1.5" />
             <span className="font-medium text-sm">{property.bathrooms}</span>
           </div>
           
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <SquareIcon className="text-[#09261E] w-4 h-4 mr-1.5" />
             <span className="font-medium text-sm whitespace-nowrap">{property.squareFeet?.toLocaleString() || '3,500'}</span>
           </div>
           
-          <div className="flex items-center">
+          <div className="flex items-center justify-center">
             <Calendar className="text-[#09261E] w-4 h-4 mr-1.5" />
-            <span className="font-medium text-sm">1886</span>
+            <span className="font-medium text-sm">{property.yearBuilt || '1886'}</span>
           </div>
         </div>
         
@@ -464,7 +466,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                     <DollarSign className="text-[#09261E] w-5 h-5 mr-2 mt-0.5" />
                     <div>
                       <div className="text-gray-600 text-xs">Price per sqft</div>
-                      <div className="font-semibold">${property.squareFeet ? Math.round((property.price || 0) / property.squareFeet) : '98'}/sq ft</div>
+                      <div className="font-semibold">${property.squareFeet ? Math.round((property.price || 0) / property.squareFeet) : '98'}/sqft</div>
                     </div>
                   </div>
                   
