@@ -1501,7 +1501,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-4 py-4 pt-[0px] pb-[0px]">
             <div className="space-y-3">
               <h3 className="font-medium text-[#09261E]">Share Options</h3>
 
