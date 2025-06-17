@@ -2488,7 +2488,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 style={{ zIndex: 40, minWidth: '320px' }}
               >
                 {/* Top Section */}
-                <div className="p-6 bg-gray-50 border-b border-gray-200">
+                <div className="p-6 bg-gray-50 border-b border-gray-200 pt-[10px] pb-[10px] pl-[10px] pr-[10px]">
                   <h3 className="text-2xl font-bold text-[#09261E] mb-2">Interested in this property?</h3>
                   <p className="text-gray-600">Contact Seller Now</p>
                 </div>
