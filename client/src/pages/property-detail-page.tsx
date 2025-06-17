@@ -2484,7 +2484,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             {/* Right Sidebar - Contact Interested Card */}
-            <div className="w-full lg:w-1/3 xl:w-1/4 mt-8 lg:mt-0">
+            <div className="w-full md:w-1/3 lg:w-1/3 xl:w-1/4 mt-8 md:mt-0">
               <div
                 className="sticky top-24 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md"
                 style={{ zIndex: 40 }}
@@ -2579,7 +2579,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
               {/* Contact Card - Mobile Version */}
               <div
-                className="lg:hidden sticky bottom-0 left-0 right-0 bg-white p-4 shadow-md"
+                className="md:hidden sticky bottom-0 left-0 right-0 bg-white p-4 shadow-md"
                 style={{ zIndex: 100 }}
               >
                 <div className="flex items-center justify-between">
