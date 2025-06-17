@@ -1489,73 +1489,119 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </form>
         </DialogContent>
       </Dialog>
-      {/* Share Dialog */}
+      {/* Share Property Report Dialog */}
       <Dialog open={shareModalOpen} onOpenChange={setShareModalOpen}>
-        <DialogContent className="w-[90%] max-w-[425px] p-4 sm:p-6 overflow-y-auto max-h-[90vh]">
-          <DialogHeader className="mb-4">
-            <DialogTitle className="text-xl font-heading text-[#09261E]">Share this Property</DialogTitle>
-            <DialogDescription>
-              Share this property with others via link, email, or social media.
+        <DialogContent className="sm:max-w-[550px]">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-heading">
+              Share Property Report
+            </DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Choose how you'd like to share this property report with others.
             </DialogDescription>
           </DialogHeader>
-          
-          <div className="space-y-5 mt-2">
-            <div className="border rounded-lg overflow-hidden shadow-sm">
+
+          <div className="grid gap-4 py-4">
+            <div className="space-y-3">
+              <h3 className="font-medium text-[#09261E]">Share Options</h3>
+
               {/* Copy Link Option */}
-              <div className="border-b p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <LinkIcon className="w-5 h-5 text-[#09261E] mr-3" />
-                    <div className="font-medium">Copy Link</div>
+              <div
+                className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:border-[#09261E] hover:bg-[#09261E]/5 transition-colors"
+                onClick={handleCopyToClipboard}
+              >
+                <div className="flex items-center">
+                  <div className="bg-[#09261E]/10 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <LinkIcon className="w-5 h-5 text-[#09261E]" />
                   </div>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className={`${copySuccess ? 'bg-green-50 text-green-600 border-green-200' : 'border-gray-200'}`}
-                    onClick={handleCopyToClipboard}
-                  >
-                    {copySuccess ? (
-                      <><CheckIcon className="h-4 w-4 mr-1" /> Copied</>
-                    ) : (
-                      <><CopyIcon className="h-4 w-4 mr-1" /> Copy</>
-                    )}
-                  </Button>
+                  <div>
+                    <p className="font-medium">Copy Link</p>
+                    <p className="text-xs text-gray-500">
+                      Copy shareable property report link
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  {copySuccess ? (
+                    <CheckIcon className="w-5 h-5 text-green-500" />
+                  ) : (
+                    <CopyIcon className="w-5 h-5 text-gray-400" />
+                  )}
                 </div>
               </div>
-              
+
               {/* Email Option */}
-              <div className="border-b p-4">
-                <button 
-                  className="flex items-center justify-between w-full cursor-pointer text-left" 
-                  onClick={handleEmailShare}
-                >
-                  <div className="flex items-center">
-                    <Mail className="w-5 h-5 text-[#09261E] mr-3" />
-                    <div className="font-medium">Email</div>
+              <div
+                className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:border-[#09261E] hover:bg-[#09261E]/5 transition-colors"
+                onClick={handleEmailShare}
+              >
+                <div className="flex items-center">
+                  <div className="bg-[#09261E]/10 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <Mail className="w-5 h-5 text-[#09261E]" />
                   </div>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
-                </button>
+                  <div>
+                    <p className="font-medium">Email</p>
+                    <p className="text-xs text-gray-500">
+                      Share via email with detailed info
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight className="w-5 h-5 text-gray-400" />
               </div>
-              
+
               {/* PDF Report Option */}
-              <div className="p-4">
-                <button 
-                  className="flex items-center justify-between w-full cursor-pointer text-left"
-                  onClick={generatePdfReport}
-                >
-                  <div className="flex items-center">
-                    <FileText className="w-5 h-5 text-[#09261E] mr-3" />
-                    <div className="font-medium">PDF Report</div>
+              <div
+                className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:border-[#09261E] hover:bg-[#09261E]/5 transition-colors"
+                onClick={generatePdfReport}
+              >
+                <div className="flex items-center">
+                  <div className="bg-[#09261E]/10 w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <FileText className="w-5 h-5 text-[#09261E]" />
                   </div>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
-                </button>
+                  <div>
+                    <p className="font-medium">PDF Report</p>
+                    <p className="text-xs text-gray-500">
+                      Download a detailed PDF report
+                    </p>
+                  </div>
+                </div>
+                <Download className="w-5 h-5 text-gray-400" />
               </div>
-            </div>
-            
-            <div className="text-center text-sm text-gray-500 mt-4">
-              This property link will be active until the property is sold or removed by the seller.
+
+              {/* Social Media Options */}
+              <div className="border-t pt-3 mt-3">
+                <h4 className="text-sm font-medium mb-2 text-gray-600">
+                  Share on Social Media
+                </h4>
+                <div className="flex gap-3">
+                  <button className="bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] p-2 rounded-full">
+                    <Facebook className="w-5 h-5" />
+                  </button>
+                  <button className="bg-[#1DA1F2]/10 hover:bg-[#1DA1F2]/20 text-[#1DA1F2] p-2 rounded-full">
+                    <Twitter className="w-5 h-5" />
+                  </button>
+                  <button className="bg-[#0A66C2]/10 hover:bg-[#0A66C2]/20 text-[#0A66C2] p-2 rounded-full">
+                    <Linkedin className="w-5 h-5" />
+                  </button>
+                  <button className="bg-[#E60023]/10 hover:bg-[#E60023]/20 text-[#E60023] p-2 rounded-full">
+                    <SiPinterest className="w-5 h-5" />
+                  </button>
+                  <button className="bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] p-2 rounded-full">
+                    <MessageCircle className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+
+          <DialogFooter>
+            <Button
+              className="bg-[#09261E] hover:bg-[#09261E]/90"
+              onClick={() => setShareModalOpen(false)}
+            >
+              Done
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
