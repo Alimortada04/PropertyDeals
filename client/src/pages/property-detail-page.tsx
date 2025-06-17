@@ -2484,7 +2484,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             </div>
 
             {/* Right Sidebar - Contact Interested Card */}
-            <div className="w-full md:w-1/3 lg:w-1/3 xl:w-1/4 mt-8 md:mt-0">
+            <div className="hidden md:block w-full md:w-1/3 lg:w-1/3 xl:w-1/4 mt-8 md:mt-0">
               <div
                 className="sticky top-24 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md"
                 style={{ zIndex: 40 }}
