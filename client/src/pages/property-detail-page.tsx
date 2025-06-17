@@ -2567,7 +2567,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     </svg>
                     {property.view_count || 0} people viewed this property
                   </div>
-                  <div className="text-gray-500 text-sm text-center">
+                  <div className="text-gray-500 text-sm text-left">
                     Listed: {property.created_at ? new Date(property.created_at).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}
                   </div>
                 </div>
