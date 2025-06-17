@@ -2494,7 +2494,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 </div>
 
                 {/* Middle Section */}
-                <div className="p-6 border-b border-gray-200">
+                <div className="p-6 border-b border-gray-200 pl-[16px] pr-[16px] pt-[16px] pb-[16px]">
                   <div className="flex items-center mb-6">
                     <Link
                       to={`/rep/${property.seller_profile?.id || property.seller_id}`}
