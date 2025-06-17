@@ -2484,16 +2484,18 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
             {/* Right Sidebar - Contact Interested Card */}
             <div className="hidden md:block w-full md:w-1/3 lg:w-1/3 xl:w-1/4 mt-8 md:mt-0 md:flex-shrink-0">
               <div
-                className="sticky top-20 bg-gray-50 rounded-lg overflow-hidden border border-gray-200 shadow-md w-full"
+                className="sticky top-20 bg-white rounded-lg overflow-hidden border border-gray-200 shadow-md w-full"
                 style={{ zIndex: 40, minWidth: '320px' }}
               >
-                <div className="p-4">
-                  <h3 className="text-2xl font-bold text-[#09261E]">Interested?</h3>
-                  <p className="text-gray-600 mt-1">Contact Seller Now</p>
+                {/* Top Section */}
+                <div className="p-6 bg-gray-50 border-b border-gray-200">
+                  <h3 className="text-2xl font-bold text-[#09261E] mb-2">Interested in this property?</h3>
+                  <p className="text-gray-600">Contact Seller Now</p>
                 </div>
 
-                <div className="bg-white p-4 border-y border-gray-200">
-                  <div className="flex items-center mb-4 pb-3 border-b border-gray-100">
+                {/* Middle Section */}
+                <div className="p-6 border-b border-gray-200">
+                  <div className="flex items-center mb-6">
                     <Link
                       to={`/rep/${property.seller_profile?.id || property.seller_id}`}
                       className="flex items-center group"
@@ -2507,16 +2509,17 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           {property.seller_profile?.full_name ? property.seller_profile.full_name.substring(0, 2).toUpperCase() : "S"}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="ml-3">
+                      <div className="ml-4">
                         <div className="font-medium text-xl text-[#09261E] group-hover:underline">
                           {property.seller_profile?.full_name || "Property Seller"}
                         </div>
                         <div className="text-gray-500 text-sm flex items-center">
-                          {property.seller_profile?.account_type || "Seller"} <span className="mx-1">•</span> Responds within 24hrs
+                          {property.seller_profile?.account_type || "Seller"} <span className="mx-1">•</span> Responds in 24hrs
                         </div>
                         {property.seller_profile?.phone_number && (
                           <div className="text-gray-600 text-sm flex items-center mt-1">
-                            📞 {property.seller_profile.phone_number}
+                            <Phone className="h-4 w-4 mr-2" />
+                            {property.seller_profile.phone_number}
                           </div>
                         )}
                       </div>
@@ -2524,31 +2527,50 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   </div>
 
                   <Button
-                    className="w-full bg-[#09261E] hover:bg-[#135341] mb-3 py-6 rounded-md text-base font-medium transition-all transform hover:scale-[1.02]"
+                    className="w-full bg-[#09261E] hover:bg-[#135341] mb-3 py-3 rounded-md text-base font-medium transition-all"
                     onClick={() => setContactModalOpen(true)}
                   >
                     Contact Seller
                   </Button>
 
                   <Button
-                    className="w-full bg-gray-50 text-gray-800 hover:bg-gray-100 hover:border-gray-400 transition-all mb-3 py-6 rounded-md text-base font-medium border border-gray-300 transform hover:scale-[1.02]"
+                    className="w-full bg-white text-gray-800 hover:bg-gray-50 hover:border-gray-400 transition-all py-3 rounded-md text-base font-medium border border-gray-300"
                     variant="outline"
                     onClick={() => setOfferModalOpen(true)}
                   >
                     Make an Offer
                   </Button>
-
-                  <div className="mt-4 pt-3 border-t border-gray-100 space-y-2">
-                    <div className="flex items-center justify-center text-gray-500 text-sm">
-                      👁️ {property.view_count || 0} people viewed this property
-                    </div>
-                    <div className="flex items-center justify-center text-gray-500 text-sm">
-                      Listed: {property.created_at ? new Date(property.created_at).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}
-                    </div>
-                  </div>
                 </div>
 
-                
+                {/* Bottom Section */}
+                <div className="p-6 bg-gray-50">
+                  <div className="flex items-center justify-center text-gray-500 text-sm mb-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                    {property.view_count || 0} people viewed this property
+                  </div>
+                  <div className="text-gray-500 text-sm text-center">
+                    Listed: {property.created_at ? new Date(property.created_at).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}
+                  </div>
+                </div>
               </div>
 
               {/* Contact Card - Mobile Version */}
