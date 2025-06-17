@@ -316,9 +316,9 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         <div className="flex justify-between items-start mb-2">
           <div className="flex-1">
             <div className="flex items-baseline justify-between">
-              <h1 className="text-2xl font-bold text-[#09261E]">${property.price?.toLocaleString()}</h1>
+              <h1 className="text-2xl font-bold text-[#09261E]">${property.price?.toLocaleString() || '0'}</h1>
               <span className="text-xs text-gray-500">
-                ${property.squareFeet ? Math.round((property.price || 0) / property.squareFeet).toLocaleString() : 'N/A'}/sqft
+                ${property.squareFeet ? Math.round((property.price || 0) / property.squareFeet) : 'N/A'}/sqft
               </span>
             </div>
             
