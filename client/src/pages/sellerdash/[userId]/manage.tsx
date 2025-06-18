@@ -32,21 +32,18 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 
-// Status options for multi-select filtering
+// Status options for multi-select filtering - only using valid database values
 const STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft' },
   { value: 'live', label: 'Live' },
   { value: 'offer_accepted', label: 'Offer Accepted' },
   { value: 'pending', label: 'Pending' },
-  { value: 'under_contract', label: 'Under Contract' },
   { value: 'closed', label: 'Closed' },
-  { value: 'dropped', label: 'Dropped' },
-  { value: 'archived', label: 'Archived' }
+  { value: 'dropped', label: 'Dropped' }
 ];
 
-// Default selected statuses - exclude closed, archived, and dropped
-// Only use status values that exist in the database
-const DEFAULT_STATUS_FILTERS = ['draft', 'live'];
+// Default selected statuses - exclude closed and dropped, focus on active properties
+const DEFAULT_STATUS_FILTERS = ['draft', 'live', 'offer_accepted', 'pending'];
 
 export default function SellerManagePage() {
   const params = useParams();

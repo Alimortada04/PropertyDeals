@@ -24,8 +24,8 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import { Link, useLocation } from "wouter";
 
-// Define property status types
-type PropertyStatus = 'draft' | 'live' | 'offer_accepted' | 'pending' | 'under_contract' | 'closed' | 'archived' | 'dropped';
+// Define property status types - matching valid database values
+type PropertyStatus = 'draft' | 'live' | 'offer_accepted' | 'pending' | 'closed' | 'dropped';
 
 // Define property card props
 interface PropertyCardProps {
