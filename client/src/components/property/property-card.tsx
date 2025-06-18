@@ -81,12 +81,8 @@ export function PropertyCard({
         return 'bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200';
       case 'pending':
         return 'bg-orange-100 text-orange-800 border-orange-200 hover:bg-orange-200';
-      case 'under_contract':
-        return 'bg-orange-100 text-orange-800 border-orange-200 hover:bg-orange-200';
       case 'closed':
         return 'bg-green-800 text-white border-green-800 hover:bg-green-900';
-      case 'archived':
-        return 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200';
       case 'dropped':
         return 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200';
       default:
@@ -101,9 +97,7 @@ export function PropertyCard({
       'live': 'Live',
       'offer_accepted': 'Offer Accepted',
       'pending': 'Pending',
-      'under_contract': 'Under Contract',
       'closed': 'Closed',
-      'archived': 'Archived',
       'dropped': 'Dropped'
     };
     

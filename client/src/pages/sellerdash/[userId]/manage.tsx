@@ -82,15 +82,14 @@ export default function SellerManagePage() {
     
     return matchesSearch;
   }).sort((a, b) => {
-    // Define status priority order: live, offer_accepted, pending, draft, closed, archived, dropped
+    // Define status priority order: live, offer_accepted, pending, draft, closed, dropped
     const statusPriority: Record<string, number> = {
       'live': 1,
       'offer_accepted': 2,
       'pending': 3,
       'draft': 4,
       'closed': 5,
-      'archived': 6,
-      'dropped': 7
+      'dropped': 6
     };
     
     // First sort by status priority
@@ -140,9 +139,7 @@ export default function SellerManagePage() {
       'live': { label: 'Live', className: 'bg-green-100 text-green-800 border-green-200' },
       'offer_accepted': { label: 'Offer Accepted', className: 'bg-blue-100 text-blue-800 border-blue-200' },
       'pending': { label: 'Pending', className: 'bg-orange-100 text-orange-800 border-orange-200' },
-      'under_contract': { label: 'Under Contract', className: 'bg-orange-100 text-orange-800 border-orange-200' },
       'closed': { label: 'Closed', className: 'bg-green-800 text-white border-green-800' },
-      'archived': { label: 'Archived', className: 'bg-gray-100 text-gray-600 border-gray-200' },
       'dropped': { label: 'Dropped', className: 'bg-red-100 text-red-800 border-red-200' }
     };
     
