@@ -44,7 +44,7 @@ interface MarketingCenterModalProps {
 
 type MarketingView = 'main' | 'new-campaign' | 'all-campaigns' | 'jv-partners';
 type CampaignStep = 1 | 2 | 3 | 4;
-type CampaignType = 'new-deal' | 'price-drop' | 'final-call' | 'under-contract';
+type CampaignType = 'new-deal' | 'price-drop' | 'final-call' | 'offer-accepted';
 type CampaignChannel = 'email' | 'social' | 'both';
 
 // Mock data for demonstration
@@ -348,7 +348,7 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
             { value: 'new-deal', label: 'New Deal', description: 'Announce a new property listing' },
             { value: 'price-drop', label: 'Price Drop', description: 'Alert about a price reduction' },
             { value: 'final-call', label: 'Final Call', description: 'Last chance urgency campaign' },
-            { value: 'under-contract', label: 'Under Contract', description: 'Announce a successful sale' }
+            { value: 'offer-accepted', label: 'Offer Accepted', description: 'Announce an accepted offer' }
           ].map((type) => (
             <Card 
               key={type.value}
