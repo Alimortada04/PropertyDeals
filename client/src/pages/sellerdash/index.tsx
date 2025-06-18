@@ -74,7 +74,7 @@ export default function SellerDashboard() {
   // Group properties by status
   const draftProperties = properties.filter((p: any) => p.status === 'draft');
   const activeProperties = properties.filter((p: any) => p.status === 'active' || p.status === 'live');
-  const pendingProperties = properties.filter((p: any) => p.status === 'pending' || p.status === 'under_contract');
+  const pendingProperties = properties.filter((p: any) => p.status === 'pending' || p.status === 'offer_accepted');
   const closedProperties = properties.filter((p: any) => p.status === 'closed');
 
   const formatPrice = (price: string | number | null) => {
@@ -103,7 +103,7 @@ export default function SellerDashboard() {
       case 'active':
       case 'live': return 'default';
       case 'pending':
-      case 'under_contract': return 'secondary';
+      case 'offer_accepted': return 'secondary';
       case 'closed': return 'destructive';
       default: return 'outline';
     }

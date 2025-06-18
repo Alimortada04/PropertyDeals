@@ -163,10 +163,10 @@ export function MarketingCenterModal({ isOpen, onClose }: MarketingCenterModalPr
         email: `This is your final opportunity to secure this deal!\n\n${property.title}\n📍 ${property.address}\n💰 ${property.price.toLocaleString()}\n\nOffers needed by end of week. Don't let this one slip away!`,
         social: `⏰ FINAL CALL! ${property.title} - last chance before it's gone. $${property.price.toLocaleString()}. Act now! #FinalCall #LastChance`
       },
-      'under-contract': {
-        subject: `✅ UNDER CONTRACT: ${property.title} - But we have more!`,
-        email: `This one's under contract, but don't worry!\n\n${property.title} - SOLD\n📍 ${property.address}\n💰 ${property.price.toLocaleString()}\n\nWe have similar properties available. Reply to see what's next!`,
-        social: `✅ ANOTHER ONE SOLD! ${property.title} is under contract. Want to see what else we have? DM us! #Sold #MoreDealsAvailable`
+      'offer-accepted': {
+        subject: `✅ OFFER ACCEPTED: ${property.title} - But we have more!`,
+        email: `This one has an offer accepted, but don't worry!\n\n${property.title} - OFFER ACCEPTED\n📍 ${property.address}\n💰 ${property.price.toLocaleString()}\n\nWe have similar properties available. Reply to see what's next!`,
+        social: `✅ OFFER ACCEPTED! ${property.title} has an accepted offer. Want to see what else we have? DM us! #Sold #MoreDealsAvailable`
       }
     };
 

@@ -230,7 +230,7 @@ const mockTemplates = [
     openRate: 0.68,
     responseRate: 0.15,
     lastUsed: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    tags: ["update", "under contract", "alternative options"],
+    tags: ["update", "offer accepted", "alternative options"],
   },
 ];
 
