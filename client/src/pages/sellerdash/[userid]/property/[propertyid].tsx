@@ -2447,13 +2447,13 @@ export default function PropertyEditor() {
                   <SelectItem value="archived">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-gray-600"></div>
-                      <span>Archive</span>
+                      <span>Archived</span>
                     </div>
                   </SelectItem>
                   <SelectItem value="dropped" className="text-red-600">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-red-600"></div>
-                      <span>Drop</span>
+                      <span>Dropped</span>
                     </div>
                   </SelectItem>
                 </SelectContent>
@@ -2540,13 +2540,13 @@ export default function PropertyEditor() {
                       <SelectItem value="archived">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-gray-600"></div>
-                          <span>Archive</span>
+                          <span>Archived</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="dropped" className="text-red-600">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-red-600"></div>
-                          <span>Drop</span>
+                          <span>Dropped</span>
                         </div>
                       </SelectItem>
                     </SelectContent>

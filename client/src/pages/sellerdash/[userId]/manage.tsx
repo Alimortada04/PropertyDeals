@@ -36,14 +36,16 @@ import { toast } from '@/hooks/use-toast';
 const STATUS_OPTIONS = [
   { value: 'draft', label: 'Draft' },
   { value: 'live', label: 'Live' },
+  { value: 'offer_accepted', label: 'Offer Accepted' },
+  { value: 'pending', label: 'Pending' },
   { value: 'under_contract', label: 'Under Contract' },
   { value: 'closed', label: 'Closed' },
   { value: 'dropped', label: 'Dropped' },
   { value: 'archived', label: 'Archived' }
 ];
 
-// Default selected statuses
-const DEFAULT_STATUS_FILTERS = ['draft', 'live', 'under_contract'];
+// Default selected statuses - exclude closed, archived, and dropped
+const DEFAULT_STATUS_FILTERS = ['draft', 'live', 'offer_accepted', 'pending', 'under_contract'];
 
 export default function SellerManagePage() {
   const params = useParams();
@@ -113,22 +115,22 @@ export default function SellerManagePage() {
     }
   };
 
-  // Get status badge styling with requested colors
+  // Get status badge styling with exact color requirements
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      'draft': { label: 'Draft', className: 'bg-yellow-100 text-yellow-800' },
-      'live': { label: 'Live', className: 'bg-green-100 text-green-800' },
-      'offer_accepted': { label: 'Offer Accepted', className: 'bg-blue-100 text-blue-800' },
-      'pending': { label: 'Pending', className: 'bg-orange-100 text-orange-800' },
-      'under_contract': { label: 'Pending', className: 'bg-orange-100 text-orange-800' },
-      'closed': { label: 'Closed', className: 'bg-green-800 text-white' },
-      'archived': { label: 'Archived', className: 'bg-gray-100 text-gray-600' },
-      'dropped': { label: 'Dropped', className: 'bg-red-100 text-red-800' }
+      'draft': { label: 'Draft', className: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
+      'live': { label: 'Live', className: 'bg-green-100 text-green-800 border-green-200' },
+      'offer_accepted': { label: 'Offer Accepted', className: 'bg-blue-100 text-blue-800 border-blue-200' },
+      'pending': { label: 'Pending', className: 'bg-orange-100 text-orange-800 border-orange-200' },
+      'under_contract': { label: 'Under Contract', className: 'bg-orange-100 text-orange-800 border-orange-200' },
+      'closed': { label: 'Closed', className: 'bg-green-800 text-white border-green-800' },
+      'archived': { label: 'Archived', className: 'bg-gray-100 text-gray-600 border-gray-200' },
+      'dropped': { label: 'Dropped', className: 'bg-red-100 text-red-800 border-red-200' }
     };
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
     return (
-      <Badge className={config.className}>
+      <Badge variant="outline" className={`${config.className} font-medium`}>
         {config.label}
       </Badge>
     );
