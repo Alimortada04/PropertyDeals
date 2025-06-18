@@ -5,6 +5,15 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { supabase } from "@/lib/supabase";
+import { 
+  getPropertyImageUrl, 
+  getPropertyGalleryUrls, 
+  getPropertyVideoUrl,
+  getProfileImageUrl,
+  generateAvatarUrl,
+  convertLegacyImageUrl,
+  getSignedUrl
+} from "@/lib/supabase-storage";
 import {
   Share2,
   Heart,
@@ -344,9 +353,11 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   }
 
   const propertyImages = [
-    property.primary_image,
-    ...(property.gallery_images || []),
-  ];
+    property.primary_image || getPropertyImageUrl(property.id.toString()),
+    ...(property.gallery_images || []).map((imageId: string) => 
+      getPropertyGalleryUrls(property.id.toString(), [imageId])[0]
+    ),
+  ].filter(Boolean);
 
   const formattedAddress = `${property.address}, ${property.city}, ${property.state} ${property.zipCode}`;
 
@@ -2502,7 +2513,9 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                     >
                       <Avatar className="h-16 w-16 border border-gray-200">
                         <AvatarImage
-                          src={property.seller_profile?.profile_image || `https://ui-avatars.com/api/?name=${encodeURIComponent(property.seller_profile?.full_name || "Seller")}&background=135341&color=ffffff`}
+                          src={property.seller_profile?.profile_image || 
+                               (property.seller_profile?.id ? getProfileImageUrl(property.seller_profile.id, "profile-photo") : null) ||
+                               generateAvatarUrl(property.seller_profile?.full_name || "Seller")}
                           alt={property.seller_profile?.full_name || "Seller"}
                         />
                         <AvatarFallback className="bg-[#09261E]/10 text-[#09261E] text-lg font-semibold">
