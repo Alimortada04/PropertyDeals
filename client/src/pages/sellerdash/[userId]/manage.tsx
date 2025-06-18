@@ -76,7 +76,7 @@ export default function SellerManagePage() {
     }
   }, [user?.id, statusFilters]);
 
-  // Filter properties based on search query
+  // Filter and sort properties based on search query and status priority
   const filteredProperties = properties.filter(property => {
     const matchesSearch = !searchQuery || 
       property.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -84,6 +84,26 @@ export default function SellerManagePage() {
       property.city?.toLowerCase().includes(searchQuery.toLowerCase());
     
     return matchesSearch;
+  }).sort((a, b) => {
+    // Define status priority order: live, offer_accepted, pending, draft, closed, archived, dropped
+    const statusPriority: Record<string, number> = {
+      'live': 1,
+      'offer_accepted': 2,
+      'pending': 3,
+      'draft': 4,
+      'closed': 5,
+      'archived': 6,
+      'dropped': 7
+    };
+    
+    // First sort by status priority
+    const statusComparison = (statusPriority[a.status] || 999) - (statusPriority[b.status] || 999);
+    if (statusComparison !== 0) return statusComparison;
+    
+    // Then sort by newest (createdAt) within the same status
+    const dateA = new Date(a.createdAt || a.created_at || 0);
+    const dateB = new Date(b.createdAt || b.created_at || 0);
+    return dateB.getTime() - dateA.getTime(); // Newest first
   });
 
   // Handle status filter changes

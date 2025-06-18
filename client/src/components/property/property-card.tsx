@@ -144,9 +144,9 @@ export function PropertyCard({
         
         {/* Top badges */}
         <div className="absolute top-3 left-3">
-          <Badge variant="outline" className={`px-3 py-1 font-medium border ${getStatusBadgeClass(status)}`}>
+          <span className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-full border ${getStatusBadgeClass(status)}`}>
             {formatStatusLabel(status)}
-          </Badge>
+          </span>
         </div>
         
         <div className="absolute top-3 right-3">
