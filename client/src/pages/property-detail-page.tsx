@@ -2540,37 +2540,40 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                   >
                     Make an Offer
                   </Button>
+
+                  {/* Thin line separator and view/listed info */}
+                  <div className="border-t border-gray-200 mt-6 pt-4">
+                    <div className="flex items-center justify-center text-gray-500 text-sm mb-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                      {property.view_count || 0} people viewed this property
+                    </div>
+                    <div className="text-gray-500 text-sm text-center">
+                      Listed: {property.created_at ? new Date(property.created_at).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}
+                    </div>
+                  </div>
                 </div>
 
-                {/* Bottom Section */}
-                <div className="p-6 bg-gray-50 pl-[16px] pr-[16px] pt-[16px] pb-[16px]">
-                  <div className="flex items-center justify-center text-gray-500 text-sm mb-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={1.5}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    {property.view_count || 0} people viewed this property
-                  </div>
-                  <div className="text-gray-500 text-sm text-left">
-                    Listed: {property.created_at ? new Date(property.created_at).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}
-                  </div>
-                </div>
+                {/* Bottom Section - Empty now */}
+                <div className="bg-gray-50 h-4"></div>
               </div>
 
               {/* Contact Card - Mobile Version */}
