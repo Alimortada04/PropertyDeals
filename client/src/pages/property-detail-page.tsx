@@ -2571,7 +2571,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
 
                 {/* Bottom Section - Empty now */}
                 <div className="bg-gray-50 h-8">
-                  <div className="text-gray-500 text-sm text-center pt-[4px] pb-[4px]">
+                  <div className="text-gray-500 text-sm text-left pl-[16px] pr-[16px] pt-[4px] pb-[4px]">
                   Listed: {property.created_at ? new Date(property.created_at).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}
                 </div>
                 </div>
