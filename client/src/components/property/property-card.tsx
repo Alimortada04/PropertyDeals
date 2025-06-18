@@ -85,8 +85,7 @@ export function PropertyCard({
         return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200';
       case 'dropped':
         return 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200';
-      case 'archived':
-        return 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200';
+
       default:
         return 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200';
     }

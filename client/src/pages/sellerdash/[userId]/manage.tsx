@@ -54,7 +54,6 @@ const statusColorMap = {
   "offer_accepted": "blue",
   "closed": "green",
   "dropped": "red",
-  "archived": "gray",
 };
 
 export default function SellerManagePage() {

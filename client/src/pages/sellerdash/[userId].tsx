@@ -232,7 +232,7 @@ export default function SellerDashboardPage() {
         case 'draft': return 'Draft';
         case 'active': return 'Live';
         case 'live': return 'Live';
-        case 'under_contract': return 'Under Contract';
+        case 'offer_accepted': return 'Offer Accepted';
         case 'closed': return 'Closed';
         case 'pending': return 'Pending';
         default: return status || 'Unknown';
