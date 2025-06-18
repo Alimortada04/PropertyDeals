@@ -553,7 +553,7 @@ export function usePropertyProfile() {
   // Load properties when user changes - use default status filters
   useEffect(() => {
     if (supabaseUser?.id) {
-      fetchSellerProperties(['draft', 'live', 'under_contract']);
+      fetchSellerProperties(['draft', 'live', 'offer_accepted']);
     } else {
       setProperties([]);
     }

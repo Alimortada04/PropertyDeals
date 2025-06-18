@@ -70,21 +70,23 @@ export function PropertyCard({
   const offersInboxModal = useOffersInboxModal();
   const marketingCenterModal = useMarketingCenterModal();
   
-  // Define status badge color function with exact color specifications
+  // Define status badge color function with user's exact color specifications
   const getStatusBadgeClass = (status: PropertyStatus) => {
     switch (status) {
       case 'draft':
+        return 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200';
+      case 'pending':
         return 'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200';
       case 'live':
         return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200';
       case 'offer_accepted':
         return 'bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200';
-      case 'pending':
-        return 'bg-orange-100 text-orange-800 border-orange-200 hover:bg-orange-200';
       case 'closed':
-        return 'bg-green-800 text-white border-green-800 hover:bg-green-900';
+        return 'bg-green-100 text-green-800 border-green-200 hover:bg-green-200';
       case 'dropped':
         return 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200';
+      case 'archived':
+        return 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200';
       default:
         return 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200';
     }

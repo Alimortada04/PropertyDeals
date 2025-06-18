@@ -32,7 +32,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
 
-// Status options for multi-select filtering - only using valid database values
+// Status options for multi-select filtering - using exact database enum values
 const STATUS_OPTIONS = [
   { value: 'active', label: 'Active' }, // Special filter that includes live, offer_accepted, pending
   { value: 'draft', label: 'Drafts' },
@@ -45,6 +45,17 @@ const STATUS_OPTIONS = [
 
 // Default selected statuses - set Active as default
 const DEFAULT_STATUS_FILTERS = ['active'];
+
+// Status color mapping as requested by user
+const statusColorMap = {
+  "draft": "gray",
+  "pending": "yellow", 
+  "live": "green",
+  "offer_accepted": "blue",
+  "closed": "green",
+  "dropped": "red",
+  "archived": "gray",
+};
 
 export default function SellerManagePage() {
   const params = useParams();
