@@ -2566,14 +2566,15 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                       </svg>
                       {property.view_count || 0} people viewed this property
                     </div>
-                    <div className="text-gray-500 text-sm text-center">
-                      Listed: {property.created_at ? new Date(property.created_at).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}
-                    </div>
                   </div>
                 </div>
 
                 {/* Bottom Section - Empty now */}
-                <div className="bg-gray-50 h-4"></div>
+                <div className="bg-gray-50 h-8">
+                  <div className="text-gray-500 text-sm text-center pt-[4px] pb-[4px]">
+                  Listed: {property.created_at ? new Date(property.created_at).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : 'Date unavailable'}
+                </div>
+                </div>
               </div>
 
               {/* Contact Card - Mobile Version */}
