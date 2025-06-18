@@ -45,7 +45,8 @@ const STATUS_OPTIONS = [
 ];
 
 // Default selected statuses - exclude closed, archived, and dropped
-const DEFAULT_STATUS_FILTERS = ['draft', 'live', 'offer_accepted', 'pending', 'under_contract'];
+// Only use status values that exist in the database
+const DEFAULT_STATUS_FILTERS = ['draft', 'live'];
 
 export default function SellerManagePage() {
   const params = useParams();
