@@ -137,7 +137,7 @@ export const propertyProfile = pgTable("property_profile", {
   featuredProperty: boolean("featured_property").default(false).notNull(),
   
   // Status and visibility
-  status: text("status").default("draft").notNull(), // draft, live, offer_accepted, under_contract, closed, archived, dropped
+  status: text("status").default("draft").notNull(), // draft, live, offer_accepted, pending, closed, dropped
   
   // Engagement stats
   viewCount: integer("view_count").default(0).notNull(),
@@ -209,6 +209,9 @@ export const reps = pgTable("reps", {
 // Define role types
 export type RoleStatus = "approved" | "pending" | "denied" | "not_applied";
 export type UserRole = "buyer" | "seller" | "rep";
+
+// Define property status types
+export type PropertyStatus = "draft" | "live" | "offer_accepted" | "pending" | "closed" | "dropped";
 
 export interface RoleData {
   status: RoleStatus;

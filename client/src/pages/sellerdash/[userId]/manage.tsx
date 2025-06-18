@@ -34,7 +34,8 @@ import { toast } from '@/hooks/use-toast';
 
 // Status options for multi-select filtering - only using valid database values
 const STATUS_OPTIONS = [
-  { value: 'draft', label: 'Draft' },
+  { value: 'active', label: 'Active' }, // Special filter that includes live, offer_accepted, pending
+  { value: 'draft', label: 'Drafts' },
   { value: 'live', label: 'Live' },
   { value: 'offer_accepted', label: 'Offer Accepted' },
   { value: 'pending', label: 'Pending' },
@@ -42,8 +43,8 @@ const STATUS_OPTIONS = [
   { value: 'dropped', label: 'Dropped' }
 ];
 
-// Default selected statuses - exclude closed and dropped, focus on active properties
-const DEFAULT_STATUS_FILTERS = ['draft', 'live', 'offer_accepted', 'pending'];
+// Default selected statuses - set Active as default
+const DEFAULT_STATUS_FILTERS = ['active'];
 
 export default function SellerManagePage() {
   const params = useParams();
@@ -66,10 +67,28 @@ export default function SellerManagePage() {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
 
+  // Convert status filters to actual database statuses
+  const getActualStatusFilters = (filters: string[]) => {
+    const actualFilters: string[] = [];
+    
+    filters.forEach(filter => {
+      if (filter === 'active') {
+        // Active includes live, offer_accepted, and pending
+        actualFilters.push('live', 'offer_accepted', 'pending');
+      } else {
+        actualFilters.push(filter);
+      }
+    });
+    
+    // Remove duplicates
+    return [...new Set(actualFilters)];
+  };
+
   // Load properties with current filters
   useEffect(() => {
     if (user?.id) {
-      fetchSellerProperties(statusFilters);
+      const actualFilters = getActualStatusFilters(statusFilters);
+      fetchSellerProperties(actualFilters);
     }
   }, [user?.id, statusFilters]);
 
@@ -145,9 +164,9 @@ export default function SellerManagePage() {
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
     return (
-      <Badge className={`${config.className} font-medium border`}>
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${config.className}`}>
         {config.label}
-      </Badge>
+      </span>
     );
   };
 
