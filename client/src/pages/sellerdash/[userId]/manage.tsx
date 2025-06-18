@@ -145,7 +145,7 @@ export default function SellerManagePage() {
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
     return (
-      <Badge variant="outline" className={`${config.className} font-medium`}>
+      <Badge className={`${config.className} font-medium border`}>
         {config.label}
       </Badge>
     );

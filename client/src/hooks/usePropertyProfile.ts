@@ -71,7 +71,7 @@ export interface PropertyProfile {
   featured_property?: boolean;
   
   // Status
-  status: 'draft' | 'live' | 'under_contract' | 'closed' | 'dropped' | 'archived';
+  status: 'draft' | 'live' | 'offer_accepted' | 'pending' | 'closed' | 'dropped';
   
   // Engagement stats
   view_count?: number;
@@ -260,16 +260,16 @@ export function usePropertyProfile() {
 
       // Rental Info (JSON & Calculated)
       rent_total_monthly: parseNum(formData.rentTotalMonthly),
-      rent_total_annual: parseNum(formData.rentTotalMonthly) ? parseNum(formData.rentTotalMonthly) * 12 : null,
+      rent_total_annual: parseNum(formData.rentTotalMonthly) ? parseNum(formData.rentTotalMonthly)! * 12 : null,
       rent_unit: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
 
       // Expenses (JSON & Calculated)
       expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
       expenses_total_monthly: parseNum(formData.expensesTotalMonthly),
-      expenses_total_annual: parseNum(formData.expensesTotalMonthly) ? parseNum(formData.expensesTotalMonthly) * 12 : null,
+      expenses_total_annual: parseNum(formData.expensesTotalMonthly) ? parseNum(formData.expensesTotalMonthly)! * 12 : null,
 
       // Repairs (JSON & Calculated)
-      repairs: Array.isArray(formData.repairProjects) ? formData.repairProjects.map(repair => ({
+      repairs: Array.isArray(formData.repairProjects) ? formData.repairProjects.map((repair: any) => ({
         name: repair.name,
         description: repair.description,
         cost: parseNum(repair.cost),
@@ -572,10 +572,10 @@ export function usePropertyProfile() {
     // Computed values
     draftProperties: properties.filter(p => p.status === 'draft'),
     liveProperties: properties.filter(p => p.status === 'live'),
-    underContractProperties: properties.filter(p => p.status === 'under_contract'),
+    offerAcceptedProperties: properties.filter(p => p.status === 'offer_accepted'),
+    pendingProperties: properties.filter(p => p.status === 'pending'),
     closedProperties: properties.filter(p => p.status === 'closed'),
     droppedProperties: properties.filter(p => p.status === 'dropped'),
-    archivedProperties: properties.filter(p => p.status === 'archived'),
     totalProperties: properties.length,
   };
 }
