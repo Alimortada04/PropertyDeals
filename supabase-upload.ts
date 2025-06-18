@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { supabase } from "./client/src/lib/supabase";
 import { v4 as uuidv4 } from 'uuid';
 
 export async function uploadFileToSupabase(
