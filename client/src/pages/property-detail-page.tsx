@@ -391,7 +391,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
   // Handle email share
   const handleEmailShare = () => {
     const subject = `Property Report: ${property.address}`;
-    const body = `Check out this property at ${property.address}, ${property.city}, ${property.state} ${property.zipCode}.\n\nPrice: $${property.listing_price.toLocaleString()}\nBedrooms: ${property.bedrooms}\nBathrooms: ${property.bathrooms}\nSquare Feet: ${property.squareFeet?.toLocaleString() || "N/A"}\n\nView the full property report here: ${shareUrl}`;
+    const body = `Check out this property at ${property.address}, ${property.city}, ${property.state} ${property.zipCode}.\n\nPrice: $${property.listing_price?.toLocaleString() || "N/A"}\nBedrooms: ${property.bedrooms}\nBathrooms: ${property.bathrooms}\nSquare Feet: ${property.squareFeet?.toLocaleString() || "N/A"}\n\nView the full property report here: ${shareUrl}`;
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
@@ -563,7 +563,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
               <div className="text-3xl md:text-4xl font-bold text-[#09261E]">
                 $
                 {property?.listing_price
-                  ? property.listing_price.toLocaleString()
+                  ? property.listing_price?.toLocaleString()
                   : "Price not available"}
               </div>
               {/* PPSF Display - Enhancement 1 */}
@@ -920,7 +920,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             </span>
                             <div className="flex items-center">
                               <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
-                                {property.rent_total_monthly ? `$${property.rent_total_monthly.toLocaleString()}/month` : 'N/A'}
+                                {property.rent_total_monthly ? `$${property.rent_total_monthly?.toLocaleString()}/month` : 'N/A'}
                               </span>
                               <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
                             </div>
@@ -971,7 +971,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             <div className="flex justify-between text-sm pt-2 border-t border-gray-100">
                               <span className="text-gray-500 font-medium">Annual Rent</span>
                               <span className="text-gray-700 font-bold">
-                                ${property.rent_total_annual.toLocaleString()}/year
+                                ${property.rent_total_annual?.toLocaleString()}/year
                               </span>
                             </div>
                           )}
@@ -987,7 +987,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             </span>
                             <div className="flex items-center">
                               <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
-                                {property.expenses_total_monthly ? `$${property.expenses_total_monthly.toLocaleString()}/month` : 'N/A'}
+                                {property.expenses_total_monthly ? `$${property.expenses_total_monthly?.toLocaleString()}/month` : 'N/A'}
                               </span>
                               <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
                             </div>
@@ -1014,7 +1014,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                 <div key={index} className="flex justify-between text-sm">
                                   <span className="text-gray-500">{expense.name}</span>
                                   <span className="text-gray-700">
-                                    ${amount.toLocaleString()}{displaySuffix}
+                                    ${amount?.toLocaleString()}{displaySuffix}
                                   </span>
                                 </div>
                               );
@@ -1030,7 +1030,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             <div className="flex justify-between text-sm pt-2 border-t border-gray-100">
                               <span className="text-gray-500 font-medium">Annual Expenses</span>
                               <span className="text-gray-700 font-bold">
-                                ${property.expenses_total_annual.toLocaleString()}/year
+                                ${property.expenses_total_annual?.toLocaleString()}/year
                               </span>
                             </div>
                           )}
@@ -1046,7 +1046,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             </span>
                             <div className="flex items-center">
                               <span className="font-semibold text-[#09261E] mr-2 group-hover:text-[#803344]">
-                                {property.repair_costs_total ? `$${property.repair_costs_total.toLocaleString()}` : 'N/A'}
+                                {property.repair_costs_total ? `$${property.repair_costs_total?.toLocaleString()}` : 'N/A'}
                               </span>
                               <ChevronDown className="h-4 w-4 text-gray-500 group-hover:text-[#803344]" />
                             </div>
@@ -1087,7 +1087,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                     </div>
                                     <div className="flex items-center space-x-2">
                                       <span className="text-gray-700 font-medium">
-                                        ${repair.cost ? (typeof repair.cost === 'string' ? parseInt(repair.cost.replace(/[$,]/g, '')) : repair.cost).toLocaleString() : '0'}
+                                        ${repair.cost ? (typeof repair.cost === 'string' ? parseInt(repair.cost.replace(/[$,]/g, '')) : repair.cost)?.toLocaleString() : '0'}
                                       </span>
                                       
                                       {/* Document icon for quote - conditionally visible */}
@@ -1151,7 +1151,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                                   </p>
                                                 )}
                                                 <p className="text-sm text-gray-600 mb-2">
-                                                  <strong>Cost:</strong> ${repair.cost ? (typeof repair.cost === 'string' ? parseInt(repair.cost.replace(/[$,]/g, '')) : repair.cost).toLocaleString() : '0'}
+                                                  <strong>Cost:</strong> ${repair.cost ? (typeof repair.cost === 'string' ? parseInt(repair.cost.replace(/[$,]/g, '')) : repair.cost)?.toLocaleString() : '0'}
                                                 </p>
                                                 {repair.quote && (
                                                   <div className="flex items-center">
@@ -1214,7 +1214,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                           </TooltipProvider>
                         </div>
                         <span className="font-semibold text-[#09261E]">
-                          ${property.arv ? property.arv.toLocaleString() : '0'}
+                          ${property.arv ? property.arv?.toLocaleString() : '0'}
                         </span>
                       </div>
 
