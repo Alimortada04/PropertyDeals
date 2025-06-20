@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useRoute, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -339,6 +339,15 @@ export default function PropertyEditor() {
 
   const userId = params?.userId;
   const propertyId = params?.propertyId;
+
+  // Resolve gallery images from database storage paths to public URLs
+  const resolvedGalleryImages = useMemo(() => {
+    return Array.isArray(propertyData?.gallery_images)
+      ? propertyData.gallery_images
+          .map((path) => resolvePublicUrl(path))
+          .filter((url) => url)
+      : [];
+  }, [propertyData?.gallery_images]);
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
@@ -1771,6 +1780,27 @@ export default function PropertyEditor() {
           <span className="text-red-500 text-sm">*Required</span>
         </div>
 
+        {/* Display existing gallery images from database */}
+        {resolvedGalleryImages.length > 0 && (
+          <div className="mb-6">
+            <h4 className="text-sm font-medium text-gray-700 mb-3">Current Gallery Images</h4>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {resolvedGalleryImages.map((img, i) => (
+                <div key={i} className="border rounded-md overflow-hidden bg-white shadow-sm">
+                  <img
+                    src={img}
+                    alt={`Gallery image ${i + 1}`}
+                    className="w-full h-24 object-cover"
+                  />
+                  <div className="text-xs text-center p-1 text-gray-500 bg-gray-50">
+                    Image {i + 1}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div
           className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50/50 hover:border-gray-400 hover:bg-gray-100/50 transition-colors cursor-pointer"
           onDragOver={handleDragOver}
@@ -1820,7 +1850,10 @@ export default function PropertyEditor() {
             <div className="flex flex-col items-center">
               <Upload className="h-12 w-12 text-gray-400 mb-4" />
               <p className="text-sm text-gray-600 mb-2">
-                Drag & drop property photos here or browse files
+                {resolvedGalleryImages.length > 0 
+                  ? "Add more property photos here or browse files"
+                  : "Drag & drop property photos here or browse files"
+                }
               </p>
               <p className="text-xs text-gray-500 mb-4">
                 Upload multiple images at once (up to 20)
