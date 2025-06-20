@@ -658,39 +658,47 @@ export default function PropertyEditor() {
   };
 
   // Gallery image management functions
-  const handleReorderGalleryImages = async (fromIndex: number, toIndex: number) => {
-    if (!property?.gallery_images || !propertyId || !user) return;
+  const handleReorderGalleryImages = (fromIndex: number, toIndex: number) => {
+    if (!property?.gallery_images) return;
 
-    try {
-      const newGalleryImages = [...property.gallery_images];
-      const [movedImage] = newGalleryImages.splice(fromIndex, 1);
-      newGalleryImages.splice(toIndex, 0, movedImage);
+    const newGalleryImages = [...property.gallery_images];
+    const [movedImage] = newGalleryImages.splice(fromIndex, 1);
+    newGalleryImages.splice(toIndex, 0, movedImage);
 
-      // Update in database
-      const { error } = await supabase
-        .from("property_profile")
-        .update({ gallery_images: newGalleryImages })
-        .eq("id", propertyId)
-        .eq("seller_id", user.id);
+    // Update local state immediately (optimistic update)
+    setProperty({ ...property, gallery_images: newGalleryImages });
 
-      if (error) throw error;
-
-      // Update local state
-      setProperty({ ...property, gallery_images: newGalleryImages });
-
-      toast({
-        title: "Images Reordered",
-        description: "Gallery images have been reordered successfully",
-      });
-    } catch (error) {
-      console.error("Error reordering gallery images:", error);
-      toast({
-        title: "Error",
-        description: "Failed to reorder images",
-        variant: "destructive",
-      });
-    }
+    // Debounce database save to avoid too many calls
+    debouncedSaveGalleryOrder(newGalleryImages);
   };
+
+  // Debounced function to save gallery order to database
+  const debouncedSaveGalleryOrder = useMemo(() => {
+    let timeoutId: NodeJS.Timeout;
+    return (galleryImages: string[]) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(async () => {
+        if (!propertyId || !user) return;
+        
+        try {
+          const { error } = await supabase
+            .from("property_profile")
+            .update({ gallery_images: galleryImages })
+            .eq("id", propertyId)
+            .eq("seller_id", user.id);
+
+          if (error) throw error;
+        } catch (error) {
+          console.error("Error saving gallery order:", error);
+          toast({
+            title: "Error",
+            description: "Failed to save image order",
+            variant: "destructive",
+          });
+        }
+      }, 1000); // Save after 1 second of no changes
+    };
+  }, [propertyId, user]);
 
   const handleDeleteGalleryImage = async (index: number) => {
     if (!property?.gallery_images || !propertyId || !user) return;
@@ -1856,13 +1864,35 @@ export default function PropertyEditor() {
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {resolvedGalleryImages.map((img, i) => (
                 <div 
-                  key={i} 
-                  className="relative group border rounded-md"
+                  key={`${img}-${i}`}
+                  className="relative group border rounded-md cursor-move"
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData("text/plain", i.toString());
+                    e.dataTransfer.effectAllowed = "move";
+                    e.currentTarget.style.opacity = "0.5";
+                  }}
+                  onDragEnd={(e) => {
+                    e.currentTarget.style.opacity = "1";
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "move";
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const dragIndex = parseInt(e.dataTransfer.getData("text/plain"));
+                    const hoverIndex = i;
+                    if (dragIndex !== hoverIndex) {
+                      handleReorderGalleryImages(dragIndex, hoverIndex);
+                    }
+                  }}
                 >
                   <img
                     src={img}
                     alt={`Gallery image ${i + 1}`}
                     className="w-full h-24 object-cover rounded-t-md"
+                    draggable={false}
                   />
                   
                   {/* Hover overlay with controls - matches listing modal exactly */}
