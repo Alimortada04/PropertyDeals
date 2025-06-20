@@ -48,11 +48,13 @@ import {
   MapPin,
   Upload,
   Bed,
+  ArrowUp,
+  ArrowDown,
+  Trash2,
   Bath,
   Square,
   Calendar,
   Plus,
-  Trash2,
   X,
   Car,
   Star,
@@ -1855,62 +1857,47 @@ export default function PropertyEditor() {
               {resolvedGalleryImages.map((img, i) => (
                 <div 
                   key={i} 
-                  className="relative border rounded-md overflow-hidden bg-white shadow-sm group cursor-move"
-                  draggable
-                  onDragStart={(e) => e.dataTransfer.setData("text/plain", i.toString())}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    const dragIndex = parseInt(e.dataTransfer.getData("text/plain"));
-                    const hoverIndex = i;
-                    if (dragIndex !== hoverIndex) {
-                      handleReorderGalleryImages(dragIndex, hoverIndex);
-                    }
-                  }}
+                  className="relative group border rounded-md"
                 >
                   <img
                     src={img}
                     alt={`Gallery image ${i + 1}`}
-                    className="w-full h-24 object-cover transition-opacity group-hover:opacity-80"
+                    className="w-full h-24 object-cover rounded-t-md"
                   />
                   
-                  {/* Hover overlay with controls */}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
-                      {/* Move left button */}
-                      {i > 0 && (
-                        <button
-                          onClick={() => handleReorderGalleryImages(i, i - 1)}
-                          className="bg-white bg-opacity-90 hover:bg-white text-gray-700 p-1 rounded text-xs font-medium transition-all"
-                          title="Move left"
-                        >
-                          ←
-                        </button>
-                      )}
-                      
-                      {/* Move right button */}
-                      {i < resolvedGalleryImages.length - 1 && (
-                        <button
-                          onClick={() => handleReorderGalleryImages(i, i + 1)}
-                          className="bg-white bg-opacity-90 hover:bg-white text-gray-700 p-1 rounded text-xs font-medium transition-all"
-                          title="Move right"
-                        >
-                          →
-                        </button>
-                      )}
-                    </div>
+                  {/* Hover overlay with controls - matches listing modal exactly */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    {i > 0 && (
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 rounded-full bg-white text-gray-700 hover:bg-green-100 hover:text-[#135341] hover:border-green-300"
+                        onClick={() => handleReorderGalleryImages(i, i - 1)}
+                      >
+                        <ArrowUp className="h-4 w-4" />
+                      </Button>
+                    )}
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      className="h-8 w-8 rounded-full"
+                      onClick={() => handleDeleteGalleryImage(i)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                    {i < resolvedGalleryImages.length - 1 && (
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 rounded-full bg-white text-gray-700 hover:bg-green-100 hover:text-[#135341] hover:border-green-300"
+                        onClick={() => handleReorderGalleryImages(i, i + 1)}
+                      >
+                        <ArrowDown className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
                   
-                  {/* Delete button */}
-                  <button
-                    onClick={() => handleDeleteGalleryImage(i)}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    title="Delete image"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                  
-                  <div className="text-xs text-center p-1 text-gray-500 bg-gray-50">
+                  <div className="px-2 py-1 text-xs text-gray-500 bg-gray-50 rounded-b-md">
                     Image {i + 1}
                   </div>
                 </div>
