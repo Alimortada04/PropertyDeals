@@ -2712,6 +2712,27 @@ export default function PropertyEditor() {
               </Card>
             </form>
           </Form>
+          
+          {/* Mobile Delete Button */}
+          <div className="lg:hidden mt-8 px-4 pb-8">
+            <button
+              onClick={handleSoftDelete}
+              disabled={saving}
+              className="w-full inline-flex items-center justify-center px-4 py-3 bg-red-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {saving ? (
+                <>
+                  <div className="animate-spin -ml-1 mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
       {/* Quick Action Selector */}
