@@ -138,6 +138,7 @@ export const propertyProfile = pgTable("property_profile", {
   
   // Status and visibility
   status: text("status").default("draft").notNull(), // draft, live, offer_accepted, pending, closed, dropped
+  deleted: boolean("deleted").default(false).notNull(),
   
   // Engagement stats
   viewCount: integer("view_count").default(0).notNull(),
