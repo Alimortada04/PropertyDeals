@@ -655,6 +655,73 @@ export default function PropertyEditor() {
     setComps(comps.filter((_, i) => i !== index));
   };
 
+  // Gallery image management functions
+  const handleReorderGalleryImages = async (fromIndex: number, toIndex: number) => {
+    if (!property?.gallery_images || !propertyId || !user) return;
+
+    try {
+      const newGalleryImages = [...property.gallery_images];
+      const [movedImage] = newGalleryImages.splice(fromIndex, 1);
+      newGalleryImages.splice(toIndex, 0, movedImage);
+
+      // Update in database
+      const { error } = await supabase
+        .from("property_profile")
+        .update({ gallery_images: newGalleryImages })
+        .eq("id", propertyId)
+        .eq("seller_id", user.id);
+
+      if (error) throw error;
+
+      // Update local state
+      setProperty({ ...property, gallery_images: newGalleryImages });
+
+      toast({
+        title: "Images Reordered",
+        description: "Gallery images have been reordered successfully",
+      });
+    } catch (error) {
+      console.error("Error reordering gallery images:", error);
+      toast({
+        title: "Error",
+        description: "Failed to reorder images",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteGalleryImage = async (index: number) => {
+    if (!property?.gallery_images || !propertyId || !user) return;
+
+    try {
+      const newGalleryImages = property.gallery_images.filter((_, i) => i !== index);
+
+      // Update in database
+      const { error } = await supabase
+        .from("property_profile")
+        .update({ gallery_images: newGalleryImages })
+        .eq("id", propertyId)
+        .eq("seller_id", user.id);
+
+      if (error) throw error;
+
+      // Update local state
+      setProperty({ ...property, gallery_images: newGalleryImages });
+
+      toast({
+        title: "Image Deleted",
+        description: "Gallery image has been removed successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting gallery image:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete image",
+        variant: "destructive",
+      });
+    }
+  };
+
   const addPartner = () => {
     if (newPartner.trim()) {
       setPartners([...partners, newPartner.trim()]);
@@ -1786,12 +1853,63 @@ export default function PropertyEditor() {
             <h4 className="text-sm font-medium text-gray-700 mb-3">Current Gallery Images</h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {resolvedGalleryImages.map((img, i) => (
-                <div key={i} className="border rounded-md overflow-hidden bg-white shadow-sm">
+                <div 
+                  key={i} 
+                  className="relative border rounded-md overflow-hidden bg-white shadow-sm group cursor-move"
+                  draggable
+                  onDragStart={(e) => e.dataTransfer.setData("text/plain", i.toString())}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    const dragIndex = parseInt(e.dataTransfer.getData("text/plain"));
+                    const hoverIndex = i;
+                    if (dragIndex !== hoverIndex) {
+                      handleReorderGalleryImages(dragIndex, hoverIndex);
+                    }
+                  }}
+                >
                   <img
                     src={img}
                     alt={`Gallery image ${i + 1}`}
-                    className="w-full h-24 object-cover"
+                    className="w-full h-24 object-cover transition-opacity group-hover:opacity-80"
                   />
+                  
+                  {/* Hover overlay with controls */}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
+                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex gap-2">
+                      {/* Move left button */}
+                      {i > 0 && (
+                        <button
+                          onClick={() => handleReorderGalleryImages(i, i - 1)}
+                          className="bg-white bg-opacity-90 hover:bg-white text-gray-700 p-1 rounded text-xs font-medium transition-all"
+                          title="Move left"
+                        >
+                          ←
+                        </button>
+                      )}
+                      
+                      {/* Move right button */}
+                      {i < resolvedGalleryImages.length - 1 && (
+                        <button
+                          onClick={() => handleReorderGalleryImages(i, i + 1)}
+                          className="bg-white bg-opacity-90 hover:bg-white text-gray-700 p-1 rounded text-xs font-medium transition-all"
+                          title="Move right"
+                        >
+                          →
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Delete button */}
+                  <button
+                    onClick={() => handleDeleteGalleryImage(i)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    title="Delete image"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                  
                   <div className="text-xs text-center p-1 text-gray-500 bg-gray-50">
                     Image {i + 1}
                   </div>
