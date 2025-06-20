@@ -106,6 +106,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
   const propertyImages = useMemo(() => {
     const images: string[] = [];
@@ -154,6 +155,10 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
 
   const handleOfferClick = () => {
     setOfferModalOpen(true);
+  };
+
+  const handleImageClick = () => {
+    setIsGalleryOpen(true);
   };
 
   // Generate a shareable property report URL
@@ -385,6 +390,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             images={propertyImages}
             address={property.address}
             onBack={onBack}
+            onImageClick={handleImageClick}
           />
         ) : (
           <div className="h-[40vh] flex items-center justify-center bg-gray-100">

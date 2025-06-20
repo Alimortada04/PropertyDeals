@@ -6,12 +6,14 @@ interface MobileImageCarouselProps {
   images: string[];
   address: string;
   onBack?: () => void;
+  onImageClick?: () => void;
 }
 
 const MobileImageCarousel: React.FC<MobileImageCarouselProps> = ({
   images,
   address,
   onBack,
+  onImageClick,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -82,7 +84,8 @@ const MobileImageCarousel: React.FC<MobileImageCarouselProps> = ({
         {images.filter(image => image && image.trim() !== '').map((image, index) => (
           <div
             key={index}
-            className="min-w-full h-full snap-center relative bg-white"
+            className="min-w-full h-full snap-center relative bg-white cursor-pointer"
+            onClick={onImageClick}
           >
             <img
               src={image}
