@@ -2374,7 +2374,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               Listed
                             </td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
-                              ${property.listing_price.toLocaleString()}
+                              ${property.listing_price?.toLocaleString()}
                             </td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
                               PropertyDeals
@@ -2389,7 +2389,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                             </td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
                               $
-                              {(property.listing_price * 0.85).toLocaleString()}
+                              {(property.listing_price * 0.85)?.toLocaleString()}
                             </td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
                               County Records
@@ -2403,7 +2403,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               Sold
                             </td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
-                              ${(property.listing_price * 0.8).toLocaleString()}
+                              ${(property.listing_price * 0.8)?.toLocaleString()}
                             </td>
                             <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
                               MLS
@@ -2585,7 +2585,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-bold text-[#09261E] text-lg">
-                      ${property.listing_price.toLocaleString()}
+                      ${property.listing_price?.toLocaleString()}
                     </h3>
                     <p className="text-gray-600 text-xs">
                       Interested in this property?
