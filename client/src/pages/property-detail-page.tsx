@@ -1232,7 +1232,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               const annualRent = property.rent_total_annual || 0;
                               const annualExpenses = property.expenses_total_annual || 0;
                               const cashFlow = annualRent - annualExpenses;
-                              return cashFlow.toLocaleString();
+                              return cashFlow?.toLocaleString();
                             })()}
                           </p>
                         </div>
@@ -1352,7 +1352,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </span>
                               <Input
                                 type="text"
-                                defaultValue={property.listing_price ? property.listing_price.toLocaleString() : '0'}
+                                defaultValue={property.listing_price ? property.listing_price?.toLocaleString() : '0'}
                                 className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20"
                                 id="purchase-price-input"
                               />
@@ -1372,7 +1372,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </span>
                               <Input
                                 type="text"
-                                defaultValue={property.repair_costs_total ? property.repair_costs_total.toLocaleString() : '0'}
+                                defaultValue={property.repair_costs_total ? property.repair_costs_total?.toLocaleString() : '0'}
                                 className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20"
                                 id="repair-costs-input"
                               />
@@ -1402,7 +1402,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </span>
                               <Input
                                 type="text"
-                                defaultValue={property.arv ? property.arv.toLocaleString() : '0'}
+                                defaultValue={property.arv ? property.arv?.toLocaleString() : '0'}
                                 className="bg-white pl-7 border-gray-300 focus:border-[#135341] focus:ring-[#135341]/20"
                                 id="arv-input"
                               />
@@ -1456,7 +1456,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                 const purchasePrice = property.listing_price || 0;
                                 const repairCosts = property.repair_costs_total || 0;
                                 const totalInvestment = purchasePrice + repairCosts;
-                                return totalInvestment.toLocaleString();
+                                return totalInvestment?.toLocaleString();
                               })()}
                             </span>
                           </div>
@@ -1475,7 +1475,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                                 // Estimate selling costs as 6% of ARV if not provided
                                 const sellingCosts = arv * 0.06;
                                 const profit = arv - purchasePrice - repairCosts - sellingCosts;
-                                return profit > 0 ? profit.toLocaleString() : '0';
+                                return profit > 0 ? profit?.toLocaleString() : '0';
                               })()}
                             </span>
                           </div>
@@ -1557,7 +1557,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               const resultElement =
                                 document.getElementById("flip-result");
                               if (resultElement) {
-                                resultElement.textContent = `$${profit.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+                                resultElement.textContent = `$${profit?.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
                               }
                             }}
                           >
@@ -1600,7 +1600,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               </span>
                               <Input
                                 type="text"
-                                defaultValue={property.listing_price.toLocaleString()}
+                                defaultValue={property.listing_price?.toLocaleString()}
                                 className="bg-white pl-7 border-gray-300 focus:border-[#09261E] focus:ring-[#09261E]/20"
                                 id="rental-purchase-price-input"
                               />
@@ -1704,7 +1704,7 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
                               {(
                                 property.listing_price * 0.008 -
                                 property.listing_price * 0.003
-                              ).toLocaleString()}
+                              )?.toLocaleString()}
                             </span>
                           </div>
                           <div className="flex justify-between items-center mb-2">
