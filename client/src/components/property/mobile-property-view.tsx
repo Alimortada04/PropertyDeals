@@ -383,8 +383,8 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </div>
         </div>
       </div>
-      {/* Image Carousel positioned flush with sticky header */}
-      <div className="pt-0">
+      {/* Image Carousel positioned right under sticky header */}
+      <div className="pt-16">
         {propertyImages.length > 0 ? (
           <MobileImageCarousel
             images={propertyImages}
@@ -395,9 +395,12 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
         ) : (
           <div className="h-[40vh] flex items-center justify-center bg-gray-100">
             <div className="text-center">
-              <div className="text-gray-400 text-sm mb-2">No images available</div>
+              <div className="text-gray-400 text-sm mb-2">
+                No images available
+              </div>
               <div className="text-xs text-gray-300">
-                Primary: {property.primary_image || 'None'}<br/>
+                Primary: {property.primary_image || "None"}
+                <br />
                 Gallery: {property.gallery_images?.length || 0} images
               </div>
             </div>
@@ -411,11 +414,11 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           <div className="flex-1">
             <div className="flex items-baseline justify-between">
               <h1 className="text-2xl font-bold text-[#09261E]">
-                ${property.price?.toLocaleString() || "0"}
+                ${property.listing_price?.toLocaleString() || "0"}
               </h1>
               <span className="text-xs text-gray-500">
                 $
-                {property.squareFeet
+                {property.sqft
                   ? Math.round((property.price || 0) / property.squareFeet)
                   : "N/A"}
                 /sqft
@@ -427,7 +430,7 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
                 variant="secondary"
                 className="bg-[#09261E]/10 hover:bg-[#09261E]/20 text-[#09261E]"
               >
-                {property.propertyType || "Single Family"}
+                {property.property_type || "Single Family"}
               </Badge>
               <Badge
                 variant="secondary"
@@ -2005,7 +2008,10 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           <div className="px-6 pb-6 overflow-y-auto max-h-[calc(90vh-120px)]">
             <div className="space-y-6">
               {propertyImages.map((img, i) => (
-                <div key={i} className="border border-gray-200 rounded-lg overflow-hidden">
+                <div
+                  key={i}
+                  className="border border-gray-200 rounded-lg overflow-hidden"
+                >
                   <img
                     src={img}
                     alt={`Property photo ${i + 1} of ${propertyImages.length}`}
