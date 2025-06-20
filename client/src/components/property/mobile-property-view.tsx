@@ -1996,16 +1996,20 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
 
       {/* Full Screen Image Gallery Modal */}
       <Dialog open={isGalleryOpen} onOpenChange={setIsGalleryOpen}>
-        <DialogContent className="p-0 max-w-2xl w-full max-h-screen overflow-y-auto">
-          <div className="p-6 h-full overflow-y-auto">
-            <h2 className="text-2xl font-bold text-[#09261E] mb-4">Property Photos</h2>
+        <DialogContent className="p-0 max-w-4xl w-[95vw] max-h-[90vh] overflow-hidden">
+          <DialogHeader className="p-6 pb-4">
+            <DialogTitle className="text-2xl font-bold text-[#09261E]">
+              Property Photos
+            </DialogTitle>
+          </DialogHeader>
+          <div className="px-6 pb-6 overflow-y-auto max-h-[calc(90vh-120px)]">
             <div className="space-y-6">
               {propertyImages.map((img, i) => (
                 <div key={i} className="border border-gray-200 rounded-lg overflow-hidden">
                   <img
                     src={img}
-                    alt={`Photo ${i + 1}`}
-                    className="w-full object-contain"
+                    alt={`Property photo ${i + 1} of ${propertyImages.length}`}
+                    className="w-full object-contain max-h-[60vh]"
                   />
                 </div>
               ))}
