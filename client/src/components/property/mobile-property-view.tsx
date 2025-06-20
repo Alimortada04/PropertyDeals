@@ -387,8 +387,14 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
             onBack={onBack}
           />
         ) : (
-          <div className="h-[40vh] flex items-center justify-center text-gray-400 text-sm">
-            Loading images...
+          <div className="h-[40vh] flex items-center justify-center bg-gray-100">
+            <div className="text-center">
+              <div className="text-gray-400 text-sm mb-2">No images available</div>
+              <div className="text-xs text-gray-300">
+                Primary: {property.primary_image || 'None'}<br/>
+                Gallery: {property.gallery_images?.length || 0} images
+              </div>
+            </div>
           </div>
         )}
       </div>

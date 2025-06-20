@@ -111,6 +111,12 @@ export async function getSignedUrl(
 export function resolvePublicUrl(path: string | null): string | null {
   if (!path || typeof path !== "string") return null;
 
+  // If it's already a full URL, return it as-is
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+
+  // Otherwise, resolve it as a file path
   const result = supabase.storage.from("properties").getPublicUrl(path);
   return result?.data?.publicUrl || null;
 }

@@ -87,7 +87,7 @@ const MobileImageCarousel: React.FC<MobileImageCarouselProps> = ({
             <img
               src={image}
               alt={`${address} - image ${index + 1}`}
-              className="w-full max-h-[40vh] object-contain bg-white"
+              className="w-full max-h-[40vh] object-cover bg-gray-100"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}
