@@ -589,6 +589,42 @@ export default function PropertyEditor() {
     }
   };
 
+  const handleSoftDelete = async () => {
+    if (!propertyId || !user) return;
+    
+    try {
+      setSaving(true);
+      
+      const { error } = await supabase
+        .from("property_profile")
+        .update({ deleted: true })
+        .eq("id", propertyId)
+        .eq("seller_id", user.id);
+
+      if (error) {
+        console.error('Supabase soft delete error:', error);
+        throw error;
+      }
+      
+      toast({
+        title: "Property Removed",
+        description: "Property has been removed from your view",
+      });
+
+      // Redirect back to dashboard
+      navigate(`/sellerdash/${userId}`);
+    } catch (error) {
+      console.error('Error soft deleting property:', error);
+      toast({
+        title: "Error",
+        description: "Failed to remove property from your view",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -2577,6 +2613,25 @@ export default function PropertyEditor() {
                     <>
                       <Save className="w-4 h-4 mr-2" />
                       Save Changes
+                    </>
+                  )}
+                </button>
+
+                {/* Delete from My View Button */}
+                <button
+                  onClick={handleSoftDelete}
+                  disabled={saving}
+                  className="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+                >
+                  {saving ? (
+                    <>
+                      <div className="animate-spin -ml-1 mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                      Removing...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete from My View
                     </>
                   )}
                 </button>

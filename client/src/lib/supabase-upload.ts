@@ -1,22 +1,120 @@
 import { supabase } from "@/lib/supabase";
+import { v4 as uuidv4 } from "uuid";
 
-export const uploadFileToSupabase = async (file: File, path: string): Promise<string | null> => {
-  const fileExt = file.name.split(".").pop();
-  const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-  const filePath = `${path}/${fileName}`;
+/**
+ * Uploads media and documents for property listings to the 'properties' bucket.
+ */
+export async function uploadPropertyFileToSupabase(
+  file: File,
+  type: "primary" | "gallery" | "video" | "agreements" | "repair-quotes",
+  userId: string,
+  propertyId: string,
+  index?: number,
+): Promise<string> {
+  const bucket = "properties";
+  let path = "";
+
+  switch (type) {
+    case "primary":
+      path = `${userId}/${propertyId}/public-images/primary.jpg`;
+      break;
+
+    case "gallery":
+      path = `${userId}/${propertyId}/public-images/gallery/${uuidv4()}.jpg`;
+      break;
+
+    case "video":
+      path = `${userId}/${propertyId}/public-video/walkthrough.mp4`;
+      break;
+
+    case "agreements":
+      path = `${userId}/${propertyId}/secure/purchase-agreement.pdf`;
+      break;
+
+    case "repair-quotes":
+      path = `${userId}/${propertyId}/public-files/repair-quote-${index ?? 0}.pdf`;
+      break;
+
+    default:
+      throw new Error(`Unsupported property file type: ${type}`);
+  }
+
+  const { error } = await supabase.storage.from(bucket).upload(path, file, {
+    upsert: true,
+  });
+
+  if (error) throw new Error(`Upload failed: ${error.message}`);
+
+  // Return public URL for visible files
+  if (["primary", "gallery", "video"].includes(type)) {
+    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+    return data?.publicUrl ?? "";
+  }
+
+  // Return file path for secure files (used with signed URLs)
+  return path;
+}
+
+/**
+ * Uploads profile images or secure documents to the 'profiles' bucket.
+ */
+export async function uploadProfileFileToSupabase(
+  file: File,
+  type: "profile-photo" | "banner-image" | "proof-of-funds",
+  userId: string,
+): Promise<string> {
+  const bucket = "profiles";
+  let path = "";
+
+  switch (type) {
+    case "profile-photo":
+      path = `${userId}/profile-photo.jpg`;
+      break;
+
+    case "banner-image":
+      path = `${userId}/banner-image.jpg`;
+      break;
+
+    case "proof-of-funds":
+      path = `${userId}/secure/proof-of-funds.pdf`;
+      break;
+
+    default:
+      throw new Error(`Unsupported profile file type: ${type}`);
+  }
+
+  const { error } = await supabase.storage.from(bucket).upload(path, file, {
+    upsert: true,
+  });
+
+  if (error) throw new Error(`Upload failed: ${error.message}`);
+
+  if (type === "proof-of-funds") {
+    return path; // private file
+  }
+
+  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+  return data?.publicUrl ?? "";
+}
+
+/**
+ * Generates a signed URL for secure file access (e.g., agreements or proof-of-funds).
+ */
+export async function getSignedUrl(
+  bucket: "properties" | "profiles",
+  path: string,
+  expiresIn: number = 300, // default: 5 minutes
+): Promise<string | null> {
+  if (!path) return null;
 
   const { data, error } = await supabase.storage
-    .from("property-images")
-    .upload(filePath, file);
+    .from(bucket)
+    .createSignedUrl(path, expiresIn);
 
   if (error) {
-    console.error("Upload error:", error);
+    console.error("Signed URL error:", error);
     return null;
   }
 
-  const { data: { publicUrl } } = supabase.storage
-    .from("property-images")
-    .getPublicUrl(filePath);
-
-  return publicUrl;
-};
+  return data?.signedUrl ?? null;
+}

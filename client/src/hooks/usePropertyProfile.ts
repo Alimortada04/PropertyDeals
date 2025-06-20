@@ -128,7 +128,9 @@ export function usePropertyProfile() {
       let query = supabase
         .from('property_profile')
         .select('*')
-        .eq('seller_id', supabaseUser.id);
+        .eq('seller_id', supabaseUser.id)
+        .eq('deleted', false)
+;
 
       // Apply status filtering if provided
       if (statusFilters && statusFilters.length > 0) {
@@ -226,6 +228,7 @@ export function usePropertyProfile() {
       // Required System Fields
       seller_id: userId,
       status: formData.status || 'draft',
+      deleted: false,
 
       // Property Info
       name: safe(formData.name),
@@ -405,7 +408,8 @@ export function usePropertyProfile() {
         .from('property_profile')
         .update(updateData)
         .eq('id', propertyId)
-        .eq('seller_id', supabaseUser.id) // Ensure user owns the property
+        .eq('seller_id', supabaseUser.id)
+        .eq('deleted', false) // Ensure user owns the property
         .select()
         .single();
 
@@ -463,7 +467,8 @@ export function usePropertyProfile() {
           updated_at: new Date().toISOString(),
         })
         .eq('id', propertyId)
-        .eq('seller_id', supabaseUser.id) // Ensure user owns the property
+        .eq('seller_id', supabaseUser.id)
+        .eq('deleted', false) // Ensure user owns the property
         .select()
         .single();
 
@@ -514,9 +519,10 @@ export function usePropertyProfile() {
     try {
       const { error } = await supabase
         .from('property_profile')
-        .delete()
+        .update({ deleted: true, updated_at: new Date().toISOString() })
         .eq('id', propertyId)
-        .eq('seller_id', supabaseUser.id); // Ensure user owns the property
+        .eq('seller_id', supabaseUser.id)
+        .eq('deleted', false); // Ensure user owns the property
 
       if (error) {
         console.error('Error deleting property:', error);
