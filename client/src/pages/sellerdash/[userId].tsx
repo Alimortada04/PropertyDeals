@@ -65,26 +65,6 @@ import { useToast } from "@/hooks/use-toast";
 
 // Property data will be fetched from the backend API
 
-// Sample recent activity data
-const RECENT_ACTIVITY = [
-  {
-    id: "act1",
-    propertyId: "prop1",
-    propertyTitle: "3-Bed Single Family Home",
-    thumbnail: "/images/property1.jpg",
-    timeAgo: "2 hours",
-    action: "Updated listing details",
-  },
-  {
-    id: "act2",
-    propertyId: "prop2",
-    propertyTitle: "Duplex Investment Property",
-    thumbnail: "/images/property2.jpg",
-    timeAgo: "1 day",
-    action: "Received new offer",
-  },
-];
-
 // Status options for multi-select filtering
 const STATUS_OPTIONS = [
   { value: "All", label: "All" },
@@ -149,8 +129,8 @@ export default function SellerDashboardPage() {
       const { data, error } = await supabase
         .from("property_profile")
         .select("*")
-        .eq("seller_id", user.id); // Using seller_id for ownership
-
+        .eq("seller_id", user.id)
+        .eq("deleted", false); // Using seller_id for ownership
       if (error) {
         console.error("Error fetching property profiles:", error);
         throw new Error("Failed to fetch property profiles");
@@ -240,7 +220,7 @@ export default function SellerDashboardPage() {
       property.address,
       property.city,
       property.state,
-      property.zipCode,
+      property.zipcode,
     ]
       .filter(Boolean)
       .join(", ");
@@ -275,24 +255,26 @@ export default function SellerDashboardPage() {
 
     return {
       id: property.id,
-      title: property.name || "Unnamed Property",
+      title: property.name || fullAddress,
       address: fullAddress || "No Address",
-      price: property.listingPrice || property.purchasePrice || 0,
+      price: property.listing_price || property.purchase_price || 0,
       status: getStatusDisplayName(property.status),
-      thumbnail:
-        resolvePublicUrl(property.primaryImage) || "/api/placeholder/400/300",
-      views: property.viewCount || 0,
-      leads: 0, // TODO: Calculate from inquiries when available
-      daysListed: getDaysLeft(property.closingDate),
+      thumbnail: property.primary_image?.startsWith("http")
+        ? property.primary_image
+        : resolvePublicUrl(property.primary_image) ||
+          "/api/placeholder/400/300",
+      views: property.view_count || 0,
+      leads: property.save_count || 0,
+      daysListed: getDaysLeft(property.closing_date) || "Not Set",
       beds: property.bedrooms || 0,
       baths: property.bathrooms || 0,
       sqft: property.sqft || 0,
       arv: property.arv || 0,
-      offers: 0, // TODO: Calculate from offers when available
+      offers: property.offer_count || 0,
       assignmentFee:
-        property.assignmentFee ||
-        (property.listingPrice && property.purchasePrice
-          ? property.listingPrice - property.purchasePrice
+        property.assignment_fee ||
+        (property.listing_price && property.purchase_price
+          ? property.listing_price - property.purchase_price
           : 0),
     };
   };
@@ -313,6 +295,16 @@ export default function SellerDashboardPage() {
       return matchesSearch && matchesStatus;
     })
     .slice(0, 20); // Limit to 20 properties initially
+
+  // ✅ Sample recent activity from actual property data
+  const RECENT_ACTIVITY = filteredProperties.slice(0, 3).map((property) => ({
+    id: `activity-${property.id}`,
+    propertyId: property.id,
+    propertyTitle: property.title || "Untitled Property",
+    thumbnail: property.thumbnail || "/api/placeholder/400/300",
+    timeAgo: "Just now", // Optional: replace with actual time logic
+    action: "Updated listing details", // Optional: make dynamic later
+  }));
 
   // Get status badge style based on status
   const getStatusBadgeClass = (status: string) => {

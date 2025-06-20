@@ -18,23 +18,18 @@ export async function uploadPropertyFileToSupabase(
     case "primary":
       path = `${userId}/${propertyId}/public-images/primary.jpg`;
       break;
-
     case "gallery":
       path = `${userId}/${propertyId}/public-images/gallery/${uuidv4()}.jpg`;
       break;
-
     case "video":
       path = `${userId}/${propertyId}/public-video/walkthrough.mp4`;
       break;
-
     case "agreements":
       path = `${userId}/${propertyId}/secure/purchase-agreement.pdf`;
       break;
-
     case "repair-quotes":
       path = `${userId}/${propertyId}/public-files/repair-quote-${index ?? 0}.pdf`;
       break;
-
     default:
       throw new Error(`Unsupported property file type: ${type}`);
   }
@@ -45,13 +40,7 @@ export async function uploadPropertyFileToSupabase(
 
   if (error) throw new Error(`Upload failed: ${error.message}`);
 
-  // Return public URL for visible files
-  if (["primary", "gallery", "video"].includes(type)) {
-    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-    return data?.publicUrl ?? "";
-  }
-
-  // Return file path for secure files (used with signed URLs)
+  // ✅ Return the file path only — NOT the public URL
   return path;
 }
 
@@ -117,4 +106,11 @@ export async function getSignedUrl(
   }
 
   return data?.signedUrl ?? null;
+}
+
+export function resolvePublicUrl(path: string | null): string | null {
+  if (!path || typeof path !== "string") return null;
+
+  const result = supabase.storage.from("properties").getPublicUrl(path);
+  return result?.data?.publicUrl || null;
 }

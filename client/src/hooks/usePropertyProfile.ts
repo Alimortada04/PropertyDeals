@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from './use-auth';
-import { supabase } from '@/lib/supabase';
-import { useToast } from './use-toast';
+import { useState, useEffect } from "react";
+import { useAuth } from "./use-auth";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "./use-toast";
 
 export interface PropertyProfile {
   id?: number;
   seller_id: string;
-  
+
   // Basic Property Info
   name?: string;
   address?: string;
@@ -16,7 +16,7 @@ export interface PropertyProfile {
   county?: string;
   parcel_id?: string;
   property_type?: string;
-  
+
   // Property Details
   bedrooms?: number;
   bathrooms?: number;
@@ -26,59 +26,65 @@ export interface PropertyProfile {
   parking?: string;
   condition?: string;
   occupancy_status?: string;
-  
+
   // Media
   primary_image?: string;
   gallery_images?: string[] | null;
   video_walkthrough?: string;
-  
+
   // Financial Data
   arv?: number;
   purchase_price?: number;
   listing_price?: number;
   assignment_fee?: number;
-  
+
   // Rental Income
   rent_total_monthly?: number;
   rent_total_annual?: number;
   rent_unit?: any[] | null;
-  
+
   // Expenses
   expenses_total_monthly?: number;
   expenses_total_annual?: number;
   expense_items?: any[] | null;
-  
+
   // Repairs & Improvements
   repair_costs_total?: number;
   repair_projects?: any[] | null;
-  
+
   // Partnership & Legal
   jv_partners?: string[] | null;
   purchase_agreement?: string;
   assignment_agreement?: string;
-  
+
   // Access & Logistics
   access_type?: string;
   closing_date?: string;
-  
+
   // Marketing & Description
   description?: string;
   additional_notes?: string;
   tags?: string[] | null;
   comps?: string;
-  
+
   // Visibility Settings
   featured_property?: boolean;
-  
+
   // Status
-  status: 'draft' | 'live' | 'offer_accepted' | 'pending' | 'closed' | 'dropped';
-  
+  status:
+    | "draft"
+    | "live"
+    | "offer_accepted"
+    | "pending"
+    | "closed"
+    | "dropped";
+
   // Engagement stats
   view_count?: number;
   save_count?: number;
   offer_count?: number;
   offer_ids?: string[] | null;
-  
+
   // Timestamps
   created_at?: string;
   updated_at?: string;
@@ -86,9 +92,13 @@ export interface PropertyProfile {
 }
 
 // File upload utility function
-const uploadFileToSupabase = async (file: File, bucket: string, folder: string): Promise<string | null> => {
+const uploadFileToSupabase = async (
+  file: File,
+  bucket: string,
+  folder: string,
+): Promise<string | null> => {
   try {
-    const fileExt = file.name.split('.').pop();
+    const fileExt = file.name.split(".").pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `${folder}/${fileName}`;
 
@@ -97,17 +107,17 @@ const uploadFileToSupabase = async (file: File, bucket: string, folder: string):
       .upload(filePath, file);
 
     if (error) {
-      console.error('File upload error:', error);
+      console.error("File upload error:", error);
       return null;
     }
 
-    const { data: { publicUrl } } = supabase.storage
-      .from(bucket)
-      .getPublicUrl(filePath);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from(bucket).getPublicUrl(filePath);
 
     return publicUrl;
   } catch (error) {
-    console.error('File upload failed:', error);
+    console.error("File upload failed:", error);
     return null;
   }
 };
@@ -126,49 +136,51 @@ export function usePropertyProfile() {
     try {
       // Use user's UUID from auth - query by seller_id field (text field for UUIDs)
       let query = supabase
-        .from('property_profile')
-        .select('*')
-        .eq('seller_id', supabaseUser.id)
-        .eq('deleted', false)
-;
-
+        .from("property_profile")
+        .select("*")
+        .eq("seller_id", supabaseUser.id)
+        .eq("deleted", false);
       // Apply status filtering if provided
       if (statusFilters && statusFilters.length > 0) {
-        query = query.in('status', statusFilters);
+        query = query.in("status", statusFilters);
       }
 
-      const { data, error } = await query.order('created_at', { ascending: false });
+      const { data, error } = await query.order("created_at", {
+        ascending: false,
+      });
 
       if (error) {
-        console.error('Error fetching property profiles:', error);
+        console.error("Error fetching property profiles:", error);
         return;
       }
 
       setProperties(data || []);
     } catch (error) {
-      console.error('Error fetching property profiles:', error);
+      console.error("Error fetching property profiles:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   // Fetch a single property by ID
-  const fetchPropertyById = async (propertyId: number): Promise<PropertyProfile | null> => {
+  const fetchPropertyById = async (
+    propertyId: number,
+  ): Promise<PropertyProfile | null> => {
     try {
       const { data, error } = await supabase
-        .from('property_profile')
-        .select('*')
-        .eq('id', propertyId)
+        .from("property_profile")
+        .select("*")
+        .eq("id", propertyId)
         .single();
 
       if (error) {
-        console.error('Error fetching property:', error);
+        console.error("Error fetching property:", error);
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error('Error fetching property:', error);
+      console.error("Error fetching property:", error);
       return null;
     }
   };
@@ -176,40 +188,74 @@ export function usePropertyProfile() {
   // Rebuild property payload with exact field mapping to verified Supabase schema
   const createPropertyPayload = (formData: any, userId: string) => {
     console.log("Raw form data for property creation:", formData);
-    
+
     // Helper to safely handle null/undefined values
-    const safe = (value: any) => value === undefined || value === '' ? null : value;
-    
+    const safe = (value: any) =>
+      value === undefined || value === "" ? null : value;
+
     // Helper to parse numbers
     const parseNum = (value: any) => {
-      if (!value || value === '') return null;
-      const cleaned = String(value).replace(/[$,]/g, '');
+      if (!value || value === "") return null;
+      const cleaned = String(value).replace(/[$,]/g, "");
       const parsed = Number(cleaned);
       return isNaN(parsed) ? null : parsed;
     };
-    
+
     // Helper to format dates
     const formatDate = (date: any) => {
       if (!date) return null;
-      if (date instanceof Date) return date.toISOString().split('T')[0];
+      if (date instanceof Date) return date.toISOString().split("T")[0];
       return String(date);
     };
 
     // Sanitize payload to only include valid database fields
     const sanitizePayload = (payload: any) => {
       const allowedKeys = new Set([
-        'id', 'created_at', 'status', 'name', 'address', 'property_type', 'city', 'state', 'zipcode',
-        'bedrooms', 'bathrooms', 'year_built', 'sqft', 'lot_size', 'parking', 'county', 'parcel_id',
-        'primary_image', 'gallery_images', 'video_walkthrough',
-        'rent_total_monthly', 'rent_total_annual', 'rent_unit',
-        'expenses_total_monthly', 'expenses_total_annual', 'expense_items',
-        'repair_costs_total', 'repairs',
-        'purchase_price', 'listing_price', 'assignment_fee', 'arv',
-        'access_type', 'closing_date', 'comps',
-        'purchase_agreement', 'assignment_agreement',
-        'jv_partners', 'description', 'additional_notes',
-        'view_count', 'save_count', 'offer_count',
-        'offer_ids', 'seller_id'
+        "id",
+        "created_at",
+        "status",
+        "name",
+        "address",
+        "property_type",
+        "city",
+        "state",
+        "zipcode",
+        "bedrooms",
+        "bathrooms",
+        "year_built",
+        "sqft",
+        "lot_size",
+        "parking",
+        "county",
+        "parcel_id",
+        "primary_image",
+        "gallery_images",
+        "video_walkthrough",
+        "rent_total_monthly",
+        "rent_total_annual",
+        "rent_unit",
+        "expenses_total_monthly",
+        "expenses_total_annual",
+        "expense_items",
+        "repair_costs_total",
+        "repairs",
+        "purchase_price",
+        "listing_price",
+        "assignment_fee",
+        "arv",
+        "access_type",
+        "closing_date",
+        "comps",
+        "purchase_agreement",
+        "assignment_agreement",
+        "jv_partners",
+        "description",
+        "additional_notes",
+        "view_count",
+        "save_count",
+        "offer_count",
+        "offer_ids",
+        "seller_id",
       ]);
 
       const cleanPayload: any = {};
@@ -222,12 +268,12 @@ export function usePropertyProfile() {
 
       return cleanPayload;
     };
-    
+
     // Create payload with ALL database fields (matching exact column names)
     const rawPayload = {
       // Required System Fields
       seller_id: userId,
-      status: formData.status || 'draft',
+      status: formData.status || "draft",
       deleted: false,
 
       // Property Info
@@ -249,11 +295,13 @@ export function usePropertyProfile() {
       parking: safe(formData.parking),
 
       // Media
-      primary_image: safe(formData.primaryImage),
-      gallery_images: Array.isArray(formData.galleryImages) && formData.galleryImages.length > 0
-        ? formData.galleryImages
-        : null,
-      video_walkthrough: safe(formData.videoLink),
+      primary_image: safe(formData.primary_image),
+      gallery_images:
+        Array.isArray(formData.gallery_images) &&
+        formData.gallery_images.length > 0
+          ? formData.gallery_images
+          : null,
+      video_walkthrough: safe(formData.video_walkthrough),
 
       // Financials
       arv: parseNum(formData.arv),
@@ -263,28 +311,38 @@ export function usePropertyProfile() {
 
       // Rental Info (JSON & Calculated)
       rent_total_monthly: parseNum(formData.rentTotalMonthly),
-      rent_total_annual: parseNum(formData.rentTotalMonthly) ? parseNum(formData.rentTotalMonthly)! * 12 : null,
+      rent_total_annual: parseNum(formData.rentTotalMonthly)
+        ? parseNum(formData.rentTotalMonthly)! * 12
+        : null,
       rent_unit: Array.isArray(formData.rentUnit) ? formData.rentUnit : null,
 
       // Expenses (JSON & Calculated)
-      expense_items: Array.isArray(formData.expenseItems) ? formData.expenseItems : null,
+      expense_items: Array.isArray(formData.expenseItems)
+        ? formData.expenseItems
+        : null,
       expenses_total_monthly: parseNum(formData.expensesTotalMonthly),
-      expenses_total_annual: parseNum(formData.expensesTotalMonthly) ? parseNum(formData.expensesTotalMonthly)! * 12 : null,
+      expenses_total_annual: parseNum(formData.expensesTotalMonthly)
+        ? parseNum(formData.expensesTotalMonthly)! * 12
+        : null,
 
       // Repairs (JSON & Calculated)
-      repairs: Array.isArray(formData.repairProjects) ? formData.repairProjects.map((repair: any) => ({
-        name: repair.name,
-        description: repair.description,
-        cost: parseNum(repair.cost),
-        contractor: repair.contractor,
-        quote: repair.quote ? repair.quote.name : null
-      })) : null,
+      repairs: Array.isArray(formData.repairProjects)
+        ? formData.repairProjects.map((repair: any) => ({
+            name: repair.name,
+            description: repair.description,
+            cost: parseNum(repair.cost),
+            contractor: repair.contractor,
+            quote: repair.quote ? repair.quote.name : null,
+          }))
+        : null,
       repair_costs_total: parseNum(formData.repairCostsTotal),
 
       // Legal Docs & JV
       purchase_agreement: safe(formData.purchaseAgreement),
       assignment_agreement: safe(formData.assignmentAgreement),
-      jv_partners: Array.isArray(formData.jvPartners) ? formData.jvPartners : null,
+      jv_partners: Array.isArray(formData.jvPartners)
+        ? formData.jvPartners
+        : null,
 
       // Logistics
       access_type: safe(formData.accessType),
@@ -293,18 +351,18 @@ export function usePropertyProfile() {
       // Description & Comps
       description: safe(formData.description),
       additional_notes: safe(formData.additionalNotes),
-      comps: Array.isArray(formData.comps) ? formData.comps.join(', ') : null,
+      comps: Array.isArray(formData.comps) ? formData.comps.join(", ") : null,
 
       // Engagement Defaults
       view_count: 0,
       save_count: 0,
       offer_count: 0,
-      offer_ids: null
+      offer_ids: null,
     };
 
     // Apply sanitization to remove invalid fields
     const sanitizedPayload = sanitizePayload(rawPayload);
-    
+
     console.log("Raw payload before sanitization:", rawPayload);
     console.log("Sanitized payload for Supabase insert:", sanitizedPayload);
     return sanitizedPayload;
@@ -325,24 +383,24 @@ export function usePropertyProfile() {
     try {
       // Create clean payload using direct field mapping
       const payload = createPropertyPayload(initialData, supabaseUser.id);
-      
-      console.log('Final payload for Supabase insert:', payload);
-      
+
+      console.log("Final payload for Supabase insert:", payload);
+
       // Insert into Supabase with detailed error handling
       const { data, error } = await supabase
-        .from('property_profile')
+        .from("property_profile")
         .insert([payload])
         .select();
 
       if (error) {
-        console.error('❌ Supabase insert error:', error);
-        console.error('Error details:', {
+        console.error("❌ Supabase insert error:", error);
+        console.error("Error details:", {
           message: error.message,
           details: error.details,
           hint: error.hint,
-          code: error.code
+          code: error.code,
         });
-        
+
         toast({
           title: "Error",
           description: `Failed to create property listing: ${error.message}`,
@@ -352,9 +410,9 @@ export function usePropertyProfile() {
       }
 
       if (!data || data.length === 0) {
-        console.warn('⚠️ No data returned from insert');
+        console.warn("⚠️ No data returned from insert");
         toast({
-          title: "Warning", 
+          title: "Warning",
           description: "Property was created but no data was returned.",
           variant: "destructive",
         });
@@ -362,7 +420,7 @@ export function usePropertyProfile() {
       }
 
       const createdProperty = data[0];
-      console.log('✅ Property created successfully:', createdProperty);
+      console.log("✅ Property created successfully:", createdProperty);
 
       toast({
         title: "Success",
@@ -371,10 +429,10 @@ export function usePropertyProfile() {
 
       // Refresh the properties list
       await fetchSellerProperties();
-      
+
       return data[0];
     } catch (error) {
-      console.error('Error creating property draft:', error);
+      console.error("Error creating property draft:", error);
       toast({
         title: "Error",
         description: "Failed to create property draft.",
@@ -387,7 +445,10 @@ export function usePropertyProfile() {
   };
 
   // Update an existing property
-  const updateProperty = async (propertyId: number, updates: Partial<PropertyProfile>) => {
+  const updateProperty = async (
+    propertyId: number,
+    updates: Partial<PropertyProfile>,
+  ) => {
     if (!supabaseUser?.id) {
       toast({
         title: "Authentication Required",
@@ -405,16 +466,16 @@ export function usePropertyProfile() {
       };
 
       const { data, error } = await supabase
-        .from('property_profile')
+        .from("property_profile")
         .update(updateData)
-        .eq('id', propertyId)
-        .eq('seller_id', supabaseUser.id)
-        .eq('deleted', false) // Ensure user owns the property
+        .eq("id", propertyId)
+        .eq("seller_id", supabaseUser.id)
+        .eq("deleted", false) // Ensure user owns the property
         .select()
         .single();
 
       if (error) {
-        console.error('Error updating property:', error);
+        console.error("Error updating property:", error);
         toast({
           title: "Error",
           description: "Failed to update property.",
@@ -430,10 +491,10 @@ export function usePropertyProfile() {
 
       // Refresh the properties list
       await fetchSellerProperties();
-      
+
       return data;
     } catch (error) {
-      console.error('Error updating property:', error);
+      console.error("Error updating property:", error);
       toast({
         title: "Error",
         description: "Failed to update property.",
@@ -459,21 +520,21 @@ export function usePropertyProfile() {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
-        .from('property_profile')
+        .from("property_profile")
         .update({
-          status: 'active',
+          status: "active",
           is_public: true,
           published_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
-        .eq('id', propertyId)
-        .eq('seller_id', supabaseUser.id)
-        .eq('deleted', false) // Ensure user owns the property
+        .eq("id", propertyId)
+        .eq("seller_id", supabaseUser.id)
+        .eq("deleted", false) // Ensure user owns the property
         .select()
         .single();
 
       if (error) {
-        console.error('Error publishing property:', error);
+        console.error("Error publishing property:", error);
         toast({
           title: "Error",
           description: "Failed to publish property.",
@@ -489,10 +550,10 @@ export function usePropertyProfile() {
 
       // Refresh the properties list
       await fetchSellerProperties();
-      
+
       return data;
     } catch (error) {
-      console.error('Error publishing property:', error);
+      console.error("Error publishing property:", error);
       toast({
         title: "Error",
         description: "Failed to publish property.",
@@ -518,14 +579,14 @@ export function usePropertyProfile() {
     setIsLoading(true);
     try {
       const { error } = await supabase
-        .from('property_profile')
+        .from("property_profile")
         .update({ deleted: true, updated_at: new Date().toISOString() })
-        .eq('id', propertyId)
-        .eq('seller_id', supabaseUser.id)
-        .eq('deleted', false); // Ensure user owns the property
+        .eq("id", propertyId)
+        .eq("seller_id", supabaseUser.id)
+        .eq("deleted", false); // Ensure user owns the property
 
       if (error) {
-        console.error('Error deleting property:', error);
+        console.error("Error deleting property:", error);
         toast({
           title: "Error",
           description: "Failed to delete property.",
@@ -541,10 +602,10 @@ export function usePropertyProfile() {
 
       // Refresh the properties list
       await fetchSellerProperties();
-      
+
       return true;
     } catch (error) {
-      console.error('Error deleting property:', error);
+      console.error("Error deleting property:", error);
       toast({
         title: "Error",
         description: "Failed to delete property.",
@@ -559,7 +620,7 @@ export function usePropertyProfile() {
   // Load properties when user changes - use default status filters
   useEffect(() => {
     if (supabaseUser?.id) {
-      fetchSellerProperties(['draft', 'live', 'offer_accepted']);
+      fetchSellerProperties(["draft", "live", "offer_accepted"]);
     } else {
       setProperties([]);
     }
@@ -574,14 +635,16 @@ export function usePropertyProfile() {
     updateProperty,
     publishProperty,
     deleteProperty,
-    
+
     // Computed values
-    draftProperties: properties.filter(p => p.status === 'draft'),
-    liveProperties: properties.filter(p => p.status === 'live'),
-    offerAcceptedProperties: properties.filter(p => p.status === 'offer_accepted'),
-    pendingProperties: properties.filter(p => p.status === 'pending'),
-    closedProperties: properties.filter(p => p.status === 'closed'),
-    droppedProperties: properties.filter(p => p.status === 'dropped'),
+    draftProperties: properties.filter((p) => p.status === "draft"),
+    liveProperties: properties.filter((p) => p.status === "live"),
+    offerAcceptedProperties: properties.filter(
+      (p) => p.status === "offer_accepted",
+    ),
+    pendingProperties: properties.filter((p) => p.status === "pending"),
+    closedProperties: properties.filter((p) => p.status === "closed"),
+    droppedProperties: properties.filter((p) => p.status === "dropped"),
     totalProperties: properties.length,
   };
 }
