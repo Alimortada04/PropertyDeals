@@ -342,12 +342,12 @@ export default function PropertyEditor() {
 
   // Resolve gallery images from database storage paths to public URLs
   const resolvedGalleryImages = useMemo(() => {
-    return Array.isArray(propertyData?.gallery_images)
-      ? propertyData.gallery_images
+    return Array.isArray(property?.gallery_images)
+      ? property.gallery_images
           .map((path) => resolvePublicUrl(path))
           .filter((url) => url)
       : [];
-  }, [propertyData?.gallery_images]);
+  }, [property?.gallery_images]);
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
