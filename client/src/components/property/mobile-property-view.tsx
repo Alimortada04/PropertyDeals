@@ -383,8 +383,8 @@ const MobilePropertyView: React.FC<MobilePropertyViewProps> = ({
           </div>
         </div>
       </div>
-      {/* Image Carousel positioned right under sticky header */}
-      <div className="pt-14">
+      {/* Image Carousel positioned flush with sticky header */}
+      <div className="pt-0">
         {propertyImages.length > 0 ? (
           <MobileImageCarousel
             images={propertyImages}
