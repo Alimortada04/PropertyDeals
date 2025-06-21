@@ -7,6 +7,7 @@ import { Bed, Bath, Move, Heart, Eye, ChevronLeft, ChevronRight, Calendar } from
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { resolvePublicUrl } from "@/lib/supabase-upload";
 
 const propertyTypeColors: Record<string, string> = {
   "Single Family": "bg-blue-500",
@@ -104,9 +105,9 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   
   const propertyImages = [];
   if (hasValidPrimaryImage) {
-    propertyImages.push(primary_image);
+    propertyImages.push(resolvePublicUrl(primary_image));
   }
-  propertyImages.push(...validGalleryImages);
+  propertyImages.push(...validGalleryImages.map(img => resolvePublicUrl(img)));
   
   const viewCount = view_count || 0;
   const favoriteCount = save_count || 0;

@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { supabase } from "@/lib/supabase";
+import { resolvePublicUrl } from "@/lib/supabase-upload";
 import {
   Share2,
   Heart,
@@ -343,7 +344,21 @@ export default function PropertyDetailPage({ id }: PropertyDetailPageProps) {
     );
   }
 
-  const propertyImages = [
+  // Process images with proper URL resolution
+  const processedImages = [];
+  if (property?.primary_image) {
+    processedImages.push(resolvePublicUrl(property.primary_image));
+  }
+  if (property?.gallery_images && Array.isArray(property.gallery_images)) {
+    property.gallery_images.forEach(img => {
+      const resolvedUrl = resolvePublicUrl(img);
+      if (resolvedUrl && resolvedUrl !== processedImages[0]) {
+        processedImages.push(resolvedUrl);
+      }
+    });
+  }
+
+  const propertyImages = processedImages.length > 0 ? processedImages : [
     property.primary_image,
     ...(property.gallery_images || []),
   ];
