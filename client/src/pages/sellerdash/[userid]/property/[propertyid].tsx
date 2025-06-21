@@ -92,14 +92,14 @@ const propertySchema = z.object({
   address: z.string().min(1, "Address is required"),
   city: z.string().optional(),
   state: z.string().optional(),
-  zipCode: z.string().optional(),
+  zipcode: z.string().optional(),
   county: z.string().optional(),
-  parcelId: z.string().optional(),
-  propertyType: z.string().optional(),
+  parcel_id: z.string().optional(),
+  property_type: z.string().optional(),
   bedrooms: z.string().optional(),
   bathrooms: z.string().optional(),
   sqft: z.string().optional(),
-  yearBuilt: z.string().optional(),
+  year_built: z.string().optional(),
   lotSize: z.string().optional(),
   parking: z.string().optional(),
 
@@ -422,10 +422,10 @@ export default function PropertyEditor() {
           address: propertyData.address || "",
           city: propertyData.city || "",
           state: propertyData.state || "",
-          zipCode: propertyData.zipCode || "",
+          zipCode: propertyData.zipcode || "",
           county: propertyData.county || "",
-          parcelId: propertyData.parcelId || "",
-          propertyType: propertyData.propertyType || "",
+          parcelId: propertyData.parcel_id || "",
+          propertyType: propertyData.property_type || "",
           bedrooms: propertyData.bedrooms
             ? propertyData.bedrooms.toString()
             : "",
@@ -433,29 +433,29 @@ export default function PropertyEditor() {
             ? propertyData.bathrooms.toString()
             : "",
           sqft: propertyData.sqft ? propertyData.sqft.toString() : "",
-          yearBuilt: propertyData.yearBuilt
-            ? propertyData.yearBuilt.toString()
+          yearBuilt: propertyData.year_built
+            ? propertyData.year_built.toString()
             : "",
-          lotSize: propertyData.lotSize || "",
+          lotSize: propertyData.lot_size || "",
           parking: propertyData.parking || "",
           arv: propertyData.arv ? propertyData.arv.toString() : "",
-          rentTotalMonthly: propertyData.rentTotalMonthly
-            ? propertyData.rentTotalMonthly.toString()
+          rentTotalMonthly: propertyData.rent_total_monthly
+            ? propertyData.rent_total_monthly.toString()
             : "",
-          purchasePrice: propertyData.purchasePrice
-            ? propertyData.purchasePrice.toString()
+          purchasePrice: propertyData.purchase_price
+            ? propertyData.purchase_price.toString()
             : "",
-          listingPrice: propertyData.listingPrice
-            ? propertyData.listingPrice.toString()
+          listingPrice: propertyData.listing_price
+            ? propertyData.listing_price.toString()
             : "",
-          assignmentFee: propertyData.assignmentFee
-            ? propertyData.assignmentFee.toString()
+          assignmentFee: propertyData.assignment_fee
+            ? propertyData.assignment_fee.toString()
             : "",
-          accessType: propertyData.accessType || "",
+          accessType: propertyData.access_type || "",
           description: propertyData.description || "",
-          additionalNotes: propertyData.additionalNotes || "",
+          additionalNotes: propertyData.additional_notes || "",
           tags: Array.isArray(propertyData.tags) ? propertyData.tags : [],
-          featuredProperty: propertyData.featuredProperty || false,
+          featuredProperty: propertyData.featured_property || false,
           // Media fields
           primaryImage: propertyData.primary_image || "",
           galleryImages: propertyData.gallery_images || [],
@@ -471,10 +471,7 @@ export default function PropertyEditor() {
         }
 
         // Set repair projects from property data
-        if (
-          propertyData.repair_projects &&
-          propertyData.repair_projects.length > 0
-        ) {
+        if (propertyData.repairs && propertyData.repairs.length > 0) {
           setRepairs(propertyData.repair_projects);
         }
 
@@ -529,42 +526,42 @@ export default function PropertyEditor() {
         address: data.address,
         city: data.city,
         state: data.state,
-        zipcode: data.zipCode, // ✅ FIXED
+        zipcode: data.zipcode, // ✅ FIXED
         county: data.county,
-        parcel_id: data.parcelId,
-        property_type: data.propertyType,
+        parcel_id: data.parcel_id,
+        property_type: data.property_type,
         bedrooms: data.bedrooms ? parseInt(data.bedrooms) : null,
         bathrooms: data.bathrooms ? parseFloat(data.bathrooms) : null,
         sqft: data.sqft ? parseInt(data.sqft) : null,
-        year_built: data.yearBuilt ? parseInt(data.yearBuilt) : null,
-        lot_size: data.lotSize,
+        year_built: data.year_built ? parseInt(data.year_built) : null,
+        lot_size: data.lot_size,
         parking: data.parking,
         arv: data.arv ? parseFloat(data.arv.replace(/[$,]/g, "")) : null,
-        rent_total_monthly: data.rentTotalMonthly
-          ? parseFloat(data.rentTotalMonthly.replace(/[$,]/g, ""))
+        rent_total_monthly: data.rent_total_monthly
+          ? parseFloat(data.rent_total_monthly.replace(/[$,]/g, ""))
           : null,
-        purchase_price: data.purchasePrice
-          ? parseFloat(data.purchasePrice.replace(/[$,]/g, ""))
+        purchase_price: data.purchase_price
+          ? parseFloat(data.purchase_price.replace(/[$,]/g, ""))
           : null,
-        listing_price: data.listingPrice
-          ? parseFloat(data.listingPrice.replace(/[$,]/g, ""))
+        listing_price: data.listing_price
+          ? parseFloat(data.listing_price.replace(/[$,]/g, ""))
           : null,
         assignment_fee: calculateAssignmentFee()
           ? parseFloat(calculateAssignmentFee())
           : null,
-        access_type: data.accessType, // ✅ FIXED
+        access_type: data.access_type, // ✅ FIXED
         description: data.description,
-        additional_notes: data.additionalNotes, // ✅ FIXED
+        additional_notes: data.additional_notes, // ✅ FIXED
         tags: data.tags || [],
-        featured_property: data.featuredProperty || false,
+        featured_property: data.featured_property || false,
         expense_items: expenses,
         repairs: repairs,
         rent_unit: units,
         comps: comps,
         jv_partners: partners,
-        primary_image: data.primaryImage,
-        gallery_images: data.galleryImages || [],
-        video_walkthrough: data.videoWalkthrough,
+        primary_image: data.primary_image,
+        gallery_images: data.gallery_images || [],
+        video_walkthrough: data.video_walkthrough,
       };
 
       const { error } = await supabase
@@ -679,7 +676,7 @@ export default function PropertyEditor() {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(async () => {
         if (!propertyId || !user) return;
-        
+
         try {
           const { error } = await supabase
             .from("property_profile")
@@ -704,7 +701,9 @@ export default function PropertyEditor() {
     if (!property?.gallery_images || !propertyId || !user) return;
 
     try {
-      const newGalleryImages = property.gallery_images.filter((_, i) => i !== index);
+      const newGalleryImages = property.gallery_images.filter(
+        (_, i) => i !== index,
+      );
 
       // Update in database
       const { error } = await supabase
@@ -1860,10 +1859,12 @@ export default function PropertyEditor() {
         {/* Display existing gallery images from database */}
         {resolvedGalleryImages.length > 0 && (
           <div className="mb-6">
-            <h4 className="text-sm font-medium text-gray-700 mb-3">Current Gallery Images</h4>
+            <h4 className="text-sm font-medium text-gray-700 mb-3">
+              Current Gallery Images
+            </h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {resolvedGalleryImages.map((img, i) => (
-                <div 
+                <div
                   key={`${img}-${i}`}
                   className="relative group border rounded-md cursor-move"
                   draggable
@@ -1881,7 +1882,9 @@ export default function PropertyEditor() {
                   }}
                   onDrop={(e) => {
                     e.preventDefault();
-                    const dragIndex = parseInt(e.dataTransfer.getData("text/plain"));
+                    const dragIndex = parseInt(
+                      e.dataTransfer.getData("text/plain"),
+                    );
                     const hoverIndex = i;
                     if (dragIndex !== hoverIndex) {
                       handleReorderGalleryImages(dragIndex, hoverIndex);
@@ -1894,7 +1897,7 @@ export default function PropertyEditor() {
                     className="w-full h-24 object-cover rounded-t-md"
                     draggable={false}
                   />
-                  
+
                   {/* Hover overlay with controls - matches listing modal exactly */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     {i > 0 && (
@@ -1926,7 +1929,7 @@ export default function PropertyEditor() {
                       </Button>
                     )}
                   </div>
-                  
+
                   <div className="px-2 py-1 text-xs text-gray-500 bg-gray-50 rounded-b-md">
                     Image {i + 1}
                   </div>
@@ -1985,10 +1988,9 @@ export default function PropertyEditor() {
             <div className="flex flex-col items-center">
               <Upload className="h-12 w-12 text-gray-400 mb-4" />
               <p className="text-sm text-gray-600 mb-2">
-                {resolvedGalleryImages.length > 0 
+                {resolvedGalleryImages.length > 0
                   ? "Add more property photos here or browse files"
-                  : "Drag & drop property photos here or browse files"
-                }
+                  : "Drag & drop property photos here or browse files"}
               </p>
               <p className="text-xs text-gray-500 mb-4">
                 Upload multiple images at once (up to 20)
