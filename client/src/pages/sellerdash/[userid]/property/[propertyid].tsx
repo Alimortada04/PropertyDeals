@@ -162,6 +162,7 @@ export default function PropertyEditor() {
   const [user, setUser] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   // State matching EnhancedPropertyListingModal
   const [expenses, setExpenses] = useState<
@@ -3191,7 +3192,7 @@ export default function PropertyEditor() {
 
                 {/* Delete from My View Button */}
                 <button
-                  onClick={handleSoftDelete}
+                  onClick={() => setShowDeleteConfirmation(true)}
                   disabled={saving}
                   className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-[#803344] mt-[5px] mb-[5px]"
                 >
@@ -3294,7 +3295,7 @@ export default function PropertyEditor() {
           {/* Mobile Delete Button */}
           <div className="lg:hidden mt-8 px-4 pb-8">
             <button
-              onClick={handleSoftDelete}
+              onClick={() => setShowDeleteConfirmation(true)}
               disabled={saving}
               className="w-full inline-flex items-center justify-center px-4 py-3 bg-red-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -3325,6 +3326,70 @@ export default function PropertyEditor() {
         onClose={() => setShowCampaignModal(false)}
         propertyId={propertyId}
       />
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirmation && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <div className="flex items-center mb-4">
+              <div className="flex-shrink-0 w-10 h-10 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+                <Trash2 className="w-6 h-6 text-red-600" />
+              </div>
+              <div className="ml-4">
+                <h3 className="text-lg font-medium text-gray-900">
+                  Delete Property
+                </h3>
+              </div>
+            </div>
+            <div className="mb-6">
+              <p className="text-sm text-gray-500">
+                Are you sure you want to delete this property? This action will remove it from your listings but won't permanently delete the data. You can restore it later if needed.
+              </p>
+              {property?.name && (
+                <div className="mt-3 p-3 bg-gray-50 rounded-md">
+                  <p className="text-sm font-medium text-gray-900">
+                    {property.name}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {property.address}
+                  </p>
+                </div>
+              )}
+            </div>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteConfirmation(false)}
+                className="flex-1"
+                disabled={saving}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setShowDeleteConfirmation(false);
+                  handleSoftDelete();
+                }}
+                className="flex-1"
+                disabled={saving}
+              >
+                {saving ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
