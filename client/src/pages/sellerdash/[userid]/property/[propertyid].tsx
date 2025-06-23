@@ -32,14 +32,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -170,9 +162,6 @@ export default function PropertyEditor() {
   const [user, setUser] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [activeSection, setActiveSection] = useState("overview");
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [imageToDelete, setImageToDelete] = useState<number | null>(null);
-  const [propertyDeleteConfirmOpen, setPropertyDeleteConfirmOpen] = useState(false);
 
   // State matching EnhancedPropertyListingModal
   const [expenses, setExpenses] = useState<
@@ -742,24 +731,6 @@ export default function PropertyEditor() {
     }
   };
 
-  const openDeleteConfirmation = (index: number) => {
-    setImageToDelete(index);
-    setDeleteConfirmOpen(true);
-  };
-
-  const confirmDeleteImage = () => {
-    if (imageToDelete !== null) {
-      handleDeleteGalleryImage(imageToDelete);
-      setDeleteConfirmOpen(false);
-      setImageToDelete(null);
-    }
-  };
-
-  const cancelDeleteImage = () => {
-    setDeleteConfirmOpen(false);
-    setImageToDelete(null);
-  };
-
   const addPartner = () => {
     if (newPartner.trim()) {
       setPartners([...partners, newPartner.trim()]);
@@ -849,19 +820,6 @@ export default function PropertyEditor() {
     } finally {
       setSaving(false);
     }
-  };
-
-  const openPropertyDeleteConfirmation = () => {
-    setPropertyDeleteConfirmOpen(true);
-  };
-
-  const confirmDeleteProperty = () => {
-    setPropertyDeleteConfirmOpen(false);
-    handleSoftDelete();
-  };
-
-  const cancelDeleteProperty = () => {
-    setPropertyDeleteConfirmOpen(false);
   };
 
   if (loading) {
@@ -1956,7 +1914,7 @@ export default function PropertyEditor() {
                       variant="destructive"
                       size="icon"
                       className="h-8 w-8 rounded-full"
-                      onClick={() => openDeleteConfirmation(i)}
+                      onClick={() => handleDeleteGalleryImage(i)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -3233,7 +3191,7 @@ export default function PropertyEditor() {
 
                 {/* Delete from My View Button */}
                 <button
-                  onClick={openPropertyDeleteConfirmation}
+                  onClick={handleSoftDelete}
                   disabled={saving}
                   className="w-full inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed bg-[#803344] mt-[5px] mb-[5px]"
                 >
@@ -3336,7 +3294,7 @@ export default function PropertyEditor() {
           {/* Mobile Delete Button */}
           <div className="lg:hidden mt-8 px-4 pb-8">
             <button
-              onClick={openPropertyDeleteConfirmation}
+              onClick={handleSoftDelete}
               disabled={saving}
               className="w-full inline-flex items-center justify-center px-4 py-3 bg-red-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -3357,47 +3315,6 @@ export default function PropertyEditor() {
       </div>
       {/* Quick Action Selector */}
       <QuickActionSelector />
-      
-      {/* Delete Image Confirmation Dialog */}
-      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Image</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this gallery image? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={cancelDeleteImage}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={confirmDeleteImage}>
-              Delete Image
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Delete Property Confirmation Dialog */}
-      <Dialog open={propertyDeleteConfirmOpen} onOpenChange={setPropertyDeleteConfirmOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Property</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this property? This will remove the property from your listings and cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={cancelDeleteProperty}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={confirmDeleteProperty}>
-              Delete Property
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
       {/* Modals */}
       <EnhancedPropertyListingModal
         isOpen={showListingModal}
