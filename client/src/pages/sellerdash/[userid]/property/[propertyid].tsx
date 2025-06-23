@@ -3330,31 +3330,17 @@ export default function PropertyEditor() {
       {/* Delete Confirmation Dialog */}
       {showDeleteConfirmation && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <div className="flex items-center mb-4">
-              <div className="flex-shrink-0 w-10 h-10 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center">
+            <div className="mb-4">
+              <div className="w-12 h-12 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-4">
                 <Trash2 className="w-6 h-6 text-red-600" />
               </div>
-              <div className="ml-4">
-                <h3 className="text-lg font-medium text-gray-900">
-                  Delete Property
-                </h3>
-              </div>
-            </div>
-            <div className="mb-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Delete Property
+              </h3>
               <p className="text-sm text-gray-500">
-                Are you sure you want to delete this property? This action will remove it from your listings but won't permanently delete the data. You can restore it later if needed.
+                Are you sure you want to delete this property?
               </p>
-              {property?.name && (
-                <div className="mt-3 p-3 bg-gray-50 rounded-md">
-                  <p className="text-sm font-medium text-gray-900">
-                    {property.name}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {property.address}
-                  </p>
-                </div>
-              )}
             </div>
             <div className="flex gap-3">
               <Button
