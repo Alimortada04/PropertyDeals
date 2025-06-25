@@ -1,0 +1,251 @@
+Name	Description	Data Type	Format	Nullable	
+id
+
+No description
+
+uuid	uuid		
+created_at
+
+No description
+
+timestamp with time zone	timestamptz		
+status
+
+No description
+
+USER-DEFINED	property_status		
+name
+
+No description
+
+text	text		
+address
+
+No description
+
+text	text		
+property_type
+
+No description
+
+text	text		
+city
+
+No description
+
+text	text		
+state
+
+No description
+
+text	text		
+zipcode
+
+No description
+
+text	text		
+bedrooms
+
+No description
+
+text	text		
+bathrooms
+
+No description
+
+text	text		
+year_built
+
+No description
+
+text	text		
+sqft
+
+No description
+
+numeric	numeric		
+lot_size
+
+No description
+
+text	text		
+parking
+
+No description
+
+text	text		
+county
+
+No description
+
+text	text		
+parcel_id
+
+No description
+
+text	text		
+primary_image
+
+No description
+
+text	text		
+gallery_images
+
+No description
+
+ARRAY	_text		
+video_walkthrough
+
+No description
+
+text	text		
+rent_total_monthly
+
+No description
+
+numeric	numeric		
+rent_total_annual
+
+No description
+
+numeric	numeric		
+rent_unit
+
+No description
+
+jsonb	jsonb		
+expenses_total_monthly
+
+No description
+
+numeric	numeric		
+expenses_total_annual
+
+No description
+
+numeric	numeric		
+expense_items
+
+No description
+
+jsonb	jsonb		
+property_condition
+
+No description
+
+text	text		
+repairs
+
+No description
+
+jsonb	jsonb		
+repair_costs_total
+
+No description
+
+numeric	numeric		
+purchase_price
+
+No description
+
+numeric	numeric		
+listing_price
+
+No description
+
+numeric	numeric		
+assignment_fee
+
+No description
+
+numeric	numeric		
+access_type
+
+No description
+
+text	text		
+closing_date
+
+No description
+
+date	date		
+purchase_agreement
+
+No description
+
+text	text		
+assignment_agreement
+
+No description
+
+text	text		
+jv_partners
+
+No description
+
+ARRAY	_text		
+description
+
+No description
+
+text	text		
+additional_notes
+
+No description
+
+text	text		
+arv
+
+No description
+
+numeric	numeric		
+comps
+
+No description
+
+text	text		
+tags
+
+No description
+
+text	text		
+featured_property
+
+No description
+
+boolean	bool		
+view_count
+
+No description
+
+integer	int4		
+save_count
+
+No description
+
+integer	int4		
+offer_count
+
+No description
+
+integer	int4		
+offer_ids
+
+No description
+
+uuid	uuid		
+seller_id
+
+No description
+
+uuid	uuid		
+ppsf
+
+No description
+
+numeric	numeric		
+deleted
+
+No description
+
+boolean	bool		
